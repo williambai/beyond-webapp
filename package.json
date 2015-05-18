@@ -1,0 +1,29 @@
+{
+  "name": "beyond-webapp",
+  "version": "0.0.1",
+  "description": "build app by using nodejs, mongodb, backbone, etc.",
+  "main": "app.js",
+  "scripts": {
+    "app-demo-test": "jasmine-node demo/test",
+    "app-demo-dev": "pm2 start demo/app.js --watch demo/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/williambai/beyond-webapp.git"
+  },
+  "keywords": [
+    "backbone"
+  ],
+  "author": "William Bai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/williambai/beyond-webapp/issues"
+  },
+  "homepage": "https://github.com/williambai/beyond-webapp",
+  "dependencies": {
+    "express": "^4.12.3",
+    "jade": "^1.9.2",
+    "mongoose": "^4.0.3",
+    "pm2": "^0.12.14"
+  }
+}

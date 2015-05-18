@@ -1,0 +1,28 @@
+{
+  "name": "beyond-webapp",
+  "version": "0.0.1",
+  "homepage": "https://github.com/williambai/beyond-webapp",
+  "authors": [
+    "William Bai <williambai2001@gmail.com>"
+  ],
+  "description": "build single page web app.",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.2",
+    "font-awesome": "~4.3.0",
+    "underscore": "~1.8.2",
+    "backbone": "~1.1.2",
+    "text": "~2.0.14"
+  }
+}
