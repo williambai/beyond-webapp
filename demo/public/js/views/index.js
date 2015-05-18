@@ -1,9 +1,9 @@
 define(['text!templates/index.html'],function(indexTemplate){
-	var indexView = Backbone.View.extend({
+	var IndexView = Backbone.View.extend({
 		el: $('#content'),
 		render: function(){
 			this.$el.html(indexTemplate);
 		},
 	});
-	return new indexView;
+	return new IndexView;
 });
