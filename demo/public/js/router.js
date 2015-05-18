@@ -27,7 +27,7 @@ define(['views/index','views/register','views/login','views/forgotPassword'],
 		},
 		forgotPassword: function(){
 			this.changeView(new ForgotPasswordView());
-		}
+		},
 	});
 
 	return new SocailRouter();

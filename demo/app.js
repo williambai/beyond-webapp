@@ -45,11 +45,11 @@ app.post('/register',function(req,res){
 	var password = req.param('password', null);
 
 	if(null == email || email.length<1 || null == password || password.length<1){
-		res.send(400);
+		res.sendStatus(400);
 		return;
 	}
 	Account.register(email,password,firstName,lastName);
-	res.send(200);
+	res.sendStatus(200);
 });
 
 app.post('/login',function(req,res){
@@ -57,36 +57,43 @@ app.post('/login',function(req,res){
 	var password = req.param('password', null);
 
 	if(null == email || email.length<1 || null == password || password.length<1){
-		res.send(400);
+		res.sendStatus(400);
 		return;
 	}
 	Account.login(email,password,function(success){
 		if(!success){
-			res.send(401);
+			res.sendStatus(401);
 			return;
 		}
 		console.log(email + ': login sucessfully.');
+		req.session.email = email;
 		req.session.loggedIn = true;
-		res.send(200);
+		res.sendStatus(200);
 	});
+});
+
+app.get('/logout', function(req,res){
+	delete req.session.loggedIn;
+	console.log(req.session.email + ': logout sucessfully.');
+	res.sendStatus(200);
 });
 
 app.post('/forgotPassword',function(req,res){
 	var email = req.param('email', null);
 	if(null == email || email.length<1){
-		res.send(400);
+		res.sendStatus(400);
 		return;
 	}
 	var hostname = req.header.host;
 	var resetPasswordUrl = 'http://' + hostname + '/resetPassword';
 	Account.forgotPassword(email, resetPasswordUrl,function(success){
 		if(!success){
-			res.send(404);
+			res.sendStatus(404);
 			return;
 		}
-		res.send(200);
+		res.sendStatus(200);
 	});
-	res.send(200);
+	res.sendStatus(200);
 });
 
 app.get('resetPassword',function(req,res){
@@ -106,9 +113,9 @@ app.post('/resetPassword',function(req,res){
 
 app.get('/account/authenticated', function(req,res){
 	if(req.session.loggedIn){
-		res.send(200);
+		res.sendStatus(200);
 	}else{
-		res.send(401);
+		res.sendStatus(401);
 	}
 });
 
