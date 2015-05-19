@@ -1,6 +1,14 @@
 module.exports = exports = function(config,mongoose,nodemailer){
 	var crypto = require('crypto');
 
+	var Status = new mongoose.Schema({
+		name: {
+			first: {type: String},
+			last: {type: String}
+		},
+		status: {type: String}
+	});
+
 	var AccountSchema = new mongoose.Schema({
 			'email' : {type: String, unique: true},
 			'password': {type: String},
@@ -14,7 +22,9 @@ module.exports = exports = function(config,mongoose,nodemailer){
 				year: {type: Number}
 			},
 			'photoUrl': {type: String},
-			'biography': {type: String}
+			'biography': {type: String},
+			status: [Status],//My own status updates only
+			activity: [Status], //All status updates including friends
 		});
 
 	var Account = mongoose.model('Account', AccountSchema);
@@ -49,7 +59,7 @@ module.exports = exports = function(config,mongoose,nodemailer){
 			email: email,
 			password: shaSum.digest('hex')
 		},function(err,doc){
-			callback(null != doc);
+			callback(doc);
 		});
 	};
 
@@ -86,8 +96,15 @@ module.exports = exports = function(config,mongoose,nodemailer){
 		});
 	};
 
+	var findById = function(accountId,callback){
+		Account.findOne({_id: accountId}, function(err,doc){
+			callback(doc);
+		});
+	};
+
 	return {
-		model: Account,
+		Account: Account,
+		findById: findById,
 		register: register,
 		forgotPassword: forgotPassword,
 		resetPassword: resetPassword,

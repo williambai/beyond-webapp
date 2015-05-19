@@ -17,6 +17,7 @@ define(['text!templates/register.html'],function(registerTemplate){
 		},
 		render: function(){
 			this.$el.html(registerTemplate);
+			return this;
 		},
 	});
 

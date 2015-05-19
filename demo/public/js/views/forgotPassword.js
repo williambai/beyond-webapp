@@ -14,6 +14,7 @@ define(['text!templates/forgotPassword.html'],function(forgotPasswordTemplate){
 		},
 		render: function(){
 			this.$el.html(forgotPasswordTemplate);
+			return this;
 		}
 	});
 

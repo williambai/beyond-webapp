@@ -11,7 +11,7 @@ var config = {
 		server: require('./config/server'),
 		mail: require('./config/mail'),
 		db: require('./config/db')
-	};	
+	};		
 var Account = require('./models/Account')(config,mongoose,nodemailer);
 
 mongoose.connect(config.db.URI);
@@ -39,10 +39,10 @@ app.get('/', function(req,res){
 });
 
 app.post('/register',function(req,res){
-	var firstName = req.param('firstName','');
-	var lastName = req.param('lastName','');
-	var email = req.param('email',null);
-	var password = req.param('password', null);
+	var firstName = req.body.firstName || '';
+	var lastName = req.body/lastName || '';
+	var email = req.body.email;
+	var password = req.body.password;
 
 	if(null == email || email.length<1 || null == password || password.length<1){
 		res.sendStatus(400);
@@ -53,33 +53,33 @@ app.post('/register',function(req,res){
 });
 
 app.post('/login',function(req,res){
-	var email = req.param('email',null);
-	var password = req.param('password', null);
+	var email = req.body.email;
+	var password = req.body.password;
 
 	if(null == email || email.length<1 || null == password || password.length<1){
 		res.sendStatus(400);
 		return;
 	}
-	Account.login(email,password,function(success){
-		if(!success){
+	Account.login(email,password,function(account){
+		if(!account){
 			res.sendStatus(401);
 			return;
 		}
 		console.log(email + ': login sucessfully.');
-		req.session.email = email;
 		req.session.loggedIn = true;
+		req.session.accountId = account._id;
 		res.sendStatus(200);
 	});
 });
 
 app.get('/logout', function(req,res){
 	delete req.session.loggedIn;
-	console.log(req.session.email + ': logout sucessfully.');
+	console.log(req.session.accountId + ': logout sucessfully.');
 	res.sendStatus(200);
 });
 
 app.post('/forgotPassword',function(req,res){
-	var email = req.param('email', null);
+	var email = req.body.email;
 	if(null == email || email.length<1){
 		res.sendStatus(400);
 		return;
@@ -103,8 +103,8 @@ app.get('resetPassword',function(req,res){
 });
 
 app.post('/resetPassword',function(req,res){
-	var accountId = req.param('accountId', null);
-	var password = req.param('password',null);
+	var accountId = req.body.accountId;
+	var password = req.body.password;
 	if(null != accountId && null != password){
 		Account.resetPassword(accountId,password);
 	}
@@ -119,6 +119,53 @@ app.get('/account/authenticated', function(req,res){
 	}
 });
 
+
+app.get('/accounts/:id', function(req,res){
+	var accountId = req.params.id == 'me' 
+						? req.session.accountId
+						: req.params.id;
+	Account.findById(accountId, function(account){
+		res.send(account);
+	});
+});
+
+app.get('/accounts/:id/status',function(req,res){
+	var accountId = req.params.id == 'me' 
+						? req.session.accountId
+						: req.params.id;
+	Account.findById(accountId, function(account){
+		res.send(account.status);
+	});
+});
+
+app.post('/accounts/:id/status',function(req,res){
+	var accountId = req.params.id == 'me' 
+						? req.session.accountId
+						: req.params.id;
+	Account.findById(accountId, function(account){
+		var status = {
+			name: account.name,
+			status: req.body.status || ''
+		};
+		account.status.push(status);
+		account.activity.push(status);
+		account.save(function(err){
+			if(err){
+				console.log('Error saving account: ' + err);
+			}
+		});
+	});
+	res.sendStatus(200);
+});
+
+app.get('/accounts/:id/activity',function(req,res){
+	var accountId = req.params.id == 'me' 
+						? req.session.accountId
+						: req.params.id;
+	Account.findById(accountId, function(account){
+		res.send(account.activity);
+	});
+});
 
 app.listen(config.server.PORT,function(){
 	console.log(config.server.NAME + ' App is running at '+ config.server.PORT + ' now.');
