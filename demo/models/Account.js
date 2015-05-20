@@ -1,7 +1,7 @@
 module.exports = exports = function(config,mongoose,nodemailer){
 	var crypto = require('crypto');
 
-	var Status = new mongoose.Schema({
+	var statusSchema = new mongoose.Schema({
 		name: {
 			first: {type: String},
 			last: {type: String}
@@ -9,12 +9,28 @@ module.exports = exports = function(config,mongoose,nodemailer){
 		status: {type: String}
 	});
 
-	var AccountSchema = new mongoose.Schema({
+	var contactSchema = new mongoose.Schema({
+		'name': {
+			'first': {type: String },
+			'last': {type: String }
+		},
+		'accountId': {type: mongoose.Schema.ObjectId},
+		'added': {type: Date}, //when the contact was added
+		'updated': {type: Date} // when the contanct was updated
+	});
+
+	// contactSchema.pre('save',function(next){
+	// 	console.log(this.name + ':' + this.accountId);
+	// 	next();
+	// });
+
+	var accountSchema = new mongoose.Schema({
 			'email' : {type: String, unique: true},
 			'password': {type: String},
 			'name': {
 				'first': {type: String},
-				'last': {type: String}
+				'last': {type: String},
+				'full': {type: String}
 			},
 			'birthday': {
 				day: {type:Number,min:1,max:31, required: false},
@@ -23,11 +39,12 @@ module.exports = exports = function(config,mongoose,nodemailer){
 			},
 			'photoUrl': {type: String},
 			'biography': {type: String},
-			status: [Status],//My own status updates only
-			activity: [Status], //All status updates including friends
+			'contacts': [contactSchema],
+			'status': [statusSchema],//My own status updates only
+			'activity': [statusSchema], //All status updates including friends
 		});
 
-	var Account = mongoose.model('Account', AccountSchema);
+	var Account = mongoose.model('Account', accountSchema);
 
 	var registerCallback = function(err){
 		if(err){
@@ -44,7 +61,8 @@ module.exports = exports = function(config,mongoose,nodemailer){
 			email: email,
 			name: {
 				first: firstName,
-				last: lastName
+				last: lastName,
+				full: firstName + ' ' + lastName
 			},
 			password: shaSum.digest('hex')
 		});
@@ -102,6 +120,65 @@ module.exports = exports = function(config,mongoose,nodemailer){
 		});
 	};
 
+	var addContact = function(account, contactJson){
+		var contact = {
+			name: {
+				first: contactJson.name.first,
+				last: contactJson.name.last
+			},
+			accountId: contactJson._id,
+			added: new Date(),
+			updated: new Date()
+		};
+		account.contacts.push(contact);
+		account.save(function(err){
+			if(err){
+				console.log('Error saving account: ' + err);
+			}
+		});
+	};
+
+	var removeContact = function(account, contactId){
+		if(null == account.contacts || account.contacts.length == 0) return;
+		account.contacts.forEach(function(contact){
+			if(contactId == contact.accountId){
+				account.contacts.remove(contact);
+			}
+		});
+		account.save(function(err){
+			if(err){
+				console.log('Error remove contact from account: ' + err);
+			}
+		});
+	};
+
+	var hasContact = function(account, contactId){
+		if(null == account.contacts) return false;
+
+		account.contacts.forEach(function(contact){
+			if(contactId == contact.accountId){
+				return true;
+			}
+		});
+		return false;
+	};
+
+	var findByString = function(searchStr,callback){
+		var searchRegex = new RegExp(searchStr,'i');
+		Account.find({
+			$or: [
+				{'name.full': {$regex: searchRegex}},
+				{'email': {$regex: searchRegex}}
+			]
+		},function(err,accounts){
+			if(err || accounts.length == 0){
+				callback(null);
+			}else{
+				callback(accounts);
+			}
+		});
+	};
+
 	return {
 		Account: Account,
 		findById: findById,
@@ -109,5 +186,9 @@ module.exports = exports = function(config,mongoose,nodemailer){
 		forgotPassword: forgotPassword,
 		resetPassword: resetPassword,
 		login: login,
+		addContact: addContact,
+		removeContact: removeContact,
+		hasContact: hasContact,
+		findByString: findByString
 	};
 };

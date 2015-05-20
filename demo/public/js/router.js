@@ -1,5 +1,5 @@
-define(['views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','models/Account','models/StatusCollection'],
-	function(IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,Account,StatusCollection){
+define(['views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','models/Account','models/StatusCollection','models/ContactCollection'],
+	function(IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,Account,StatusCollection,ContactCollection){
 
 	var SocailRouter = Backbone.Router.extend({
 		currentView : null,
@@ -8,7 +8,9 @@ define(['views/Index','views/Register','views/Login','views/ForgotPassword','vie
 			'login': 'login',
 			'register': 'register',
 			'forgotpassword': 'forgotPassword',
-			'profile/:id': 'profile'
+			'profile/:id': 'profile',
+			'contacts/:id': 'contacts',
+			'addcontact': 'addContact'
 		},
 		changeView: function(view){
 			if(null != this.currentView){
@@ -36,6 +38,16 @@ define(['views/Index','views/Register','views/Login','views/ForgotPassword','vie
 			var account = new Account({id: id});
 			this.changeView(new ProfileView({model: account}));
 			account.fetch();
+		},
+		contacts: function(id){
+			var contactId = id ? id: 'me';
+			var contactCollection = new ContactCollection();
+			contactCollection.url = '/accounts/' + contactId + '/contacts';
+			this.changeView(new ContactsView({collection: contactCollection}));
+			contactCollection.fetch();
+		},
+		addContact: function(){
+			this.changeView(new AddContactView());
 		}
 	});
 

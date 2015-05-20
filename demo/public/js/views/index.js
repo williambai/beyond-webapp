@@ -34,7 +34,7 @@ define(['text!templates/index.html','views/Status','models/Status'],
 			var statusCollection = this.collection;
 			var statusText = $('input[name=status]').val();
 			$.post('/accounts/me/status',{status: statusText},function(data){
-				statusCollection.add(new Status({status: statusText}));
+				statusCollection.add(new Status({status: statusText,name:{first:'我'}}));
 			});
 			return false;
 		},
