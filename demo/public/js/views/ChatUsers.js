@@ -1,4 +1,6 @@
-define(['text!templates/chatusers.html'],function(ChatUsersTemplate){
+define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession'],
+	function(ChatUsersTemplate,ChatUserView,ChatSessionView){
+
 	var ChatUsersView = Backbone.View.extend({
 		template: _.template(ChatUsersTemplate),
 		el: $('#chat'),
@@ -26,7 +28,7 @@ define(['text!templates/chatusers.html'],function(ChatUsersTemplate){
 			});
 		},
 		render: function(){
-			this.$el.html(this.template(ChatUsersTemplate()));
+			this.$el.html(this.template());
 			return this;
 		},
 		chatSessions: {},

@@ -46,5 +46,13 @@ exports =module.exports = function(app,models){
 		var session = socket.handshake.headers.session;
 		var accountId = session.accountId;
 		socket.join(accountId);
+		socket.on('chatclient', function(data){
+			console.log('chatclient:');
+			console.log(data);
+			sio.sockets.in(data.to).emit('chatserver',{
+				from: accountId,
+				text: data.text
+			});
+		});
 	});
 };

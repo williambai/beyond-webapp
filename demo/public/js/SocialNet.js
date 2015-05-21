@@ -21,6 +21,7 @@ define(['router','SocialNetSocket'],function(router,socket){
 			window.location.hash = 'login';
 		}else{
 			window.location.hash = 'index';
+			router.socketEvents.trigger('app:logined');
 		}
 		Backbone.history.start();
 	}

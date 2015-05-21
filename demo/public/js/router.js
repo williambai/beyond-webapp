@@ -1,5 +1,5 @@
-define(['views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','models/Account','models/StatusCollection','models/ContactCollection'],
-	function(IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,Account,StatusCollection,ContactCollection){
+define(['views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','views/ChatUsers','models/Account','models/StatusCollection','models/ContactCollection'],
+	function(IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,ChatUsersView,Account,StatusCollection,ContactCollection){
 
 	var SocailRouter = Backbone.Router.extend({
 		currentView : null,
@@ -25,6 +25,16 @@ define(['views/Index','views/Register','views/Login','views/ForgotPassword','vie
 			statusCollection.url = '/accounts/me/activity';
 			this.changeView(new IndexView({collection: statusCollection}));
 			statusCollection.fetch();
+
+
+			// var contactCollection = new ContactCollection();
+			// contactCollection.url = '/accounts/me/contacts';
+			// new ChatUsersView({
+			// 		collection:contactCollection,
+			// 		socketEvents: this.socketEvents
+			// 	}).render();
+			// contactCollection.fetch({reset: true});
+
 		},
 		register: function(){
 			this.changeView(new RegisterView());

@@ -11,7 +11,7 @@ define(['text!templates/chatsession.html'], function(chatSessionTemplate){
 		initialize: function(options){
 			this.socketEvents = options.socketEvents;
 			this.socketEvents.on(
-					'socket:chat:in' + this.model.get('accountId'),
+					'socket:chat:in:' + this.model.get('accountId'),
 					this.receiveChat, 
 					this
 				);
@@ -23,7 +23,7 @@ define(['text!templates/chatsession.html'], function(chatSessionTemplate){
 				this.$el.find('.chat_log').append('<li>' + chatLine + '</li>');
 				this.socketEvents.trigger('socket:chat',{
 					to: this.model.get('accountId'),
-					text: chatLine
+					text: chatText
 				});
 			}
 			return false;

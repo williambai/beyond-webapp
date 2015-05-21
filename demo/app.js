@@ -24,7 +24,10 @@ var config = {
 var models = {
 		Account: require('./models/Account')(config,mongoose,nodemailer),
 	};
-mongoose.connect(config.db.URI);
+	
+mongoose.connect(config.db.URI,function onMongooseError(err){
+	if(err) throw err;
+});
 
 //express configure
 app.set('view engine', 'jade');
