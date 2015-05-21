@@ -1,4 +1,5 @@
 var fs = require('fs');
+var http = require('http');
 var path = require('path');
 var express = require('express');
 var session = require('express-session');
@@ -8,6 +9,9 @@ var bodyParser = require('body-parser');
 var multer = require('multer'); 
 var app = express();
 var nodemailer = require('nodemailer');
+
+//create an http server
+app.server = http.createServer(app);
 
 //import the data layer
 var mongoose = require('mongoose');
@@ -54,6 +58,6 @@ fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file){
 	require('./routes/' + routeName)(app,models);
 });
 
-app.listen(config.server.PORT,function(){
+app.server.listen(config.server.PORT,function(){
 	console.log(config.server.NAME + ' App is running at '+ config.server.PORT + ' now.');
 });

@@ -4,12 +4,17 @@ define(['text!templates/login.html'],function(loginTemplate){
 		events: {
 			'submit form': 'login'
 		},
+		initialize: function(options){
+			this.socketEvents = options.socketEvents;
+		},
 		login: function(){
+			var that = this;
 			$.post('/login',{
 				email: $('input[name=email]').val(),
 				password: $('input[name=password]').val()
 			},function(data){
 				console.log(data);
+				that.socketEvents.trigger('app:logined');
 			}).error(function(){
 				$('#error').text('登录失败');
 				$('#error').slideDown();
