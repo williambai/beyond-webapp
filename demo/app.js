@@ -3,7 +3,6 @@ var http = require('http');
 var path = require('path');
 var express = require('express');
 var session = require('express-session');
-var session = require('express-session');
 var mongoStore = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
 var multer = require('multer'); 
@@ -36,13 +35,17 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(multer()); // for parsing multipart/form-data
-app.use(session({
-		secret: 'it is mime.',
-		key: 'beyond.sid',
-		store: new mongoStore({
+
+//app session
+app.sessionSecret = 'it is mime.';
+app.sessionStore = new mongoStore({
 			url: config.db.URI,
 			collection: 'sessions'
-		}),
+		});
+app.use(session({
+		secret: app.sessionSecret,
+		key: 'beyond.sid',
+		store: app.sessionStore,
 		saveUninitialized: true,
         resave: true
     }));

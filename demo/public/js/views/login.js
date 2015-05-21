@@ -15,6 +15,7 @@ define(['text!templates/login.html'],function(loginTemplate){
 			},function(data){
 				console.log(data);
 				that.socketEvents.trigger('app:logined');
+				window.location.hash = 'index';
 			}).error(function(){
 				$('#error').text('登录失败');
 				$('#error').slideDown();
