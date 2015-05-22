@@ -1,3 +1,4 @@
+var events = require('events');
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
@@ -12,6 +13,18 @@ var nodemailer = require('nodemailer');
 //create an http server
 app.server = http.createServer(app);
 
+//create an event dispatcher
+var eventDispatcher = new events.EventEmitter();
+app.addEventListener = function(eventName, callback){
+		eventDispatcher.on(eventName,callback);
+	};
+app.removeEventListener = function(eventName,callback){
+		eventDispatcher.removeListener(eventName,callback);
+	};
+app.triggerEvent = function(eventName,eventOptions){
+		eventDispatcher.emit(eventName, eventOptions);
+	};	
+
 //import the data layer
 var mongoose = require('mongoose');
 var config = {
@@ -22,7 +35,7 @@ var config = {
 
 //import the models
 var models = {
-		Account: require('./models/Account')(config,mongoose,nodemailer),
+		Account: require('./models/Account')(app,config,mongoose,nodemailer),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

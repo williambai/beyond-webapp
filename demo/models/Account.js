@@ -1,28 +1,42 @@
-module.exports = exports = function(config,mongoose,nodemailer){
+module.exports = exports = function(app, config,mongoose,nodemailer){
 	var crypto = require('crypto');
 
+	var schemaOptions = {
+			toJSON: {
+				virtuals: true
+			},
+			toObject: {
+				virtuals: true
+			}
+		};
+
 	var statusSchema = new mongoose.Schema({
-		name: {
-			first: {type: String},
-			last: {type: String}
-		},
-		status: {type: String}
-	});
+			name: {
+				first: {type: String},
+				last: {type: String}
+			},
+			status: {type: String}
+		});
 
 	var contactSchema = new mongoose.Schema({
-		'name': {
-			'first': {type: String },
-			'last': {type: String }
-		},
-		'accountId': {type: mongoose.Schema.ObjectId},
-		'added': {type: Date}, //when the contact was added
-		'updated': {type: Date} // when the contanct was updated
+			'name': {
+				'first': {type: String },
+				'last': {type: String }
+			},
+			'accountId': {type: mongoose.Schema.ObjectId},
+			'added': {type: Date}, //when the contact was added
+			'updated': {type: Date} // when the contanct was updated
+		},schemaOptions);
+
+	contactSchema.virtual('online').get(function(){
+		return app.isAccountOnline(this.get('accountId'));
 	});
 
 	// contactSchema.pre('save',function(next){
 	// 	console.log(this.name + ':' + this.accountId);
 	// 	next();
 	// });
+
 
 	var accountSchema = new mongoose.Schema({
 			'email' : {type: String, unique: true},

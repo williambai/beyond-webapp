@@ -29,7 +29,7 @@ form {
 .chat_list li {
 	width:100%;
 	padding:10px 0px;
-	background-color: #0099ff;
+	/*background-color: #0099ff;*/
 }
 
 /*.chat_list li :nth-child(odd) {
@@ -44,4 +44,9 @@ form {
 	float: left;
 	width: 250px;
 	height: 300px;
+}
+
+
+.online {
+	background-color: green;
 }

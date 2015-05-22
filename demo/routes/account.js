@@ -48,7 +48,13 @@
 			account.save(function(err){
 				if(err){
 					console.log('Error saving account: ' + err);
+					return;
 				}
+				app.triggerEvent('event:' + accountId, {
+					from: req.params.id,
+					data: status,
+					action: 'status'
+				});
 			});
 		});
 		res.sendStatus(200);

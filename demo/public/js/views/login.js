@@ -14,7 +14,7 @@ define(['text!templates/login.html'],function(loginTemplate){
 				password: $('input[name=password]').val()
 			},function(data){
 				console.log(data);
-				that.socketEvents.trigger('app:logined');
+				that.socketEvents.trigger('app:logined',data);
 				window.location.hash = 'index';
 			}).error(function(){
 				$('#error').text('登录失败');

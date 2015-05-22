@@ -32,7 +32,7 @@ module.exports = exports = function(app,models){
 			req.session.loggedIn = true;
 			req.session.accountId = account._id;
 			req.session.name = account.name;
-			res.sendStatus(200);
+			res.send({accountId: account._id});
 		});
 	});
 

@@ -2,12 +2,14 @@ define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,Ch
 
 	var SocialNetSocket = function(eventDispatcher){
 		var socket = null;
+		var accountId = null;
 
 		var initialize = function(){
 			eventDispatcher.bind('app:logined', connectSocket);
 		}
 
-		var connectSocket = function(){
+		var connectSocket = function(socketAccountId){
+			accountId = socketAccountId;
 			socket = sio.connect();
 			socket
 				.on('connect_failed', function(reason){
@@ -16,21 +18,34 @@ define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,Ch
 				.on('connect', function(){
 					console.info('established a connection successfully.');
 					//in --> out
-					eventDispatcher.on('socket:chat',sendChat);
+					eventDispatcher.on('socket:chat',handleSendChat);
+
 					//in <-- out
-					socket.on('chatserver',function(data){
-						eventDispatcher.trigger('socket:chat:start:' + data.from);
-						eventDispatcher.trigger('socket:chat:in:' + data.from, data);
-					});
+					socket.on('contactEvent', handleContactEvent);
+					socket.on('chatserver',handleChatEvent);
+
 					renderChatView();
 				});
 		};
 
-		var sendChat = function(payload){
+		var handleSendChat = function(payload){
 			if(null != socket){
 				// console.log('send:'+ payload);
 				socket.emit('chatclient',payload);
 			}
+		};
+
+		var handleContactEvent = function(eventObj){
+			var eventName = eventObj.action + ':' + eventObj.from;
+			// if(eventObj.from == accountId){
+			// 	eventName = eventObj.action + ':me';
+			// }
+			eventDispatcher.trigger(eventName,eventObj);
+		};
+
+		var handleChatEvent = function(data){
+			eventDispatcher.trigger('socket:chat:start:' + data.from);
+			eventDispatcher.trigger('socket:chat:in:' + data.from, data);
 		};
 
 		var renderChatView = function(){

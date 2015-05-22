@@ -22,7 +22,7 @@ define(['views/Index','views/Register','views/Login','views/ForgotPassword','vie
 		index: function(){
 			var statusCollection = new StatusCollection();
 			statusCollection.url = '/accounts/me/activity';
-			this.changeView(new IndexView({collection: statusCollection}));
+			this.changeView(new IndexView({collection: statusCollection,socketEvents: this.socketEvents}));
 			statusCollection.fetch();
 
 
@@ -46,7 +46,7 @@ define(['views/Index','views/Register','views/Login','views/ForgotPassword','vie
 		},
 		profile: function(id){
 			var account = new Account({id: id});
-			this.changeView(new ProfileView({model: account}));
+			this.changeView(new ProfileView({model: account,socketEvents: this.socketEvents}));
 			account.fetch();
 		},
 		contacts: function(id){

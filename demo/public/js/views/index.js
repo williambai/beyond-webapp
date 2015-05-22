@@ -7,9 +7,15 @@ define(['text!templates/index.html','views/Status','models/Status'],
 			'submit form': 'updateStatus'
 		},
 		
-		initialize: function(){
+		initialize: function(options){
+			options.socketEvents.bind('status:me',this.onSocketStatusAdded, this);
 			this.collection.on('add', this.onStatusAdded, this);
 			this.collection.on('reset', this.onStatusCollectonReset, this);
+		},
+
+		onSocketStatusAdded: function(data){
+			var newStatus = data.data;
+			this.collection.add(new Status({status: newStatus.status, name: newStatus.name}));
 		},
 
 		onStatusCollectonReset: function(collection){
