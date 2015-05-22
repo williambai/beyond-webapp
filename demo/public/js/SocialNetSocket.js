@@ -1,8 +1,11 @@
-define(['Sockets','views/ChatUsers','models/ContactCollection'],
-	function(sio,ChatUsersView,ContactCollection){
+define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,ChatUsersView,ContactCollection){
 
 	var SocialNetSocket = function(eventDispatcher){
 		var socket = null;
+
+		var initialize = function(){
+			eventDispatcher.bind('app:logined', connectSocket);
+		}
 
 		var connectSocket = function(){
 			socket = sio.connect();
@@ -40,13 +43,10 @@ define(['Sockets','views/ChatUsers','models/ContactCollection'],
 			contactCollection.fetch({reset:true});
 		};
 
-		eventDispatcher.bind('app:logined', connectSocket);
+		return {
+			initialize: initialize
+		}
 	};
 
-
-	return {
-		initialize: function(eventDispatcher){
-			SocialNetSocket(eventDispatcher);
-		}
-	}
+	return SocialNetSocket;
 });

@@ -1,5 +1,4 @@
-define(['views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','views/ChatUsers','models/Account','models/StatusCollection','models/ContactCollection'],
-	function(IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,ChatUsersView,Account,StatusCollection,ContactCollection){
+define(['views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','views/ChatUsers','models/Account','models/StatusCollection','models/ContactCollection'], function(IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,ChatUsersView,Account,StatusCollection,ContactCollection){
 
 	var SocailRouter = Backbone.Router.extend({
 		currentView : null,

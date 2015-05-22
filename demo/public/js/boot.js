@@ -14,5 +14,5 @@ require.config({
 });
 
 require(['SocialNet'], function(SocialNet){
-	SocialNet.initialize();
+	(new SocialNet).initialize();
 });
