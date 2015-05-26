@@ -1,8 +1,11 @@
-define(['text!templates/productAdd.html','text!templates/productEdit.html'], function(productAddTemplate,productEditTemplate){
+define(['text!templates/productEdit.html'], function(productEditTemplate){
 	var ProductEditView = Backbone.View.extend({
 		el: '#content',
-		templateEdit: _.template(productEditTemplate),
-		templateAdd: _.template(productAddTemplate),
+		template: _.template(productEditTemplate),
+
+		initialize: function(){
+			this.listenTo(this.model, 'change', this.render);
+		},
 
 		events: {
 			'submit form': 'editProduct'
@@ -10,22 +13,19 @@ define(['text!templates/productAdd.html','text!templates/productEdit.html'], fun
 
 		editProduct: function(){
 			$.post('/products',{
+				cid: $('input[name=cid').val(),
 				name: $('input[name=name]').val(),
 				description: $('input[name=description]').val()
 			},function success(){
-				window.location.hash = 'products/root';
 			},function failure(){
 				console.log('-----');
 			});
+			window.history.back();
 			return false;
 		},
 
 		render: function(){
-			if(this.model._id){
-				this.$el.html(this.templateEdit(this.model.toJSON()));	
-			}else{
-				this.$el.html(this.templateAdd());
-			}
+			this.$el.html(this.template(this.model.toJSON()));	
 			return this;
 		}
 

@@ -1,10 +1,13 @@
-define(['text!templates/categoryAdd.html'], function(categoryAddTemplate){
+define(['text!templates/categoryEdit.html'], function(categoryAddTemplate){
 	var CategoryAddView = Backbone.View.extend({
 		el: '#content',
 		template: _.template(categoryAddTemplate),
 
 		events: {
 			'submit form': 'addCategory'
+		},
+		initialize: function(){
+			this.listenTo(this.model,'change',this.render);
 		},
 
 		addCategory: function(){
@@ -13,15 +16,17 @@ define(['text!templates/categoryAdd.html'], function(categoryAddTemplate){
 				name: $('input[name=name]').val(),
 				description: $('input[name=description]').val()
 			},function success(){
-				window.location.hash = 'categories/root';
 			},function failure(){
 				console.log('-----');
 			});
+			window.history.back();
 			return false;
 		},
 
 		render: function(){
-			this.$el.html(this.template(this.model.toJSON()));
+			// if(this.model.get('_id')){
+				this.$el.html(this.template(this.model.toJSON()));
+			// }
 			return this;
 		}
 

@@ -4,14 +4,15 @@
 <hr>
 <h4>在当前目录<span id="parent" class="">xxxxxx</span>下新增：</h4>
 <form>
-	<input type="hidden" name="pid" value="<%= parent_id %>"/>
+	<input type="hidden" name="_id" value="<%= _id %>" />
+	<input type="hidden" name="pid" value="<%= parent %>"/>
 	<fieldset>
 		<label>名称：</label>
-		<input type="text" name="name" />
+		<input type="text" name="name" value="<%= name %>"/>
 	</fieldset>
 	<fieldset>
 		<label>描述：</label>
-		<input type="text" name="description" />
+		<input type="text" name="description" value="<%= description %>"/>
 	</fieldset>
 	<input type="submit" value="提交" />
 </form>

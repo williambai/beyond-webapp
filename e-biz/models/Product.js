@@ -99,11 +99,11 @@ exports = module.exports = function(app, config, mongoose, nodemailer){
 	var Product = mongoose.model('Product', productSchema);
 	var Category = mongoose.model('Category', categorySchema);
 
-	var saveCallback = function(err){
+	var defaultCallback = function(err){
 			if(err){
 				return console.log(err);
 			}
-			return console.log('Saved successfully.');
+			return console.log('Save/Remove/Update successfully.');
 		};
 
 	var addCategory = function(parentId,options){
@@ -120,7 +120,21 @@ exports = module.exports = function(app, config, mongoose, nodemailer){
 			parent_id: parentId,
 			ancestors: options.parentIds || []
 		});
-		category.save(saveCallback);
+		category.save(defaultCallback);
+	};
+
+	var findCategoryById = function(id, callback){
+		Category.findOne({_id:id}, function(err,doc){
+			callback(doc);
+		});
+	};
+
+	var updateCategory = function(id,options){
+		Category.update({_id:id},{$set: options});
+	};
+
+	var removeCategory = function(id){
+		Category.remove({_id:id},defaultCallback);
 	};
 
 	var findCategoriesById = function(id,callback){
@@ -145,7 +159,12 @@ exports = module.exports = function(app, config, mongoose, nodemailer){
 			},
 			main_cat_id: categoryId
 		});
-		product.save(saveCallback);
+		product.save(defaultCallback);
+	};
+	var findProductById = function(id, callback){
+		Product.findOne({_id:id}, function(err,doc){
+			callback(doc);
+		});
 	};
 
 	var findProductsByCategoryId = function(categoryId,callback){
@@ -164,8 +183,12 @@ exports = module.exports = function(app, config, mongoose, nodemailer){
 		Product: Product,
 		Category: Category,
 		addProduct: addProduct,
+		findProductById: findProductById,
 		findProductsByCategoryId: findProductsByCategoryId,
+		findCategoryById: findCategoryById,
 		addCategory: addCategory,
+		updateCategory: updateCategory,
 		findCategoriesById: findCategoriesById,
+		removeCategory: removeCategory,
 	};
 };
