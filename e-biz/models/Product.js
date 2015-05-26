@@ -130,7 +130,7 @@ exports = module.exports = function(app, config, mongoose, nodemailer){
 	};
 
 	var updateCategory = function(id,options){
-		Category.update({_id:id},{$set: options});
+		Category.where({_id:id}).update({$set: options});
 	};
 
 	var removeCategory = function(id){

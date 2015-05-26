@@ -2,7 +2,6 @@ define(['views/Index','views/CategoryEdit','views/Categories','views/Product','v
 
 	var BizRouter = Backbone.Router.extend({
 		currentView : null,
-		socketEvents: _.extend({},Backbone.Events),
 		routes: {
 			'': 'index',
 			'index': 'index',

@@ -28,10 +28,8 @@ exports = module.exports = function(app,models){
 	});
 
 	app.put('/categories/:id',function(req,res){
-		var body = {
-			name: req.body.name
-		};
-		models.Product.updateCategory(id,body);
+		models.Product.updateCategory(req.params.id,req.body);
+		res.sendStatus(200);
 	});
 
 	app.delete('/categories/:id',function(req,res){

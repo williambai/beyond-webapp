@@ -13,7 +13,9 @@ define(['text!templates/productDetail.html'],function(productDetailTemplate){
 		},
 
 		editProduct: function(){
-
+			var cid = this.$el.find('[cid]').attr('cid');
+			window.location.hash = 'category/edit/' + cid;
+			return false;
 		},
 
 		viewProduct: function(){
