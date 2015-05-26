@@ -1,0 +1,19 @@
+<h1>新增产品目录</h1>
+<div id="categorypath">目录路径</div>
+<div id="categories"></div>
+<hr>
+<h4>在当前目录<span id="parent" class="">xxxxxx</span>下新增：</h4>
+<form>
+	<input type="hidden" name="pid" value="<%= parent_id %>"/>
+	<fieldset>
+		<label>名称：</label>
+		<input type="text" name="name" />
+	</fieldset>
+	<fieldset>
+		<label>描述：</label>
+		<input type="text" name="description" />
+	</fieldset>
+	<input type="submit" value="提交" />
+</form>
+
+<div class="feedback"></div>
