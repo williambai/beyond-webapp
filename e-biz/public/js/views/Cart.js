@@ -3,9 +3,18 @@ define(['text!templates/cart.html','views/CartItem'],function(cartTemplate,CartI
 		el: '#content',
 		template: _.template(cartTemplate),
 
+		events: {
+			'click .payment': 'createOrder'
+		},
+
 		initialize: function(){
 			this.listenTo(this.collection,'reset', this.cartCollectionReset);
 			this.listenTo(this.collection,'add', this.cartItemAdded);
+		},
+
+		createOrder: function(){
+			window.locaiton.hash = '/orders';
+			return false;
 		},
 
 		cartItemAdded: function(productModel){
