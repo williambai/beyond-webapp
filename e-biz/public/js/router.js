@@ -1,4 +1,4 @@
-define(['views/Index','views/Cart','views/CategoryEdit','views/Categories','views/Product','views/Products','views/ProductEdit','views/ProductDetail','models/Product','models/Category','models/CartCollection','models/ProductCollection','models/CategoryCollection'], function(IndexView,CartView,CategoryEditView,CategoriesView,ProductView,ProductsView,ProductEditView,ProductDetailView,Product,Category,CartCollection,ProductCollection,CategoryCollection){
+define(['views/Index','views/Cart','views/CategoryEdit','views/Categories','views/Product','views/Products','views/ProductEdit','views/ProductDetail','views/admin/Index','models/Product','models/Category','models/CartCollection','models/ProductCollection','models/CategoryCollection'], function(IndexView,CartView,CategoryEditView,CategoriesView,ProductView,ProductsView,ProductEditView,ProductDetailView,AdminIndexView,Product,Category,CartCollection,ProductCollection,CategoryCollection){
 
 	var BizRouter = Backbone.Router.extend({
 		currentView : null,
@@ -14,6 +14,8 @@ define(['views/Index','views/Cart','views/CategoryEdit','views/Categories','view
 			'categories(/:id)': 'categories',
 			'category/add(/:pid)': 'categoryAdd',
 			'category/edit/:id': 'categoryEdit',
+
+			'admin/index': 'adminIndex',
 		},
 		changeView: function(view){
 			if(null != this.currentView){
@@ -74,7 +76,7 @@ define(['views/Index','views/Cart','views/CategoryEdit','views/Categories','view
 		categoryAdd: function(parentId){
 			var pid = parentId || '';
 			var categoryModel = new Category({
-				parent_id: pid
+				parent: pid
 			});
 			this.changeView(new CategoryEditView({model: categoryModel}));
 		},
@@ -85,6 +87,10 @@ define(['views/Index','views/Cart','views/CategoryEdit','views/Categories','view
 			this.changeView(new CategoryEditView({model: category}));
 			category.fetch();
 		},
+
+		adminIndex: function(){
+			this.changeView(new AdminIndexView());
+		}
 	});
 
 	return new BizRouter();

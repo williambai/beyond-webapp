@@ -3,6 +3,7 @@ define([],function(){
 		urlRoot: '/categories',
 		defaults: {
 			_id: '',
+			parent: '',
 			name: '',
 			description: ''
 		}

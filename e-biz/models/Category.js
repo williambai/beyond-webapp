@@ -1,19 +1,17 @@
 exports = module.exports = function(app, config, mongoose, nodemailer){
 
+	var tree = require('./plugins/mongoose-tree');
+
 	var categorySchema = new mongoose.Schema({
 		slug: {type: String},
 		name: {type: String},
 		description: {type: String},
-		ancestors: [{
-			name: {type: String},
-			slug: {type: String},
-
-		}],
-		parent_id: {
-			type: mongoose.Schema.ObjectId
-		}
+		parent: {type: mongoose.Schema.ObjectId },
+		path: {type: String}
 	});
 	
+	categorySchema.plugin(tree);
+
 	mongoose.categorySchema = categorySchema;
 	
 	var Category = mongoose.model('Category', categorySchema);
@@ -26,14 +24,25 @@ exports = module.exports = function(app, config, mongoose, nodemailer){
 		};
 
 	var add = function(parentId,options){
-
 		var category = new Category({
 			name: options.name || '',
 			description: options.description || '',
-			parent_id: parentId,
-			ancestors: options.parentIds || []
 		});
-		category.save(defaultCallback);
+
+		if(!parentId){
+			category.save(defaultCallback);
+		}else{
+			Category.findOne({_id:parentId}, function(err,doc){
+				if(err || !doc){
+					defaultCallback(err);
+					return;
+				}
+				console.log('+++++')
+				console.log(doc)
+				category.parent = doc;
+				category.save(defaultCallback);
+			});
+		}
 	};
 
 	var getById = function(id, callback){
@@ -43,31 +52,85 @@ exports = module.exports = function(app, config, mongoose, nodemailer){
 	};
 
 	var update = function(id,options){
+		console.log(options);
 		Category.where({_id:id}).update({$set: options});
 	};
 
 	var remove = function(id){
-		Category.remove({_id:id},defaultCallback);
+		if(id){
+			Category.findOne({_id:id},function(err,doc){
+				if(err){
+					defaultCallback(err);
+					return;
+				}
+				doc.getChildren(true,function(err,docs){
+					doc.getChildren(true,function(err,docs){
+						if(err){
+							callback(defaultCallback);
+							return;
+						}
+						if(docs && docs.length > 0){
+							//非叶节点
+							callback(defaultCallback);
+						}else{
+							//叶节点
+							Category.remove({_id:id},defaultCallback);
+						}
+					});					
+				})
+			})
+		}
 	};
 
 	var getChildrenById = function(id,callback){
 		if(id){
-			Category.find({_id:id}, function(err,docs){
-				callback(docs);
+			Category.findOne({_id:id}, function(err,doc){
+				if(err){
+					defaultCallback(err);
+					return;
+				}
+				doc.getChildren(true,function(err,docs){
+					if(err){
+						defaultCallback(err);
+						return;
+					}
+					callback(docs);
+				});
 			});
 		}else{
-			Category.find({},function(err,docs){
+			Category.find({parent: null} , function(err,docs){
 				callback(docs);
 			});
 		}
 	};
 
+	var getAnsestorsById = function(id,callback){
+		if(id){
+			Category.findOne({_id:id}, function(err,doc){
+				if(err){
+					callback(defaultCallback);
+					return;
+				}
+				doc.getAnsestors(function(err,docs){
+					if(err){
+						callback(defaultCallback);
+						return;
+					}
+					callback(docs);
+				});
+			});
+		}else{
+			callback(null);
+		}
+	};
+
 	return {
 		Category: Category,
-		getById: getById,
 		add: add,
 		update: update,
-		getChildrenById: getChildrenById,
 		remove: remove,
+		getById: getById,
+		getChildrenById: getChildrenById,
+		getAnsestorsById: getAnsestorsById,
 	};
 };

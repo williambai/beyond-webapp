@@ -11,25 +11,22 @@ define(['text!templates/categoryEdit.html'], function(categoryAddTemplate){
 		},
 
 		addCategory: function(){
+			var data = {
+					parent: $('input[name=parent').val(),
+					name: $('input[name=name]').val(),
+					description: $('input[name=description]').val()
+				};
 			if(this.model.get('_id')){
 				$.ajax({
 					url:'/categories/' + this.model.get('_id')
 					,type: 'PUT'
-					,data: {
-						pid: $('input[name=pid').val(),
-						name: $('input[name=name]').val(),
-						description: $('input[name=description]').val()
-					}
+					,data: data
 				}).done(function success(){
 				}).fail(function failure(){
 					console.log('-----');
 				});
 			}else{
-				$.post('/categories',{
-					pid: $('input[name=pid').val(),
-					name: $('input[name=name]').val(),
-					description: $('input[name=description]').val()
-				},function success(){
+				$.post('/categories',data,function success(){
 				},function failure(){
 					console.log('-----');
 				});

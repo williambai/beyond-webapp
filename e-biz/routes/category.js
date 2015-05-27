@@ -9,7 +9,7 @@ exports = module.exports = function(app,models){
 	});
 
 	app.post('/categories',function(req,res){
-		var parentId = req.body.pid || null;
+		var parentId = req.body.parent || null;
 		var name = req.body.name;
 		var description = req.body.description;
 
