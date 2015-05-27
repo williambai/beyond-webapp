@@ -6,7 +6,8 @@ define(['text!templates/product.html'],function(productTemplate){
 
 		events: {
 			'click .productEdit': 'editProduct',
-			'click .productDetail': 'viewProduct'
+			'click .productDetail': 'viewProduct',
+			'click .putCart': 'putCart'
 		},
 		editProduct: function(){
 			window.location.hash = 'product/edit/' + this.model.get('_id');
@@ -15,6 +16,19 @@ define(['text!templates/product.html'],function(productTemplate){
 
 		viewProduct: function(){
 			window.location.hash = 'product/view/' + this.model.get('_id');
+			return false;
+		},
+
+		putCart: function(){
+			$.post('/cart',{
+				_id: this.$el.find('[pid]').attr('pid'),
+				name: this.$el.find('.name').text(),
+				description: this.$el.find('.description').text()
+			},function success(){
+			},function failure(){
+				console.log('-----');
+			});
+			window.location.hash = 'cart';
 			return false;
 		},
 

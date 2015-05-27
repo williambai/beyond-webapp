@@ -13,42 +13,9 @@ exports = module.exports = function(app, config, mongoose, nodemailer){
 			type: mongoose.Schema.ObjectId
 		}
 	});
+	
 	mongoose.categorySchema = categorySchema;
 	
-	var userSchema = new mongoose.Schema({
-		username: {type: String},
-		email: {type: String},
-		first_name: {type: String},
-		last_name: {type: String},
-		hashed_password: {type: String},
-		address: [
-			{
-				name: {type: String},
-				street: {type: String},
-				city: {type: String},
-				state: {type: String},
-				zip: {type: Number}
-			}
-		],
-		payment_methods: [{
-			name: {type: String},
-			last_four: {type: Number},
-			crypted_number: {type: Number},
-			expiration_date: {type: Date}
-		}]
-	});
-
-	var productCommentSchema = new mongoose.Schema({
-		product_id: {type: mongoose.Schema.ObjectId},
-		user_id: {type: mongoose.Schema.ObjectId},
-		username: {type: String},
-		date: {type: Date},
-		title: {type: String},
-		text: {type: String},
-		rating: {type: Number},
-		helpful_votes: {type: Number},
-		voter_ids: [{type: mongoose.Schema.ObjectId}]
-	});
 	var Category = mongoose.model('Category', categorySchema);
 
 	var defaultCallback = function(err){

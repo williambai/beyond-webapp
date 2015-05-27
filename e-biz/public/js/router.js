@@ -1,10 +1,11 @@
-define(['views/Index','views/CategoryEdit','views/Categories','views/Product','views/Products','views/ProductEdit','views/ProductDetail','models/Product','models/Category','models/ProductCollection','models/CategoryCollection'], function(IndexView,CategoryEditView,CategoriesView,ProductView,ProductsView,ProductEditView,ProductDetailView,Product,Category,ProductCollection,CategoryCollection){
+define(['views/Index','views/Cart','views/CategoryEdit','views/Categories','views/Product','views/Products','views/ProductEdit','views/ProductDetail','models/Product','models/Category','models/CartCollection','models/ProductCollection','models/CategoryCollection'], function(IndexView,CartView,CategoryEditView,CategoriesView,ProductView,ProductsView,ProductEditView,ProductDetailView,Product,Category,CartCollection,ProductCollection,CategoryCollection){
 
 	var BizRouter = Backbone.Router.extend({
 		currentView : null,
 		routes: {
 			'': 'index',
 			'index': 'index',
+			'cart': 'myCart',
 			'products(/:id)': 'products',
 			'product/add(/:cid)': 'productAdd',
 			'product/edit/:id': 'productEdit',
@@ -23,6 +24,13 @@ define(['views/Index','views/CategoryEdit','views/Categories','views/Product','v
 		},
 		index: function(){
 			this.changeView(new IndexView());
+		},
+
+		myCart: function(){
+			var cartCollection = new CartCollection();
+			cartCollection.url = '/cart';
+			this.changeView(new CartView({collection:cartCollection}));
+			cartCollection.fetch();
 		},
 
 		/** product related */
