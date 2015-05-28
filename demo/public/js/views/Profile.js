@@ -17,9 +17,9 @@ define(['views/Status','text!templates/profile.html','models/Status'],
 			var statusCollection = this.collection;
 			var statusText = $('input[name=status]').val();
 			$.post('/accounts/'+ this.model.get('_id') +'/status',{status: statusText},function(data){
-				var statusModel = new Status({status:statusText,name: {first:'我'}});
-				that.prependStatus(statusModel);
 			});
+			var statusModel = new Status({status:statusText,name: {first:'我'}});
+			that.prependStatus(statusModel);
 			return false;
 		},
 

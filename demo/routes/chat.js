@@ -55,18 +55,20 @@ exports =module.exports = function(app,models){
 		var myAccount = null;
 
 		socket.join(accountId);
-
 		app.triggerEvent('event:' + accountId,{
 			from: accountId,
 			action: 'login'
 		});
 
 		var handleContactEvent = function(eventObj){
+				console.log('App triggerEvent on account: ' + accountId);
+				console.log(eventObj);
 				socket.emit('contactEvent', eventObj);
 			};
 			
 		var subscribeToAccount = function(accountId){
 				var eventName = 'event:' + accountId;
+				console.log('App addEventListener on eventName: ' + eventName);
 				app.addEventListener(eventName,handleContactEvent);
 				console.log('Subscribing to ' + accountId);
 			};

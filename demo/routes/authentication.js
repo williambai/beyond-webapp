@@ -77,7 +77,7 @@ module.exports = exports = function(app,models){
 
 	app.get('/account/authenticated', function(req,res){
 		if(req.session.loggedIn){
-			res.sendStatus(200);
+			res.send({accountId: req.session.accountId});
 		}else{
 			res.sendStatus(401);
 		}

@@ -8,8 +8,8 @@ define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,Ch
 			eventDispatcher.bind('app:logined', connectSocket);
 		}
 
-		var connectSocket = function(socketAccountId){
-			accountId = socketAccountId;
+		var connectSocket = function(socketAccount){
+			accountId = socketAccount && socketAccount.accountId;
 			socket = sio.connect();
 			socket
 				.on('connect_failed', function(reason){
@@ -30,16 +30,19 @@ define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,Ch
 
 		var handleSendChat = function(payload){
 			if(null != socket){
-				// console.log('send:'+ payload);
+				console.log(accountId +' send:');
+				console.log(payload);
 				socket.emit('chatclient',payload);
 			}
 		};
 
 		var handleContactEvent = function(eventObj){
 			var eventName = eventObj.action + ':' + eventObj.from;
-			// if(eventObj.from == accountId){
-			// 	eventName = eventObj.action + ':me';
-			// }
+			if(eventObj.from == accountId){
+				eventName = eventObj.action + ':me';
+			}
+			console.log(accountId + ' receive: ' + eventName);
+			console.log(eventObj);
 			eventDispatcher.trigger(eventName,eventObj);
 		};
 

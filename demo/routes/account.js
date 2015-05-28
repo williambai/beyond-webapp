@@ -51,7 +51,7 @@
 					return;
 				}
 				app.triggerEvent('event:' + accountId, {
-					from: req.params.id,
+					from: accountId,
 					data: status,
 					action: 'status'
 				});

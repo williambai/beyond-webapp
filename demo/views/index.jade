@@ -4,12 +4,55 @@ html(lang="zh-CN")
 	head
 		//- include include/head
 		title Social Network
-		link(rel="stylesheet" href="/css/demo.css")
+		//- link(rel="stylesheet" href="/css/mobile-angular-ui-hover.css")
+		//- link(rel="stylesheet" href="/css/mobile-angular-ui-base.css")
+		//- link(rel="stylesheet" href="/css/mobile-angular-ui-desktop.css")
+		//- link(rel="stylesheet" href="/css/bootstrap-theme.css")
+		link(rel="stylesheet" href="/css/app.css")
 		script(data-main='js/boot', type='text/javascript', src="/js/libs/require.js")
 	body
-		//-header
-		//- include include/header
+		.sidebar.sidebar-left
+			.scrollable
+				.scrollable-header.app-name 我的社交网
+					.scrollable-content
+						.list-group
+							a.list-group-item(href="#") 通讯录
+								i.fa.fa-chevron-right.pull-right
+							a.list-group-item(href="#") 我的第一个项目
+								i.fa.fa-chevron-right.pull-right
+		.sidebar.sidebar-right
+			.scrollable
+				.scrollable-content
+					.list-group
+						a.list-group-item.media(href="#")
+							.pull-left
+								i.fa.fa-user.chat-user-avatar
+							.media-body
+								h5.media-heading 用户名
+								small
+									span.label.label-default
+										i 离线
+		.app
+			.navbar.navbar-app.navbar-absolute-top
+				.navbar-brand.navbar-brand-center 通讯录
+				.btn-group.pull-left
+					i.fa.fa-bars 菜单
+				.btn-group.pull-right
+					i.fa.fa-comments 聊天
+			.navbar.navbar-app.navbar-absolute-bottom
+				.btn-group.justified
+					a.btn.btn-navbar(href="#")
+						i.fa.fa-home.fa-navbar 文档
+					a.btn.btn-navbar(href="#")
+						i.fa.fa-home.fa-navbar 文档
+					a.btn.btn-navbar(href="#")
+						i.fa.fa-home.fa-navbar 文档
+			.app-body
+				.app-content-loading
+					i.fa.fa-spinner.fa-spin.loading-spinner
+				.app-content
+					.scrollable
+						.scrollable-content
+							#content
 		div#chat
-		div#content
-		//-footer
-		//- include include/footer
+		.modal
