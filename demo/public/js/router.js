@@ -15,15 +15,14 @@ define(['views/Index','views/Register','views/Login','views/ForgotPassword','vie
 			'addcontact': 'addContact',
 			'project/add': 'addProject',
 		},
-		changeView: function(view){
-			if(null == this.sidebarView){
-				this.projectCollection = new ProjectCollection();
-				var projectsView = new ProjectsView({collection: this.projectCollection,socketEvents: this.socketEvents});
-				this.projectCollection.url = '/projects';
-				this.projectCollection.fetch();
-				this.sidebarView = projectsView;
-			}
+		initialize: function(){
+			this.projectCollection = new ProjectCollection();
+			this.projectCollection.url = '/projects';
+			this.sidebarView = new ProjectsView({collection: this.projectCollection,socketEvents: this.socketEvents});
+			this.projectCollection.fetch({reset:true});
+		},
 
+		changeView: function(view){
 			if(null != this.currentView){
 				this.currentView.undelegateEvents();
 			}

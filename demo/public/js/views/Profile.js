@@ -1,7 +1,8 @@
-define(['views/Status','text!templates/profile.html','models/Status'],
-	function(StatusView, profileTemplate,Status){
+define(['text!templates/_layout.html','text!templates/profile.html','views/Status','models/Status'],
+	function(layoutTemplate,profileTemplate,StatusView, Status){
 	var ProfileView = Backbone.View.extend({
 		el: $('#content'),
+		layout: _.template(layoutTemplate),
 
 		events: {
 			'submit form': 'postStatus'
@@ -40,8 +41,8 @@ define(['views/Status','text!templates/profile.html','models/Status'],
 			if(this.model.get('_id')){
 				this.socketEvents.bind('status' + this.model.get('_id'), this.onSocketStatusAdded, this);
 			}
-
-			this.$el.html(_.template(profileTemplate)(this.model.toJSON()));
+			this.$el.html(this.layout({brand: '个人资料'}));
+			this.$el.find('#main').html(_.template(profileTemplate)(this.model.toJSON()));
 			var that = this;
 			var statusCollection = this.model.get('status');
 			if(null != statusCollection){

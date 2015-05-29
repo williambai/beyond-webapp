@@ -2,7 +2,7 @@ exports = module.exports = function(app,models){
 
 	app.get('/projects',function(req,res){
 		var accountId = req.session.accountId;
-		if(accountId){
+		if(req.session.loggedIn && accountId){
 			models.Project.getByAccountId(accountId,function(data){
 				res.send(data);
 			});
