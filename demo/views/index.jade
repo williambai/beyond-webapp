@@ -16,7 +16,7 @@ html(lang="zh-CN")
 				.scrollable-header.app-name 我的社交网
 				.scrollable-content
 					.list-group
-						a.list-group-item.active(href="#") 通讯录
+						a.list-group-item.active(href="#index") 通讯录
 							i.fa.fa-chevron-right.pull-right
 						a.list-group-item(href="#") 我的第一个项目
 							i.fa.fa-chevron-right.pull-right
@@ -24,8 +24,8 @@ html(lang="zh-CN")
 			.scrollable(style="padding-top:70px;")
 				.scrollable-header.app-name 我的好友
 				.scrollable-content
-					.list-group
-						a.list-group-item.media(href="#")
+					#chat.list-group
+						//- a.list-group-item.media(href="#")
 							.pull-left
 								i.fa.fa-user.chat-user-avatar
 							.media-body
@@ -55,5 +55,5 @@ html(lang="zh-CN")
 					.scrollable
 						#content.scrollable-content.section
 							
-		div#chat
+		//- div#chat
 		//- .modal

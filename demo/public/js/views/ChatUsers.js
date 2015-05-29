@@ -39,7 +39,8 @@ define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession'],
 					model: model,
 					socketEvents: this.socketEvents
 				});
-				this.$el.prepend(chatSessionView.render().el);
+				chatSessionView.render();
+				// this.$el.prepend(chatSessionView.render().el);
 				this.chatSessions[accountId] = chatSessionView;
 			}
 		}

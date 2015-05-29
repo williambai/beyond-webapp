@@ -1,6 +1,6 @@
 define(['text!templates/chatuser.html'],function(ChatUserTemplate){
 	var ChatUserView = Backbone.View.extend({
-		tagName: 'li',
+		tagName: 'div',
 		template: _.template(ChatUserTemplate),
 
 		events: {

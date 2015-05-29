@@ -1,7 +1,8 @@
 define(['text!templates/chatsession.html'], function(chatSessionTemplate){
 	var ChatSessionView = Backbone.View.extend({
 		template: _.template(chatSessionTemplate),
-		tagName: 'div',
+		el: $('#content'),
+		// tagName: 'div',
 		className: 'chat_session',
 
 		events: {
