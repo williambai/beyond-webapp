@@ -36,6 +36,7 @@ var config = {
 //import the models
 var models = {
 		Account: require('./models/Account')(app,config,mongoose,nodemailer),
+		Project: require('./models/Project')(app,config,mongoose,nodemailer),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

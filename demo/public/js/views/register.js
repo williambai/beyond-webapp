@@ -1,6 +1,7 @@
-define(['text!templates/register.html'],function(registerTemplate){
+define(['text!templates/_layout.html','text!templates/register.html'],function(layoutTemplate,registerTemplate){
 	var RegisterView = Backbone.View.extend({
 		el: $('#content'),
+		layout: _.template(layoutTemplate),
 		events: {
 			'submit form': 'register',
 		},
@@ -16,7 +17,8 @@ define(['text!templates/register.html'],function(registerTemplate){
 			return false;
 		},
 		render: function(){
-			this.$el.html(registerTemplate);
+			this.$el.html(this.layout({brand: '在线注册'}));
+			this.$el.find('#main').html(registerTemplate);
 			return this;
 		},
 	});

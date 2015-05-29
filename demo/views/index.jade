@@ -10,19 +10,24 @@ html(lang="zh-CN")
 		//- link(rel="stylesheet" href="/css/bootstrap-theme.css")
 		link(rel="stylesheet" href="/css/app.css")
 		script(data-main='js/boot', type='text/javascript', src="/js/libs/require.js")
-	body.has-navbar-top.has-navbar-bottom.has-sidebar-left.sidebar-left-visible.sidebar-left-in.has-sidebar-right.sidebar-left-visible.sidebar-right-in
+	body.has-navbar-top.has-sidebar-left.sidebar-left-visible.sidebar-left-in.has-sidebar-right.sidebar-left-visible.sidebar-right-in
 		.sidebar.sidebar-left
 			.scrollable(style="padding-top:70px;")
 				.scrollable-header.app-name 我的社交网
+					a(href="#project/add") 新增项目
 				.scrollable-content
 					.list-group
-						a.list-group-item.active(href="#index") 通讯录
+						a.list-group-item.active(href="#contacts/me") 通讯录
 							i.fa.fa-chevron-right.pull-right
-						a.list-group-item(href="#") 我的第一个项目
+						a.list-group-item(href="#index") 我的第一个项目
 							i.fa.fa-chevron-right.pull-right
+						a.list-group-item(href="#profile/me") 我的资料
+							i.fa.fa-chevron-right.pull-right
+					#projectlist
 		.sidebar.sidebar-right
 			.scrollable(style="padding-top:70px;")
-				.scrollable-header.app-name 我的好友
+				.scrollable-header.app-name 项目成员
+					a(href="#addcontact") 邀请成员
 				.scrollable-content
 					#chat.list-group
 						//- a.list-group-item.media(href="#")
@@ -33,14 +38,14 @@ html(lang="zh-CN")
 								small
 									span.label.label-default
 										i 离线
-		.app
-			.navbar.navbar-app.navbar-absolute-top
+		#content.app
+			//- .navbar.navbar-app.navbar-absolute-top
 				.navbar-brand.navbar-brand-center 通讯录
 				.btn.btn-group.pull-left.hidden
 					i.fa.fa-bars 菜单
 				.btn.btn-group.pull-right
 					i.fa.fa-comments 聊天
-			.navbar.navbar-app.navbar-absolute-bottom
+			//- .navbar.navbar-app.navbar-absolute-bottom
 				.btn-group.justified
 					a.btn.btn-navbar(href="#")
 						i.fa.fa-home.fa-navbar 文档
@@ -48,7 +53,7 @@ html(lang="zh-CN")
 						i.fa.fa-home.fa-navbar 文档
 					a.btn.btn-navbar(href="#")
 						i.fa.fa-home.fa-navbar 文档
-			.app-body
+			//- .app-body
 				.app-content-loading.hidden
 					i.fa.fa-spinner.fa-spin.loading-spinner
 				.app-content

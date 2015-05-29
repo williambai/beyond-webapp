@@ -1,8 +1,8 @@
-define(['text!templates/addContact.html','views/Contact','models/Contact'], 
-	function(addContactTemplate,ContactView,Contact){
+define(['text!templates/_layout.html','text!templates/addContact.html','views/Contact','models/Contact'], 
+	function(layoutTemplate,addContactTemplate,ContactView,Contact){
 	var AddContactView = Backbone.View.extend({
 		el: $('#content'),
-
+		layout: _.template(layoutTemplate),
 		template: _.template(addContactTemplate),
 
 		events: {
@@ -24,7 +24,8 @@ define(['text!templates/addContact.html','views/Contact','models/Contact'],
 		},
 
 		render: function(resultList){
-			this.$el.html(this.template());
+			this.$el.html(this.layout({brand: '选择成员'}));
+			this.$el.find('#main').html(this.template());
 			if(null != resultList){
 				_.each(resultList, function(contactJson){
 					var contact = new Contact(contactJson);

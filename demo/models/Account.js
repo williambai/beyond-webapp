@@ -17,7 +17,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			},
 			status: {type: String}
 		});
-
+	mongoose.statusSchema = statusSchema;
+	
 	var contactSchema = new mongoose.Schema({
 			'name': {
 				'first': {type: String },
@@ -31,6 +32,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 	contactSchema.virtual('online').get(function(){
 		return app.isAccountOnline(this.get('accountId'));
 	});
+
+	mongoose.contactSchema = contactSchema;
 
 	// contactSchema.pre('save',function(next){
 	// 	console.log(this.name + ':' + this.accountId);
@@ -57,6 +60,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			'status': [statusSchema],//My own status updates only
 			'activity': [statusSchema], //All status updates including friends
 		});
+	mongoose.accountSchema = accountSchema;
 
 	var Account = mongoose.model('Account', accountSchema);
 

@@ -1,7 +1,8 @@
-define(['text!templates/index.html','views/Status','models/Status'],
-	function(indexTemplate,StatusView,Status){
+define(['text!templates/_layout.html','text!templates/index.html','views/Status','models/Status'],
+	function(layoutTemplate,indexTemplate,StatusView,Status){
 	var IndexView = Backbone.View.extend({
 		el: $('#content'),
+
 		events: {
 			'click .logout': 'logout',
 			'submit form': 'updateStatus'
@@ -48,7 +49,8 @@ define(['text!templates/index.html','views/Status','models/Status'],
 		},
 
 		render: function(){
-			this.$el.html(indexTemplate);
+			this.$el.html(layoutTemplate);
+			this.$el.find('#main').html(indexTemplate);
 			return this;
 		},
 	});

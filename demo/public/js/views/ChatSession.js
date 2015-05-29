@@ -1,4 +1,4 @@
-define(['text!templates/chatsession.html'], function(chatSessionTemplate){
+define(['text!templates/_layout_1.html','text!templates/chatsession.html'], function(layoutTemplate,chatSessionTemplate){
 	var ChatSessionView = Backbone.View.extend({
 		template: _.template(chatSessionTemplate),
 		el: $('#content'),
@@ -36,7 +36,8 @@ define(['text!templates/chatsession.html'], function(chatSessionTemplate){
 		},
 
 		render: function(){
-			this.$el.html(this.template({model: this.model.toJSON()}));
+			this.$el.html(layoutTemplate);
+			this.$el.find('#main').html(this.template({model: this.model.toJSON()}));
 			return this;
 		}
 	});

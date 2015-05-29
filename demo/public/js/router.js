@@ -1,7 +1,9 @@
-define(['views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','views/ChatUsers','models/Account','models/StatusCollection','models/ContactCollection'], function(IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,ChatUsersView,Account,StatusCollection,ContactCollection){
+define(['views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','models/Account','models/Project','models/StatusCollection','models/ContactCollection','models/ProjectCollection'], function(IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,Account,Project,StatusCollection,ContactCollection,ProjectCollection){
 
 	var SocailRouter = Backbone.Router.extend({
 		currentView : null,
+		sidebarView : null,
+		projectCollection: null,
 		socketEvents: _.extend({},Backbone.Events),
 		routes: {
 			'index': 'index',
@@ -10,9 +12,18 @@ define(['views/Index','views/Register','views/Login','views/ForgotPassword','vie
 			'forgotpassword': 'forgotPassword',
 			'profile/:id': 'profile',
 			'contacts/:id': 'contacts',
-			'addcontact': 'addContact'
+			'addcontact': 'addContact',
+			'project/add': 'addProject',
 		},
 		changeView: function(view){
+			if(null == this.sidebarView){
+				this.projectCollection = new ProjectCollection();
+				var projectsView = new ProjectsView({collection: this.projectCollection,socketEvents: this.socketEvents});
+				this.projectCollection.url = '/projects';
+				this.projectCollection.fetch();
+				this.sidebarView = projectsView;
+			}
+
 			if(null != this.currentView){
 				this.currentView.undelegateEvents();
 			}
@@ -24,17 +35,8 @@ define(['views/Index','views/Register','views/Login','views/ForgotPassword','vie
 			statusCollection.url = '/accounts/me/activity';
 			this.changeView(new IndexView({collection: statusCollection,socketEvents: this.socketEvents}));
 			statusCollection.fetch();
-
-
-			// var contactCollection = new ContactCollection();
-			// contactCollection.url = '/accounts/me/contacts';
-			// new ChatUsersView({
-			// 		collection:contactCollection,
-			// 		socketEvents: this.socketEvents
-			// 	}).render();
-			// contactCollection.fetch({reset: true});
-
 		},
+
 		register: function(){
 			this.changeView(new RegisterView());
 		},
@@ -58,7 +60,11 @@ define(['views/Index','views/Register','views/Login','views/ForgotPassword','vie
 		},
 		addContact: function(){
 			this.changeView(new AddContactView());
-		}
+		},
+
+		addProject: function(){
+			this.changeView(new AddProjectView({projectCollection: this.projectCollection}));
+		},
 	});
 
 	return new SocailRouter();
