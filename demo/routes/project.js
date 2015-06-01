@@ -1,9 +1,10 @@
 exports = module.exports = function(app,models){
 
 	app.get('/projects',function(req,res){
+		page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
 		var accountId = req.session.accountId;
 		if(req.session.loggedIn && accountId){
-			models.Project.getByAccountId(accountId,function(data){
+			models.Project.getByAccountId(accountId,page,function(data){
 				res.send(data);
 			});
 		}else{

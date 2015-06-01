@@ -37,6 +37,7 @@ var config = {
 var models = {
 		Account: require('./models/Account')(app,config,mongoose,nodemailer),
 		Project: require('./models/Project')(app,config,mongoose,nodemailer),
+		Chat: require('./models/Chat')(app,config,mongoose,nodemailer),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

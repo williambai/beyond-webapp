@@ -1,5 +1,5 @@
-define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession'],
-	function(ChatUsersTemplate,ChatUserView,ChatSessionView){
+define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession','models/ChatCollection'],
+	function(ChatUsersTemplate,ChatUserView,ChatSessionView,ChatCollection){
 
 	var ChatUsersView = Backbone.View.extend({
 		template: _.template(ChatUsersTemplate),
@@ -33,17 +33,21 @@ define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession'],
 		},
 		chatSessions: {},
 		startChatSession: function(model){
-			var accountId = model.get('accountId');
-			if(!this.chatSessions[accountId]){
+			var roomId = model.get('accountId');
+			if(!this.chatSessions[roomId]){
+				var chatCollection = new ChatCollection();
+				chatCollection.url = '/chats/' + roomId;
 				var chatSessionView = new ChatSessionView({
-					model: model,
-					socketEvents: this.socketEvents
-				});
+						room: model,
+						collection: chatCollection,
+						socketEvents: this.socketEvents
+					});
 				chatSessionView.render();
+				chatCollection.fetch();
 				// this.$el.prepend(chatSessionView.render().el);
-				this.chatSessions[accountId] = chatSessionView;
+				this.chatSessions[roomId] = chatSessionView;
 			}else{
-				this.chatSessions[accountId].render();
+				this.chatSessions[roomId].render(roomId);
 			}
 		}
 	});

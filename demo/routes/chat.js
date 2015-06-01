@@ -105,10 +105,26 @@ exports =module.exports = function(app,models){
 		socket.on('chatclient', function(data){
 			console.log('chatclient:');
 			console.log(data);
+			var roomId = accountId;
+			// if(data.action == 'chat'){
+			// 	models.Chat.add(roomId,{
+			// 		from: accountId,
+			// 		to: data.to,
+			// 		text: data.text,
+			// 	});
+			// }
 			sio.sockets.in(data.to).emit('chatserver',{
 				from: accountId,
 				text: data.text
 			});
+		});
+	});
+
+	app.get('/chats/:roomId',function(req,res){
+		var roomId = req.params.roomId;
+		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
+		models.Chat.getByRoomId(roomId,page,function(docs){
+			res.send(docs);
 		});
 	});
 };
