@@ -31,7 +31,7 @@ module.exports = exports = function(app,models){
 			console.log(email + ': login sucessfully.');
 			req.session.loggedIn = true;
 			req.session.accountId = account._id;
-			req.session.name = account.name;
+			req.session.name = account.name.last + ' ' + account.name.first;
 			res.send({accountId: account._id});
 		});
 	});

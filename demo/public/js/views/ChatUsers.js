@@ -8,6 +8,8 @@ define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession','mo
 		initialize: function(options){
 			this.socketEvents = options.socketEvents;
 			this.collection.on('reset', this.onCollectionReset, this);
+			this.currentChatView = options.currentChatView;
+			this.chatSessions = options.chatSessions;
 		},
 
 		onContactAdded: function(contact){
@@ -31,24 +33,34 @@ define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession','mo
 			this.$el.html(this.template());
 			return this;
 		},
-		chatSessions: {},
+		// currentChatView: null,
+		// chatSessions: {},
 		startChatSession: function(model){
+			if(null != this.currentChatView){
+				this.currentChatView.undelegateEvents();
+			}
+			
 			var roomId = model.get('accountId');
 			if(!this.chatSessions[roomId]){
 				var chatCollection = new ChatCollection();
-				chatCollection.url = '/chats/' + roomId;
 				var chatSessionView = new ChatSessionView({
 						room: model,
 						collection: chatCollection,
 						socketEvents: this.socketEvents
 					});
 				chatSessionView.render();
+				chatCollection.url = '/chats/' + roomId;
 				chatCollection.fetch();
-				// this.$el.prepend(chatSessionView.render().el);
 				this.chatSessions[roomId] = chatSessionView;
 			}else{
-				this.chatSessions[roomId].render(roomId);
+				var view = this.chatSessions[roomId];
+				view.delegateEvents();
+				view.render();
+				var collection = view.collection;
+				collection.trigger('reset',collection);
 			}
+
+			this.currentChatView = this.chatSessions[roomId];
 		}
 	});
 	return ChatUsersView;

@@ -26,12 +26,15 @@ define(['text!templates/_layout_1.html','text!templates/chatsession.html','model
 				// var chatLine = '我：' + chatText;
 				// this.$el.find('.chat_log').append('<li>' + chatLine + '</li>');
 				var chat = new Chat({
-					roomId: this.room.get('accountId'),
-					from: '我：',
+					from: {
+						username: '我：'
+					},
 					to: this.room.get('accountId'),
 					text: chatText,
 				});
-				this.collection.push(chat);
+				this.collection.push(chat.toJSON());
+				//TODO 
+				// console.log('有重复发送问题，待查')
 				this.socketEvents.trigger('socket:chat',{
 					action: 'chat',
 					to: this.room.get('accountId'),
@@ -44,16 +47,17 @@ define(['text!templates/_layout_1.html','text!templates/chatsession.html','model
 
 		receiveChat: function(data){
 			var chat = new Chat({
-				roomId: this.room.get('accountId'),
-				from: data.from,
-				to: this.room.get('accountId'),
+				from: {
+					username: data.username
+				},
+				// to: this.room.get('accountId'),
 				text: data.text,
 			});
-			// this.collection.push(chat);
+			this.collection.push(chat);
 		},
 
 		onChatAdded: function(chat){
-			var chatLine = chat.get('from') + ': ' + chat.get('text');
+			var chatLine = chat.get('from')['username']  + ': ' + chat.get('text');
 			this.$el.find('.chat_log').append('<li>' + chatLine + '</li>');
 		},
 

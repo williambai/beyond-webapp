@@ -61,16 +61,16 @@ exports =module.exports = function(app,models){
 		});
 
 		var handleContactEvent = function(eventObj){
-				console.log('App triggerEvent on account: ' + accountId);
-				console.log(eventObj);
+				// console.log('App triggerEvent on account: ' + accountId);
+				// console.log(eventObj);
 				socket.emit('contactEvent', eventObj);
 			};
 			
 		var subscribeToAccount = function(accountId){
 				var eventName = 'event:' + accountId;
-				console.log('App addEventListener on eventName: ' + eventName);
+				// console.log('App addEventListener on eventName: ' + eventName);
 				app.addEventListener(eventName,handleContactEvent);
-				console.log('Subscribing to ' + accountId);
+				// console.log('Subscribing to ' + accountId);
 			};
 
 		models.Account.findById(accountId,function(account){
@@ -93,7 +93,7 @@ exports =module.exports = function(app,models){
 				myAccount.contacts.forEach(function(contact){
 					var eventName = 'event:' + contact.accountId;
 					app.removeEventListener(eventName, handleContactEvent);
-					console.log('Unsubcribing from ' + eventName);
+					// console.log('Unsubcribing from ' + eventName);
 				});
 				app.triggerEvent('event:' + accountId,{
 					from: accountId,
@@ -103,16 +103,16 @@ exports =module.exports = function(app,models){
 		});
 
 		socket.on('chatclient', function(data){
-			console.log('chatclient:');
-			console.log(data);
-			var roomId = accountId;
-			// if(data.action == 'chat'){
-			// 	models.Chat.add(roomId,{
-			// 		from: accountId,
-			// 		to: data.to,
-			// 		text: data.text,
-			// 	});
-			// }
+			// console.log('chatclient:');
+			// console.log(data);
+			var from = accountId;
+			var to = data.to;
+			if(data.action == 'chat'){
+				models.Chat.add(from,to,{
+					username: session.name,
+					text: data.text,
+				});
+			}
 			sio.sockets.in(data.to).emit('chatserver',{
 				from: accountId,
 				text: data.text

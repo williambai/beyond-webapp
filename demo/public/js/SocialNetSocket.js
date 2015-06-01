@@ -1,6 +1,9 @@
 define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,ChatUsersView,ContactCollection){
 
-	var SocialNetSocket = function(eventDispatcher){
+	var SocialNetSocket = function(options){
+		var eventDispatcher = options.eventDispatcher;
+		var currentChatView = options.currentChatView;
+		var chatSessions = options.chatSessions;
 		var socket = null;
 		var accountId = null;
 
@@ -16,7 +19,7 @@ define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,Ch
 					console.error('Unable to connect',reason);
 				})
 				.on('connect', function(){
-					console.info('established a connection successfully.');
+					// console.info('established a connection successfully.');
 					//in --> out
 					eventDispatcher.on('socket:chat',handleSendChat);
 
@@ -30,8 +33,9 @@ define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,Ch
 
 		var handleSendChat = function(payload){
 			if(null != socket){
-				console.log(accountId +' send:');
-				console.log(payload);
+				// payload.from = accountId;
+				// console.log(accountId +' send:');
+				// console.log(payload);
 				socket.emit('chatclient',payload);
 			}
 		};
@@ -41,8 +45,8 @@ define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,Ch
 			if(eventObj.from == accountId){
 				eventName = eventObj.action + ':me';
 			}
-			console.log(accountId + ' receive: ' + eventName);
-			console.log(eventObj);
+			// console.log(accountId + ' receive: ' + eventName);
+			// console.log(eventObj);
 			eventDispatcher.trigger(eventName,eventObj);
 		};
 
@@ -56,7 +60,9 @@ define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,Ch
 			contactCollection.url = '/accounts/me/contacts';
 			new ChatUsersView({
 					collection:contactCollection,
-					socketEvents: eventDispatcher
+					socketEvents: eventDispatcher,
+					currentChatView: currentChatView,
+					chatSessions: chatSessions,
 				}).render();
 			contactCollection.fetch({reset:true});
 		};

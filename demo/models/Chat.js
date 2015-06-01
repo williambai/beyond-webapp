@@ -1,7 +1,9 @@
 module.exports = exports = function(app, config,mongoose,nodemailer){
 	var chatSchema = new mongoose.Schema({
-		roomId: {type: mongoose.Schema.ObjectId},
-		from: {type: mongoose.Schema.ObjectId},
+		from: {
+			id: {type: mongoose.Schema.ObjectId},
+			username: {type: String}
+		},
 		to: {type: mongoose.Schema.ObjectId},
 		text: {type: String},
 		time: {type: Date}
@@ -17,11 +19,13 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			return console.log('Save/Remove/Update successfully.');
 		};
 	
-	var add = function(roomId,options){
+	var add = function(from,to,options){
 			var chat = new Chat({
-				roomId: roomId,
-				from: options.from,
-				to: options.to,
+				from: {
+					id: from,
+					username: options.username 
+				},
+				to: to,
 				text: options.text,
 				time: new Date()
 			});
@@ -46,7 +50,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			page = (!page || page < 0) ? 0 : page;
 			var per = 20;
 			if(roomId){
-				Chat.find({roomId:roomId},function(err,docs){
+				Chat.find({to:roomId},function(err,docs){
 					callback(docs);
 				}).skip(page*per).limit(per);
 			}else{

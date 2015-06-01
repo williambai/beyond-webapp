@@ -2,7 +2,11 @@ define(['router','SocialNetSocket'],function(router,SocialNetSocket){
 	var SocialNet = function(){
 
 		var initialize = function(){
-			var socket = new SocialNetSocket(router.socketEvents);
+			var socket = new SocialNetSocket({
+				eventDispatcher:router.socketEvents,
+				currentChatView: router.currentChatView,
+				chatSessions: router.chatSessions,
+			});
 			socket.initialize();
 			checkLogin(runApplication);
 		};

@@ -3,6 +3,8 @@ define(['views/Index','views/Register','views/Login','views/ForgotPassword','vie
 	var SocailRouter = Backbone.Router.extend({
 		currentView : null,
 		sidebarView : null,
+		currentChatView: null,
+		chatSessions: {},
 		projectCollection: null,
 		socketEvents: _.extend({},Backbone.Events),
 		routes: {
@@ -18,7 +20,12 @@ define(['views/Index','views/Register','views/Login','views/ForgotPassword','vie
 		initialize: function(){
 			this.projectCollection = new ProjectCollection();
 			this.projectCollection.url = '/projects';
-			this.sidebarView = new ProjectsView({collection: this.projectCollection,socketEvents: this.socketEvents});
+			this.sidebarView = new ProjectsView({
+				collection: this.projectCollection,
+				socketEvents: this.socketEvents,
+				chatSessions: this.chatSessions,
+				currentChatView: this.currentChatView
+			});
 			this.projectCollection.fetch({reset:true});
 		},
 

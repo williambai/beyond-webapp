@@ -5,6 +5,9 @@ define(['text!templates/projects.html','views/ProjectItem','views/chatSession','
 
 		initialize: function(options){
 			this.socketEvents = options.socketEvents;
+			this.currentChatView = options.currentChatView;
+			this.chatSessions = options.chatSessions;
+			
 			this.collection.on('add', this.onProjectAdded, this);
 			this.collection.on('reset', this.onProjectCollectionReset, this);
 		},
@@ -23,25 +26,34 @@ define(['text!templates/projects.html','views/ProjectItem','views/chatSession','
 				that.onProjectAdded(project);
 			});
 		},
-
-		chatSessions: {},
+		// currentChatView: null,
+		// chatSessions: {},
 		startChatSession: function(model){
-			var roomId = model.get('_id');
+			if(null != this.currentChatView){
+				this.currentChatView.undelegateEvents();
+			}
+
+			var roomId = model.get('accountId');
 			if(!this.chatSessions[roomId]){
 				var chatCollection = new ChatCollection();
-				chatCollection.url = '/chats/' + roomId;
 				var chatSessionView = new ChatSessionView({
 						room: model,
 						collection: chatCollection,
 						socketEvents: this.socketEvents
 					});
 				chatSessionView.render();
+				chatCollection.url = '/chats/' + roomId;
 				chatCollection.fetch();
-				// this.$el.prepend(chatSessionView.render().el);
 				this.chatSessions[roomId] = chatSessionView;
 			}else{
-				this.chatSessions[roomId].render(roomId);
+				var view = this.chatSessions[roomId];
+				view.delegateEvents();
+				view.render();
+				var collection = view.collection;
+				collection.trigger('reset',collection);
 			}
+
+			this.currentChatView = this.chatSessions[roomId];
 		},
 
 		render: function(){
