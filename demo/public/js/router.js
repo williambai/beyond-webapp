@@ -1,4 +1,4 @@
-define(['views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','models/Account','models/Project','models/StatusCollection','models/ContactCollection','models/ProjectCollection'], function(IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,Account,Project,StatusCollection,ContactCollection,ProjectCollection){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','models/Account','models/Project','models/StatusCollection','models/ContactCollection','models/ProjectCollection'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,Account,Project,StatusCollection,ContactCollection,ProjectCollection){
 
 	var SocailRouter = Backbone.Router.extend({
 		currentView : null,
@@ -18,6 +18,8 @@ define(['views/Index','views/Register','views/Login','views/ForgotPassword','vie
 			'project/add': 'addProject',
 		},
 		initialize: function(){
+			new LayoutView().render();
+
 			this.projectCollection = new ProjectCollection();
 			this.projectCollection.url = '/projects';
 			this.sidebarView = new ProjectsView({

@@ -3,7 +3,7 @@ define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession','mo
 
 	var ChatUsersView = Backbone.View.extend({
 		template: _.template(ChatUsersTemplate),
-		el: $('#chat'),
+		el: '#chat',
 
 		initialize: function(options){
 			this.socketEvents = options.socketEvents;

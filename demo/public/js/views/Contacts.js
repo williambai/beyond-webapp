@@ -1,7 +1,7 @@
-define(['text!templates/_layout.html','text!templates/contacts.html','views/Contact'],
-	function(layoutTemplate,contactsTemplate, ContactView){
+define(['text!templates/contacts.html','views/Contact'],
+	function(contactsTemplate, ContactView){
 	var ContactsView = Backbone.View.extend({
-		el: $('#content'),
+		el: '#content',
 		
 		template: _.template(contactsTemplate),
 		
@@ -23,8 +23,7 @@ define(['text!templates/_layout.html','text!templates/contacts.html','views/Cont
 		},
 
 		render: function(){
-			this.$el.html(layoutTemplate);
-			this.$el.find('#main').html(this.template());
+			this.$el.html(this.template());
 			return this;
 		}
 

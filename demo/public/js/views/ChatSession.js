@@ -1,8 +1,7 @@
-define(['text!templates/_layout_1.html','text!templates/chatsession.html','models/Chat','models/ChatCollection'], function(layoutTemplate,chatSessionTemplate,Chat,ChatCollection){
+define(['text!templates/chatsession.html','models/Chat','models/ChatCollection'], function(chatSessionTemplate,Chat,ChatCollection){
 	var ChatSessionView = Backbone.View.extend({
 		template: _.template(chatSessionTemplate),
-		el: $('#content'),
-		// tagName: 'div',
+		el: '#content',
 		className: 'chat_session',
 
 		events: {
@@ -74,8 +73,7 @@ define(['text!templates/_layout_1.html','text!templates/chatsession.html','model
 				var collectionInRoom = new ChatCollection(this.collection.where({roomId: roomId}));
 				this.onChatCollectionReset(collectionInRoom);
 			}else{
-				this.$el.html(layoutTemplate);
-				this.$el.find('#main').html(this.template({room: this.room.toJSON()}));
+				this.$el.html(this.template({room: this.room.toJSON()}));
 
 			}
 			return this;

@@ -1,6 +1,6 @@
 define(['text!templates/projects.html','views/ProjectItem','views/chatSession','models/ChatCollection'],function(projectsTemplate,ProjectItemView,ChatSessionView,ChatCollection){
 	var ProjectsView = Backbone.View.extend({
-		el: $('#projectlist'),
+		id: '#projectlist',
 		template: _.template(projectsTemplate),
 
 		initialize: function(options){

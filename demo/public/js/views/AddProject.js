@@ -1,7 +1,6 @@
-define(['text!templates/_layout.html','text!templates/addProject.html'],function(layoutTemplate,addProjectTemplate){
+define(['text!templates/addProject.html'],function(addProjectTemplate){
 	var AddProjectView = Backbone.View.extend({
 		el: $('#content'),
-		layout: _.template(layoutTemplate),
 		template: _.template(addProjectTemplate),
 
 		events: {
@@ -25,8 +24,7 @@ define(['text!templates/_layout.html','text!templates/addProject.html'],function
 		},
 
 		render: function(){
-			this.$el.html(this.layout({brand: '新建项目'}));
-			this.$el.find('#main').html(this.template());
+			this.$el.html(this.template());
 			return this;
 		}
 	});

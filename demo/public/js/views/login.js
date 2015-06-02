@@ -1,8 +1,6 @@
-define(['text!templates/_layout.html','text!templates/login.html'],function(layoutTemplate,loginTemplate){
+define(['text!templates/login.html'],function(loginTemplate){
 	var LoginView = Backbone.View.extend({
-		el: $('#content'),
-
-		layout: _.template(layoutTemplate),
+		el: '#content',
 		template: _.template(loginTemplate),
 
 		events: {
@@ -27,8 +25,7 @@ define(['text!templates/_layout.html','text!templates/login.html'],function(layo
 			return false;
 		},
 		render: function(){
-			this.$el.html(this.layout({brand: '登录'}));
-			this.$el.find('#main').html(loginTemplate);
+			this.$el.html(loginTemplate);
 			return this;
 		},
 
