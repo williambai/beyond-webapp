@@ -1,6 +1,6 @@
 define(['text!templates/addProject.html'],function(addProjectTemplate){
 	var AddProjectView = Backbone.View.extend({
-		el: $('#content'),
+		el: '#content',
 		template: _.template(addProjectTemplate),
 
 		events: {

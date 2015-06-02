@@ -1,6 +1,7 @@
 define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','models/Account','models/Project','models/StatusCollection','models/ContactCollection','models/ProjectCollection'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,Account,Project,StatusCollection,ContactCollection,ProjectCollection){
 
 	var SocailRouter = Backbone.Router.extend({
+		layoutView: null,
 		currentView : null,
 		sidebarView : null,
 		currentChatView: null,
@@ -18,7 +19,8 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'project/add': 'addProject',
 		},
 		initialize: function(){
-			new LayoutView().render();
+			this.layoutView = new LayoutView();
+			this.layoutView.render();
 
 			this.projectCollection = new ProjectCollection();
 			this.projectCollection.url = '/projects';
@@ -42,13 +44,16 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			var statusCollection = new StatusCollection();
 			statusCollection.url = '/accounts/me/activity';
 			this.changeView(new IndexView({collection: statusCollection,socketEvents: this.socketEvents}));
-			statusCollection.fetch();
+			statusCollection.fetch({error: function(){
+				window.location.hash= 'login';
+			}});
 		},
 
 		register: function(){
 			this.changeView(new RegisterView());
 		},
 		login: function(){
+			this.layoutView.trigger('set:brand','登录');
 			this.changeView(new LoginView({socketEvents: this.socketEvents}));
 		},
 		forgotPassword: function(){
@@ -57,14 +62,18 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		profile: function(id){
 			var account = new Account({id: id});
 			this.changeView(new ProfileView({model: account,socketEvents: this.socketEvents}));
-			account.fetch();
+			account.fetch({error: function(){
+				window.location.hash= 'login';
+			}});
 		},
 		contacts: function(id){
 			var contactId = id ? id: 'me';
 			var contactCollection = new ContactCollection();
 			contactCollection.url = '/accounts/' + contactId + '/contacts';
 			this.changeView(new ContactsView({collection: contactCollection}));
-			contactCollection.fetch();
+			contactCollection.fetch({error: function(){
+				window.location.hash= 'login';
+			}});
 		},
 		addContact: function(){
 			this.changeView(new AddContactView());

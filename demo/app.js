@@ -75,6 +75,15 @@ app.get('/', function(req,res){
 	res.render('index.jade',{layout: false});
 });
 
+//登录判断中间件
+app.isLogined = function(req,res,next){
+	if(req.session.loggedIn){
+		next();
+	}else{
+		res.sendStatus(401);
+	}
+};
+
 /** for development ONLY */
 app.get('/css/app.css', function(req,res){
 	res.set('Content-Type','text/css');

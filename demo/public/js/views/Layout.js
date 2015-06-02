@@ -9,7 +9,8 @@ define(['text!templates/layout.html'],function(layoutTemplate){
 				.addClass('has-sidebar-right')
 				// .addClass('sidebar-left-visible')
 				// .addClass('sidebar-left-in')
-				.addClass('has-navbar-top')
+				.addClass('has-navbar-top');
+			this.bind('set:brand', this.updateBrand,this);
 		},
 
 		events: {
@@ -41,6 +42,9 @@ define(['text!templates/layout.html'],function(layoutTemplate){
 					.removeClass('sidebar-right-in')
 					.removeClass('sidebar-right-visible');
 			}
+		},
+		updateBrand: function(brand){
+			this.$('.navbar-brand').text(brand || '');
 		},
 
 		render: function(){

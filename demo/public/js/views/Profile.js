@@ -4,12 +4,19 @@ define(['text!templates/profile.html','views/Status','models/Status'],
 		el: '#content',
 		template: _.template(profileTemplate),
 		events: {
+			'click .logout': 'logout',
 			'submit form': 'postStatus'
 		},
 
 		initialize: function(options){
 			this.socketEvents = options.socketEvents;
 			this.model.bind('change',this.render,this);
+		},
+
+		logout: function(){
+			$.get('/logout');
+			window.location.hash = 'login';
+			return false;
 		},
 
 		postStatus: function(){

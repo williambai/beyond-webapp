@@ -1,7 +1,7 @@
  exports = module.exports = function(app,models){
 	var Account = models.Account;
 
-	app.get('/accounts/:id', function(req,res){
+	app.get('/accounts/:id', app.isLogined,function(req,res){
 		var accountId = req.params.id == 'me' 
 							? req.session.accountId
 							: req.params.id;
@@ -17,7 +17,7 @@
 		});
 	});
 
-	app.get('/accounts/:id/status',function(req,res){
+	app.get('/accounts/:id/status',app.isLogined,function(req,res){
 		var accountId = req.params.id == 'me' 
 							? req.session.accountId
 							: req.params.id;
@@ -30,7 +30,7 @@
 		});
 	});
 
-	app.post('/accounts/:id/status',function(req,res){
+	app.post('/accounts/:id/status',app.isLogined,function(req,res){
 		var accountId = req.params.id == 'me' 
 							? req.session.accountId
 							: req.params.id;
@@ -60,7 +60,7 @@
 		res.sendStatus(200);
 	});
 
-	app.get('/accounts/:id/activity',function(req,res){
+	app.get('/accounts/:id/activity',app.isLogined,function(req,res){
 		var accountId = req.params.id == 'me' 
 							? req.session.accountId
 							: req.params.id;
@@ -73,7 +73,7 @@
 		});
 	});
 
-	app.get('/accounts/:id/contacts', function(req,res){
+	app.get('/accounts/:id/contacts',app.isLogined, function(req,res){
 		var accountId = req.params.id == 'me' 
 							? req.session.accountId
 							: req.params.id;
@@ -86,7 +86,7 @@
 		});				
 	});
 
-	app.post('/accounts/:id/contacts', function(req,res){
+	app.post('/accounts/:id/contacts',app.isLogined, function(req,res){
 		var accountId = req.params.id == 'me' 
 							? req.session.accountId
 							: req.params.id;
@@ -110,7 +110,7 @@
 		res.sendStatus(200);
 	});
 
-	app.delete('/accounts/:id/contacts', function(req,res){
+	app.delete('/accounts/:id/contacts', app.isLogined,function(req,res){
 		var accountId = req.params.id == 'me' 
 							? req.session.accountId
 							: req.params.id;
@@ -134,7 +134,7 @@
 		res.sendStatus(200);
 	});
 
-	app.post('/contacts/find', function(req,res){
+	app.post('/contacts/find', app.isLogined,function(req,res){
 		var searchStr = req.body.searchStr;
 		if(null == searchStr){
 			res.sendStatus(400);

@@ -3,7 +3,6 @@ define(['text!templates/index.html','views/Status','models/Status'],
 	var IndexView = Backbone.View.extend({
 		el: '#content',
 		events: {
-			'click .logout': 'logout',
 			'submit form': 'updateStatus'
 		},
 		
@@ -28,12 +27,6 @@ define(['text!templates/index.html','views/Status','models/Status'],
 		onStatusAdded: function(status){
 			var statusHtml = (new StatusView({model: status})).render().el;
 			$(statusHtml).prependTo('.status_list').hide().fadeIn('slow');
-		},
-
-		logout: function(){
-			$.get('/logout');
-			window.location.hash = 'login';
-			return false;
 		},
 
 		updateStatus: function(){
