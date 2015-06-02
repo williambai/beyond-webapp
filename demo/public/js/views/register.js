@@ -10,7 +10,10 @@ define(['text!templates/register.html'],function(registerTemplate){
 				lastName: $('input[name=lastName]').val(),
 				email: $('input[name=email').val(),
 				password: $('input[name=password').val()
-			}, function registerCallback(data){
+			}, function success(data){
+				console.log(data);
+				window.location.hash = 'login';
+			}, function failure(data){
 				console.log(data);
 			});
 			return false;

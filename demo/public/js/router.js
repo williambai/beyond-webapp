@@ -1,6 +1,7 @@
 define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','models/Account','models/Project','models/StatusCollection','models/ContactCollection','models/ProjectCollection'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,Account,Project,StatusCollection,ContactCollection,ProjectCollection){
 
 	var SocailRouter = Backbone.Router.extend({
+		logined: false,
 		layoutView: null,
 		currentView : null,
 		sidebarView : null,
@@ -41,6 +42,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			this.currentView.render();
 		},
 		index: function(){
+			this.layoutView.trigger('set:brand','注册');
 			var statusCollection = new StatusCollection();
 			statusCollection.url = '/accounts/me/activity';
 			this.changeView(new IndexView({collection: statusCollection,socketEvents: this.socketEvents}));
@@ -50,16 +52,21 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		},
 
 		register: function(){
+			this.layoutView.trigger('set:brand','注册');
 			this.changeView(new RegisterView());
 		},
 		login: function(){
 			this.layoutView.trigger('set:brand','登录');
-			this.changeView(new LoginView({socketEvents: this.socketEvents}));
+			this.changeView(new LoginView({
+				socketEvents: this.socketEvents,
+				router: this,
+			}));
 		},
 		forgotPassword: function(){
 			this.changeView(new ForgotPasswordView());
 		},
 		profile: function(id){
+			this.layoutView.trigger('set:brand','个人资料');
 			var account = new Account({id: id});
 			this.changeView(new ProfileView({model: account,socketEvents: this.socketEvents}));
 			account.fetch({error: function(){
@@ -76,12 +83,20 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			}});
 		},
 		addContact: function(){
-			this.changeView(new AddContactView());
+			if(this.logined){
+				this.changeView(new AddContactView());
+			}else{
+				window.location.hash = 'login';
+			}
 		},
 
 		addProject: function(){
-			this.changeView(new AddProjectView({projectCollection: this.projectCollection}));
-		},
+			if(this.logined){
+				this.changeView(new AddProjectView({projectCollection: this.projectCollection}));
+			}else{
+				window.location.hash = 'login';
+			}
+		}
 	});
 
 	return new SocailRouter();

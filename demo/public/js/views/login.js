@@ -8,6 +8,7 @@ define(['text!templates/login.html'],function(loginTemplate){
 		},
 		initialize: function(options){
 			this.socketEvents = options.socketEvents;
+			this.router = options.router;
 		},
 		login: function(){
 			var that = this;
@@ -16,6 +17,7 @@ define(['text!templates/login.html'],function(loginTemplate){
 				password: $('input[name=password]').val()
 			},function(data){
 				console.log(data);
+				that.router.logined = true;
 				that.socketEvents.trigger('app:logined',data);
 				window.location.hash = 'index';
 			}).error(function(){
