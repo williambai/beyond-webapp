@@ -1,4 +1,4 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','models/Account','models/Project','models/StatusCollection','models/ContactCollection','models/ProjectCollection'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,Account,Project,StatusCollection,ContactCollection,ProjectCollection){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','models/Account','models/Project','models/StatusCollection','models/ContactCollection','models/ProjectCollection'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,Account,Project,StatusCollection,ContactCollection,ProjectCollection){
 
 	var SocailRouter = Backbone.Router.extend({
 		logined: false,
@@ -18,6 +18,9 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'contacts/:id': 'contacts',
 			'addcontact': 'addContact',
 			'project/add': 'addProject',
+			'projects/:id': 'projectIndex',
+			'projects/:pid/contact/add': 'projectContactAdd',
+			'projects/:pid/contacts(/:cid)': 'projectContacts',
 		},
 		initialize: function(){
 			this.layoutView = new LayoutView();
@@ -96,7 +99,38 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			}else{
 				window.location.hash = 'login';
 			}
-		}
+		},
+
+		projectIndex: function(id){
+			// var project = this.projectCollection.find({_id:id});
+			// this.layoutView.trigger('set:brand','项目：' + id);
+			var statusCollection = new StatusCollection();
+			statusCollection.url = '/projects/'+ id +'/status';
+			this.changeView(new ProjectView({
+				pid: id,
+				collection: statusCollection,
+				socketEvents: this.socketEvents
+			}));
+			statusCollection.fetch({error: function(){
+				window.location.hash= 'login';
+			}});
+		},
+		projectContacts: function(pid,cid){
+			var contactId = cid ? cid: 'me';
+			var contactCollection = new ContactCollection();
+			contactCollection.url = '/projects/' + pid + '/contacts';
+			this.changeView(new ProjectContactsView({pid:pid,collection: contactCollection}));
+			contactCollection.fetch({error: function(){
+				window.location.hash= 'login';
+			}});
+		},
+		projectContactAdd: function(pid){
+			if(this.logined){
+				this.changeView(new ProjectContactAddView({pid: pid}));
+			}else{
+				window.location.hash = 'login';
+			}
+		},
 	});
 
 	return new SocailRouter();

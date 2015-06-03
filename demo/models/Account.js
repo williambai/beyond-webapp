@@ -138,6 +138,18 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		});
 	};
 
+	var findAll = function(accountIds, page, callback){
+		page = (!page || page<0) ? 0 : page;
+		var per = 20;
+		Account.find({_id: {$in: accountIds}}, function(err,docs){
+			if(err){
+				registerCallback(err);
+				return;
+			}
+			callback(docs);
+		}).skip(page*per).limit(per);
+	};
+
 	var addContact = function(account, contactJson){
 		var contact = {
 			name: {
@@ -200,6 +212,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 	return {
 		Account: Account,
 		findById: findById,
+		findAll: findAll,
 		register: register,
 		forgotPassword: forgotPassword,
 		resetPassword: resetPassword,

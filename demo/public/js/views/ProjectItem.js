@@ -4,7 +4,7 @@ define(['text!templates/projectItem.html'],function(projectItemTemplate){
 		template: _.template(projectItemTemplate),
 
 		events: {
-			'click': 'startChatSession'
+			// 'click': 'startChatSession'
 		},
 
 		initialize: function(options){

@@ -1,0 +1,21 @@
+<h1><%= model.name.last %><%= model.name.first %></h1>
+
+<% if(!addButton){ %>
+<p>
+	<a href="#profile/<%= model.accountId %>">看一看</a>
+</p>
+<% } %>
+
+<div class="actionArea">
+	<% if(addButton){ %>
+		<p>
+			<button class="addbutton">添加为好友</button>
+		</p>
+	<% } %>
+
+	<% if(removeButton){ %>
+		<p>
+			<button class="removebutton">移除好友</button>
+		</p>
+	<% } %>
+</div>

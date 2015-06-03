@@ -1,33 +1,47 @@
-<div class="navbar navbar-app navbar-absolute-top">
-	<div class="navbar-brand navbar-brand-center">项目群聊</div>
-	<div class="btn btn-group pull-left hidden"> <i class="fa fa-bars">菜单</i>
-	</div>
-	<div class="btn btn-group pull-right"> <i class="fa fa-bars">同事</i>
-	</div>
+<!-- <div class="navbar navbar-app navbar-absolute-top">
+<div class="navbar-brand navbar-brand-center">项目群聊</div>
+<div class="btn btn-group pull-left hidden"> <i class="fa fa-bars">菜单</i>
 </div>
+<div class="btn btn-group pull-right"> <i class="fa fa-bars">同事</i>
+</div>
+</div>
+-->
 <div class="navbar navbar-app navbar-absolute-bottom">
-	<form>
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="input-group">
-					<input type="text" name="chat" class="form-control" />
-					<span class="input-group-btn">
-						<input type="submit" value="发送" class="btn"/>
-					</span>
-				</div>
-			</div>
-
-		</div>
-	</form>
-</div>
-<div class="app-body">
-	<div class="app-content">
-		<div class="scrollable">
-			<div id="main" class="scrollable-content section">
-				<span class="name">
-					<%= model.name.full %></span>
-				<ul class="chat_log"></ul>
-			</div>
-		</div>
+	<div class="btn-group justified">
+		<a href="#projects/<%= model._id %>
+			" class="btn btn-navbar">
+			<i class="fa fa-exclamation-circle fa-navbar"></i>
+			动态
+		</a>
+		<a href="#projects/<%= model._id %>/contacts" class="btn btn-navbar">
+			<i class="fa fa-github fa-navbar"></i>
+			成员
+		</a>
+		<a href="#projects/<%= model._id %>/stats" class="btn btn-navbar">
+			<i class="fa fa-home fa-navbar"></i>
+			状况
+		</a>
 	</div>
 </div>
+
+<!-- <div class="pull-right">
+<a class="btn btn-default" href="#projects/<%= model._id %>/contact/add">添加成员</a>
+</div>
+ -->
+<span class="name"><%= model.name %></span>
+<hr>
+<ul class="status_list" style="margin-bottom:80px;"></ul>
+<hr>
+<form style="position:fixed;bottom:50px;">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="input-group">
+				<input type="text" name="text" class="form-control" />
+				<span class="input-group-btn">
+					<input type="submit" value="发送" class="btn"/>
+				</span>
+			</div>
+		</div>
+
+	</div>
+</form>
