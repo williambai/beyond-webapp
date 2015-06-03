@@ -168,13 +168,6 @@ gulp.task('less', function () {
 // });
 
 
-// /*======================================
-// =            Build Sequence            =
-// ======================================*/
-
-// gulp.task('build', function(done) {
-//   seq('clean', ['fonts', 'css',  'js'], done);
-// });
 
 /*====================================
 =            Default Task            =
