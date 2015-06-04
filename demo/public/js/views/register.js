@@ -6,8 +6,7 @@ define(['text!templates/register.html'],function(registerTemplate){
 		},
 		register: function(){
 			$.post('/register',{
-				firstName: $('input[name=firstName]').val(),
-				lastName: $('input[name=lastName]').val(),
+				username: $('input[name=username]').val(),
 				email: $('input[name=email').val(),
 				password: $('input[name=password').val()
 			}, function success(data){

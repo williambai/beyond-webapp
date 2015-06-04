@@ -3,6 +3,7 @@ define(['text!templates/index.html','views/Status','models/Status'],
 	var IndexView = Backbone.View.extend({
 		el: '#content',
 		events: {
+			'click .editor-toggle': 'editorToggle',
 			'submit form': 'updateStatus'
 		},
 		
@@ -29,14 +30,24 @@ define(['text!templates/index.html','views/Status','models/Status'],
 			$(statusHtml).prependTo('.status_list').hide().fadeIn('slow');
 		},
 
+		editorToggle: function(){
+			if(this.$('.status-editor').hasClass('hidden')){
+				this.$('.status-editor').removeClass('hidden').hide().fadeIn('slow');
+			}else{
+				this.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
+			}
+		},
+
 		updateStatus: function(){
 			var statusCollection = this.collection;
-			var statusText = $('input[name=status]').val();
+			var statusText = $('textarea[name=text]').val();
 			$.post('/accounts/me/status',{status: statusText},function(data){
 				// statusCollection.add(new Status({status: statusText,name:{first:'我'}}));
 			});
-			var statusModel = new Status({status:statusText,name: {first:'我'}});
-			this.onStatusAdded(statusModel);
+			// var statusModel = new Status({status:statusText,name: {first:'我'}});
+			// this.onStatusAdded(statusModel);
+			$('textarea[name=text]').val('');
+			this.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
 			return false;
 		},
 

@@ -51,6 +51,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			statusCollection.url = '/accounts/me/status';
 			this.changeView(new IndexView({collection: statusCollection,socketEvents: this.socketEvents}));
 			statusCollection.fetch({error: function(){
+				console.log(error);
 				window.location.hash= 'login';
 			}});
 		},

@@ -7,27 +7,33 @@
 </div>
 -->
 <div class="navbar navbar-app navbar-absolute-bottom">
-	<div class="btn-group justified">
-		<a href="#projects/<%= model._id %>
-			" class="btn btn-navbar">
-			<i class="fa fa-exclamation-circle fa-navbar"></i>
-			动态
-		</a>
-		<a href="#projects/<%= model._id %>/contacts" class="btn btn-navbar">
-			<i class="fa fa-github fa-navbar"></i>
-			成员
-		</a>
-		<a href="#projects/<%= model._id %>/stats" class="btn btn-navbar">
-			<i class="fa fa-home fa-navbar"></i>
-			状况
-		</a>
-	</div>
+<div class="btn-group justified">
+	<a href="#projects/<%= model._id %>
+		" class="btn btn-navbar">
+		<i class="fa fa-exclamation-circle fa-navbar"></i>
+		动态
+	</a>
+	<a href="#projects/<%= model._id %>
+		/contacts" class="btn btn-navbar">
+		<i class="fa fa-github fa-navbar"></i>
+		成员
+	</a>
+	<a href="#projects/<%= model._id %>
+		/stats" class="btn btn-navbar">
+		<i class="fa fa-home fa-navbar"></i>
+		状况
+	</a>
+</div>
 </div>
 
 <div class="pull-right">
-<button class="btn btn-default editor-toggle" href="#">发表&nbsp;<span class="caret"></span></button>
+<button class="btn btn-default editor-toggle" href="#">
+	发表&nbsp;
+	<span class="caret"></span>
+</button>
 </div>
-<span class="name"><%= model.name %></span>
+<span class="name">
+<%= model.name %></span>
 <div class="status-editor hidden">
 <hr>
 <form>
@@ -39,7 +45,6 @@
 		</div>
 
 	</div>
-<hr>
-</form>
+	<hr></form>
 </div>
 <ul class="status_list" style="margin-bottom:80px;"></ul>

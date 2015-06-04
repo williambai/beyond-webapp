@@ -2,8 +2,7 @@ module.exports = exports = function(app,models){
 	var Account = models.Account;
 	
 	app.post('/register',function(req,res){
-		var firstName = req.body.firstName || '';
-		var lastName = req.body/lastName || '';
+		var username = req.body.username || '';
 		var email = req.body.email;
 		var password = req.body.password;
 
@@ -11,7 +10,7 @@ module.exports = exports = function(app,models){
 			res.sendStatus(400);
 			return;
 		}
-		Account.register(email,password,firstName,lastName);
+		Account.register(email,password,username);
 		res.sendStatus(200);
 	});
 
@@ -31,7 +30,7 @@ module.exports = exports = function(app,models){
 			console.log(email + ': login sucessfully.');
 			req.session.loggedIn = true;
 			req.session.accountId = account._id;
-			req.session.name = account.name.last + ' ' + account.name.first;
+			req.session.username = account.username;
 			res.send({accountId: account._id});
 		});
 	});

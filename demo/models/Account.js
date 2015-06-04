@@ -9,22 +9,10 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				virtuals: true
 			}
 		};
-
-	var statusSchema = new mongoose.Schema({
-			name: {
-				first: {type: String},
-				last: {type: String}
-			},
-			status: {type: String}
-		});
-	mongoose.statusSchema = statusSchema;
 	
 	var contactSchema = new mongoose.Schema({
-			'name': {
-				'first': {type: String },
-				'last': {type: String }
-			},
-			'accountId': {type: mongoose.Schema.ObjectId},
+			'username': {type: String},
+			'accountId': {type: String},
 			'added': {type: Date}, //when the contact was added
 			'updated': {type: Date} // when the contanct was updated
 		},schemaOptions);
@@ -35,31 +23,24 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 
 	mongoose.contactSchema = contactSchema;
 
-	// contactSchema.pre('save',function(next){
-	// 	console.log(this.name + ':' + this.accountId);
-	// 	next();
-	// });
-
-
 	var accountSchema = new mongoose.Schema({
 			'email' : {type: String, unique: true},
 			'password': {type: String},
-			'name': {
-				'first': {type: String},
-				'last': {type: String},
-				'full': {type: String}
-			},
+			'username': {type: String},
+			'realname': {type: String},
+
 			'birthday': {
 				day: {type:Number,min:1,max:31, required: false},
 				month: {type:Number, min:1, max: 12, required: false},
 				year: {type: Number}
 			},
-			'photoUrl': {type: String},
+
+			'avatar': {type: String},
 			'biography': {type: String},
 			'contacts': [contactSchema],
-			'status': [statusSchema],//My own status updates only
-			'activity': [statusSchema], //All status updates including friends
+			'activity': [], //All status updates including friends
 		});
+
 	mongoose.accountSchema = accountSchema;
 
 	var Account = mongoose.model('Account', accountSchema);
@@ -71,18 +52,16 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		return console.log('Account was created');
 	};
 
-	var register = function(email,password,firstName,lastName){
+	var register = function(email,password,username){
 		var shaSum = crypto.createHash('sha256');
 		shaSum.update(password);
 
 		var user = new Account({
 			email: email,
-			name: {
-				first: firstName,
-				last: lastName,
-				full: firstName + ' ' + lastName
-			},
-			password: shaSum.digest('hex')
+			username: username,
+			realname: username,
+			password: shaSum.digest('hex'),
+			avatar: ''
 		});
 		user.save(registerCallback);
 	};
@@ -152,10 +131,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 
 	var addContact = function(account, contactJson){
 		var contact = {
-			name: {
-				first: contactJson.name.first,
-				last: contactJson.name.last
-			},
+			username: contactJson.username,
 			accountId: contactJson._id,
 			added: new Date(),
 			updated: new Date()
@@ -197,7 +173,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		var searchRegex = new RegExp(searchStr,'i');
 		Account.find({
 			$or: [
-				{'name.full': {$regex: searchRegex}},
+				{'username': {$regex: searchRegex}},
 				{'email': {$regex: searchRegex}}
 			]
 		},function(err,accounts){

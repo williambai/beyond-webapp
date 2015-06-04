@@ -38,26 +38,21 @@
 							? req.session.accountId
 							: req.params.id;
 		Account.findById(accountId, function(account){
-			var status = {
-				name: {
-					first: req.session.name.first,
-					last: req.session.name.last,
-					full: req.session.name.full
-				},
-				status: req.body.status || ''
-			};
-			account.status.push(status);
-			account.activity.push(status);
-			account.save(function(err){
-				if(err){
-					console.log('Error saving account: ' + err);
-					return;
+			var username = req.session.username || '匿名';
+			var avatar = req.session.avatar || '';
+			var status = req.body.status || '';
+			if(status.length<0){
+				res.sendStatus(400);
+				return;
+			}
+			Status.add(accountId,accountId,username,avatar,status,function(err){
+				if(!err){
+					app.triggerEvent('event:' + accountId, {
+						from: accountId,
+						data: status,
+						action: 'status'
+					});
 				}
-				app.triggerEvent('event:' + accountId, {
-					from: accountId,
-					data: status,
-					action: 'status'
-				});
 			});
 		});
 		res.sendStatus(200);

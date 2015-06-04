@@ -109,7 +109,7 @@ exports =module.exports = function(app,models){
 			var to = data.to;
 			if(data.action == 'chat'){
 				models.Chat.add(from,to,{
-					username: session.name,
+					username: session.username,
 					text: data.text,
 				});
 			}
