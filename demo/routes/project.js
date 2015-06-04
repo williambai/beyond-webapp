@@ -1,5 +1,6 @@
 exports = module.exports = function(app,models){
 	var Project = models.Project;
+	var Status = models.Status;
 
 	app.get('/projects',function(req,res){
 		page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
@@ -87,7 +88,9 @@ exports = module.exports = function(app,models){
 				res.sendStatus(404);
 				return;
 			}
-			res.send(project.status);
+			Status.getAllByBelongTo(project._id,0,function(status){
+				res.send(status);
+			});
 		});				
 	});
 
@@ -109,7 +112,7 @@ exports = module.exports = function(app,models){
 				res.sendStatus(401);
 				return;
 			}
-			Project.addStatusById(project._id,name,accountId,text);
+			Status.add(accountId,project._id,name,'',text);
 			res.sendStatus(200);
 		});
 	});

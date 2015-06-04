@@ -35,6 +35,7 @@ var config = {
 
 //import the models
 var models = {
+		Status: require('./models/Status')(app,config,mongoose,nodemailer),
 		Account: require('./models/Account')(app,config,mongoose,nodemailer),
 		Project: require('./models/Project')(app,config,mongoose,nodemailer),
 		Chat: require('./models/Chat')(app,config,mongoose,nodemailer),

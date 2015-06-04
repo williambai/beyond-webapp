@@ -48,14 +48,14 @@ define(['text!templates/profile.html','views/Status','models/Status'],
 				this.socketEvents.bind('status' + this.model.get('_id'), this.onSocketStatusAdded, this);
 			}
 			this.$el.html(this.template(this.model.toJSON()));
-			var that = this;
-			var statusCollection = this.model.get('status');
-			if(null != statusCollection){
-				_.each(statusCollection,function(statusJson){
-					var statusModel = new Status(statusJson);
-					that.prependStatus(statusModel);
-				});
-			}
+			// var that = this;
+			// var statusCollection = this.model.get('status');
+			// if(null != statusCollection){
+			// 	_.each(statusCollection,function(statusJson){
+			// 		var statusModel = new Status(statusJson);
+			// 		that.prependStatus(statusModel);
+			// 	});
+			// }
 			return this;
 		}
 	});

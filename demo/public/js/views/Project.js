@@ -3,6 +3,7 @@ define(['text!templates/project.html','views/Status','models/Project','models/St
 		el: '#content',
 		template: _.template(projectTemplate),
 		events: {
+			'click .editor-toggle': 'editorToggle',
 			'submit form': 'updateStatus'
 		},
 		
@@ -30,14 +31,24 @@ define(['text!templates/project.html','views/Status','models/Project','models/St
 			$(statusHtml).appendTo('.status_list').hide().fadeIn('slow');
 		},
 
+		editorToggle: function(){
+			if(this.$('.status-editor').hasClass('hidden')){
+				this.$('.status-editor').removeClass('hidden').hide().fadeIn('slow');
+			}else{
+				this.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
+			}
+		},
+
 		updateStatus: function(){
 			var statusCollection = this.collection;
-			var statusText = $('input[name=text]').val();
+			var statusText = $('textarea[name=text]').val();
 			$.post('/projects/'+ this.pid +'/status',{text: statusText},function(data){
 				// statusCollection.add(new Status({status: statusText,name:{first:'我'}}));
 			});
-			var statusModel = new Status({status:statusText,name: {first:'我'}});
-			this.onStatusAdded(statusModel);
+			// var statusModel = new Status({status:statusText,name: {first:'我'}});
+			// this.onStatusAdded(statusModel);
+			$('textarea[name=text]').val('');
+			this.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
 			return false;
 		},
 

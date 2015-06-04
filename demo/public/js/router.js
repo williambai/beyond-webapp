@@ -11,6 +11,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		socketEvents: _.extend({},Backbone.Events),
 		routes: {
 			'index': 'index',
+			'status': 'index',
 			'login': 'login',
 			'register': 'register',
 			'forgotpassword': 'forgotPassword',
@@ -47,7 +48,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		index: function(){
 			this.layoutView.trigger('set:brand','注册');
 			var statusCollection = new StatusCollection();
-			statusCollection.url = '/accounts/me/activity';
+			statusCollection.url = '/accounts/me/status';
 			this.changeView(new IndexView({collection: statusCollection,socketEvents: this.socketEvents}));
 			statusCollection.fetch({error: function(){
 				window.location.hash= 'login';

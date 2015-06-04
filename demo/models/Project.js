@@ -1,18 +1,20 @@
 module.exports = exports = function(app, config,mongoose,nodemailer){
-	var statusSchema = new mongoose.Schema({
-			name: {type: String},
-			editor: {type: mongoose.Schema.ObjectId},
-			status: {type: String}
-		});
+	// var statusSchema = new mongoose.Schema({
+	// 		name: {type: String},
+	// 		editor: {type: mongoose.Schema.ObjectId},
+	// 		status: {type: String}
+	// 	});
 	var projectSchema = new mongoose.Schema({
 		accountId: {type: mongoose.Schema.ObjectId},
 		name: {type: String},
 		description: {type: String},
 		contacts: [],
-		status: [statusSchema], 
+		// status: [statusSchema], 
 	});
 
 	mongoose.projectSchema = projectSchema;
+	
+	var Status = mongoose.model('Status');
 
 	var Project = mongoose.model('Project', projectSchema);
 
@@ -60,39 +62,54 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			}
 		};
 
-	var addStatusById = function(id,name,editor,text){
-		var status = {
-			name: name,
-			editor: editor,
-			status: text
-		};
-		Project.findOne({_id:id},function(err,doc){
-			if(doc){
-				doc.status.push(status);
-				doc.save(defaultCallback);
-			}
-		});
+	var addStatusById = function(id,userId,username,avatar,status,callback){
+		Status.add(userId,id,username,avatar,status,callback);
 	};
 
-	var removeStatusById = function(id,status){
-		Project.findOne({_id:id}, function(err,doc){
-			if(doc){
-				doc.status.pull(status);
-				doc.save(defaultCallback);
-			}
-		})
+	var removeStatusById = function(id, callback){
+		Status.remove(id,callback);
 	};
 
 	var getStatusById = function(id,page,callback){
-		id = id || 0;
-		page = (!page || page<0) ? 0 : page;
-		var per = 20;
-		Project.findOne({_id:id}, function(err,doc){
-			if(doc){
-				callback(doc.status).skip(page*per).limit(per);
-			}
-		});
+		if(typeof page == 'function'){
+			callback = page;
+			page = 0;
+		}
+		Status.getAllByBelongTo(id,page,callback);
 	};
+	// var addStatusById = function(id,name,editor,text){
+	// 	var status = {
+	// 		name: name,
+	// 		editor: editor,
+	// 		status: text
+	// 	};
+	// 	Project.findOne({_id:id},function(err,doc){
+	// 		if(doc){
+	// 			doc.status.push(status);
+	// 			doc.save(defaultCallback);
+	// 		}
+	// 	});
+	// };
+
+	// var removeStatusById = function(id,status){
+	// 	Project.findOne({_id:id}, function(err,doc){
+	// 		if(doc){
+	// 			doc.status.pull(status);
+	// 			doc.save(defaultCallback);
+	// 		}
+	// 	})
+	// };
+
+	// var getStatusById = function(id,page,callback){
+	// 	id = id || 0;
+	// 	page = (!page || page<0) ? 0 : page;
+	// 	var per = 20;
+	// 	Project.findOne({_id:id}, function(err,doc){
+	// 		if(doc){
+	// 			callback(doc.status).skip(page*per).limit(per);
+	// 		}
+	// 	});
+	// };
 
 	var addContactById = function(id,contactId){
 		Project.findOne({_id:id}, function(err,doc){
@@ -138,9 +155,9 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		update: update,
 		getById: getById,
 		getByAccountId: getByAccountId,
-		addStatusById: addStatusById,
-		removeStatusById: removeStatusById,
-		getStatusById: getStatusById,
+		// addStatusById: addStatusById,
+		// removeStatusById: removeStatusById,
+		// getStatusById: getStatusById,
 		addContactById: addContactById,
 		removeContactById: removeContactById,
 		getContactById: getContactById,

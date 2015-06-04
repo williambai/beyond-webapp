@@ -1,5 +1,6 @@
  exports = module.exports = function(app,models){
 	var Account = models.Account;
+	var Status = models.Status;
 
 	app.get('/accounts/:id', app.isLogined,function(req,res){
 		var accountId = req.params.id == 'me' 
@@ -26,7 +27,9 @@
 				res.sendStatus(404);
 				return;
 			}
-			res.send(account.status);
+			Status.getAllByBelongTo(accountId,0,function(status){
+				res.send(status);
+			});
 		});
 	});
 
