@@ -48,7 +48,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			this.currentView.render();
 		},
 		index: function(){
-			this.layoutView.trigger('set:brand','注册');
+			this.layoutView.trigger('set:brand','主页');
 			var statusCollection = new StatusCollection();
 			statusCollection.url = '/accounts/me/status';
 			this.changeView(new IndexView({collection: statusCollection,socketEvents: this.socketEvents}));
@@ -101,6 +101,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		},
 
 		contacts: function(id){
+			this.layoutView.trigger('set:brand','我的好友');
 			var contactId = id ? id: 'me';
 			var contactCollection = new ContactCollection();
 			contactCollection.url = '/accounts/' + contactId + '/contacts';

@@ -68,12 +68,16 @@
 		var accountId = req.params.id == 'me' 
 							? req.session.accountId
 							: req.params.id;
+		var page = req.query.page || 0;
+
+		if(isNaN(page)) page = 0;
+
 		Account.findById(accountId, function(account){
 			if(!account){
 				res.sendStatus(404);
 				return;
 			}
-			Status.getAll(accountId,accountId,0,function(status){
+			Status.getAll(accountId,accountId,page,function(status){
 				res.send(status);
 			});
 		});
@@ -95,7 +99,11 @@
 				if(!err){
 					app.triggerEvent('event:' + accountId, {
 						from: accountId,
-						data: status,
+						data: {
+							username: username,
+							avatar: avatar,
+							status: status
+						},
 						action: 'status'
 					});
 				}
@@ -108,12 +116,16 @@
 		var accountId = req.params.id == 'me' 
 							? req.session.accountId
 							: req.params.id;
+		var page = req.query.page || 0;
+
+		if(isNaN(page)) page = 0;
+
 		Account.findById(accountId, function(account){
 			if(!account){
 				res.sendStatus(404);
 				return;
 			}
-			Status.getAllByBelongTo(accountId,0,function(status){
+			Status.getAllByBelongTo(accountId,page,function(status){
 				res.send(status);
 			});
 		});

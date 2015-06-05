@@ -1,10 +1,20 @@
 <div class="pull-right">
 <button class="btn btn-default editor-toggle" href="#">
-	发表&nbsp;
+	<% if(ui.activity){ %>
+		发表&nbsp;
+	<% }else{ %>
+		私信&nbsp;
+	<% } %>
 	<span class="caret"></span>
 </button>
 </div>
-<h2>好友圈</h2>
+<h2>
+	<% if(ui.activity){ %>
+		好友圈
+	<% }else{ %>
+		私人空间
+	<% } %>
+</h2>
 <hr>
 <div class="status-editor hidden">
 <form>
@@ -20,3 +30,4 @@
 </div>
 
 <div class="status-list"></div>
+<a href="#" class="next-page">下一页</a>
