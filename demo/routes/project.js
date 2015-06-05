@@ -97,7 +97,7 @@ exports = module.exports = function(app,models){
 	app.post('/projects/:id/status',app.isLogined, function(req,res){
 		var projectId = req.params.id || 0;
 		var accountId = req.session.accountId;
-		var name = req.session.name || '匿名';
+		var name = req.session.username || '匿名';
 		var text = req.body.text || '';
 		if(text.length<1){
 			res.sendStatus(400);

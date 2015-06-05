@@ -1,4 +1,6 @@
 module.exports = exports = function(app, config,mongoose,nodemailer){
+	var debug = true;
+
 	var crypto = require('crypto');
 
 	var schemaOptions = {
@@ -184,6 +186,31 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			}
 		});
 	};
+	var updateAvatar = function(id,avatar,callback){
+			Account
+				.findByIdAndUpdate(
+					id,
+					{
+						avatar: avatar
+					},
+					function(err){
+						debug && registerCallback(err);
+						callback && callback(err);
+					}
+				);
+		};
+
+	var updateAccount = function(id,account,callback){
+			Account
+				.findByIdAndUpdate(
+					id,
+					account,
+					function(err){
+						debug && registerCallback(err);
+						callback && callback(err);
+					}
+				);
+		};
 
 	return {
 		Account: Account,
@@ -196,6 +223,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		addContact: addContact,
 		removeContact: removeContact,
 		hasContact: hasContact,
-		findByString: findByString
+		findByString: findByString,
+		updateAvatar: updateAvatar,
+		updateAccount: updateAccount,
 	};
 };

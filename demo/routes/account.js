@@ -1,4 +1,7 @@
  exports = module.exports = function(app,models){
+ 	var path = require('path');
+ 	var fs = require('fs');
+
 	var Account = models.Account;
 	var Status = models.Status;
 
@@ -16,6 +19,49 @@
 			}
 			res.send(account);
 		});
+	});
+
+	app.post('/accounts/:id/avatar', app.isLogined, function(req,res){
+		var accountId = req.params.id == 'me' 
+							? req.session.accountId
+							: req.params.id;
+		// console.log(req.files);
+		// res.writeHead(200, {'content-type': 'text/plain'});
+		// res.write('received upload:\n\n');
+		// var util = require('util');
+		// res.end(util.inspect({files: req.files}));
+		var file = req.files.files;
+		var filename = app.randomHex() + '.' + file.extension;//file.name;
+		var tmp_path = file.path;
+		var new_path = path.join(__dirname, '../public/upload/',filename);
+		var avatar = '/upload/' + filename;
+		fs.rename(tmp_path,new_path,function(err){
+			if(err) {
+				console.log(err);
+				res.sendStatus(400);
+				return;
+			}
+			Account.updateAvatar(accountId,avatar, function(err){
+				if(!err){
+					res.end(avatar);
+				}else{
+					res.end();
+				}
+			});
+		});
+	});
+
+	app.post('/accounts/:id', app.isLogined, function(req,res){
+		var accountId = req.params.id == 'me' 
+							? req.session.accountId
+							: req.params.id;
+		var account = {};
+		if(req.body.username) account.username = req.body.username;
+		if(req.body.realname) account.realname = req.body.realname;
+		if(req.body.biography) account.biography = req.body.biography;
+		// console.log(account);
+		Account.updateAccount(accountId,account);
+		res.sendStatus(200);
 	});
 
 	app.get('/accounts/:id/status',app.isLogined,function(req,res){

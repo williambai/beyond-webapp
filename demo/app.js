@@ -32,6 +32,9 @@ var config = {
 		mail: require('./config/mail'),
 		db: require('./config/db')
 	};		
+app.randomHex = function(){
+	return new Date().getTime();
+};
 
 //import the models
 var models = {

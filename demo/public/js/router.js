@@ -1,4 +1,4 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','models/Account','models/Project','models/StatusCollection','models/ContactCollection','models/ProjectCollection'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,Account,Project,StatusCollection,ContactCollection,ProjectCollection){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','models/Account','models/Project','models/StatusCollection','models/ContactCollection','models/ProjectCollection'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,Account,Project,StatusCollection,ContactCollection,ProjectCollection){
 
 	var SocailRouter = Backbone.Router.extend({
 		logined: false,
@@ -16,6 +16,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'register': 'register',
 			'forgotpassword': 'forgotPassword',
 			'profile/:id': 'profile',
+			'profile/:id/edit': 'profileEdit',
 			'contacts/:id': 'contacts',
 			'addcontact': 'addContact',
 			'project/add': 'addProject',
@@ -78,6 +79,14 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash= 'login';
 			}});
 		},
+
+		profileEdit: function(id){
+			this.layoutView.trigger('set:brand','编辑个人资料');
+			var profileEditView = new ProfileEditView();
+			this.changeView(profileEditView);
+			profileEditView.trigger('load');
+		},
+
 		contacts: function(id){
 			var contactId = id ? id: 'me';
 			var contactCollection = new ContactCollection();

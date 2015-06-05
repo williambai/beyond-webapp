@@ -47,7 +47,7 @@ define(['text!templates/profile.html','views/Status','models/Status'],
 			if(this.model.get('_id')){
 				this.socketEvents.bind('status' + this.model.get('_id'), this.onSocketStatusAdded, this);
 			}
-			this.$el.html(this.template(this.model.toJSON()));
+			this.$el.html(this.template({profile: this.model.toJSON()}));
 			// var that = this;
 			// var statusCollection = this.model.get('status');
 			// if(null != statusCollection){

@@ -1,6 +1,31 @@
+<div class="editor-layer">
+	<a class="btn btn-primary pull-right editor-control" href="#profile/me/edit">编辑</a>
+	<p>&nbsp;</p>
+</div>
+
+<hr>
+
 <div class="pull-left">
-<img src="" width="120px" height="160px">
-</div><h1>姓名：<%= name.last %><%= name.first %></h1>
+	<img src="<%= profile.avatar %>" width="120px" height="160px">
+</div>
+<h1><%= profile.username %></h1>
+
+<p><%= profile.biography %></p>
+<p class="clearfix"></p>
+
+<div class="status-layer">
+	<div class="status-list"></div>
+</div>
+<hr>
+
+<div class="contact-layer">
+	<div class="contact-list"></div>
+</div>
+<hr>
+<div class="button-layer">
+	<a href="#" class="btn btn-block btn-danger logout">退出</a>
+</div>
+<!-- <h2>状态更新记录</h2>
 <form>
 	<fieldset>
 		<legend>发表评论</legend>
@@ -9,6 +34,3 @@
 	</fieldset>
 </form>
 <hr>
-<a href="#" class="btn btn-block btn-danger logout">退出</a>
-<!-- <h2>状态更新记录</h2>
-<ul class="status_list"></ul> -->
