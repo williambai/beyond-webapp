@@ -119,6 +119,25 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					}
 				);
 		};
+	var getAll = function(userId,belongTo,page,callback){
+			var per = 20;
+			if(typeof page == 'function'){
+				callback = page;
+				page = 0;
+			}
+			if(!callback){
+				throw new Error('callback is not defined.');
+			}
+			Status
+				.find({belongTo:belongTo, userId: userId})
+				.sort({createtime:-1})
+				.skip(page*per)
+				.limit(per)
+				.exec(function(err,docs){
+					debug && defaultCallback(err);
+					callback && callback(docs);
+				});
+		};
 
 	var getAllByBelongTo = function(belongTo,page,callback){
 			var per = 20;
@@ -131,6 +150,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			}
 			Status
 				.find({belongTo:belongTo})
+				.sort({createtime:-1})
 				.skip(page*per)
 				.limit(per)
 				.exec(function(err,docs){
@@ -151,6 +171,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 
 			Status
 				.find({userId: userId})
+				.sort({createtime:-1})
 				.skip(page*per)
 				.limit(per)
 				.exec(function(err,docs){
@@ -167,6 +188,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		updateVoteGood: updateVoteGood,
 		updateVoteBad: updateVoteBad,
 		updateLevel: updateLevel,
+		getAll:getAll,
 		getAllByBelongTo: getAllByBelongTo,
 		getAllByUserId: getAllByUserId
 	};

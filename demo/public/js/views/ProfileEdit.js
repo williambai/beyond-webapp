@@ -8,16 +8,16 @@ define(['text!templates/loading.html','text!templates/profileEdit.html','models/
 		loadingTemplate: _.template(loadingTemplate),
 
 		initialize: function(options){
-			this.on('load', this.load, this);
 			this.model = new Account();
 			this.model.url = '/accounts/me';
+
 			this.model.bind('change', this.render, this);
+			this.on('load', this.load, this);
 		},
 
 		load: function(){
 			this.loaded = true;
 			this.model.fetch();
-
 		},
 		
 		events: {
@@ -52,7 +52,7 @@ define(['text!templates/loading.html','text!templates/profileEdit.html','models/
 				{
 					username: this.$('input[name=username]').val(),
 					realname: this.$('input[name=realname]').val(),
-					biography: this.$('input[name=biography]').val(),
+					biography: this.$('textarea[name=biography]').val(),
 				},
 				function success(){
 					window.location.hash = 'profile/me';

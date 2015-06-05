@@ -1,36 +1,51 @@
+<% if(ui.me){ %>
 <div class="editor-layer">
 	<a class="btn btn-primary pull-right editor-control" href="#profile/me/edit">编辑</a>
 	<p>&nbsp;</p>
 </div>
-
+<% } %>
 <hr>
 
-<div class="pull-left">
-	<img src="<%= profile.avatar %>" width="120px" height="160px">
+<div class="media">
+	<div class="pull-left">
+		<img class="media-object" src="<%= account.avatar %>" width="120px" height="160px">
+	</div>
+	<div class="media-body">
+		<h2 class="media-heading"><%= account.username %></h2>
+		<h4><%= account.realname %></h4>
+	</div>
 </div>
-<h1><%= profile.username %></h1>
-
-<p><%= profile.biography %></p>
 <p class="clearfix"></p>
-
-<div class="status-layer">
-	<div class="status-list"></div>
-</div>
 <hr>
+<h2>我的自传</h2>
+<p><%= account.biography %></p>
 
-<div class="contact-layer">
-	<div class="contact-list"></div>
-</div>
+<% if(!ui.me){ %>
+<h2>动态</h2>
+<hr>
+<div class="status-list"></div>
+<a class="pull-right" href="#">更多...</a>
+<p>&nbsp;</p>
+
+<h2>好友</h2>
+<hr>
+<div class="contact-list"></div>
+<% } %>
+
+<% if(ui.me){ %>
 <hr>
 <div class="button-layer">
 	<a href="#" class="btn btn-block btn-danger logout">退出</a>
 </div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<% } %>
 <!-- <h2>状态更新记录</h2>
 <form>
-	<fieldset>
-		<legend>发表评论</legend>
-		<input type="text" name="status" />
-		<input type="submit" value="添加" />
-	</fieldset>
+<fieldset>
+	<legend>发表评论</legend>
+	<input type="text" name="status" />
+	<input type="submit" value="添加" />
+</fieldset>
 </form>
 <hr>

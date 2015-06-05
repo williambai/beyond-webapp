@@ -31,6 +31,7 @@ module.exports = exports = function(app,models){
 			req.session.loggedIn = true;
 			req.session.accountId = account._id;
 			req.session.username = account.username;
+			req.session.avatar = account.avatar;
 			res.send({accountId: account._id});
 		});
 	});

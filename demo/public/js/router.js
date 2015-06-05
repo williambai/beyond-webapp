@@ -1,4 +1,4 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','models/Account','models/Project','models/StatusCollection','models/ContactCollection','models/ProjectCollection'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,Account,Project,StatusCollection,ContactCollection,ProjectCollection){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','models/Account','models/Project','models/StatusCollection','models/ContactCollection','models/ProjectCollection'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,StatusesView,Account,Project,StatusCollection,ContactCollection,ProjectCollection){
 
 	var SocailRouter = Backbone.Router.extend({
 		logined: false,
@@ -11,12 +11,13 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		socketEvents: _.extend({},Backbone.Events),
 		routes: {
 			'index': 'index',
-			'status': 'index',
+			'activity/:id': 'activity',
+			'status/:id': 'status',
 			'login': 'login',
 			'register': 'register',
 			'forgotpassword': 'forgotPassword',
 			'profile/:id': 'profile',
-			'profile/:id/edit': 'profileEdit',
+			'profile/me/edit': 'profileEdit',
 			'contacts/:id': 'contacts',
 			'addcontact': 'addContact',
 			'project/add': 'addProject',
@@ -57,6 +58,20 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			}});
 		},
 
+		activity: function(id){
+			this.layoutView.trigger('set:brand','朋友圈');
+			var statusesView = new StatusesView({id:id,activity:true,socketEvents: this.socketEvents});
+			this.changeView(statusesView);
+			statusesView.trigger('load');
+		},
+
+		status: function(id){
+			this.layoutView.trigger('set:brand','朋友圈');
+			var statusesView = new StatusesView({id:id,socketEvents: this.socketEvents});
+			this.changeView(statusesView);
+			statusesView.trigger('load');
+		},
+
 		register: function(){
 			this.layoutView.trigger('set:brand','注册');
 			this.changeView(new RegisterView());
@@ -73,14 +88,12 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		},
 		profile: function(id){
 			this.layoutView.trigger('set:brand','个人资料');
-			var account = new Account({id: id});
-			this.changeView(new ProfileView({model: account,socketEvents: this.socketEvents}));
-			account.fetch({error: function(){
-				window.location.hash= 'login';
-			}});
+			var profileView = new ProfileView({id:id,socketEvents: this.socketEvents});
+			this.changeView(profileView);
+			profileView.trigger('load');
 		},
 
-		profileEdit: function(id){
+		profileEdit: function(){
 			this.layoutView.trigger('set:brand','编辑个人资料');
 			var profileEditView = new ProfileEditView();
 			this.changeView(profileEditView);

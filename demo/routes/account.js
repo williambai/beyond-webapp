@@ -73,7 +73,7 @@
 				res.sendStatus(404);
 				return;
 			}
-			Status.getAllByBelongTo(accountId,0,function(status){
+			Status.getAll(accountId,accountId,0,function(status){
 				res.send(status);
 			});
 		});
@@ -91,7 +91,7 @@
 				res.sendStatus(400);
 				return;
 			}
-			Status.add(accountId,accountId,username,avatar,status,function(err){
+			Status.add(req.session.accountId,accountId,username,avatar,status,function(err){
 				if(!err){
 					app.triggerEvent('event:' + accountId, {
 						from: accountId,
@@ -113,7 +113,9 @@
 				res.sendStatus(404);
 				return;
 			}
-			res.send(account.activity);
+			Status.getAllByBelongTo(accountId,0,function(status){
+				res.send(status);
+			});
 		});
 	});
 
