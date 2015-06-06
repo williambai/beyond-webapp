@@ -5,7 +5,6 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 		loadingTemplate: _.template(loadingTemplate),
 
 		loaded: false,		
-		//.has-navbar-top.has-sidebar-left.sidebar-left-visible.sidebar-left-in.sidebar-left-visible
 		initialize: function(options){
 			this.socketEvents = options.socketEvents;
 			this.chatSessions = options.chatSessions;
@@ -14,16 +13,17 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 			this.$el
 				.addClass('has-sidebar-left')
 				.addClass('has-sidebar-right')
-				// .addClass('sidebar-left-visible')
-				// .addClass('sidebar-left-in')
 				.addClass('has-navbar-top');
 			this.on('set:brand', this.updateBrand,this);
 			this.on('load', this.load,this);
 		},
 
 		events: {
+			'click .list-group-item': 'activeItem',
 			'click #left-sidebar-toggle': 'leftSideBarToggle',
 			'click #right-sidebar-toggle': 'rightSideBarToggle',
+			'click .sidebar-left': 'closeLeftSideBar',
+			'click .sidebar-right': 'closeRightSideBar',
 		},
 
 		load: function(){
@@ -38,6 +38,12 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 			this.projectCollection = this.sidebarView.collection;
 		},
 
+		activeItem: function(evt){
+			var currentItem = evt.currentTarget;
+			this.$('.list-group-item').removeClass('active');
+			this.$(currentItem).addClass('active');
+		},
+
 		leftSideBarToggle: function(){
 			var visible = this.$el.hasClass('sidebar-left-visible');
 			if(!visible){
@@ -49,6 +55,7 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 					.removeClass('sidebar-left-in')
 					.removeClass('sidebar-left-visible');
 			}
+			// return false;
 		},
 
 		rightSideBarToggle: function(){
@@ -62,7 +69,17 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 					.removeClass('sidebar-right-in')
 					.removeClass('sidebar-right-visible');
 			}
+			// return false;
 		},
+
+		closeLeftSideBar: function(){
+			this.leftSideBarToggle();
+		},
+
+		closeRightSideBar: function(){
+			this.rightSideBarToggle();
+		},
+
 		updateBrand: function(brand){
 			this.$('.navbar-brand').text(brand || '');
 		},

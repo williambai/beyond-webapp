@@ -25,6 +25,8 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'projects/:pid/contacts(/:cid)': 'projectContacts',
 		},
 		initialize: function(){
+			this.on('logined',this.onLogined,this);
+			this.on('logout', this.onLogout,this);
 			this.layoutView = new LayoutView({
 				socketEvents: this.socketEvents,
 				chatSessions: this.chatSessions,
@@ -88,6 +90,16 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				router: this,
 			}));
 		},
+
+		onLogined: function(){
+			this.logined = true;
+			this.initialize();
+		},
+
+		onLogout: function(){
+			this.logined = false;
+			this.initialize();
+		},
 		forgotPassword: function(){
 			this.changeView(new ForgotPasswordView());
 		},
@@ -97,7 +109,11 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				return;
 			}
 			this.layoutView.trigger('set:brand','个人资料');
-			var profileView = new ProfileView({id:id,socketEvents: this.socketEvents});
+			var profileView = new ProfileView({
+					id:id,
+					router: this,
+					socketEvents: this.socketEvents
+				});
 			this.changeView(profileView);
 			profileView.trigger('load');
 		},
@@ -175,4 +191,5 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 	});
 
 	return new SocailRouter();
+
 });

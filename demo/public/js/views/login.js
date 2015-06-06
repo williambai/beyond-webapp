@@ -16,8 +16,7 @@ define(['text!templates/login.html'],function(loginTemplate){
 				email: $('input[name=email]').val(),
 				password: $('input[name=password]').val()
 			},function(data){
-				console.log(data);
-				that.router.logined = true;
+				that.router.trigger('logined');
 				that.socketEvents.trigger('app:logined',data);
 				window.location.hash = 'index';
 			}).error(function(){
