@@ -67,6 +67,10 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		},
 
 		status: function(id){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
 			this.layoutView.trigger('set:brand','朋友圈');
 			var statusesView = new StatusesView({id:id,socketEvents: this.socketEvents});
 			this.changeView(statusesView);
@@ -99,6 +103,10 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		},
 
 		profileEdit: function(){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
 			this.layoutView.trigger('set:brand','编辑个人资料');
 			var profileEditView = new ProfileEditView();
 			this.changeView(profileEditView);
@@ -106,6 +114,10 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		},
 
 		contacts: function(id){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
 			this.layoutView.trigger('set:brand','我的好友');
 			var contactsView = new ContactsView({id:id});
 			this.changeView(contactsView);
