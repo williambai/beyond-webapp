@@ -1,10 +1,9 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','models/Account','models/Project','models/StatusCollection','models/ContactCollection','models/ProjectCollection'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,StatusesView,Account,Project,StatusCollection,ContactCollection,ProjectCollection){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','views/Statuses'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,StatusesView){
 
 	var SocailRouter = Backbone.Router.extend({
 		logined: false,
 		layoutView: null,
 		currentView : null,
-		sidebarView : null,
 		currentChatView: null,
 		chatSessions: {},
 		projectCollection: null,
@@ -26,18 +25,13 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'projects/:pid/contacts(/:cid)': 'projectContacts',
 		},
 		initialize: function(){
-			this.layoutView = new LayoutView();
-			this.layoutView.render();
-
-			this.projectCollection = new ProjectCollection();
-			this.projectCollection.url = '/projects';
-			this.sidebarView = new ProjectsView({
-				collection: this.projectCollection,
+			this.layoutView = new LayoutView({
 				socketEvents: this.socketEvents,
 				chatSessions: this.chatSessions,
-				currentChatView: this.currentChatView
+				currentChatView: this.currentChatView				
 			});
-			this.projectCollection.fetch({reset:true});
+			this.layoutView.trigger('load');
+			this.projectCollection = this.layoutView.projectCollection;
 		},
 
 		changeView: function(view){
@@ -47,18 +41,25 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			this.currentView = view;
 			this.currentView.render();
 		},
+
 		index: function(){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
 			this.layoutView.trigger('set:brand','主页');
-			var statusCollection = new StatusCollection();
-			statusCollection.url = '/accounts/me/status';
-			this.changeView(new IndexView({collection: statusCollection,socketEvents: this.socketEvents}));
-			statusCollection.fetch({error: function(){
-				console.log(error);
-				window.location.hash= 'login';
-			}});
+			var indexView = new IndexView({
+				socketEvents: this.socketEvents
+			});
+			this.changeView(indexView);
+			indexView.trigger('load');
 		},
 
 		activity: function(id){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
 			this.layoutView.trigger('set:brand','朋友圈');
 			var statusesView = new StatusesView({id:id,activity:true,socketEvents: this.socketEvents});
 			this.changeView(statusesView);
@@ -87,6 +88,10 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			this.changeView(new ForgotPasswordView());
 		},
 		profile: function(id){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
 			this.layoutView.trigger('set:brand','个人资料');
 			var profileView = new ProfileView({id:id,socketEvents: this.socketEvents});
 			this.changeView(profileView);
@@ -102,59 +107,58 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 
 		contacts: function(id){
 			this.layoutView.trigger('set:brand','我的好友');
-			var contactId = id ? id: 'me';
-			var contactCollection = new ContactCollection();
-			contactCollection.url = '/accounts/' + contactId + '/contacts';
-			this.changeView(new ContactsView({collection: contactCollection}));
-			contactCollection.fetch({error: function(){
-				window.location.hash= 'login';
-			}});
+			var contactsView = new ContactsView({id:id});
+			this.changeView(contactsView);
+			contactsView.trigger('load');
 		},
 		addContact: function(){
-			if(this.logined){
-				this.changeView(new AddContactView());
-			}else{
+			if(!this.logined){
 				window.location.hash = 'login';
+				return;
 			}
+			this.changeView(new AddContactView());
 		},
 
 		addProject: function(){
-			if(this.logined){
-				this.changeView(new AddProjectView({projectCollection: this.projectCollection}));
-			}else{
+			if(!this.logined){
 				window.location.hash = 'login';
+				return;
 			}
+			var projectAddView = new AddProjectView({
+					projectCollection: this.projectCollection
+				});
+			this.changeView(projectAddView);
 		},
 
 		projectIndex: function(id){
 			// var project = this.projectCollection.find({_id:id});
 			// this.layoutView.trigger('set:brand','项目：' + id);
-			var statusCollection = new StatusCollection();
-			statusCollection.url = '/projects/'+ id +'/status';
-			this.changeView(new ProjectView({
+			var projectView = new ProjectView({
 				pid: id,
-				collection: statusCollection,
 				socketEvents: this.socketEvents
-			}));
-			statusCollection.fetch({error: function(){
-				window.location.hash= 'login';
-			}});
+			});
+			this.changeView(projectView);
+			projectView.trigger('load');
 		},
+		
 		projectContacts: function(pid,cid){
 			var contactId = cid ? cid: 'me';
-			var contactCollection = new ContactCollection();
-			contactCollection.url = '/projects/' + pid + '/contacts';
-			this.changeView(new ProjectContactsView({pid:pid,collection: contactCollection}));
-			contactCollection.fetch({error: function(){
-				window.location.hash= 'login';
-			}});
+			var projectContactView = new ProjectContactsView({
+					pid:pid,
+				});
+			this.changeView(projectContactView);
+			projectContactView.trigger('load');
 		},
+
 		projectContactAdd: function(pid){
-			if(this.logined){
-				this.changeView(new ProjectContactAddView({pid: pid}));
-			}else{
+			if(!this.logined){
 				window.location.hash = 'login';
+				return;
 			}
+			var projectContactAddView = new ProjectContactAddView({
+					pid: pid
+				});
+			this.changeView(projectContactAddView);			
 		},
 	});
 

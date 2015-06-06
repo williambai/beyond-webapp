@@ -1,5 +1,5 @@
-define(['text!templates/projectContacts.html','views/ProjectContact'],
-	function(contactsTemplate, ContactView){
+define(['text!templates/projectContacts.html','views/ProjectContact','models/ContactCollection'],
+	function(contactsTemplate, ContactView,ContactCollection){
 	var ContactsView = Backbone.View.extend({
 		el: '#content',
 		
@@ -7,10 +7,15 @@ define(['text!templates/projectContacts.html','views/ProjectContact'],
 		
 		initialize: function(options){
 			this.pid = options.pid;
+			this.collection = new ContactCollection();
+			this.collection.url = '/projects/' + this.pid + '/contacts';
 			this.collection.on('add', this.contactAdded, this);
 			this.collection.on('reset', this.contactCollectionReset, this);
+			this.on('load',this.load,this);
 		},
-
+		load: function(){
+			this.collection.fetch();
+		},
 		contactAdded: function(contact){
 			var contactHtml = (new ContactView({pid: this.pid, model: contact,removeButton:true})).render().el;
 			$(contactHtml).appendTo('#contactlist').hide().fadeIn('slow');

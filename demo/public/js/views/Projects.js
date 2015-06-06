@@ -1,4 +1,4 @@
-define(['text!templates/projects.html','views/ProjectItem','views/chatSession','models/ChatCollection'],function(projectsTemplate,ProjectItemView,ChatSessionView,ChatCollection){
+define(['text!templates/projects.html','views/ProjectItem','views/chatSession','models/ChatCollection','models/ProjectCollection'],function(projectsTemplate,ProjectItemView,ChatSessionView,ChatCollection,ProjectCollection){
 	var ProjectsView = Backbone.View.extend({
 		id: '#projectlist',
 		template: _.template(projectsTemplate),
@@ -8,8 +8,15 @@ define(['text!templates/projects.html','views/ProjectItem','views/chatSession','
 			this.currentChatView = options.currentChatView;
 			this.chatSessions = options.chatSessions;
 			
+			this.collection = new ProjectCollection();
+			this.collection.url = '/projects';
 			this.collection.on('add', this.onProjectAdded, this);
 			this.collection.on('reset', this.onProjectCollectionReset, this);
+			this.on('load', this.load,this);
+		},
+
+		load: function(){
+			this.collection.fetch({reset:true});
 		},
 
 		onProjectAdded: function(project){

@@ -1,7 +1,9 @@
-define(['text!templates/index.html','views/Status','models/Status'],
-	function(indexTemplate,StatusView,Status){
+define(['text!templates/index.html','views/Status','models/Status','models/StatusCollection'],
+	function(indexTemplate,StatusView,Status,StatusCollection){
 	var IndexView = Backbone.View.extend({
 		el: '#content',
+
+		loaded: false,
 		events: {
 			'click .editor-toggle': 'editorToggle',
 			'submit form': 'updateStatus'
@@ -9,8 +11,17 @@ define(['text!templates/index.html','views/Status','models/Status'],
 		
 		initialize: function(options){
 			options.socketEvents.bind('status:me',this.onSocketStatusAdded, this);
+
+			this.collection = new StatusCollection();
+			this.collection.url = '/accounts/me/status';
 			this.collection.on('add', this.onStatusAdded, this);
 			this.collection.on('reset', this.onStatusCollectonReset, this);
+		},
+
+		load: function(){
+			loaded = true;
+			this.render();
+			this.collection.fetch();
 		},
 
 		onSocketStatusAdded: function(data){

@@ -29,7 +29,7 @@ define(['router','SocialNetSocket'],function(router,SocialNetSocket){
 			if(!authenticated){
 				window.location.hash = 'login';
 			}else{
-				window.location.hash = 'index';
+				// window.location.hash = 'index';
 			}
 			Backbone.history.start();
 		};

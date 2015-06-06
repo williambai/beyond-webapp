@@ -1,4 +1,4 @@
-define(['text!templates/project.html','views/Status','models/Project','models/Status'],function(projectTemplate,StatusView,Project,Status){
+define(['text!templates/project.html','views/Status','models/Project','models/Status','models/StatusCollection'],function(projectTemplate,StatusView,Project,Status,StatusCollection){
 	var ProjectView = Backbone.View.extend({
 		el: '#content',
 		template: _.template(projectTemplate),
@@ -10,8 +10,15 @@ define(['text!templates/project.html','views/Status','models/Project','models/St
 		initialize: function(options){
 			this.pid = options.pid;
 			// options.socketEvents.bind('status:me',this.onSocketStatusAdded, this);
+			this.collection = new StatusCollection();
+			this.collection.url = '/projects/'+ this.pid +'/status';
 			this.collection.on('add', this.onStatusAdded, this);
 			this.collection.on('reset', this.onStatusCollectonReset, this);
+			this.on('load', this.load, this);
+		},
+
+		load: function(){
+			this.collection.fetch();
 		},
 
 		onSocketStatusAdded: function(data){
