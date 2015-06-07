@@ -167,13 +167,45 @@ gulp.task('less', function () {
 //   return stream.pipe(gulp.dest(path.join(config.dest, 'images')));
 // });
 
+// /*=====================================
+// =            Optimize js              =
+// =====================================*/
 
+
+gulp.task('js', function(done){
+  var requirejs = require('requirejs');
+  var configJs = {
+        paths: {
+          'jQuery': 'libs/jquery',
+          'Underscore': 'libs/underscore',
+          'Backbone': 'libs/backbone',
+          'text': 'libs/text',
+          'templates': '../templates',
+          'Sockets': 'empty:'
+        },
+        shim: {
+          'Backbone': ['Underscore', 'jQuery'],
+          'SocialNet': ['Backbone']
+        },
+        requireLib: require,
+        baseUrl: __dirname + '/' + config.project + '/public/js',
+        name: 'boot',
+        // excludeShallow: Sockets,
+        out: __dirname + '/dist/' + config.project + '/public/js/boot.js',
+      };
+      requirejs.optimize(configJs,function(buildResponse){
+        // console.log(buildResponse);
+        done();
+      },function(err){
+        console.log(err);
+      });
+  });
 
 /*====================================
 =            Default Task            =
 ====================================*/
 
 gulp.task('default', function(done){
-  var tasks = ['server','fonts','less'];
+  var tasks = ['server','fonts','less','js'];
   seq('clean',tasks, done);
 });
