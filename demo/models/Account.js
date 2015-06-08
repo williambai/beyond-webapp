@@ -15,6 +15,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 	var contactSchema = new mongoose.Schema({
 			'username': {type: String},
 			'accountId': {type: String},
+			'avatar': {type: String},
 			'added': {type: Date}, //when the contact was added
 			'updated': {type: Date} // when the contanct was updated
 		},schemaOptions);
@@ -135,6 +136,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		var contact = {
 			username: contactJson.username,
 			accountId: contactJson._id,
+			avatar: contactJson.avatar,
 			added: new Date(),
 			updated: new Date()
 		};

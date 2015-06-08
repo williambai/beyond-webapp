@@ -83,7 +83,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
-			this.layoutView.trigger('set:brand','朋友圈');
+			this.layoutView.trigger('set:brand','私人空间');
 			var statusesView = new StatusesView({id:id,socketEvents: this.socketEvents});
 			this.changeView(statusesView);
 			statusesView.trigger('load');

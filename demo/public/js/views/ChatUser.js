@@ -28,12 +28,12 @@ define(['text!templates/chatuser.html'],function(ChatUserTemplate){
 
 		handleContactLogin: function(eventObj){
 			this.model.set('online', true);
-			this.$el.find('.online_indicator').addClass('online');
+			this.$el.find('.label').addClass('label-success').html('<i>在线</i>');
 		},
 
 		handleContactLogout: function(eventObj){
 			this.model.set('online', false);
-			this.$el.find('.online_indicator').removeClass('online');
+			this.$el.find('.label').removeClass('label-success').html('<i>离线</i>');
 		},
 
 		startChatSession: function(){

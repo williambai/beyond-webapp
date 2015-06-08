@@ -1,6 +1,6 @@
 define(['text!templates/contact.html'],function(contactTemplate){
 	var ContactView = Backbone.View.extend({
-		tagName: 'li',
+		tagName: 'div',
 		template: _.template(contactTemplate),
 
 		addbutton: false,

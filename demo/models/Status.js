@@ -120,6 +120,9 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				);
 		};
 	var getAll = function(userId,belongTo,page,callback){
+			if(typeof userId == 'string') {
+				userId = [userId];
+			}
 			var per = 20;
 			if(typeof page == 'function'){
 				callback = page;
@@ -129,7 +132,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				throw new Error('callback is not defined.');
 			}
 			Status
-				.find({belongTo:belongTo, userId: userId})
+				.find({belongTo:belongTo, userId: {$in: userId}})
 				.sort({createtime:-1})
 				.skip(page*per)
 				.limit(per)
