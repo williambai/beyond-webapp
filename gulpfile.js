@@ -39,6 +39,7 @@ var config = {
 var gulp           = require('gulp'),
     del            = require('del'),
     seq            = require('run-sequence'),
+    jade           = require('gulp-jade'),
     mobilizer      = require('gulp-mobilizer'),
     uglify         = require('gulp-uglify'),
     sourcemaps     = require('gulp-sourcemaps'),
@@ -175,7 +176,9 @@ gulp.task('less', function () {
 gulp.task('js', function(done){
   var requirejs = require('requirejs');
   var configJs = {
+        optimize: 'none',
         paths: {
+          'requireLib': 'libs/require',
           'jQuery': 'libs/jquery',
           'Underscore': 'libs/underscore',
           'Backbone': 'libs/backbone',
@@ -187,11 +190,11 @@ gulp.task('js', function(done){
           'Backbone': ['Underscore', 'jQuery'],
           'SocialNet': ['Backbone']
         },
-        requireLib: require,
+        // include: ['requireLib'],
         baseUrl: __dirname + '/' + config.project + '/public/js',
         name: 'boot',
         // excludeShallow: Sockets,
-        out: __dirname + '/dist/' + config.project + '/public/js/boot.js',
+        out: __dirname + '/dist/' + config.project + '/public/js/main.js',
       };
       requirejs.optimize(configJs,function(buildResponse){
         // console.log(buildResponse);
@@ -200,6 +203,18 @@ gulp.task('js', function(done){
         console.log(err);
       });
   });
+
+/*======================================================================
+=            Compile jade                            =
+======================================================================*/
+
+gulp.task('jade',function(){
+  gulp.src(path.join(__dirname, config.project, 'views/index.jade'))
+    .pipe(jade({
+      pretty: true
+    }))
+    .pipe(gulp.dest(path.join(__dirname,'dist', config.project, 'public')));
+});
 
 /*====================================
 =            Default Task            =
