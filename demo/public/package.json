@@ -1,0 +1,15 @@
+{
+  "name": "我的工作网",
+  "main": "http://localhost:8080",
+  "version": "0.0.1",
+  "single-instance": true,
+  "window": {
+    "title": "Client App for Beyond",
+    "width": 1024,
+    "height": 768,
+    "min_width": 800,
+    "min_height": 650,
+    "toolbar": false
+  },
+  "chromium-args": "--child-clean-exit"
+}
