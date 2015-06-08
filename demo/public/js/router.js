@@ -36,6 +36,16 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			this.projectCollection = this.layoutView.projectCollection;
 		},
 
+		onLogined: function(){
+			this.logined = true;
+			this.initialize();
+		},
+
+		onLogout: function(){
+			this.logined = false;
+			this.initialize();
+		},
+
 		changeView: function(view){
 			if(null != this.currentView){
 				this.currentView.undelegateEvents();
@@ -80,27 +90,29 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		},
 
 		register: function(){
+			if(this.logined){
+				window.location.hash = 'index';
+				return;
+			}
 			this.layoutView.trigger('set:brand','注册');
 			this.changeView(new RegisterView());
 		},
 		login: function(){
+			if(this.logined){
+				window.location.hash = 'index';
+				return;
+			}
 			this.layoutView.trigger('set:brand','登录');
 			this.changeView(new LoginView({
 				socketEvents: this.socketEvents,
 				router: this,
 			}));
 		},
-
-		onLogined: function(){
-			this.logined = true;
-			this.initialize();
-		},
-
-		onLogout: function(){
-			this.logined = false;
-			this.initialize();
-		},
 		forgotPassword: function(){
+			if(this.logined){
+				window.location.hash = 'index';
+				return;
+			}
 			this.changeView(new ForgotPasswordView());
 		},
 		profile: function(id){
@@ -159,6 +171,10 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		},
 
 		projectIndex: function(id){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
 			// var project = this.projectCollection.find({_id:id});
 			// this.layoutView.trigger('set:brand','项目：' + id);
 			var projectView = new ProjectView({
@@ -170,6 +186,10 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		},
 		
 		projectContacts: function(pid,cid){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
 			var contactId = cid ? cid: 'me';
 			var projectContactView = new ProjectContactsView({
 					pid:pid,
