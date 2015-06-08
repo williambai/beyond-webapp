@@ -1,4 +1,4 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/AddContact','views/ChatUsers','views/AddProject','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','views/Statuses'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,AddContactView,ChatUsersView,AddProjectView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,StatusesView){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/AddProject','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','views/Statuses'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,AddProjectView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,StatusesView){
 
 	var SocailRouter = Backbone.Router.extend({
 		logined: false,
@@ -18,7 +18,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'profile/:id': 'profile',
 			'profile/me/edit': 'profileEdit',
 			'contacts/:id': 'contacts',
-			'addcontact': 'addContact',
+			'contact/add': 'addContact',
 			'project/add': 'addProject',
 			'projects/:id': 'projectIndex',
 			'projects/:pid/contact/add': 'projectContactAdd',
@@ -152,11 +152,12 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			contactsView.trigger('load');
 		},
 		addContact: function(){
+			this.layoutView.trigger('set:brand','搜索和添加好友');
 			if(!this.logined){
 				window.location.hash = 'login';
 				return;
 			}
-			this.changeView(new AddContactView());
+			this.changeView(new ContactAddView());
 		},
 
 		addProject: function(){

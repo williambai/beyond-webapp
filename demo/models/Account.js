@@ -13,8 +13,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		};
 	
 	var contactSchema = new mongoose.Schema({
-			'username': {type: String},
 			'accountId': {type: String},
+			'username': {type: String},
 			'avatar': {type: String},
 			'added': {type: Date}, //when the contact was added
 			'updated': {type: Date} // when the contanct was updated
@@ -133,19 +133,26 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 	};
 
 	var addContact = function(account, contactJson){
-		var contact = {
-			username: contactJson.username,
+		var contactNew = {
 			accountId: contactJson._id,
+			username: contactJson.username,
 			avatar: contactJson.avatar,
 			added: new Date(),
 			updated: new Date()
 		};
-		account.contacts.push(contact);
-		account.save(function(err){
-			if(err){
-				console.log('Error saving account: ' + err);
+		account.contacts.forEach(function(contact){
+			if(contactJson._id == contact.accountId){
+				contactNew = null;
 			}
 		});
+		if(contactNew && (contactJson._id.toString() != account._id.toString())){
+			account.contacts.push(contactNew);
+			account.save(function(err){
+				if(err){
+					console.log('Error saving account: ' + err);
+				}
+			});
+		}
 	};
 
 	var removeContact = function(account, contactId){

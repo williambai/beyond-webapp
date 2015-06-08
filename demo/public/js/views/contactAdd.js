@@ -1,4 +1,4 @@
-define(['text!templates/addContact.html','views/Contact','models/Contact'], 
+define(['text!templates/contactAdd.html','views/Contact','models/Contact'], 
 	function(addContactTemplate,ContactView,Contact){
 	var AddContactView = Backbone.View.extend({
 		el: '#content',
