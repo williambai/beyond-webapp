@@ -1,4 +1,4 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/AddProject','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','views/Statuses'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,AddProjectView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,StatusesView){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/ProjectAdd','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','views/Statuses'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,ProjectAddView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,StatusesView){
 
 	var SocailRouter = Backbone.Router.extend({
 		logined: false,
@@ -165,7 +165,8 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
-			var projectAddView = new AddProjectView({
+			this.layoutView.trigger('set:brand','新建项目');
+			var projectAddView = new ProjectAddView({
 					projectCollection: this.projectCollection
 				});
 			this.changeView(projectAddView);

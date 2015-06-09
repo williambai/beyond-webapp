@@ -1,7 +1,7 @@
-define(['text!templates/addProject.html'],function(addProjectTemplate){
+define(['text!templates/projectAdd.html'],function(projectAddTemplate){
 	var AddProjectView = Backbone.View.extend({
 		el: '#content',
-		template: _.template(addProjectTemplate),
+		template: _.template(projectAddTemplate),
 
 		events: {
 			'submit form': 'addProject'
@@ -12,14 +12,20 @@ define(['text!templates/addProject.html'],function(addProjectTemplate){
 		},
 
 		addProject: function(){
+			var name = $('input[name=name]').val();
+			var description = $('textarea[name=description]').val();
+			if(name.length<2){
+				console.log('name too short.');
+				return false;
+			}
 			var that = this;
 			$.post('/projects',{
-				name: $('input[name=name]').val(),
-				description: $('input[name=description]').val()
+				name: name,
+				description: description 
 			},function success(){
 				that.projectCollection.fetch({reset: true});
 			});
-			window.location.hash = 'addcontact';
+			window.location.hash = 'contact/add';
 			return false;
 		},
 
