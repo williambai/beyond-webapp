@@ -50,7 +50,7 @@ define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession','mo
 					});
 				chatSessionView.render();
 				chatCollection.url = '/chats/' + roomId;
-				chatCollection.fetch();
+				chatCollection.fetch({reset:true});
 				this.chatSessions[roomId] = chatSessionView;
 			}else{
 				var view = this.chatSessions[roomId];

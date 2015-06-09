@@ -110,20 +110,26 @@ exports =module.exports = function(app,models){
 			if(data.action == 'chat'){
 				models.Chat.add(from,to,{
 					username: session.username,
-					text: data.text,
+					avatar: session.avatar,
+					status: data.text,
 				});
 			}
 			sio.sockets.in(data.to).emit('chatserver',{
 				from: accountId,
-				text: data.text
+				data: {
+					username: session.username,
+					avatar: session.avatar,
+					text: data.text
+				}
 			});
 		});
 	});
 
-	app.get('/chats/:roomId',function(req,res){
-		var roomId = req.params.roomId;
+	app.get('/chats/:fromId',function(req,res){
+		var toId = req.session.accountId;
+		var fromId = req.params.fromId;
 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
-		models.Chat.getByRoomId(roomId,page,function(docs){
+		models.Chat.getByToId(toId,page,function(docs){
 			res.send(docs);
 		});
 	});

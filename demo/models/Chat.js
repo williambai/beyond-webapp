@@ -1,12 +1,11 @@
 module.exports = exports = function(app, config,mongoose,nodemailer){
 	var chatSchema = new mongoose.Schema({
-		from: {
-			id: {type: mongoose.Schema.ObjectId},
-			username: {type: String}
-		},
-		to: {type: mongoose.Schema.ObjectId},
-		text: {type: String},
-		time: {type: Date}
+		fromId: {type: String},
+		toId: {type: String},
+		username: {type: String},
+		avatar: {type: String},
+		status: {type: String},
+		createtime: {type: Date}
 	});
 	mongoose.chatSchema = chatSchema;
 
@@ -21,13 +20,12 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 	
 	var add = function(from,to,options){
 			var chat = new Chat({
-				from: {
-					id: from,
-					username: options.username 
-				},
-				to: to,
-				text: options.text,
-				time: new Date()
+				fromId: from,
+				toId: to,
+				username: options.username,
+				avatar: options.avatar, 
+				status: options.status,
+				createtime: new Date()
 			});
 			chat.save(defaultCallback);
 		};
@@ -46,11 +44,11 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	var getByRoomId = function(roomId,page,callback){
+	var getByToId = function(toId,page,callback){
 			page = (!page || page < 0) ? 0 : page;
 			var per = 20;
-			if(roomId){
-				Chat.find({to:roomId},function(err,docs){
+			if(toId){
+				Chat.find({toId:toId},function(err,docs){
 					callback(docs);
 				}).skip(page*per).limit(per);
 			}else{
@@ -62,6 +60,6 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		Chat: Chat,
 		add: add,
 		remove: remove,
-		getByRoomId: getByRoomId,
+		getByToId: getByToId,
 	};		
 };

@@ -16,6 +16,7 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 			'click .editor-toggle': 'editorToggle',
 			'submit form': 'updateStatus',
 			'click .next-page': 'nextPage',
+			'scroll': 'scroll',
 		},
 		
 		initialize: function(options){
@@ -94,6 +95,15 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 			++this.page;
 			this.collection.url = this.collectionUrl + '?page=' + this.page;
 			this.collection.fetch();
+		},
+
+		scroll: function(){
+			 viewH =this.$el.height(),//可见高度  
+             contentH =this.$el.get(0).scrollHeight,//内容高度  
+             scrollTop =this.$el.scrollTop();//滚动高度  
+            if(contentH - viewH - scrollTop <= 100) { //到达底部100px时,加载新内容
+            	this.nextPage();
+            }
 		},
 
 		render: function(){
