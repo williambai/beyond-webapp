@@ -1,6 +1,7 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/ProjectAdd','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','views/Statuses'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,ProjectAddView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,StatusesView){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/ProjectAdd','views/ProjectChat','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','views/ChatSession'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,ProjectAddView,ProjectChatView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,StatusesView,ChatSessionView){
 
 	var SocailRouter = Backbone.Router.extend({
+		account: null,
 		logined: false,
 		layoutView: null,
 		currentView : null,
@@ -12,6 +13,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'index': 'index',
 			'activity/:id': 'activity',
 			'status/:id': 'status',
+			'chat/:id': 'chat',
 			'login': 'login',
 			'register': 'register',
 			'forgotpassword': 'forgotPassword',
@@ -20,6 +22,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'contacts/:id': 'contacts',
 			'contact/add': 'addContact',
 			'project/add': 'addProject',
+			'project/chat/:id': 'projectChat',
 			'projects/:id': 'projectIndex',
 			'projects/:pid/contact/add': 'projectContactAdd',
 			'projects/:pid/contacts(/:cid)': 'projectContacts',
@@ -36,9 +39,11 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			this.projectCollection = this.layoutView.projectCollection;
 		},
 
-		onLogined: function(){
+		onLogined: function(account){
+			// console.log('++')
+			// console.log(account.avatar);
+			this.account = account;
 			this.logined = true;
-			this.initialize();
 		},
 
 		onLogout: function(){
@@ -159,6 +164,30 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			}
 			this.changeView(new ContactAddView());
 		},
+		
+		chat: function(id){
+			// if(null != this.currentChatView){
+			// 	this.currentChatView.undelegateEvents();
+			// }
+			// if(!this.chatSessions[id]){
+				var chatSessionView = new ChatSessionView({
+						id: id,
+						me: this.account,
+						socketEvents: this.socketEvents
+					});
+				this.changeView(chatSessionView);
+				chatSessionView.trigger('load');
+			// this.chatSessions[id] = chatSessionView;
+			// }else{
+			// 	var view = this.chatSessions[id];
+			// 	view.delegateEvents();
+			// 	view.render();
+			// 	var collection = view.collection;
+			// 	collection.trigger('reset',collection);
+			// }
+
+			// this.currentChatView = this.chatSessions[id];
+		},
 
 		addProject: function(){
 			if(!this.logined){
@@ -170,6 +199,15 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 					projectCollection: this.projectCollection
 				});
 			this.changeView(projectAddView);
+		},
+
+		projectChat: function(id){
+			var chatSessionView = new ProjectChatView({
+					id: id,
+					socketEvents: this.socketEvents
+				});
+			this.changeView(chatSessionView);
+			chatSessionView.trigger('load');
 		},
 
 		projectIndex: function(id){

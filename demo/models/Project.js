@@ -22,7 +22,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			if(err){
 				return console.log(err);
 			}
-			return console.log('Save/Remove/Update successfully.');
+			return console.log('Project Save/Remove/Update successfully.');
 		};
 	
 	var add = function(accountId,options){

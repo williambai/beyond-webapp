@@ -37,7 +37,9 @@ define(['text!templates/chatuser.html'],function(ChatUserTemplate){
 		},
 
 		startChatSession: function(){
-			this.trigger('chat:start', this.model);
+			window.location.hash = 'chat/' + this.model.get('accountId');
+			return false;
+			// this.trigger('chat:start', this.model);
 		},
 
 		render: function(){

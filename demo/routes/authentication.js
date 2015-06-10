@@ -32,7 +32,11 @@ module.exports = exports = function(app,models){
 			req.session.accountId = account._id;
 			req.session.username = account.username;
 			req.session.avatar = account.avatar;
-			res.send({accountId: account._id});
+			res.json({
+				id: req.session.accountId,
+				username: req.session.username,
+				avatar: req.session.avatar
+			});
 		});
 	});
 
@@ -77,7 +81,11 @@ module.exports = exports = function(app,models){
 
 	app.get('/account/authenticated', function(req,res){
 		if(req.session.loggedIn){
-			res.send({accountId: req.session.accountId});
+			res.json({
+				id: req.session.accountId,
+				username: req.session.username,
+				avatar: req.session.avatar
+			});
 		}else{
 			res.sendStatus(401);
 		}

@@ -22,13 +22,18 @@
     top: 3px;
 }
 .sender .chat-content{
-	background-color: aquamarine;
-	margin: 0 0 0 78px;
-	padding: 5px;
-	border-radius: 7px;
-	min-width: 120px;
 	overflow-y: scroll;
 	overflow-x: hidden;
+}
+
+.chat-content p.left{
+	background-color: aquamarine;
+	margin: 0;
+	padding: 5px;
+	line-height: 25px;
+	border-radius: 7px;
+	min-width: 120px;
+	display: inline-block;
 }
 
 .receiver {
@@ -64,3 +69,5 @@
 	overflow-x: hidden;
 }
 
+.chat-content p.right{
+}

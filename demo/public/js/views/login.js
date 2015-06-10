@@ -16,8 +16,8 @@ define(['text!templates/login.html'],function(loginTemplate){
 				email: $('input[name=email]').val(),
 				password: $('input[name=password]').val()
 			},function(data){
-				that.router.trigger('logined');
-				that.socketEvents.trigger('app:logined',data);
+				that.router.trigger('logined',data);
+				that.socketEvents.trigger('app:logined',{accountId: data.id});
 				window.location.hash = 'index';
 			}).error(function(){
 				$('#error').text('登录失败');

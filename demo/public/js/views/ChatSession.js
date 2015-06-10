@@ -9,23 +9,35 @@ define(['text!templates/chatsession.html','views/ChatItem','models/Chat','models
 		},
 
 		initialize: function(options){
-			this.room = options.room;
-			this.listenTo(this.collection, 'reset', this.onChatCollectionReset);
+			this.id = options.id;
+			this.me = options.me;
 			this.socketEvents = options.socketEvents;
 			this.socketEvents.on(
-					'socket:chat:in:' + this.room.get('accountId'),
+					// 'socket:chat:in:' + this.room.get('accountId'),
+					'socket:chat:in:' + this.id,
 					this.socketReceiveChat, 
 					this
 				);
+			this.collection = new ChatCollection();
+			this.collection.url = '/chats/' + this.id;
+			this.listenTo(this.collection, 'reset', this.onChatCollectionReset);
+			this.on('load', this.load, this);
 		},
+
+		load: function(){
+			this.render();
+			this.collection.fetch({reset:true});
+		},
+
 		sendChat: function(){
 			var chatText = $('input[name=chat]').val();
 			if(chatText && /[^\s]+/.test(chatText)){
 				var chatObject = {
 					fromId: 'me',
-					toId: this.room.get('accountId'),
+					// toId: this.room.get('accountId'),
+					toId: this.id,
 					username: '我：',
-					avatar: '',
+					avatar: this.me.avatar,
 					status: chatText
 				};
 				var chat = new Chat(chatObject);
@@ -34,7 +46,8 @@ define(['text!templates/chatsession.html','views/ChatItem','models/Chat','models
 
 				this.socketEvents.trigger('socket:chat',{
 					action: 'chat',
-					to: this.room.get('accountId'),
+					// to: this.room.get('accountId'),
+					to: this.id,
 					text: chatText
 				});
 			}
@@ -43,9 +56,12 @@ define(['text!templates/chatsession.html','views/ChatItem','models/Chat','models
 		},
 
 		socketReceiveChat: function(socket){
+			var fromId = socket.from;
+			var toId = this.id;
 			var chat = new Chat({
-				fromId: socket.from,
-				toId: this.room.get('accountId'),
+				fromId: fromId,
+				// toId: this.room.get('accountId'),
+				toId: toId,
 				username: socket.data.username,
 				avatar: socket.data.avatar,
 				status: socket.data.text,
@@ -55,6 +71,10 @@ define(['text!templates/chatsession.html','views/ChatItem','models/Chat','models
 		},
 
 		onChatAdded: function(chat){
+			var fromId = chat.get('fromId');
+			if(fromId != this.id) {
+				chat.set('fromId','me');
+			}
 			var chatItemHtml = (new ChatItemView({model: chat})).render().el;
 			$(chatItemHtml).appendTo('.chat_log').hide().fadeIn('slow');
 			this.$el.animate({scrollTop: this.$el.get(0).scrollHeight});
@@ -64,6 +84,10 @@ define(['text!templates/chatsession.html','views/ChatItem','models/Chat','models
 			var that = this;
 			$('.chat_log').empty();
 			collection.each(function(chat){
+				var fromId = chat.get('fromId');
+				if(fromId != that.id) {
+					chat.set('fromId','me');
+				}
 				var chatItemHtml = (new ChatItemView({model: chat})).render().el;
 				$(chatItemHtml).appendTo('.chat_log').hide().fadeIn('fast');
 			});
@@ -75,7 +99,8 @@ define(['text!templates/chatsession.html','views/ChatItem','models/Chat','models
 				var collectionInRoom = new ChatCollection(this.collection.where({roomId: roomId}));
 				this.onChatCollectionReset(collectionInRoom);
 			}else{
-				this.$el.html(this.template({room: this.room.toJSON()}));
+				// this.$el.html(this.template({room: this.room.toJSON()}));
+				this.$el.html(this.template());
 
 			}
 			return this;

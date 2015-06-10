@@ -38,6 +38,7 @@ define(['text!templates/projectItem.html'],function(projectItemTemplate){
 
 		startChatSession: function(){
 			this.trigger('chat:start', this.model);
+			return false;
 		},
 
 		render: function(){

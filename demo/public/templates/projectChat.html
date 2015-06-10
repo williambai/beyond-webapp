@@ -1,0 +1,49 @@
+<div class="navbar navbar-app navbar-absolute-bottom hidden">
+<form>
+	<div class="nav4">
+		<div class="nav4-left">
+			<a href="#" class="chat-toggle">
+				<img src="" width="40px" height="40px">
+			</a>
+		</div>
+		<div class="nav4-right">		
+			<button class="btn btn-primary">发送</button>
+		</div>
+		<div class="nav4-input-both">
+			<div class="form-group">
+				<input type="text" name="chat" class="form-control">
+			</div>
+		</div>
+	</div>
+</form>
+</div>
+
+<div class="navbar navbar-app navbar-absolute-bottom">
+	<div class="nav4">
+		<div class="nav4-left">
+			<a href="#" class="chat-toggle" >
+				<img src="" width="40px" height="40px">
+			</a>
+		</div>
+		<div class="nav4-menu">
+		<div class="btn-group justified">
+			<a href="#projects/<-%= model._id %>
+				" class="btn btn-navbar">
+				<i class="fa fa-exclamation-circle fa-navbar"></i>
+				动态
+			</a>
+			<a href="#projects/<-%= model._id %>
+				/contacts" class="btn btn-navbar">
+				<i class="fa fa-github fa-navbar"></i>
+				成员
+			</a>
+			<a href="#projects/<-%= model._id %>
+				/stats" class="btn btn-navbar">
+				<i class="fa fa-home fa-navbar"></i>
+				状况
+			</a>
+		</div>
+		</div>
+	</div>
+</div>
+<ul class="chat_log" style="margin-bottom:80px;"></ul>
