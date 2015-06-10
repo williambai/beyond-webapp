@@ -16,8 +16,6 @@ define(['router','SocialNetSocket'],function(router,SocialNetSocket){
 				mathod: 'GET',
 				success: function(data){
 					router.trigger('logined',data);
-					console.log('++')
-					console.log(data.id)
 					router.socketEvents.trigger('app:logined',{accountId: data.id});
 					return callback(true);
 				},

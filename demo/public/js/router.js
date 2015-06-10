@@ -1,7 +1,7 @@
 define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/ProjectAdd','views/ProjectChat','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','views/ChatSession'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,ProjectAddView,ProjectChatView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,StatusesView,ChatSessionView){
 
 	var SocailRouter = Backbone.Router.extend({
-		account: null,
+		account: null,//login account
 		logined: false,
 		layoutView: null,
 		currentView : null,
@@ -172,7 +172,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			// if(!this.chatSessions[id]){
 				var chatSessionView = new ChatSessionView({
 						id: id,
-						me: this.account,
+						account: this.account,
 						socketEvents: this.socketEvents
 					});
 				this.changeView(chatSessionView);
@@ -204,6 +204,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		projectChat: function(id){
 			var chatSessionView = new ProjectChatView({
 					id: id,
+					account: this.account,
 					socketEvents: this.socketEvents
 				});
 			this.changeView(chatSessionView);

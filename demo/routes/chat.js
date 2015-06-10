@@ -104,7 +104,7 @@ exports =module.exports = function(app,models){
 
 		socket.on('chatclient', function(data){
 			// console.log('chatclient:');
-			// console.log(data);
+			console.log(data);
 			var from = accountId;
 			var to = data.to;
 			if(data.action == 'chat'){
