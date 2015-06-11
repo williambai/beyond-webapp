@@ -42,7 +42,11 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				});
 			status.save(function(err){
 				debug && defaultCallback(err);
-				callback && callback(err);
+				if(err){
+					callback && callback(null);
+				}else{
+					callback && callback(status);
+				}
 			});
 		};
 
@@ -52,7 +56,11 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					id, 
 					function(err){
 						debug && defaultCallback(err);
-						callback && callback(err);
+						if(err){
+							callback && callback(null);
+						}else{
+							callback && callback(true);
+						}
 					}
 				);
 		};
@@ -66,7 +74,11 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					},
 					function(err){
 						debug && defaultCallback(err);
-						callback && callback(err);
+						if(err){
+							callback && callback(null);
+						}else{
+							callback && callback(true);
+						}
 					}
 				);
 		};
@@ -83,10 +95,14 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				},
 				function(err){
 					debug && defaultCallback(err);
-					callback && callback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(true);
+					}
 				}
 			);			
-	};
+		};
 
 	var updateVoteBad = function(id,accountId,callback){
 		Status
@@ -101,10 +117,14 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				},
 				function(err){
 					debug && defaultCallback(err);
-					callback && callback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(true);
+					}
 				}
 			);
-	};
+		};
 
 	var updateLevel = function(id,level,callback){
 			Status
@@ -115,7 +135,11 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					},
 					function(err){
 						debug && defaultCallback(err);
-						callback && callback(err);
+						if(err){
+							callback && callback(null);
+						}else{
+							callback && callback(true);
+						}
 					}
 				);
 		};
@@ -138,7 +162,11 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				.limit(per)
 				.exec(function(err,docs){
 					debug && defaultCallback(err);
-					callback && callback(docs);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(docs);
+					}
 				});
 		};
 
@@ -158,7 +186,11 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				.limit(per)
 				.exec(function(err,docs){
 					debug && defaultCallback(err);
-					callback && callback(docs);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(docs);
+					}
 				});
 		};
 
@@ -179,7 +211,11 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				.limit(per)
 				.exec(function(err,docs){
 					debug && defaultCallback(err);
-					callback && callback(docs);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(docs);
+					}
 				});
 		};
 

@@ -1,20 +1,14 @@
 module.exports = exports = function(app, config,mongoose,nodemailer){
-	// var statusSchema = new mongoose.Schema({
-	// 		name: {type: String},
-	// 		editor: {type: mongoose.Schema.ObjectId},
-	// 		status: {type: String}
-	// 	});
+	var debug = true;
+
 	var projectSchema = new mongoose.Schema({
 		accountId: {type: mongoose.Schema.ObjectId},
 		name: {type: String},
 		description: {type: String},
 		contacts: [],
-		// status: [statusSchema], 
 	});
 
 	mongoose.projectSchema = projectSchema;
-	
-	var Status = mongoose.model('Status');
 
 	var Project = mongoose.model('Project', projectSchema);
 
@@ -25,26 +19,54 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			return console.log('Project Save/Remove/Update successfully.');
 		};
 	
-	var add = function(accountId,options){
+	var add = function(accountId,options,callback){
 			var project = new Project({
 				accountId: accountId,
 				name: options.name || '',
 				description: options.description || '',
 			});
-			project.save(defaultCallback);
+			project.save(function(err){
+				debug && defaultCallback(err);
+				if(err){
+					callback && callback(null);
+				}else{
+					callback && callback(project);
+				}
+			});
 		};
 
-	var update = function(id, options){
-			Project.where({_id:id}).update({$set: options}, defaultCallback);
+	var update = function(id, options, callback){
+			Project
+				.where({_id:id})
+				.update({$set: options}, function(err){
+					debug && defaultCallback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(true);
+					}				
+				});
 		};
 
-	var remove = function(id){
-			Project.remove({_id:id}, defaultCallback);
+	var remove = function(id,callback){
+			Project.remove({_id:id}, function(err){
+				debug && defaultCallback(err);
+				if(err){
+					callback && callback(null);
+				}else{
+					callback && callback(true);
+				}								
+			});
 		};
 
 	var getById = function(id, callback){
 			Project.findOne({_id:id}, function(err,doc){
-				callback(doc);
+				debug && defaultCallback(err);
+				if(err){
+					callback && callback(null);
+				}else{
+					callback && callback(doc);
+				}				
 			});
 		};
 
@@ -52,101 +74,91 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			page = (!page || page < 0) ? 0 : page;
 			var per = 20;
 			if(accountId){
-				Project.find({accountId:accountId},function(err,docs){
-					callback(docs);
-				}).skip(page*per).limit(per);
+				Project
+					.find({accountId:accountId})
+					.skip(page*per)
+					.limit(per)
+					.exec(function(err,docs){
+						debug && defaultCallback(err);
+						if(err){
+							callback && callback(null);
+						}else{
+							callback && callback(docs);
+						}
+					});
+
 			}else{
-				Project.find({},function(err,docs){
-					callback(docs);
-				}).skip(page*per).limit(per);
+				Project
+					.find({})
+					.skip(page*per)
+					.limit(per)
+					.exec(function(err,docs){
+						debug && defaultCallback(err);
+						if(err){
+							callback && callback(null);
+						}else{
+							callback && callback(docs);
+						}
+					});
 			}
 		};
 
-	var addStatusById = function(id,userId,username,avatar,status,callback){
-		Status.add(userId,id,username,avatar,status,callback);
-	};
-
-	var removeStatusById = function(id, callback){
-		Status.remove(id,callback);
-	};
-
-	var getStatusById = function(id,page,callback){
-		if(typeof page == 'function'){
-			callback = page;
-			page = 0;
-		}
-		Status.getAllByBelongTo(id,page,callback);
-	};
-	// var addStatusById = function(id,name,editor,text){
-	// 	var status = {
-	// 		name: name,
-	// 		editor: editor,
-	// 		status: text
-	// 	};
-	// 	Project.findOne({_id:id},function(err,doc){
-	// 		if(doc){
-	// 			doc.status.push(status);
-	// 			doc.save(defaultCallback);
-	// 		}
-	// 	});
-	// };
-
-	// var removeStatusById = function(id,status){
-	// 	Project.findOne({_id:id}, function(err,doc){
-	// 		if(doc){
-	// 			doc.status.pull(status);
-	// 			doc.save(defaultCallback);
-	// 		}
-	// 	})
-	// };
-
-	// var getStatusById = function(id,page,callback){
-	// 	id = id || 0;
-	// 	page = (!page || page<0) ? 0 : page;
-	// 	var per = 20;
-	// 	Project.findOne({_id:id}, function(err,doc){
-	// 		if(doc){
-	// 			callback(doc.status).skip(page*per).limit(per);
-	// 		}
-	// 	});
-	// };
-
-	var addContactById = function(id,contactId){
-		Project.findOne({_id:id}, function(err,doc){
-			if(err){
-				defaultCallback(err);
-				return;
-			}
-			if(doc){
-				doc.contacts.push(contactId);
-				doc.save(defaultCallback);
-			}
-		});
-	};
+	var addContactById = function(id,contactId, callback){
+			Project.findOne({_id:id}, function(err,doc){
+				if(err || doc == null){
+					debug && defaultCallback(err);
+					callback && callback(null);
+					return;
+				}
+				if(doc){
+					doc.contacts.push(contactId);
+					doc.save(function(err){
+						debug && defaultCallback(err);
+						if(err){
+							callback && callback(null);
+						}else{
+							callback && callback(contactId);
+						}					
+					});
+				}
+			});
+		};
 
 	var removeContactById = function(id,contactId){
-		Project.findOne({_id:id}, function(err,doc){
-			if(err){
-				defaultCallback(err);
-				return;
-			}
-			if(doc){
-				doc.contacts.pull(contactId);
-				doc.save(defaultCallback);
-			}
-		})
-	};
+			Project.findOne({_id:id}, function(err,doc){
+				if(err || doc == null){
+					debug && defaultCallback(err);
+					callback && callback(null);
+					return;
+				}
+				if(doc){
+					doc.contacts.pull(contactId);
+					doc.save(function(err){
+						debug && defaultCallback(err);
+						if(err){
+							callback && callback(null);
+						}else{
+							callback && callback(contactId);
+						}					
+					});
+				}
+			})
+		};
 
 	var getContactById = function(id,page,callback){
-		id = id || 0;
-		page = (!page || page<0) ? 0 : page;
-		var per = 20;
-		Project.findOne({_id:id},function(err,docs){
-			if(docs){
-				callback(docs.contacts).skip(page*per).limit(per);
-			}
-		});
-	};
+			id = id || 0;
+			page = (!page || page<0) ? 0 : page;
+			var per = 20;
+			Project.findOne({_id:id},function(err,doc){
+				debug && defaultCallback(err);
+				if(err || doc == null){
+					callback && callback(null);
+					return;
+				}else{
+					callback && callback(doc.contacts);
+				}
+			});
+		};
 
 	return {
 		Project: Project,
@@ -155,9 +167,6 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		update: update,
 		getById: getById,
 		getByAccountId: getByAccountId,
-		// addStatusById: addStatusById,
-		// removeStatusById: removeStatusById,
-		// getStatusById: getStatusById,
 		addContactById: addContactById,
 		removeContactById: removeContactById,
 		getContactById: getContactById,

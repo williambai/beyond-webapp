@@ -1,4 +1,4 @@
-define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,ChatUsersView,ContactCollection){
+define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection'], function(sio,ChatUsersView,ProjectsView,ContactCollection){
 
 	var SocialNetSocket = function(options){
 		var eventDispatcher = options.eventDispatcher;
@@ -28,6 +28,7 @@ define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,Ch
 					socket.on('chatserver',handleChatEvent);
 
 					renderChatView();
+					renderProjectsView();
 				});
 		};
 
@@ -65,6 +66,14 @@ define(['Sockets','views/ChatUsers','models/ContactCollection'], function(sio,Ch
 					chatSessions: chatSessions,
 				}).render();
 			contactCollection.fetch({reset:true});
+		};
+
+		var renderProjectsView = function(){
+			var projectsView = new ProjectsView({
+				socketEvents: eventDispatcher,
+			});
+			projectsView.collection.url = 'accounts/me/projects';
+			projectsView.trigger('load');
 		};
 
 		return {

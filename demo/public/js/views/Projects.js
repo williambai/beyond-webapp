@@ -13,6 +13,7 @@ define(['text!templates/projects.html','views/ProjectItem','views/ProjectChat','
 			this.collection.on('add', this.onProjectAdded, this);
 			this.collection.on('reset', this.onProjectCollectionReset, this);
 			this.on('load', this.load,this);
+			this.socketEvents.on('app:projects:reload', this.load, this);
 		},
 
 		load: function(){

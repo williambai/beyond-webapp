@@ -44,7 +44,7 @@ define(['text!templates/loading.html','text!templates/profile.html','views/Statu
 		logout: function(){
 			$.get('/logout');
 			this.router.trigger('logout');
-			this.socketEvents.trigger('app:logined');
+			// this.socketEvents.trigger('app:logout');
 			window.location.hash = 'login';
 			return false;
 		},

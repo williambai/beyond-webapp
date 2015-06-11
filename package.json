@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/williambai/beyond-webapp",
   "dependencies": {
+    "async": "^1.2.1",
     "body-parser": "^1.12.4",
     "connect-mongo": "^0.8.1",
     "cookie": "^0.1.3",

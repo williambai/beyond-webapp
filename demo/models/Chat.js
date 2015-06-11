@@ -1,4 +1,6 @@
 module.exports = exports = function(app, config,mongoose,nodemailer){
+	var debug = true;
+
 	var chatSchema = new mongoose.Schema({
 		fromId: {type: String},
 		toId: {type: String},
@@ -18,7 +20,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			return console.log('Chat Save/Remove/Update successfully.');
 		};
 	
-	var add = function(from,to,options){
+	var add = function(from,to,options,callback){
 			var chat = new Chat({
 				fromId: from,
 				toId: to,
@@ -27,49 +29,94 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				status: options.status,
 				createtime: new Date()
 			});
-			chat.save(defaultCallback);
+			chat.save(function(err){
+				debug && defaultCallback(err);
+				if(err){
+					callback && callback(null);
+				}else{
+					callback && callback(chat);
+				}
+			});
 		};
 
-	var update = function(id, options){
-			Chat.where({_id:id}).update({$set: options}, defaultCallback);
+	var update = function(id, options,callback){
+			Chat
+				.where({_id:id})
+				.update({$set: options}, function(err){
+					debug && defaultCallback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(true);
+					}					
+				});
 		};
 
-	var remove = function(id){
-			Chat.remove({_id:id}, defaultCallback);
+	var remove = function(id,callback){
+			Chat.remove({_id:id}, function(err){
+				debug && defaultCallback(err);
+				if(err){
+					callback && callback(null);
+				}else{
+					callback && callback(true);
+				}									
+			});
 		};
 
 	var getById = function(id, callback){
 			Chat.findOne({_id:id}, function(err,doc){
-				callback(doc);
+				debug && defaultCallback(err);
+				if(err){
+					callback && callback(null);
+				}else{
+					callback && callback(doc);
+				}									
 			});
 		};
 
 	var getByToId = function(toId,page,callback){
 			page = (!page || page < 0) ? 0 : page;
 			var per = 20;
-			if(toId){
-				Chat.find({toId:toId},function(err,docs){
-					callback(docs);
-				}).skip(page*per).limit(per);
-			}else{
-				callback(null);
+			if(!toId){
+				callback && callback(null);
+				return;
 			}
+			Chat
+				.find({toId:toId})
+				.skip(page*per)
+				.limit(per)
+				.exec(function(err,docs){
+					debug && defaultCallback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(docs);
+					}									
+				});
 		};
 
-	var getChatHistory = function(id1,id2, page, callback){
+	var getChatHistory = function(id1, id2, page, callback){
 			page = (!page || page < 0) ? 0 : page;
 			var per = 20;
-			if(id1 && id2){
-				Chat.find({
-						fromId:{$in: [id1, id2]},
-						toId: {$in: [id1, id2]}
-					},
-					function(err,docs){
-						callback(docs);
-					}).skip(page*per).limit(per);
-			}else{
-				callback(null);
+			if(!(id1 && id2)){
+				callback && callback(null);
+				return;
 			}			
+			Chat
+				.find({
+					fromId:{$in: [id1, id2]},
+					toId: {$in: [id1, id2]}
+				})
+				.skip(page*per)
+				.limit(per)
+				.exec(function(err,docs){
+					debug && defaultCallback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(docs);
+					}									
+				});
 		};
 	return {
 		Chat: Chat,

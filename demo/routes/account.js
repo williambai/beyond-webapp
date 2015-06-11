@@ -1,4 +1,5 @@
  exports = module.exports = function(app,models){
+ 	var async = require('async');
  	var path = require('path');
  	var fs = require('fs');
 
@@ -6,22 +7,38 @@
 	var Status = models.Status;
 
 	app.get('/accounts/:id', app.isLogined,function(req,res){
+		var meId = req.session.accountId;
 		var accountId = req.params.id == 'me' 
-							? req.session.accountId
+							? meId
 							: req.params.id;
-		Account.findById(accountId, function(account){
-			if(!account){
-				res.sendStatus(404);
-				return;
+
+		async.waterfall(
+			[
+				function _account(callback){
+					Account.findById(accountId, function(account){
+						if(!account){
+							callback(404);
+							return;
+						}
+						if(accountId == meId || Account.hasContact(account,meId)){
+							account.isFriend = true;
+						}
+						callback(null,account);
+					});
+				}
+			],
+			function _result(err,result){
+				if(err){
+					res.sendStatus(err);
+					return;
+				}
+				res.send(result);
 			}
-			if(accountId == 'me' || Account.hasContact(account,req.session.accountId)){
-				account.isFriend = true;
-			}
-			res.send(account);
-		});
+		);
 	});
 
 	app.post('/accounts/:id/avatar', app.isLogined, function(req,res){
+		var meId = req.session.accountId;
 		var accountId = req.params.id == 'me' 
 							? req.session.accountId
 							: req.params.id;
@@ -206,4 +223,36 @@
 			res.send(accounts);
 		});
 	});
+
+	app.get('/accounts/:id/projects',app.isLogined, function(req,res){
+		var meId = req.session.accountId;
+		var accountId = req.params.id == 'me' 
+							? meId
+							: req.params.id;
+
+		async.waterfall(
+			[
+				function _account(callback){
+					Account.findById(accountId,function(account){
+						if(!account){
+							callback(404);
+							return;
+						}
+						callback(null,account.projects);
+					});
+				},
+				function _project(projects,callback){
+					callback(null,projects);
+				}
+			],
+			function _result(err,result){
+				if(err){
+					res.sendStatus(err);
+					return;
+				}
+				res.send(result);
+			}
+		);
+	});
+
 }

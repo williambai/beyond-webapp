@@ -8,7 +8,7 @@ define(['text!templates/projectAdd.html'],function(projectAddTemplate){
 		},
 
 		initialize: function(options){
-			this.projectCollection = options.projectCollection;
+			this.socketEvents = options.socketEvents;
 		},
 
 		addProject: function(){
@@ -23,7 +23,7 @@ define(['text!templates/projectAdd.html'],function(projectAddTemplate){
 				name: name,
 				description: description 
 			},function success(){
-				that.projectCollection.fetch({reset: true});
+				that.socketEvents.trigger('app:projects:reload');
 			});
 			window.location.hash = 'contact/add';
 			return false;

@@ -29,13 +29,13 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 		load: function(){
 			this.loaded = true;
 			this.render();
-			this.sidebarView = new ProjectsView({
-				socketEvents: this.socketEvents,
-				chatSessions: this.chatSessions,
-				currentChatView: this.currentChatView
-			});
-			this.sidebarView.trigger('load');
-			this.projectCollection = this.sidebarView.collection;
+			// this.sidebarView = new ProjectsView({
+			// 	socketEvents: this.socketEvents,
+			// 	chatSessions: this.chatSessions,
+			// 	currentChatView: this.currentChatView
+			// });
+			// this.sidebarView.trigger('load');
+			// this.projectCollection = this.sidebarView.collection;
 		},
 
 		activeItem: function(evt){

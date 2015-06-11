@@ -75,16 +75,18 @@ exports =module.exports = function(app,models){
 
 		models.Account.findById(accountId,function(account){
 			var subscribedAccounts = {};
-			myAccount = account;
-
-			account.contacts.forEach(function(contact){
-				if(!subscribedAccounts[contact.accountId]){
-					subscribeToAccount(contact.accountId);
-					subscribedAccounts[contact.accountId] = true;
+			if(account){
+				myAccount = account;
+				account.contacts = account.contacts || [];
+				account.contacts.forEach(function(contact){
+					if(!subscribedAccounts[contact.accountId]){
+						subscribeToAccount(contact.accountId);
+						subscribedAccounts[contact.accountId] = true;
+					}
+				});
+				if(!subscribedAccounts[accountId]){
+					subscribeToAccount(accountId);
 				}
-			});
-			if(!subscribedAccounts[accountId]){
-				subscribeToAccount(accountId);
 			}
 		});
 

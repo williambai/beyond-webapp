@@ -7,7 +7,6 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		currentView : null,
 		currentChatView: null,
 		chatSessions: {},
-		projectCollection: null,
 		socketEvents: _.extend({},Backbone.Events),
 		routes: {
 			'index': 'index',
@@ -23,7 +22,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'contact/add': 'addContact',
 			'project/add': 'addProject',
 			'project/chat/:id': 'projectChat',
-			'projects/:id': 'projectIndex',
+			'projects/:pid/status': 'projectStatus',
 			'projects/:pid/contact/add': 'projectContactAdd',
 			'projects/:pid/contacts(/:cid)': 'projectContacts',
 		},
@@ -36,7 +35,6 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				currentChatView: this.currentChatView				
 			});
 			this.layoutView.trigger('load');
-			this.projectCollection = this.layoutView.projectCollection;
 		},
 
 		onLogined: function(account){
@@ -196,7 +194,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			}
 			this.layoutView.trigger('set:brand','新建项目');
 			var projectAddView = new ProjectAddView({
-					projectCollection: this.projectCollection
+					socketEvents: this.socketEvents
 				});
 			this.changeView(projectAddView);
 		},
@@ -211,7 +209,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			chatSessionView.trigger('load');
 		},
 
-		projectIndex: function(id){
+		projectStatus: function(pid){
 			if(!this.logined){
 				window.location.hash = 'login';
 				return;
@@ -219,7 +217,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			// var project = this.projectCollection.find({_id:id});
 			// this.layoutView.trigger('set:brand','项目：' + id);
 			var projectView = new ProjectView({
-				pid: id,
+				pid: pid,
 				socketEvents: this.socketEvents
 			});
 			this.changeView(projectView);
