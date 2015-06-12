@@ -4,17 +4,21 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 		template: _.template(layoutTemplate),
 		loadingTemplate: _.template(loadingTemplate),
 
-		loaded: false,		
+		messageUnreadNum: 0, //未读消息数量
+		// statusUnreadNum: 0, //好友圈新消息数量
+
+		loaded: false,
 		initialize: function(options){
+			this.appEvents = options.appEvents;
 			this.socketEvents = options.socketEvents;
-			this.chatSessions = options.chatSessions;
-			this.currentChatView = options.currentChatView;
 
 			this.$el
 				.addClass('has-sidebar-left')
 				.addClass('has-sidebar-right')
 				.addClass('has-navbar-top');
-			this.on('set:brand', this.updateBrand,this);
+			this.appEvents.on('set:brand', this.updateBrand,this);
+			this.socketEvents.on('chat:number:total', this.onMessageNumChanged, this);
+			// this.socketEvents.on('status:number:unread', this.onStatusNumChanged, this);
 			this.on('load', this.load,this);
 		},
 
@@ -29,13 +33,6 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 		load: function(){
 			this.loaded = true;
 			this.render();
-			// this.sidebarView = new ProjectsView({
-			// 	socketEvents: this.socketEvents,
-			// 	chatSessions: this.chatSessions,
-			// 	currentChatView: this.currentChatView
-			// });
-			// this.sidebarView.trigger('load');
-			// this.projectCollection = this.sidebarView.collection;
 		},
 
 		activeItem: function(evt){
@@ -82,6 +79,16 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 
 		updateBrand: function(brand){
 			this.$('.navbar-brand').text(brand || '');
+		},
+
+		onMessageNumChanged: function(num){
+			this.messageUnreadNum += num;
+			if(this.messageUnreadNum < 1) {
+				this.messageUnreadNum = 0;
+				this.$('.chat-total-unread').text('');
+			}else{
+				this.$('.chat-total-unread').text(this.messageUnreadNum);
+			}
 		},
 
 		render: function(){

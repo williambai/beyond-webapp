@@ -15,7 +15,7 @@ define(['text!templates/loading.html','text!templates/profile.html','views/Statu
 		uiControl: {},
 
 		initialize: function(options){
-			this.router = options.router;
+			this.appEvents = options.appEvents;
 			if(options.id == 'me') {
 				this.uiControl.me = true;
 			}else{
@@ -43,7 +43,7 @@ define(['text!templates/loading.html','text!templates/profile.html','views/Statu
 
 		logout: function(){
 			$.get('/logout');
-			this.router.trigger('logout');
+			this.appEvents.trigger('logout');
 			// this.socketEvents.trigger('app:logout');
 			window.location.hash = 'login';
 			return false;

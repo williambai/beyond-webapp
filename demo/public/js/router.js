@@ -3,11 +3,11 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 	var SocailRouter = Backbone.Router.extend({
 		account: null,//login account
 		logined: false,
-		layoutView: null,
 		currentView : null,
-		currentChatView: null,
-		chatSessions: {},
-		socketEvents: _.extend({},Backbone.Events),
+		appEvents: _.extend({},Backbone.Events),//app inner events
+		socketEvents: _.extend({},Backbone.Events),//socket events
+		// currentChatView: null,
+		// chatSessions: {},
 		routes: {
 			'index': 'index',
 			'activity/:id': 'activity',
@@ -27,14 +27,13 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'projects/:pid/contacts(/:cid)': 'projectContacts',
 		},
 		initialize: function(){
-			this.on('logined',this.onLogined,this);
-			this.on('logout', this.onLogout,this);
-			this.layoutView = new LayoutView({
+			this.appEvents.on('logined',this.onLogined,this);
+			this.appEvents.on('logout', this.onLogout,this);
+			layoutView = new LayoutView({
+				appEvents: this.appEvents,
 				socketEvents: this.socketEvents,
-				chatSessions: this.chatSessions,
-				currentChatView: this.currentChatView				
 			});
-			this.layoutView.trigger('load');
+			layoutView.trigger('load');
 		},
 
 		onLogined: function(account){
@@ -62,7 +61,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
-			this.layoutView.trigger('set:brand','主页');
+			this.appEvents.trigger('set:brand','主页');
 			var indexView = new IndexView({
 				socketEvents: this.socketEvents
 			});
@@ -75,7 +74,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
-			this.layoutView.trigger('set:brand','朋友圈');
+			this.appEvents.trigger('set:brand','朋友圈');
 			var statusesView = new StatusesView({id:id,activity:true,socketEvents: this.socketEvents});
 			this.changeView(statusesView);
 			statusesView.trigger('load');
@@ -86,7 +85,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
-			this.layoutView.trigger('set:brand','私人空间');
+			this.appEvents.trigger('set:brand','私人空间');
 			var statusesView = new StatusesView({id:id,socketEvents: this.socketEvents});
 			this.changeView(statusesView);
 			statusesView.trigger('load');
@@ -97,7 +96,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'index';
 				return;
 			}
-			this.layoutView.trigger('set:brand','注册');
+			this.appEvents.trigger('set:brand','注册');
 			this.changeView(new RegisterView());
 		},
 		login: function(){
@@ -105,10 +104,10 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'index';
 				return;
 			}
-			this.layoutView.trigger('set:brand','登录');
+			this.appEvents.trigger('set:brand','登录');
 			this.changeView(new LoginView({
+				appEvents: this.appEvents,
 				socketEvents: this.socketEvents,
-				router: this,
 			}));
 		},
 		forgotPassword: function(){
@@ -123,10 +122,10 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
-			this.layoutView.trigger('set:brand','个人资料');
+			this.appEvents.trigger('set:brand','个人资料');
 			var profileView = new ProfileView({
 					id:id,
-					router: this,
+					appEvents: this.appEvents,
 					socketEvents: this.socketEvents
 				});
 			this.changeView(profileView);
@@ -138,7 +137,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
-			this.layoutView.trigger('set:brand','编辑个人资料');
+			this.appEvents.trigger('set:brand','编辑个人资料');
 			var profileEditView = new ProfileEditView();
 			this.changeView(profileEditView);
 			profileEditView.trigger('load');
@@ -149,13 +148,13 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
-			this.layoutView.trigger('set:brand','我的好友');
+			this.appEvents.trigger('set:brand','我的好友');
 			var contactsView = new ContactsView({id:id});
 			this.changeView(contactsView);
 			contactsView.trigger('load');
 		},
 		addContact: function(){
-			this.layoutView.trigger('set:brand','搜索和添加好友');
+			this.appEvents.trigger('set:brand','搜索和添加好友');
 			if(!this.logined){
 				window.location.hash = 'login';
 				return;
@@ -192,7 +191,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
-			this.layoutView.trigger('set:brand','新建项目');
+			this.appEvents.trigger('set:brand','新建项目');
 			var projectAddView = new ProjectAddView({
 					socketEvents: this.socketEvents
 				});
@@ -215,7 +214,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				return;
 			}
 			// var project = this.projectCollection.find({_id:id});
-			// this.layoutView.trigger('set:brand','项目：' + id);
+			// this.appEvents.trigger('set:brand','项目：' + id);
 			var projectView = new ProjectView({
 				pid: pid,
 				socketEvents: this.socketEvents

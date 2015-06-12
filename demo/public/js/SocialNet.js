@@ -15,7 +15,7 @@ define(['router','SocialNetSocket'],function(router,SocialNetSocket){
 			$.ajax('/account/authenticated',{
 				mathod: 'GET',
 				success: function(data){
-					router.trigger('logined',data);
+					router.appEvents.trigger('logined',data);
 					router.socketEvents.trigger('app:logined',{accountId: data.id});
 					return callback(true);
 				},

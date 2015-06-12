@@ -7,8 +7,8 @@ define(['text!templates/login.html'],function(loginTemplate){
 			'submit form': 'login'
 		},
 		initialize: function(options){
+			this.appEvents = options.appEvents;
 			this.socketEvents = options.socketEvents;
-			this.router = options.router;
 		},
 		login: function(){
 			var that = this;
@@ -16,7 +16,7 @@ define(['text!templates/login.html'],function(loginTemplate){
 				email: $('input[name=email]').val(),
 				password: $('input[name=password]').val()
 			},function(data){
-				that.router.trigger('logined',data);
+				that.appEvents.trigger('logined',data);
 				that.socketEvents.trigger('app:logined',{accountId: data.id});
 				window.location.hash = 'index';
 			}).error(function(){
