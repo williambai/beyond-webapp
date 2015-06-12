@@ -62,6 +62,7 @@ exports =module.exports = function(app,models){
 
 		var handleContactEvent = function(eventObj){
 				console.log('+++重要调试，检查Contact事件数量。To(用户名)：' + session.username);
+				console.log(eventObj);
 				socket.emit('contactEvent', eventObj);
 			};
 			
@@ -72,7 +73,6 @@ exports =module.exports = function(app,models){
 
 		var handleProjectEvent = function(eventObj){
 				console.log('+++重要调试，检查Project事件数量。To(用户名)：' + session.username);
-				console.log(eventObj);
 				socket.emit('projectEvent', eventObj);
 			};
 
