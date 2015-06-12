@@ -61,8 +61,7 @@ exports =module.exports = function(app,models){
 		});
 
 		var handleContactEvent = function(eventObj){
-				console.log('+++重要调试，检查群发事件数量。用户名：' + session.username)
-				console.log(eventObj);
+				console.log('+++重要调试，检查Contact事件数量。To(用户名)：' + session.username);
 				socket.emit('contactEvent', eventObj);
 			};
 			
@@ -72,6 +71,8 @@ exports =module.exports = function(app,models){
 			};
 
 		var handleProjectEvent = function(eventObj){
+				console.log('+++重要调试，检查Project事件数量。To(用户名)：' + session.username);
+				console.log(eventObj);
 				socket.emit('projectEvent', eventObj);
 			};
 
@@ -129,6 +130,9 @@ exports =module.exports = function(app,models){
 					from: accountId,
 					action: 'logout'
 				});
+				//退订 accountId
+				var eventName = 'event:' + accountId;
+				app.removeEventListener(eventName, handleContactEvent);
 			}
 		});
 
