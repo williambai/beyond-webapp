@@ -38,7 +38,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 
 		onLogined: function(account){
 			// console.log('++')
-			// console.log(account.avatar);
+			// console.log(account);
 			this.account = account;
 			this.logined = true;
 		},

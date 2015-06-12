@@ -6,7 +6,7 @@ exports = module.exports = function(app,models){
 	var Status = models.Status;
 
 	app.get('/projects',app.isLogined,function(req,res){
-		page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
+		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
 		var accountId = req.session.accountId;
 
 		async.waterfall(
@@ -80,6 +80,7 @@ exports = module.exports = function(app,models){
 	});
 
 	app.get('/projects/:id/contacts',app.isLogined, function(req,res){
+		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
 		var id = req.params.id;
 
 		async.waterfall(
@@ -94,7 +95,7 @@ exports = module.exports = function(app,models){
 					});
 				},
 				function _account(project,callback){
-					Account.findAll(project.contacts, 0 ,function(accounts){
+					Account.findAll(project.contacts, page, function(accounts){
 						callback(null,accounts);
 					});
 				}
@@ -193,6 +194,7 @@ exports = module.exports = function(app,models){
 	});
 
 	app.get('/projects/:id/status',app.isLogined, function(req,res){
+		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
 		var id = req.params.id;
 
 		async.waterfall(
@@ -207,7 +209,7 @@ exports = module.exports = function(app,models){
 					});
 				},
 				function _status(project,callback){
-					Status.getAllByBelongTo(project._id,0,function(status){
+					Status.getAllByToId(project._id,page,function(status){
 						callback(null,status);
 					});
 				}

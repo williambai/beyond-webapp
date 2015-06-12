@@ -22,10 +22,12 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 					// console.info('established a connection successfully.');
 					//in --> out
 					eventDispatcher.on('socket:chat',handleSendChat);
+					eventDispatcher.on('socket:project:chat', handleSendPorject);
 
 					//in <-- out
 					socket.on('contactEvent', handleContactEvent);
 					socket.on('chatserver',handleChatEvent);
+					socket.on('projectEvent', handleProjectEvent);
 
 					renderChatView();
 					renderProjectsView();
@@ -34,10 +36,13 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 
 		var handleSendChat = function(payload){
 			if(null != socket){
-				// payload.from = accountId;
-				// console.log(accountId +' send:');
-				// console.log(payload);
 				socket.emit('chatclient',payload);
+			}
+		};
+
+		var handleSendPorject = function(payload){
+			if(null != socket){
+				socket.emit('projectclient', payload);
 			}
 		};
 
@@ -46,8 +51,6 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 			if(eventObj.from == accountId){
 				eventName = eventObj.action + ':me';
 			}
-			// console.log(accountId + ' receive: ' + eventName);
-			// console.log(eventObj);
 			eventDispatcher.trigger(eventName,eventObj);
 		};
 
@@ -55,6 +58,10 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 			eventDispatcher.trigger('socket:chat:start:' + data.from);
 			eventDispatcher.trigger('socket:chat:in:' + data.from, data);
 		};
+
+		var handleProjectEvent = function(data){
+			eventDispatcher.trigger('socket:project:chat:in:' + data.from, data);
+		}
 
 		var renderChatView = function(){
 			var contactCollection = new ContactCollection();

@@ -2,8 +2,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 	var debug = true;
 
 	var statusSchema = new mongoose.Schema({
-			userId: {type: String},
-			belongTo: {type:String},//accountId or projectId
+			fromId: {type: String},
+			toId: {type:String},//accountId or projectId
 			username: {type: String},
 			avatar: {type: String},
 			status: {type: String},
@@ -27,10 +27,10 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			return console.log('Status Save/Remove/Update successfully.');
 		};
 
-	var add = function(userId,belongTo,username,avatar,status,callback){
+	var add = function(fromId,toId,username,avatar,status,callback){
 			var status = new Status({
-					userId: userId,
-					belongTo: belongTo,
+					fromId: fromId,
+					toId: toId,
 					username: username,
 					avatar: avatar || '',
 					status: status,
@@ -143,9 +143,9 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					}
 				);
 		};
-	var getAll = function(userId,belongTo,page,callback){
-			if(typeof userId == 'string') {
-				userId = [userId];
+	var getAll = function(fromId,toId,page,callback){
+			if(typeof fromId == 'string') {
+				fromId = [fromId];
 			}
 			var per = 20;
 			if(typeof page == 'function'){
@@ -156,7 +156,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				throw new Error('callback is not defined.');
 			}
 			Status
-				.find({belongTo:belongTo, userId: {$in: userId}})
+				.find({toId:toId, fromId: {$in: fromId}})
 				.sort({createtime:-1})
 				.skip(page*per)
 				.limit(per)
@@ -170,7 +170,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				});
 		};
 
-	var getAllByBelongTo = function(belongTo,page,callback){
+	var getAllByToId = function(toId,page,callback){
 			var per = 20;
 			if(typeof page == 'function'){
 				callback = page;
@@ -180,7 +180,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				throw new Error('callback is not defined.');
 			}
 			Status
-				.find({belongTo:belongTo})
+				.find({toId:toId})
 				.sort({createtime:-1})
 				.skip(page*per)
 				.limit(per)
@@ -194,7 +194,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				});
 		};
 
-	var getAllByUserId = function(userId,page,callback){
+	var getAllByFromId = function(fromId,page,callback){
 			var per = 20;
 			if(typeof page == 'function'){
 				callback = page;
@@ -205,7 +205,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			}
 
 			Status
-				.find({userId: userId})
+				.find({fromId: fromId})
 				.sort({createtime:-1})
 				.skip(page*per)
 				.limit(per)
@@ -228,7 +228,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		updateVoteBad: updateVoteBad,
 		updateLevel: updateLevel,
 		getAll:getAll,
-		getAllByBelongTo: getAllByBelongTo,
-		getAllByUserId: getAllByUserId
+		getAllByToId: getAllByToId,
+		getAllByFromId: getAllByFromId
 	};
 };

@@ -83,6 +83,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			}
 			Chat
 				.find({toId:toId})
+				.sort({createtime:-1})
 				.skip(page*per)
 				.limit(per)
 				.exec(function(err,docs){
@@ -107,6 +108,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					fromId:{$in: [id1, id2]},
 					toId: {$in: [id1, id2]}
 				})
+				.sort({createtime:-1})
 				.skip(page*per)
 				.limit(per)
 				.exec(function(err,docs){

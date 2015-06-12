@@ -73,10 +73,21 @@ exports =module.exports = function(app,models){
 				// console.log('Subscribing to ' + accountId);
 			};
 
+		var handleProjectEvent = function(eventObj){
+				socket.emit('projectEvent', eventObj);
+			};
+
+		var subscribeToProject = function(projectId){
+				var eventName = 'project:' + projectId
+				app.addEventListener(eventName, handleProjectEvent);
+			};
+
 		models.Account.findById(accountId,function(account){
 			var subscribedAccounts = {};
+			var subscirbedProjects = {};
 			if(account){
 				myAccount = account;
+				//订阅contact events
 				account.contacts = account.contacts || [];
 				account.contacts.forEach(function(contact){
 					if(!subscribedAccounts[contact.accountId]){
@@ -84,19 +95,38 @@ exports =module.exports = function(app,models){
 						subscribedAccounts[contact.accountId] = true;
 					}
 				});
+				//订阅自己account events
 				if(!subscribedAccounts[accountId]){
 					subscribeToAccount(accountId);
+					subscribedAccounts[accountId] = true;
 				}
+				//订阅project events
+				account.projects = account.projects || [];
+				account.projects.forEach(function(project){
+					if(!subscirbedProjects[project._id]){
+						subscribeToProject(project._id);
+						subscirbedProjects[project._id] = true;
+					}
+				});
 			}
 		});
 
 		socket.on('disconnect', function(){
 			if(myAccount){
+				myAccount.contacts = myAccount.contacts || [];
+				//退订 contanct events
 				myAccount.contacts.forEach(function(contact){
 					var eventName = 'event:' + contact.accountId;
 					app.removeEventListener(eventName, handleContactEvent);
 					// console.log('Unsubcribing from ' + eventName);
 				});
+				//退订 project events
+				myAccount.projects = myAccount.projects || [];
+				myAccount.projects.forEach(function(project){
+					var eventName = 'project:' + project._id;
+					app.removeEventListener(eventName, handleProjectEvent);
+				});
+				//声明自己logout
 				app.triggerEvent('event:' + accountId,{
 					from: accountId,
 					action: 'logout'
@@ -104,9 +134,10 @@ exports =module.exports = function(app,models){
 			}
 		});
 
+		//receiving contact client
 		socket.on('chatclient', function(data){
 			// console.log('chatclient:');
-			console.log(data);
+			// console.log(data);
 			var from = accountId;
 			var to = data.to;
 			if(data.action == 'chat'){
@@ -124,6 +155,28 @@ exports =module.exports = function(app,models){
 					text: data.text
 				}
 			});
+		});
+
+		//receiving project client 
+		socket.on('projectclient', function(data){
+			// console.log('+++')
+			// console.log(data)
+			var action = data.action; // 'chat'
+			var to = data.to;
+			var text = data.text;
+			var message = {
+					from: to,
+					data: {
+						userId: accountId,
+						username: session.username,
+						avatar: session.avatar,
+						text: text,
+					}
+				};
+			if(action == 'chat'){
+				models.Status.add(accountId,to,session.username,session.avatar,text);
+				app.triggerEvent('project:' + to, message);
+			}
 		});
 	});
 

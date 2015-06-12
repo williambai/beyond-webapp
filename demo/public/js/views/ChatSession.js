@@ -86,7 +86,7 @@ define(['text!templates/chatsession.html','views/ChatItem','models/Chat','models
 					chat.set('fromId','me');
 				}
 				var chatItemHtml = (new ChatItemView({model: chat})).render().el;
-				$(chatItemHtml).appendTo('.chat_log').hide().fadeIn('fast');
+				$(chatItemHtml).prependTo('.chat_log').hide().fadeIn('fast');
 			});
 			this.$el.animate({scrollTop: this.$el.get(0).scrollHeight});
 		},

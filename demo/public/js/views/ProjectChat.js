@@ -13,7 +13,7 @@ define(['text!templates/projectChat.html','views/ChatItem','models/Status','mode
 			this.account = options.account;
 			this.socketEvents = options.socketEvents;
 			this.socketEvents.on(
-					'socket:chat:in:' + this.id,
+					'socket:project:chat:in:' + this.id,
 					this.socketReceiveChat, 
 					this
 				);
@@ -31,19 +31,19 @@ define(['text!templates/projectChat.html','views/ChatItem','models/Status','mode
 		sendChat: function(){
 			var chatText = $('input[name=chat]').val();
 			if(chatText && /[^\s]+/.test(chatText)){
-				var statusObject = {
-					userId: 'me',
-					belongTo: this.id,
-					username: this.account.userId,
-					avatar: this.account.avatar,
-					status: chatText
-				};
-				var status = new Status(statusObject);
-				this.collection.add(status);
-				this.onChatAdded(status);
+				// var statusObject = {
+				// 	fromId: 'me',
+				// 	toId: this.id,
+				// 	username: this.account.id,
+				// 	avatar: this.account.avatar,
+				// 	status: chatText
+				// };
+				// var status = new Status(statusObject);
+				// this.collection.add(status);
+				// this.onChatAdded(status);
 
-				this.socketEvents.trigger('socket:project',{
-					action: 'project',
+				this.socketEvents.trigger('socket:project:chat',{
+					action: 'chat',
 					to: this.id,
 					text: chatText
 				});
@@ -52,13 +52,46 @@ define(['text!templates/projectChat.html','views/ChatItem','models/Status','mode
 			return false;
 		},
 
+		socketReceiveChat: function(socket){
+			var fromId = socket.from;
+			var data = socket.data;
+			var userId = data.userId;
+			var username = data.username;
+			var avatar = data.avatar;
+			var text = data.text;
+
+			var status = new Status({
+					fromId: userId,
+					toId: fromId,
+					username: username,
+					avatar: avatar,
+					status: text,
+				});
+			this.collection.add(status);
+			this.onChatAdded(status);
+		},
+
 		onChatAdded: function(chat){
 			var fromId = chat.get('fromId');
-			if(fromId != this.id) {
+			if(fromId == this.account.id) {
 				chat.set('fromId','me');
 			}
 			var chatItemHtml = (new ChatItemView({model: chat})).render().el;
 			$(chatItemHtml).appendTo('.chat_log').hide().fadeIn('slow');
+			this.$el.animate({scrollTop: this.$el.get(0).scrollHeight});
+		},
+
+		onChatCollectionReset: function(collection){
+			var that = this;
+			$('.chat_log').empty();
+			collection.each(function(chat){
+				var fromId = chat.get('fromId');
+				if(fromId == that.account.id) {
+					chat.set('fromId','me');
+				}
+				var chatItemHtml = (new ChatItemView({model: chat})).render().el;
+				$(chatItemHtml).prependTo('.chat_log').hide().fadeIn('fast');
+			});
 			this.$el.animate({scrollTop: this.$el.get(0).scrollHeight});
 		},
 
