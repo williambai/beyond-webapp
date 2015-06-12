@@ -107,21 +107,21 @@
 		Account.findById(accountId, function(account){
 			var username = req.session.username || '匿名';
 			var avatar = req.session.avatar || '';
-			var status = req.body.status || '';
-			if(status.length<0){
+			var text = req.body.status || '';
+			if(text.length<0){
 				res.sendStatus(400);
 				return;
 			}
-			Status.add(req.session.accountId,accountId,username,avatar,status,function(err){
-				if(!err){
+			Status.add(req.session.accountId,accountId,username,avatar,text,function(status){
+				if(status){
 					app.triggerEvent('event:' + accountId, {
+						action: 'status',
 						from: accountId,
 						data: {
 							username: username,
 							avatar: avatar,
-							status: status
+							status: text
 						},
-						action: 'status'
 					});
 				}
 			});
@@ -142,7 +142,7 @@
 				res.sendStatus(404);
 				return;
 			}
-			Status.getAllByBelongTo(accountId,page,function(status){
+			Status.getAllByToId(accountId,page,function(status){
 				res.send(status);
 			});
 		});

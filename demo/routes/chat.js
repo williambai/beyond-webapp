@@ -61,16 +61,14 @@ exports =module.exports = function(app,models){
 		});
 
 		var handleContactEvent = function(eventObj){
-				// console.log('App triggerEvent on account: ' + accountId);
-				// console.log(eventObj);
+				console.log('+++重要调试，检查群发事件数量。用户名：' + session.username)
+				console.log(eventObj);
 				socket.emit('contactEvent', eventObj);
 			};
 			
 		var subscribeToAccount = function(accountId){
 				var eventName = 'event:' + accountId;
-				// console.log('App addEventListener on eventName: ' + eventName);
 				app.addEventListener(eventName,handleContactEvent);
-				// console.log('Subscribing to ' + accountId);
 			};
 
 		var handleProjectEvent = function(eventObj){
