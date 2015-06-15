@@ -53,7 +53,7 @@ exports =module.exports = function(app,models){
 		var session = socket.handshake.headers.session;
 		var accountId = session.accountId;
 		var myAccount = null;
-
+		//进入 room
 		socket.join(accountId);
 		app.triggerEvent('event:' + accountId,{
 			from: accountId,
@@ -125,6 +125,11 @@ exports =module.exports = function(app,models){
 					var eventName = 'project:' + project._id;
 					app.removeEventListener(eventName, handleProjectEvent);
 				});
+				//退订 socket
+				// socket.removeListener('chatclient',recieveChat);
+				// socket.removeListener('projectclient');
+				//离开 room
+				// socket.leave(accountId);
 				//声明自己logout
 				app.triggerEvent('event:' + accountId,{
 					from: accountId,
@@ -136,28 +141,29 @@ exports =module.exports = function(app,models){
 			}
 		});
 
-		//receiving contact client
-		socket.on('chatclient', function(data){
-			// console.log('chatclient:');
-			// console.log(data);
-			var from = accountId;
-			var to = data.to;
-			if(data.action == 'chat'){
-				models.Chat.add(from,to,{
-					username: session.username,
-					avatar: session.avatar,
-					status: data.text,
-				});
-			}
-			sio.sockets.in(data.to).emit('chatserver',{
-				from: accountId,
-				data: {
-					username: session.username,
-					avatar: session.avatar,
-					text: data.text
+		var recieveChat = function(data){
+				console.log('chatclient:');
+				// console.log(data);
+				var from = accountId;
+				var to = data.to;
+				if(data.action == 'chat'){
+					models.Chat.add(from,to,{
+						username: session.username,
+						avatar: session.avatar,
+						status: data.text,
+					});
 				}
-			});
-		});
+				sio.sockets.in(data.to).emit('chatserver',{
+					from: accountId,
+					data: {
+						username: session.username,
+						avatar: session.avatar,
+						text: data.text
+					}
+				});
+			};
+		//receiving contact client
+		socket.on('chatclient', recieveChat);
 
 		//receiving project client 
 		socket.on('projectclient', function(data){

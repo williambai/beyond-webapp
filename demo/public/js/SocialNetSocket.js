@@ -19,7 +19,7 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 					console.error('Unable to connect',reason);
 				})
 				.on('connect', function(){
-					// console.info('established a connection successfully.');
+					console.info('established a connection successfully.');
 					//in --> out
 					eventDispatcher.on('socket:chat',handleSendChat);
 					eventDispatcher.on('socket:project:chat', handleSendPorject);
@@ -30,7 +30,16 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 					socket.on('projectEvent', handleProjectEvent);
 
 					renderChatView();
-					renderProjectsView();
+					renderProjectsView();					
+				})
+				.on('disconnect',function(){
+					console.info('socket disconnected by server.');
+					eventDispatcher.off('scoket:chat',handleSendChat);
+					eventDispatcher.off('socket:project:chat', handleSendPorject);
+					// socket.removeListener('contactEvent',handleContactEvent);
+					// socket.removeListener('chatserver',handleChatEvent);
+					// socket.removeListener('projectEvent', handleProjectEvent);
+					window.location.reload();
 				});
 		};
 
