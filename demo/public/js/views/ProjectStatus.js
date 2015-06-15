@@ -1,7 +1,7 @@
-define(['text!templates/project.html','views/Status','models/Project','models/Status','models/StatusCollection'],function(projectTemplate,StatusView,Project,Status,StatusCollection){
-	var ProjectView = Backbone.View.extend({
+define(['text!templates/projectStatus.html','views/BottomBar0','views/Status','models/Project','models/Status','models/StatusCollection'],function(projectStatusTemplate,BottomBarView,StatusView,Project,Status,StatusCollection){
+	var ProjectStatusView = Backbone.View.extend({
 		el: '#content',
-		template: _.template(projectTemplate),
+		template: _.template(projectStatusTemplate),
 		page: 0,
 		collectionUrl: '',
 		events: {
@@ -79,9 +79,19 @@ define(['text!templates/project.html','views/Status','models/Project','models/St
 		},
 
 		render: function(){
+			//增加 bottom Bar
+			if($('.navbar-absolute-bottom').length == 0){
+				var bottomBarView = new BottomBarView({
+						id: this.pid,
+						account: this.account,
+						socketEvents: this.socketEvents,
+						parentView: this,
+					});
+				$(bottomBarView.render().el).prependTo('.app');
+			}
 			this.$el.html(this.template({model:{_id: this.pid, name: '待定'}}));
 			return this;
 		},
 	});
-	return ProjectView;
+	return ProjectStatusView;
 });

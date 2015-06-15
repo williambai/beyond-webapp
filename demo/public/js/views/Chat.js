@@ -1,19 +1,13 @@
-define(['text!templates/chatsession.html','views/ChatItem','models/Chat','models/ChatCollection'], function(chatSessionTemplate,ChatItemView,Chat,ChatCollection){
-	var ChatSessionView = Backbone.View.extend({
+define(['text!templates/chat.html','views/BottomBar1','views/ChatItem','models/Chat','models/ChatCollection'], function(chatSessionTemplate,BottomBarView,ChatItemView,Chat,ChatCollection){
+	var ChatView = Backbone.View.extend({
 		template: _.template(chatSessionTemplate),
 		el: '#content',
-		className: 'chat_session',
-
-		events: {
-			'submit form': 'sendChat'
-		},
 
 		initialize: function(options){
 			this.id = options.id;
 			this.account = options.account;
 			this.socketEvents = options.socketEvents;
 			this.socketEvents.on(
-					// 'socket:chat:in:' + this.room.get('accountId'),
 					'socket:chat:in:' + this.id,
 					this.socketReceiveChat, 
 					this
@@ -29,29 +23,6 @@ define(['text!templates/chatsession.html','views/ChatItem','models/Chat','models
 			this.collection.fetch({reset:true});
 		},
 
-		sendChat: function(){
-			var chatText = $('input[name=chat]').val();
-			if(chatText && /[^\s]+/.test(chatText)){
-				var chatObject = {
-					fromId: 'me',
-					toId: this.id,
-					username: '我：',
-					avatar: this.account.avatar,
-					status: chatText
-				};
-				var chat = new Chat(chatObject);
-				this.collection.add(chat);
-				this.onChatAdded(chat);
-
-				this.socketEvents.trigger('socket:chat',{
-					action: 'chat',
-					to: this.id,
-					text: chatText
-				});
-			}
-			$('input[name=chat]').val('');
-			return false;
-		},
 
 		socketReceiveChat: function(socket){
 			var fromId = socket.from;
@@ -92,9 +63,19 @@ define(['text!templates/chatsession.html','views/ChatItem','models/Chat','models
 		},
 
 		render: function(){
+			//增加 bottom Bar
+			if($('.navbar-absolute-bottom').length == 0){
+				var bottomBarView = new BottomBarView({
+						id: this.id,
+						account: this.account,
+						socketEvents: this.socketEvents,
+						parentView: this,
+					});
+				$(bottomBarView.render().el).prependTo('.app');
+			}
 			this.$el.html(this.template());
 			return this;
 		}
 	});
-	return ChatSessionView;
+	return ChatView;
 });

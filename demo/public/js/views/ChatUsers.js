@@ -1,5 +1,5 @@
-define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession','models/ChatCollection'],
-	function(ChatUsersTemplate,ChatUserView,ChatSessionView,ChatCollection){
+define(['text!templates/chatusers.html','views/ChatUser','views/Chat','models/ChatCollection'],
+	function(ChatUsersTemplate,ChatUserView,ChatView,ChatCollection){
 
 	var ChatUsersView = Backbone.View.extend({
 		template: _.template(ChatUsersTemplate),
@@ -9,7 +9,7 @@ define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession','mo
 			this.socketEvents = options.socketEvents;
 			this.collection.on('reset', this.onCollectionReset, this);
 			this.currentChatView = options.currentChatView;
-			this.chatSessions = options.chatSessions;
+			this.chats = options.chats;
 		},
 
 		onContactAdded: function(contact){
@@ -17,7 +17,7 @@ define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession','mo
 				model: contact,
 				socketEvents: this.socketEvents
 			});
-			chatUserView.bind('chat:start', this.startChatSession, this);
+			chatUserView.bind('chat:start', this.startChat, this);
 			var chatUserHtml = chatUserView.render().el;
 			$(chatUserHtml).appendTo('.chat_list');
 		},
@@ -34,33 +34,33 @@ define(['text!templates/chatusers.html','views/ChatUser','views/ChatSession','mo
 			return this;
 		},
 		// currentChatView: null,
-		// chatSessions: {},
-		startChatSession: function(model){
+		// chats: {},
+		startChat: function(model){
 			if(null != this.currentChatView){
 				this.currentChatView.undelegateEvents();
 			}
 			
 			var roomId = model.get('accountId');
-			if(!this.chatSessions[roomId]){
+			if(!this.chats[roomId]){
 				var chatCollection = new ChatCollection();
-				var chatSessionView = new ChatSessionView({
+				var chatView = new ChatView({
 						room: model,
 						collection: chatCollection,
 						socketEvents: this.socketEvents
 					});
-				chatSessionView.render();
+				chatView.render();
 				chatCollection.url = '/chats/' + roomId;
 				chatCollection.fetch({reset:true});
-				this.chatSessions[roomId] = chatSessionView;
+				this.chats[roomId] = chatView;
 			}else{
-				var view = this.chatSessions[roomId];
+				var view = this.chats[roomId];
 				view.delegateEvents();
 				view.render();
 				var collection = view.collection;
 				collection.trigger('reset',collection);
 			}
 
-			this.currentChatView = this.chatSessions[roomId];
+			this.currentChatView = this.chats[roomId];
 		}
 	});
 	return ChatUsersView;

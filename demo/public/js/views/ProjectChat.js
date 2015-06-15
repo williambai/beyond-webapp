@@ -1,13 +1,9 @@
-define(['text!templates/projectChat.html','views/ChatItem','models/Status','models/StatusCollection'], function(projectChatTemplate,ChatItemView,Status,StatusCollection){
+define(['text!templates/chat.html','views/BottomBar2','views/ChatItem','models/Status','models/StatusCollection'], function(projectChatTemplate,BottomBarView,ChatItemView,Status,StatusCollection){
 	var ProjectChatView = Backbone.View.extend({
 		el: '#content',
 
 		template: _.template(projectChatTemplate),
 
-		events: {
-			'submit form': 'sendChat',
-			'click .chat-toggle': 'changeToolbar'
-		},
 		initialize: function(options){
 			this.id = options.id;
 			this.account = options.account;
@@ -26,30 +22,6 @@ define(['text!templates/projectChat.html','views/ChatItem','models/Status','mode
 		load: function(){
 			this.render();
 			this.collection.fetch({reset:true});
-		},
-
-		sendChat: function(){
-			var chatText = $('input[name=chat]').val();
-			if(chatText && /[^\s]+/.test(chatText)){
-				// var statusObject = {
-				// 	fromId: 'me',
-				// 	toId: this.id,
-				// 	username: this.account.id,
-				// 	avatar: this.account.avatar,
-				// 	status: chatText
-				// };
-				// var status = new Status(statusObject);
-				// this.collection.add(status);
-				// this.onChatAdded(status);
-
-				this.socketEvents.trigger('socket:project:chat',{
-					action: 'chat',
-					to: this.id,
-					text: chatText
-				});
-			}
-			$('input[name=chat]').val('');
-			return false;
 		},
 
 		socketReceiveChat: function(socket){
@@ -95,19 +67,17 @@ define(['text!templates/projectChat.html','views/ChatItem','models/Status','mode
 			this.$el.animate({scrollTop: this.$el.get(0).scrollHeight});
 		},
 
-		changeToolbar: function(){
-			var toolbars = this.$('.navbar-absolute-bottom');
-			toolbars.each(function(index){
-				var toolbar = toolbars[index];
-				if($(toolbar).hasClass('hidden')){
-					$(toolbar).removeClass('hidden');
-				}else{
-					$(toolbar).addClass('hidden');				
-				}
-			});
-			return false;
-		},
 		render: function(){
+			//增加 bottom Bar
+			if($('.navbar-absolute-bottom').length == 0){
+				var bottomBarView = new BottomBarView({
+						id: this.id,
+						account: this.account,
+						socketEvents: this.socketEvents,
+						parentView: this,
+					});
+				$(bottomBarView.render().el).prependTo('.app');
+			}
 			this.$el.html(this.template({id: this.id}));
 			return this;
 		}

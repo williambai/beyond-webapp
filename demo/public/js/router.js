@@ -1,4 +1,4 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/ProjectAdd','views/ProjectChat','views/Projects','views/Project','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','views/ChatSession'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,ProjectAddView,ProjectChatView,ProjectsView,ProjectView,ProjectContactsView,ProjectContactAddView,StatusesView,ChatSessionView){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/ProjectAdd','views/ProjectChat','views/Projects','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','views/Chat'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,ProjectAddView,ProjectChatView,ProjectsView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,StatusesView,ChatView){
 
 	var SocailRouter = Backbone.Router.extend({
 		account: null,//login account
@@ -53,6 +53,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				this.currentView.undelegateEvents();
 			}
 			this.currentView = view;
+			$('.navbar-absolute-bottom').remove();
 			this.currentView.render();
 		},
 
@@ -167,14 +168,14 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			// 	this.currentChatView.undelegateEvents();
 			// }
 			// if(!this.chatSessions[id]){
-				var chatSessionView = new ChatSessionView({
+				var chatView = new ChatView({
 						id: id,
 						account: this.account,
 						socketEvents: this.socketEvents
 					});
-				this.changeView(chatSessionView);
-				chatSessionView.trigger('load');
-			// this.chatSessions[id] = chatSessionView;
+				this.changeView(chatView);
+				chatView.trigger('load');
+			// this.chatSessions[id] = chatView;
 			// }else{
 			// 	var view = this.chatSessions[id];
 			// 	view.delegateEvents();
@@ -199,13 +200,13 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		},
 
 		projectChat: function(id){
-			var chatSessionView = new ProjectChatView({
+			var chatView = new ProjectChatView({
 					id: id,
 					account: this.account,
 					socketEvents: this.socketEvents
 				});
-			this.changeView(chatSessionView);
-			chatSessionView.trigger('load');
+			this.changeView(chatView);
+			chatView.trigger('load');
 		},
 
 		projectStatus: function(pid){
@@ -215,7 +216,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			}
 			// var project = this.projectCollection.find({_id:id});
 			// this.appEvents.trigger('set:brand','项目：' + id);
-			var projectView = new ProjectView({
+			var projectView = new ProjectStatusView({
 				pid: pid,
 				socketEvents: this.socketEvents
 			});

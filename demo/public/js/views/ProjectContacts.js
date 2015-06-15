@@ -1,5 +1,5 @@
-define(['text!templates/projectContacts.html','views/ProjectContact','models/ContactCollection'],
-	function(contactsTemplate, ContactView,ContactCollection){
+define(['text!templates/projectContacts.html','views/BottomBar0','views/ProjectContact','models/ContactCollection'],
+	function(contactsTemplate, BottomBarView, ContactView,ContactCollection){
 	var ContactsView = Backbone.View.extend({
 		el: '#content',
 		
@@ -29,6 +29,16 @@ define(['text!templates/projectContacts.html','views/ProjectContact','models/Con
 		},
 
 		render: function(){
+			//增加 bottom Bar
+			if($('.navbar-absolute-bottom').length == 0){
+				var bottomBarView = new BottomBarView({
+						id: this.pid,
+						account: this.account,
+						socketEvents: this.socketEvents,
+						parentView: this,
+					});
+				$(bottomBarView.render().el).prependTo('.app');
+			}
 			this.$el.html(this.template({model:{_id: this.pid}}));
 			return this;
 		}
