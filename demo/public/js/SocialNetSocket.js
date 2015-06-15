@@ -1,4 +1,5 @@
 define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection'], function(sio,ChatUsersView,ProjectsView,ContactCollection){
+	var debug = true;
 
 	var SocialNetSocket = function(options){
 		var eventDispatcher = options.eventDispatcher;
@@ -39,7 +40,7 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 					// socket.removeListener('contactEvent',handleContactEvent);
 					// socket.removeListener('chatserver',handleChatEvent);
 					// socket.removeListener('projectEvent', handleProjectEvent);
-					window.location.reload();
+					!debug && window.location.reload();
 				});
 		};
 
