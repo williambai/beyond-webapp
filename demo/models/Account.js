@@ -1,6 +1,8 @@
 module.exports = exports = function(app, config,mongoose,nodemailer){
 	var debug = true;
 
+	var smtpTransport = require('nodemailer-smtp-transport');
+
 	var crypto = require('crypto');
 
 	var schemaOptions = {
@@ -31,6 +33,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			'password': {type: String},
 			'username': {type: String},
 			'realname': {type: String},
+			'registerCode': {type: String}, //注册验证码
+			'enable': {type: Number, default: -1}, //账号的有效性；-1：注册但不能登录；0：正常可登陆
 
 			'birthday': {
 				day: {type:Number,min:1,max:31, required: false},
@@ -64,7 +68,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			return console.log('Account Save/Remove/Update successfully.');
 		};
 
-	var register = function(email,password,username,callback){
+	var register = function(email,password,username,registerConfirmUrl,callback){
 			var shaSum = crypto.createHash('sha256');
 			shaSum.update(password);
 
@@ -73,6 +77,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				username: username,
 				realname: username,
 				password: shaSum.digest('hex'),
+				registerCode: crypto.createHash('sha256').update(email + "beyond" + password).digest('hex'),
+				enable: -1,
 				avatar: ''
 			});
 			user.save(function(err){
@@ -82,7 +88,43 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				}else{
 					callback && callback(user);
 				}
+				var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
+				registerConfirmUrl += '?email=' + user.email + '&' + 'code=' + user.registerCode;
+
+				smtpTransporter.sendMail({
+					from: 'socialworkserivce@appmod.cn',
+					to: user.email,
+					subject: 'SocialWork Registration Confirm Request',
+					text: 'Click here to finish your registration: ' + registerConfirmUrl
+				},function forgetPasswordCallback(err){
+					debug && defaultCallback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(true);
+					}
+				});
 			});
+		};
+
+	var registerConfirm = function(email,code,callback){
+			Account
+				.findOneAndUpdate({
+						email: email,
+						registerCode: code
+					},
+					{
+						$set: {enable: 0}
+					},
+					function(err){
+						debug && defaultCallback(err);
+						if(err){
+							callback && callback(null);
+						}else{
+							callback && callback(true);
+						}
+					}
+				);
 		};
 
 	var login = function(email,password, callback){
@@ -91,7 +133,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			
 			Account.findOne({
 				email: email,
-				password: shaSum.digest('hex')
+				password: shaSum.digest('hex'),
+				// enable: 0,
 			},function(err,doc){
 				debug && defaultCallback(err);
 				if(err){
@@ -109,13 +152,13 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				callback && callback(null);
 				return;
 			}
-			var smtpTransport = nodemailer.createTransport('SMTP',config.mail);
+			var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
 			resetPasswordUrl += '?account=' + doc._id;
 
-			smtpTransport.sendMail({
-				from: 'admin@appmod.cn',
+			smtpTransporter.sendMail({
+				from: 'socialworkserivce@appmod.cn',
 				to: email,
-				subject: 'SocialNet Password Reset Request',
+				subject: 'SocialWork Password Reset Request',
 				text: 'Click here to reset your password: ' + resetPasswordUrl
 			},function forgetPasswordCallback(err){
 				debug && defaultCallback(err);
@@ -124,7 +167,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				}else{
 					callback && callback(true);
 				}
-			})
+			});
 		});
 	};
 
@@ -349,6 +392,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		findById: findById,
 		findAll: findAll,
 		register: register,
+		registerConfirm: registerConfirm,
 		forgotPassword: forgotPassword,
 		resetPassword: resetPassword,
 		login: login,

@@ -10,8 +10,22 @@ module.exports = exports = function(app,models){
 			res.sendStatus(400);
 			return;
 		}
-		Account.register(email,password,username);
+		var host = req.header('host');
+		var registerConfirmUrl = 'http://' + host + '/register/confirm';
+		Account.register(email,password,username,registerConfirmUrl);
 		res.sendStatus(200);
+	});
+
+	app.get('/register/confirm', function(req,res){
+		var email = req.query.email;
+		var code = req.query.code;
+		Account.registerConfirm(email,code,function(result){
+			if(result){
+				res.render('registrationSuccess.jade');
+			}else{
+				res.render('registrationFailure.jade');
+			}
+		});
 	});
 
 	app.post('/login',function(req,res){
@@ -52,8 +66,8 @@ module.exports = exports = function(app,models){
 			res.sendStatus(400);
 			return;
 		}
-		var hostname = req.header.host;
-		var resetPasswordUrl = 'http://' + hostname + '/resetPassword';
+		var host = req.header('host');
+		var resetPasswordUrl = 'http://' + host + '/resetPassword';
 		Account.forgotPassword(email, resetPasswordUrl,function(success){
 			if(!success){
 				res.sendStatus(404);
@@ -76,7 +90,7 @@ module.exports = exports = function(app,models){
 		if(null != accountId && null != password){
 			Account.resetPassword(accountId,password);
 		}
-		res.render('resetPasswordSucess.jade');
+		res.render('resetPasswordSuccess.jade');
 	});
 
 	app.get('/account/authenticated', function(req,res){

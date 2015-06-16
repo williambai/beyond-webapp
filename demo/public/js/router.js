@@ -1,4 +1,4 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/ProjectAdd','views/ProjectChat','views/Projects','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','views/Chat'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,ProjectAddView,ProjectChatView,ProjectsView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,StatusesView,ChatView){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/ForgotPasswordSuccess','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/ProjectAdd','views/ProjectChat','views/Projects','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','views/Chat'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ForgotPasswordSuccessView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,ProjectAddView,ProjectChatView,ProjectsView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,StatusesView,ChatView){
 
 	var SocailRouter = Backbone.Router.extend({
 		account: null,//login account
@@ -16,6 +16,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'login': 'login',
 			'register': 'register',
 			'forgotpassword': 'forgotPassword',
+			'forgotpassword/success': 'forgotPasswordSuccess',
 			'profile/:id': 'profile',
 			'profile/me/edit': 'profileEdit',
 			'contacts/:id': 'contacts',
@@ -116,7 +117,16 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'index';
 				return;
 			}
+			this.appEvents.trigger('set:brand','找回密码');
 			this.changeView(new ForgotPasswordView());
+		},
+		forgotPasswordSuccess: function(){
+			if(this.logined){
+				window.location.hash = 'index';
+				return;
+			}
+			this.appEvents.trigger('set:brand','找回密码');
+			this.changeView(new ForgotPasswordSuccessView());
 		},
 		profile: function(id){
 			if(!this.logined){
@@ -155,11 +165,11 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			contactsView.trigger('load');
 		},
 		addContact: function(){
-			this.appEvents.trigger('set:brand','搜索和添加好友');
 			if(!this.logined){
 				window.location.hash = 'login';
 				return;
 			}
+			this.appEvents.trigger('set:brand','搜索和添加好友');
 			this.changeView(new ContactAddView());
 		},
 		

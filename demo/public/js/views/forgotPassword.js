@@ -9,7 +9,7 @@ define(['text!templates/forgotPassword.html'],function(forgotPasswordTemplate){
 			$.post('/forgotPassword',{
 				email: $('input[name=email]').val()
 			},function(data){
-				console.log(data);
+				window.location.hash = 'forgotpassword/success';
 			});
 			return false;
 		},
