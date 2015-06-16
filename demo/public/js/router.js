@@ -54,7 +54,8 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				this.currentView.undelegateEvents();
 			}
 			this.currentView = view;
-			$('.navbar-absolute-bottom').remove();
+			$('body').removeClass('has-navbar-bottom');
+			$('.bottom-bar').remove();
 			this.currentView.render();
 		},
 

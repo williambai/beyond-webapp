@@ -88,6 +88,9 @@ define(['text!templates/projectStatus.html','views/BottomBar0','views/Status','m
 						parentView: this,
 					});
 				$(bottomBarView.render().el).prependTo('.app');
+				if(!$('body').hasClass('has-navbar-bottom')){
+					$('body').addClass('has-navbar-bottom');
+				}
 			}
 			this.$el.html(this.template({model:{_id: this.pid, name: '待定'}}));
 			return this;

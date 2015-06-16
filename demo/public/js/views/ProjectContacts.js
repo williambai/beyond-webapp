@@ -38,6 +38,9 @@ define(['text!templates/projectContacts.html','views/BottomBar0','views/ProjectC
 						parentView: this,
 					});
 				$(bottomBarView.render().el).prependTo('.app');
+				if(!$('body').hasClass('has-navbar-bottom')){
+					$('body').addClass('has-navbar-bottom');
+				}
 			}
 			this.$el.html(this.template({model:{_id: this.pid}}));
 			return this;

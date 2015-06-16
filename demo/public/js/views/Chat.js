@@ -72,6 +72,9 @@ define(['text!templates/chat.html','views/BottomBar1','views/ChatItem','models/C
 						parentView: this,
 					});
 				$(bottomBarView.render().el).prependTo('.app');
+				if(!$('body').hasClass('has-navbar-bottom')){
+					$('body').addClass('has-navbar-bottom');
+				}
 			}
 			this.$el.html(this.template());
 			return this;

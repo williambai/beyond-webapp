@@ -1,5 +1,8 @@
 define(['text!templates/bottomBar0.html','text!templates/bottomBar2.html'],function(bottomBar0Template,bottomBarTemplate){
 	var BottomBarView = Backbone.View.extend({
+
+		className: 'bottom-bar',
+
 		template0: _.template(bottomBar0Template),
 		template: _.template(bottomBarTemplate),
 
