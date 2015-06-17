@@ -61,6 +61,13 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 			if(eventObj.from == accountId){
 				eventName = eventObj.action + ':me';
 			}
+			//TODO need to refect
+			if(eventObj.action == 'status'){
+				eventName = 'status:me';
+			}
+			// console.log('+++')
+			// console.log(eventName)
+			// console.log(eventObj)
 			eventDispatcher.trigger(eventName,eventObj);
 		};
 
