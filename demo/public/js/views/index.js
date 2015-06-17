@@ -1,5 +1,5 @@
-define(['text!templates/index.html','views/Status','models/Status','models/StatusCollection'],
-	function(indexTemplate,StatusView,Status,StatusCollection){
+define(['text!templates/index.html','views/ProjectItem','models/ProjectCollection'],
+	function(indexTemplate,ProjectItemView,ProjectCollection){
 	var IndexView = Backbone.View.extend({
 		el: '#content',
 
@@ -10,56 +10,38 @@ define(['text!templates/index.html','views/Status','models/Status','models/Statu
 		},
 		
 		initialize: function(options){
-			options.socketEvents.bind('status:me',this.onSocketStatusAdded, this);
-
-			this.collection = new StatusCollection();
-			this.collection.url = '/accounts/me/status';
-			this.collection.on('add', this.onStatusAdded, this);
-			this.collection.on('reset', this.onStatusCollectonReset, this);
+			this.socketEvents = options.socketEvents;
+			this.collection = new ProjectCollection();
+			this.collection.url = '/accounts/me/projects';
+			this.collection.on('add', this.onProjectAdded, this);
+			this.collection.on('reset', this.onProjectCollectionReset, this);
+			this.on('load', this.load,this);
 		},
 
 		load: function(){
 			loaded = true;
 			this.render();
-			this.collection.fetch();
+			this.collection.fetch({reset: true});
 		},
 
-		onSocketStatusAdded: function(data){
-			var newStatus = data.data;
-			this.collection.add(new Status({status: newStatus.status, name: newStatus.name}));
-		},
-
-		onStatusCollectonReset: function(collection){
-			var that = this;
-			collection.each(function(model){
-				that.onStatusAdded(model);
-			});
-		},
-
-		onStatusAdded: function(status){
-			var statusHtml = (new StatusView({model: status})).render().el;
-			$(statusHtml).prependTo('.status_list').hide().fadeIn('slow');
-		},
-
-		editorToggle: function(){
-			if(this.$('.status-editor').hasClass('hidden')){
-				this.$('.status-editor').removeClass('hidden').hide().fadeIn('slow');
+		onProjectAdded: function(project){
+			var projectItemView = new ProjectItemView({model: project,socketEvents: this.socketEvents});
+			var projectItemHtml = projectItemView.render().el;
+			console.log()
+			if(project.get('type') == 1){
+				this.$('.my-projects-none').remove();
+				$(projectItemHtml).appendTo('.my-projects');
 			}else{
-				this.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
+				this.$('.other-projects-none').remove();
+				$(projectItemHtml).appendTo('.other-projects');
 			}
 		},
 
-		updateStatus: function(){
-			var statusCollection = this.collection;
-			var statusText = $('textarea[name=text]').val();
-			$.post('/accounts/me/status',{status: statusText},function(data){
-				// statusCollection.add(new Status({status: statusText,name:{first:'我'}}));
+		onProjectCollectionReset: function(collection){
+			var that = this;
+			collection.each(function(project){
+				that.onProjectAdded(project);
 			});
-			// var statusModel = new Status({status:statusText,name: {first:'我'}});
-			// this.onStatusAdded(statusModel);
-			$('textarea[name=text]').val('');
-			this.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
-			return false;
 		},
 
 		render: function(){

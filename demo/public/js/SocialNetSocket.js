@@ -64,6 +64,7 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 			//TODO need to refect
 			if(eventObj.action == 'status'){
 				eventName = 'status:me';
+				eventDispatcher.trigger('status:number:unread',1);
 			}
 			// console.log('+++')
 			// console.log(eventName)
@@ -96,7 +97,7 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 			var projectsView = new ProjectsView({
 				socketEvents: eventDispatcher,
 			});
-			projectsView.collection.url = 'accounts/me/projects';
+			projectsView.collection.url = '/accounts/me/projects';
 			projectsView.trigger('load');
 		};
 

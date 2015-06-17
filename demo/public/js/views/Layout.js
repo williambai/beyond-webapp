@@ -5,7 +5,7 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 		loadingTemplate: _.template(loadingTemplate),
 
 		messageUnreadNum: 0, //未读消息数量
-		// statusUnreadNum: 0, //好友圈新消息数量
+		statusUnreadNum: 0, //好友圈新消息数量
 
 		loaded: false,
 		initialize: function(options){
@@ -18,7 +18,7 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 				.addClass('has-navbar-top');
 			this.appEvents.on('set:brand', this.updateBrand,this);
 			this.socketEvents.on('chat:number:total', this.onMessageNumChanged, this);
-			// this.socketEvents.on('status:number:unread', this.onStatusNumChanged, this);
+			this.socketEvents.on('status:number:unread', this.onStatusNumChanged, this);
 			this.on('load', this.load,this);
 		},
 
@@ -39,6 +39,10 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 			var currentItem = evt.currentTarget;
 			this.$('.list-group-item').removeClass('active');
 			this.$(currentItem).addClass('active');
+			if(this.$(currentItem).find('.status-unread').length > 0){
+				this.statusUnreadNum = 0;
+				this.$('.status-unread').html('<i class="fa fa-chevron-right"></i>');
+			}
 		},
 
 		leftSideBarToggle: function(){
@@ -88,6 +92,15 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 				this.$('.chat-total-unread').text('');
 			}else{
 				this.$('.chat-total-unread').text(this.messageUnreadNum);
+			}
+		},
+		onStatusNumChanged: function(num){
+			this.statusUnreadNum += num;
+			if(this.statusUnreadNum < 1) {
+				this.statusUnreadNum = 0;
+				this.$('.status-unread').html('<i class="fa fa-chevron-right"></i>');
+			}else{
+				this.$('.status-unread').html('<span class="badge">' + this.statusUnreadNum + '</span>');
 			}
 		},
 

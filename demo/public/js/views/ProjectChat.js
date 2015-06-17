@@ -64,7 +64,7 @@ define(['text!templates/chat.html','views/BottomBar2','views/ChatItem','models/S
 				var chatItemHtml = (new ChatItemView({model: chat})).render().el;
 				$(chatItemHtml).prependTo('.chat_log').hide().fadeIn('fast');
 			});
-			this.$el.animate({scrollTop: this.$el.get(0).scrollHeight});
+			this.$el.animate({scrollTop: this.$el.get(0).scrollHeight},1);
 		},
 
 		render: function(){

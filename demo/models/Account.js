@@ -49,7 +49,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				{
 					_id: mongoose.Schema.ObjectId,
 					name: String,
-					type: {type: String}, //参与或主持
+					type: {type: String}, //0:参与; 1:主持
 					notification: {type: Number}, //通知提醒，0: 接收；1: 拒绝
 					agree: {type: Number} //0: 正常；1: 待确认；-1: 拒绝/不显示
 				}

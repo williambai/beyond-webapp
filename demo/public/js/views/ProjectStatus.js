@@ -92,7 +92,7 @@ define(['text!templates/projectStatus.html','views/BottomBar0','views/Status','m
 					$('body').addClass('has-navbar-bottom');
 				}
 			}
-			this.$el.html(this.template({model:{_id: this.pid, name: '待定'}}));
+			this.$el.html(this.template({model:{_id: this.pid, name: '动态'}}));
 			return this;
 		},
 	});

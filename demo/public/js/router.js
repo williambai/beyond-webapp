@@ -1,4 +1,4 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/ForgotPasswordSuccess','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/ProjectAdd','views/ProjectChat','views/Projects','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','views/Chat'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ForgotPasswordSuccessView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,ProjectAddView,ProjectChatView,ProjectsView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,StatusesView,ChatView){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/ForgotPasswordSuccess','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/ProjectIndex','views/ProjectAdd','views/ProjectChat','views/Projects','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','views/Chat'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ForgotPasswordSuccessView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,ProjectIndexView,ProjectAddView,ProjectChatView,ProjectsView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,StatusesView,ChatView){
 
 	var SocailRouter = Backbone.Router.extend({
 		account: null,//login account
@@ -23,6 +23,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'contact/add': 'addContact',
 			'project/add': 'addProject',
 			'project/chat/:id': 'projectChat',
+			'projects/:pid/index': 'projectIndex',
 			'projects/:pid/status': 'projectStatus',
 			'projects/:pid/contact/add': 'projectContactAdd',
 			'projects/:pid/contacts(/:cid)': 'projectContacts',
@@ -196,6 +197,18 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			// }
 
 			// this.currentChatView = this.chatSessions[id];
+		},
+
+		projectIndex: function(pid){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
+			var projectView = new ProjectIndexView({
+				pid: pid
+			});
+			this.changeView(projectView);
+			projectView.trigger('load');
 		},
 
 		addProject: function(){
