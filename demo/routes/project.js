@@ -38,8 +38,12 @@ exports = module.exports = function(app,models){
 					Project.add(accountId,{
 						name: name,
 						description: description
-					},function(err,project){
-						callback(err,project);
+					},function(project){
+						if(!project){
+							callback(400);
+							return;
+						}
+						callback(null,project);
 					});
 				},
 				function _account(project,callback){
