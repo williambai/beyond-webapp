@@ -199,9 +199,9 @@ gulp.task('js', function(done){
       });
   });
 
-/*======================================================================
-=            Compile jade                            =
-======================================================================*/
+/*===================================
+=        Compile jade               =
+====================================*/
 
 gulp.task('jade',function(){
   gulp.src(path.join(__dirname, config.project, 'views/index.jade'))
@@ -209,6 +209,48 @@ gulp.task('jade',function(){
       pretty: true
     }))
     .pipe(gulp.dest(path.join(__dirname,'dist', config.project, 'public')));
+});
+
+/*===========================================
+=   build node-webkit clients(APP):         =
+=   win32,win64,osx32,osx64,linux32,linux64 =
+============================================*/
+
+gulp.task('package.json', function(){
+    return gulp.src(path.join(__dirname,config.project,'public','package.json'))
+                .pipe(gulp.dest(path.join(__dirname,'dist',config.project,'public')));
+});
+
+gulp.task('node-webkit', function(done){
+  var NwBuilder = require('node-webkit-builder');
+  var nw = new NwBuilder({
+        files: path.join(__dirname,'dist',config.project, '**','**'),
+        platforms: ['win','osx','linux'],
+        version: '0.12.2',//download node-webkit version
+        appName: config.project,
+        buildDir: './dist/build',
+        cacheDir: './dist/cache',
+        buildType: 'default',
+        forceDownload: false,
+        macCredits: false,
+        macIcns: false,
+        macZip: true,
+        macPlist: false,
+        winIco: null,
+      });
+    
+    nw.on('log', console.log);
+    nw.build()
+      .then(function(){
+        done();
+      })
+      .catch(function(err){
+        console.error(err);
+      });
+});
+
+gulp.task('desktop-clients', function(done){
+  seq('package.json','node-webkit',done);
 });
 
 /*====================================
