@@ -77,6 +77,7 @@ gulp.on('err', function(e) {
 
 gulp.task('clean', function (cb) {
   del(path.join('dist',config.project),cb);
+  del(path.join('dist','build'),cb);
 });
 
 /*==================================
