@@ -1,11 +1,12 @@
 require.config({
+	baseUrl: '/js',
 	paths: {
-		'jQuery': '/js/libs/jquery',
-		'Underscore': '/js/libs/underscore',
-		'Backbone': '/js/libs/backbone',
-		'text': '/js/libs/text',
+		'jQuery': 'libs/jquery',
+		'Underscore': 'libs/underscore',
+		'Backbone': 'libs/backbone',
+		'text': 'libs/text',
 		'templates': '../templates',
-		'Sockets': '/js/libs/socket.io'
+		'Sockets': 'libs/socket.io'
 	},
 	shim: {
 		'Backbone': ['Underscore', 'jQuery'],
@@ -13,6 +14,4 @@ require.config({
 	}
 });
 
-require(['SocialNet'], function(SocialNet){
-	(new SocialNet).initialize();
-});
+require(['main']);

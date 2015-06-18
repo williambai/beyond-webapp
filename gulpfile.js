@@ -176,23 +176,10 @@ gulp.task('less', function () {
 gulp.task('js', function(done){
   var requirejs = require('requirejs');
   var configJs = {
+        baseUrl: __dirname + '/' + config.project + '/public/js',
         mainConfigFile: __dirname + '/' + config.project + '/public/js/boot.js',
         findNestedDependencies: true,
         optimize: 'none',
-        paths: {
-          'requireLib': 'libs/require',
-          'jQuery': 'libs/jquery',
-          'Underscore': 'libs/underscore',
-          'Backbone': 'libs/backbone',
-          'text': 'libs/text',
-          'templates': '../templates',
-          'Sockets': 'libs/socket.io'
-        },
-        shim: {
-          'Backbone': ['Underscore', 'jQuery'],
-          'SocialNet': ['Backbone']
-        },
-        baseUrl: __dirname + '/' + config.project + '/public/js',
         name: 'main',
         out: __dirname + '/dist/' + config.project + '/public/js/main.js',
         onModuleBundleComplete: function(data){

@@ -6,7 +6,7 @@
   "window": {
     "title": "Client App for Beyond",
     "width": 1024,
-    "height": 768,
+    "height": 700,
     "min_width": 800,
     "min_height": 650,
     "toolbar": false
