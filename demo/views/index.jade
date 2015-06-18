@@ -9,57 +9,7 @@ html(lang="zh-CN")
 		meta(name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-ui")
 		meta(name="apple-mobile-web-app-status-bar-style" content="yes")
 		link(rel="stylesheet" href="/css/app.css")
-		//- script(type="text/javascript" src="/js/main.js")
-		script(data-main='js/boot', type='text/javascript', src="/js/libs/require.js")
 	body
-		//- .sidebar.sidebar-left
-			.scrollable(style="padding-top:70px;")
-				.scrollable-header.app-name 我的社交网
-					a(href="#project/add") 新增项目
-				.scrollable-content
-					.list-group
-						a.list-group-item.active(href="#index") 主页
-							i.fa.fa-chevron-right.pull-right
-						a.list-group-item(href="#contacts/me") 通讯录
-							i.fa.fa-chevron-right.pull-right
-						a.list-group-item(href="#profile/me") 我的资料
-							i.fa.fa-chevron-right.pull-right
-					#projectlist
-		//- .sidebar.sidebar-right
-			.scrollable(style="padding-top:70px;")
-				.scrollable-header.app-name 项目成员
-					a(href="#addcontact") 邀请成员
-				.scrollable-content
-					#chat.list-group
-						//- a.list-group-item.media(href="#")
-							.pull-left
-								i.fa.fa-user.chat-user-avatar
-							.media-body
-								h5.media-heading 用户名
-								small
-									span.label.label-default
-										i 离线
-		//- #content.app
-			//- .navbar.navbar-app.navbar-absolute-top
-				.navbar-brand.navbar-brand-center 通讯录
-				.btn.btn-group.pull-left.hidden
-					i.fa.fa-bars 菜单
-				.btn.btn-group.pull-right
-					i.fa.fa-comments 聊天
-			//- .navbar.navbar-app.navbar-absolute-bottom
-				.btn-group.justified
-					a.btn.btn-navbar(href="#")
-						i.fa.fa-home.fa-navbar 文档
-					a.btn.btn-navbar(href="#")
-						i.fa.fa-home.fa-navbar 文档
-					a.btn.btn-navbar(href="#")
-						i.fa.fa-home.fa-navbar 文档
-			//- .app-body
-				.app-content-loading.hidden
-					i.fa.fa-spinner.fa-spin.loading-spinner
-				.app-content
-					.scrollable
-						#content.scrollable-content.section
-							
-		//- div#chat
-		//- .modal
+	script(src="/socket.io/socket.io.js")
+	//- script(type="text/javascript" src="/js/main.js")
+	script(data-main='js/boot', type='text/javascript', src="/js/libs/require.js")

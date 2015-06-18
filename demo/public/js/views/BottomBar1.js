@@ -1,4 +1,4 @@
-define(['text!/templates/bottomBar1.html', 'models/Chat'],function(bottomBarTemplate, Chat){
+define(['text!templates/bottomBar1.html', 'models/Chat'],function(bottomBarTemplate, Chat){
 	var BottomBarView = Backbone.View.extend({
 		className: 'bottom-bar',
 

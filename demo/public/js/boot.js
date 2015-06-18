@@ -5,7 +5,7 @@ require.config({
 		'Backbone': '/js/libs/backbone',
 		'text': '/js/libs/text',
 		'templates': '../templates',
-		'Sockets': '/socket.io/socket.io'
+		'Sockets': '/js/libs/socket.io'
 	},
 	shim: {
 		'Backbone': ['Underscore', 'jQuery'],
