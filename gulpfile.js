@@ -176,6 +176,8 @@ gulp.task('less', function () {
 gulp.task('js', function(done){
   var requirejs = require('requirejs');
   var configJs = {
+        mainConfigFile: __dirname + '/' + config.project + '/public/js/boot.js',
+        findNestedDependencies: true,
         optimize: 'none',
         paths: {
           'requireLib': 'libs/require',
@@ -184,17 +186,23 @@ gulp.task('js', function(done){
           'Backbone': 'libs/backbone',
           'text': 'libs/text',
           'templates': '../templates',
-          'Sockets': 'empty:'
+          'Sockets': 'libs/socket.io'
         },
         shim: {
           'Backbone': ['Underscore', 'jQuery'],
           'SocialNet': ['Backbone']
         },
-        // include: ['requireLib'],
         baseUrl: __dirname + '/' + config.project + '/public/js',
-        name: 'boot',
-        // excludeShallow: Sockets,
+        name: 'main',
         out: __dirname + '/dist/' + config.project + '/public/js/main.js',
+        onModuleBundleComplete: function(data){
+          var amdclean = require('amdclean');
+          var fs = require('fs');
+          var outputFile = data.path;
+          fs.writeFileSync(outputFile, amdclean.clean({
+            filePath: outputFile
+          }));
+        }
       };
       requirejs.optimize(configJs,function(buildResponse){
         // console.log(buildResponse);
