@@ -35,6 +35,7 @@ var config = {
 /*========================================
 =            Requiring stuffs            =
 ========================================*/
+var sh = require('shelljs');
 
 var gulp           = require('gulp'),
     del            = require('del'),
@@ -49,16 +50,6 @@ var gulp           = require('gulp'),
     concat         = require('gulp-concat'),
     ignore         = require('gulp-ignore'),
     rimraf         = require('gulp-rimraf'),
-
-    // connect        = require('gulp-connect'),
-    // imagemin       = require('gulp-imagemin'),
-    // pngcrush       = require('imagemin-pngcrush'),
-    // templateCache  = require('gulp-angular-templatecache'),
-    // ngAnnotate     = require('gulp-ng-annotate'),
-    // replace        = require('gulp-replace'),
-    // ngFilesort     = require('gulp-angular-filesort'),
-    // streamqueue    = require('streamqueue'),
-    // rename         = require('gulp-rename'),
     path           = require('path');
 
 
@@ -74,10 +65,22 @@ gulp.on('err', function(e) {
 /*=========================================
 =            Clean dest folder            =
 =========================================*/
+gulp.task('clean:project', function(done){
+  del(path.join(__dirname,'dist',config.project));
+  done();
+});
+gulp.task('clean:node-webkit', function(done){
+  del(path.join(__dirname,'dist','node-webkit'));
+  done();
+});
+gulp.task('clean:cordova',function(done){
+  del(path.join(__dirname,'dist','cordova'));
+  done();
+});
 
 gulp.task('clean', function (cb) {
-  del(path.join('dist',config.project),cb);
-  del(path.join('dist','build'),cb);
+  var tasks = ['clean:project','clean:node-webkit','clean:cordova'];
+  seq(tasks,cb);
 });
 
 /*==================================
@@ -217,19 +220,22 @@ gulp.task('jade',function(){
 =   win32,win64,osx32,osx64,linux32,linux64 =
 ============================================*/
 
-gulp.task('package.json', function(){
-    return gulp.src(path.join(__dirname,config.project,'public','package.json'))
-                .pipe(gulp.dest(path.join(__dirname,'dist',config.project,'public')));
+gulp.task('package.json', function(done){
+  sh.cp(
+    path.join(__dirname,config.project,'nodeWebkitPackage.json'),
+    path.join(__dirname,'dist',config.project,'public','package.json')
+  );
+  done();
 });
 
-gulp.task('node-webkit', function(done){
+gulp.task('node-webkit-builder', function(done){
   var NwBuilder = require('node-webkit-builder');
   var nw = new NwBuilder({
         files: path.join(__dirname,'dist',config.project, '**','**'),
         platforms: ['win','osx','linux'],
         version: '0.12.2',//download node-webkit version
         appName: config.project,
-        buildDir: './dist/build',
+        buildDir: './dist/node-webkit',
         cacheDir: './dist/cache',
         buildType: 'default',
         forceDownload: false,
@@ -240,7 +246,7 @@ gulp.task('node-webkit', function(done){
         winIco: null,
       });
     
-    nw.on('log', console.log);
+    // nw.on('log', console.log);
     nw.build()
       .then(function(){
         done();
@@ -250,8 +256,47 @@ gulp.task('node-webkit', function(done){
       });
 });
 
-gulp.task('desktop-clients', function(done){
-  seq('package.json','node-webkit',done);
+gulp.task('node-webkit', function(done){
+  seq('package.json','node-webkit-builder',done);
+});
+
+
+/*===========================================
+=   build cordova clients(APP):             =
+=   android, ios                            =
+============================================*/
+
+
+gulp.task('cordova',function(done){
+  //NOTE: npm install cordova-cli -g
+  var buildDir = path.join(__dirname,'dist','cordova');
+  var cordovaConfigFile = path.join(__dirname,config.project,'cordovaConfig.xml');
+  var www_dir = path.join(__dirname,'dist',config.project, 'public');
+  var platforms = ['android','ios'];
+  var plugins = ['org.apache.cordova.file'];
+  var fs = require('fs');
+
+  if(!fs.existsSync(buildDir)){
+   fs.mkdirSync(buildDir);
+  }
+  process.chdir(buildDir);
+
+  if(!fs.existsSync(path.join(buildDir,'config.xml'))){
+    fs.symlinkSync(cordovaConfigFile, 'config.xml');
+  }
+  if(!fs.existsSync(path.join(buildDir,'www'))){
+    fs.symlinkSync(www_dir, 'www');
+  }
+  plugins.forEach(function(plugin){
+    sh.exec('cordova plugin add ' + plugin);
+  });
+
+  platforms.forEach(function(platform){
+    sh.exec('cordova platform add ' + platform);
+  });
+  sh.exec('cordova build --release');
+  process.chdir(__dirname);
+  done();
 });
 
 /*====================================

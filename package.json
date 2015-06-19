@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "amdclean": "^2.7.0",
+    "cordova": "^5.1.1",
     "del": "^1.2.0",
     "gulp": "^3.8.11",
     "gulp-concat": "^2.5.2",
@@ -57,6 +58,7 @@
     "node-webkit-builder": "^1.0.12",
     "requirejs": "^2.1.18",
     "run-sequence": "^1.1.0",
+    "shelljs": "^0.5.1",
     "through": "^2.3.7"
   }
 }
