@@ -48,9 +48,13 @@ var gulp           = require('gulp'),
     cssmin         = require('gulp-cssmin'),
     order          = require('gulp-order'),
     concat         = require('gulp-concat'),
+    rename         = require('gulp-rename'),
+    zip            = require('gulp-zip'),
     ignore         = require('gulp-ignore'),
     rimraf         = require('gulp-rimraf'),
-    path           = require('path');
+    path           = require('path'),
+    fs             = require('fs');
+;
 
 
 /*================================================
@@ -84,6 +88,30 @@ gulp.task('clean', function (cb) {
 });
 
 /*==================================
+=            mkdir                 =
+==================================*/
+
+gulp.task('directory', function(done){
+  var project_dir = path.join(__dirname,'dist',config.project);
+  var public_dir = path.join(__dirname,'dist',config.project,'public');
+  var downloads = path.join(__dirname,'dist',config.project,'public','downloads');
+  var upload = path.join(__dirname,'dist',config.project,'public','upload');
+  if(!fs.existsSync(project_dir)){
+    fs.mkdirSync(project_dir);
+  }
+  if(!fs.existsSync(public_dir)){
+    fs.mkdirSync(public_dir);
+  }
+  if(!fs.existsSync(downloads)){
+    fs.mkdirSync(downloads);
+  }
+  if(!fs.existsSync(upload)){
+    fs.mkdirSync(upload);
+  }
+  done();
+});
+
+/*==================================
 =       Copy server related        =
 ==================================*/
 
@@ -113,13 +141,15 @@ gulp.task('server', function(done) {
     seq(tasks,done);
 });
 
-// /*==================================
-// =            Copy fonts            =
-// ==================================*/
 
-gulp.task('fonts', function() {
+/*==================================
+=            Copy fonts            =
+==================================*/
+
+gulp.task('fonts', function(done) {
   return gulp.src(path.join(config.project,'public/fonts/**/*'))
-  .pipe(gulp.dest(path.join('dist',config.project, 'public/fonts')));
+  .pipe(gulp.dest(path.join('dist',config.project, 'public','fonts')));
+  done();
 });
 
 
@@ -256,8 +286,35 @@ gulp.task('node-webkit-builder', function(done){
       });
 });
 
+gulp.task('node-webkit-downloads',function(done){
+  //zip&copy to downloads
+  var downloads = path.join(__dirname,'dist',config.project,'public','downloads');
+  if(!fs.existsSync(downloads)){
+    fs.mkdirSync(downloads);
+  }
+  gulp.src(path.join('dist','node-webkit',config.project,'linux32'))
+      .pipe(zip('SocialWork-linux32.zip'))
+      .pipe(gulp.dest(path.join('dist',config.project,'public','downloads')));
+  gulp.src(path.join('dist','node-webkit',config.project,'linux64'))
+      .pipe(zip('SocialWork-linux64.zip'))
+      .pipe(gulp.dest(path.join('dist',config.project,'public','downloads')));
+  gulp.src(path.join('dist','node-webkit',config.project,'win32'))
+      .pipe(zip('SocialWork-win32.zip'))
+      .pipe(gulp.dest(path.join('dist',config.project,'public','downloads')));
+  gulp.src(path.join('dist','node-webkit',config.project,'win64'))
+      .pipe(zip('SocialWork-win64.zip'))
+      .pipe(gulp.dest(path.join('dist',config.project,'public','downloads')));
+  gulp.src(path.join('dist','node-webkit',config.project,'osx32'))
+      .pipe(zip('SocialWork-osx32.zip'))
+      .pipe(gulp.dest(path.join('dist',config.project,'public','downloads')));
+  gulp.src(path.join('dist','node-webkit',config.project,'osx64'))
+      .pipe(zip('SocialWork-osx64.zip'))
+      .pipe(gulp.dest(path.join('dist',config.project,'public','downloads')));
+  done();
+});
+
 gulp.task('node-webkit', function(done){
-  seq('package.json','node-webkit-builder',done);
+  seq('package.json','node-webkit-builder','node-webkit-downloads',done);
 });
 
 
@@ -274,11 +331,11 @@ gulp.task('cordova',function(done){
   var www_dir = path.join(__dirname,'dist',config.project, 'public');
   var platforms = ['android','ios'];
   var plugins = ['org.apache.cordova.file'];
-  var fs = require('fs');
 
   if(!fs.existsSync(buildDir)){
    fs.mkdirSync(buildDir);
   }
+  var projectDir = path.join(__dirname);
   process.chdir(buildDir);
 
   if(!fs.existsSync(path.join(buildDir,'config.xml'))){
@@ -295,7 +352,18 @@ gulp.task('cordova',function(done){
     sh.exec('cordova platform add ' + platform);
   });
   sh.exec('cordova build --release');
-  process.chdir(__dirname);
+  process.chdir(projectDir);
+  //copy to downloads directory
+  var downloads = path.join(__dirname,'dist',config.project,'public','downloads');
+  if(!fs.existsSync(downloads)){
+    fs.mkdirSync(downloads);
+  }
+  gulp.src(path.join('dist','cordova','platforms','android','ant-build','CordovaApp-release-unsigned.apk'))
+      .pipe(rename('socialWork.apk'))
+      .pipe(gulp.dest(path.join('dist',config.project,'public','downloads')));
+  gulp.src(path.join('dist','cordova','platforms/ios/build/**/*'))
+      .pipe(zip('socialWork.ipa'))
+      .pipe(gulp.dest(path.join('dist',config.project,'public','downloads')));
   done();
 });
 
@@ -305,5 +373,6 @@ gulp.task('cordova',function(done){
 
 gulp.task('default', function(done){
   var tasks = ['server','fonts','less','js'];
-  seq('clean',tasks, done);
+  var tasks2 = ['directory','cordova','node-webkit'];
+  seq('clean',tasks,tasks2, done);
 });
