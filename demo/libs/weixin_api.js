@@ -1,23 +1,25 @@
-exports = module.exports = function(){
-	var config = require('../config/weixin');
+var config = require('../config/weixin');
 
-	var wechatAPI = require('wechat-api');
-	var api = new wechatAPI(config.appid, config.secret);
+var WechatAPI = require('wechat-api');
+var EnterpriseAPI = require('wechat-enterprise').API;
+var OAuth = require('wechat-oauth');
+var Payment = require('wechat-payment').Payment;
+var PaymentConfirm = require('wechat-payment').middleware;
 
-	var OAuth = require('wechat-oauth');
-	var client = new OAuth(config.appid,config.secret);
+var mpApi = new WechatAPI(config.mp.appid, config.mp.secret);
+var mpClient = new OAuth(config.mp.appid, config.mp.secret);
 
-	var Payment = require('wechat-payment').Payment;
-	var payment = new Payment(config.payment);
+var qyApi = new EnterpriseAPI(config.qy.appid, config.qy.secret, config.qy.agentid);
+var qyClient = new OAuth(config.qy.appid, config.qy.secret);
 
+var payment = new Payment(config.payment);
+var paymentConfirm = PaymentConfirm(config.payment).getNotify().done;
 
-	var PaymentConfirm = require('wechat-payment').middleware;
-	var paymentConfirm = PaymentConfirm(config.payment).getNotify().done;
-
-	return {
-		api: api,
-		client: client,
-		payment: payment,
-		paymentConfirm: paymentConfirm,
-	};
-}
+exports = module.exports = {
+	mpApi: mpApi,
+	mpClient: mpClient,
+	qyApi: qyApi, 
+	qyClient: qyClient,
+	payment: payment,
+	paymentConfirm: paymentConfirm,
+};

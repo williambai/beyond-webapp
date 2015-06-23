@@ -1,8 +1,17 @@
 exports = module.exports = {
-	token: 'token',
-	appid: 'appid',
-	secret: 'secret',
-	encodingAESKey: 'encodingAESKey',
+	mp: {
+		token: 'token',
+		appid: 'appid', //mp
+		encodingAESKey: '',
+		secret: 'secret',
+	},
+	qy: {
+		token: 'token',
+		corpid: 'corpid', //qy
+		agentid: 'agentid',
+		encodingAESKey: '',
+		secret: 'secret',
+	},
 	payment: {
 		partnerKey: "<partnerkey>",
 		appId: "<appid>",

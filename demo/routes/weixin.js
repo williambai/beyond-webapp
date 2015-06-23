@@ -2,14 +2,36 @@ exports = module.exports = function(app,models){
 	var async = require('async');
 	var config = require('../config/weixin');
 	var wechat = require('wechat');
-	var api = require('../libs/weixin_api').api;
+	var mpApi = require('../libs/weixin_api').mpApi; //member platform(mp) service
+	var qyApi = require('../libs/weixin_api').qyApi; //enterprise(qy) service
 	var paymentConfirm = require('../libs/weixin_api').paymentConfirm;
 
-	var wechatMiddleware = wechat(config.weixin, function(req,res,next){
+	var mpMiddleware = wechat(config.mp, function(req,res,next){
 		next();
 	});
 
-	app.use('/wechat', wechatMiddleware, function(req,res){
+	app.use('/wechat', mpMiddleware, function(req,res){
+		var message = req.weixin;
+		async.waterfall(
+			[
+				
+			]
+			,function _result(err, result){
+				if(err){
+					res.sendStatus(err);
+					return;
+				}
+				//调用weixin消息封装方法
+				res.reply(result);				
+			}
+		);
+	});
+
+	var qyMiddleware = wechat(config.qy, function(req,res,next){
+		next();
+	});
+
+	app.use('/corp', qyMiddleware, function(req,res){
 		var message = req.weixin;
 		async.waterfall(
 			[
@@ -38,7 +60,7 @@ exports = module.exports = function(app,models){
 			next();
 		};
 		
-	app.use(config.payment.notifyUrl,paymentMiddleware,wechatMiddleware,function(req,res){
+	app.use(config.payment.notifyUrl, paymentMiddleware, mpMiddleware, function(req,res){
 		/**
 		* 查询订单，在自己系统里把订单标为已处理
 		* 如果订单之前已经处理过了直接返回成功
