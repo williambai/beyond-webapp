@@ -1,8 +1,9 @@
 var menu = {
 		button:[
 			{
-				type: 'click',
+				type: 'view',
 				name: '菜单1',
+				url: 'http://www.baidu.com'
 			},
 			{
 				name: '菜单2',
@@ -13,9 +14,9 @@ var menu = {
 						url: 'http://www.baidu.com'
 					},
 					{
-						type: 'click',
+						type: 'view',
 						name: '子菜单',
-						key: ''
+						url: 'http://www.sina.com.cn'
 					}
 				]
 			},

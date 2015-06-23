@@ -9,8 +9,8 @@ var PaymentConfirm = require('wechat-payment').middleware;
 var mpApi = new WechatAPI(config.mp.appid, config.mp.secret);
 var mpClient = new OAuth(config.mp.appid, config.mp.secret);
 
-var qyApi = new EnterpriseAPI(config.qy.appid, config.qy.secret, config.qy.agentid);
-var qyClient = new OAuth(config.qy.appid, config.qy.secret);
+var qyApi = new EnterpriseAPI(config.qy.corpid, config.qy.secret, config.qy.agentid);
+var qyClient = new OAuth(config.qy.corpid, config.qy.secret);
 
 var payment = new Payment(config.payment);
 var paymentConfirm = PaymentConfirm(config.payment).getNotify().done;
