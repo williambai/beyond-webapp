@@ -12,6 +12,10 @@ exports = module.exports = function(app,models){
 
 	app.use('/wechat', mpMiddleware, function(req,res){
 		var message = req.weixin;
+		console.log('+++')
+		console.log(req.session)
+		console.log(req.wxsession)
+		console.log(message)
 		async.waterfall(
 			[
 				

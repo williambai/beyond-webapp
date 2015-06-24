@@ -77,9 +77,9 @@ define(['text!templates/loading.html','text!templates/profile.html','views/Statu
 			if(!this.loaded){
 				this.$el.html(this.loadingTemplate);
 			}else{
-				if(this.model.get('_id')){
-					this.socketEvents.bind('status' + this.model.get('_id'), this.onSocketonStatusAdded, this);
-				}
+				// if(this.model.get('_id')){
+				// 	this.socketEvents.bind('status' + this.model.get('_id'), this.onSocketonStatusAdded, this);
+				// }
 				this.$el.html(this.template({
 					ui: this.uiControl,
 					account: this.model.toJSON()
