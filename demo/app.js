@@ -71,7 +71,7 @@ app.use(session({
 		secret: app.sessionSecret,
 		key: 'beyond.sid',
 		store: app.sessionStore,
-		saveUninitialized: true,
+		saveUninitialized: false,
         resave: true
     }));
 
