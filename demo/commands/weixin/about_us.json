@@ -1,0 +1,13 @@
+{
+	"articles": [
+		{
+			"title": "关于我们",
+			"thumb_media_id": "about_us",
+			"author": "白杨软件",
+			"digest": "摘要",
+			"show_cover_pic": 1,
+			"content": "正文内容",
+			"content_source_url": "http://www.baidu.com"
+		}
+	]
+}
