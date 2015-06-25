@@ -2,7 +2,23 @@ define(['router_wechat'],function(router){
 	var SocialNet = function(){
 
 		var initialize = function(){
-			checkLogin(runApplication);
+			var appid = 'wx93534d55c06f6fec';//beyond_mp
+			router.appid = appid;
+			checkOpenId(appid,function(){
+				checkLogin(runApplication);
+			});
+		};
+
+		var checkOpenId = function(appid,callback){
+			$.ajax('/wechat/check/openid?appid=' + appid,{
+				mathod: 'GET',
+				success: function(data){
+					callback();
+				},
+				error: function(){
+					window.location.href = '/wechat/oauth2?appid=' + appid;
+				}
+			});
 		};
 
 		var checkLogin = function(callback){

@@ -1,15 +1,7 @@
-<h2>您已经切换到<u><%= project.name %></u></h2>
-<p>现在可以采集和上传与该项目有关的信息了，包括：文字，图片，视频，音频，文档等。</p>
-<p>注意：从现在起，您上传的信息都将是关于该项目的，在发送信息前，请确认您选择了正确的项目类别。</p>
-<button class="btn btn-primary btn-block">您可以关闭窗口了</button>
+<h2>项目名称：<%= project.name %></h2>
 <hr>
 <h3>项目概况：</h3>
 <p><%= project.description %></p>
 <p>成员人数：<%= project.contacts %></p>
 <hr>
-<h3>你问我答?</h3>
-<ul>
-	<li>如何上传图片，视频等多媒体文件？</li>
-	<li>为什么使用微信客户端上传多媒体文件？</li>
-	<li>如何与其他同事更好地交流工作？</li>
-</ul>
+<button class="btn btn-primary btn-block checkin">切换到该项目</button>
