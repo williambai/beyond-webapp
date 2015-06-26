@@ -70,15 +70,15 @@ gulp.on('err', function(e) {
 =            Clean dest folder            =
 =========================================*/
 gulp.task('clean:project', function(done){
-  del(path.join(__dirname,'dist',config.project));
+  del.sync(path.join(__dirname,'dist',config.project));
   done();
 });
 gulp.task('clean:node-webkit', function(done){
-  del(path.join(__dirname,'dist','node-webkit'));
+  del.sync(path.join(__dirname,'dist','node-webkit'));
   done();
 });
 gulp.task('clean:cordova',function(done){
-  del(path.join(__dirname,'dist','cordova'));
+  del.sync(path.join(__dirname,'dist','cordova'));
   done();
 });
 
@@ -92,16 +92,16 @@ gulp.task('clean', function (cb) {
 ==================================*/
 
 gulp.task('directory', function(done){
-  var project_dir = path.join(__dirname,'dist',config.project);
-  var public_dir = path.join(__dirname,'dist',config.project,'public');
+  // var project_dir = path.join(__dirname,'dist',config.project);
+  // var public_dir = path.join(__dirname,'dist',config.project,'public');
   var downloads = path.join(__dirname,'dist',config.project,'public','downloads');
   var upload = path.join(__dirname,'dist',config.project,'public','upload');
-  if(!fs.existsSync(project_dir)){
-    fs.mkdirSync(project_dir);
-  }
-  if(!fs.existsSync(public_dir)){
-    fs.mkdirSync(public_dir);
-  }
+  // if(!fs.existsSync(project_dir)){
+  //   fs.mkdirSync(project_dir);
+  // }
+  // if(!fs.existsSync(public_dir)){
+  //   fs.mkdirSync(public_dir);
+  // }
   if(!fs.existsSync(downloads)){
     fs.mkdirSync(downloads);
   }
@@ -117,30 +117,52 @@ gulp.task('directory', function(done){
 
 gulp.task('app.js', function(){
     return gulp.src(path.join(config.project,'app.js'))
+                .pipe(uglify())
                 .pipe(gulp.dest(path.join('dist',config.project)));
 });
 gulp.task('views', function(){
     return gulp.src(path.join(config.project,'views/**/*'))
                 .pipe(gulp.dest(path.join('dist',config.project,'views')));
 });
+gulp.task('libs', function(){
+    return gulp.src(path.join(config.project,'libs/**/*'))
+                .pipe(uglify())
+                .pipe(gulp.dest(path.join('dist',config.project,'libs')));
+});
 gulp.task('routes', function(){
     return gulp.src(path.join(config.project,'routes/**/*'))
+                .pipe(uglify())
                 .pipe(gulp.dest(path.join('dist',config.project,'routes')));
 });
 gulp.task('models', function(){
     return gulp.src(path.join(config.project,'models/**/*'))
+                .pipe(uglify())
                 .pipe(gulp.dest(path.join('dist',config.project,'models')));
 });
 gulp.task('config', function(){
     return gulp.src(path.join(config.project,'config/**/*'))
+                .pipe(uglify())
                 .pipe(gulp.dest(path.join('dist',config.project,'config')));
+});
+gulp.task('commands', function(){
+    return gulp.src(path.join(config.project,'commands/**/*'))
+                .pipe(gulp.dest(path.join('dist',config.project,'commands')));
 });
 
 gulp.task('server', function(done) {
-    var tasks = ['app.js','views','routes','models','config'];
+    var tasks = ['app.js','views','libs','routes','models','config','commands'];
     seq(tasks,done);
 });
 
+/*==================================
+=            Copy htmls            =
+==================================*/
+
+gulp.task('htmls', function(done) {
+  return gulp.src(path.join(config.project,'public/*.html'))
+  .pipe(gulp.dest(path.join('dist',config.project, 'public')));
+  done();
+});
 
 /*==================================
 =            Copy fonts            =
@@ -368,11 +390,32 @@ gulp.task('cordova',function(done){
 });
 
 /*====================================
+=            Build Task            =
+====================================*/
+
+gulp.task('build:project', function(done){
+  var tasks = ['server','htmls','fonts','less','js'];
+  seq('clean:project',tasks,'directory', done);
+});
+gulp.task('build:client', function(done){
+  var tasks = [];
+  seq('clean:cordova','clean:node-webkit','cordova','node-webkit', done);
+});
+
+gulp.task('build', function(done){
+  seq('build:project','build:client', done);
+});
+
+/*====================================
 =            Default Task            =
 ====================================*/
 
-gulp.task('default', function(done){
-  var tasks = ['server','fonts','less','js'];
-  var tasks2 = ['directory','cordova','node-webkit'];
-  seq('clean',tasks,tasks2, done);
+gulp.task('default', function(){
+  console.log("Usage:\n\n");
+  console.log("command: gulp build\n");
+  console.log("description: to build project's project and clients.\n\n");
+  console.log("command: gulp build:project\n");
+  console.log("description: to build project's project.\n\n");
+  console.log("command: gulp build:client\n");
+  console.log("description: to build cordova and node-webkit clients.\n\n");
 });
