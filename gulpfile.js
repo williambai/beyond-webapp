@@ -235,7 +235,7 @@ gulp.task('js', function(done){
         baseUrl: __dirname + '/' + config.project + '/public/js',
         mainConfigFile: __dirname + '/' + config.project + '/public/js/boot.js',
         findNestedDependencies: true,
-        optimize: 'none',
+        optimize: 'uglify',//none
         name: 'main',
         out: __dirname + '/dist/' + config.project + '/public/js/main.js',
         onModuleBundleComplete: function(data){
