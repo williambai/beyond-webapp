@@ -2,6 +2,7 @@
   "name": "beyond-webapp",
   "version": "0.0.1",
   "description": "build app by using nodejs, mongodb, backbone, etc.",
+  "private": true,
   "main": "app.js",
   "scripts": {
     "app-demo-test": "jasmine-node demo/test",
