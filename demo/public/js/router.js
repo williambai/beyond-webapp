@@ -9,6 +9,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		// currentChatView: null,
 		// chatSessions: {},
 		routes: {
+			'': 'index',
 			'index': 'index',
 			'activity/:id': 'activity',
 			'status/:id': 'status',
