@@ -211,16 +211,16 @@ gulp.task('less', function () {
           , path.resolve(__dirname, 'bower_components')
         ]
     }))
-    .pipe(mobilizer('app.css', {
-      'app.css': {
-        hover: 'exclude',
-        screens: ['0px']      
-      },
-      'hover.css': {
-        hover: 'only',
-        screens: ['0px']
-      }
-    }))
+    // .pipe(mobilizer('app.css', {
+    //   'app.css': {
+    //     hover: 'exclude',
+    //     screens: ['0px']      
+    //   },
+    //   'hover.css': {
+    //     hover: 'only',
+    //     screens: ['0px']
+    //   }
+    // }))
     .pipe(cssmin())
     // .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest(path.join('dist',config.project, 'public/css')));
