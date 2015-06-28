@@ -30,7 +30,10 @@ define(['text!templates/projectIndex.html','views/BottomBar0','models/Project'],
 					$('body').addClass('has-navbar-bottom');
 				}
 			}
-			this.$el.html(this.template({project: this.model.toJSON()}));
+			this.$el.html(this.template({
+					project: this.model.toJSON(),
+					contacts_num: this.model.get('contacts') ? this.model.get('contacts').length : 0
+				}));
 			return this;
 		}
 	});

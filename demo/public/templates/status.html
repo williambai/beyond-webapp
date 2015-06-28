@@ -7,7 +7,11 @@
 	</div>
 	<div class="media-body">
 		<h4 class="media-heading"><%= username %></h4>
-		<p><%= status %></p>
+		<% if(status.PicUrl){ %>
+			<img src="<%= status.PicUrl %>">
+		<% }else{ %>
+			<p><%= status %></p>
+		<% } %>
 		<div class="statusControl">
 		</div>
 		<p><a class="level">重要度：<%= level %></a>&nbsp; <a class="good">顶</a>&nbsp;<a class="bad">砸</a>&nbsp;评分：<span><%= score %></span></p>

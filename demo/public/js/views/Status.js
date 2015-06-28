@@ -14,9 +14,56 @@ define(['text!templates/status.html'],function(statusTemplate){
 		},
 
 		initialize: function(){
-			
+			this._convertStatus();
 		},
 
+		_convertStatus: function(){
+			var model = this.model;
+			var statusJsonString = model.get('status');
+			if(!statusJsonString){
+				return;
+			}
+			statusJsonString = statusJsonString.trim();
+
+			if(!/^\{.*\}$/.test(statusJsonString)){
+				if(!/^http/.test(statusJsonString)){
+					return;
+				}
+
+				if(/^http.*(png|jpg|git)$/.test(statusJsonString)){
+					this.model.set('status', {
+						MsgType:'image',
+						PicUrl: statusJsonString
+					});
+				}else if(/^http.*(mp4|mov)$/.test(statusJsonString)){
+
+				}else if(/^http.*(mp3|amr)$/.test(statusJsonString)){
+
+				}else{
+					$.get('/website/thumbnail?url=' + encodeURIComponent(statusJsonString),
+						function success(response){
+							console.log(response);
+						}
+					);
+				}
+			}else{
+				// console.log('===')
+				// console.log(statusJsonString)
+				try{
+					var statusObject = JSON.parse(statusJsonString);
+					if(statusObject && statusObject.MsgType){
+						//is wechat message
+						if(statusObject.MsgType == 'text'){
+							this.model.set('status',statusObject.Content);
+						}else{
+							this.model.set('status',statusObject);
+						}
+					}
+				}catch(e){
+					console.log(statusStatusString);
+				}
+			}
+		},
 		voteGood: function(){
 			$.post(
 				'/status/'+ this.model.get('_id'),

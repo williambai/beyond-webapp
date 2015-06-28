@@ -36,7 +36,10 @@ define(['text!templates/projectIndex_wechat.html','views/ProjectCheckIn_wechat',
 		},
 
 		render: function(){
-			this.$el.html(this.template({project: this.model.toJSON()}));
+			this.$el.html(this.template({
+					project: this.model.toJSON(),
+					contacts_num: this.model.get('contacts') ? this.model.get('contacts').length : 0
+				}));
 			return this;
 		}
 	});
