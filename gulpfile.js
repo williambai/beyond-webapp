@@ -39,6 +39,7 @@ var sh = require('shelljs');
 
 var gulp           = require('gulp'),
     del            = require('del'),
+    replace        = require('gulp-replace');
     seq            = require('run-sequence'),
     jade           = require('gulp-jade'),
     mobilizer      = require('gulp-mobilizer'),
@@ -158,10 +159,30 @@ gulp.task('server', function(done) {
 =            Copy htmls            =
 ==================================*/
 
-gulp.task('htmls', function(done) {
+gulp.task('copy-html', function(done) {
   return gulp.src(path.join(config.project,'public/*.html'))
   .pipe(gulp.dest(path.join('dist',config.project, 'public')));
   done();
+});
+
+gulp.task('index.html', function(done){
+  gulp.src(path.join(config.project,'public/index.html'))
+      .pipe(replace('data-main="js/boot" ',''))
+      .pipe(replace('js/libs/require.js','/js/main.js'))
+      .pipe(gulp.dest(path.join('dist',config.project, 'public')));
+  done();
+});
+
+gulp.task('wechat.html', function(done){
+  gulp.src(path.join(config.project,'public/wechat.html'))
+      .pipe(replace('data-main="js/boot_wechat" ',''))
+      .pipe(replace('js/libs/require.js','/js/main_wechat.js'))
+      .pipe(gulp.dest(path.join('dist',config.project, 'public')));
+  done();
+});
+
+gulp.task('htmls', function(done){
+  seq('copy-html','index.html','wechat.html',done);
 });
 
 /*==================================
@@ -229,7 +250,7 @@ gulp.task('less', function () {
 // =====================================*/
 
 
-gulp.task('js', function(done){
+gulp.task('main.js', function(done){
   var requirejs = require('requirejs');
   var configJs = {
         baseUrl: __dirname + '/' + config.project + '/public/js',
@@ -254,6 +275,36 @@ gulp.task('js', function(done){
         console.log(err);
       });
   });
+
+gulp.task('main_wechat.js', function(done){
+  var requirejs = require('requirejs');
+  var configJs = {
+        baseUrl: __dirname + '/' + config.project + '/public/js',
+        mainConfigFile: __dirname + '/' + config.project + '/public/js/boot_wechat.js',
+        findNestedDependencies: true,
+        optimize: 'uglify',//none
+        name: 'main_wechat',
+        out: __dirname + '/dist/' + config.project + '/public/js/main_wechat.js',
+        onModuleBundleComplete: function(data){
+          var amdclean = require('amdclean');
+          var fs = require('fs');
+          var outputFile = data.path;
+          fs.writeFileSync(outputFile, amdclean.clean({
+            filePath: outputFile
+          }));
+        }
+      };
+      requirejs.optimize(configJs,function(buildResponse){
+        // console.log(buildResponse);
+        done();
+      },function(err){
+        console.log(err);
+      });
+  });
+
+gulp.task('js',function(done){
+  seq('main.js','main_wechat.js', done);
+});
 
 /*===================================
 =        Compile jade               =

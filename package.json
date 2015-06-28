@@ -62,6 +62,7 @@
     "gulp-mobilizer": "0.0.3",
     "gulp-order": "^1.1.1",
     "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.3",
     "gulp-rimraf": "^0.1.1",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
