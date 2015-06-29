@@ -2,51 +2,45 @@ define(['text!templates/projectItem.html'],function(projectItemTemplate){
 	var ProjectItemView = Backbone.View.extend({
 		tagName: 'div',
 		template: _.template(projectItemTemplate),
+		messageUnreadNum: 0,
 
 		events: {
-			// 'click': 'startChatSession'
+			'click .list-group-item': 'activeItem',
 		},
 
 		initialize: function(options){
-			// var accountId = this.model.get('accountId');
-			// options.socketEvents.bind(
-			// 		'login:'+ accountId,
-			// 		this.handleContactLogin,
-			// 		this
-			// 	);
-			// options.socketEvents.bind(
-			// 		'logout:' + accountId,
-			// 		this.handleContactLogout,
-			// 		this				
-			// 	);
-			// options.socketEvents.bind(
-			// 		'socket:chat:start:' + this.model.get('accountId'),
-			// 		this.startChatSession,
-			// 		this
-			// 	);
+			this.socketEvents = options.socketEvents;
+			options.socketEvents.bind(
+					'socket:project:chat:in:' + this.model.get('_id'),
+					this.onMessageRecieved,
+					this
+				);
+		},
+		
+		activeItem: function(evt){
+			var currentItem = evt.currentTarget;
+			this.messageUnreadNum = 0;
+			this.renderMessageNum();
 		},
 
-		// handleContactLogin: function(eventObj){
-		// 	this.model.set('online', true);
-		// 	this.$el.find('.online_indicator').addClass('online');
-		// },
+		onMessageRecieved: function(){
+			if(this.$('.active').length == 0){
+				this.messageUnreadNum += 1;
+				this.renderMessageNum();
+			}
+		},
 
-		// handleContactLogout: function(eventObj){
-		// 	this.model.set('online', false);
-		// 	this.$el.find('.online_indicator').removeClass('online');
-		// },
-
-		// startChatSession: function(){
-		// 	this.trigger('chat:start', this.model);
-		// 	return false;
-		// },
+		renderMessageNum: function(){
+			if(this.messageUnreadNum < 1) {
+				this.messageUnreadNum = 0;
+				this.$('.project-chat-unread').html('<i class="fa fa-chevron-right"></i>');
+			}else{
+				this.$('.project-chat-unread').html('<span class="badge">' + this.messageUnreadNum + '</span>');
+			}
+		},
 
 		render: function(){
 			this.$el.html(this.template(this.model.toJSON()));
-			// if(this.model.get('online')){
-			// 	this.handleContactLogin();
-			// }
-
 			return this;
 		}
 	});
