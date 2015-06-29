@@ -94,7 +94,7 @@
 				res.sendStatus(404);
 				return;
 			}
-			Status.getAll(accountId,accountId,page,function(status){
+			Status.getAll([req.session.accountId,accountId],accountId,page,function(status){
 				res.send(status);
 			});
 		});
@@ -112,10 +112,14 @@
 				res.sendStatus(400);
 				return;
 			}
+			var action = 'status';//朋友圈
+			if(req.session.accountId != accountId){
+				action = 'message';//私信
+			}
 			Status.add(req.session.accountId,accountId,username,avatar,text,function(status){
 				if(status){
 					app.triggerEvent('event:' + accountId, {
-						action: 'status',
+						action: action,
 						from: accountId,
 						data: {
 							username: username,
@@ -127,6 +131,33 @@
 			});
 		});
 		res.sendStatus(200);
+	});
+
+	app.get('/accounts/:id/message',app.isLogined,function(req,res){
+		if(req.params.id != 'me'){
+			res.sendStatus(401);
+			return;
+		}
+		var accountId = req.params.id == 'me' 
+							? req.session.accountId
+							: req.params.id;
+		var page = req.query.page || 0;
+
+		if(isNaN(page)) page = 0;
+
+		Account.findById(accountId, function(account){
+			if(!account){
+				res.sendStatus(404);
+				return;
+			}
+			var contactIds = [];
+			account.contacts.forEach(function(contact){
+				contactIds.push(contact.accountId);
+			});
+			Status.getShortMessageById(accountId,contactIds,page,function(status){
+				res.send(status);
+			});
+		});
 	});
 
 	app.get('/accounts/:id/activity',app.isLogined,function(req,res){
@@ -142,7 +173,11 @@
 				res.sendStatus(404);
 				return;
 			}
-			Status.getAllByToId(accountId,page,function(status){
+			var contactIds = [];
+			account.contacts.forEach(function(contact){
+				contactIds.push(contact.accountId);
+			});
+			Status.getActivityById(accountId,contactIds,page,function(status){
 				res.send(status);
 			});
 		});

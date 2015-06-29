@@ -24,14 +24,18 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 			options.socketEvents.bind('status:me',this.onSocketStatusAdded, this);
 
 			this.collection = new StatusCollection();
-			if(options.activity){
+			if(options.statusType == 'activity'){
 				this.collection.url = '/accounts/'+ options.id + '/activity';
 				this.collectionUrl = this.collection.url;
-				this.uiControl.activity = true;
+				this.uiControl.statusType = 'activity';
+			}else if(options.statusType == 'message'){
+				this.collection.url = '/accounts/'+ options.id + '/message';
+				this.collectionUrl = this.collection.url;
+				this.uiControl.statusType = 'message';
 			}else{
 				this.collection.url = '/accounts/'+ options.id + '/status';
 				this.collectionUrl = this.collection.url;
-				this.uiControl.activity = false;
+				this.uiControl.statusType = 'status';
 			}
 			this.collection.on('add', this.onStatusAdded, this);
 			this.collection.on('reset', this.onStatusCollectonReset, this);
@@ -45,8 +49,10 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 		},
 
 		onSocketStatusAdded: function(data){
+			var fromId = data.from;
 			data = data.data;
 			var status = new Status({
+					fromId: fromId,
 					username: data.username,
 					avatar: data.avatar,
 					status: data.status

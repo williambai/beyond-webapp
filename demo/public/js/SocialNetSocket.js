@@ -65,6 +65,9 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 			if(eventObj.action == 'status'){
 				eventName = 'status:me';
 				eventDispatcher.trigger('status:number:unread',1);
+			}else if(eventObj.action == 'message' && (eventObj.from == accountId)){
+				eventName = 'message:me';
+				eventDispatcher.trigger('message:number:unread',1);
 			}
 			// console.log('+++')
 			// console.log(eventName)

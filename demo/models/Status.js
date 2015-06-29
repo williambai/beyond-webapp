@@ -219,6 +219,69 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				});
 		};
 
+	var getShortMessageById = function(accountId,contactIds,page,callback){
+			var per = 20;
+			if(typeof page == 'function'){
+				callback = page;
+				page = 0;
+			}
+			if(!callback){
+				throw new Error('callback is not defined.');
+			}
+
+			Status
+				.find({
+						toId: accountId,
+						fromId: {$in: contactIds} 
+					})
+				.sort({createtime:-1})
+				.skip(page*per)
+				.limit(per)
+				.exec(function(err,docs){
+					debug && defaultCallback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(docs);
+					}
+				});
+		};
+
+	var getActivityById = function(accountId, contactIds, page, callback){
+			var per = 20;
+			if(typeof page == 'function'){
+				callback = page;
+				page = 0;
+			}
+			if(!callback){
+				throw new Error('callback is not defined.');
+			}
+
+			Status
+				.find({})
+				.or([
+					{
+						toId: accountId,
+						fromId: accountId 
+					},
+					{
+						toId: {$in: contactIds},
+						fromId: {$in: contactIds}
+					}
+				])
+				.sort({createtime:-1})
+				.skip(page*per)
+				.limit(per)
+				.exec(function(err,docs){
+					debug && defaultCallback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(docs);
+					}
+				});
+		};
+
 	return {
 		Status: Status,
 		add: add,
@@ -229,6 +292,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		updateLevel: updateLevel,
 		getAll:getAll,
 		getAllByToId: getAllByToId,
-		getAllByFromId: getAllByFromId
+		getAllByFromId: getAllByFromId,
+		getShortMessageById: getShortMessageById,
+		getActivityById: getActivityById
 	};
 };

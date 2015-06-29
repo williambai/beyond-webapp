@@ -12,6 +12,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'': 'index',
 			'index': 'index',
 			'activity/:id': 'activity',
+			'message/:id': 'messageBox',
 			'status/:id': 'status',
 			'chat/:id': 'chat',
 			'login': 'login',
@@ -81,7 +82,18 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				return;
 			}
 			this.appEvents.trigger('set:brand','朋友圈');
-			var statusesView = new StatusesView({id:id,activity:true,socketEvents: this.socketEvents});
+			var statusesView = new StatusesView({id:id,statusType:'activity',socketEvents: this.socketEvents});
+			this.changeView(statusesView);
+			statusesView.trigger('load');
+		},
+
+		messageBox: function(id){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
+			this.appEvents.trigger('set:brand','私信');
+			var statusesView = new StatusesView({id:id,statusType:'message',socketEvents: this.socketEvents});
 			this.changeView(statusesView);
 			statusesView.trigger('load');
 		},
@@ -92,7 +104,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				return;
 			}
 			this.appEvents.trigger('set:brand','私人空间');
-			var statusesView = new StatusesView({id:id,socketEvents: this.socketEvents});
+			var statusesView = new StatusesView({id:id,statusType:'status',socketEvents: this.socketEvents});
 			this.changeView(statusesView);
 			statusesView.trigger('load');
 		},

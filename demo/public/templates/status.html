@@ -3,10 +3,14 @@
 </style>
 <div class="media">
 	<div class="pull-left">
-		<img class="media-object" src="<%= avatar %>" width="64px;" height="64px;">
+		<a href="#profile/<%= fromId %>">
+			<img class="media-object" src="<%= avatar %>" width="64px;" height="64px;">
+		</a>
 	</div>
 	<div class="media-body">
-		<h4 class="media-heading"><%= username %></h4>
+		<a href="#status/<%= fromId %>">
+			<h4 class="media-heading"><%= username %></h4>
+		</a>
 		<% if(status.PicUrl){ %>
 			<img src="<%= status.PicUrl %>">
 		<% }else{ %>

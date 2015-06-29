@@ -4,8 +4,9 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 		template: _.template(layoutTemplate),
 		loadingTemplate: _.template(loadingTemplate),
 
-		messageUnreadNum: 0, //未读消息数量
-		statusUnreadNum: 0, //好友圈新消息数量
+		chatUnreadNum: 0, //未读聊天消息数量
+		messageUnreadNum: 0, //好友未读私信数量
+		statusUnreadNum: 0, //好友圈未读新消息数量
 
 		loaded: false,
 		initialize: function(options){
@@ -17,7 +18,8 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 				.addClass('has-sidebar-right')
 				.addClass('has-navbar-top');
 			this.appEvents.on('set:brand', this.updateBrand,this);
-			this.socketEvents.on('chat:number:total', this.onMessageNumChanged, this);
+			this.socketEvents.on('chat:number:total', this.onChatNumChanged, this);
+			this.socketEvents.on('message:number:unread', this.onMessageNumChanged, this);
 			this.socketEvents.on('status:number:unread', this.onStatusNumChanged, this);
 			this.on('load', this.load,this);
 		},
@@ -42,6 +44,9 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 			if(this.$(currentItem).find('.status-unread').length > 0){
 				this.statusUnreadNum = 0;
 				this.$('.status-unread').html('<i class="fa fa-chevron-right"></i>');
+			}else if(this.$(currentItem).find('.message-unread').length > 0){
+				this.messageUnreadNum = 0;
+				this.$('.message-unread').html('<i class="fa fa-chevron-right"></i>');
 			}
 		},
 
@@ -85,15 +90,26 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 			this.$('.navbar-brand').text(brand || '');
 		},
 
+		onChatNumChanged: function(num){
+			this.chatUnreadNum += num;
+			if(this.chatUnreadNum < 1) {
+				this.chatUnreadNum = 0;
+				this.$('.chat-total-unread').text('');
+			}else{
+				this.$('.chat-total-unread').text(this.chatUnreadNum);
+			}
+		},
+
 		onMessageNumChanged: function(num){
 			this.messageUnreadNum += num;
 			if(this.messageUnreadNum < 1) {
 				this.messageUnreadNum = 0;
-				this.$('.chat-total-unread').text('');
+				this.$('.message-unread').html('<i class="fa fa-chevron-right"></i>');
 			}else{
-				this.$('.chat-total-unread').text(this.messageUnreadNum);
+				this.$('.message-unread').html('<span class="badge">' + this.messageUnreadNum + '</span>');
 			}
 		},
+
 		onStatusNumChanged: function(num){
 			this.statusUnreadNum += num;
 			if(this.statusUnreadNum < 1) {
