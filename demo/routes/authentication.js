@@ -44,6 +44,7 @@ module.exports = exports = function(app,models){
 			console.log(email + ': login sucessfully.');
 			req.session.loggedIn = true;
 			req.session.accountId = account._id;
+			req.session.email = account.email;
 			req.session.username = account.username;
 			req.session.avatar = account.avatar;
 			res.json({

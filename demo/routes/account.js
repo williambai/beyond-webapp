@@ -255,4 +255,17 @@
 		);
 	});
 
+	app.post('/account/invite/friend', app.isLogined, function(req,res){
+		var emails = req.body.emails;
+		var inviteUrl = 'http://' + req.header('host');
+		var username = req.session.username;
+		var email = req.session.email;
+		Account.inviteFriend(emails,inviteUrl,username,email,function(success){
+			if(!success){
+				console.err('email sender error.');
+			}
+		});
+		res.sendStatus(200);
+	});
+
 }

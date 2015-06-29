@@ -1,4 +1,4 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/ForgotPasswordSuccess','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ChatUsers','views/ProjectIndex','views/ProjectAdd','views/ProjectChat','views/Projects','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','views/Chat'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ForgotPasswordSuccessView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ChatUsersView,ProjectIndexView,ProjectAddView,ProjectChatView,ProjectsView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,StatusesView,ChatView){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/ForgotPasswordSuccess','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ContactInvite','views/ChatUsers','views/ProjectIndex','views/ProjectAdd','views/ProjectChat','views/Projects','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','views/Chat'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ForgotPasswordSuccessView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ContactInviteView,ChatUsersView,ProjectIndexView,ProjectAddView,ProjectChatView,ProjectsView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,StatusesView,ChatView){
 
 	var SocailRouter = Backbone.Router.extend({
 		account: null,//login account
@@ -22,6 +22,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			'profile/me/edit': 'profileEdit',
 			'contacts/:id': 'contacts',
 			'contact/add': 'addContact',
+			'contact/invite': 'inviteContact',
 			'project/add': 'addProject',
 			'project/chat/:id': 'projectChat',
 			'projects/:pid/index': 'projectIndex',
@@ -174,6 +175,15 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			}
 			this.appEvents.trigger('set:brand','搜索和添加好友');
 			this.changeView(new ContactAddView());
+		},
+
+		inviteContact: function(){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
+			this.appEvents.trigger('set:brand','邀请好友');
+			this.changeView(new ContactInviteView());
 		},
 		
 		chat: function(id){

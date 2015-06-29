@@ -145,6 +145,26 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
+	var inviteFriend = function(emails, inviteUrl, username, email, callback){
+			var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
+			inviteUrl ? inviteUrl : 'http://localhost:8080';
+			emails.forEach(function(email){
+				smtpTransporter.sendMail({
+					from: 'socialworkserivce@appmod.cn',
+					to: email,
+					subject: '我的工作社交网--邀请信',
+					text: '您的朋友' + username + '(' + email + ')' + '邀请您加入。请点击：' + inviteUrl,
+				},function inviteCallback(err){
+					debug && defaultCallback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(true);
+					}
+				});
+			});
+		};
+
 	var forgotPassword = function(email,resetPasswordUrl,callback){
 		Account.findOne({email:email},function(err,doc){
 			if(err){
@@ -393,6 +413,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		findAll: findAll,
 		register: register,
 		registerConfirm: registerConfirm,
+		inviteFriend: inviteFriend,
 		forgotPassword: forgotPassword,
 		resetPassword: resetPassword,
 		login: login,
