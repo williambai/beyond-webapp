@@ -3,9 +3,13 @@ define(['text!templates/projectIndex.html','views/BottomBar0','models/Project'],
 		el: '#content',
 		template: _.template(projectIndexTemplate),
 
+		events: {
+			'click .toggle-project': 'closeOrOpen',
+		},
 
 		initialize: function(options){
 			this.pid = options.pid;
+			this.account = options.account;
 			this.model = new Project();
 			this.model.url = '/projects/' + options.pid;
 			this.model.on('change', this.render,this);
@@ -13,7 +17,33 @@ define(['text!templates/projectIndex.html','views/BottomBar0','models/Project'],
 		},
 
 		load: function(){
-			this.model.fetch();
+			var that = this;
+			this.model.fetch({
+				success: function(model){
+					if(that.account.id == model.get('accountId')){
+						model.set('isOwner', true);
+					}
+				}
+			});
+		},
+
+		closeOrOpen: function(){
+			var that = this;
+			var closed = this.model.get('closed');
+			if(closed){
+				if(confirm('你确定要打开项目吗？')){
+					that.model.set('closed', false);
+					that.render();
+					$.post('/projects/'+ this.model.get('_id') + '/open');
+				}
+			}else{
+				if(confirm('你确定要关闭项目吗？')){
+					that.model.set('closed', true);
+					that.render();
+					$.post('/projects/'+ this.model.get('_id') + '/close');
+				}
+			}
+			return false;
 		},
 
 		render: function(){
@@ -22,6 +52,7 @@ define(['text!templates/projectIndex.html','views/BottomBar0','models/Project'],
 				var bottomBarView = new BottomBarView({
 						id: this.pid,
 						account: this.account,
+						project: this.model,
 						socketEvents: this.socketEvents,
 						parentView: this,
 					});

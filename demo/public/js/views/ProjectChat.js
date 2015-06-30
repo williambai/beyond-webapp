@@ -1,4 +1,4 @@
-define(['text!templates/chat.html','views/BottomBar2','views/ChatItem','models/Status','models/StatusCollection'], function(projectChatTemplate,BottomBarView,ChatItemView,Status,StatusCollection){
+define(['text!templates/chat.html','views/BottomBar2','views/ChatItem','models/Project','models/Status','models/StatusCollection'], function(projectChatTemplate,BottomBarView,ChatItemView,Project,Status,StatusCollection){
 	var ProjectChatView = Backbone.View.extend({
 		el: '#content',
 
@@ -13,6 +13,9 @@ define(['text!templates/chat.html','views/BottomBar2','views/ChatItem','models/S
 					this.socketReceiveChat, 
 					this
 				);
+			this.model = new Project();
+			this.model.url = '/projects/' + options.id;
+			this.model.on('change', this.render,this);
 			this.collection = new StatusCollection();
 			this.collection.url = '/projects/' + this.id + '/status';
 			this.listenTo(this.collection, 'reset', this.onChatCollectionReset);
@@ -20,8 +23,15 @@ define(['text!templates/chat.html','views/BottomBar2','views/ChatItem','models/S
 		},
 
 		load: function(){
-			this.render();
-			this.collection.fetch({reset:true});
+			var that = this;
+			this.model.fetch({
+				success: function(model){
+					if(that.account.id == model.get('accountId')){
+						model.set('isOwner', true);
+					}
+					that.collection.fetch({reset:true});
+				}
+			});
 		},
 
 		socketReceiveChat: function(socket){
@@ -72,6 +82,7 @@ define(['text!templates/chat.html','views/BottomBar2','views/ChatItem','models/S
 			if($('.navbar-absolute-bottom').length == 0){
 				var bottomBarView = new BottomBarView({
 						id: this.id,
+						project: this.model,
 						account: this.account,
 						socketEvents: this.socketEvents,
 						parentView: this,
@@ -81,7 +92,7 @@ define(['text!templates/chat.html','views/BottomBar2','views/ChatItem','models/S
 					$('body').addClass('has-navbar-bottom');
 				}
 			}
-			this.$el.html(this.template({id: this.id}));
+			this.$el.html(this.template({project: this.model.toJSON()}));
 			return this;
 		}
 

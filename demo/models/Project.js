@@ -6,6 +6,9 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		name: {type: String},
 		description: {type: String},
 		contacts: [],
+		createtime: {type: Date},
+		updatetime: {type: Date},
+		closed: {type: Boolean}
 	});
 
 	mongoose.projectSchema = projectSchema;
@@ -24,6 +27,9 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				accountId: accountId,
 				name: options.name || '',
 				description: options.description || '',
+				createtime: new Date(),
+				updatetime: new Date(),
+				closed: false,
 			});
 			project.save(function(err){
 				debug && defaultCallback(err);
@@ -36,9 +42,44 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		};
 
 	var update = function(id, options, callback){
+			options.updatetime = options.updatetime || new Date();
 			Project
 				.where({_id:id})
 				.update({$set: options}, function(err){
+					debug && defaultCallback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(true);
+					}				
+				});
+		};
+
+	var close = function(id, callback){
+			var set = {
+				closed: true,
+				updatetime: new Date()
+			};
+			Project
+				.where({_id:id})
+				.update({$set: set}, function(err){
+					debug && defaultCallback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(true);
+					}				
+				});
+		};
+
+	var open = function(id, callback){
+			var set = {
+				closed: false,
+				updatetime: new Date()
+			};
+			Project
+				.where({_id:id})
+				.update({$set: set}, function(err){
 					debug && defaultCallback(err);
 					if(err){
 						callback && callback(null);
@@ -70,12 +111,34 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
+	var getOpenedByAccountId = function(accountId,page,callback){
+			page = (!page || page < 0) ? 0 : page;
+			var per = 20;
+			if(accountId){
+				Project
+					.find({accountId:accountId,closed: false})
+					.sort({updatetime:-1})
+					.skip(page*per)
+					.limit(per)
+					.exec(function(err,docs){
+						debug && defaultCallback(err);
+						if(err){
+							callback && callback(null);
+						}else{
+							callback && callback(docs);
+						}
+					});
+
+			}
+		};
+
 	var getByAccountId = function(accountId,page,callback){
 			page = (!page || page < 0) ? 0 : page;
 			var per = 20;
 			if(accountId){
 				Project
 					.find({accountId:accountId})
+					.sort({updatetime:-1})
 					.skip(page*per)
 					.limit(per)
 					.exec(function(err,docs){
@@ -90,6 +153,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			}else{
 				Project
 					.find({})
+					.sort({updatetime:-1})
 					.skip(page*per)
 					.limit(per)
 					.exec(function(err,docs){
@@ -104,7 +168,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		};
 
 	var addContactById = function(id,contactId, callback){
-			Project.findOne({_id:id}, function(err,doc){
+			Project.findOne({_id:id, closed: false}, function(err,doc){
 				if(err || doc == null){
 					debug && defaultCallback(err);
 					callback && callback(null);
@@ -125,7 +189,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		};
 
 	var removeContactById = function(id,contactId){
-			Project.findOne({_id:id}, function(err,doc){
+			Project.findOne({_id:id, closed: false}, function(err,doc){
 				if(err || doc == null){
 					debug && defaultCallback(err);
 					callback && callback(null);
@@ -165,7 +229,10 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		add: add,
 		remove: remove,
 		update: update,
+		open: open,
+		close: close,
 		getById: getById,
+		getOpenedByAccountId: getOpenedByAccountId,
 		getByAccountId: getByAccountId,
 		addContactById: addContactById,
 		removeContactById: removeContactById,

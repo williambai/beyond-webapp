@@ -62,6 +62,46 @@ exports = module.exports = function(app,models){
 		);
 	});
 
+	app.post('/projects/:id/close', app.isLogined, function(req,res){
+		var id = req.params.id;
+		async.waterfall(
+			[
+				function _project(callback){
+					Project.close(id,function(success){
+						callback(null,success);
+					});
+				},
+			],
+			function _result(err,result){
+				if(err){
+					res.sendStatus(err);
+					return;
+				}
+				res.sendStatus(200);
+			}
+		);
+	});
+
+	app.post('/projects/:id/open', app.isLogined, function(req,res){
+		var id = req.params.id;
+		async.waterfall(
+			[
+				function _project(callback){
+					Project.open(id,function(success){
+						callback(null,success);
+					});
+				},
+			],
+			function _result(err,result){
+				if(err){
+					res.sendStatus(err);
+					return;
+				}
+				res.sendStatus(200);
+			}
+		);
+	});
+
 	app.get('/projects/:id', app.isLogined, function(req,res){
 		var id = req.params.id;
 

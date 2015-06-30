@@ -3,6 +3,7 @@
 	<div class="pull-left">
 		<img class="media-object" src="<%= model.avatar %>" width="64px;" height="64px;">
 	</div>
+<% if(project.isOwner){ %>	
 	<div class="actionArea pull-right">
 		<% if(addButton){ %>
 				<button class="addbutton">添加为好友</button>
@@ -12,6 +13,7 @@
 				<button class="removebutton">移除好友</button>
 		<% } %>
 	</div>
+<% } %>
 	<div class="media-body">
 		<div class="media-heading"><h1><%= model.username %></h1></div>
 			<p>

@@ -228,7 +228,8 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				return;
 			}
 			var projectView = new ProjectIndexView({
-				pid: pid
+				pid: pid,
+				account: this.account,
 			});
 			this.changeView(projectView);
 			projectView.trigger('load');
@@ -279,6 +280,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			var contactId = cid ? cid: 'me';
 			var projectContactView = new ProjectContactsView({
 					pid:pid,
+					account: this.account,
 				});
 			this.changeView(projectContactView);
 			projectContactView.trigger('load');

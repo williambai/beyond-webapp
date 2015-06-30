@@ -1,5 +1,5 @@
-define(['text!templates/projectContacts.html','views/BottomBar0','views/ProjectContact','models/ContactCollection'],
-	function(contactsTemplate, BottomBarView, ContactView,ContactCollection){
+define(['text!templates/projectContacts.html','views/BottomBar0','views/ProjectContact','models/Project','models/ContactCollection'],
+	function(contactsTemplate, BottomBarView, ContactView, Project, ContactCollection){
 	var ContactsView = Backbone.View.extend({
 		el: '#content',
 		
@@ -7,17 +7,29 @@ define(['text!templates/projectContacts.html','views/BottomBar0','views/ProjectC
 		
 		initialize: function(options){
 			this.pid = options.pid;
+			this.account = options.account;
+			this.model = new Project();
+			this.model.url = '/projects/' + options.pid;
+			this.model.on('change', this.render,this);
 			this.collection = new ContactCollection();
-			this.collection.url = '/projects/' + this.pid + '/contacts';
+			this.collection.url = '/projects/' + options.pid + '/contacts';
 			this.collection.on('add', this.contactAdded, this);
 			this.collection.on('reset', this.contactCollectionReset, this);
 			this.on('load',this.load,this);
 		},
 		load: function(){
-			this.collection.fetch();
+			var that = this;
+			this.model.fetch({
+				success: function(model){
+					if(that.account.id == model.get('accountId')){
+						model.set('isOwner', true);
+					}
+					that.collection.fetch();
+				}
+			});
 		},
 		contactAdded: function(contact){
-			var contactHtml = (new ContactView({pid: this.pid, model: contact,removeButton:true})).render().el;
+			var contactHtml = (new ContactView({project: this.model, model: contact,removeButton:true})).render().el;
 			$(contactHtml).appendTo('#contactlist').hide().fadeIn('slow');
 		},
 
@@ -34,6 +46,7 @@ define(['text!templates/projectContacts.html','views/BottomBar0','views/ProjectC
 				var bottomBarView = new BottomBarView({
 						id: this.pid,
 						account: this.account,
+						project: this.model,
 						socketEvents: this.socketEvents,
 						parentView: this,
 					});
@@ -42,7 +55,7 @@ define(['text!templates/projectContacts.html','views/BottomBar0','views/ProjectC
 					$('body').addClass('has-navbar-bottom');
 				}
 			}
-			this.$el.html(this.template({model:{_id: this.pid}}));
+			this.$el.html(this.template({project:this.model.toJSON()}));
 			return this;
 		}
 
