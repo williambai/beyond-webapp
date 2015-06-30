@@ -1,4 +1,4 @@
-define(['text!templates/chat.html','views/BottomBar1','views/ChatItem','models/Chat','models/ChatCollection'], function(chatSessionTemplate,BottomBarView,ChatItemView,Chat,ChatCollection){
+define(['text!templates/chat.html','views/ChatBottomBar','views/ChatItem','models/Chat','models/ChatCollection'], function(chatSessionTemplate,BottomBarView,ChatItemView,Chat,ChatCollection){
 	var ChatView = Backbone.View.extend({
 		template: _.template(chatSessionTemplate),
 		el: '#content',

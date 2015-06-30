@@ -9,11 +9,19 @@
 			<div class="nav4-right">		
 				<button class="btn btn-primary">发送</button>
 			</div>
+	<% if(project.closed){ %>
+			<div class="nav4-input-both">
+				<div class="form-group">
+					<input type="text" name="chat" class="form-control" placeholder="项目已关闭，停止发言" disabled>
+				</div>
+			</div>
+	<% }else{ %>
 			<div class="nav4-input-both">
 				<div class="form-group">
 					<input type="text" name="chat" class="form-control">
 				</div>
 			</div>
+	<% } %>	
 		</div>
 	</form>
 </div>

@@ -79,7 +79,7 @@ define(['text!templates/chat.html','views/ProjectBottomBar','views/ChatItem','mo
 
 		render: function(){
 			//增加 bottom Bar
-			if($('.navbar-absolute-bottom').length == 0){
+			if(this.model.get('_id') && $('.navbar-absolute-bottom').length == 0){
 				var bottomBarView = new BottomBarView({
 						id: this.id,
 						project: this.model,

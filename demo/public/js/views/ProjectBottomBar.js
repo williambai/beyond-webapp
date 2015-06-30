@@ -8,6 +8,7 @@ define(['text!templates/projectBottomBar.html','text!templates/projectBottomBar2
 
 		initialize: function(options){				
 			this.id = options.id;
+			this.project = options.project;
 			this.account = options.account;
 			this.socketEvents = options.socketEvents;
 			this.parentView = options.parentView;
@@ -64,7 +65,7 @@ define(['text!templates/projectBottomBar.html','text!templates/projectBottomBar2
 
 		render: function(){
 			if(this.barToggle){
-				this.$el.html(this.template());
+				this.$el.html(this.template({project: this.project.toJSON()}));
 			}else{
 				this.$el.html(this.template0({id: this.id}));
 			}
