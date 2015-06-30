@@ -46,15 +46,6 @@ define(['text!templates/projectBottomBar.html','text!templates/projectBottomBar2
 		},
 
 		changeToolbar: function(){
-			// var toolbars = this.$('.navbar-absolute-bottom');
-			// toolbars.each(function(index){
-			// 	var toolbar = toolbars[index];
-			// 	if($(toolbar).hasClass('hidden')){
-			// 		$(toolbar).removeClass('hidden');
-			// 	}else{
-			// 		$(toolbar).addClass('hidden');				
-			// 	}
-			// });
 			this.barToggle = !this.barToggle;
 			if(this.barToggle){
 				window.location.hash = 'project/chat/' + this.id;

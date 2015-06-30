@@ -188,7 +188,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	var removeContactById = function(id,contactId){
+	var removeContactById = function(id,contactId,callback){
 			Project.findOne({_id:id, closed: false}, function(err,doc){
 				if(err || doc == null){
 					debug && defaultCallback(err);

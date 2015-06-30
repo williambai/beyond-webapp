@@ -14,32 +14,35 @@ define(['text!templates/contact.html'],function(contactTemplate){
 		addContact: function(){
 			var $responseArea = this.$('.actionArea');
 
-			$.post('/accounts/me/contacts'
-				,{contactId: this.model.get('_id')}
-				,function onSuccess(){
+			$.ajax({
+					url: '/accounts/me/contacts',
+					type: 'POST',
+					data: {contactId: this.model.get('_id')}
+				}).done(function onSuccess(){
 					$responseArea.text('已添加成功！');
-				}
-				,function onError(){
+				}).fail(function onError(){
 					$responseArea.text('添加失败！');
 				});
 			return false;
 		},
 
 		removeContact: function(){
-			var $responseArea = this.$('.actionArea');
-			$responseArea.text('正在移除....');
-			$.ajax({
-					url: '/accounts/me/contacts'
-					,type: 'DELETE'
-					,data: {
-						contactId: this.model.get('accountId')
-					}
-				}).done(function onSuccess(){
-					$responseArea.text('移除成功！')
-				}).fail(function onError(){
-					$responseArea.text('移除失败');
-				});
-			return false;
+			if(confirm('确认移除'+ this.model.get('username')+'用户吗？')){
+				var $responseArea = this.$('.actionArea');
+				$responseArea.text('正在移除....');
+				$.ajax({
+						url: '/accounts/me/contacts'
+						,type: 'DELETE'
+						,data: {
+							contactId: this.model.get('accountId')
+						}
+					}).done(function onSuccess(){
+						$responseArea.text('移除成功！')
+					}).fail(function onError(){
+						$responseArea.text('移除失败');
+					});
+				return false;
+			}
 		},
 
 		initialize: function(options){

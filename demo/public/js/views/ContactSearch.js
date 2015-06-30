@@ -4,17 +4,21 @@ define(['text!templates/contactAdd.html','views/Contact','models/Contact'],
 		el: '#content',
 		template: _.template(addContactTemplate),
 
+		initialize: function(options){
+			this.account = options.account;
+		},
+
 		events: {
 			'submit form': 'search'
 		},
 
 		search: function(){
-			var view = this;
+			var emailDomain = this.account.email.substr(this.account.email.indexOf('@'));
+			var that = this;
 			$.post('/contacts/find',{
-					searchStr: $('input[name=searchStr]').val()
-					// this.$('form').serialize()
+					searchStr: $('input[name=searchStr]').val() + emailDomain,
 				},function onSucess(data){
-					view.render(data);
+					that.render(data);
 				}).error(function(){
 					$('#results').text('没有找到。');
 					$('#results').slidedown();
@@ -23,7 +27,7 @@ define(['text!templates/contactAdd.html','views/Contact','models/Contact'],
 		},
 
 		render: function(resultList){
-			this.$el.html(this.template());
+			this.$el.html(this.template({account: this.account}));
 			if(null != resultList){
 				_.each(resultList, function(contactJson){
 					var contact = new Contact(contactJson);

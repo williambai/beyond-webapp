@@ -23,13 +23,13 @@ define(['text!templates/projectContact.html'],function(contactTemplate){
 
 		addContact: function(){
 			var $responseArea = this.$('.actionArea');
-
-			$.post('/projects/'+ this.project._id +'/contacts'
-				,{contactId: this.model.get('_id')}
-				,function onSuccess(){
+			$.ajax({
+					url: '/projects/'+ this.project.get('_id') +'/contacts',
+					type: 'POST',
+					data: {contactId: this.model.get('_id')},
+				}).done(function onSuccess(){
 					$responseArea.text('已添加成功！');
-				}
-				,function onError(){
+				}).fail(function onError(){
 					$responseArea.text('添加失败！');
 				});
 			return false;
@@ -40,7 +40,7 @@ define(['text!templates/projectContact.html'],function(contactTemplate){
 				var $responseArea = this.$('.actionArea');
 				$responseArea.text('正在移除....');
 				$.ajax({
-						url: '/projects/'+ this.project._id +'/contacts/' + this.model.get('_id')
+						url: '/projects/'+ this.project.get('_id') +'/contacts/' + this.model.get('_id')
 						,type: 'DELETE'
 						,data: {
 							contactId: this.model.get('accountId')

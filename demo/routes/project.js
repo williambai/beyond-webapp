@@ -220,11 +220,11 @@ exports = module.exports = function(app,models){
 				},
 				function _contact(project,callback){
 					Project.removeContactById(project._id,contactId);
-					callbac(null,project);
+					callback(null,project);
 				},
 				function _account(project,callback){
 					Account.removeProject(accountId,project._id);
-
+					callback(null,project);
 				}				
 			],
 			function _result(err,result){

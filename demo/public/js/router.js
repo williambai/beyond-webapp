@@ -1,4 +1,4 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/ForgotPasswordSuccess','views/Profile','views/ProfileEdit','views/Contacts','views/ContactAdd','views/ContactInvite','views/ChatUsers','views/ProjectIndex','views/ProjectAdd','views/ProjectChat','views/Projects','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','views/Chat'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ForgotPasswordSuccessView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ContactInviteView,ChatUsersView,ProjectIndexView,ProjectAddView,ProjectChatView,ProjectsView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,StatusesView,ChatView){
+define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/ForgotPasswordSuccess','views/Profile','views/ProfileEdit','views/Contacts','views/ContactSearch','views/ContactInvite','views/ChatUsers','views/ProjectIndex','views/ProjectAdd','views/ProjectChat','views/Projects','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Statuses','views/Chat'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ForgotPasswordSuccessView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ContactInviteView,ChatUsersView,ProjectIndexView,ProjectAddView,ProjectChatView,ProjectsView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,StatusesView,ChatView){
 
 	var SocailRouter = Backbone.Router.extend({
 		account: null,//login account
@@ -6,8 +6,6 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		currentView : null,
 		appEvents: _.extend({},Backbone.Events),//app inner events
 		socketEvents: _.extend({},Backbone.Events),//socket events
-		// currentChatView: null,
-		// chatSessions: {},
 		routes: {
 			'': 'index',
 			'index': 'index',
@@ -103,7 +101,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
-			this.appEvents.trigger('set:brand','私人空间');
+			this.appEvents.trigger('set:brand','个人空间');
 			var statusesView = new StatusesView({id:id,statusType:'status',socketEvents: this.socketEvents});
 			this.changeView(statusesView);
 			statusesView.trigger('load');
@@ -186,7 +184,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				return;
 			}
 			this.appEvents.trigger('set:brand','搜索和添加好友');
-			this.changeView(new ContactAddView());
+			this.changeView(new ContactAddView({account: this.account}));
 		},
 
 		inviteContact: function(){
@@ -199,27 +197,18 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		},
 		
 		chat: function(id){
-			// if(null != this.currentChatView){
-			// 	this.currentChatView.undelegateEvents();
-			// }
-			// if(!this.chatSessions[id]){
-				var chatView = new ChatView({
-						id: id,
-						account: this.account,
-						socketEvents: this.socketEvents
-					});
-				this.changeView(chatView);
-				chatView.trigger('load');
-			// this.chatSessions[id] = chatView;
-			// }else{
-			// 	var view = this.chatSessions[id];
-			// 	view.delegateEvents();
-			// 	view.render();
-			// 	var collection = view.collection;
-			// 	collection.trigger('reset',collection);
-			// }
-
-			// this.currentChatView = this.chatSessions[id];
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
+			this.appEvents.trigger('set:brand','一对一聊天');
+			var chatView = new ChatView({
+					id: id,
+					account: this.account,
+					socketEvents: this.socketEvents
+				});
+			this.changeView(chatView);
+			chatView.trigger('load');
 		},
 
 		projectIndex: function(pid){
@@ -227,6 +216,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
+			this.appEvents.trigger('set:brand','项目概况');
 			var projectView = new ProjectIndexView({
 				pid: pid,
 				account: this.account,
@@ -248,6 +238,11 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 		},
 
 		projectChat: function(id){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
+			this.appEvents.trigger('set:brand','项目即时沟通');
 			var chatView = new ProjectChatView({
 					id: id,
 					account: this.account,
@@ -262,8 +257,7 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
-			// var project = this.projectCollection.find({_id:id});
-			// this.appEvents.trigger('set:brand','项目：' + id);
+			this.appEvents.trigger('set:brand','项目消息');
 			var projectView = new ProjectStatusView({
 				pid: pid,
 				socketEvents: this.socketEvents
@@ -277,10 +271,11 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
+			this.appEvents.trigger('set:brand','项目成员');
 			var contactId = cid ? cid: 'me';
 			var projectContactView = new ProjectContactsView({
 					pid:pid,
-					account: this.account,
+					account: this.account
 				});
 			this.changeView(projectContactView);
 			projectContactView.trigger('load');
@@ -291,8 +286,10 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				window.location.hash = 'login';
 				return;
 			}
+			this.appEvents.trigger('set:brand','新增项目成员');
 			var projectContactAddView = new ProjectContactAddView({
-					pid: pid
+					pid: pid,
+					account: this.account
 				});
 			this.changeView(projectContactAddView);			
 		},

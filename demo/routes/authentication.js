@@ -49,6 +49,7 @@ module.exports = exports = function(app,models){
 			req.session.avatar = account.avatar;
 			res.json({
 				id: req.session.accountId,
+				email: req.session.email,
 				username: req.session.username,
 				avatar: req.session.avatar
 			});
@@ -98,6 +99,7 @@ module.exports = exports = function(app,models){
 		if(req.session.loggedIn){
 			res.json({
 				id: req.session.accountId,
+				email: req.session.email,
 				username: req.session.username,
 				avatar: req.session.avatar
 			});
