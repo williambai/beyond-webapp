@@ -1,4 +1,4 @@
-define(['text!templates/bottomBar0.html','text!templates/bottomBar2.html'],function(bottomBar0Template,bottomBarTemplate){
+define(['text!templates/projectBottomBar.html','text!templates/projectBottomBar2.html'],function(bottomBar0Template,bottomBarTemplate){
 	var BottomBarView = Backbone.View.extend({
 
 		className: 'bottom-bar',

@@ -1,4 +1,4 @@
-define(['text!templates/chat.html','views/BottomBar2','views/ChatItem','models/Project','models/Status','models/StatusCollection'], function(projectChatTemplate,BottomBarView,ChatItemView,Project,Status,StatusCollection){
+define(['text!templates/chat.html','views/ProjectBottomBar','views/ChatItem','models/Project','models/Status','models/StatusCollection'], function(projectChatTemplate,BottomBarView,ChatItemView,Project,Status,StatusCollection){
 	var ProjectChatView = Backbone.View.extend({
 		el: '#content',
 

@@ -1,7 +1,9 @@
-define(['text!templates/projectStatus.html','views/BottomBar0','views/Status','models/Project','models/Status','models/StatusCollection'],function(projectStatusTemplate,BottomBarView,StatusView,Project,Status,StatusCollection){
+define(['text!templates/projectStatus.html','text!templates/projectBottomBar.html','views/Status','models/Project','models/Status','models/StatusCollection'],function(projectStatusTemplate,bottomBarTemplate,StatusView,Project,Status,StatusCollection){
 	var ProjectStatusView = Backbone.View.extend({
 		el: '#content',
 		template: _.template(projectStatusTemplate),
+		templateBar: _.template(bottomBarTemplate),
+
 		page: 0,
 		collectionUrl: '',
 		events: {
@@ -81,13 +83,8 @@ define(['text!templates/projectStatus.html','views/BottomBar0','views/Status','m
 		render: function(){
 			//增加 bottom Bar
 			if($('.navbar-absolute-bottom').length == 0){
-				var bottomBarView = new BottomBarView({
-						id: this.pid,
-						account: this.account,
-						socketEvents: this.socketEvents,
-						parentView: this,
-					});
-				$(bottomBarView.render().el).prependTo('.app');
+				var bottomBarHtml = this.templateBar({id:this.pid});
+				$('.app').prepend('<div class="bottom-bar">' +bottomBarHtml + '</div>');
 				if(!$('body').hasClass('has-navbar-bottom')){
 					$('body').addClass('has-navbar-bottom');
 				}

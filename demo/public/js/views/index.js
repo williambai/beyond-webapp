@@ -1,12 +1,12 @@
-define(['text!templates/index.html','views/ProjectItem','models/ProjectCollection'],
-	function(indexTemplate,ProjectItemView,ProjectCollection){
+define(['text!templates/index.html','text!templates/projectItem2.html','views/ProjectItem','models/ProjectCollection'],
+	function(indexTemplate,projectItemTemplate,ProjectItemView,ProjectCollection){
 	var IndexView = Backbone.View.extend({
 		el: '#content',
+		template: _.template(indexTemplate),
+		templateProjectItem: _.template(projectItemTemplate),
 
 		loaded: false,
 		events: {
-			'click .editor-toggle': 'editorToggle',
-			'submit form': 'updateStatus'
 		},
 		
 		initialize: function(options){
@@ -25,9 +25,7 @@ define(['text!templates/index.html','views/ProjectItem','models/ProjectCollectio
 		},
 
 		onProjectAdded: function(project){
-			var projectItemView = new ProjectItemView({model: project,socketEvents: this.socketEvents});
-			var projectItemHtml = projectItemView.render().el;
-			console.log()
+			var projectItemHtml = this.templateProjectItem({project: project.toJSON()});
 			if(project.get('type') == 1){
 				this.$('.my-projects-none').remove();
 				$(projectItemHtml).appendTo('.my-projects');

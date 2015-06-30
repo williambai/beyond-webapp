@@ -22,7 +22,7 @@ define(['text!templates/projects.html','views/ProjectItem','views/ProjectChat','
 
 		onProjectAdded: function(project){
 			var projectItemView = new ProjectItemView({model: project,socketEvents: this.socketEvents});
-			projectItemView.bind('chat:start', this.startChatSession, this);
+			// projectItemView.bind('chat:start', this.startChatSession, this);
 			var projectItemHtml = projectItemView.render().el;
 			$(projectItemHtml).appendTo('#projectlist');
 		},

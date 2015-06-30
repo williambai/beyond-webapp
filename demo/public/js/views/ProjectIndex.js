@@ -1,7 +1,8 @@
-define(['text!templates/projectIndex.html','views/BottomBar0','models/Project'], function(projectIndexTemplate,BottomBarView,Project){
+define(['text!templates/projectIndex.html','text!templates/projectBottomBar.html','models/Project'], function(projectIndexTemplate,projectBarTemplate,Project){
 	var ProjectIndexView = Backbone.View.extend({
 		el: '#content',
 		template: _.template(projectIndexTemplate),
+		templateBar: _.template(projectBarTemplate),
 
 		events: {
 			'click .toggle-project': 'closeOrOpen',
@@ -49,14 +50,8 @@ define(['text!templates/projectIndex.html','views/BottomBar0','models/Project'],
 		render: function(){
 			//增加 bottom Bar
 			if($('.navbar-absolute-bottom').length == 0){
-				var bottomBarView = new BottomBarView({
-						id: this.pid,
-						account: this.account,
-						project: this.model,
-						socketEvents: this.socketEvents,
-						parentView: this,
-					});
-				$(bottomBarView.render().el).prependTo('.app');
+				var bottomBarHtml = this.templateBar({id:this.pid});
+				$('.app').prepend('<div class="bottom-bar">' +bottomBarHtml + '</div>');
 				if(!$('body').hasClass('has-navbar-bottom')){
 					$('body').addClass('has-navbar-bottom');
 				}

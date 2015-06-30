@@ -1,9 +1,10 @@
-define(['text!templates/projectContacts.html','views/BottomBar0','views/ProjectContact','models/Project','models/ContactCollection'],
-	function(contactsTemplate, BottomBarView, ContactView, Project, ContactCollection){
+define(['text!templates/projectContacts.html','text!templates/projectBottomBar.html','views/ProjectContact','models/Project','models/ContactCollection'],
+	function(contactsTemplate,projectBarTemplate,ContactView, Project, ContactCollection){
 	var ContactsView = Backbone.View.extend({
 		el: '#content',
 		
 		template: _.template(contactsTemplate),
+		templateBar: _.template(projectBarTemplate),
 		
 		initialize: function(options){
 			this.pid = options.pid;
@@ -43,14 +44,16 @@ define(['text!templates/projectContacts.html','views/BottomBar0','views/ProjectC
 		render: function(){
 			//增加 bottom Bar
 			if($('.navbar-absolute-bottom').length == 0){
-				var bottomBarView = new BottomBarView({
-						id: this.pid,
-						account: this.account,
-						project: this.model,
-						socketEvents: this.socketEvents,
-						parentView: this,
-					});
-				$(bottomBarView.render().el).prependTo('.app');
+				// var bottomBarView = new BottomBarView({
+				// 		id: this.pid,
+				// 		account: this.account,
+				// 		project: this.model,
+				// 		socketEvents: this.socketEvents,
+				// 		parentView: this,
+				// 	});
+				// $(bottomBarHtml).prependTo('.app');
+				var bottomBarHtml = this.templateBar({id:this.pid});
+				$('.app').prepend('<div class="bottom-bar">' +bottomBarHtml + '</div>');
 				if(!$('body').hasClass('has-navbar-bottom')){
 					$('body').addClass('has-navbar-bottom');
 				}
