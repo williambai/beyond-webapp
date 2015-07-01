@@ -5,18 +5,21 @@
 		</a>
 	</div>
 	<div class="media-body">
-		<a href="#status/<%= fromId %>">
-			<h4 class="media-heading"><%= username %></h4>
-		</a>
+		<h4 class="media-heading">
+			<a href="#status/<%= fromId %>"><%= username %></a>
+		</h4>
+	
 		<% if(status.PicUrl){ %>
 			<img src="<%= status.PicUrl %>">
 		<% }else{ %>
 			<p><%= status %></p>
 		<% } %>
-		<div class="statusControl">
+		<p>20分钟之前<span class="pull-right"><a class="good"><i class="fa fa-heart-o"></i>&nbsp;点赞</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="comment-toggle"><i class="fa fa-pencil-square-o"></i>&nbsp;评论</a></span>
+		</p>
+		<div class="comment-editor">
 		</div>
-		<p class="pull-right"><a class="level">评论：<%= level %></a>&nbsp; <a class="good">顶</a>&nbsp;<a class="bad">砸</a>&nbsp;评分：<span><%= score %></span></p>
-		<div class="levelControl"></div>
+		<div class="comments">
+		</div>
 	</div>
 	<div class="media-right">
 	</div>

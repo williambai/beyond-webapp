@@ -7,9 +7,10 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			username: {type: String},
 			avatar: {type: String},
 			status: {type: String},
-			comments: [{type: String}],
+			comments: [],//accountId,username,comment
 			level: {type: Number}, // important index: 0~100
-			voters: [],//accountId
+			voters:[],//accountId
+			votes: [],//accountId,username,vote(good or bad)
 			good: {type: Number},
 			bad: {type: Number},
 			score: {type: Number},
@@ -72,10 +73,10 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					{
 						avatar: avatar
 					},
-					function(err){
+					function(err, result){
 						debug && defaultCallback(err);
-						if(err){
-							callback && callback(null);
+						if(err || !result){
+							callback && callback(false);
 						}else{
 							callback && callback(true);
 						}
@@ -83,20 +84,27 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				);
 		};
 
-	var updateVoteGood = function(id,accountId,callback){
+	var updateVoteGood = function(id,accountId,voterUsername,callback){
 			Status.findOneAndUpdate(
 				{
 					 _id: id,
 					voters: {$nin: [accountId]}
 				},
 				{
-					$push: {voters: accountId},
+					$push: {
+						voters: accountId, 
+						votes: {
+							accountId: accountId,
+							username: voterUsername,
+							vote: 'good'
+						}
+					},
 					$inc: {good: 1, score: 1}
 				},
-				function(err){
+				function(err,result){
 					debug && defaultCallback(err);
-					if(err){
-						callback && callback(null);
+					if(err || !result){
+						callback && callback(false);
 					}else{
 						callback && callback(true);
 					}
@@ -104,26 +112,59 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			);			
 		};
 
-	var updateVoteBad = function(id,accountId,callback){
-		Status
-			.findOneAndUpdate(
-				{
-					_id: id,
-					voters: {$nin: [accountId]}
-				},
-				{
-					$push: {voters: accountId},
-					$inc: {bad: 1, score: -1}
-				},
-				function(err){
-					debug && defaultCallback(err);
-					if(err){
-						callback && callback(null);
-					}else{
-						callback && callback(true);
+	var addComment = function(id,accountId,username,comment,callback){
+			Status
+				.findOneAndUpdate(
+					{
+						_id: id,
+					},
+					{
+						$push: {
+							comments: {
+								accountId: accountId,
+								username: username,
+								comment: comment
+							}
+						}
+					},
+					function(err,result){
+						debug && defaultCallback(err);
+						if(err || !result){
+							callback && callback(false);
+						}else{
+							callback && callback(true);
+						}
 					}
-				}
-			);
+				);
+		};
+
+	var updateVoteBad = function(id,accountId,voterUsername,callback){
+			Status
+				.findOneAndUpdate(
+					{
+						_id: id,
+						voters: {$nin: [accountId]}
+					},
+					{
+						$push: {
+							voters: accountId, 
+							votes: {
+								accountId: accountId,
+								username: voterUsername,
+								vote: 'bad'
+							}
+						},
+						$inc: {bad: 1, score: -1}
+					},
+					function(err, result){
+						debug && defaultCallback(err);
+						if(err || !result){
+							callback && callback(false);
+						}else{
+							callback && callback(true);
+						}
+					}
+				);
 		};
 
 	var updateLevel = function(id,level,callback){
@@ -133,16 +174,17 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					{
 						level: level
 					},
-					function(err){
+					function(err,result){
 						debug && defaultCallback(err);
-						if(err){
-							callback && callback(null);
+						if(err || !result){
+							callback && callback(false);
 						}else{
 							callback && callback(true);
 						}
 					}
 				);
 		};
+
 	var getAll = function(fromId,toId,page,callback){
 			if(typeof fromId == 'string') {
 				fromId = [fromId];
@@ -290,6 +332,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		updateVoteGood: updateVoteGood,
 		updateVoteBad: updateVoteBad,
 		updateLevel: updateLevel,
+		addComment: addComment,
 		getAll:getAll,
 		getAllByToId: getAllByToId,
 		getAllByFromId: getAllByFromId,

@@ -4,6 +4,8 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 		el: '#content',
 		template: _.template(statusesTemplate),
 
+		attachments: [],
+
 		loaded: false,
 		loadingTemplate: _.template(loadingTemplate),
 
@@ -14,6 +16,8 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 
 		events: {
 			'click .editor-toggle': 'editorToggle',
+			'change input[name=attachment]': 'addAttachment',
+			'click .attachment': 'removeAttachment',
 			'submit form': 'updateStatus',
 			'click .next-page': 'nextPage',
 			'scroll': 'scroll',
@@ -21,6 +25,7 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 		
 		initialize: function(options){
 			this.accountId = options.id;
+			this.account = options.account;
 			options.socketEvents.bind('status:me',this.onSocketStatusAdded, this);
 
 			this.collection = new StatusCollection();
@@ -58,7 +63,7 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 					status: data.status
 				});
 			//新进来的Status加在前面
-			var statusHtml = (new StatusView({model: status})).render().el;
+			var statusHtml = (new StatusView({account: this.account,model: status})).render().el;
 			$(statusHtml).prependTo('.status-list').hide().fadeIn('slow');
 			this.collection.add(status,{silent: true});
 		},
@@ -71,7 +76,7 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 		},
 
 		onStatusAdded: function(status){
-			var statusHtml = (new StatusView({model: status})).render().el;
+			var statusHtml = (new StatusView({account: this.account,model: status})).render().el;
 			$(statusHtml).appendTo('.status-list').hide().fadeIn('slow');
 		},
 
@@ -80,6 +85,51 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 				this.$('.status-editor').removeClass('hidden').hide().fadeIn('slow');
 			}else{
 				this.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
+			}
+		},
+
+		addAttachment: function(evt){
+			var that = this;
+			var formData = new FormData();
+			formData.append('files',evt.currentTarget.files[0]);
+			$.ajax({
+				url: '/attachment/add',
+				type: 'POST',
+				data: formData,
+				cache: false,//MUST be false
+				processData: false,//MUST be false
+				contentType:false,//MUST be false
+				success: function(data){
+					console.log('++++')
+					if(data && data.type){
+						if(/jpg|png/.test(data.type)){
+						console.log(data)
+							that.attachments.push(data.filename);
+							that.$('.attachments').append('<img src="'+ data.filename +'" class="attachment" width="80px" height="80px">&nbsp;');
+						}
+					}
+				},
+				error: function(err){
+				  console.log(err);
+				},
+			});
+          return false;
+		},
+
+		removeAttachment: function(evt){
+			if(confirm('放弃上传它吗？')){
+				var that = this;
+				var filename = $(evt.currentTarget).attr('src');
+				$.ajax({
+					url: 'attachment/remove',
+					type: 'POST',
+					data: {
+						filename: filename
+					}
+				}).done(function(){
+					//remove attatchment
+					$(evt.currentTarget).remove();
+				});
 			}
 		},
 

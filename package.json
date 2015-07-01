@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "app-demo-test": "jasmine-node demo/test",
-    "app-demo-dev": "pm2 start demo/app.js --watch demo/"
+    "app-demo-dev": "pm2 start demo/app.js --watch demo/ --ignore-watch=\"demo/public/_tmp demo/public/upload\""
   },
   "repository": {
     "type": "git",

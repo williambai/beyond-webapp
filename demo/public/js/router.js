@@ -80,7 +80,12 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				return;
 			}
 			this.appEvents.trigger('set:brand','朋友圈');
-			var statusesView = new StatusesView({id:id,statusType:'activity',socketEvents: this.socketEvents});
+			var statusesView = new StatusesView({
+					id:id,
+					account: this.account,
+					statusType:'activity',
+					socketEvents: this.socketEvents
+				});
 			this.changeView(statusesView);
 			statusesView.trigger('load');
 		},
@@ -91,7 +96,12 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				return;
 			}
 			this.appEvents.trigger('set:brand','私信');
-			var statusesView = new StatusesView({id:id,statusType:'message',socketEvents: this.socketEvents});
+			var statusesView = new StatusesView({
+					id:id,
+					account: this.account,
+					statusType:'message',
+					socketEvents: this.socketEvents
+				});
 			this.changeView(statusesView);
 			statusesView.trigger('load');
 		},
@@ -102,7 +112,12 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 				return;
 			}
 			this.appEvents.trigger('set:brand','个人空间');
-			var statusesView = new StatusesView({id:id,statusType:'status',socketEvents: this.socketEvents});
+			var statusesView = new StatusesView({
+					id:id,
+					account: this.account,
+					statusType:'status',
+					socketEvents: this.socketEvents
+				});
 			this.changeView(statusesView);
 			statusesView.trigger('load');
 		},
