@@ -1,4 +1,4 @@
-define(['text!templates/projectStatus.html','text!templates/projectBottomBar.html','views/Status','models/Project','models/Status','models/StatusCollection'],function(projectStatusTemplate,bottomBarTemplate,StatusView,Project,Status,StatusCollection){
+define(['text!templates/projectStatus.html','text!templates/projectBottomBar.html','views/ProjectStatusItem','models/Project','models/Status','models/StatusCollection'],function(projectStatusTemplate,bottomBarTemplate,StatusView,Project,Status,StatusCollection){
 	var ProjectStatusView = Backbone.View.extend({
 		el: '#content',
 		template: _.template(projectStatusTemplate),
