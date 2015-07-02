@@ -1,12 +1,81 @@
 module.exports = exports = function(app, config,mongoose,nodemailer){
 	var debug = true;
 
+/**
+ * params: status [text | json object]
+ * MsgType:[text|image|vioce|video|shortvideo|location|moreimage]
+ *
+ * JSON Object MUST HAS:
+ * 
+ * {
+ *    MsgType:'text',
+ *    CreateTime:
+ *    Content:
+ * }
+ * {
+ *    MsgType:'image',
+ *    CreateTime:
+ *    Url:
+ * }
+ * {
+ *    MsgType:'mixed',
+ *    CreateTime:
+ *    Content:
+ *    Urls:[]
+ * }
+ * {
+ *    MsgType:'link',
+ *    CreateTime:
+ *    Title:
+ *    Description:
+ *    Url:
+ * }
+ * {
+ *    MsgType:'voice',
+ *    CreateTime:
+ *    Url:
+ *    Format:[amr,speex]
+ * }
+ * {
+ *    MsgType:'shortvideo',
+ *    CreateTime:
+ *    Url:
+ *    ThumbUrl:
+ * }
+ * {
+ *    MsgType:'video',
+ *    CreateTime:
+ *    Url:
+ *    ThumbUrl:
+ * }
+ * {
+ *    MsgType:'location',
+ *    CreateTime:
+ *    Location_X:
+ *    Location_Y:
+ *    Scale:
+ *    Label:
+ * }
+ * {
+ * 	  MsgType: 'email',
+ * 	  CreateTime:
+ * 	  From:
+ * 	  To:
+ * 	  CC:
+ * 	  Subject:
+ * 	  Url:
+ * }
+ * 
+ * -- OR --
+ * 
+ * String: display directly
+ */
 	var statusSchema = new mongoose.Schema({
 			fromId: {type: String},
 			toId: {type:String},//accountId or projectId
 			username: {type: String},
 			avatar: {type: String},
-			status: {type: String},
+			status: {},//body, SEE ABOVE
 			comments: [],//accountId,username,comment
 			level: {type: Number}, // important index: 0~100
 			voters:[],//accountId
@@ -28,13 +97,13 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			return console.log('Status Save/Remove/Update successfully.');
 		};
 
-	var add = function(fromId,toId,username,avatar,status,callback){
+	var add = function(fromId,toId,username,avatar,statusMixed,callback){
 			var status = new Status({
 					fromId: fromId,
 					toId: toId,
 					username: username,
 					avatar: avatar || '',
-					status: status,
+					status: statusMixed,
 					level: 0,
 					good: 0,
 					bad: 0,

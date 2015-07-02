@@ -22,48 +22,34 @@ define(['text!templates/status.html','text!templates/commentForm.html'],function
 
 		_convertStatus: function(){
 			var model = this.model;
-			var statusJsonString = model.get('status');
-			if(!statusJsonString){
+			var statusString = model.get('status');
+			if(!statusString){
 				return;
 			}
-			statusJsonString = statusJsonString.trim();
-
-			if(!/^\{.*\}$/.test(statusJsonString)){
-				if(!/^http/.test(statusJsonString)){
-					return;
-				}
-
-				if(/^http.*(png|jpg|git)$/.test(statusJsonString)){
-					this.model.set('status', {
-						MsgType:'image',
-						PicUrl: statusJsonString
-					});
-				}else if(/^http.*(mp4|mov)$/.test(statusJsonString)){
-
-				}else if(/^http.*(mp3|amr)$/.test(statusJsonString)){
-
+			if(typeof statusString == 'string'){
+				statusString = statusString.trim();
+				if(!/^http/.test(statusString)){
+					// this.model.set('status', {
+					// 	MsgType:'text',
+					// 	Content: statusString
+					// });
 				}else{
-					$.get('/website/thumbnail?url=' + encodeURIComponent(statusJsonString),
-						function success(response){
-							console.log(response);
-						}
-					);
-				}
-			}else{
-				// console.log('===')
-				// console.log(statusJsonString)
-				try{
-					var statusObject = JSON.parse(statusJsonString);
-					if(statusObject && statusObject.MsgType){
-						//is wechat message
-						if(statusObject.MsgType == 'text'){
-							this.model.set('status',statusObject.Content);
-						}else{
-							this.model.set('status',statusObject);
-						}
+					if(/^http.*(png|jpg|git)$/.test(statusString)){
+						this.model.set('status', {
+							MsgType:'image',
+							PicUrl: statusString
+						});
+					}else if(/^http.*(mp4|mov)$/.test(statusString)){
+
+					}else if(/^http.*(mp3|amr)$/.test(statusString)){
+
+					}else{
+						$.get('/website/thumbnail?url=' + encodeURIComponent(statusString),
+							function success(response){
+								console.log(response);
+							}
+						);
 					}
-				}catch(e){
-					console.log(statusStatusString);
 				}
 			}
 		},
@@ -100,7 +86,7 @@ define(['text!templates/status.html','text!templates/commentForm.html'],function
 
 		commentToggle: function(){
 			if(this.$('.comment-editor form').length == 0){
-				this.$('.comment-editor').html(this.templateCommentForm());
+				this.$('.comment-editor').html(this.templateCommentForm()).hide().fadeIn('slow');
 			}else{
 				this.$('.comment-editor').html('');
 			}
@@ -133,7 +119,7 @@ define(['text!templates/status.html','text!templates/commentForm.html'],function
 
 		render: function(){
 			var that = this;
-			this.$el.html(this.template(this.model.toJSON()));
+			this.$el.html(this.template({model:this.model.toJSON()}));
 			var votes = this.model.get('votes') || [];
 			var comments = this.model.get('comments') || [];
 			votes.forEach(function(vote){

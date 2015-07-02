@@ -108,6 +108,14 @@
 			var username = req.session.username || '匿名';
 			var avatar = req.session.avatar || '';
 			var text = req.body.status || '';
+			var attachments = req.body.attachments || [];
+
+			var statusNew = {
+				MsgType: 'mixed',
+				Content: text,
+				Urls: attachments
+			};
+
 			if(text.length<0){
 				res.sendStatus(400);
 				return;
@@ -116,7 +124,7 @@
 			if(req.session.accountId != accountId){
 				action = 'message';//私信
 			}
-			Status.add(req.session.accountId,accountId,username,avatar,text,function(status){
+			Status.add(req.session.accountId,accountId,username,avatar,statusNew,function(status){
 				if(status){
 					app.triggerEvent('event:' + accountId, {
 						action: action,
@@ -124,7 +132,7 @@
 						data: {
 							username: username,
 							avatar: avatar,
-							status: text
+							status: statusNew
 						},
 					});
 				}

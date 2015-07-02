@@ -1,4 +1,5 @@
 exports = module.exports = function(app,models){
+	var path = require('path');
 	var async = require('async');
 	var config = require('../config/weixin');
 	var wechat = require('wechat');
@@ -36,7 +37,7 @@ exports = module.exports = function(app,models){
 			res.sendStatus(400);
 			return;	
 		}
-		var redirectUrl = 'http://localhost:8080/wechat/authorized';
+		var redirectUrl = 'http://'+ req.header('host') +'/wechat/authorized';
 		var state = 'state';
 		var client  = new OAuth(config.mp.appid, config.mp.secret);//TODO
 		req.session.state = state;
@@ -136,21 +137,78 @@ exports = module.exports = function(app,models){
 		// console.log(req.wxsession)
 		// console.log(message)
 		if(message.MsgType == 'event'){
+			//收到事件消息
 			if(message.Event == 'subscribe'){
-
-			}else if(message.Event == 'unsubscribe'){
-
-			}else{
-				console.log('waiting to development ....');
 				res.reply({
 					type: 'text',
 					content: 'coming soon ....'
 				});
+				console.log('waiting to development ....');
+			}else if(message.Event == 'unsubscribe'){
+				res.reply({
+					type: 'text',
+					content: 'coming soon ....'
+				});
+				console.log('waiting to development ....');
+			}else{
+				res.reply({});
+				console.log(message.Event + 'waiting to development ....');
 			}
-		}else{
+		}else if(message.MsgType == 'text' || message.MsgType == 'image' || message.MsgType == 'voice' || message.MsgType == 'video' || message.MsgType == 'shortvideo' || message.MsgType == 'link' || message.MsgType == 'location'){
+			//收到普通消息，不等处理，立即回复
+			res.reply({
+					type: 'text',
+					content: req.wxsession.projectid + '项目已成功接收您发送的消息。'
+				});
+			//慢慢处理
 			async.waterfall(
 				[
-					function _project(callback){
+					function _download_MediaId(callback){
+						if(!message.MediaId){
+							callback(null,message);
+						}else{
+							mpApi.getMedia(message.MediaId,function(err,result,response){
+								var filename  = '';
+								if(message.MsgType == 'image'){
+									var subfix = message.PicUrl.substr(message.PicUrl.lastIndexOf('.')) || '';
+									filename = '/_tmp/wechat/' + message.MediaId + subfix;
+								}else if(message.MsgType == 'voice'){
+									filename = '/_tmp/wechat/' + message.MediaId;
+								}else if(message.MsgType == 'shortvideo'){
+									filename = '/_tmp/wechat/' + message.MediaId;
+								}
+								fs.writeFile(path.join(__dirname,filename), function(err){
+									if(err){
+										callback(err,null);
+									}else{
+										message.Url = filename;
+										callback(null,message);
+									}
+								});
+							});
+						}
+					},
+					function _download_ThumbMediaId(msg,callback){
+						if(!msg.ThumbMediaId){
+							callback(null,msg);
+						}else{
+							mpApi.getMedia(msg.ThumbMediaId,function(err,result,response){
+								var filename = '/_tmp/wechat/' + msg.ThumbMediaId;
+								fs.writeFile(path.join(__dirname,filename), function(err){
+									if(err){
+										callback(err,null);
+									}else{
+										msg.ThumbUrl = filename;
+										callback(null,msg);
+									}
+								});
+							});
+						}
+					},
+					function _transform(msg,callback){
+						callback(null,msg);
+					},
+					function _project(msg,callback){
 						var projectId = req.wxsession.projectid;
 						if(!projectId){
 							callback(400);
@@ -166,7 +224,10 @@ exports = module.exports = function(app,models){
 							var username = req.wxsession.username;
 							var avatar = req.wxsession.avatar;
 							var to = projectId;
-							var text = JSON.stringify(message);
+							var text = JSON.stringify(msg);
+
+							models.Status.add(accountId,to,username,avatar,text);
+
 							var status = {
 									from: to,
 									data: {
@@ -176,31 +237,25 @@ exports = module.exports = function(app,models){
 										text: text,
 									}
 								};
-							models.Status.add(accountId,to,username,avatar,text);
 							app.triggerEvent('project:' + to, status);
 
-							callback(null,project);
-						});
-					},
-					function _reply(project,callback){
-						callback(null,{
-							type: 'text',
-							content: '“' + project.name + '”项目成功接收到您发送的消息。'
+							callback(null,true);
 						});
 					}
 				]
-				,function _result(err, result){
+				,function _result(err, success){
 					if(err){
-						res.reply({
-							type: 'text',
-							content: '错误提示：您还没有选择接收消息的工作项目。请先点击”菜单“>>”我的工作网“，在列表中选择要发送的项目。'
-						});
+						console.error(err);
 						return;
 					}
-					//调用weixin消息封装方法
-					res.reply(result);				
+					if(!success){
+						console.error('message from wechat to project '+ req.wxsession.projectid +' transfer failure.');
+						return;
+					}
 				}
 			);
+		}else{
+			res.reply({});
 		}
 	});
 

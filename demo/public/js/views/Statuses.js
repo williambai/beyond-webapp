@@ -16,7 +16,7 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 
 		events: {
 			'click .editor-toggle': 'editorToggle',
-			'change input[name=attachment]': 'addAttachment',
+			'change input[name=file]': 'addAttachment',
 			'click .attachment': 'removeAttachment',
 			'submit form': 'updateStatus',
 			'click .next-page': 'nextPage',
@@ -100,12 +100,11 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 				processData: false,//MUST be false
 				contentType:false,//MUST be false
 				success: function(data){
-					console.log('++++')
 					if(data && data.type){
 						if(/jpg|png/.test(data.type)){
-						console.log(data)
 							that.attachments.push(data.filename);
-							that.$('.attachments').append('<img src="'+ data.filename +'" class="attachment" width="80px" height="80px">&nbsp;');
+							that.$('.attachments').append('<span class="attachment"><input type="hidden" name="attachment" value="'+ data.filename +'"><img src="'+ data.filename +'" width="80px" height="80px">&nbsp;</span>');
+							that.$('input[name=file]').val('');
 						}
 					}
 				},
@@ -131,19 +130,31 @@ define(['text!templates/loading.html','text!templates/statuses.html','views/Stat
 					$(evt.currentTarget).remove();
 				});
 			}
+			return false;
 		},
 
 		updateStatus: function(){
-			var statusCollection = this.collection;
-			var statusText = $('textarea[name=text]').val();
-			$.post('/accounts/'+ this.accountId +'/status',
-				{
-					status: statusText
-				},
-				function(data){
+			var that = this;
+			var statusCollection = that.collection;
+			var statusText = that.$('textarea[name=text]').val();
+			var attachments = [];
+			var $attachments = that.$('input[name=attachment]') ||[];
+			$attachments.each(function(index){
+				attachments.push($($attachments[index]).val());
 			});
-			$('textarea[name=text]').val('');
-			this.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
+			$.ajax({
+				url: '/accounts/'+ that.accountId +'/status',
+				type: 'POST',
+				data: {
+						status: statusText,
+						attachments: attachments
+					}
+				}).done(function(data){
+					$('textarea[name=text]').val('');
+					that.$('input[name=file]').val('');
+					that.$('.attachments').empty();
+					that.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
+				});
 			return false;
 		},
 

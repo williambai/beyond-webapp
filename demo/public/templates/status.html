@@ -1,27 +1,48 @@
 <div class="media">
 	<div class="pull-left">
-		<a href="#profile/<%= fromId %>">
-			<img class="media-object" src="<%= avatar %>" width="64px;" height="64px;">
-		</a>
+		<a href="#profile/<%= model.fromId %>
+			">
+			<img class="media-object" src="<%= model.avatar %>" width="64px;" height="64px;"></a>
 	</div>
 	<div class="media-body">
 		<h4 class="media-heading">
-			<a href="#status/<%= fromId %>"><%= username %></a>
+			<a href="#status/<%= model.fromId %>
+				">
+				<%= model.username %></a>
 		</h4>
-	
-		<% if(status.PicUrl){ %>
-			<img src="<%= status.PicUrl %>">
-		<% }else{ %>
-			<p><%= status %></p>
+		<% if(typeof model.status == 'string'){ %>
+		<p>
+			<%= model.status %></p>
+		<% }else if(model.status.MsgType == 'text'){ %>
+		<p>
+			<%= model.status.Content %></p>
+		<% }else if(model.status.MsgType == 'image'){ %>
+		<% if(model.status.PicUrl){ %>
+		<img src="<%= model.status.Url %>
+		">
 		<% } %>
-		<p>20分钟之前<span class="pull-right"><a class="good"><i class="fa fa-heart-o"></i>&nbsp;点赞</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="comment-toggle"><i class="fa fa-pencil-square-o"></i>&nbsp;评论</a></span>
+		<% }else if(model.status.MsgType == 'mixed'){ %>
+		<p>
+			<%= model.status.Content %></p>
+		<% for(var i=0; i<model.status.Urls.length; i++){ %>
+		<img src="<%= model.status.Urls[i] %>" width="<%= parseInt(50/model.status.Urls.length-1) %>%">
+		<% } %>
+		<% } %>
+		<p>
+			20分钟之前
+			<span class="pull-right">
+					<a class="good"> <i class="fa fa-heart-o"></i>
+						&nbsp;点赞
+					</a>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<a class="comment-toggle"> <i class="fa fa-pencil-square-o"></i>
+						&nbsp;评论
+					</a>
+			</span>
 		</p>
-		<div class="comment-editor">
-		</div>
-		<div class="comments">
-		</div>
+		<div class="comment-editor"></div>
+		<div class="comments"></div>
 	</div>
-	<div class="media-right">
-	</div>
+	<div class="media-right"></div>
 </div>
 <hr>
