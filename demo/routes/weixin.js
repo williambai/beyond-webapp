@@ -226,7 +226,7 @@ exports = module.exports = function(app,models){
 							var to = projectId;
 							var text = JSON.stringify(msg);
 
-							models.Status.add(accountId,to,username,avatar,text);
+							models.Status.add(accountId,to,username,avatar,'','',text);
 
 							var status = {
 									from: to,

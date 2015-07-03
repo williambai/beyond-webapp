@@ -1,8 +1,9 @@
 define(['text!templates/projects.html','views/ProjectItem','views/ProjectChat','models/ChatCollection','models/ProjectCollection'],function(projectsTemplate,ProjectItemView,ChatView,ChatCollection,ProjectCollection){
 	var ProjectsView = Backbone.View.extend({
-		id: '#projectlist',
+		el: '#projectlist',
 		template: _.template(projectsTemplate),
 
+		loaded: false,
 		initialize: function(options){
 			this.socketEvents = options.socketEvents;
 			this.currentChatView = options.currentChatView;
@@ -17,6 +18,8 @@ define(['text!templates/projects.html','views/ProjectItem','views/ProjectChat','
 		},
 
 		load: function(){
+			loaded = true;
+			this.render();
 			this.collection.fetch({reset:true});
 		},
 

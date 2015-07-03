@@ -182,7 +182,7 @@ exports =module.exports = function(app,models){
 					}
 				};
 			if(action == 'chat'){
-				models.Status.add(accountId,to,session.username,session.avatar,text);
+				models.Status.add(accountId,to,session.username,session.avatar,'','',text);
 				app.triggerEvent('project:' + to, message);
 			}
 		});

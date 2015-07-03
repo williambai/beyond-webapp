@@ -41,7 +41,7 @@ var models = {
 		Status: require('./models/Status')(app,config,mongoose,nodemailer),
 		Account: require('./models/Account')(app,config,mongoose,nodemailer),
 		Project: require('./models/Project')(app,config,mongoose,nodemailer),
-		Chat: require('./models/Chat')(app,config,mongoose,nodemailer),
+		Chat: require('./models/AccountChat')(app,config,mongoose,nodemailer),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

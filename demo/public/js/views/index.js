@@ -1,49 +1,34 @@
-define(['text!templates/index.html','text!templates/projectItem2.html','views/ProjectItem','models/ProjectCollection'],
-	function(indexTemplate,projectItemTemplate,ProjectItemView,ProjectCollection){
+define(['text!templates/loading.html','text!templates/index.html','views/ProjectWidget'],
+	function(loadingTemplate,indexTemplate,ProjectWidget){
+
 	var IndexView = Backbone.View.extend({
 		el: '#content',
 		template: _.template(indexTemplate),
-		templateProjectItem: _.template(projectItemTemplate),
 
 		loaded: false,
-		events: {
-		},
-		
+		loadingTemplate: _.template(loadingTemplate),
+
 		initialize: function(options){
 			this.socketEvents = options.socketEvents;
-			this.collection = new ProjectCollection();
-			this.collection.url = '/accounts/me/projects';
-			this.collection.on('add', this.onProjectAdded, this);
-			this.collection.on('reset', this.onProjectCollectionReset, this);
-			this.on('load', this.load,this);
+			this.on('load', this.load, this);
 		},
 
 		load: function(){
-			loaded = true;
+			this.loaded = true;
 			this.render();
-			this.collection.fetch({reset: true});
-		},
-
-		onProjectAdded: function(project){
-			var projectItemHtml = this.templateProjectItem({project: project.toJSON()});
-			if(project.get('type') == 1){
-				this.$('.my-projects-none').remove();
-				$(projectItemHtml).appendTo('.my-projects');
-			}else{
-				this.$('.other-projects-none').remove();
-				$(projectItemHtml).appendTo('.other-projects');
-			}
-		},
-
-		onProjectCollectionReset: function(collection){
-			var that = this;
-			collection.each(function(project){
-				that.onProjectAdded(project);
+			this.projectWidget = new ProjectWidget({
+				el: '#project-widget',
+				socketEvents: this.socketEvents
 			});
+			this.projectWidget.trigger('load');
 		},
 
 		render: function(){
-			this.$el.html(indexTemplate);
+			if(!this.loaded){
+				this.$el.html(this.loadingTemplate);
+			}else{
+				this.$el.html(this.template());
+			}
 			return this;
 		},
 	});

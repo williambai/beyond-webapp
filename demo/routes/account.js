@@ -94,7 +94,7 @@
 				res.sendStatus(404);
 				return;
 			}
-			Status.getAll([req.session.accountId,accountId],accountId,page,function(status){
+			Status.getStatusById(accountId,page,function(status){
 				res.send(status);
 			});
 		});
@@ -105,6 +105,10 @@
 							? req.session.accountId
 							: req.params.id;
 		Account.findById(accountId, function(account){
+			if(!account){
+				res.sendStatus(404);
+				return;
+			}
 			var username = req.session.username || '匿名';
 			var avatar = req.session.avatar || '';
 			var text = req.body.status || '';
@@ -124,7 +128,7 @@
 			if(req.session.accountId != accountId){
 				action = 'message';//私信
 			}
-			Status.add(req.session.accountId,accountId,username,avatar,statusNew,function(status){
+			Status.add(req.session.accountId,accountId,username,avatar,account.username,account.avatar,statusNew,function(status){
 				if(status){
 					app.triggerEvent('event:' + accountId, {
 						action: action,

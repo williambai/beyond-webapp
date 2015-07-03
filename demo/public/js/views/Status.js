@@ -1,5 +1,5 @@
 define(['text!templates/status.html','text!templates/commentForm.html'],function(statusTemplate,commentFormTemplate){
-	var StatusView = Backbone.View.extend({
+	var StatusBaseView = Backbone.View.extend({
 		// tagName: 'li',
 		template: _.template(statusTemplate),
 		templateCommentForm: _.template(commentFormTemplate),
@@ -132,5 +132,5 @@ define(['text!templates/status.html','text!templates/commentForm.html'],function
 		}
 	});
 
-	return StatusView;
+	return StatusBaseView;
 });

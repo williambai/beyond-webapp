@@ -73,8 +73,10 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 	var statusSchema = new mongoose.Schema({
 			fromId: {type: String},
 			toId: {type:String},//accountId or projectId
-			username: {type: String},
-			avatar: {type: String},
+			fromUser: {},//fromId => username,avatar
+			toUser: {},// toId => username,avatar
+			username: {type: String}, //!deprecated
+			avatar: {type: String}, //!deprecated
 			status: {},//body, SEE ABOVE
 			comments: [],//accountId,username,comment
 			level: {type: Number}, // important index: 0~100
@@ -97,12 +99,28 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			return console.log('Status Save/Remove/Update successfully.');
 		};
 
-	var add = function(fromId,toId,username,avatar,statusMixed,callback){
+	var add = function(fromId,toId,fromUsername,fromAvatar,toUsername,toAvatar,statusMixed,callback){
+			var fromUser = {};
+			var toUser = {};
+			if(!fromId || !toId){
+				throw new Error('fromId or toId can not be undefined.');
+				return;
+			}
+			fromUser[fromId] = {
+				username: fromUsername || '',
+				avatar: fromAvatar || ''
+			};
+			toUser[toId] = {
+				username: toUsername || '',
+				avatar: toAvatar || ''
+			};
 			var status = new Status({
 					fromId: fromId,
 					toId: toId,
-					username: username,
-					avatar: avatar || '',
+					fromUser: fromUser,
+					toUser: toUser,
+					username: fromUsername,
+					avatar: fromAvatar || '',
 					status: statusMixed,
 					level: 0,
 					good: 0,
@@ -341,10 +359,17 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			}
 
 			Status
-				.find({
+				.find({})
+				.or([
+					{
 						toId: accountId,
 						fromId: {$in: contactIds} 
-					})
+					},
+					{
+						fromId: accountId,
+						toId: {$in: contactIds} 
+					}
+				])
 				.sort({createtime:-1})
 				.skip(page*per)
 				.limit(per)
@@ -367,19 +392,46 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			if(!callback){
 				throw new Error('callback is not defined.');
 			}
+			var pairs = [];
+			contactIds.forEach(function(contantId){
+				pairs.push({
+					fromId: contantId,
+					toId: contantId
+				});
+			});
+
+			pairs.push({
+					toId: accountId,
+					fromId: accountId 
+				});
 
 			Status
 				.find({})
-				.or([
-					{
-						toId: accountId,
-						fromId: accountId 
-					},
-					{
-						toId: {$in: contactIds},
-						fromId: {$in: contactIds}
+				.or(pairs)
+				.sort({createtime:-1})
+				.skip(page*per)
+				.limit(per)
+				.exec(function(err,docs){
+					debug && defaultCallback(err);
+					if(err){
+						callback && callback(null);
+					}else{
+						callback && callback(docs);
 					}
-				])
+				});
+		};
+
+	var getStatusById = function(accountId,page,callback){
+			var per = 20;
+			if(typeof page == 'function'){
+				callback = page;
+				page = 0;
+			}
+			if(!callback){
+				throw new Error('callback is not defined.');
+			}
+			Status
+				.find({toId: accountId, fromId: accountId})
 				.sort({createtime:-1})
 				.skip(page*per)
 				.limit(per)
@@ -406,6 +458,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		getAllByToId: getAllByToId,
 		getAllByFromId: getAllByFromId,
 		getShortMessageById: getShortMessageById,
-		getActivityById: getActivityById
+		getActivityById: getActivityById,
+		getStatusById: getStatusById
 	};
 };

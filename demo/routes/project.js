@@ -294,7 +294,7 @@ exports = module.exports = function(app,models){
 					});
 				},
 				function _status(project,callback){
-					Status.add(accountId,project._id,name,'',text);
+					Status.add(accountId,project._id,name,'','','',text);
 					callback(null);
 				}
 			],

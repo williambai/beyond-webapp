@@ -1,0 +1,62 @@
+<div class="media">
+	<% if(ui.showToUser){ %>
+	<div class="pull-left">
+		<a href="#profile/<%= model.toId %>
+			">
+			<img class="media-object" src="<%= model.toUser[model.toId].avatar %>" width="64px;" height="64px;"></a>
+	</div>
+	<% }else{ %>
+	<div class="pull-left">
+		<a href="#profile/<%= model.fromId %>
+			">
+			<img class="media-object" src="<%= model.fromUser[model.fromId].avatar %>" width="64px;" height="64px;"></a>
+	</div>
+	<% } %>
+	<div class="media-body">
+
+		<% if(ui.showToUser){ %>
+		<h4 class="media-heading">
+			<a href="#status/<%= model.toId %>
+				">
+				<%= model.toUser[model.toId].username %></a>&nbsp;<i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i>&nbsp;我
+		</h4>
+		<% }else{ %>
+		<h4 class="media-heading">
+			<a href="#status/<%= model.fromId %>
+				">
+				<%= model.fromUser[model.fromId].username %></a>&nbsp;<i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i>&nbsp;我
+		</h4>
+		<% } %>
+
+		<% if(typeof model.status == 'string'){ %>
+		<p>
+			<%= model.status %></p>
+		<% }else if(model.status.MsgType == 'text'){ %>
+		<p>
+			<%= model.status.Content %></p>
+		<% }else if(model.status.MsgType == 'image'){ %>
+		<% if(model.status.PicUrl){ %>
+		<img src="<%= model.status.Url %>
+		">
+		<% } %>
+		<% }else if(model.status.MsgType == 'mixed'){ %>
+		<p>
+			<%= model.status.Content %></p>
+		<% for(var i=0; i<model.status.Urls.length; i++){ %>
+		<img src="<%= model.status.Urls[i] %>" width="<%= parseInt(50/model.status.Urls.length-1) %>%">
+		<% } %>
+		<% } %>
+		<p>
+			20分钟之前
+			<span class="pull-right">
+					<a class="comment-toggle"> <i class="fa fa-pencil-square-o"></i>
+						&nbsp;回复
+					</a>
+			</span>
+		</p>
+		<div class="comment-editor"></div>
+		<div class="comments"></div>
+	</div>
+	<div class="media-right"></div>
+</div>
+<hr>
