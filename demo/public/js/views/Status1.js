@@ -1,7 +1,8 @@
-define(['views/Status','text!templates/status1.html','text!templates/commentForm.html'],function(StatusView,statusTemplate,commentFormTemplate){
+define(['views/Status','text!templates/status1.html','text!templates/commentForm1.html'],function(StatusView,statusTemplate,commentFormTemplate){
 	var StatusView = StatusView.extend({
 
 		template: _.template(statusTemplate),
+		templateCommentForm: _.template(commentFormTemplate),
 
 		uiControl: {},
 

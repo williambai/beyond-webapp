@@ -3,8 +3,11 @@ define(['views/ListView','views/Status','models/Status','models/StatusCollection
 
 	var StatusListView = ListView.extend({
 
-		Status: StatusView,
+		StatusView: StatusView,
 		initialize: function(options){
+			if(options.StatusView){
+				this.StatusView = options.StatusView;
+			}
 			this.accountId = options.id;
 			this.account = options.account;
 			options.socketEvents.bind('status:me',this.onSocketStatusAdded, this);
@@ -34,7 +37,7 @@ define(['views/ListView','views/Status','models/Status','models/StatusCollection
 					status: data.status
 				});
 			//新进来的Status加在前面
-			var statusHtml = (new StatusView({account: this.account,model: status})).render().el;
+			var statusHtml = (new this.StatusView({account: this.account,model: status})).render().el;
 			$(statusHtml).prependTo('.status-list').hide().fadeIn('slow');
 			this.collection.add(status,{silent: true});
 		},
@@ -47,7 +50,7 @@ define(['views/ListView','views/Status','models/Status','models/StatusCollection
 		},
 
 		onStatusAdded: function(status){
-			var statusHtml = (new StatusView({account: this.account,model: status})).render().el;
+			var statusHtml = (new this.StatusView({account: this.account,model: status})).render().el;
 			$(statusHtml).appendTo('.status-list').hide().fadeIn('slow');
 		},
 
