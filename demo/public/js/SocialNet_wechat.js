@@ -1,23 +1,21 @@
 define(['router_wechat'],function(router){
-	var wechatOriginId = 'gh_205afa8af9b0';//beyond_mp
 	var SocialNet = function(){
 
-		var initialize = function(){
-			var appid = 'wx93534d55c06f6fec';
-			router.appid = appid;
-			checkOpenId(appid,function(){
+		var initialize = function(originid){
+			router.originid = originid;
+			checkOpenId(originid,function(){
 				checkLogin(runApplication);
 			});
 		};
 
-		var checkOpenId = function(appid,callback){
-			$.ajax('/wechat/check/openid?appid=' + appid,{
+		var checkOpenId = function(originid,callback){
+			$.ajax('/wechat/check/openid?originid=' + originid,{
 				mathod: 'GET',
 				success: function(data){
 					callback();
 				},
 				error: function(){
-					window.location.href = '/wechat/oauth2?appid=' + appid;
+					window.location.href = '/wechat/oauth2?originid=' + originid;
 				}
 			});
 		};

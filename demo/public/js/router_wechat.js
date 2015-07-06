@@ -1,6 +1,6 @@
 define(['views/Projects_wechat','views/ProjectIndex_wechat','views/Login_wechat','views/Profile_wechat'],function(ProjectsView,ProjectIndexView,LoginView,ProfileView){
 	var SocailRouter = Backbone.Router.extend({
-		appid: '',
+		originid: '',
 		logined: false,
 		currentView : null,
 		appEvents: _.extend({},Backbone.Events),//app inner events
@@ -79,7 +79,7 @@ define(['views/Projects_wechat','views/ProjectIndex_wechat','views/Login_wechat'
 			}
 			var projectView = new ProjectIndexView({
 				pid: pid,
-				appid: this.appid,
+				originid: this.originid,
 			});
 			this.changeView(projectView);
 			projectView.trigger('load');

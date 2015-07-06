@@ -17,13 +17,13 @@ exports = module.exports = function(app,models){
 
 	app.use('/wechat/check/openid', function(req,res){
 		// console.log('/openid ++++++')
-		var appid = config.mp.appid;//req.query.appid;
-		if(!appid){
+		var originid = config.mp.originid;//req.query.originid;
+		if(!originid){
 			res.sendStatus(400);
 			return;	
 		}
-		if(req.session  && req.session.wechat && req.session.wechat[appid]){
-			var openid  = req.session.wechat[appid]['openid'];
+		if(req.session  && req.session.wechat && req.session.wechat[originid]){
+			var openid  = req.session.wechat[originid]['openid'];
 			if(openid){
 				res.sendStatus(200);
 				return;
@@ -33,8 +33,8 @@ exports = module.exports = function(app,models){
 	});
 
 	app.use('/wechat/oauth2',function(req,res){
-		var appid = config.mp.appid;//req.query.appid;
-		if(!appid){
+		var originid = config.mp.originid;//req.query.originid;
+		if(!originid){
 			res.sendStatus(400);
 			return;	
 		}
@@ -82,24 +82,24 @@ exports = module.exports = function(app,models){
 	});
 
 	app.use('/wechat/project/update', function(req,res){
-		var appid = req.query.appid;
+		var originid = req.query.originid;
 		var pname = req.query.pname;
 		var pid = req.query.pid;
-		if(!appid || !pid){
+		if(!originid || !pid){
 			res.sendStatus(400);
 			return;
 		}
 		/******ONLY for session test begin */
-		wechatOriginId = config.mp.originid;//'gh_205afa8af9b0';
+		originid = config.mp.originid;//'gh_205afa8af9b0';
 		req.session.wechat = {};
-		req.session.wechat[wechatOriginId] = {};
-		req.session.wechat[wechatOriginId]['openid'] = 'olnndt1IVnyRIgRs0vRGgUHM3Ljw';
+		req.session.wechat[originid] = {};
+		req.session.wechat[originid]['openid'] = 'olnndt1IVnyRIgRs0vRGgUHM3Ljw';
 		/******ONLY end */
 		
-		if(req.session && req.session.wechat && req.session.wechat[wechatOriginId]){
-			var openid = req.session.wechat[wechatOriginId]['openid'];
-			req.session.wechat[wechatOriginId]['projectid'] = pid;
-			req.sessionStore.get(openid + ':' + wechatOriginId, function(err, wechatSession){
+		if(req.session && req.session.wechat && req.session.wechat[originid]){
+			var openid = req.session.wechat[originid]['openid'];
+			req.session.wechat[originid]['projectid'] = pid;
+			req.sessionStore.get(openid + ':' + originid, function(err, wechatSession){
 				if(err){
 					console.error(err);
 					res.sendStatus(401);
@@ -122,7 +122,7 @@ exports = module.exports = function(app,models){
 				wechatSession.projectid = pid;
 				wechatSession.projectName = pname; 
 
-				req.sessionStore.set(openid + ':' + wechatOriginId, wechatSession, function(err,result){
+				req.sessionStore.set(openid + ':' + originid, wechatSession, function(err,result){
 					if(err){
 						console.error(err);
 						res.sendStatus(401);

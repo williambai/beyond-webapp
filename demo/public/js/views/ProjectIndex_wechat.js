@@ -5,7 +5,7 @@ define(['text!templates/projectIndex_wechat.html','views/ProjectCheckIn_wechat',
 
 		initialize: function(options){
 			this.pid = options.pid;
-			this.appid = options.appid;
+			this.originid = options.originid;
 			this.model = new Project();
 			this.model.url = '/projects/' + options.pid;
 			this.model.on('change', this.render,this);
@@ -22,7 +22,7 @@ define(['text!templates/projectIndex_wechat.html','views/ProjectCheckIn_wechat',
 
 		checkIn: function(){
 			var that = this;
-			$.ajax('/wechat/project/update?appid=' + this.appid + '&pid=' + that.model.get('_id') + '&pname=' + that.model.get('name'), {
+			$.ajax('/wechat/project/update?originid=' + this.originid + '&pid=' + that.model.get('_id') + '&pname=' + that.model.get('name'), {
 				mathod: 'GET',
 				success: function(data){
 					var projectCheckInView = new ProjectCheckInView({model: that.model});
