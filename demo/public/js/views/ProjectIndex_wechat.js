@@ -22,7 +22,7 @@ define(['text!templates/projectIndex_wechat.html','views/ProjectCheckIn_wechat',
 
 		checkIn: function(){
 			var that = this;
-			$.ajax('/wechat/project/update?appid=' + this.appid + '&pid=' + that.model.get('_id'), {
+			$.ajax('/wechat/project/update?appid=' + this.appid + '&pid=' + that.model.get('_id') + '&pname=' + that.model.get('name'), {
 				mathod: 'GET',
 				success: function(data){
 					var projectCheckInView = new ProjectCheckInView({model: that.model});

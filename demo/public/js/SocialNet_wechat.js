@@ -1,8 +1,9 @@
 define(['router_wechat'],function(router){
+	var wechatOriginId = 'gh_205afa8af9b0';//beyond_mp
 	var SocialNet = function(){
 
 		var initialize = function(){
-			var appid = 'wx93534d55c06f6fec';//beyond_mp
+			var appid = 'wx93534d55c06f6fec';
 			router.appid = appid;
 			checkOpenId(appid,function(){
 				checkLogin(runApplication);

@@ -6,6 +6,17 @@ var jf = require('jsonfile');
 
 async.waterfall(
 	[
+		//获取永久素材
+		// function(callback){
+		// 	mpApi.getMaterials('news',0,20,function(err,result,response){
+		// 		if(err){
+		// 			callback(err);
+		// 			return;
+		// 		}
+		// 		fs.writeFileSync(path.join(__dirname,'./weixin/materials_news.json'));
+		// 		callback(null,result);
+		// 	});
+		// },
 		//更新菜单
 		function(callback){
 			var menu = jf.readFileSync(path.join(__dirname,'./weixin/menu.json'));

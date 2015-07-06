@@ -1,7 +1,7 @@
 define(['views/ListView','views/Status','models/Status','models/StatusCollection'],
 	function(ListView,StatusView,Status,StatusCollection){
 
-	var StatusListView = ListView.extend({
+	var StatusListView = Backbone.View.extend({
 
 		StatusView: StatusView,
 		initialize: function(options){

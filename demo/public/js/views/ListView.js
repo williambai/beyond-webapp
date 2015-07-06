@@ -1,12 +1,13 @@
 define([],function(){
-	var ListView = Backbone.View.extend({
+	var ContentView = Backbone.View.extend({
 
 		page: 0,
-
+		
 		events: {
 			'click .next-page': 'nextPage',
 			'scroll': 'scroll',
 		},
+
 		nextPage: function(){},
 
 		scroll: function(){
@@ -18,5 +19,5 @@ define([],function(){
             }
 		},		
 	});
-	return ListView;
+	return ContentView;
 });

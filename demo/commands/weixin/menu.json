@@ -1,45 +1,73 @@
 {
 	"button":[
 		{
-			"type": "view",
-			"name": "菜单1",
-			"url": "http://www.baidu.com"
-		},
-		{
-			"name": "菜单2",
+			"name": "我的工作",
 			"sub_button":[
 				{
-					"type": "view",
-					"name": "子菜单1",
-					"url": "http://www.baidu.com"
+					"type": "click", 
+					"name": "更多发布", 
+					"key": "key_static_help_more_publish"
 				},
 				{
-					"type": "view",
-					"name": "子菜单",
-					"url": "http://www.sina.com.cn"
-				}
-			]
-		},
-		{
-			"name": "发图", 
-			"sub_button": [
-				{
 					"type": "pic_sysphoto", 
-					"name": "系统拍照发图", 
+					"name": "拍照发图", 
 					"key": "rselfmenu_1_0", 
 					"sub_button": [ ]
 				}, 
 				{
-					"type": "pic_photo_or_album", 
-					"name": "拍照或者相册发图", 
-					"key": "rselfmenu_1_1", 
-					"sub_button": [ ]
+					"type": "view",
+					"name": "所有项目",
+					"url": "http://sw.appmod.cn/wechat.html"
+				},
+				{
+					"type": "view",
+					"name": "切换项目",
+					"url": "http://sw.appmod.cn/wechat.html"
+				},
+				{
+					"type": "view",
+					"name": "当前项目",
+					"url": "http://sw.appmod.cn/wechat.html#project/current"
+				}
+			]
+		},
+		{
+			"name": "产品试用", 
+			"sub_button": [
+				{
+					"type": "click", 
+					"name": "前提条件", 
+					"key": "key_static_help_pre_condition"
 				}, 
 				{
-					"type": "pic_weixin", 
-					"name": "微信相册发图", 
-					"key": "rselfmenu_1_2", 
-					"sub_button": [ ]
+					"type": "click", 
+					"name": "产品演示", 
+					"key": "key_static_help_demo"
+				}, 
+				{
+					"type": "click", 
+					"name": "联系我们", 
+					"key": "key_static_help_contact_us"
+				}
+			]
+		},
+		{
+			"name": "关于我们",
+			"sub_button": [
+				{
+					"type": "click",
+					"name": "合作共赢",
+					"key": "key_static_help_cooperation_for_win"
+				},
+				{
+					"type": "click",
+					"name": "产品介绍",
+					"key": "key_static_help_product_introdution"
+				},
+				{
+					"type": "click",
+					"name": "联系我们",
+					"key": "key_static_help_contact_us"
 				}
 			]
 		}

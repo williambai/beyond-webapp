@@ -1,5 +1,6 @@
 exports = module.exports = function(app,models){
 	var path = require('path');
+	var fs = require('fs');
 	var async = require('async');
 	var config = require('../config/weixin');
 	var wechat = require('wechat');
@@ -69,9 +70,11 @@ exports = module.exports = function(app,models){
 			}
 			var accessToken = result.data.access_token;
 			var openid = result.data.openid;
+			console.log('++++')
+			console.log(openid);
 			req.session.wechat = req.session.wechat || {};
-			req.session.wechat[config.mp.appid] = req.session.wechat[config.mp.appid] || {};
-			req.session.wechat[config.mp.appid]['openid'] = openid;
+			req.session.wechat[config.mp.originid] = req.session.wechat[config.mp.originid] || {};
+			req.session.wechat[config.mp.originid]['openid'] = openid;
 			delete oAtuthClients[state];
 			delete req.session.state;
 			res.redirect('/wechat.html');//回到主程序入口
@@ -80,44 +83,46 @@ exports = module.exports = function(app,models){
 
 	app.use('/wechat/project/update', function(req,res){
 		var appid = req.query.appid;
+		var pname = req.query.pname;
 		var pid = req.query.pid;
 		if(!appid || !pid){
 			res.sendStatus(400);
 			return;
 		}
 		/******ONLY for session test begin */
-		appid = 'client';
+		wechatOriginId = config.mp.originid;//'gh_205afa8af9b0';
 		req.session.wechat = {};
-		req.session.wechat[appid] = {};
-		req.session.wechat[appid]['openid'] = 'webot';
+		req.session.wechat[wechatOriginId] = {};
+		req.session.wechat[wechatOriginId]['openid'] = 'olnndt1IVnyRIgRs0vRGgUHM3Ljw';
 		/******ONLY end */
 		
-		if(req.session && req.session.wechat && req.session.wechat[appid]){
-			var openid = req.session.wechat[appid]['openid'];
-			req.session.wechat[appid]['projectid'] = pid;
-			req.sessionStore.get(appid + ':' + openid, function(err, wechatSession){
+		if(req.session && req.session.wechat && req.session.wechat[wechatOriginId]){
+			var openid = req.session.wechat[wechatOriginId]['openid'];
+			req.session.wechat[wechatOriginId]['projectid'] = pid;
+			req.sessionStore.get(openid + ':' + wechatOriginId, function(err, wechatSession){
 				if(err){
 					console.error(err);
 					res.sendStatus(401);
 					return;
 				}
-				var wechatSessionObject = {
+
+				if(!wechatSession){
+					wechatSession = {
 						cookie: {
 							path: '/', 
 							httpOnly: true, 
 							originalMaxAge: null,
 							expires: null
 						},
-						accountId: req.session.accountId,
-						username: req.session.username,
-						avatar: req.session.avatar,
 					};
-				if(wechatSession){
-					wechatSessionObject = wechatSession;
 				}
-				wechatSessionObject.projectid = pid;
+				wechatSession.accountId = req.session.accountId,
+				wechatSession.username = req.session.username,
+				wechatSession.avatar = req.session.avatar,
+				wechatSession.projectid = pid;
+				wechatSession.projectName = pname; 
 
-				req.sessionStore.set(appid + ':' + openid, wechatSessionObject, function(err,result){
+				req.sessionStore.set(openid + ':' + wechatOriginId, wechatSession, function(err,result){
 					if(err){
 						console.error(err);
 						res.sendStatus(401);
@@ -133,9 +138,9 @@ exports = module.exports = function(app,models){
 
 	app.use('/wechat', mpMiddleware, function(req,res){
 		var message = req.weixin;
-		// console.log('/wechat +++')
-		// console.log(req.wxsession)
-		// console.log(message)
+		console.log('/wechat +++')
+		console.log(req.wxsession)
+		console.log(message)
 		if(message.MsgType == 'event'){
 			//收到事件消息
 			if(message.Event == 'subscribe'){
@@ -150,15 +155,71 @@ exports = module.exports = function(app,models){
 					content: 'coming soon ....'
 				});
 				console.log('waiting to development ....');
+			}else if(message.Event == 'CLICK'){
+				if(message.EventKey == 'key_static_help_more_publish'){
+					//发布更多
+					res.reply([
+						{
+							title: '更多发布',
+							description: 'coming soon ....',
+							picurl: 'http://sw.appmod.cn/upload/1433476695765.jpg',
+							url: 'http://sw.appmod.cn/helps/help_publish.html'
+						}
+					]);
+
+				}else if(message.EventKey == 'key_static_help_pre_condition'){
+					//前提条件
+					res.reply({
+						type: 'text',
+						content: 'coming soon ....'
+					});
+
+				}else if(message.EventKey == 'key_static_help_demo'){
+					//产品演示
+					res.reply({
+						type: 'text',
+						content: 'coming soon ....'
+					});
+
+				}else if(message.EventKey == 'key_static_help_contact_us'){
+					//联系我们
+					res.reply({
+						type: 'text',
+						content: 'coming soon ....'
+					});
+
+				}else if(message.EventKey == 'key_static_help_cooperation_for_win'){
+					//合作共赢
+					res.reply({
+						type: 'text',
+						content: 'coming soon ....'
+					});
+
+				}else if(message.EventKey == 'key_static_help_product_introdution'){
+					//产品介绍
+					res.reply({
+						type: 'text',
+						content: 'coming soon ....'
+					});
+				}else{
+					res.reply({});
+				}
 			}else{
 				res.reply({});
 				console.log(message.Event + 'waiting to development ....');
 			}
 		}else if(message.MsgType == 'text' || message.MsgType == 'image' || message.MsgType == 'voice' || message.MsgType == 'video' || message.MsgType == 'shortvideo' || message.MsgType == 'link' || message.MsgType == 'location'){
 			//收到普通消息，不等处理，立即回复
+			if(!req.wxsession.projectid){
+				res.reply({
+						type: 'text',
+						content: '该消息丢弃，因为您还没有选择项目。请先选择一个项目，重新发送。'
+					});
+				return;
+			}
 			res.reply({
 					type: 'text',
-					content: req.wxsession.projectid + '项目已成功接收您发送的消息。'
+					content: req.wxsession.projectName + '项目已成功接收您发送的消息。'
 				});
 			//慢慢处理
 			async.waterfall(
@@ -168,16 +229,23 @@ exports = module.exports = function(app,models){
 							callback(null,message);
 						}else{
 							mpApi.getMedia(message.MediaId,function(err,result,response){
+								if(err){
+									callback(null,message);
+									console.log('Warning: MediaId('+ message.MediaId + ') download failure.');
+									return;
+								}
+								console.log('++++')
+								console.log(result);
 								var filename  = '';
 								if(message.MsgType == 'image'){
-									var subfix = message.PicUrl.substr(message.PicUrl.lastIndexOf('.')) || '';
+									var subfix = '.png';//message.PicUrl.substr(message.PicUrl.lastIndexOf('.')) || '';
 									filename = '/_tmp/wechat/' + message.MediaId + subfix;
 								}else if(message.MsgType == 'voice'){
 									filename = '/_tmp/wechat/' + message.MediaId;
 								}else if(message.MsgType == 'shortvideo'){
 									filename = '/_tmp/wechat/' + message.MediaId;
 								}
-								fs.writeFile(path.join(__dirname,filename), function(err){
+								fs.writeFile(path.join(__dirname,'../public',filename), result, function(err){
 									if(err){
 										callback(err,null);
 									}else{
@@ -193,8 +261,13 @@ exports = module.exports = function(app,models){
 							callback(null,msg);
 						}else{
 							mpApi.getMedia(msg.ThumbMediaId,function(err,result,response){
+								if(err){
+									callback(null,message);
+									console.log('Warning: ThumbMediaId('+ message.MediaId + ') download failure.');
+									return;
+								}
 								var filename = '/_tmp/wechat/' + msg.ThumbMediaId;
-								fs.writeFile(path.join(__dirname,filename), function(err){
+								fs.writeFile(path.join(__dirname,'../public',filename), result, function(err){
 									if(err){
 										callback(err,null);
 									}else{
