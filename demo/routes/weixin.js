@@ -75,6 +75,9 @@ exports = module.exports = function(app,models){
 			req.session.wechat = req.session.wechat || {};
 			req.session.wechat[config.mp.originid] = req.session.wechat[config.mp.originid] || {};
 			req.session.wechat[config.mp.originid]['openid'] = openid;
+			//加载 openid:originid 如果有对应的 accountid, 则自动登录
+			
+			
 			delete oAtuthClients[state];
 			delete req.session.state;
 			res.redirect('/wechat.html');//回到主程序入口

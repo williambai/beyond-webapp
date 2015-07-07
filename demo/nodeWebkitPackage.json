@@ -1,6 +1,6 @@
 {
   "name": "我的工作网",
-  "main": "http://localhost:8080",
+  "main": "http://sw.appmod.cn",
   "version": "0.0.1",
   "single-instance": true,
   "window": {
