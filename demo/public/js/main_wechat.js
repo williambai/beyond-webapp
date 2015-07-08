@@ -1,4 +1,5 @@
 require(['SocialNet_wechat'], function(SocialNet){
-	var wechatOriginId = 'gh_205afa8af9b0';//origin ID of 'beyond-mp'
-	(new SocialNet).initialize(wechatOriginId);
+	// var wechatOriginId = 'gh_205afa8af9b0';//origin ID of 'beyond-mp'
+	// (new SocialNet).initialize(wechatOriginId);
+	(new SocialNet).initialize();
 });

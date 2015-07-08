@@ -83,7 +83,6 @@ define(['text!templates/statusForm.html'],function(statusFormTemplate){
 		},
 
 		render: function(){
-				console.log('+++')
 			this.$el.html(this.template());
 			return this;
 		},

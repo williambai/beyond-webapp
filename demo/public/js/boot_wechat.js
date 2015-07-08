@@ -11,7 +11,13 @@ require.config({
 	shim: {
 		'Backbone': ['Underscore', 'jQuery'],
 		'SocialNet_wechat': ['Backbone']
+	},
+	config: {
+		router_wechat: {
+			wechatOriginId: 'gh_205afa8af9b0',
+		}
 	}
 });
+
 
 require(['main_wechat']);

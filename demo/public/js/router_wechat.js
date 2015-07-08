@@ -1,6 +1,7 @@
-define(['views/Projects_wechat','views/ProjectIndex_wechat','views/Login_wechat','views/Profile_wechat'],function(ProjectsView,ProjectIndexView,LoginView,ProfileView){
+define(['module','views/Projects_wechat','views/ProjectIndex_wechat','views/Login_wechat','views/Profile_wechat'],function(module,ProjectsView,ProjectIndexView,LoginView,ProfileView){
+
 	var SocailRouter = Backbone.Router.extend({
-		originid: '',
+		originid: module.config().wechatOriginId,
 		logined: false,
 		currentView : null,
 		appEvents: _.extend({},Backbone.Events),//app inner events

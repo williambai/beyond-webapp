@@ -4,6 +4,7 @@ define(['text!templates/register.html'],function(registerTemplate){
 
 			events: {
 				'submit form': 'register',
+				'swipeleft': 'swipeToLoginForm',
 			},
 
 			register: function(){
@@ -18,6 +19,11 @@ define(['text!templates/register.html'],function(registerTemplate){
 				 .error(function(data){
 							console.log(data);
 						});
+				return false;
+			},
+
+			swipeToLoginForm: function(){
+				window.location.hash = 'login';
 				return false;
 			},
 

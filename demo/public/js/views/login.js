@@ -4,7 +4,8 @@ define(['text!templates/login.html'],function(loginTemplate){
 		template: _.template(loginTemplate),
 
 		events: {
-			'submit form': 'login'
+			'submit form': 'login',
+			'swiperight': 'toRegisterForm',
 		},
 		initialize: function(options){
 			this.appEvents = options.appEvents;
@@ -25,6 +26,12 @@ define(['text!templates/login.html'],function(loginTemplate){
 			});
 			return false;
 		},
+
+		toRegisterForm: function(){
+			window.location.hash = 'register';
+			return false;
+		},
+
 		render: function(){
 			this.$el.html(loginTemplate);
 			return this;
