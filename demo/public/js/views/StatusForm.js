@@ -5,6 +5,7 @@ define(['text!templates/statusForm.html'],function(statusFormTemplate){
 
 		template: _.template(statusFormTemplate),
 		events: {
+			'click .send-file': 'showFileExplorer',
 			'change input[name=file]': 'addAttachment',
 			'click .attachment': 'removeAttachment',
 			'submit form': 'updateStatus',
@@ -12,6 +13,11 @@ define(['text!templates/statusForm.html'],function(statusFormTemplate){
 
 		initialize: function(options){
 			this.accountId = options.accountId;
+		},
+
+		showFileExplorer: function(){
+			$('input[name=file]').click();
+			return false;
 		},
 
 		addAttachment: function(evt){
@@ -43,7 +49,7 @@ define(['text!templates/statusForm.html'],function(statusFormTemplate){
 		removeAttachment: function(evt){
 			if(confirm('放弃上传它吗？')){
 				var that = this;
-				var filename = $(evt.currentTarget).attr('src');
+				var filename = $(evt.currentTarget).find('img').attr('src');
 				$.ajax({
 					url: 'attachment/remove',
 					type: 'POST',
@@ -77,7 +83,7 @@ define(['text!templates/statusForm.html'],function(statusFormTemplate){
 					$('textarea[name=text]').val('');
 					that.$('input[name=file]').val('');
 					that.$('.attachments').empty();
-					that.$el.remove();
+					that.$('form').addClass('hidden');
 				});
 			return false;
 		},

@@ -18,6 +18,8 @@ define(['text!templates/projectBottomBar.html','text!templates/projectBottomBar2
 		
 		events: {
 			'submit form': 'sendChat',
+			'click .send-file': 'showFileExplorer',
+			'change input[name=file]': 'uploadFile',
 			'click .chat-toggle': 'changeToolbar'
 		},
 
@@ -43,6 +45,42 @@ define(['text!templates/projectBottomBar.html','text!templates/projectBottomBar2
 			}
 			$('input[name=chat]').val('');
 			return false;
+		},
+
+		showFileExplorer: function(){
+			$('input[name=file]').click();
+			return false;
+		},
+
+		uploadFile: function(evt){
+			var that = this;
+			var formData = new FormData();
+			formData.append('files',evt.currentTarget.files[0]);
+			$.ajax({
+				url: '/attachment/add',
+				type: 'POST',
+				data: formData,
+				cache: false,//MUST be false
+				processData: false,//MUST be false
+				contentType:false,//MUST be false
+				success: function(data){
+					if(data && data.type){
+						if(/jpg|png/.test(data.type)){
+							that.socketEvents.trigger('socket:project:chat',{
+								action: 'chat',
+								to: that.id,
+								text: 'http://' + location.host + '/' + data.filename
+							});
+							that.$('input[name=file]').val('');
+						}
+					}
+				},
+				error: function(err){
+					that.$('input[name=file]').val('');
+					console.log(err);
+				},
+			});
+          	return false;
 		},
 
 		changeToolbar: function(){

@@ -27,7 +27,7 @@ exports =module.exports = function(app,models){
 	});
 
 	app.post('/attachment/remove', app.isLogined, function(req,res){
-		var filename = req.body.filename;
+		var filename = req.body.filename || '';
 		var file_path = path.join(__dirname, '../public/',filename);
 		fs.unlink(file_path,function(err){
 			if(err) {

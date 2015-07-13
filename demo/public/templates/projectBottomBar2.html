@@ -6,8 +6,9 @@
 					<i class="fa fa-list-ul fa-2x" style="vertical-align:middle;"></i>
 				</a>
 			</div>
-			<div class="nav4-right">		
+			<div class="nav4-right btn-group">		
 				<button class="btn btn-primary">发送</button>
+				<button class="btn btn-promary send-file"><i class="fa fa-lg fa-plus-circle"></i></button>
 			</div>
 	<% if(project.closed){ %>
 			<div class="nav4-input-both">
@@ -24,4 +25,5 @@
 	<% } %>	
 		</div>
 	</form>
+	<input class="hidden" type="file" name="file">
 </div>
