@@ -11,7 +11,8 @@ require.config({
 	shim: {
 		'Backbone': ['Underscore', 'jQuery'],
 		'SocialNet': ['Backbone']
-	}
+	},
+	// urlArgs: "v=0.0.12"
 });
 
 require(['main']);

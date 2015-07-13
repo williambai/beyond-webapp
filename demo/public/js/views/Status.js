@@ -18,6 +18,7 @@ define(['text!templates/status.html','text!templates/commentForm.html'],function
 		initialize: function(options){
 			this.account = options.account;
 			this._convertStatus();
+			this._transformTime();
 		},
 
 		_convertStatus: function(){
@@ -51,6 +52,23 @@ define(['text!templates/status.html','text!templates/commentForm.html'],function
 						);
 					}
 				}
+			}
+		},
+
+		_transformTime: function(){
+			var createtime = this.model.get('createtime');
+			var deltatime = (_.now() - new Date(createtime).getTime())/1000;
+			var days = parseInt(deltatime/(24*60*60));
+			var hours = parseInt(deltatime/(60*60));
+			var mins = parseInt(deltatime/60);
+			if(days>0){
+				this.model.set('deltatime', days + ' 天之前');
+			}else if(hours>0){
+				this.model.set('deltatime', hours + ' 小时之前');
+			}else if(mins>0){
+				this.model.set('deltatime', mins + ' 分钟之前');
+			}else{
+				this.model.set('deltatime', '刚刚');
 			}
 		},
 
