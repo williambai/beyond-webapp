@@ -1,8 +1,12 @@
-define(['text!templates/chat.html','views/ProjectBottomBar','views/ChatItem','models/Project','models/Status','models/StatusCollection'], function(projectChatTemplate,BottomBarView,ChatItemView,Project,Status,StatusCollection){
+define(['text!templates/imageModal.html','text!templates/chat.html','views/ProjectBottomBar','views/ChatItem','models/Project','models/Status','models/StatusCollection'], function(imageModalTemplate,projectChatTemplate,BottomBarView,ChatItemView,Project,Status,StatusCollection){
 	var ProjectChatView = Backbone.View.extend({
 		el: '#content',
 
 		template: _.template(projectChatTemplate),
+
+		events: {
+			'click .chat-content img': 'showImageInModal'
+		},
 
 		initialize: function(options){
 			this.id = options.id;
@@ -20,6 +24,19 @@ define(['text!templates/chat.html','views/ProjectBottomBar','views/ChatItem','mo
 			this.collection.url = '/projects/' + this.id + '/status';
 			this.listenTo(this.collection, 'reset', this.onChatCollectionReset);
 			this.on('load', this.load, this);
+		},
+
+		showImageInModal: function(evt){
+			var imageUrl = $(evt.currentTarget).attr('src');
+		    // Create a modal view class
+		    var Modal = Backbone.Modal.extend({
+		      template: (_.template(imageModalTemplate))({src: imageUrl}),
+		      cancelEl: '.bbm-button'
+		    });
+			// // Render an instance of your modal
+			var modalView = new Modal();
+			$('body').append(modalView.render().el);
+			return false;
 		},
 
 		load: function(){

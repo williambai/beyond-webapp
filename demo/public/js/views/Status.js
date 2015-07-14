@@ -1,4 +1,4 @@
-define(['text!templates/status.html','text!templates/commentForm.html'],function(statusTemplate,commentFormTemplate){
+define(['text!templates/status.html','text!templates/commentForm.html','text!templates/imageModal.html'],function(statusTemplate,commentFormTemplate, modalTemplate){
 	var StatusBaseView = Backbone.View.extend({
 		// tagName: 'li',
 		template: _.template(statusTemplate),
@@ -13,6 +13,8 @@ define(['text!templates/status.html','text!templates/commentForm.html'],function
 			'submit form': 'submitComment',
 			'click .expand': 'expand',
 			'click .packup': 'packup',
+
+			'click .media-body img': 'showInModal',
 		},
 
 		initialize: function(options){
@@ -70,6 +72,19 @@ define(['text!templates/status.html','text!templates/commentForm.html'],function
 			}else{
 				this.model.set('deltatime', '刚刚');
 			}
+		},
+
+		showInModal: function(evt){
+			var imageUrl = $(evt.currentTarget).attr('src');
+		    // Create a modal view class
+		    var Modal = Backbone.Modal.extend({
+		      template: (_.template(modalTemplate))({src: imageUrl}),
+		      cancelEl: '.bbm-button'
+		    });
+			// // Render an instance of your modal
+			var modalView = new Modal();
+			$('body').append(modalView.render().el);
+			return false;
 		},
 
 		voteGood: function(){

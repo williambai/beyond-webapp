@@ -4,13 +4,15 @@ require.config({
 		'jQuery': 'libs/jquery',
 		'Underscore': 'libs/underscore',
 		'Backbone': 'libs/backbone',
+		'Backbone.modal': 'libs/backbone.modal',
 		'text': 'libs/text',
 		'templates': '../templates',
 		'Sockets': 'libs/socket.io'
 	},
 	shim: {
 		'Backbone': ['Underscore', 'jQuery'],
-		'SocialNet': ['Backbone']
+		'Backbone.modal': ['Backbone'],
+		'SocialNet': ['Backbone','Backbone.modal']
 	},
 	// urlArgs: "v=0.0.12"
 });
