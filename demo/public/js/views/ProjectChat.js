@@ -1,11 +1,12 @@
-define(['text!templates/imageModal.html','text!templates/chat.html','views/ProjectBottomBar','views/ChatItem','models/Project','models/Status','models/StatusCollection'], function(imageModalTemplate,projectChatTemplate,BottomBarView,ChatItemView,Project,Status,StatusCollection){
-	var ProjectChatView = Backbone.View.extend({
+define(['text!templates/imageModal.html','text!templates/chat.html','views/ProjectBottomBar','views/ScrollableView','views/ChatItem','models/Project','models/Status','models/StatusCollection'], function(imageModalTemplate,projectChatTemplate,BottomBarView,ScrollableView,ChatItemView,Project,Status,StatusCollection){
+	var ProjectChatView = ScrollableView.extend({
 		el: '#content',
 
 		template: _.template(projectChatTemplate),
 
 		events: {
-			'click .chat-content img': 'showImageInModal'
+			'click .chat-content img': 'showImageInModal',
+			'scroll': 'scrollUp',
 		},
 
 		initialize: function(options){
@@ -22,6 +23,7 @@ define(['text!templates/imageModal.html','text!templates/chat.html','views/Proje
 			this.model.on('change', this.render,this);
 			this.collection = new StatusCollection();
 			this.collection.url = '/projects/' + this.id + '/status';
+			this.collectionUrl = this.collection.url;
 			this.listenTo(this.collection, 'reset', this.onChatCollectionReset);
 			this.on('load', this.load, this);
 		},

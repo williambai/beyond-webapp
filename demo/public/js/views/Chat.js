@@ -1,5 +1,5 @@
-define(['text!templates/imageModal.html','text!templates/chat.html','views/ChatBottomBar','views/ChatItem','models/Chat','models/ChatCollection'], function(imageModalTemplate, chatSessionTemplate,BottomBarView,ChatItemView,Chat,ChatCollection){
-	var ChatView = Backbone.View.extend({
+define(['text!templates/imageModal.html','text!templates/chat.html','views/ChatBottomBar','views/ScrollableView','views/ChatItem','models/Chat','models/ChatCollection'], function(imageModalTemplate, chatSessionTemplate,BottomBarView,ScrollableView,ChatItemView,Chat,ChatCollection){
+	var ChatView = ScrollableView.extend({
 		template: _.template(chatSessionTemplate),
 		el: '#content',
 
@@ -19,6 +19,7 @@ define(['text!templates/imageModal.html','text!templates/chat.html','views/ChatB
 				);
 			this.collection = new ChatCollection();
 			this.collection.url = '/chats/' + this.id;
+			this.collectionUrl = this.collection.url;
 			this.listenTo(this.collection, 'reset', this.onChatCollectionReset);
 			this.on('load', this.load, this);
 		},
@@ -77,11 +78,6 @@ define(['text!templates/imageModal.html','text!templates/chat.html','views/ChatB
 				$(chatItemHtml).prependTo('.chat_log').hide().fadeIn('fast');
 			});
 			this.$el.animate({scrollTop: this.$el.get(0).scrollHeight},1);
-		},
-
-		scrollUp: function(){
-
-			return false;
 		},
 
 		render: function(){
