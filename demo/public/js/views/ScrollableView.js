@@ -20,6 +20,7 @@ define(['text!templates/load-more.html',],function(loadMoreTemplate){
 							that.$('.load-more').remove();
 						}
 						if(collection.length == 0){
+							that.$el.append(that.templateLoadMore({loading: false}));
 							that.hasmore = false;
 						}else{
 							that.hasmore = true;
@@ -53,6 +54,7 @@ define(['text!templates/load-more.html',],function(loadMoreTemplate){
 							that.$('.load-more').remove();
 						}
 						if(collection.length == 0){
+							that.$el.prepend(that.templateLoadMore({loading: false}));
 							that.hasmore = false;
 						}else{
 							that.hasmore = true;
