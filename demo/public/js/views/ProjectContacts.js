@@ -1,6 +1,6 @@
-define(['text!templates/projectContacts.html','text!templates/projectBottomBar.html','views/ProjectContact','models/Project','models/ContactCollection'],
-	function(contactsTemplate,projectBarTemplate,ContactView, Project, ContactCollection){
-	var ContactsView = Backbone.View.extend({
+define(['text!templates/projectContacts.html','text!templates/projectBottomBar.html','views/ScrollableView','views/ProjectContact','models/Project','models/ContactCollection'],
+	function(contactsTemplate,projectBarTemplate,ScrollableView,ContactView, Project, ContactCollection){
+	var ContactsView = ScrollableView.extend({
 		el: '#content',
 		
 		template: _.template(contactsTemplate),
@@ -14,10 +14,16 @@ define(['text!templates/projectContacts.html','text!templates/projectBottomBar.h
 			this.model.on('change', this.render,this);
 			this.collection = new ContactCollection();
 			this.collection.url = '/projects/' + options.pid + '/contacts';
+			this.collectionUrl = this.collection.url;
 			this.collection.on('add', this.contactAdded, this);
 			this.collection.on('reset', this.contactCollectionReset, this);
 			this.on('load',this.load,this);
 		},
+		
+		events: {
+			'scroll': 'scroll',
+		},
+
 		load: function(){
 			var that = this;
 			this.model.fetch({

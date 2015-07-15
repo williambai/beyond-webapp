@@ -4,7 +4,8 @@ define(['text!templates/imageModal.html','text!templates/chat.html','views/ChatB
 		el: '#content',
 
 		events: {
-			'click .chat-content img': 'showImageInModal'
+			'click .chat-content img': 'showImageInModal',
+			'scroll': 'scrollUp',
 		},
 
 		initialize: function(options){
@@ -76,6 +77,11 @@ define(['text!templates/imageModal.html','text!templates/chat.html','views/ChatB
 				$(chatItemHtml).prependTo('.chat_log').hide().fadeIn('fast');
 			});
 			this.$el.animate({scrollTop: this.$el.get(0).scrollHeight},1);
+		},
+
+		scrollUp: function(){
+
+			return false;
 		},
 
 		render: function(){

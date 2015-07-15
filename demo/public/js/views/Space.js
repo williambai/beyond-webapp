@@ -1,7 +1,7 @@
-define(['text!templates/loading.html','text!templates/space.html','views/StatusForm','views/StatusList'],
-	function(loadingTemplate,activityTemplate,StatusFormView,StatusListView){
+define(['text!templates/loading.html','text!templates/space.html','views/ScrollableView','views/StatusForm','views/StatusList'],
+	function(loadingTemplate,activityTemplate,ScrollableView,StatusFormView,StatusListView){
 
-	var SpaceView = Backbone.View.extend({
+	var SpaceView = ScrollableView.extend({
 		el: '#content',
 		template: _.template(activityTemplate),
 
@@ -10,6 +10,7 @@ define(['text!templates/loading.html','text!templates/space.html','views/StatusF
 
 		events: {
 			'click .editor-toggle': 'editorToggle',
+			'scroll': 'scroll',
 		},
 
 		initialize: function(options){
@@ -22,14 +23,14 @@ define(['text!templates/loading.html','text!templates/space.html','views/StatusF
 		load: function(){
 			this.loaded = true;
 			this.render();
-			this.statuses = new StatusListView({
+			this.statusListView = new StatusListView({
 				el: 'div.status-list',
 				url: '/accounts/'+ this.id + '/status',
 				id:this.id,
 				account: this.account,
 				socketEvents: this.socketEvents
 			});
-			this.statuses.trigger('load');
+			this.statusListView.trigger('load');
 		},
 
 		editorToggle: function(){
@@ -47,6 +48,11 @@ define(['text!templates/loading.html','text!templates/space.html','views/StatusF
 			}else{
 				this.$('.status-editor form').addClass('hidden');
 			}
+			return false;
+		},
+
+		scroll: function(){
+			this.statusListView.scroll();
 			return false;
 		},
 

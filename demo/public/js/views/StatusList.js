@@ -1,7 +1,7 @@
-define(['views/ListView','views/Status','models/Status','models/StatusCollection'],
-	function(ListView,StatusView,Status,StatusCollection){
+define(['views/ScrollableView','views/Status','models/Status','models/StatusCollection'],
+	function(ScrollableView,StatusView,Status,StatusCollection){
 
-	var StatusListView = Backbone.View.extend({
+	var StatusListView = ScrollableView.extend({
 
 		StatusView: StatusView,
 		initialize: function(options){
@@ -57,13 +57,6 @@ define(['views/ListView','views/Status','models/Status','models/StatusCollection
 		render: function(){
 			return this;
 		},
-
-		nextPage: function(){
-			++this.page;
-			this.collection.url = this.collectionUrl + '?page=' + this.page;
-			this.collection.fetch();
-		},
-
 
 	});
 	return StatusListView;

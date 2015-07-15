@@ -14,11 +14,14 @@ define(['text!templates/loading.html','text!templates/message.html','views/Statu
 			this.socketEvents = options.socketEvents;
 			this.on('load', this.load, this);
 		},
+		events: {
+			'scroll': 'scroll',
+		},
 
 		load: function(){
 			this.loaded = true;
 			this.render();
-			this.statuses = new StatusListView({
+			this.statusListView = new StatusListView({
 				StatusView: StatusView,
 				el: 'div.status-list',
 				url: '/accounts/'+ this.id + '/message',
@@ -26,7 +29,12 @@ define(['text!templates/loading.html','text!templates/message.html','views/Statu
 				account: this.account,
 				socketEvents: this.socketEvents
 			});
-			this.statuses.trigger('load');
+			this.statusListView.trigger('load');
+		},
+
+		scroll: function(){
+			this.statusListView.scroll();
+			return false;
 		},
 
 		render: function(){

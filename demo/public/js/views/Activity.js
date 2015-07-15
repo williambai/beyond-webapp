@@ -10,6 +10,7 @@ define(['text!templates/loading.html','text!templates/activity.html','views/Stat
 
 		events: {
 			'click .editor-toggle': 'editorToggle',
+			'scroll': 'scroll',
 		},
 
 		initialize: function(options){
@@ -22,14 +23,14 @@ define(['text!templates/loading.html','text!templates/activity.html','views/Stat
 		load: function(){
 			this.loaded = true;
 			this.render();
-			this.statuses = new StatusListView({
+			this.statusListView = new StatusListView({
 				el: 'div.status-list',
 				url: '/accounts/'+ this.id + '/activity',
 				id:this.id,
 				account: this.account,
 				socketEvents: this.socketEvents
 			});
-			this.statuses.trigger('load');
+			this.statusListView.trigger('load');
 		},
 
 		editorToggle: function(){
@@ -47,6 +48,11 @@ define(['text!templates/loading.html','text!templates/activity.html','views/Stat
 			}else{
 				this.$('.status-editor form').addClass('hidden');
 			}
+			return false;
+		},
+
+		scroll: function(){
+			this.statusListView.scroll();
 			return false;
 		},
 
