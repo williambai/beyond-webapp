@@ -2,6 +2,8 @@ exports =module.exports = function(app,models){
 	var cookie = require('cookie');
 	var cookieSignature = require('cookie-signature');
 	var sio = require('socket.io').listen(app.server);
+	var mongoAdapter = require('socket.io-adapter-mongo');
+	sio.adapter(mongoAdapter({ host: '127.0.0.1', port: 27017, db: 'socketio' }));
 
 	app.isAccountOnline = function(accountId){
 		// console.log(accountId);
