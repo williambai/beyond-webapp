@@ -1,11 +1,11 @@
-define(['text!templates/imageModal.html','text!templates/chat.html','views/ProjectBottomBar','views/ScrollableView','views/ChatItem','models/Project','models/Status','models/StatusCollection'], function(imageModalTemplate,projectChatTemplate,BottomBarView,ScrollableView,ChatItemView,Project,Status,StatusCollection){
+define(['text!templates/modal.html','text!templates/chat.html','views/ProjectBottomBar','views/ScrollableView','views/ChatItem','models/Project','models/Status','models/StatusCollection'], function(modalTemplate,projectChatTemplate,BottomBarView,ScrollableView,ChatItemView,Project,Status,StatusCollection){
 	var ProjectChatView = ScrollableView.extend({
 		el: '#content',
 
 		template: _.template(projectChatTemplate),
 
 		events: {
-			'click .chat-content img': 'showImageInModal',
+			'click .chat-content img': 'showInModal',
 			'scroll': 'scrollUp',
 		},
 
@@ -28,16 +28,24 @@ define(['text!templates/imageModal.html','text!templates/chat.html','views/Proje
 			this.on('load', this.load, this);
 		},
 
-		showImageInModal: function(evt){
-			var imageUrl = $(evt.currentTarget).attr('src');
-		    // Create a modal view class
-		    var Modal = Backbone.Modal.extend({
-		      template: (_.template(imageModalTemplate))({src: imageUrl}),
-		      cancelEl: '.bbm-button'
-		    });
-			// // Render an instance of your modal
-			var modalView = new Modal();
-			$('body').append(modalView.render().el);
+		showInModal: function(evt){
+			var targetType = $(evt.currentTarget).attr('target-type');			
+			var targetData = $(evt.currentTarget).attr('target-data');
+			if(targetType != 'image' && targetType != 'video'){
+				window.open(targetData,'_blank');
+				return false;
+			}
+			if(targetType == 'image'){
+			    // Create a modal view class
+		    	var Modal = Backbone.Modal.extend({
+		    	  template: (_.template(modalTemplate))(),
+		    	  cancelEl: '.bbm-button'
+		    	});
+				// Render an instance of your modal
+				var modalView = new Modal();
+				$('body').append(modalView.render().el);
+				$('.bbm-modal__section').html('<img src="' + targetData +'">');
+			}
 			return false;
 		},
 

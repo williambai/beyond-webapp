@@ -33,10 +33,10 @@ define(['text!templates/statusForm.html'],function(statusFormTemplate){
 				contentType:false,//MUST be false
 				success: function(data){
 					if(data && data.type){
-						if(/jpg|png/.test(data.type)){
+						// if(/jpg|png/.test(data.type)){
 							that.$('.attachments').append('<span class="attachment"><input type="hidden" name="attachment" value="'+ data.filename +'"><img src="'+ data.filename +'" width="80px" height="80px">&nbsp;</span>');
 							that.$('input[name=file]').val('');
-						}
+						// }
 					}
 				},
 				error: function(err){

@@ -15,37 +15,19 @@
 	<div class="media-body">
 
 		<% if(ui.showToUser){ %>
-		<h4 class="media-heading">
-			<a href="#status/<%= model.toId %>
-				">
-				<%= model.toUser[model.toId].username %></a>&nbsp;<i class="fa fa-chevron-left small"></i><i class="fa fa-chevron-left small"></i>&nbsp;<span class="small">我</span>
-		</h4>
+			<h4 class="media-heading">
+				<a href="#status/<%= model.toId %>
+					">
+					<%= model.toUser[model.toId].username %></a>&nbsp;<i class="fa fa-chevron-left small"></i><i class="fa fa-chevron-left small"></i>&nbsp;<span class="small">我</span>
+			</h4>
 		<% }else{ %>
-		<h4 class="media-heading">
-			<a href="#status/<%= model.fromId %>
-				">
-				<%= model.fromUser[model.fromId].username %></a>&nbsp;<i class="fa fa-chevron-right small"></i><i class="fa fa-chevron-right small"></i>&nbsp;<span class="small">我</span>
-		</h4>
+			<h4 class="media-heading">
+				<a href="#status/<%= model.fromId %>
+					">
+					<%= model.fromUser[model.fromId].username %></a>&nbsp;<i class="fa fa-chevron-right small"></i><i class="fa fa-chevron-right small"></i>&nbsp;<span class="small">我</span>
+			</h4>
 		<% } %>
-
-		<% if(typeof model.status == 'string'){ %>
-		<p>
-			<%= model.status %></p>
-		<% }else if(model.status.MsgType == 'text'){ %>
-		<p>
-			<%= model.status.Content %></p>
-		<% }else if(model.status.MsgType == 'image'){ %>
-		<% if(model.status.PicUrl){ %>
-		<img src="<%= model.status.Url %>
-		">
-		<% } %>
-		<% }else if(model.status.MsgType == 'mixed'){ %>
-		<p>
-			<%= model.status.Content %></p>
-		<% for(var i=0; i<model.status.Urls.length; i++){ %>
-		<img src="<%= model.status.Urls[i] %>" width="<%= parseInt(50/model.status.Urls.length-1) %>%">
-		<% } %>
-		<% } %>
+		<%= model.status %>
 		<p>
 			<%= model.deltatime %>
 			<span class="pull-right">

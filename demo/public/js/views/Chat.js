@@ -1,10 +1,10 @@
-define(['text!templates/imageModal.html','text!templates/chat.html','views/ChatBottomBar','views/ScrollableView','views/ChatItem','models/Chat','models/ChatCollection'], function(imageModalTemplate, chatSessionTemplate,BottomBarView,ScrollableView,ChatItemView,Chat,ChatCollection){
+define(['text!templates/modal.html','text!templates/chat.html','views/ChatBottomBar','views/ScrollableView','views/ChatItem','models/Chat','models/ChatCollection'], function(modalTemplate, chatSessionTemplate,BottomBarView,ScrollableView,ChatItemView,Chat,ChatCollection){
 	var ChatView = ScrollableView.extend({
 		template: _.template(chatSessionTemplate),
 		el: '#content',
 
 		events: {
-			'click .chat-content img': 'showImageInModal',
+			'click .chat-content img': 'showInModal',
 			'scroll': 'scrollUp',
 		},
 
@@ -24,18 +24,27 @@ define(['text!templates/imageModal.html','text!templates/chat.html','views/ChatB
 			this.on('load', this.load, this);
 		},
 
-		showImageInModal: function(evt){
-			var imageUrl = $(evt.currentTarget).attr('src');
-		    // Create a modal view class
-		    var Modal = Backbone.Modal.extend({
-		      template: (_.template(imageModalTemplate))({src: imageUrl}),
-		      cancelEl: '.bbm-button'
-		    });
-			// // Render an instance of your modal
-			var modalView = new Modal();
-			$('body').append(modalView.render().el);
+		showInModal: function(evt){
+			var targetType = $(evt.currentTarget).attr('target-type');			
+			var targetData = $(evt.currentTarget).attr('target-data');
+			if(targetType != 'image' && targetType != 'video'){
+				window.open(targetData,'_blank');
+				return false;
+			}
+			if(targetType == 'image'){
+			    // Create a modal view class
+		    	var Modal = Backbone.Modal.extend({
+		    	  template: (_.template(modalTemplate))(),
+		    	  cancelEl: '.bbm-button'
+		    	});
+				// Render an instance of your modal
+				var modalView = new Modal();
+				$('body').append(modalView.render().el);
+				$('.bbm-modal__section').html('<img src="' + targetData +'">');
+			}
 			return false;
 		},
+
 		load: function(){
 			this.render();
 			this.collection.fetch({reset:true});

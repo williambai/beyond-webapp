@@ -65,15 +65,15 @@ define(['text!templates/projectBottomBar.html','text!templates/projectBottomBar2
 				contentType:false,//MUST be false
 				success: function(data){
 					if(data && data.type){
-						if(/jpg|png/.test(data.type)){
+						// if(/jpg|png/.test(data.type)){
 							that.socketEvents.trigger('socket:project:chat',{
 								action: 'chat',
 								to: that.id,
-								text: 'http://' + location.host + '/' + data.filename
+								text: 'http://' + location.host + data.filename
 							});
-							that.$('input[name=file]').val('');
-						}
+						// }
 					}
+					that.$('input[name=file]').val('');
 				},
 				error: function(err){
 					that.$('input[name=file]').val('');

@@ -1,4 +1,4 @@
-define(['text!templates/status.html','text!templates/commentForm.html','text!templates/imageModal.html'],function(statusTemplate,commentFormTemplate, modalTemplate){
+define(['text!templates/status.html','text!templates/commentForm.html','text!templates/modal.html'],function(statusTemplate,commentFormTemplate, modalTemplate){
 	var StatusBaseView = Backbone.View.extend({
 		// tagName: 'li',
 		template: _.template(statusTemplate),
@@ -24,36 +24,57 @@ define(['text!templates/status.html','text!templates/commentForm.html','text!tem
 		},
 
 		_convertStatus: function(){
-			var model = this.model;
-			var statusString = model.get('status');
-			if(!statusString){
+			var statusObject = this.model.get('status');
+			if(!statusObject){
 				return;
 			}
-			if(typeof statusString == 'string'){
-				statusString = statusString.trim();
+			if(typeof statusObject == 'string'){
+				var statusString = statusObject.trim();
+				var newString = '';
 				if(!/^http/.test(statusString)){
-					// this.model.set('status', {
-					// 	MsgType:'text',
-					// 	Content: statusString
-					// });
+					newString += '<p>'+ statusString + '</p>'
 				}else{
 					if(/^http.*(png|jpg|git)$/.test(statusString)){
-						this.model.set('status', {
-							MsgType:'image',
-							PicUrl: statusString
-						});
+						newString += '<img src="' + statusString +'" width="50%" target-data="'+ statusString +'" target-type="image">';
 					}else if(/^http.*(mp4|mov)$/.test(statusString)){
-
 					}else if(/^http.*(mp3|amr)$/.test(statusString)){
 
+					}else if(/[pdf]$/.test(statusString)){
+						newString += '<a href="' + statusString + '">';
+						newString += '<img src="images/pdf.png" target-data="'+ statusString +'" target-type="pdf">';
+						newString += '</a>'; 
 					}else{
-						$.get('/website/thumbnail?url=' + encodeURIComponent(statusString),
-							function success(response){
-								console.log(response);
-							}
-						);
+						newString += '<a href="' + statusString + '">';
+						newString += '<img src="images/unknown.png" target-data="'+ statusString +'" target-type="unknown">';
+						newString += '</a>'; 
 					}
 				}
+				this.model.set('status', newString);
+			}else{
+				var newStatus = '';
+				if(statusObject.MsgType == 'text'){
+					newStatus += '<p>' + statusObject.Content + '</p>';
+				}else if(statusObject.MsgType == 'image'){ 
+					if(statusObject.PicUrl){
+						newStatus += '<p><img src="' + statusObject.PicUrl + '">';	
+					}
+				}else if(statusObject.MsgType == 'mixed'){
+					newStatus += '<p>' + statusObject.Content + '</p>';
+					for(var i=0; i<statusObject.Urls.length; i++){
+						if(/[png|jpg]$/.test(statusObject.Urls[i])){
+							newStatus += '<img src="' + statusObject.Urls[i] +'" width="' + parseInt(50/statusObject.Urls.length-1) +'%" target-data="'+ statusObject.Urls[i] +'" target-type="image">';
+						}else if(/[pdf]$/.test(statusObject.Urls[i])){
+							newStatus += '<a href="' + statusObject.Urls[i] + '">';
+							newStatus += '<img src="images/pdf.png" target-data="'+ statusObject.Urls[i] +'" target-type="pdf">';
+							newStatus += '</a>'; 
+						}
+					}
+				}else if(statusObject.MsgType == 'link'){
+					newStatus += '<a href="' + statusObject.Url + '">';
+					newStatus += '<h4>' +statusObject.Title + '</h4>';
+					newStatus += '<p>'+ statusObject.Description + '</p>';
+				}
+				this.model.set('status', newStatus);
 			}
 		},
 
@@ -75,15 +96,23 @@ define(['text!templates/status.html','text!templates/commentForm.html','text!tem
 		},
 
 		showInModal: function(evt){
-			var imageUrl = $(evt.currentTarget).attr('src');
-		    // Create a modal view class
-		    var Modal = Backbone.Modal.extend({
-		      template: (_.template(modalTemplate))({src: imageUrl}),
-		      cancelEl: '.bbm-button'
-		    });
-			// // Render an instance of your modal
-			var modalView = new Modal();
-			$('body').append(modalView.render().el);
+			var targetType = $(evt.currentTarget).attr('target-type');			
+			var targetData = $(evt.currentTarget).attr('target-data');
+			if(targetType != 'image' && targetType != 'video'){
+				window.open(targetData,'_blank');
+				return false;
+			}
+			if(targetType == 'image'){
+			    // Create a modal view class
+		    	var Modal = Backbone.Modal.extend({
+		    	  template: (_.template(modalTemplate))(),
+		    	  cancelEl: '.bbm-button'
+		    	});
+				// Render an instance of your modal
+				var modalView = new Modal();
+				$('body').append(modalView.render().el);
+				$('.bbm-modal__section').html('<img src="' + targetData +'">');
+			}
 			return false;
 		},
 

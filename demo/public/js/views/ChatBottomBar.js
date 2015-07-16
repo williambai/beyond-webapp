@@ -60,7 +60,7 @@ define(['text!templates/chatBottomBar.html', 'models/Chat'],function(bottomBarTe
 				success: function(data){
 					if(data && data.type){
 						var chatText = 'http://' + location.host + '/' + data.filename;
-						if(/jpg|png/.test(data.type)){
+						// if(/jpg|png/.test(data.type)){
 							var chatObject = {
 								fromId: 'me',
 								toId: that.id,
@@ -78,7 +78,7 @@ define(['text!templates/chatBottomBar.html', 'models/Chat'],function(bottomBarTe
 								text: chatText
 							});
 							that.$('input[name=file]').val('');
-						}
+						// }
 					}
 				},
 				error: function(err){
