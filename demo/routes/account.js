@@ -1,4 +1,5 @@
  exports = module.exports = function(app,models){
+ 	var debug = require('debug')('account:router');
  	var async = require('async');
  	var path = require('path');
  	var fs = require('fs');

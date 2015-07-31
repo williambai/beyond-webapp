@@ -14,13 +14,17 @@ define(['Sockets'], function(sio){
 
 		var connectSocket = function(socketAccount){
 			accountId = socketAccount && socketAccount.accountId;
-			socket = sio.connect();
+			socket = sio();
 			socket
 				.on('connect_failed', function(reason){
 					console.error('Unable to connect',reason);
 				})
 				.on('connect', function(){
 					console.info('established a connection successfully.');
+					/* logout */
+					eventDispatcher.on('app:logout', function(){
+						socket.close();
+					});
 					//in --> out
 					eventDispatcher.on('socket:chat',handleSendChat);
 					eventDispatcher.on('socket:project:chat', handleSendPorject);
@@ -33,6 +37,7 @@ define(['Sockets'], function(sio){
 				})
 				.on('disconnect',function(){
 					console.info('socket disconnected by server.');
+					eventDispatcher.off('app:logout');
 					eventDispatcher.off('scoket:chat',handleSendChat);
 					eventDispatcher.off('socket:project:chat', handleSendPorject);
 					// socket.removeListener('contactEvent',handleContactEvent);

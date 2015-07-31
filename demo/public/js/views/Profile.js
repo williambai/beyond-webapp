@@ -41,9 +41,9 @@ define(['text!templates/loading.html','text!templates/profile.html','views/Statu
 		},
 
 		logout: function(){
-			$.get('/logout');
 			this.appEvents.trigger('logout');
-			// this.socketEvents.trigger('app:logout');
+			this.socketEvents.trigger('app:logout');
+			$.get('/logout');
 			window.location.hash = 'login';
 			return false;
 		},
