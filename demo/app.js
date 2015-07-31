@@ -38,10 +38,12 @@ app.randomHex = function(){
 
 //import the models
 var models = {
-		Status: require('./models/Status')(app,config,mongoose,nodemailer),
 		Account: require('./models/Account')(app,config,mongoose,nodemailer),
+		AccountMessage: require('./models/AccountMessage')(app,config,mongoose,nodemailer),
+		AccountChat: require('./models/AccountChat')(app,config,mongoose,nodemailer),
+
 		Project: require('./models/Project')(app,config,mongoose,nodemailer),
-		Chat: require('./models/AccountChat')(app,config,mongoose,nodemailer),
+		ProjectMessage: require('./models/ProjectMessage')(app,config,mongoose,nodemailer),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

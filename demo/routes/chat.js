@@ -149,7 +149,7 @@ exports =module.exports = function(app,models){
 				var from = accountId;
 				var to = data.to;
 				if(data.action == 'chat'){
-					models.Chat.add(from,to,{
+					models.AccountChat.add(from,to,{
 						username: session.username,
 						avatar: session.avatar,
 						status: data.text,
@@ -184,7 +184,7 @@ exports =module.exports = function(app,models){
 					}
 				};
 			if(action == 'chat'){
-				models.Status.add(accountId,to,session.username,session.avatar,'','',text);
+				models.ProjectMessage.add(accountId,to,session.username,session.avatar,'','','',text);
 				app.triggerEvent('project:' + to, message);
 			}
 		});
@@ -202,7 +202,7 @@ exports =module.exports = function(app,models){
 		var id1 = req.session.accountId;
 		var id2 = req.params.toId;
 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
-		models.Chat.getChatHistory(id1,id2,page,function(docs){
+		models.AccountChat.getChatHistory(id1,id2,page,function(docs){
 			res.send(docs);
 		});
 	});
