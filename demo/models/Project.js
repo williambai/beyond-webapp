@@ -1,5 +1,5 @@
 module.exports = exports = function(app, config,mongoose,nodemailer){
-	var debug = true;
+	var project = null;
 
 	var projectSchema = new mongoose.Schema({
 		accountId: {type: mongoose.Schema.ObjectId},
@@ -13,17 +13,22 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 
 	mongoose.projectSchema = projectSchema;
 
-	var Project = mongoose.model('Project', projectSchema);
+	var ProjectModel = mongoose.model('Project', projectSchema);
 
-	var defaultCallback = function(err){
+	var Project = function(model){
+		this.model = ProjectModel;
+	};
+
+	Project.prototype.debug = true;
+	Project.prototype.defaultCallback = function(err){
 			if(err){
 				return console.log(err);
 			}
 			return console.log('Project Save/Remove/Update successfully.');
 		};
 	
-	var add = function(accountId,options,callback){
-			var project = new Project({
+	Project.prototype.add = function(accountId,options,callback){
+			var project = new this.model({
 				accountId: accountId,
 				name: options.name || '',
 				description: options.description || '',
@@ -32,7 +37,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				closed: false,
 			});
 			project.save(function(err){
-				debug && defaultCallback(err);
+				this.debug && this.defaultCallback(err);
 				if(err){
 					callback && callback(null);
 				}else{
@@ -41,12 +46,12 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	var update = function(id, options, callback){
+	Project.prototype.update = function(id, options, callback){
 			options.updatetime = options.updatetime || new Date();
-			Project
+			this.model
 				.where({_id:id})
 				.update({$set: options}, function(err){
-					debug && defaultCallback(err);
+					this.debug && this.defaultCallback(err);
 					if(err){
 						callback && callback(null);
 					}else{
@@ -55,15 +60,15 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				});
 		};
 
-	var close = function(id, callback){
+	Project.prototype.close = function(id, callback){
 			var set = {
 				closed: true,
 				updatetime: new Date()
 			};
-			Project
+			this.model
 				.where({_id:id})
 				.update({$set: set}, function(err){
-					debug && defaultCallback(err);
+					this.debug && this.defaultCallback(err);
 					if(err){
 						callback && callback(null);
 					}else{
@@ -72,15 +77,15 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				});
 		};
 
-	var open = function(id, callback){
+	Project.prototype.open = function(id, callback){
 			var set = {
 				closed: false,
 				updatetime: new Date()
 			};
-			Project
+			this.model
 				.where({_id:id})
 				.update({$set: set}, function(err){
-					debug && defaultCallback(err);
+					this.debug && this.defaultCallback(err);
 					if(err){
 						callback && callback(null);
 					}else{
@@ -89,9 +94,9 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				});
 		};
 
-	var remove = function(id,callback){
-			Project.remove({_id:id}, function(err){
-				debug && defaultCallback(err);
+	Project.prototype.remove = function(id,callback){
+			this.model.remove({_id:id}, function(err){
+				this.debug && this.defaultCallback(err);
 				if(err){
 					callback && callback(null);
 				}else{
@@ -100,9 +105,9 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	var getById = function(id, callback){
-			Project.findOne({_id:id}, function(err,doc){
-				debug && defaultCallback(err);
+	Project.prototype.getById = function(id, callback){
+			this.model.findOne({_id:id}, function(err,doc){
+				this.debug && this.defaultCallback(err);
 				if(err){
 					callback && callback(null);
 				}else{
@@ -111,17 +116,17 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	var getOpenedByAccountId = function(accountId,page,callback){
+	Project.prototype.getOpenedByAccountId = function(accountId,page,callback){
 			page = (!page || page < 0) ? 0 : page;
 			var per = 20;
 			if(accountId){
-				Project
+				this.model
 					.find({accountId:accountId,closed: false})
 					.sort({updatetime:-1})
 					.skip(page*per)
 					.limit(per)
 					.exec(function(err,docs){
-						debug && defaultCallback(err);
+						this.debug && this.defaultCallback(err);
 						if(err){
 							callback && callback(null);
 						}else{
@@ -132,17 +137,17 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			}
 		};
 
-	var getByAccountId = function(accountId,page,callback){
+	Project.prototype.getByAccountId = function(accountId,page,callback){
 			page = (!page || page < 0) ? 0 : page;
 			var per = 20;
 			if(accountId){
-				Project
+				this.model
 					.find({accountId:accountId})
 					.sort({updatetime:-1})
 					.skip(page*per)
 					.limit(per)
 					.exec(function(err,docs){
-						debug && defaultCallback(err);
+						this.debug && this.defaultCallback(err);
 						if(err){
 							callback && callback(null);
 						}else{
@@ -151,13 +156,13 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					});
 
 			}else{
-				Project
+				this.model
 					.find({})
 					.sort({updatetime:-1})
 					.skip(page*per)
 					.limit(per)
 					.exec(function(err,docs){
-						debug && defaultCallback(err);
+						this.debug && this.defaultCallback(err);
 						if(err){
 							callback && callback(null);
 						}else{
@@ -167,17 +172,17 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			}
 		};
 
-	var addContactById = function(id,contactId, callback){
-			Project.findOne({_id:id, closed: false}, function(err,doc){
+	Project.prototype.addContactById = function(id,contactId, callback){
+			this.model.findOne({_id:id, closed: false}, function(err,doc){
 				if(err || doc == null){
-					debug && defaultCallback(err);
+					this.debug && this.defaultCallback(err);
 					callback && callback(null);
 					return;
 				}
 				if(doc){
 					doc.contacts.push(contactId);
 					doc.save(function(err){
-						debug && defaultCallback(err);
+						this.debug && this.defaultCallback(err);
 						if(err){
 							callback && callback(null);
 						}else{
@@ -188,17 +193,17 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	var removeContactById = function(id,contactId,callback){
-			Project.findOne({_id:id, closed: false}, function(err,doc){
+	Project.prototype.removeContactById = function(id,contactId,callback){
+			this.model.findOne({_id:id, closed: false}, function(err,doc){
 				if(err || doc == null){
-					debug && defaultCallback(err);
+					this.debug && this.defaultCallback(err);
 					callback && callback(null);
 					return;
 				}
 				if(doc){
 					doc.contacts.pull(contactId);
 					doc.save(function(err){
-						debug && defaultCallback(err);
+						this.debug && this.defaultCallback(err);
 						if(err){
 							callback && callback(null);
 						}else{
@@ -209,12 +214,12 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			})
 		};
 
-	var getContactById = function(id,page,callback){
+	Project.prototype.getContactById = function(id,page,callback){
 			id = id || 0;
 			page = (!page || page<0) ? 0 : page;
 			var per = 20;
-			Project.findOne({_id:id},function(err,doc){
-				debug && defaultCallback(err);
+			this.model.findOne({_id:id},function(err,doc){
+				this.debug && this.defaultCallback(err);
 				if(err || doc == null){
 					callback && callback(null);
 					return;
@@ -223,19 +228,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				}
 			});
 		};
-
-	return {
-		Project: Project,
-		add: add,
-		remove: remove,
-		update: update,
-		open: open,
-		close: close,
-		getById: getById,
-		getOpenedByAccountId: getOpenedByAccountId,
-		getByAccountId: getByAccountId,
-		addContactById: addContactById,
-		removeContactById: removeContactById,
-		getContactById: getContactById,
-	};	
+	if(!project){
+		project = new Project(ProjectModel);
+	}
+	return project;
 };

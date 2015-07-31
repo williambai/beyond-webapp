@@ -1,5 +1,5 @@
 module.exports = exports = function(app, config,mongoose,nodemailer){
-	var debug = true;
+	var account = null;
 
 	var smtpTransport = require('nodemailer-smtp-transport');
 
@@ -25,8 +25,6 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 	contactSchema.virtual('online').get(function(){
 		return app.isAccountOnline(this.get('accountId'));
 	});
-
-	mongoose.contactSchema = contactSchema;
 
 	var accountSchema = new mongoose.Schema({
 			'email' : {type: String, unique: true},
@@ -59,20 +57,25 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 
 	mongoose.accountSchema = accountSchema;
 
-	var Account = mongoose.model('Account', accountSchema);
+	var AccountModel = mongoose.model('Account', accountSchema);
 
-	var defaultCallback = function(err){
+	var Account = function(model){
+		this.model = model;
+	};
+
+	Account.prototype.debug = true;
+	Account.prototype.defaultCallback = function(err){
 			if(err){
 				return console.log(err);
 			}
 			return console.log('Account Save/Remove/Update successfully.');
 		};
 
-	var register = function(email,password,username,registerConfirmUrl,callback){
+	Account.prototype.register = function(email,password,username,registerConfirmUrl,callback){
 			var shaSum = crypto.createHash('sha256');
 			shaSum.update(password);
 
-			var user = new Account({
+			var user = new this.model({
 				email: email,
 				username: username,
 				realname: username,
@@ -82,7 +85,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				avatar: ''
 			});
 			user.save(function(err){
-				debug && defaultCallback(err);
+				this.debug && this.defaultCallback(err);
 				if(err){
 					callback && callback(null);					
 				}else{
@@ -97,7 +100,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					subject: 'SocialWork Registration Confirm Request',
 					text: 'Click here to finish your registration: ' + registerConfirmUrl
 				},function forgetPasswordCallback(err){
-					debug && defaultCallback(err);
+					this.debug && this.defaultCallback(err);
 					if(err){
 						callback && callback(null);
 					}else{
@@ -107,8 +110,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	var registerConfirm = function(email,code,callback){
-			Account
+	Account.prototype.registerConfirm = function(email,code,callback){
+			this.model
 				.findOneAndUpdate({
 						email: email,
 						registerCode: code
@@ -117,7 +120,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 						$set: {enable: 0}
 					},
 					function(err){
-						debug && defaultCallback(err);
+						this.debug && this.defaultCallback(err);
 						if(err){
 							callback && callback(null);
 						}else{
@@ -127,16 +130,16 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				);
 		};
 
-	var login = function(email,password, callback){
+	Account.prototype.login = function(email,password, callback){
 			var shaSum = crypto.createHash('sha256');
 			shaSum.update(password);
 			
-			Account.findOne({
+			this.model.findOne({
 				email: email,
 				password: shaSum.digest('hex'),
 				// enable: 0,
 			},function(err,doc){
-				debug && defaultCallback(err);
+				this.debug && this.defaultCallback(err);
 				if(err){
 					callback && callback(null);
 				}else{
@@ -145,7 +148,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	var inviteFriend = function(emails, inviteUrl, username, email, callback){
+	Account.prototype.inviteFriend = function(emails, inviteUrl, username, email, callback){
 			var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
 			inviteUrl ? inviteUrl : 'http://localhost:8080';
 			emails.forEach(function(email){
@@ -155,7 +158,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					subject: '我的工作社交网--邀请信',
 					text: '您的朋友' + username + '(' + email + ')' + '邀请您加入。请点击：' + inviteUrl,
 				},function inviteCallback(err){
-					debug && defaultCallback(err);
+					this.debug && this.defaultCallback(err);
 					if(err){
 						callback && callback(null);
 					}else{
@@ -165,10 +168,10 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	var forgotPassword = function(email,resetPasswordUrl,callback){
-		Account.findOne({email:email},function(err,doc){
+	Account.prototype.forgotPassword = function(email,resetPasswordUrl,callback){
+		this.model.findOne({email:email},function(err,doc){
 			if(err){
-				debug && defaultCallback(err);
+				this.debug && this.defaultCallback(err);
 				callback && callback(null);
 				return;
 			}
@@ -181,7 +184,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				subject: 'SocialWork Password Reset Request',
 				text: 'Click here to reset your password: ' + resetPasswordUrl
 			},function forgetPasswordCallback(err){
-				debug && defaultCallback(err);
+				this.debug && this.defaultCallback(err);
 				if(err){
 					callback && callback(null);
 				}else{
@@ -191,10 +194,10 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		});
 	};
 
-	var resetPassword = function(accountId,newPassword, callback){
+	Account.prototype.resetPassword = function(accountId,newPassword, callback){
 			var shaSum = crypto.createHash('sha256');
 			shaSum.update(newPassword);
-			Account.update(
+			this.model.update(
 				{
 					_id: accountId
 				},
@@ -206,7 +209,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				},
 				function(err){
 					console.log('Change password done for account ' + accountId);
-					debug && defaultCallback(err);
+					this.debug && this.defaultCallback(err);
 					if(err){
 						callback && callback(null);
 					}else{
@@ -215,9 +218,9 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	var findById = function(accountId,callback){
-		Account.findOne({_id: accountId}, function(err,doc){
-			debug && defaultCallback(err);
+	Account.prototype.findById = function(accountId,callback){
+		this.model.findOne({_id: accountId}, function(err,doc){
+			this.debug && this.defaultCallback(err);
 			if(err){
 				callback && callback(null);
 			}else{
@@ -226,15 +229,15 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		});
 	};
 
-	var findAll = function(accountIds, page, callback){
+	Account.prototype.findAll = function(accountIds, page, callback){
 		page = (!page || page<0) ? 0 : page;
 		var per = 20;
-		Account
+		this.model
 			.find({_id: {$in: accountIds}})
 			.skip(page*per)
 			.limit(per)
 			.exec(function(err,docs){
-				debug && defaultCallback(err);
+				this.debug && this.defaultCallback(err);
 				if(err){
 					callback && callback(null);
 				}else{
@@ -243,7 +246,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	var addContact = function(account, contactJson, callback){
+	Account.prototype.addContact = function(account, contactJson, callback){
 		var contactNew = {
 			accountId: contactJson._id,
 			username: contactJson.username,
@@ -259,7 +262,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		if(contactNew && (contactJson._id.toString() != account._id.toString())){
 			account.contacts.push(contactNew);
 			account.save(function(err){
-				debug && defaultCallback(err);
+				this.debug && this.defaultCallback(err);
 				if(err){
 					callback && callback(null);
 				}else{
@@ -269,13 +272,13 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		}
 	};
 
-	var removeContact = function(account, contactId, callback){
+	Account.prototype.removeContact = function(account, contactId, callback){
 		if(null == account.contacts || account.contacts.length == 0) return;
 		account.contacts.forEach(function(contact){
 			if(contactId == contact.accountId){
 				account.contacts.remove(contact);
 				account.save(function(err){
-					debug && defaultCallback(err);
+					this.debug && this.defaultCallback(err);
 					if(err){
 						callback && callback(null);
 					}else{
@@ -286,7 +289,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		});
 	};
 
-	var hasContact = function(account, contactId){
+	Account.prototype.hasContact = function(account, contactId){
 		if(null == account.contacts) return false;
 
 		account.contacts.forEach(function(contact){
@@ -297,15 +300,15 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		return false;
 	};
 
-	var findByString = function(searchStr,callback){
+	Account.prototype.findByString = function(searchStr,callback){
 		var searchRegex = new RegExp(searchStr,'i');
-		Account.find({
+		this.model.find({
 			$or: [
 				{'username': {$regex: searchRegex}},
 				{'email': {$regex: searchRegex}}
 			]
 		},function(err,accounts){
-			debug && defaultCallback(err);
+			this.debug && this.defaultCallback(err);
 			if(err || accounts.length == 0){
 				callback && callback(null);
 			}else{
@@ -313,15 +316,15 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			}
 		});
 	};
-	var updateAvatar = function(id,avatar,callback){
-			Account
+	Account.prototype.updateAvatar = function(id,avatar,callback){
+			this.model
 				.findByIdAndUpdate(
 					id,
 					{
 						avatar: avatar
 					},
 					function(err){
-						debug && defaultCallback(err);
+						this.debug && this.defaultCallback(err);
 						if(err){
 							callback && callback(null);
 						}else{
@@ -331,7 +334,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				);
 		};
 
-	var addProject = function(id, projectId,name,type,callback){
+	Account.prototype.addProject = function(id, projectId,name,type,callback){
 			var projectNew = {
 				_id: projectId,
 				name: name,
@@ -340,8 +343,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				agree: 0,
 			};
 
-			Account.findOne({_id:id}, function(err,account){
-				debug && defaultCallback(err);
+			this.model.findOne({_id:id}, function(err,account){
+				this.debug && this.defaultCallback(err);
 				if(err || account == null){
 					callback && callback(null);
 					return;
@@ -355,7 +358,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				if(projectNew){
 					account.projects.push(projectNew);
 					account.save(function(err){
-						debug && defaultCallback(err);
+						this.debug && this.defaultCallback(err);
 						if(err){
 							callback && callback(null);
 						}else{
@@ -366,9 +369,9 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});	
 		};
 
-	var removeProject = function(id, projectId){
-			Account.findOne({_id: id}, function(err,account){
-				debug && defaultCallback(err);
+	Account.prototype.removeProject = function(id, projectId){
+			this.model.findOne({_id: id}, function(err,account){
+				this.debug && this.defaultCallback(err);
 				if(err || account == null){
 					callback && callback(null);
 					return;
@@ -379,7 +382,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					if(projectId == project._id){
 						account.projects.remove(project);
 						account.save(function(err){
-							debug && defaultCallback(err);
+							this.debug && this.defaultCallback(err);
 							if(err){
 								callback && callback(null);
 							}else{
@@ -391,13 +394,13 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	var updateAccount = function(id,account,callback){
-			Account
+	Account.prototype.updateAccount = function(id,account,callback){
+			this.model
 				.findByIdAndUpdate(
 					id,
 					account,
 					function(err){
-						debug && defaultCallback(err);
+						this.debug && this.defaultCallback(err);
 						if(err){
 							callback && callback(null);
 						}else{
@@ -406,24 +409,8 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					}
 				);
 		};
-
-	return {
-		Account: Account,
-		findById: findById,
-		findAll: findAll,
-		register: register,
-		registerConfirm: registerConfirm,
-		inviteFriend: inviteFriend,
-		forgotPassword: forgotPassword,
-		resetPassword: resetPassword,
-		login: login,
-		addContact: addContact,
-		removeContact: removeContact,
-		hasContact: hasContact,
-		findByString: findByString,
-		updateAvatar: updateAvatar,
-		updateAccount: updateAccount,
-		addProject: addProject,
-		removeProject: removeProject,
-	};
+	if(!account){
+		account = new Account(AccountModel);
+	}
+	return account;
 };
