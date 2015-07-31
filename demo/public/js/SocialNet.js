@@ -7,12 +7,12 @@ define(['router','SocialNetSocket'],function(router,SocialNetSocket){
 				currentChatView: router.currentChatView,
 				chatSessions: router.chatSessions,
 			});
-			socket.initialize();
+			socket();
 			checkLogin(runApplication);
 		};
 
 		var checkLogin = function(callback){
-			$.ajax('/account/authenticated',{
+			$.ajax('/authenticated',{
 				mathod: 'GET',
 				success: function(data){
 					router.appEvents.trigger('logined',data);
@@ -34,9 +34,7 @@ define(['router','SocialNetSocket'],function(router,SocialNetSocket){
 			Backbone.history.start();
 		};
 
-		return {
-			initialize: initialize
-		};
+		return initialize;
 	};
 
 	return SocialNet;

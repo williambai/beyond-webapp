@@ -1,3 +1,3 @@
 require(['SocialNet'], function(SocialNet){
-	(new SocialNet).initialize();
+	(new SocialNet)();
 });

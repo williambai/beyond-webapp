@@ -1,4 +1,4 @@
-define(['text!templates/status.html','text!templates/commentForm.html','text!templates/modal.html'],function(statusTemplate,commentFormTemplate, modalTemplate){
+define(['text!templates/status.html','text!templates/commentForm.html','text!templates/modal.html','views/Util'],function(statusTemplate,commentFormTemplate, modalTemplate, MessageUtil){
 	var StatusBaseView = Backbone.View.extend({
 		// tagName: 'li',
 		template: _.template(statusTemplate),
@@ -19,79 +19,29 @@ define(['text!templates/status.html','text!templates/commentForm.html','text!tem
 
 		initialize: function(options){
 			this.account = options.account;
-			this._convertStatus();
+			this._convertContent();
 			this._transformTime();
+			this._transformAvatar();
 		},
 
-		_convertStatus: function(){
-			var statusObject = this.model.get('status');
-			if(!statusObject){
-				return;
-			}
-			if(typeof statusObject == 'string'){
-				var statusString = statusObject.trim();
-				var newString = '';
-				if(!/^http/.test(statusString)){
-					newString += '<p>'+ statusString + '</p>'
-				}else{
-					if(/^http.*(png|jpg|git)$/.test(statusString)){
-						newString += '<img src="' + statusString +'" width="50%" target-data="'+ statusString +'" target-type="image">';
-					}else if(/^http.*(mp4|mov)$/.test(statusString)){
-					}else if(/^http.*(mp3|amr)$/.test(statusString)){
-
-					}else if(/[pdf]$/.test(statusString)){
-						newString += '<a href="' + statusString + '">';
-						newString += '<img src="images/pdf.png" target-data="'+ statusString +'" target-type="pdf">';
-						newString += '</a>'; 
-					}else{
-						newString += '<a href="' + statusString + '">';
-						newString += '<img src="images/unknown.png" target-data="'+ statusString +'" target-type="unknown">';
-						newString += '</a>'; 
-					}
-				}
-				this.model.set('status', newString);
-			}else{
-				var newStatus = '';
-				if(statusObject.MsgType == 'text'){
-					newStatus += '<p>' + statusObject.Content + '</p>';
-				}else if(statusObject.MsgType == 'image'){ 
-					if(statusObject.PicUrl){
-						newStatus += '<p><img src="' + statusObject.PicUrl + '">';	
-					}
-				}else if(statusObject.MsgType == 'mixed'){
-					newStatus += '<p>' + statusObject.Content + '</p>';
-					for(var i=0; i<statusObject.Urls.length; i++){
-						if(/[png|jpg]$/.test(statusObject.Urls[i])){
-							newStatus += '<img src="' + statusObject.Urls[i] +'" width="' + parseInt(50/statusObject.Urls.length-1) +'%" target-data="'+ statusObject.Urls[i] +'" target-type="image">';
-						}else if(/[pdf]$/.test(statusObject.Urls[i])){
-							newStatus += '<a href="' + statusObject.Urls[i] + '">';
-							newStatus += '<img src="images/pdf.png" target-data="'+ statusObject.Urls[i] +'" target-type="pdf">';
-							newStatus += '</a>'; 
-						}
-					}
-				}else if(statusObject.MsgType == 'link'){
-					newStatus += '<a href="' + statusObject.Url + '">';
-					newStatus += '<h4>' +statusObject.Title + '</h4>';
-					newStatus += '<p>'+ statusObject.Description + '</p>';
-				}
-				this.model.set('status', newStatus);
-			}
+		_convertContent: function(){
+			var contentObject = this.model.get('content');
+			var newContent = MessageUtil.convertContent(contentObject);
+			this.model.set('content',newContent);
 		},
 
 		_transformTime: function(){
 			var createtime = this.model.get('createtime');
-			var deltatime = (_.now() - new Date(createtime).getTime())/1000;
-			var days = parseInt(deltatime/(24*60*60));
-			var hours = parseInt(deltatime/(60*60));
-			var mins = parseInt(deltatime/60);
-			if(days>0){
-				this.model.set('deltatime', days + ' 天之前');
-			}else if(hours>0){
-				this.model.set('deltatime', hours + ' 小时之前');
-			}else if(mins>0){
-				this.model.set('deltatime', mins + ' 分钟之前');
-			}else{
-				this.model.set('deltatime', '刚刚');
+			var deltatime = MessageUtil.transformTime(createtime);
+			this.model.set('deltatime', deltatime);
+		},
+
+		_transformAvatar: function(){
+			var fromId = this.model.get('fromId');
+			var fromUser = this.model.get('fromUser');
+			if(fromUser && fromId){
+				this.model.set('avatar', fromUser[fromId].avatar);
+				this.model.set('username', fromUser[fromId].username);
 			}
 		},
 
@@ -120,7 +70,7 @@ define(['text!templates/status.html','text!templates/commentForm.html','text!tem
 			var that = this;
 
 			$.ajax({
-				url: '/status/'+ that.model.get('_id'),
+				url: '/message/account/vote/'+ that.model.get('_id'),
 				type: 'POST',
 				data: {
 						good: 1	
@@ -159,7 +109,7 @@ define(['text!templates/status.html','text!templates/commentForm.html','text!tem
 			var comment = this.$('textarea[name=comment]').val() || '';
 			if(comment.length>0){
 				$.ajax({
-					url: '/status/' + this.model.get('_id') + '/comment',
+					url: '/message/account/comment/' + this.model.get('_id'),
 					type: 'POST',
 					data: {
 						comment: comment

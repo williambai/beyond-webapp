@@ -1,17 +1,24 @@
-define(['text!templates/chatusers.html','views/ChatUser','views/Chat','models/ChatCollection'],
-	function(ChatUsersTemplate,ChatUserView,ChatView,ChatCollection){
+define(['views/ChatUser','views/Chat','models/ContactCollection','models/ChatCollection'],
+	function(ChatUserView,ChatView,ContactCollection,ChatCollection){
 
 	var ChatUsersView = Backbone.View.extend({
-		template: _.template(ChatUsersTemplate),
 		el: '#chat',
+		loaded: false,
 
 		initialize: function(options){
 			this.socketEvents = options.socketEvents;
+			this.collection = new ContactCollection();
+			this.collection.url = '/accounts/me/contacts';
 			this.collection.on('reset', this.onCollectionReset, this);
+			this.on('load', this.load, this);
+
 			this.currentChatView = options.currentChatView;
 			this.chats = options.chats;
 		},
-
+		load: function(){
+			this.loaded = true;
+			this.collection.fetch({reset:true});
+		},
 		onContactAdded: function(contact){
 			var chatUserView = new ChatUserView({
 				model: contact,
@@ -19,18 +26,17 @@ define(['text!templates/chatusers.html','views/ChatUser','views/Chat','models/Ch
 			});
 			chatUserView.bind('chat:start', this.startChat, this);
 			var chatUserHtml = chatUserView.render().el;
-			$(chatUserHtml).appendTo('.chat_list');
+			this.$el.append(chatUserHtml);
 		},
 
 		onCollectionReset: function(collection){
 			var that = this;
-			$('.chat_list').empty();
+			that.$el.empty();
 			collection.each(function(contact){
 				that.onContactAdded(contact);
 			});
 		},
 		render: function(){
-			this.$el.html(this.template());
 			return this;
 		},
 		// currentChatView: null,

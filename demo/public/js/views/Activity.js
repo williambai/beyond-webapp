@@ -25,7 +25,7 @@ define(['text!templates/loading.html','text!templates/activity.html','views/Stat
 			this.render();
 			this.statusListView = new StatusListView({
 				el: 'div.status-list',
-				url: '/accounts/'+ this.id + '/activity',
+				url: '/messages/account/activity/'+ this.id,
 				id:this.id,
 				account: this.account,
 				socketEvents: this.socketEvents

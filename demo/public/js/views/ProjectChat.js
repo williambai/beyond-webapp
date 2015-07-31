@@ -1,4 +1,4 @@
-define(['text!templates/modal.html','text!templates/chat.html','views/ProjectBottomBar','views/ScrollableView','views/ChatItem','models/Project','models/Status','models/StatusCollection'], function(modalTemplate,projectChatTemplate,BottomBarView,ScrollableView,ChatItemView,Project,Status,StatusCollection){
+define(['text!templates/modal.html','text!templates/chat.html','views/ProjectBottomBar','views/ScrollableView','views/ProjectChatItem','models/Project','models/Status','models/StatusCollection'], function(modalTemplate,projectChatTemplate,BottomBarView,ScrollableView,ChatItemView,Project,Status,StatusCollection){
 	var ProjectChatView = ScrollableView.extend({
 		el: '#content',
 
@@ -22,7 +22,7 @@ define(['text!templates/modal.html','text!templates/chat.html','views/ProjectBot
 			this.model.url = '/projects/' + options.id;
 			this.model.on('change', this.render,this);
 			this.collection = new StatusCollection();
-			this.collection.url = '/projects/' + this.id + '/status';
+			this.collection.url = '/messages/project/status/' + this.id;
 			this.collectionUrl = this.collection.url;
 			this.listenTo(this.collection, 'reset', this.onChatCollectionReset);
 			this.on('load', this.load, this);
@@ -83,7 +83,7 @@ define(['text!templates/modal.html','text!templates/chat.html','views/ProjectBot
 		onChatAdded: function(chat){
 			var fromId = chat.get('fromId');
 			if(fromId == this.account.id) {
-				chat.set('fromId','me');
+				chat.set('from','me');
 			}
 			var chatItemHtml = (new ChatItemView({model: chat})).render().el;
 			$(chatItemHtml).appendTo('.chat_log').hide().fadeIn('slow');
@@ -96,7 +96,7 @@ define(['text!templates/modal.html','text!templates/chat.html','views/ProjectBot
 			collection.each(function(chat){
 				var fromId = chat.get('fromId');
 				if(fromId == that.account.id) {
-					chat.set('fromId','me');
+					chat.set('from','me');
 				}
 				var chatItemHtml = (new ChatItemView({model: chat})).render().el;
 				$(chatItemHtml).prependTo('.chat_log').hide().fadeIn('fast');

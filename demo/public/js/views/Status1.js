@@ -8,7 +8,7 @@ define(['views/Status','text!templates/status1.html','text!templates/commentForm
 
 		initialize: function(options){
 			this.account = options.account;
-			this._convertStatus();
+			this._convertContent();
 			this._transformTime();
 			if(this.model.get('fromId') == this.account.id){
 				this.uiControl.showToUser = true;

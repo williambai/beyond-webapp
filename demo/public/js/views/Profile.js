@@ -9,7 +9,6 @@ define(['text!templates/loading.html','text!templates/profile.html','views/Statu
 
 		events: {
 			'click .logout': 'logout',
-			// 'submit form': 'postStatus'
 		},
 
 		uiControl: {},
@@ -26,7 +25,7 @@ define(['text!templates/loading.html','text!templates/profile.html','views/Statu
 			this.model.url = '/accounts/'+ options.id;
 
 			this.statusCollection = new StatusCollection();
-			this.statusCollection.url = '/accounts/' + options.id +'/status';
+			this.statusCollection.url = '/messages/account/status/' + options.id;
 
 			this.model.on('change',this.render,this);
 			this.statusCollection.on('add', this.onStatusAdded, this);
@@ -48,17 +47,6 @@ define(['text!templates/loading.html','text!templates/profile.html','views/Statu
 			window.location.hash = 'login';
 			return false;
 		},
-
-		// postStatus: function(){
-		// 	var that = this;
-		// 	var statusCollection = this.collection;
-		// 	var statusText = $('input[name=status]').val();
-		// 	$.post('/accounts/'+ this.model.get('_id') +'/status',{status: statusText},function(data){
-		// 	});
-		// 	var statusModel = new Status({status:statusText,name: {first:'我'}});
-		// 	that.onStatusAdded(statusModel);
-		// 	return false;
-		// },
 
 		onStatusAdded: function(statusModel){
 			var statusHtml = (new StatusView({model: statusModel})).render().el;

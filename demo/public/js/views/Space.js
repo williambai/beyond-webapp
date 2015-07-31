@@ -25,7 +25,7 @@ define(['text!templates/loading.html','text!templates/space.html','views/Scrolla
 			this.render();
 			this.statusListView = new StatusListView({
 				el: 'div.status-list',
-				url: '/accounts/'+ this.id + '/status',
+				url: '/messages/account/status/'+ this.id,
 				id:this.id,
 				account: this.account,
 				socketEvents: this.socketEvents

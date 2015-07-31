@@ -42,9 +42,7 @@ define(['router_wechat'],function(router){
 			Backbone.history.start();
 		};
 
-		return {
-			initialize: initialize
-		};
+		return initialize;
 	};
 
 	return SocialNet;

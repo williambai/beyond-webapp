@@ -24,7 +24,7 @@ define(['text!templates/loading.html','text!templates/message.html','views/Statu
 			this.statusListView = new StatusListView({
 				StatusView: StatusView,
 				el: 'div.status-list',
-				url: '/accounts/'+ this.id + '/message',
+				url: '/messages/account/exchange/'+ this.id,
 				id:this.id,
 				account: this.account,
 				socketEvents: this.socketEvents

@@ -68,7 +68,7 @@ define(['text!templates/modal.html','text!templates/chat.html','views/ChatBottom
 		onChatAdded: function(chat){
 			var fromId = chat.get('fromId');
 			if(fromId != this.id) {
-				chat.set('fromId','me');
+				chat.set('from','me');
 			}
 			var chatItemHtml = (new ChatItemView({model: chat})).render().el;
 			$(chatItemHtml).appendTo('.chat_log').hide().fadeIn('slow');
@@ -81,7 +81,7 @@ define(['text!templates/modal.html','text!templates/chat.html','views/ChatBottom
 			collection.each(function(chat){
 				var fromId = chat.get('fromId');
 				if(fromId != that.id) {
-					chat.set('fromId','me');
+					chat.set('from','me');
 				}
 				var chatItemHtml = (new ChatItemView({model: chat})).render().el;
 				$(chatItemHtml).prependTo('.chat_log').hide().fadeIn('fast');

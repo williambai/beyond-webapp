@@ -14,7 +14,7 @@ define(['text!templates/projectStatus.html','text!templates/projectBottomBar.htm
 			this.pid = options.pid;
 			// options.socketEvents.bind('status:me',this.onSocketStatusAdded, this);
 			this.collection = new StatusCollection();
-			this.collection.url = '/projects/'+ this.pid +'/status';
+			this.collection.url = '/messages/project/status/'+ this.pid;
 			this.collectionUrl = this.collection.url;
 			this.collection.on('add', this.onStatusAdded, this);
 			this.collection.on('reset', this.onStatusCollectonReset, this);
@@ -53,7 +53,7 @@ define(['text!templates/projectStatus.html','text!templates/projectBottomBar.htm
 		updateStatus: function(){
 			var statusCollection = this.collection;
 			var statusText = $('textarea[name=text]').val();
-			$.post('/projects/'+ this.pid +'/status',{text: statusText},function(data){
+			$.post('/messages/project/'+ this.pid,{text: statusText},function(data){
 				// statusCollection.add(new Status({status: statusText,name:{first:'我'}}));
 			});
 			// var statusModel = new Status({status:statusText,name: {first:'我'}});

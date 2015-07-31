@@ -1,7 +1,6 @@
-define(['text!templates/projects.html','views/ProjectItem','views/ProjectChat','models/ChatCollection','models/ProjectCollection'],function(projectsTemplate,ProjectItemView,ChatView,ChatCollection,ProjectCollection){
+define(['views/ProjectItem','views/ProjectChat','models/ChatCollection','models/ProjectCollection'],function(ProjectItemView,ChatView,ChatCollection,ProjectCollection){
 	var ProjectsView = Backbone.View.extend({
 		el: '#projectlist',
-		template: _.template(projectsTemplate),
 
 		loaded: false,
 		initialize: function(options){
@@ -27,12 +26,12 @@ define(['text!templates/projects.html','views/ProjectItem','views/ProjectChat','
 			var projectItemView = new ProjectItemView({model: project,socketEvents: this.socketEvents});
 			// projectItemView.bind('chat:start', this.startChatSession, this);
 			var projectItemHtml = projectItemView.render().el;
-			$(projectItemHtml).appendTo('#projectlist');
+			this.$el.append(projectItemHtml);
 		},
 
 		onProjectCollectionReset: function(collection){
 			var that = this;
-			this.$el.html('');
+			this.$el.empty();
 			collection.each(function(project){
 				that.onProjectAdded(project);
 			});
@@ -68,7 +67,6 @@ define(['text!templates/projects.html','views/ProjectItem','views/ProjectChat','
 		},
 
 		render: function(){
-			this.$el.html(this.template());
 			return this;
 		}
 	});

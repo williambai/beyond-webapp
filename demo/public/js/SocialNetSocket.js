@@ -1,5 +1,5 @@
-define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection'], function(sio,ChatUsersView,ProjectsView,ContactCollection){
-	var debug = true;
+define(['Sockets'], function(sio){
+	var development = true;
 
 	var SocialNetSocket = function(options){
 		var eventDispatcher = options.eventDispatcher;
@@ -30,8 +30,6 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 					socket.on('chatserver',handleChatEvent);
 					socket.on('projectEvent', handleProjectEvent);
 
-					renderChatView();
-					renderProjectsView();					
 				})
 				.on('disconnect',function(){
 					console.info('socket disconnected by server.');
@@ -40,7 +38,7 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 					// socket.removeListener('contactEvent',handleContactEvent);
 					// socket.removeListener('chatserver',handleChatEvent);
 					// socket.removeListener('projectEvent', handleProjectEvent);
-					!debug && window.location.reload();
+					!development && window.location.reload();
 				});
 		};
 
@@ -84,29 +82,7 @@ define(['Sockets','views/ChatUsers','views/Projects','models/ContactCollection']
 			eventDispatcher.trigger('socket:project:chat:in:' + data.from, data);
 		}
 
-		var renderChatView = function(){
-			var contactCollection = new ContactCollection();
-			contactCollection.url = '/accounts/me/contacts';
-			new ChatUsersView({
-					collection:contactCollection,
-					socketEvents: eventDispatcher,
-					currentChatView: currentChatView,
-					chatSessions: chatSessions,
-				}).render();
-			contactCollection.fetch({reset:true});
-		};
-
-		var renderProjectsView = function(){
-			var projectsView = new ProjectsView({
-				socketEvents: eventDispatcher,
-			});
-			projectsView.collection.url = '/accounts/me/projects';
-			projectsView.trigger('load');
-		};
-
-		return {
-			initialize: initialize
-		}
+		return initialize;
 	};
 
 	return SocialNetSocket;

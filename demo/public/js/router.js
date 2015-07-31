@@ -1,4 +1,4 @@
-define(['views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/ForgotPasswordSuccess','views/Profile','views/ProfileEdit','views/Contacts','views/ContactSearch','views/ContactInvite','views/ChatUsers','views/ProjectIndex','views/ProjectAdd','views/ProjectChat','views/Projects','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Activity','views/Message','views/Space','views/Chat'], function(LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ForgotPasswordSuccessView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ContactInviteView,ChatUsersView,ProjectIndexView,ProjectAddView,ProjectChatView,ProjectsView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,ActivityView,MessageView,SpaceView,ChatView){
+define(['views/Projects','views/ChatUsers','views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/ForgotPasswordSuccess','views/Profile','views/ProfileEdit','views/Contacts','views/ContactSearch','views/ContactInvite','views/ProjectIndex','views/ProjectAdd','views/ProjectChat','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Activity','views/Message','views/Space','views/Chat'], function(ProjectsView,ChatUsersView,LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ForgotPasswordSuccessView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ContactInviteView,ProjectIndexView,ProjectAddView,ProjectChatView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,ActivityView,MessageView,SpaceView,ChatView){
 
 	var SocailRouter = Backbone.Router.extend({
 		account: null,//login account
@@ -44,6 +44,18 @@ define(['views/Layout','views/Index','views/Register','views/Login','views/Forgo
 			// console.log(account);
 			this.account = account;
 			this.logined = true;
+			/* load projects */
+			var projectsView = new ProjectsView({
+				socketEvents: this.socketEvents,
+			});
+			projectsView.collection.url = '/accounts/me/projects';
+			projectsView.trigger('load');
+			/* load contacts */
+			var contactsView = new ChatUsersView({
+				socketEvents: this.socketEvents,
+			});
+			contactsView.collection.url = '/accounts/me/contacts';
+			contactsView.trigger('load');
 		},
 
 		onLogout: function(){

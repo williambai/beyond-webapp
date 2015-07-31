@@ -73,7 +73,7 @@ define(['text!templates/statusForm.html'],function(statusFormTemplate){
 				attachments.push($($attachments[index]).val());
 			});
 			$.ajax({
-				url: '/accounts/'+ that.accountId +'/status',
+				url: '/messages/account/'+ that.accountId,
 				type: 'POST',
 				data: {
 						status: statusText,
