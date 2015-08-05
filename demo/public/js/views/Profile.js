@@ -44,7 +44,6 @@ define(['text!templates/loading.html','text!templates/profile.html','views/_Item
 			this.appEvents.trigger('logout');
 			this.socketEvents.trigger('app:logout');
 			$.get('/logout');
-			window.location.reload();
 			return false;
 		},
 

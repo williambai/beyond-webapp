@@ -58,13 +58,10 @@ app.triggerEvent = function(eventName,eventOptions){
 	sio.on('connection', function(socket){
 		socket.on('disconnect', function(){
 			var user = socket.user;
-			socket.in(user.id).emit('logout',{from: user});
-			// for(var i in users){
-			// 	if(users[i].id === socket.id){
-			// 		users[i] = null;
-			// 		// break;
-			// 	}
-			// }
+			if(user && user.id){
+				socket.in(user.id).emit('logout',{from: user});
+				users[user.id] = null;
+			}
 		});
 
 		socket.on('login', function(){
@@ -114,10 +111,10 @@ app.triggerEvent = function(eventName,eventOptions){
 			}else{
 				console.error('logout error.');
 			}
+			users[user.id] = null;
 			socket.user = null;
 			//leave all rooms
 			socket.leaveAll();
-			// socket.disconnect();
 		});
 		socket.on('status', function(content){
 			var user = socket.user;

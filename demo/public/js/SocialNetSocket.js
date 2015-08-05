@@ -2,8 +2,6 @@ define(['Sockets'], function(sio){
 
 	var SocialNetSocket = function(options){
 		var eventDispatcher = options.eventDispatcher;
-		var socket = null;
-		var accountId = null;
 
 		var initialize = function(){
 			eventDispatcher.on('app:logined', connectSocket);
@@ -11,8 +9,8 @@ define(['Sockets'], function(sio){
 		}
 
 		var connectSocket = function(socketAccount){
-			accountId = socketAccount && socketAccount.accountId;
-			socket = sio.connect();
+			var accountId = socketAccount && socketAccount.accountId;
+			var socket = sio.connect();
 
 			socket.on('connect_failed', function(reason){
 				console.error('Unable to connect',reason);
@@ -30,8 +28,6 @@ define(['Sockets'], function(sio){
 			eventDispatcher.on('app:logout', function(){
 				if(socket){
 					socket.emit('logout');
-					// socket.close();
-					// socket = null;
 				}
 			});
 

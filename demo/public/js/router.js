@@ -61,7 +61,7 @@ define(['views/_ListProject','views/_ListChatUser','views/__Layout','views/Index
 
 		onLogout: function(){
 			this.logined = false;
-			this.initialize();
+			window.location.reload();
 		},
 
 		changeView: function(view){
