@@ -1,5 +1,5 @@
 define(['Sockets'], function(sio){
-	var development = true;
+	var development = false;
 
 	var SocialNetSocket = function(options){
 		var eventDispatcher = options.eventDispatcher;
@@ -7,7 +7,7 @@ define(['Sockets'], function(sio){
 		var accountId = null;
 
 		var initialize = function(){
-			eventDispatcher.bind('app:logined', connectSocket);
+			eventDispatcher.on('app:logined', connectSocket);
 			// return socket;
 		}
 
@@ -15,8 +15,9 @@ define(['Sockets'], function(sio){
 			/* logout */
 			eventDispatcher.on('app:logout', function(){
 				if(socket){
-					socket.close();
-					socket = null;
+					socket.emit('logout');
+					// socket.close();
+					// socket = null;
 				}
 			});
 			socket = sio.connect();
@@ -33,7 +34,9 @@ define(['Sockets'], function(sio){
 
 				socket.on('disconnect',function(){
 					console.info('socket disconnected by server.');
-					eventDispatcher.off('socket');
+					socket.close();
+					// eventDispatcher.trigger('app:logined',{accountId: accountId});
+					// connectSocket({accountId:accountId});
 					!development && window.location.reload();
 				});
 

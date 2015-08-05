@@ -57,6 +57,8 @@ app.triggerEvent = function(eventName,eventOptions){
 
 	sio.on('connection', function(socket){
 		socket.on('disconnect', function(){
+			var user = socket.user;
+			socket.in(user.id).emit('logout',{from: user});
 			// for(var i in users){
 			// 	if(users[i].id === socket.id){
 			// 		users[i] = null;
