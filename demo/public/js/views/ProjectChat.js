@@ -1,4 +1,4 @@
-define(['text!templates/modal.html','text!templates/chat.html','views/ProjectBottomBar','views/ScrollableView','views/ProjectChatItem','models/Project','models/Status','models/StatusCollection'], function(modalTemplate,projectChatTemplate,BottomBarView,ScrollableView,ChatItemView,Project,Status,StatusCollection){
+define(['text!templates/modal.html','text!templates/chat.html','views/_FormProjectChat','views/__ScrollableView','views/_ItemProjectChat','models/Project','models/Status','models/StatusCollection'], function(modalTemplate,projectChatTemplate,BottomBarView,ScrollableView,ChatItemView,Project,Status,StatusCollection){
 	var ProjectChatView = ScrollableView.extend({
 		el: '#content',
 
@@ -13,8 +13,9 @@ define(['text!templates/modal.html','text!templates/chat.html','views/ProjectBot
 			this.id = options.id;
 			this.account = options.account;
 			this.socketEvents = options.socketEvents;
+			this.socketEvents.off('socket:in:project:chat');
 			this.socketEvents.on(
-					'socket:project:chat:in:' + this.id,
+					'socket:in:project:chat',
 					this.socketReceiveChat, 
 					this
 				);
@@ -61,23 +62,22 @@ define(['text!templates/modal.html','text!templates/chat.html','views/ProjectBot
 			});
 		},
 
-		socketReceiveChat: function(socket){
-			var fromId = socket.from;
-			var data = socket.data;
-			var userId = data.userId;
-			var username = data.username;
-			var avatar = data.avatar;
-			var text = data.text;
-
-			var status = new Status({
-					fromId: userId,
-					toId: fromId,
-					username: username,
-					avatar: avatar,
-					status: text,
+		socketReceiveChat: function(data){
+			var user = data.from;
+			var project = data.to;
+			var content = data.content;
+			if(project.id == this.id){
+				var status = new Status({
+					fromId: user.id,
+					toId: project.id,
+					username: user.username,
+					avatar: user.avatar,
+					content: content,
 				});
-			this.collection.add(status);
-			this.onChatAdded(status);
+
+				this.collection.add(status);
+				this.onChatAdded(status);
+			}
 		},
 
 		onChatAdded: function(chat){

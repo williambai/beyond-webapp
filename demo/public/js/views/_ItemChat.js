@@ -1,25 +1,15 @@
-define(['text!templates/projectChatItem.html','text!templates/chatItemImage.html','views/Util'],function(chatItemTemplate,chatItemImageTemplate,MessageUtil){
+define(['text!templates/_itemChat.html','text!templates/_itemChatImage.html','views/__Util'],function(chatItemTemplate,chatItemImageTemplate,MessageUtil){
 	var ChatItemView = Backbone.View.extend({
 		tagName: 'div',
 		template: _.template(chatItemTemplate),
 		templateImage: _.template(chatItemImageTemplate),
 
 		initialize: function(){
-			this._convertContent();
-			this._transformAvatar();
+			this._convertStatus();
 		},
 
-		_transformAvatar: function(){
-			var fromId = this.model.get('fromId');
-			var fromUser = this.model.get('fromUser');
-			if(fromUser && fromId){
-				this.model.set('avatar', fromUser[fromId].avatar);
-				this.model.set('username', fromUser[fromId].username);
-			}
-		},
-
-		_convertContent: function(){
-			var statusObject = this.model.get('content');
+		_convertStatus: function(){
+			var statusObject = this.model.get('status');
 			if(!statusObject){
 				return;
 			}
@@ -44,7 +34,7 @@ define(['text!templates/projectChatItem.html','text!templates/chatItemImage.html
 						newString += '</a>'; 
 					}
 				}
-				this.model.set('content', newString);
+				this.model.set('status', newString);
 			}else{
 				var newStatus = '';
 				if(statusObject.MsgType == 'text'){
@@ -69,20 +59,20 @@ define(['text!templates/projectChatItem.html','text!templates/chatItemImage.html
 					newStatus += '<h4>' +statusObject.Title + '</h4>';
 					newStatus += '<p>'+ statusObject.Description + '</p>';
 				}
-				this.model.set('content', newStatus);
+				this.model.set('status', newStatus);
 			}
 		},
 
 		render: function(){
-			var content = this.model.get('content');
-			if(content){
-				// this.$el.addClass('textType');
-				this.$el.html(this.template({message: this.model.toJSON()}));
-			// }else{
-			// 	if(content.MsgType == 'image'){
-			// 		this.$el.addClass('imageType');
-			// 		this.$el.html(this.templateImage(this.model.toJSON()));
-			// 	}
+			var content = this.model.get('status');
+			if(typeof content =='string'){
+				this.$el.addClass('textType');
+				this.$el.html(this.template(this.model.toJSON()));
+			}else{
+				if(content.MsgType == 'image'){
+					this.$el.addClass('imageType');
+					this.$el.html(this.templateImage(this.model.toJSON()));
+				}
 			}
 			return this;
 		}

@@ -1,4 +1,4 @@
-define(['views/ChatUser','views/Chat','models/ContactCollection','models/ChatCollection'],
+define(['views/_ItemChatUser','views/Chat','models/ContactCollection','models/ChatCollection'],
 	function(ChatUserView,ChatView,ContactCollection,ChatCollection){
 
 	var ChatUsersView = Backbone.View.extend({

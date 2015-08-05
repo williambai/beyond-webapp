@@ -1,4 +1,4 @@
-define(['text!templates/projects_wechat.html','views/ProjectItem_wechat','models/ProjectCollection'],function(projectsTemplate,ProjectItemView,ProjectCollection){
+define(['text!templates/projects_wechat.html','views/_ItemProject_wechat','models/ProjectCollection'],function(projectsTemplate,ProjectItemView,ProjectCollection){
 	var ProjectsView = Backbone.View.extend({
 		el: '#content',
 		template: _.template(projectsTemplate),

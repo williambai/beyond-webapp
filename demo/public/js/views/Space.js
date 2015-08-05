@@ -1,4 +1,4 @@
-define(['text!templates/loading.html','text!templates/space.html','views/ScrollableView','views/StatusForm','views/StatusList'],
+define(['text!templates/loading.html','text!templates/space.html','views/__ScrollableView','views/_FormStatus','views/_ListStatus'],
 	function(loadingTemplate,activityTemplate,ScrollableView,StatusFormView,StatusListView){
 
 	var SpaceView = ScrollableView.extend({
@@ -13,6 +13,8 @@ define(['text!templates/loading.html','text!templates/space.html','views/Scrolla
 			'scroll': 'scroll',
 		},
 
+		pageEvents: _.extend({},Backbone.Events),
+
 		initialize: function(options){
 			this.id = options.id;
 			this.account = options.account;
@@ -26,20 +28,18 @@ define(['text!templates/loading.html','text!templates/space.html','views/Scrolla
 			this.statusListView = new StatusListView({
 				el: 'div.status-list',
 				url: '/messages/account/status/'+ this.id,
-				id:this.id,
 				account: this.account,
-				socketEvents: this.socketEvents
 			});
 			this.statusListView.trigger('load');
 		},
 
 		editorToggle: function(){
 			if(this.$('.status-editor form').length == 0){
-				var statusFormView = new StatusFormView({
+				var formView = new StatusFormView({
 					el: '.status-editor',
-					accountId: this.id
 				});
-				statusFormView.render();
+				formView.on('form:submit', this.formSubmit, this);
+				formView.render();
 				this.$('.status-editor form').addClass('');
 				return false;
 			}
@@ -49,6 +49,48 @@ define(['text!templates/loading.html','text!templates/space.html','views/Scrolla
 				this.$('.status-editor form').addClass('hidden');
 			}
 			return false;
+		},
+
+		formSubmit: function(form){
+			var that = this;
+			var text = form.text;
+			var attachments = form.attachments;
+			var content = {
+				MsgType: 'mixed',
+				Content: text,
+				Urls: attachments
+			};
+
+			$.ajax('/accounts/' + that.id,{
+				method: 'GET',
+				success: function(data){
+					var message = {
+							to: {
+								id: data._id,
+								username: data.username,
+								avatar: data.avatar
+							},
+							content: content,
+						};
+
+					that.socketEvents.trigger('socket:out:message', message);
+
+				}
+			});
+
+			// $.ajax({
+			// 	url: '/messages/account/'+ that.accountId,
+			// 	type: 'POST',
+			// 	data: {
+			// 			status: statusText,
+			// 			attachments: attachments
+			// 		}
+			// 	}).done(function(data){
+			// 		$('textarea[name=text]').val('');
+			// 		that.$('input[name=file]').val('');
+			// 		that.$('.attachments').empty();
+			// 		that.$('form').addClass('hidden');
+			// 	});			
 		},
 
 		scroll: function(){

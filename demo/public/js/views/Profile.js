@@ -1,4 +1,4 @@
-define(['text!templates/loading.html','text!templates/profile.html','views/Status','models/Status','models/Account', 'models/StatusCollection'],
+define(['text!templates/loading.html','text!templates/profile.html','views/_ItemStatus','models/Status','models/Account', 'models/StatusCollection'],
 	function(loadingTemplate,profileTemplate,StatusView, Status, Account, StatusCollection){
 	var ProfileView = Backbone.View.extend({
 		el: '#content',

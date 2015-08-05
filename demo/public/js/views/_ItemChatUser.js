@@ -1,4 +1,4 @@
-define(['text!templates/chatuser.html'],function(ChatUserTemplate){
+define(['text!templates/_itemChatUser.html'],function(ChatUserTemplate){
 	var ChatUserView = Backbone.View.extend({
 		tagName: 'div',
 		template: _.template(ChatUserTemplate),
@@ -14,25 +14,20 @@ define(['text!templates/chatuser.html'],function(ChatUserTemplate){
 			this.socketEvents = options.socketEvents;
 
 			options.socketEvents.bind(
-					'login:'+ accountId,
+					'socket:in:login:'+ accountId,
 					this.handleContactLogin,
 					this
 				);
 			options.socketEvents.bind(
-					'logout:' + accountId,
+					'socket:in:logout:' + accountId,
 					this.handleContactLogout,
 					this				
 				);
 			options.socketEvents.bind(
-					'socket:chat:in:' + this.model.get('accountId'),
+					'socket:in:chat:' + accountId,
 					this.onMessageRecieved,
 					this
 				);
-			// options.socketEvents.bind(
-			// 		'socket:chat:start:' + this.model.get('accountId'),
-			// 		this.startChatSession,
-			// 		this
-			// 	);
 		},
 
 		handleContactLogin: function(eventObj){
@@ -45,10 +40,9 @@ define(['text!templates/chatuser.html'],function(ChatUserTemplate){
 			this.$el.find('.label').removeClass('label-success').html('<i>离线</i>');
 		},
 
-		onMessageRecieved: function(socket){
+		onMessageRecieved: function(data){
 			++this.messageUnreadNum;
 			this.renderMessageNum();
-			this.socketEvents.trigger('chat:number:total',1);
 		},
 
 		renderMessageNum: function(){

@@ -1,4 +1,4 @@
-define(['text!templates/loading.html','text!templates/activity.html','views/StatusForm','views/StatusList'],
+define(['text!templates/loading.html','text!templates/activity.html','views/_FormStatus','views/_ListStatus'],
 	function(loadingTemplate,activityTemplate,StatusFormView,StatusListView){
 
 	var ActivityView = Backbone.View.extend({
@@ -17,6 +17,9 @@ define(['text!templates/loading.html','text!templates/activity.html','views/Stat
 			this.id = options.id;
 			this.account = options.account;
 			this.socketEvents = options.socketEvents;
+			if(options.socketEvents){
+				options.socketEvents.on('socket:in:status',this.onSocketStatusAdded, this);
+			}
 			this.on('load', this.load, this);
 		},
 
@@ -26,9 +29,7 @@ define(['text!templates/loading.html','text!templates/activity.html','views/Stat
 			this.statusListView = new StatusListView({
 				el: 'div.status-list',
 				url: '/messages/account/activity/'+ this.id,
-				id:this.id,
 				account: this.account,
-				socketEvents: this.socketEvents
 			});
 			this.statusListView.trigger('load');
 		},
@@ -37,8 +38,8 @@ define(['text!templates/loading.html','text!templates/activity.html','views/Stat
 			if(this.$('.status-editor form').length == 0){
 				var statusFormView = new StatusFormView({
 					el: '.status-editor',
-					accountId: this.id
 				});
+				statusFormView.on('form:submit', this.statusFormSubmit, this);
 				statusFormView.render();
 				this.$('.status-editor form').addClass('');
 				return false;
@@ -56,6 +57,53 @@ define(['text!templates/loading.html','text!templates/activity.html','views/Stat
 			return false;
 		},
 
+		onSocketStatusAdded: function(data){
+			var from = data.from;
+			var content = data.content;
+			var status = {};
+			status.fromId = from.id;
+			status.fromUser = {};
+			status.fromUser[from.id] = from;
+			status.content = content;
+			this.statusListView.collection.trigger('add:prepend',status);
+		},
+
+		statusFormSubmit: function(form){
+			var text = form.text;
+			var attachments = form.attachments;
+
+			var data = {
+				MsgType: 'mixed',
+				Content: text,
+				Urls: attachments
+			};
+
+			var status = {};
+			status.fromId = this.account.id;
+			status.fromUser = {};
+			status.fromUser[this.account.id] = this.account;
+			status.content = data;
+
+			this.statusListView.collection.trigger('add:prepend',status);
+
+			this.socketEvents.trigger('socket:out:status', data);
+
+			// $.ajax({
+			// 	url: '/messages/account/'+ that.accountId,
+			// 	type: 'POST',
+			// 	data: {
+			// 			status: statusText,
+			// 			attachments: attachments
+			// 		}
+			// 	}).done(function(data){
+			// 		$('textarea[name=text]').val('');
+			// 		that.$('input[name=file]').val('');
+			// 		that.$('.attachments').empty();
+			// 		that.$('form').addClass('hidden');
+			// 	});
+
+		},
+		
 		render: function(){
 			if(!this.loaded){
 				this.$el.html(this.loadingTemplate);

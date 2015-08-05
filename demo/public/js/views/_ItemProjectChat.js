@@ -1,15 +1,25 @@
-define(['text!templates/chatItem.html','text!templates/chatItemImage.html','views/Util'],function(chatItemTemplate,chatItemImageTemplate,MessageUtil){
+define(['text!templates/_itemProjectChat.html','text!templates/_itemChatImage.html','views/__Util'],function(chatItemTemplate,chatItemImageTemplate,MessageUtil){
 	var ChatItemView = Backbone.View.extend({
 		tagName: 'div',
 		template: _.template(chatItemTemplate),
 		templateImage: _.template(chatItemImageTemplate),
 
 		initialize: function(){
-			this._convertStatus();
+			this._convertContent();
+			this._transformAvatar();
 		},
 
-		_convertStatus: function(){
-			var statusObject = this.model.get('status');
+		_transformAvatar: function(){
+			var fromId = this.model.get('fromId');
+			var fromUser = this.model.get('fromUser');
+			if(fromUser && fromId){
+				this.model.set('avatar', fromUser[fromId].avatar);
+				this.model.set('username', fromUser[fromId].username);
+			}
+		},
+
+		_convertContent: function(){
+			var statusObject = this.model.get('content');
 			if(!statusObject){
 				return;
 			}
@@ -34,7 +44,7 @@ define(['text!templates/chatItem.html','text!templates/chatItemImage.html','view
 						newString += '</a>'; 
 					}
 				}
-				this.model.set('status', newString);
+				this.model.set('content', newString);
 			}else{
 				var newStatus = '';
 				if(statusObject.MsgType == 'text'){
@@ -59,20 +69,20 @@ define(['text!templates/chatItem.html','text!templates/chatItemImage.html','view
 					newStatus += '<h4>' +statusObject.Title + '</h4>';
 					newStatus += '<p>'+ statusObject.Description + '</p>';
 				}
-				this.model.set('status', newStatus);
+				this.model.set('content', newStatus);
 			}
 		},
 
 		render: function(){
-			var content = this.model.get('status');
-			if(typeof content =='string'){
-				this.$el.addClass('textType');
-				this.$el.html(this.template(this.model.toJSON()));
-			}else{
-				if(content.MsgType == 'image'){
-					this.$el.addClass('imageType');
-					this.$el.html(this.templateImage(this.model.toJSON()));
-				}
+			var content = this.model.get('content');
+			if(content){
+				// this.$el.addClass('textType');
+				this.$el.html(this.template({message: this.model.toJSON()}));
+			// }else{
+			// 	if(content.MsgType == 'image'){
+			// 		this.$el.addClass('imageType');
+			// 		this.$el.html(this.templateImage(this.model.toJSON()));
+			// 	}
 			}
 			return this;
 		}

@@ -1,4 +1,4 @@
-define(['text!templates/chatBottomBar.html', 'models/Chat'],function(bottomBarTemplate, Chat){
+define(['text!templates/_formChat.html', 'models/Chat'],function(bottomBarTemplate, Chat){
 	var BottomBarView = Backbone.View.extend({
 		className: 'bottom-bar',
 
@@ -31,10 +31,11 @@ define(['text!templates/chatBottomBar.html', 'models/Chat'],function(bottomBarTe
 				this.parentView.collection.add(chat);
 				this.parentView.onChatAdded(chat);
 
-				this.socketEvents.trigger('socket:chat',{
-					action: 'chat',
-					to: this.id,
-					text: chatText
+				this.socketEvents.trigger('socket:out:chat',{
+					to: {
+						id: this.id
+					},
+					content: chatText
 				});
 			}
 			$('input[name=chat]').val('');
@@ -71,12 +72,19 @@ define(['text!templates/chatBottomBar.html', 'models/Chat'],function(bottomBarTe
 							var chat = new Chat(chatObject);
 							that.parentView.collection.add(chat);
 							that.parentView.onChatAdded(chat);
-							
-							that.socketEvents.trigger('socket:chat',{
-								action: 'chat',
-								to: that.id,
-								text: chatText
+
+							that.socketEvents.trigger('socket:out:chat',{
+								to: {
+									id: this.id
+								},
+								content: chatText
 							});
+							
+							// that.socketEvents.trigger('socket:chat',{
+							// 	action: 'chat',
+							// 	to: that.id,
+							// 	text: chatText
+							// });
 							that.$('input[name=file]').val('');
 						// }
 					}

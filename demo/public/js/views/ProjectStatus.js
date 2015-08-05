@@ -1,4 +1,4 @@
-define(['text!templates/projectStatus.html','text!templates/projectBottomBar.html','views/ScrollableView','views/ProjectStatusItem','models/Project','models/Status','models/StatusCollection'],function(projectStatusTemplate,bottomBarTemplate,ScrollableView,StatusView,Project,Status,StatusCollection){
+define(['text!templates/projectStatus.html','text!templates/projectBottomBar.html','views/__ScrollableView','views/_ItemProjectStatus','models/Project','models/Status','models/StatusCollection'],function(projectStatusTemplate,bottomBarTemplate,ScrollableView,StatusView,Project,Status,StatusCollection){
 	var ProjectStatusView = ScrollableView.extend({
 		el: '#content',
 		template: _.template(projectStatusTemplate),

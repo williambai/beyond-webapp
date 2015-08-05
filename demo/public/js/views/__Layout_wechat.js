@@ -1,4 +1,4 @@
-define(['text!templates/loading.html','views/Projects'],function(loadingTemplate,ProjectsView){
+define(['text!templates/loading.html'],function(loadingTemplate){
 	var LayoutView = Backbone.View.extend({
 		el: 'body',
 		loadingTemplate: _.template(loadingTemplate),

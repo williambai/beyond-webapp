@@ -1,4 +1,4 @@
-define(['text!templates/loading.html','text!templates/message.html','views/StatusForm','views/StatusList','views/Status1'],
+define(['text!templates/loading.html','text!templates/message.html','views/_FormStatus','views/_ListStatus','views/_ItemStatus1'],
 	function(loadingTemplate,messageTemplate,StatusFormView,StatusListView,StatusView){
 
 	var MessageView = Backbone.View.extend({
@@ -12,6 +12,9 @@ define(['text!templates/loading.html','text!templates/message.html','views/Statu
 			this.id = options.id;
 			this.account = options.account;
 			this.socketEvents = options.socketEvents;
+			if(options.socketEvents){
+				options.socketEvents.on('socket:in:message',this.onSocketMessageAdded, this);
+			}
 			this.on('load', this.load, this);
 		},
 		events: {
@@ -25,9 +28,7 @@ define(['text!templates/loading.html','text!templates/message.html','views/Statu
 				StatusView: StatusView,
 				el: 'div.status-list',
 				url: '/messages/account/exchange/'+ this.id,
-				id:this.id,
 				account: this.account,
-				socketEvents: this.socketEvents
 			});
 			this.statusListView.trigger('load');
 		},
@@ -35,6 +36,17 @@ define(['text!templates/loading.html','text!templates/message.html','views/Statu
 		scroll: function(){
 			this.statusListView.scroll();
 			return false;
+		},
+
+		onSocketMessageAdded: function(data){
+			var from = data.from;
+			var content = data.content;
+			var status = {};
+			status.fromId = from.id;
+			status.fromUser = {};
+			status.fromUser[from.id] = from;
+			status.content = content;
+			this.statusListView.collection.trigger('add:prepend',status);
 		},
 
 		render: function(){

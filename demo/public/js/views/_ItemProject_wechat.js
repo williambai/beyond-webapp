@@ -1,4 +1,4 @@
-define(['text!templates/projectItem_wechat.html'],function(projectItemTemplate){
+define(['text!templates/_itemProject_wechat.html'],function(projectItemTemplate){
 	var ProjectItemView = Backbone.View.extend({
 		tagName: 'div',
 		template: _.template(projectItemTemplate),

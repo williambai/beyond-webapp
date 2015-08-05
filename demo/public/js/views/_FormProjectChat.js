@@ -1,4 +1,4 @@
-define(['text!templates/projectBottomBar.html','text!templates/projectBottomBar2.html'],function(bottomBar0Template,bottomBarTemplate){
+define(['text!templates/projectBottomBar.html','text!templates/_formProjectChat.html','models/Status'],function(bottomBar0Template,bottomBarTemplate,Status){
 	var BottomBarView = Backbone.View.extend({
 
 		className: 'bottom-bar',
@@ -26,21 +26,22 @@ define(['text!templates/projectBottomBar.html','text!templates/projectBottomBar2
 		sendChat: function(){
 			var chatText = $('input[name=chat]').val();
 			if(chatText && /[^\s]+/.test(chatText)){
-				// var statusObject = {
-				// 	fromId: 'me',
-				// 	toId: this.id,
-				// 	username: this.account.id,
-				// 	avatar: this.account.avatar,
-				// 	status: chatText
-				// };
-				// var status = new Status(statusObject);
-				// this.collection.add(status);
-				// this.onChatAdded(status);
 
-				this.socketEvents.trigger('socket:project:chat',{
-					action: 'chat',
-					to: this.id,
-					text: chatText
+				var status = new Status({
+					fromId: this.account.id,
+					toId: this.id,
+					username: this.account.username,
+					avatar: this.account.avatar,
+					content: chatText
+				});
+				this.parentView.collection.add(status);
+				this.parentView.onChatAdded(status);
+
+				this.socketEvents.trigger('socket:out:project',{
+					to: {
+						id: this.id
+					},
+					content: chatText
 				});
 			}
 			$('input[name=chat]').val('');
@@ -65,11 +66,23 @@ define(['text!templates/projectBottomBar.html','text!templates/projectBottomBar2
 				contentType:false,//MUST be false
 				success: function(data){
 					if(data && data.type){
+						var content = 'http://' + location.host + data.filename;
 						// if(/jpg|png/.test(data.type)){
-							that.socketEvents.trigger('socket:project:chat',{
-								action: 'chat',
-								to: that.id,
-								text: 'http://' + location.host + data.filename
+							var status = new Status({
+								fromId: that.account.id,
+								toId: that.id,
+								username: that.account.username,
+								avatar: that.account.avatar,
+								content: content
+							});
+							that.parentView.collection.add(status);
+							that.parentView.onChatAdded(status);
+						
+							that.socketEvents.trigger('socket:out:project',{
+								to: {
+									id: that.id
+								},
+								content: content,
 							});
 						// }
 					}

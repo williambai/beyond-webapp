@@ -1,11 +1,12 @@
-define(['views/Projects','views/ChatUsers','views/Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/ForgotPasswordSuccess','views/Profile','views/ProfileEdit','views/Contacts','views/ContactSearch','views/ContactInvite','views/ProjectIndex','views/ProjectAdd','views/ProjectChat','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Activity','views/Message','views/Space','views/Chat'], function(ProjectsView,ChatUsersView,LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ForgotPasswordSuccessView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ContactInviteView,ProjectIndexView,ProjectAddView,ProjectChatView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,ActivityView,MessageView,SpaceView,ChatView){
+define(['views/_ListProject','views/_ListChatUser','views/__Layout','views/Index','views/Register','views/Login','views/ForgotPassword','views/ForgotPasswordSuccess','views/Profile','views/ProfileEdit','views/Contacts','views/ContactSearch','views/ContactInvite','views/ProjectIndex','views/ProjectAdd','views/ProjectChat','views/ProjectStatus','views/ProjectContacts','views/ProjectContactSearch','views/Activity','views/Message','views/Space','views/Chat'], function(ProjectsView,ChatUsersView,LayoutView,IndexView,RegisterView,LoginView,ForgotPasswordView,ForgotPasswordSuccessView,ProfileView,ProfileEditView,ContactsView,ContactAddView,ContactInviteView,ProjectIndexView,ProjectAddView,ProjectChatView,ProjectStatusView,ProjectContactsView,ProjectContactAddView,ActivityView,MessageView,SpaceView,ChatView){
 
 	var SocailRouter = Backbone.Router.extend({
 		account: null,//login account
 		logined: false,
 		currentView : null,
-		appEvents: _.extend({},Backbone.Events),//app inner events
-		socketEvents: _.extend({},Backbone.Events),//socket events
+		// socket: null,
+		appEvents: _.extend({},Backbone.Events),//app events
+		socketEvents: _.extend({},Backbone.Events),//socket events ---Deprecated!
 		routes: {
 			'': 'index',
 			'index': 'index',
@@ -32,7 +33,7 @@ define(['views/Projects','views/ChatUsers','views/Layout','views/Index','views/R
 		initialize: function(){
 			this.appEvents.on('logined',this.onLogined,this);
 			this.appEvents.on('logout', this.onLogout,this);
-			layoutView = new LayoutView({
+			var layoutView = new LayoutView({
 				appEvents: this.appEvents,
 				socketEvents: this.socketEvents,
 			});

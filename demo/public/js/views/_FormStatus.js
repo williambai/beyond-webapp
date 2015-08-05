@@ -1,18 +1,18 @@
-define(['text!templates/statusForm.html'],function(statusFormTemplate){
+define(['text!templates/_formStatus.html'],function(statusFormTemplate){
 	var StatusFormView = Backbone.View.extend({
 		
 		el: '.status-editor',
 
 		template: _.template(statusFormTemplate),
+
 		events: {
 			'click .send-file': 'showFileExplorer',
 			'change input[name=file]': 'addAttachment',
 			'click .attachment': 'removeAttachment',
-			'submit form': 'updateStatus',
+			'submit form': 'submitForm',
 		},
 
 		initialize: function(options){
-			this.accountId = options.accountId;
 		},
 
 		showFileExplorer: function(){
@@ -64,7 +64,7 @@ define(['text!templates/statusForm.html'],function(statusFormTemplate){
 			return false;
 		},
 
-		updateStatus: function(){
+		submitForm: function(){
 			var that = this;
 			var statusText = that.$('textarea[name=text]').val();
 			var attachments = [];
@@ -72,19 +72,16 @@ define(['text!templates/statusForm.html'],function(statusFormTemplate){
 			$attachments.each(function(index){
 				attachments.push($($attachments[index]).val());
 			});
-			$.ajax({
-				url: '/messages/account/'+ that.accountId,
-				type: 'POST',
-				data: {
-						status: statusText,
-						attachments: attachments
-					}
-				}).done(function(data){
-					$('textarea[name=text]').val('');
-					that.$('input[name=file]').val('');
-					that.$('.attachments').empty();
-					that.$('form').addClass('hidden');
-				});
+
+			$('textarea[name=text]').val('');
+			that.$('input[name=file]').val('');
+			that.$('.attachments').empty();
+			that.$('form').addClass('hidden');
+
+			this.trigger('form:submit', {
+				text: statusText,
+				attachments: attachments,
+			});
 			return false;
 		},
 

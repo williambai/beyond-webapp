@@ -1,4 +1,4 @@
-define(['text!templates/loading.html','text!templates/layout.html','views/Projects'],function(loadingTemplate,layoutTemplate,ProjectsView){
+define(['text!templates/loading.html','text!templates/__layout.html'],function(loadingTemplate,layoutTemplate){
 	var LayoutView = Backbone.View.extend({
 		el: 'body',
 		template: _.template(layoutTemplate),
@@ -13,14 +13,15 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 			this.appEvents = options.appEvents;
 			this.socketEvents = options.socketEvents;
 
+
 			this.$el
 				.addClass('has-sidebar-left')
 				.addClass('has-sidebar-right')
 				.addClass('has-navbar-top');
 			this.appEvents.on('set:brand', this.updateBrand,this);
-			this.socketEvents.on('chat:number:total', this.onChatNumChanged, this);
-			this.socketEvents.on('message:number:unread', this.onMessageNumChanged, this);
-			this.socketEvents.on('status:number:unread', this.onStatusNumChanged, this);
+			this.socketEvents.on('socket:in:chat', this.onChatIn, this);
+			this.socketEvents.on('socket:in:message', this.onMessageIn, this);
+			this.socketEvents.on('socket:in:status', this.onStatusIn, this);
 			this.on('load', this.load,this);
 		},
 
@@ -90,8 +91,8 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 			this.$('.navbar-brand').text(brand || '');
 		},
 
-		onChatNumChanged: function(num){
-			this.chatUnreadNum += num;
+		onChatIn: function(){
+			this.chatUnreadNum ++;
 			if(this.chatUnreadNum < 1) {
 				this.chatUnreadNum = 0;
 				this.$('.chat-total-unread').text('');
@@ -100,8 +101,8 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 			}
 		},
 
-		onMessageNumChanged: function(num){
-			this.messageUnreadNum += num;
+		onMessageIn: function(data){
+			this.messageUnreadNum ++;
 			if(this.messageUnreadNum < 1) {
 				this.messageUnreadNum = 0;
 				this.$('.message-unread').html('<i class="fa fa-chevron-right"></i>');
@@ -110,8 +111,8 @@ define(['text!templates/loading.html','text!templates/layout.html','views/Projec
 			}
 		},
 
-		onStatusNumChanged: function(num){
-			this.statusUnreadNum += num;
+		onStatusIn: function(data){
+			this.statusUnreadNum ++;
 			if(this.statusUnreadNum < 1) {
 				this.statusUnreadNum = 0;
 				this.$('.status-unread').html('<i class="fa fa-chevron-right"></i>');

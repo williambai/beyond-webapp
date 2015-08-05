@@ -1,4 +1,4 @@
-define(['text!templates/projectStatusItem.html','text!templates/modal.html','views/Util'],function(statusTemplate,modalTemplate,MessageUtil){
+define(['text!templates/_itemProjectStatus.html','text!templates/modal.html','views/__Util'],function(statusTemplate,modalTemplate,MessageUtil){
 	var StatusView = Backbone.View.extend({
 		// tagName: 'li',
 		template: _.template(statusTemplate),

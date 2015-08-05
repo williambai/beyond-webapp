@@ -1,4 +1,4 @@
-define(['text!templates/loading.html','text!templates/index.html','views/ProjectWidget'],
+define(['text!templates/loading.html','text!templates/index.html','views/_WidgetProject'],
 	function(loadingTemplate,indexTemplate,ProjectWidget){
 
 	var IndexView = Backbone.View.extend({

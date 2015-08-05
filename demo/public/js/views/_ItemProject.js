@@ -1,4 +1,4 @@
-define(['text!templates/projectItem.html'],function(projectItemTemplate){
+define(['text!templates/_itemProject.html'],function(projectItemTemplate){
 	var ProjectItemView = Backbone.View.extend({
 		tagName: 'div',
 		template: _.template(projectItemTemplate),
@@ -11,7 +11,7 @@ define(['text!templates/projectItem.html'],function(projectItemTemplate){
 		initialize: function(options){
 			this.socketEvents = options.socketEvents;
 			options.socketEvents.bind(
-					'socket:project:chat:in:' + this.model.get('_id'),
+					'socket:in:project:notification:' + this.model.get('_id'),
 					this.onMessageRecieved,
 					this
 				);

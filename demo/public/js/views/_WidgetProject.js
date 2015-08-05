@@ -1,5 +1,5 @@
-define(['text!templates/projectWidget.html','text!templates/projectItem2.html','views/Projects','models/ProjectCollection'],
-	function(projectTemplate,projectItemTemplate,ProjectListBaseView,ProjectCollection){
+define(['text!templates/_widgetProject.html','text!templates/_itemProject2.html','models/ProjectCollection'],
+	function(projectTemplate,projectItemTemplate,ProjectCollection){
 	var ProjectWidget = Backbone.View.extend({
 
 		el: '#project-widget',

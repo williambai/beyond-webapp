@@ -1,4 +1,4 @@
-define(['views/ProjectItem','views/ProjectChat','models/ChatCollection','models/ProjectCollection'],function(ProjectItemView,ChatView,ChatCollection,ProjectCollection){
+define(['views/_ItemProject','views/ProjectChat','models/ChatCollection','models/ProjectCollection'],function(ProjectItemView,ChatView,ChatCollection,ProjectCollection){
 	var ProjectsView = Backbone.View.extend({
 		el: '#projectlist',
 
@@ -13,7 +13,6 @@ define(['views/ProjectItem','views/ProjectChat','models/ChatCollection','models/
 			this.collection.on('add', this.onProjectAdded, this);
 			this.collection.on('reset', this.onProjectCollectionReset, this);
 			this.on('load', this.load,this);
-			this.socketEvents.on('app:projects:reload', this.load, this);
 		},
 
 		load: function(){

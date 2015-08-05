@@ -1,4 +1,4 @@
-define(['text!templates/modal.html','text!templates/chat.html','views/ChatBottomBar','views/ScrollableView','views/ChatItem','models/Chat','models/ChatCollection'], function(modalTemplate, chatSessionTemplate,BottomBarView,ScrollableView,ChatItemView,Chat,ChatCollection){
+define(['text!templates/modal.html','text!templates/chat.html','views/_FormChat','views/__ScrollableView','views/_ItemChat','models/Chat','models/ChatCollection'], function(modalTemplate, chatSessionTemplate,BottomBarView,ScrollableView,ChatItemView,Chat,ChatCollection){
 	var ChatView = ScrollableView.extend({
 		template: _.template(chatSessionTemplate),
 		el: '#content',
@@ -12,8 +12,9 @@ define(['text!templates/modal.html','text!templates/chat.html','views/ChatBottom
 			this.id = options.id;
 			this.account = options.account;
 			this.socketEvents = options.socketEvents;
+			this.socketEvents.off('socket:in:chat');
 			this.socketEvents.on(
-					'socket:chat:in:' + this.id,
+					'socket:in:chat',
 					this.socketReceiveChat, 
 					this
 				);
@@ -51,18 +52,24 @@ define(['text!templates/modal.html','text!templates/chat.html','views/ChatBottom
 		},
 
 
-		socketReceiveChat: function(socket){
-			var fromId = socket.from;
-			var toId = this.id;
-			var chat = new Chat({
-				fromId: fromId,
-				toId: toId,
-				username: socket.data.username,
-				avatar: socket.data.avatar,
-				status: socket.data.text,
-			});
-			this.collection.add(chat);
-			this.onChatAdded(chat);
+		socketReceiveChat: function(data){
+			if(data){
+				var from = data.from;
+				var to = data.to;
+				var content = data.content;
+				if(from.id == this.id){
+					var chat = new Chat({
+						fromId: from.id,
+						toId: to.id,
+						username: from.username,
+						avatar: from.avatar,
+						status: content,
+					});
+					chat.set('from', 'others');
+					this.collection.add(chat);
+					this.onChatAdded(chat);
+				}	
+			}
 		},
 
 		onChatAdded: function(chat){

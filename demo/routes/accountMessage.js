@@ -31,17 +31,17 @@
 				action = 'message';//私信
 			}
 			Message.add(req.session.accountId,accountId,username,avatar,account.username,account.avatar,'',statusNew,function(status){
-				if(status){
-					app.triggerEvent('event:' + accountId, {
-						action: action,
-						from: accountId,
-						data: {
-							username: username,
-							avatar: avatar,
-							status: statusNew
-						},
-					});
-				}
+				// if(status){
+				// 	app.triggerEvent('event:' + accountId, {
+				// 		action: action,
+				// 		from: accountId,
+				// 		data: {
+				// 			username: username,
+				// 			avatar: avatar,
+				// 			status: statusNew
+				// 		},
+				// 	});
+				// }
 			});
 		});
 		res.sendStatus(200);

@@ -1,4 +1,4 @@
-define(['text!templates/load-more.html',],function(loadMoreTemplate){
+define(['text!templates/__load-more.html',],function(loadMoreTemplate){
 	var ScrollableView = Backbone.View.extend({
 		templateLoadMore: _.template(loadMoreTemplate),
 
