@@ -1,4 +1,4 @@
-define(['text!templates/modal.html','text!templates/chat.html','views/_FormProjectChat','views/__ScrollableView','views/_ItemProjectChat','models/Project','models/Status','models/StatusCollection'], function(modalTemplate,projectChatTemplate,BottomBarView,ScrollableView,ChatItemView,Project,Status,StatusCollection){
+define(['text!templates/_modal.html','text!templates/chat.html','views/_FormProjectChat','views/__ScrollableView','views/_ItemProjectChat','models/Project','models/Status','models/StatusCollection'], function(modalTemplate,projectChatTemplate,BottomBarView,ScrollableView,ChatItemView,Project,Status,StatusCollection){
 	var ProjectChatView = ScrollableView.extend({
 		el: '#content',
 

@@ -1,4 +1,4 @@
-define(['text!templates/projectContacts.html','text!templates/projectBottomBar.html','views/__ScrollableView','views/_ItemProjectContact','models/Project','models/ContactCollection'],
+define(['text!templates/projectContacts.html','text!templates/_barProjectBottom.html','views/__ScrollableView','views/_ItemProjectContact','models/Project','models/ContactCollection'],
 	function(contactsTemplate,projectBarTemplate,ScrollableView,ContactView, Project, ContactCollection){
 	var ContactsView = ScrollableView.extend({
 		el: '#content',

@@ -1,4 +1,4 @@
-define(['text!templates/projectBottomBar.html','text!templates/_formProjectChat.html','models/Status'],function(bottomBar0Template,bottomBarTemplate,Status){
+define(['text!templates/_barProjectBottom.html','text!templates/_formProjectChat.html','models/Status'],function(bottomBar0Template,bottomBarTemplate,Status){
 	var BottomBarView = Backbone.View.extend({
 
 		className: 'bottom-bar',

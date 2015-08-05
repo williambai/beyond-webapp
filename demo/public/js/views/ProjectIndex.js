@@ -1,4 +1,4 @@
-define(['text!templates/projectIndex.html','text!templates/projectBottomBar.html','models/Project'], function(projectIndexTemplate,projectBarTemplate,Project){
+define(['text!templates/projectIndex.html','text!templates/_barProjectBottom.html','models/Project'], function(projectIndexTemplate,projectBarTemplate,Project){
 	var ProjectIndexView = Backbone.View.extend({
 		el: '#content',
 		template: _.template(projectIndexTemplate),
