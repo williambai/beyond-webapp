@@ -1,4 +1,4 @@
-define(['views/Index','views/login','views/Layout','views/UserIndex','views/UserEdit','views/UserApp','views/Profile','views/VerifySingle','views/RecordIndex'], function(IndexView,LoginView,LayoutView,UserIndexView,UserEditView,UserAppView,ProfileView,VerifySingleView,RecordIndexView){
+define(['views/Index','views/login','views/Layout','views/UserIndex','views/UserEdit','views/UserApp','views/Profile','views/VerifySingle','views/RecordIndex','views/IdInfo'], function(IndexView,LoginView,LayoutView,UserIndexView,UserEditView,UserAppView,ProfileView,VerifySingleView,RecordIndexView,IdInfoView){
 
 	var Router = Backbone.Router.extend({
 		account: null,
@@ -20,6 +20,7 @@ define(['views/Index','views/login','views/Layout','views/UserIndex','views/User
 			'user/app/:id': 'userApp',
 			'user/add': 'userAdd', 
 			'verify/single': 'verifySingle',
+			'id/info': 'idInfo',
 			'record/index': 'recordIndex',
 		},
 
@@ -190,6 +191,19 @@ define(['views/Index','views/login','views/Layout','views/UserIndex','views/User
 				var verifySingleView = new VerifySingleView({id: null, account: this.account});
 				this.changeView(verifySingleView);
 				verifySingleView.trigger('load');
+			}
+		},
+
+		idInfo: function(){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
+			if(this.account.roles.user){
+				this.appEvents.trigger('set:brand', '身份证号信息解读');
+				var idInfoView = new IdInfoView({id: null, account: this.account});
+				this.changeView(idInfoView);
+				idInfoView.trigger('load');
 			}
 		},
 

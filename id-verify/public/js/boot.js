@@ -5,11 +5,12 @@ require.config({
 		'Backbone': '/js/libs/backbone',
 		'text': '/js/libs/text',
 		'templates': '../templates',
-		'Sockets': '/socket.io/socket.io'
+		'Sockets': '/socket.io/socket.io',
+		'IdInfo': '/js/libs/idinfo',
 	},
 	shim: {
 		'Backbone': ['Underscore', 'jQuery'],
-		'main': ['Backbone']
+		'main': ['Backbone'],
 	}
 });
 
