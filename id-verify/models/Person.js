@@ -88,7 +88,6 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 	};
 
 	Person.prototype.findAll = function(pairs, callback){
-		console.log(pairs)
 		this.model
 			.find({
 				$or: pairs

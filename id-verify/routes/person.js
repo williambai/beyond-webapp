@@ -1,126 +1,58 @@
 exports = module.exports = function(app,models){
-	var fs = require('fs');
-	var path = require('path');
-	var inLicense = fs.readFileSync(path.join(__dirname,'../config','auth_sjtxsjtx49338_1112.txt'),{encoding: 'utf8'});
-	// var inLicense = fs.readFileSync(path.join(__dirname,'auth_shldshld43318_1112.txt'),{encoding: 'utf8'});
-	//var inLicenseDetail = fs.readFileSync(path.join(__dirname,'.txt'),{encoding: 'utf8'});
+	var nciic = new (require('../libs'))(models,{
+			// wsdl: require('path').join(__dirname,'../test/nciic/','NciicLocalServices.wsdl') /** ONLY for development */
+		});
 
-	/*check single and multi( xm,hm and xp ). */
-	// var inLicenseSimple = fs.readFileSync(path.join(__dirname,'auth_hzgjhzgj48842_3454.txt'),{encoding: 'utf8'});
-
-	/*check detail*/
-	// var inLicenseDetail = fs.readFileSync(path.join(__dirname,'auth_hzgjhzgj48842_4958.txt'),{encoding: 'utf8'});
-
-	/* photo check license */
-	// var inLicensePhoto = fs.readFileSync(path.join(__dirname,'auth_shldrxbd47888_4777.txt'),{encoding: 'utf8'});
-
-	var nciic = require('../libs/nciic')({
-		inLicense: inLicense,
-		privatekey: path.join(__dirname,'../config','privatekey.pem'),
-		certificate: path.join(__dirname,'../config','certificate.pem')
-	});
-	
-	var async = require('async');
-	var Person = models.Person;
-	var Record = models.Record;
-
-	var verify = function(req,res){
+	var check = function(req,res){
 			// res.send(req.body);
 			// return;
+			var stage;
 			if(req.session && req.session.account && req.session.account.business){
-				switch(req.session.account.business.stage){
-					case 'test': 
-						_verifyTestStage(req,res);
-						break;
-					case 'dev': 
-						_verifyDevStage(req,res);
-						break;
-					case 'prod':
-						_verifyProdStage(req,res);
-						break;
-					default:
-						res.sendStatus(401);
-				};
-			}else{
-				res.sendStatus(400);
+				stage = req.session.account.business.stage;
 			}
-		};
-
-	var _verifyTestStage = function(req,res){
-			async.waterfall(
-				[
-
-				]
-				,function(err,result){
-					if(err){
-						res.sendStatus(400);
-						return;
-					}
-					res.send(result);
-				}
-			);		
-		};
-
-	var _verifyDevStage = function(req,res){
-			console.log('dev stage...')
-			//one or more check supported
-			var pairs = [];
-			if(req.body instanceof Array){
-				pairs = req.body;
-			}else{
-				pairs.push(req.body);
+			if(!stage){
+				res.send(403,'未授权');
+				return;
 			}
-			async.waterfall(
-				[
-					function _person(callback){
-						Person.findAll(pairs,function(err,persons){
-							callback(err,persons);
-						});
-					},
-					function _process(persons,callback){
-						pairs.forEach(function(person){
-							person.result = false;
-							for(var i in persons){
-								if(person.card_id == persons[i].card_id){
-									person.credential = true;
-									delete persons[i];
-									break;
-								}
-							}
-						});
-						callback(null,pairs);
-					},
-					function _record(persons, callback){
-						Record.add(req.session.account._id,req.session.account.username,'身份校验', persons.length, 0, 'dev', JSON.stringify(persons));
-						callback(null,persons);
-					}
-				]
-				,function(err,result){
+			var type = req.body.type;
+			if(!req.body.type){
+				res.send(400,'缺少type参数');
+				return;
+			}
+			var paires = [];
+			if(req.body.persons instanceof Array){
+				pairs = req.body.persons;
+			}else{
+				pairs.push(req.body.persons);
+			}
+			nciic.check(
+				pairs, 
+				req.session.account, 
+				{
+					type: 'base',
+					stage: stage
+				},
+				function(err,result){
 					if(err){
-						res.sendStatus(400);
+						res.send(400,result);
 						return;
 					}
 					res.send(result);
 				}
-			);		
+			);
 		};
-	var _verifyProdStage = function(req,res){
-			async.waterfall(
-				[
 
-				]
-				,function(err,result){
-					if(err){
-						res.sendStatus(400);
-						return;
-					}
-					res.send(result);
-				}
-			);		
-		};
+	var getCondition = function(req,res){
+			nciic.getCondition(function(err, result){
+				if(err) throw err;
+				res.send(result);
+			});
+	};
+
 /**
  * router outline
  */
+ 	app.get('/persons/getCondition', app.isLogined, getCondition);
 	//query collection
-	app.post('/persons/verify', app.isLogined, verify);
+	app.post('/persons/check', app.isLogined, check);
 };

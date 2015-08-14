@@ -22,12 +22,21 @@ define(['text!templates/verifySingle.tpl','text!templates/_itemVerify.tpl'], fun
 			var card_id = this.$('input[name=card_id]').val();
 			var card_name = this.$('input[name=card_name]').val();
 
-			$.ajax('/persons/verify', {
+			var pairs = [{card_id: '610125197004201212',card_name: '白卫'},{card_id: 1,card_name: 'test1'},{card_id:11,card_name: 'test11'}];
+
+			$.ajax('/persons/check', {
 				method: 'POST',
 				dataType: 'json',
+				// data: {
+				// 	type: 'base',
+				// 	persons: {
+				// 		card_id: card_id,
+				// 		card_name: card_name
+				// 	}
+				// },
 				data: {
-					card_id: card_id,
-					card_name: card_name
+					type: 'base',
+					persons: pairs
 				},
 				success: function(data){
 					var person = data[0] || {};

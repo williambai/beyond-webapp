@@ -788,7 +788,7 @@
   </wsdl:binding>
   <wsdl:service name="NciicServices">
     <wsdl:port name="NciicServicesHttpPort" binding="tns:NciicServicesHttpBinding">
-      <wsdlsoap:address location="https://api.nciic.com.cn/nciic_ws/services/NciicServices"/>
+      <wsdlsoap:address location="http://localhost:9000/nciic_ws/services/NciicServices"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
