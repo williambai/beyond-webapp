@@ -109,7 +109,7 @@ app.isLogined = function(req,res,next){
 	if(req.session.loggedIn){
 		next();
 	}else{
-		res.sendStatus(401);
+		res.send({errcode:40100,errmsg:'没有登录'});
 	}
 };
 

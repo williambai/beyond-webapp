@@ -10,6 +10,7 @@ define(['text!templates/recordIndex.tpl','views/_ListRecord'],
 		},
 
 		events: {
+			'scroll': 'scroll',
 			'submit form': 'search'
 		},
 
@@ -18,12 +19,21 @@ define(['text!templates/recordIndex.tpl','views/_ListRecord'],
 				account: this.account,
 				url: '/records'
 			});
+			this.recordListView.collectionUrl = '/records';
 			this.recordListView.trigger('load');
+		},
+
+		scroll: function(){
+			this.recordListView.scroll();
+			return false;
 		},
 
 		search: function(){
 			var that = this;
-			this.recordListView.collection.url = '/records?type=search&searchStr=' + $('input[name=searchStr]').val();
+			this.recordListView.$el.empty();
+			var url = '/records?type=search&searchStr=' + $('input[name=searchStr]').val();
+			this.recordListView.collection.url = url;
+			this.recordListView.collectionUrl = url;
 			this.recordListView.collection.fetch({reset: true});
 			return false;
 		},

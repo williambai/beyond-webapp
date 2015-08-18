@@ -13,7 +13,11 @@ define(['text!templates/__load-more.tpl',],function(loadMoreTemplate){
             		this.$el.append(this.templateLoadMore({loading: true}));
             	}
 				++this.page;
-				this.collection.url = this.collectionUrl + '?page=' + this.page;
+				if(this.collectionUrl.indexOf('?') == -1){
+					this.collection.url = this.collectionUrl + '?page=' + this.page;
+				}else{
+					this.collection.url = this.collectionUrl + '&page=' + this.page;
+				}
 				this.collection.fetch({
 					success: function(collection, response){
 						if(that.$('.load-more').length > 0){

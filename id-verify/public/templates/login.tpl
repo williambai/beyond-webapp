@@ -17,11 +17,11 @@
                             <input type="password" name="password" class="form-control input-sm" placeholder="密码">
                         </div>
 
-                        <div class="form-group">
+<!--                         <div class="form-group">
                         	<a href="#register" class="pull-right">还没有注册，去注册吧！</a>
                        		<a href="#forgotpassword">忘记密码？</a>
                     	</div>
-
+ -->
                         <br>
                         <input type="submit" value="登&nbsp;&nbsp;录" class="btn btn-primary btn-block">
                     </form>

@@ -9,6 +9,9 @@ define(['router'],function(router){
 			$.ajax('/authenticated',{
 				mathod: 'GET',
 				success: function(account){
+					if(account.errcode){
+						return callback(false);
+					}
 					router.appEvents.trigger('logined',account);
 					return callback(true);
 				},

@@ -1,7 +1,7 @@
 <div class="sidebar sidebar-left">
 	<div class="scrollable" style="padding-top:70px;">
 		<div class="scrollable-header app-name">
-			<a href="#" onclick="window.location.reload();return false;">公民身份验证系统</a>
+			<a href="#" onclick="window.location.reload();return false;">居民身份校验系统</a>
 		</div>
 		<div class="scrollable-content">
 			<div class="list-group">

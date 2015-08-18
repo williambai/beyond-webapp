@@ -1,4 +1,4 @@
-<h4 class="text-center">身份证号码信息</h4>
+<h4 class="text-center">身份证号码校验</h4>
 <hr/>
 <p>价格：免费</p>
 <form class="form-horizontal">

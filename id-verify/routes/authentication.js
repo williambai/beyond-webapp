@@ -36,9 +36,9 @@ module.exports = exports = function(app,models){
 				res.sendStatus(400);
 				return;
 			}
-			Account.login(email,password,function(account){
-				if(!account){
-					res.sendStatus(401);
+			Account.login(email,password,function(err,account){
+				if(err){
+					res.send({errcode:40100,errmsg: 'login error.'});
 					return;
 				}
 				req.session.loggedIn = true;
@@ -97,8 +97,8 @@ module.exports = exports = function(app,models){
 		};
 
 	var authenticated = function(req,res){
-			console.log('authenticated:');
-			console.log(req.session)
+			// console.log('authenticated:');
+			// console.log(req.session)
 			if(req.session.loggedIn){
 				res.json({
 					id: req.session.account._id,
@@ -108,7 +108,7 @@ module.exports = exports = function(app,models){
 					roles: req.session.account.roles
 				});
 			}else{
-				res.sendStatus(401);
+				res.send({errcode:40101,errmsg: 'did not login.'});
 			}
 		};
 

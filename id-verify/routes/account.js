@@ -7,6 +7,7 @@
 	var Account = models.Account;
 
 	var add = function(req,res){
+		var roles = req.session.account.roles;
 		var creator = {
 				id: (req.session.account && req.session.account._id),
 				username: (req.session.account && req.session.account.username),
@@ -39,18 +40,16 @@
 		async.waterfall(
 			[
 				function _account(callback){
-					Account.add(creator,account, function(account){
-						if(!account){
-							callback(400);
-							return;
-						}
-						callback(null,account);
-					});
+					if(roles.admin || roles.agent){
+						Account.add(creator,account, callback);
+					}else{
+						callback({errcode: 401001, errmsg: '没有权限'});
+					}
 				}
 			],
-			function _result(err,result){
+			function(err,result){
 				if(err){
-					res.sendStatus(err);
+					res.send(err);
 					return;
 				}
 				res.sendStatus(200);
@@ -58,44 +57,161 @@
 		);
 	};
 
-	var updateAvatar = function(req,res){
-			var meId = req.session.accountId;
-			var accountId = req.params.id == 'me' 
-								? req.session.accountId
-								: req.params.id;
-			// console.log(req.files);
-			// res.writeHead(200, {'content-type': 'text/plain'});
-			// res.write('received upload:\n\n');
-			// var util = require('util');
-			// res.end(util.inspect({files: req.files}));
-			var file = req.files.files;
-			var filename = app.randomHex() + '.' + file.extension;//file.name;
-			var tmp_path = file.path;
-			var new_path = path.join(__dirname, '../public/upload/',filename);
-			var avatar = '/upload/' + filename;
-			fs.rename(tmp_path,new_path,function(err){
-				if(err) {
-					console.log(err);
-					res.sendStatus(400);
-					return;
-				}
-				Account.updateAvatar(accountId,avatar, function(err){
-					if(!err){
-						res.end(avatar);
-					}else{
-						res.end();
-					}
-				});
-			});
-		};
-
 	var updateAccount = function(req,res){
+			var roles = req.session.account.roles;
+			var type = req.query.type || '';
 			var meId = req.session.account._id;
 			var accountId = req.params.id == 'me' 
 								? meId
 								: req.params.id;
 			var account = req.body;
-
+			switch(type){
+				case 'times': 
+					async.waterfall(
+						[
+							function(callback){
+								if(roles.user){
+									Account.updateTimes(accountId,account,callback);
+								}else{
+									callback({errcode: 401001, errmsg: '没有权限'});
+								}
+							},
+						],
+						function(err,result){
+							if(err){
+								res.send(err);
+								return;
+							}
+							res.sendStatus(result);
+						}
+					);
+					break;
+				case 'balance': 
+					async.waterfall(
+						[
+							function(callback){
+								if(roles.user){
+									Account.updateBalance(accountId,account,callback);
+								}else{
+									callback({errcode: 401001, errmsg: '没有权限'});
+								}
+							},
+						],
+						function(err,result){
+							if(err){
+								res.send(err);
+								return;
+							}
+							res.sendStatus(result);
+						}
+					);
+					break;
+				case 'password': 
+					async.waterfall(
+						[
+							function(callback){
+								if(roles.user){
+									account = _.pick(account,'password');
+									Account.update(accountId,account,callback);
+								}else{
+									callback({errcode: 401001, errmsg: '没有权限'});
+								}
+							},
+						],
+						function(err,result){
+							if(err){
+								res.send(err);
+								return;
+							}
+							res.sendStatus(result);
+						}
+					);
+					break;
+				case 'app': 
+					async.waterfall(
+						[
+							function(callback){
+								if(roles.admin || roles.agent){
+									account = _.pick(account,'app');
+									Account.update(accountId,account,callback);
+								}else{
+									callback({errcode: 401001, errmsg: '没有权限'});
+								}
+							},
+						],
+						function(err,result){
+							if(err){
+								res.send(err);
+								return;
+							}
+							res.sendStatus(result);
+						}
+					);
+					break;
+				case 'avatar':
+					async.waterfall(
+						[
+							function(callback){
+								if(roles.user){
+									// console.log(req.files);
+									// res.writeHead(200, {'content-type': 'text/plain'});
+									// res.write('received upload:\n\n');
+									// var util = require('util');
+									// res.end(util.inspect({files: req.files}));
+									var file = req.files.files;
+									var filename = app.randomHex() + '.' + file.extension;//file.name;
+									var tmp_path = file.path;
+									var new_path = path.join(__dirname, '../public/upload/',filename);
+									var avatar = '/upload/' + filename;
+									fs.rename(tmp_path,new_path,function(err){
+										if(err) {
+											console.log(err);
+											res.sendStatus(400);
+											return;
+										}
+										Account.updateAvatar(accountId,avatar, function(err){
+											if(!err){
+												res.end(avatar);
+											}else{
+												res.end();
+											}
+										});
+									});
+								}else{
+									callback({errcode: 401001, errmsg: '没有权限'});
+								}
+							},
+						],
+						function(err,result){
+							if(err){
+								res.send(err);
+								return;
+							}
+							res.sendStatus(200);
+						}
+					);
+					break;
+				default:
+					async.waterfall(
+						[
+							function(callback){
+								if(roles.admin || roles.agent){
+									Account.update(accountId,account,callback);
+								}else{
+									callback({errcode: 401001, errmsg: '没有权限'});
+								}
+							},
+						],
+						function(err,result){
+							if(err){
+								res.send(err);
+								return;
+							}
+							res.sendStatus(200);
+						}
+					);
+					break;
+			}
 		// var account = {
 		// 		email: req.body.email,
 		// 		password: req.body.password,
@@ -127,86 +243,110 @@
 			// }
 			// if(req.body.)
 			// console.log(account);
-			Account.update(accountId,account);
-			res.sendStatus(200);
 		};
 
 	var getAccount = function(req,res){
+			var type = req.query.type || '';
 			var meId = req.session.account._id;
 			var accountId = req.params.id == 'me' 
 								? meId
 								: req.params.id;
-
-			async.waterfall(
-				[
-					function _account(callback){
-						Account.findById(accountId, function(account){
-							if(!account){
-								callback(404);
+			switch(type){
+				default:
+					async.waterfall(
+						[
+							function(callback){
+								Account.findById(accountId, {}, callback);
+							},
+						],
+						function(err,result){
+							if(err){
+								res.send(err);
 								return;
 							}
-							callback(null,account);
-						});
-					}
-				],
-				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
-					}
-					res.send(result);
-				}
-			);
+							res.send(result);
+						}
+					);
+				break;
+			}
 		};
 
 	var getAccounts = function(req,res){
-			if(!req.query.type){
-				res.sendStatus(400);
-				return;
-			}
-			switch(req.query.type){
-				case 'search': 
-					_searchAccountsByString(req,res);
-					break;
-				default: 
-					Account.findByString('',function(accounts){
-						if(!accounts){
-							res.sendStatus(404);
-							return;
-						}
-						res.send(accounts);
-					});
-					break;
-			}
-		};
-
-	var _searchAccountsByString = function(req,res){
+			var type = req.query.type || '';
+			var page = req.query.page || 0;
 			var accountId = req.session.account._id;
-			var searchStr = req.query.searchStr;
-			if(null == searchStr){
-				res.sendStatus(400);
-				return;
-			}
-			Account.findByString(accountId,searchStr,0,function(accounts){
-				if(!accounts){
-					res.sendStatus(404);
-					return;
-				}
-				res.send(accounts);
-			});
-		};	
+			var roles = req.session.account.roles;
+			switch(type){
+				case 'search':
+					var searchStr = req.query.searchStr || '';
+					async.waterfall(
+						[
+							function(callback){
+								if(roles.admin || roles.agent){
+									Account.findByString(accountId,searchStr,page,callback);
+								}else{
+									callback({errcode: 401001, errmsg: '没有权限'});
+								}
+							},
 
+						],function(err,result){
+							if(err){
+								res.send(err);
+								return;
+							}
+							res.send(result);
+						}
+					);
+					break;
+				default:
+					async.waterfall(
+						[
+							function(callback){
+								if(roles.admin || roles.agent){
+									Account.findAll(accountId,page,callback);
+								}else{
+									callback({errcode: 401001, errmsg: '没有权限'});
+								}
+							},				
+						],
+						function _result(err,result){
+							if(err){
+								res.send(err);
+								return;
+							}
+							res.send(result);
+						}
+					);
+					break;
+			}
+
+		};
 /**
  * router outline
  */
- 	//add account
+ 	/**
+ 	 * add account
+ 	 */
  	app.post('/accounts', app.isLogined, add);
- 	//update account
+ 	/**
+ 	 * update account
+ 	 * type: 
+ 	 *     times
+ 	 *     balance
+ 	 *     avatar
+ 	 *     password
+ 	 */
  	app.post('/accounts/:id', app.isLogined, updateAccount);
- 	//update avatar
- 	app.post('/account/:id/avatar', app.isLogined, updateAvatar);
-	//query model
+	/**
+	 * query model
+	 * type:
+	 */
 	app.get('/accounts/:id', app.isLogined,getAccount);
-	//query collection
+	// 
+	/**
+	 * query collection
+	 * type: 
+	 *      search
+	 */
 	app.get('/accounts', app.isLogined, getAccounts);
 };

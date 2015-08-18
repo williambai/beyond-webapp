@@ -1,4 +1,5 @@
 module.exports = exports = function(app, config,mongoose,nodemailer){
+	var _ = require('underscore');
 	var account = null;
 
 	var smtpTransport = require('nodemailer-smtp-transport');
@@ -165,6 +166,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			var shaSum = crypto.createHash('sha256');
 			if(account && account.password){
 				shaSum.update(account.password);
+				account.password = shaSum.digest('hex');
 			}
 			account.createBy = creator;
 			account.app = {
@@ -235,13 +237,14 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			// 	registerCode: crypto.createHash('sha256').update(account.email + "beyond" + account.password).digest('hex')
 			// });
 
-			user.save(function(err){
+			user.save(function(err,doc){
 				this.debug && this.defaultCallback(err);
-				if(err){
-					callback && callback(null);					
-				}else{
-					callback && callback(user);
-				}
+				callback(err,doc);
+				// if(err){
+				// 	callback && callback(null);					
+				// }else{
+				// 	callback && callback(user);
+				// }
 				var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
 
 				smtpTransporter.sendMail({
@@ -263,18 +266,28 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		};
 
 	Account.prototype.update = function(id,account,callback){
+			if(account.password){
+				var shaSum = crypto.createHash('sha256');
+				shaSum.update(account.password);
+				account.password = shaSum.digest('hex');
+			}
+			account.business.times = {
+				verify: 5,
+				base: 1,
+				whole: 1
+			};
+
+			account.business.prices = {
+				verify: 2,
+				base: 5,
+				whole: 10
+			};
+
 			this.model
 				.findByIdAndUpdate(
 					id,
 					account,
-					function(err){
-						this.debug && this.defaultCallback(err);
-						if(err){
-							callback && callback(null);
-						}else{
-							callback && callback(true);
-						}
-					}
+					callback
 				);
 		};
 
@@ -282,18 +295,13 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			var shaSum = crypto.createHash('sha256');
 			shaSum.update(password);
 			
-			this.model.findOne({
-				email: email,
-				password: shaSum.digest('hex'),
-				// enable: 0,
-			},function(err,doc){
-				this.debug && this.defaultCallback(err);
-				if(err){
-					callback && callback(null);
-				}else{
-					callback && callback(doc);
-				}
-			});
+			this.model
+				.findOne({
+					email: email,
+					password: shaSum.digest('hex'),
+					enable: true,
+				})
+				.exec(callback);
 		};
 
 	Account.prototype.inviteFriend = function(emails, inviteUrl, username, email, callback){
@@ -365,18 +373,39 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});
 		};
 
-	Account.prototype.findById = function(accountId,callback){
-		this.model.findOne({_id: accountId}, function(err,doc){
-			this.debug && this.defaultCallback(err);
-			if(err){
-				callback && callback(null);
-			}else{
-				callback && callback(doc);
-			}
-		});
+	Account.prototype.findById = function(accountId,select,callback){
+		var _default = {
+			createBy: 0,
+			password: 0,
+			registerCode: 0,
+		};
+		var selected = _.extend(_default,select);
+		this.model
+			.findById(accountId)
+			.select(selected)
+			.exec(callback);
 	};
 
-	Account.prototype.findAll = function(accountIds, page, callback){
+	Account.prototype.findAll = function(createId,page,callback){
+		var _default = {
+			createBy: 0,
+			password: 0,
+			registerCode: 0,
+		};
+		page = (!page || page<0) ? 0 : page;
+		var per = 20;
+		this.model
+			.find({})
+			.where({
+				'createBy.id': createId
+			})
+			.select(_default)
+			.skip(page*per)
+			.limit(per)
+			.exec(callback);		
+	};
+
+	Account.prototype.findByIds = function(accountIds, page, callback){
 		page = (!page || page<0) ? 0 : page;
 		var per = 20;
 		this.model
@@ -420,50 +449,50 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 	};
 
 	Account.prototype.updateAvatar = function(id,avatar,callback){
+			var path_avatar = 'avatar';
 			this.model
 				.findByIdAndUpdate(
 					id,
 					{
-						avatar: avatar
+						$set: {path_avatar: avatar}
 					},
-					function(err){
-						this.debug && this.defaultCallback(err);
-						if(err){
-							callback && callback(null);
-						}else{
-							callback && callback(true);
-						}
-					}
+					callback
 				);
 		};
 
-	if(!account){
-		account = new Account(AccountModel);
-	}
-
 	Account.prototype.updateTimes = function(id,type,count,callback){
-		var path = 'business.times.' + type;
+		var path_type = 'business.times.' + type;
 		this.model
 			.findByIdAndUpdate(
 				id,
 				{
-					'$inc': {path: -1}
+					$inc: {path_type: -1}
 				},
-				callback(err,doc)
+				{
+					select: {business: 1}
+				},
+				callback
 			);
 	};
 
 	Account.prototype.updateBalance = function(id,cost,callback){
-		var path = 'balance';
+		var path_balance = 'balance';
 		this.model
 			.findByIdAndUpdate(
 				id,
 				{
-					'$inc': {path: -cost}
+					$inc: {path_balance: -cost}
 				},
-				callback(err,doc)
+				{
+					select: {business: 1}
+				},
+				callback
 			);
 	};
+
+	if(!account){
+		account = new Account(AccountModel);
+	}
 
 	return account;
 };

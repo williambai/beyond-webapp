@@ -10,32 +10,29 @@ define(['text!templates/userIndex.tpl','views/_ListUser'],
 		},
 
 		events: {
+			'scroll': 'scroll',
 			'submit form': 'search'
 		},
 
 		load: function(){
 			this.userListView = new UserListView({
 				account: this.account,
-				url: '/accounts?type=search&searchStr='
+				url: '/accounts'
 			});
+			this.userListView.collectionUrl = '/accounts';
 			this.userListView.trigger('load');
 		},
-
+		scroll: function(){
+			this.userListView.scroll();
+			return false;
+		},
 		search: function(){
 			var that = this;
-			this.userListView.collection.url = '/accounts?type=search&searchStr=' + $('input[name=searchStr]').val();
+			this.userListView.$el.empty();
+			var url = '/accounts?type=search&searchStr=' + $('input[name=searchStr]').val();
+			this.userListView.collectionUrl = url;
+			this.userListView.collection.url = url;
 			this.userListView.collection.fetch({reset: true});
-			// $.ajax('/accounts/find?searchStr=' + $('input[name=searchStr]').val(),{
-			// 	mathod: 'GET',
-			// 	sucess: function(data){
-			// 		console.log('+++')
-			// 		that.userListView.collection.reset(data);
-			// 	},
-			// 	error: function(){
-			// 		$('#userlist').text('没有找到。');
-			// 		$('#userlist').slidedown();
-			// 	}
-			// });
 			return false;
 		},
 

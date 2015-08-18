@@ -2,7 +2,6 @@
 <hr/>
 <div class="pull-right times"></div>
 <div class="price"></div>
-<br>
 <form class="form-horizontal">
 	<label></label>
 	<input name="card_name" type="text" placeholder="姓名" class="form-control">

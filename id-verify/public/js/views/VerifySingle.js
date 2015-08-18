@@ -58,7 +58,7 @@ define(['text!templates/verifySingle.tpl','text!templates/_itemVerify.tpl'], fun
 						if(times > 0){
 							that.$('.times').html('您当前还可以查询 ' + times +' 条')
 						}
-						var person = data.persons[0] || {};
+						var person = (data.persons && data.persons[0]) || {};
 						that.$('#result').html(that.templateResult({person: person}));
 					}
 				},

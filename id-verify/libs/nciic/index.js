@@ -78,7 +78,37 @@ exports.prototype.getCondition = function(options,fn){
 		inLicense: options.inLicense,
 	}
 	this.soapClient.nciicGetCondition(args,function(err,result){
-		fn && fn(err, result);
+		if(err){
+			console.error('nciic remote server getCondition: ');
+			console.error(err);
+			fn && fn({errcode: 500100, errmsg: 'remote server exceptions.'});
+			return;
+		}
+		var out = xml2json.toJson(result.out.toLowerCase());
+		try{
+			out = JSON.parse(out);
+		}catch(err){
+			fn && fn({errcode: 500111, errmsg: 'remote数据解析异常'});
+			return;
+		}
+		if(out.response){
+			var response = out.response;
+			var error = {};
+			if(response.rows){
+				if(response.rows.row){
+					var _error = response.rows.row;
+					if(_error.errorcode){
+						error.errcode = _error.errorcode;
+					}
+					if(_error.errormsg){
+						error.errmsg = 'remote server exceptions, ' + _error.errormsg;
+					}
+				}
+			}
+			fn && fn(error);
+			return;
+		}
+		fn && fn(null, out);
 	});	
 };
 
@@ -107,29 +137,39 @@ exports.prototype.check = function(persons,options,fn){
 
 	this.soapClient.nciicCheck(args,function(err,result){
 		if(err){
-			fn && fn(err);
+			console.error('nciic remote server check: ');
+			console.error(err);
+			fn && fn({errcode: 500100, errmsg: 'remote server exceptions.'});
 			return;
 		}
-
-		var out = xml2json.toJson(result).toLowerCase();
-		if(!(out && out.rows && out.rows.row)){
-			fn && fn({code: 500, message: 'remote数据解析异常'});
+		var out = xml2json.toJson(result.out.toLowerCase());
+		try{
+			out = JSON.parse(out);
+		}catch(err){
+			fn && fn({errcode: 500111, errmsg: 'remote数据解析异常'});
 			return;
 		}
+	
 		if(out.response){
 			var response = out.response;
 			var error = {};
 			if(response.rows){
 				if(response.rows.row){
-					var _error = row;
+					var _error = response.rows.row;
+					console.log(_error)
 					if(_error.errorcode){
-						error.code = _error.errorcode;
-					}else if(_error.errormsg){
-						error.message = _error.errormsg;
+						error.errcode = _error.errorcode;
+					}
+					if(_error.errormsg){
+						error.errmsg = 'remote server exceptions, ' + _error.errormsg;
 					}
 				}
 			}
 			fn && fn(error);
+			return;
+		}
+		if(!(out && out.rows && out.rows.row)){
+			fn && fn({errcode: 500110, errmsg: 'remote数据不完整'});
 			return;
 		}
 		var error = null;
@@ -139,8 +179,8 @@ exports.prototype.check = function(persons,options,fn){
 		rows.forEach(function(row,index){
 			if(row.errorcode){
 				error = {
-					code: row.errorcode,
-					message: row.errormsg || ''
+					errcode: row.errorcode,
+					errmsg: row.errormsg || ''
 				};
 			}else{
 				var outPerson = {};
@@ -155,45 +195,61 @@ exports.prototype.check = function(persons,options,fn){
 						var item = output.item;
 						if(item.errormesage){
 							outPerson.errormesage = item.errormesage; 
-						}else if(item.errormesagecol){
+						}
+						if(item.errormesagecol){
 							outPerson.errormesagecol = item.errormesagecol;
-						}else if(item.gmsfhm){ //
+						}
+						if(item.gmsfhm){ //
 							var gmsfhm = item.gmsfhm;
 							if(gmsfhm.result_gmsfhm){//<!--公民身份号码的核查结果:注销人员的文字描述-->
 								var result_gmsfhm = gmsfhm.result_gmsfhm;
 								outPerson.result_gmsfhm = result_gmsfhm.trim();
 							}
-						}else if(item.xm){
+						}
+						if(item.xm){
 							var xm = item.xm;
 							if(xm.result_xm){//<!--姓名的核查结果-->
 								var result_xm = xm.result_xm;
 								outPerson.result_xm = result_xm.trim();
 							}
-						}else if(item.zt){//<!--注销状态描述-->
+						}
+						if(item.zt){//<!--注销状态描述-->
 							outPerson.result_zt = item.zt;
-						}else if(item.zxbs){//<!--注销标识-->
+						}
+						if(item.zxbs){//<!--注销标识-->
 							outPerson.result_zxbs = item.zxbs;
-						}else if(item.cym){//<!—曾用名-->
+						}
+						if(item.cym){//<!—曾用名-->
 							outPerson.result_cym = item.cym;
-						}else if(item.xb){ //<!--性别-->
+						}
+						if(item.xb){ //<!--性别-->
 							outPerson.result_xb = item.xb;
-						}else if(item.mz){ //<!--民族-->
+						}
+						if(item.mz){ //<!--民族-->
 							outPerson.result_mz = item.mz;
-						}else if(item.csrq){ //<!—出生日期-->
+						}
+						if(item.csrq){ //<!—出生日期-->
 							outPerson.result_csrq = item.csrq;
-						}else if(item.ssssxq){//<!—所属省市县区-->
+						}
+						if(item.ssssxq){//<!—所属省市县区-->
 							outPerson.result_ssssxq = item.ssssxq;
-						}else if(item.csdssx){//<!—出生地省市县区-->
+						}
+						if(item.csdssx){//<!—出生地省市县区-->
 							outPerson.result_csdssx = item.csdssx;
-						}else if(item.zz){//<!—住址-->
+						}
+						if(item.zz){//<!—住址-->
 							outPerson.result_zz = item.zz;
-						}else if(item.fwcs){//<!—服务处所-->
+						}
+						if(item.fwcs){//<!—服务处所-->
 							outPerson.result_fwcs = item.fwcs;
-						}else if(item.hyzk){//<!—婚姻状况-->
+						}
+						if(item.hyzk){//<!—婚姻状况-->
 							outPerson.result_hyzk = item.hyzk;
-						}else if(item.whcd){//<!—文化程度-->
+						}
+						if(item.whcd){//<!—文化程度-->
 							outPerson.result_whcd = item.whcd;
-						}else if(item.xp){//<!—相片(Base64 编码)-->
+						}
+						if(item.xp){//<!—相片(Base64 编码)-->
 							outPerson.result_xp = item.xp;
 						}
 					}
@@ -223,11 +279,14 @@ exports.prototype.check = function(persons,options,fn){
 												var item = output.item;
 												if(item.result_xm){//<!--同住址成员的姓名-->
 													_item.result_xm = item.result_xm;
-												}else if(item.result_xb){//<!--同住址成员的性别-->
+												}
+												if(item.result_xb){//<!--同住址成员的性别-->
 													_item.result_xb = item.result_xb;
-												}else if(item.result_mz){//<!--同住址成员的民族-->
+												}
+												if(item.result_mz){//<!--同住址成员的民族-->
 													_item.result_mz = item.result_mz;
-												}else if(item.result_csrq){//<!--同住址成员的出生日期-->
+												}
+												if(item.result_csrq){//<!--同住址成员的出生日期-->
 													_item.result_csrq = item.result_csrq;
 												}
 											}

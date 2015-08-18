@@ -5,6 +5,9 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			userId: String,
 			username: String,
 			type: String,
+			sbm: String,//终端用户识别码
+			fsd: String,//终端用户发生地
+			ywlx: String,//终端用户业务类型
 			items: Number,
 			price: Number,
 			stage: String,
@@ -28,11 +31,14 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			return console.log('Record Save/Remove/Update successfully.');
 		};
 
-	Record.prototype.add = function(userId, username, type, items, price, stage, content, callback){
+	Record.prototype.add = function(userId, username, type, sbm, fsd, ywlx, items, price, stage, content, callback){
 		var record = new this.model({
 			userId: userId,
 			username: username,
 			type: type,
+			sbm: sbm,
+			fsd: fsd,
+			ywlx: ywlx,
 			items: items,
 			price: price,
 			stage: stage,
@@ -50,25 +56,42 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			});	
 	};
 
-	Record.prototype.getByTimeline = function(userId,page,callback){
+	Record.prototype.getAllByUser = function(userId,page,callback){
+		var _default = {
+			content: 0
+		};
 		page = (!page || page<0) ? 0 : page;
 		var per = 20;
 		this.model
 			.find({
 				userId: userId
 			})
-			.sort({updatetime: -1})
+			.select(_default)
+			.sort({createtime: -1})
 			.skip(page*per)
 			.limit(per)
-			.exec(function(err,records){
-			this.debug && this.defaultCallback(err);
-			if(err || records.length == 0){
-				callback && callback(null);
-			}else{
-				callback && callback(records);
-			}
-		});
+			.exec(callback);
 	};
+
+	Record.prototype.findByString = function(userId,searchStr,page,callback){
+		page = (!page || page<0) ? 0 : page;
+		var per = 20;
+		var searchRegex = new RegExp(searchStr,'i');
+		this.model
+			.find({
+				$or: [
+					{'card_id': {$regex: searchRegex}},
+					{'card_name': {$regex: searchRegex}}
+				]
+			})
+			.where({
+				'userId': userId
+			})
+			.skip(page*per)
+			.limit(per)
+			.exec(callback);
+	};
+
 	if(!recordModel){
 		recordModel = new Record(RecordModel);
 	}
