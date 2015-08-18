@@ -30,9 +30,27 @@
 	</div>
 
 	<div class="form-group">
+		<label>业务类型：</label>
+		<hr>
+		<div class="">
+			<input type="checkbox" name="business-types-verify" value="verify" <% if(user.business.types && user.business.types.verify){ %>checked <% } %> disabled/> 校验（检验身份证合法性）
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="">
+			<input type="checkbox" name="business-types-base" value="base" <% if(user.business.types && user.business.types.base){ %>checked <% } %> disabled/> 基本信息（获取居民身份基本信息）
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="">
+			<input type="checkbox" name="business-types-whole" value="whole" <% if(user.business.types && user.business.types.whole){ %>checked <% } %> disabled/> 高级信息（获取居民身份高级信息）
+		</div>
+		<hr>
+	</div>
+	<div class="form-group">
 		<label>每日最高使用次数(-1不限制)：</label>
 		<div class="">
-			<input type="number" class="form-control" name="times" value="<%= user.business.times %>" disabled/>
+			<input type="number" class="form-control" name="times" value="<%= user.business.limit %>" disabled/>
 		</div>
 	</div>
 

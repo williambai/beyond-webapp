@@ -1,21 +1,21 @@
-define(['text!templates/verifySingle.tpl','text!templates/_itemVerify.tpl'], function(verifySingleTemplate,itemVerifyTemplate){
-	var VerifySingleView = Backbone.View.extend({
+define(['text!templates/baseInfo.tpl','models/Person'], function(baseInfoTemplate,Person){
+	var IdInfoView = Backbone.View.extend({
 		el: '#content',
-		template: _.template(verifySingleTemplate),
-		templateResult: _.template(itemVerifyTemplate),
+		template: _.template(baseInfoTemplate),
 		events: {
-			'submit form': 'verify',
+			'submit form': 'baseInfo',
 		},
 		limits: {},
 		initialize: function(options){
 			this.id = options.id;
 			this.account = options.account;
+			this.model = new Person();
 			this.on('load', this.load,this);
 		},
 
 		load: function(){
 			var that = this;
-			$.ajax('persons/times?type=verify', {
+			$.ajax('persons/times?type=base', {
 				method: 'GET',
 				success: function(data){
 					var limits = data.account || {};
@@ -28,26 +28,18 @@ define(['text!templates/verifySingle.tpl','text!templates/_itemVerify.tpl'], fun
 			});
 		},
 
-		verify: function(){
+		baseInfo: function(){
 			var that = this;
 			var card_id = this.$('input[name=card_id]').val();
 			var card_name = this.$('input[name=card_name]').val();
-
-			var pairs = [{card_id: '610125197004201212',card_name: '白卫'},{card_id: 1,card_name: 'test1'},{card_id:11,card_name: 'test11'}];
-
-			$.ajax('/persons/check?type=verify', {
+			$.ajax('/persons/check?type=base', {
 				method: 'POST',
 				dataType: 'json',
-				// data: {
-				// 	type: 'base',
-				// 	persons: {
-				// 		card_id: card_id,
-				// 		card_name: card_name
-				// 	}
-				// },
 				data: {
-					type: 'base',
-					persons: pairs
+					persons: {
+						card_id: card_id,
+						card_name: card_name
+					}
 				},
 				success: function(data){
 					if(data.errcode){
@@ -59,7 +51,8 @@ define(['text!templates/verifySingle.tpl','text!templates/_itemVerify.tpl'], fun
 							that.$('.times').html('您当前还可以查询 ' + times +' 条')
 						}
 						var person = data.persons[0] || {};
-						that.$('#result').html(that.templateResult({person: person}));
+						that.model = new Person(person);
+						that.render();
 					}
 				},
 				error: function(){
@@ -72,7 +65,7 @@ define(['text!templates/verifySingle.tpl','text!templates/_itemVerify.tpl'], fun
 		},
 
 		render: function(){
-			this.$el.html(this.template());
+			this.$el.html(this.template({limits:this.limits,person: this.model.toJSON()}));
 			if(this.limits.times > 0){
 				this.$('.times').html('您当前还可以查询 ' + this.limits.times +' 条')
 			}
@@ -84,5 +77,5 @@ define(['text!templates/verifySingle.tpl','text!templates/_itemVerify.tpl'], fun
 
 	});
 
-	return VerifySingleView;
+	return IdInfoView;
 })

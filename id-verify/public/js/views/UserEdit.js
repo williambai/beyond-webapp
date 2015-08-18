@@ -30,15 +30,20 @@ define(['text!templates/userEdit.tpl', 'models/Account'], function(userEditTempl
 						email: this.$('input[name=email]').val(),
 						username: this.$('input[name=username]').val(),
 						roles: {
-							admin: this.$('input[value=admin]').is(':checked'),
-							agent: this.$('input[value=agent]').is(':checked'),
-							user: this.$('input[value=user]').is(':checked'),
-							app: this.$('input[value=app]').is(':checked'),
+							admin: this.$('input[name=roles-admin]').is(':checked'),
+							agent: this.$('input[name=roles-agent]').is(':checked'),
+							user: this.$('input[name=roles-user]').is(':checked'),
+							app: this.$('input[name=roles-app]').is(':checked'),
 						},
 						business: {
-							stage: this.$('input[name=stage]:checked').val(),
-							times: this.$('input[name=times]').val(),
-							expired: this.$('input[name=expired]').val()
+							stage: this.$('input[name=business-stage]:checked').val(),
+							types: {
+								verify: this.$('input[value=business-types-verify]').is(':checked'),
+								base: this.$('input[value=business-types-base]').is(':checked'),
+								whole: this.$('input[value=business-types-whole]').is(':checked'),
+							},
+							limit: this.$('input[name=business-limit]').val(),
+							expired: this.$('input[name=business-expired]').val()
 						},
 						enable: this.$('input[name=enable]:checked').val(),
 					};

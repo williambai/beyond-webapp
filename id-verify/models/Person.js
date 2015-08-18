@@ -5,6 +5,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			card_md5: String,
 			card_name: String,
 			card_id: String,
+			content: {},
 			creattime: Date,
 			updatetime: Date,
 		});

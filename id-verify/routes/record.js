@@ -9,7 +9,8 @@ exports = module.exports = function(app,models){
 			if(!req.query.type){
 				Record.getByTimeline(userId,page,function(records){
 					if(!records){
-						res.sendStatus(404);
+						res.send(records);
+						// res.send({errcode: 40401, errmsg: 'records 不存在'});
 						return;
 					}
 					res.send(records);

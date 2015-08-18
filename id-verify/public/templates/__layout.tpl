@@ -7,8 +7,10 @@
 			<div class="list-group">
 				<a class="list-group-item active" href="#index"><i class="fa fa-home fa-fw"></i>&nbsp;主页<i class="fa fa-chevron-right pull-right"></i></a>
 				<% if(account.roles.user){ %>
-				<a class="list-group-item" href="#verify/single"><i class="fa fa-users fa-fw"></i>&nbsp;身份校验<span class="message-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
-				<a class="list-group-item" href="#id/info"><i class="fa fa-users fa-fw"></i>&nbsp;身份证号码信息<span class="message-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
+				<a class="list-group-item" href="#id/info"><i class="fa fa-users fa-fw"></i>&nbsp;身份证号码校验<span class="message-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
+				<a class="list-group-item" href="#verify/single"><i class="fa fa-users fa-fw"></i>&nbsp;居民身份证校验<span class="message-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
+				<a class="list-group-item" href="#person/info/base"><i class="fa fa-users fa-fw"></i>&nbsp;居民身份基本信息<span class="message-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
+				<a class="list-group-item" href="#person/info/whole"><i class="fa fa-users fa-fw"></i>&nbsp;居民身份高级信息<span class="message-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
 				<% } %>
 				<% if(account.roles.admin || account.roles.agent || account.roles.user || account.roles.app){ %>
 				<a class="list-group-item" href="#record/index"><i class="fa fa-users fa-fw"></i>&nbsp;使用记录<span class="status-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>

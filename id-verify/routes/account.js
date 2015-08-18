@@ -12,6 +12,7 @@
 				username: (req.session.account && req.session.account.username),
 				avatar: (req.session.account && req.session.account.avatar)
 			};
+		var account = req.body;
 		// var account = {
 		// 		email: req.body.email,
 		// 		password: req.body.password,
@@ -24,11 +25,17 @@
 		// 		},
 		// 		business: {
 		// 			stage: req.body.stage || 'test',
-		// 			times: req.body.times || 10,
-		// 			expired: req.body.expired
+		// 			type: {
+		// 				verify: req.body.business['types']['verify'] || false,
+		// 				base: req.body.business['types']['base'] || false,
+		// 				whole: req.body.business['types']['whole'] || false
+		// 			},
+		// 			limit: req.body.limit || -1,
+		// 			expired: req.body.expired || (new Date()).getTime() + 1000*60*60*24*3
 		// 		},
+		// 		balance: req.body.balance || 0,
+		// 		enable: req.body.enable
 		// 	};
-		var account = req.body;
 		async.waterfall(
 			[
 				function _account(callback){
@@ -88,6 +95,30 @@
 								? meId
 								: req.params.id;
 			var account = req.body;
+
+		// var account = {
+		// 		email: req.body.email,
+		// 		password: req.body.password,
+		// 		username: req.body.username,
+		// 		roles: {
+		// 			admin: req.body.roles['admin'] || false,
+		// 			agent: req.body.roles['agent'] || false,
+		// 			user: req.body.roles['user'] || false,
+		// 			app: req.body.roles['app'] || false,
+		// 		},
+		// 		business: {
+		// 			stage: req.body.stage || 'test',
+		// 			type: {
+		// 				verify: req.body.types['verify'] || false,
+		// 				base: req.body.types['base'] || false,
+		// 				whole: req.body.types['whole'] || false
+		// 			},
+		// 			limit: req.body.limit || -1,
+		// 			expired: req.body.expired || (new Date()).getTime() + 1000*60*60*24*3
+		// 		},
+		// 		balance: req.body.balance || 0,
+		// 		enable: req.body.enable
+		// 	};
 			// if(req.body.username){
 			// 	account.username = req.body.username;
 			// }

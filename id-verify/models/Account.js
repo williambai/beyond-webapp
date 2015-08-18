@@ -37,16 +37,32 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				app: Boolean
 			},
 			business: {
+				type: {
+					verify: Boolean,
+					base: Boolean,
+					whole: Boolean 
+				},
+				prices: {
+					verify: Number,
+					base: Number,
+					whole: Number,
+				},
+				times: {
+					verify: Number,
+					base: Number,
+					whole: Number,
+				},
 				stage: String, /** test,dev,prod */
-				times: Number,
+				limit: Number,
 				expired: Date,
 			},
 			app: {
 				app_id: String,
 				app_secret: String,
 				apis: {
+					verify: Boolean,
 					base: Boolean,
-					photoBase: Boolean
+					whole: Boolean
 				}
 			},
 			balance: Number,
@@ -150,38 +166,74 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			if(account && account.password){
 				shaSum.update(account.password);
 			}
-			var user = new this.model({
-				createBy: {
-					id: creator.id,
-					username: creator.username || '',
-					avatar: creator.avatar || '',
-				},
-				email: account.email,
-				password: shaSum.digest('hex'),
-				username: account.username,
-				avatar: account.avatar || '',
-				roles: {
-					admin: account.roles.admin || false,
-					agent: account.roles.agent || false,
-					user: account.roles.user || false
-				},
-				business: {
-					stage: account.business.stage || 'test',
-					times: account.business.times || 10,
-					expired: account.business.expired || (new Date()).getTime() + 1000*60*60*24*3
-				},
-				app: {
-					app_id: crypto.randomBytes(8).toString('hex'),
-					app_secret: crypto.randomBytes(16).toString('hex'),
-					apis: {
-						base: false,
-						photoBase: false
-					}
-				},
-				balance: account.balance || 0,
-				enable: true,
-				registerCode: crypto.createHash('sha256').update(account.email + "beyond" + account.password).digest('hex')
-			});
+			account.createBy = creator;
+			account.app = {
+				app_id: crypto.randomBytes(8).toString('hex'),
+				app_secret: crypto.randomBytes(16).toString('hex'),
+				apis: {
+					verify: false,
+					base: false,
+					whole: false
+				}
+			};
+			
+			account.business.times = {
+				verify: 5,
+				base: 1,
+				whole: 1
+			};
+
+			account.business.prices = {
+				verify: 2,
+				base: 5,
+				whole: 10
+			};
+
+			account.registerCode = crypto.createHash('sha256').update(account.email + "beyond" + account.password).digest('hex');
+			var user = new this.model(account);
+
+			// var user = new this.model({
+			// 	createBy: {
+			// 		id: creator.id,
+			// 		username: creator.username || '',
+			// 		avatar: creator.avatar || '',
+			// 	},
+			// 	email: account.email,
+			// 	password: shaSum.digest('hex'),
+			// 	username: account.username,
+			// 	avatar: account.avatar || '',
+			// 	roles: {
+			// 		admin: account.roles.admin || false,
+			// 		agent: account.roles.agent || false,
+			// 		user: account.roles.user || false
+			// 	},
+			// 	business: {
+			// 		stage: account.business.stage || 'test',
+			// 		type: {
+			// 			verify: account.business.type.verify || false,
+			// 			base: account.business.type.base || false,
+			// 			whole: account.business.type.whole || false
+			// 		},
+			// 		times: {
+			// 			verify: 5,
+			// 			base: 1,
+			// 			whole: 1
+			// 		},
+			// 		limit: account.business.limit || -1,
+			// 		expired: account.business.expired || (new Date()).getTime() + 1000*60*60*24*3
+			// 	},
+			// 	app: {
+			// 		app_id: crypto.randomBytes(8).toString('hex'),
+			// 		app_secret: crypto.randomBytes(16).toString('hex'),
+			// 		apis: {
+			// 			base: false,
+			// 			photoBase: false
+			// 		}
+			// 	},
+			// 	balance: account.balance || 0,
+			// 	enable: true,
+			// 	registerCode: crypto.createHash('sha256').update(account.email + "beyond" + account.password).digest('hex')
+			// });
 
 			user.save(function(err){
 				this.debug && this.defaultCallback(err);
@@ -388,5 +440,30 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 	if(!account){
 		account = new Account(AccountModel);
 	}
+
+	Account.prototype.updateTimes = function(id,type,count,callback){
+		var path = 'business.times.' + type;
+		this.model
+			.findByIdAndUpdate(
+				id,
+				{
+					'$inc': {path: -1}
+				},
+				callback(err,doc)
+			);
+	};
+
+	Account.prototype.updateBalance = function(id,cost,callback){
+		var path = 'balance';
+		this.model
+			.findByIdAndUpdate(
+				id,
+				{
+					'$inc': {path: -cost}
+				},
+				callback(err,doc)
+			);
+	};
+
 	return account;
 };

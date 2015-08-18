@@ -3,7 +3,7 @@ define(['text!templates/idInfo.tpl','IdInfo'], function(idInfoTemplate,IdInfo){
 		el: '#content',
 		template: _.template(idInfoTemplate),
 		events: {
-			'submit form': 'getInfo',
+			'submit form': 'baseInfo',
 		},
 
 		initialize: function(options){
@@ -16,9 +16,10 @@ define(['text!templates/idInfo.tpl','IdInfo'], function(idInfoTemplate,IdInfo){
 			this.render();
 		},
 
-		getInfo: function(){
+		baseInfo: function(){
 			var card_id = this.$('input[name=card_id]').val();
 			var card_name = this.$('input[name=card_name]').val();
+
 			var idInfo = IdInfo.build(card_id);
 			this.$('#result').html('<h4>解析结果：</h4>' + idInfo);
 			this.$('input[name=card_id]').val('');

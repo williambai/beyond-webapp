@@ -1,4 +1,4 @@
-define(['views/Index','views/login','views/Layout','views/UserIndex','views/UserEdit','views/UserApp','views/Profile','views/VerifySingle','views/RecordIndex','views/IdInfo'], function(IndexView,LoginView,LayoutView,UserIndexView,UserEditView,UserAppView,ProfileView,VerifySingleView,RecordIndexView,IdInfoView){
+define(['views/Index','views/login','views/Layout','views/UserIndex','views/UserEdit','views/UserApp','views/Profile','views/VerifySingle','views/BaseInfo','views/WholeInfo','views/RecordIndex','views/IdInfo'], function(IndexView,LoginView,LayoutView,UserIndexView,UserEditView,UserAppView,ProfileView,VerifySingleView,BaseInfoView,WholeInfoView,RecordIndexView,IdInfoView){
 
 	var Router = Backbone.Router.extend({
 		account: null,
@@ -21,6 +21,8 @@ define(['views/Index','views/login','views/Layout','views/UserIndex','views/User
 			'user/add': 'userAdd', 
 			'verify/single': 'verifySingle',
 			'id/info': 'idInfo',
+			'person/info/base': 'baseInfo',
+			'person/info/whole': 'wholeInfo',
 			'record/index': 'recordIndex',
 		},
 
@@ -204,6 +206,32 @@ define(['views/Index','views/login','views/Layout','views/UserIndex','views/User
 				var idInfoView = new IdInfoView({id: null, account: this.account});
 				this.changeView(idInfoView);
 				idInfoView.trigger('load');
+			}
+		},
+
+		baseInfo: function(){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
+			if(this.account.roles.user){
+				this.appEvents.trigger('set:brand', '居民身份基本信息');
+				var baseInfoView = new BaseInfoView({id: null, account: this.account});
+				this.changeView(baseInfoView);
+				baseInfoView.trigger('load');
+			}
+		},
+
+		wholeInfo: function(){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
+			if(this.account.roles.user){
+				this.appEvents.trigger('set:brand', '居民身份高级信息');
+				var wholeInfoView = new WholeInfoView({id: null, account: this.account});
+				this.changeView(wholeInfoView);
+				wholeInfoView.trigger('load');
 			}
 		},
 

@@ -44,7 +44,7 @@ exports.prototype.getCondition = function(options,fn){
 
 exports.prototype.check = function(pairs, operator, options, fn){
 	var opts = {
-		type: 'base', //业务类型 base,whole
+		type: 'verify', //业务类型 verify,base,whole
 		stage: 'dev', //阶段 test,dev,prod
 		record: true, //记录操作日志
 		SBM: 'chinamobiletest', //用户唯一识别码:客户填写各自的业务帐号,集团用户可填写各自的小 帐号,最大长度 40(20 个汉字)
@@ -56,6 +56,7 @@ exports.prototype.check = function(pairs, operator, options, fn){
 		options = {};
 	}
 	options = _.extend(opts, options);
+	console.log(options);
 	var Person = this.models.Person;
 	var Record = this.models.Record;
 	async.waterfall(
@@ -68,11 +69,32 @@ exports.prototype.check = function(pairs, operator, options, fn){
 							return;
 						}
 						pairs.forEach(function(person){
-							person.result = false;
+							person.credential = false;
 							for(var i in persons){
-								if(person.card_id == persons[i].card_id){
-									if(options.type == 'base'){
+								if(person.card_id == persons[i].card_id && person.card_name == persons[i].card_name){
+									if(options.type == 'verify' || options.type == 'base' || options.type == 'whole'){
 										person.credential = true;
+									}
+									if(options.type == 'base' || options.type == 'whole'){
+										var content = persons[i].content;
+										person.result_xm = (content && content.xm);
+										person.result_gmsfhm = (content && content.gmsfhm);
+										person.result_zt = (content && content.zt);
+										person.result_zxbs = (content && content.zxbs);
+										person.result_cym = (content && content.cym);
+										person.result_xb = (content && content.xb);
+										person.result_mz = (content && content.mz);
+										person.result_csrq = (content && content.csrq);
+										person.result_ssssxq = (content && content.ssssxq);
+										person.result_csdssx = (content && content.csdssx);
+										person.result_zz = (content && content.zz);
+										person.result_fwcs = (content && content.fwcs);
+										person.result_hyzk = (content && content.hyzk);
+										person.result_whcd = (content && content.whcd);
+									}
+									if(options.type == 'whole'){
+										person.result_xp = (content && content.xp);
+										person.result_rts = (content && content.rts);
 									}
 									delete persons[i];
 									break;
@@ -82,6 +104,9 @@ exports.prototype.check = function(pairs, operator, options, fn){
 						callback(null,pairs);
 					});
 				}else{
+					pairs.forEach(function(person){
+						person.credential = false;
+					});
 					callback(null, pairs);
 				}
 			},
@@ -100,28 +125,33 @@ exports.prototype.check = function(pairs, operator, options, fn){
 						}
 						pairs.forEach(function(person){
 							for(var i in persons){
-								if(person.card_id == persons[i].gmsfhm){
-									if(options.type == 'base' || options.type == 'whole'){
+								if(person.card_id == persons[i].gmsfhm || person.card_name == persons[i].xm){
+									if(options.type == 'verify' || options.type == 'base' || options.type == 'whole'){
 										if(persons[i].result_xm == '一致'){
 											person.credential = true;
 										}
-									}else if(options.type == 'whole'){
-										person.result_xm = persons.result_xm;
-										person.result_gmsfhm = persons.result_gmsfhm;
-										person.result_zt = persons.result_zt;
-										person.result_zxbs = persons.result_zxbs;
-										person.result_cym = persons.result_cym;
-										person.result_xb = persons.result_xb;
-										person.result_mz = persons.result_mz;
-										person.result_csrq = persons.result_csrq;
-										person.result_ssssxq = persons.result_ssssxq;
-										person.result_csdssx = persons.result_csdssx;
-										person.result_zz = persons.result_zz;
-										person.result_fwcs = persons.result_fwcs;
-										person.result_hyzk = persons.result_hyzk;
-										person.result_whcd = persons.result_whcd;
-										person.result_xp = persons.result_xp;
-										person.result_rts = persons.result_rts;
+									}
+									if(options.type == 'base' || options.type == 'whole'){
+										person.result_xm = persons[i].result_xm;
+										person.result_gmsfhm = persons[i].result_gmsfhm;
+										person.result_xm = persons[i].result_xm;
+										person.result_gmsfhm = persons[i].result_gmsfhm;
+										person.result_zt = persons[i].result_zt;
+										person.result_zxbs = persons[i].result_zxbs;
+										person.result_cym = persons[i].result_cym;
+										person.result_xb = persons[i].result_xb;
+										person.result_mz = persons[i].result_mz;
+										person.result_csrq = persons[i].result_csrq;
+										person.result_ssssxq = persons[i].result_ssssxq;
+										person.result_csdssx = persons[i].result_csdssx;
+										person.result_zz = persons[i].result_zz;
+										person.result_fwcs = persons[i].result_fwcs;
+										person.result_hyzk = persons[i].result_hyzk;
+										person.result_whcd = persons[i].result_whcd;
+									}
+									if(options.type == 'whole'){
+										person.result_xp = persons[i].result_xp;
+										person.result_rts = persons[i].result_rts;
 									}
 									delete persons[i];
 									break;

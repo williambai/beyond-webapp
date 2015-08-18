@@ -29,6 +29,29 @@ IdInfo.build = function(id){
 	return result;
 };
 
+IdInfo.parse = function(id){
+	var result = {};
+	if(IdCardValidate(id)){
+		if(maleOrFemalByIdCard(id) == 'male'){
+			result.sex = '男';
+		}else{
+			result.sex = '女';
+		}
+	    var idCard = trim(id.replace(/ /g, ""));
+	    var code,text,birthday;
+		code = idCard.substring(0,6);
+		text = areaCode[code] || '';
+		result.birthplace = text;
+		if(idCard.length > 16){
+			birthday = idCard.substring(6,14);
+			result.birthday = birthday;
+		}else{
+			birthday = idCard.substring(6,12);
+			result.birthday = birthday;
+		}
+	}
+	return result;
+};
 
 /**  
  * 身份证15位编码规则：dddddd yymmdd xx p   
