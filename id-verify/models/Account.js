@@ -60,7 +60,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			app: {
 				app_id: String,
 				app_secret: String,
-				apis: {
+				apis: { 
 					verify: Boolean,
 					base: Boolean,
 					whole: Boolean

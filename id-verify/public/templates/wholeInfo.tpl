@@ -1,4 +1,4 @@
-<h4 class="text-center">居民身份基本信息</h4>
+<h4 class="text-center">居民身份高级信息</h4>
 <hr/>
 <div class="pull-right times"></div>
 <div class="price"></div>

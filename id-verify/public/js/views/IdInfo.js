@@ -21,7 +21,7 @@ define(['text!templates/idInfo.tpl','IdInfo'], function(idInfoTemplate,IdInfo){
 			var card_name = this.$('input[name=card_name]').val();
 
 			var idInfo = IdInfo.build(card_id);
-			this.$('#result').html('<h4>解析结果：</h4>' + idInfo);
+			this.$('#result').html('<h4>校验结果：</h4>' + idInfo);
 			this.$('input[name=card_id]').val('');
 			this.$('input[name=card_name]').val('');
 			return false;

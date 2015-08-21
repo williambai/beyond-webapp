@@ -1,4 +1,4 @@
-define(['views/Index','views/login','views/Layout','views/UserIndex','views/UserEdit','views/UserApp','views/Profile','views/VerifySingle','views/BaseInfo','views/WholeInfo','views/RecordIndex','views/IdInfo'], function(IndexView,LoginView,LayoutView,UserIndexView,UserEditView,UserAppView,ProfileView,VerifySingleView,BaseInfoView,WholeInfoView,RecordIndexView,IdInfoView){
+define(['views/Index','views/login','views/Layout','views/UserIndex','views/UserEdit','views/UserApp','views/Profile','views/VerifySingle','views/BaseInfo','views/WholeInfo','views/RecordIndex','views/IdInfo','views/RecordStats'], function(IndexView,LoginView,LayoutView,UserIndexView,UserEditView,UserAppView,ProfileView,VerifySingleView,BaseInfoView,WholeInfoView,RecordIndexView,IdInfoView,RecordStatsView){
 
 	var Router = Backbone.Router.extend({
 		account: null,
@@ -24,6 +24,7 @@ define(['views/Index','views/login','views/Layout','views/UserIndex','views/User
 			'person/info/base': 'baseInfo',
 			'person/info/whole': 'wholeInfo',
 			'record/index': 'recordIndex',
+			'record/stats': 'recordStats',
 		},
 
 		changeView: function(view){
@@ -49,7 +50,6 @@ define(['views/Index','views/login','views/Layout','views/UserIndex','views/User
 			this.logined = true;
 			this.layoutView.account = this.account;
 			this.layoutView.trigger('load');
-			window.location.hash = 'index';
 		},
 
 		onLogout: function(){
@@ -202,7 +202,7 @@ define(['views/Index','views/login','views/Layout','views/UserIndex','views/User
 				return;
 			}
 			if(this.account.roles.user){
-				this.appEvents.trigger('set:brand', '身份证号信息解读');
+				this.appEvents.trigger('set:brand', '身份证号码校验');
 				var idInfoView = new IdInfoView({id: null, account: this.account});
 				this.changeView(idInfoView);
 				idInfoView.trigger('load');
@@ -248,6 +248,18 @@ define(['views/Index','views/login','views/Layout','views/UserIndex','views/User
 			}
 		},
 
+		recordStats: function(){
+			if(!this.logined){
+				window.location.hash = 'login';
+				return;
+			}
+			if(this.account.roles.user || this.account.roles.app){
+				this.appEvents.trigger('set:brand','使用记录');
+				var recordStatsView = new RecordStatsView({account: this.account});
+				this.changeView(recordStatsView);
+				recordStatsView.trigger('load');
+			}
+		},
 
 	});
 
