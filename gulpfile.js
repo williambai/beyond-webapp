@@ -168,7 +168,7 @@ gulp.task('copy-html', function(done) {
 gulp.task('index.html', function(done){
   gulp.src(path.join(config.project,'public/index.html'))
       .pipe(replace('data-main="js/boot" ',''))
-      .pipe(replace('js/libs/require.js','/js/main.js'))
+      .pipe(replace('js/libs/require.js','js/main.js'))
       .pipe(gulp.dest(path.join('dist',config.project, 'public')));
   done();
 });
@@ -324,6 +324,7 @@ gulp.task('jade',function(){
 ============================================*/
 
 gulp.task('package.json', function(done){
+  sh.rm(path.join(__dirname,'dist',config.project,'public','package.json'));
   sh.cp(
     path.join(__dirname,config.project,'nodeWebkitPackage.json'),
     path.join(__dirname,'dist',config.project,'public','package.json')
@@ -334,7 +335,7 @@ gulp.task('package.json', function(done){
 gulp.task('node-webkit-builder', function(done){
   var NwBuilder = require('node-webkit-builder');
   var nw = new NwBuilder({
-        files: path.join(__dirname,'dist',config.project, '**','**'),
+        files: path.join(__dirname,'dist',config.project,'public', '**','**'),
         platforms: ['win','osx','linux'],
         version: '0.12.2',//download node-webkit version
         appName: config.project,

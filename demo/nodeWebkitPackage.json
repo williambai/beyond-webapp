@@ -1,6 +1,6 @@
 {
   "name": "我的工作网",
-  "main": "http://sw.appmod.cn",
+  "main": "index.html",
   "version": "0.0.1",
   "single-instance": true,
   "window": {
@@ -9,7 +9,7 @@
     "height": 700,
     "min_width": 800,
     "min_height": 650,
-    "toolbar": false
+    "toolbar": true
   },
   "chromium-args": "--child-clean-exit"
 }
