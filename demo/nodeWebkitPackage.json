@@ -5,6 +5,7 @@
   "single-instance": true,
   "window": {
     "title": "Client App for Beyond",
+    "icon": "images/icon.png",
     "width": 1024,
     "height": 700,
     "min_width": 800,

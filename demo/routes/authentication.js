@@ -41,7 +41,7 @@ module.exports = exports = function(app,models){
 					res.sendStatus(401);
 					return;
 				}
-				console.log(email + ': login sucessfully.');
+				// console.log(email + ': login successfully.');
 				req.session.loggedIn = true;
 				req.session.accountId = account._id;
 				req.session.email = account.email;
@@ -58,7 +58,7 @@ module.exports = exports = function(app,models){
 
 	var logout = function(req,res){
 			delete req.session.loggedIn;
-			console.log(req.session.accountId + ': logout sucessfully.');
+			// console.log(req.session.accountId + ': logout sucessfully.');
 			res.sendStatus(200);
 		};
 
