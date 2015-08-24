@@ -30,7 +30,7 @@ define(['text!templates/recordStats.tpl','Chart'],function(recordStatsTemplate,C
 			    ]
 			};
 			var ctx = this.$('#recordChart').get(0).getContext("2d");
-			var chart = new Chart(ctx).Bar(data);
+			var chart = new Chart(ctx).Bar(data,{responsive: true});
 		},
 
 		render: function(){

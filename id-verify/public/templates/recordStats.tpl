@@ -16,4 +16,6 @@
 </form>
 </div>
 <hr>
+<div style="margin:0 10%;">
 <canvas id="recordChart" width="600px" height="400px"></canvas>
+</div>
