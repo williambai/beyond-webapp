@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     userAppTemplate = require('../../assets/templates/userApp.tpl'),
     Account = require('../models/Account');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -25,7 +26,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	load: function(){
-		this.model.url = '/accounts/' + this.id;
+		this.model.url = config.api.host + '/accounts/' + this.id;
 		this.model.fetch();
 		this.render();
 	},

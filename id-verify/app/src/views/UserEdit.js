@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     userEditTemplate = require('../../assets/templates/userEdit.tpl'),
     Account = require('../models/Account');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -24,7 +25,7 @@ exports =module.exports = Backbone.View.extend({
 
 	load: function(){
 		if(this.id){
-			this.model.url = '/accounts/' + this.id;
+			this.model.url = config.api.host + '/accounts/' + this.id;
 			this.model.fetch();
 		}
 		this.render();
@@ -60,7 +61,7 @@ exports =module.exports = Backbone.View.extend({
 		}
 
 		if(this.model.get('_id')){ //update
-			$.ajax('/accounts/'+ this.model.get('_id'),{
+			$.ajax(config.api.host + '/accounts/'+ this.model.get('_id'),{
 				method: 'POST',
 				data: account,
 				success: function(){
@@ -72,7 +73,7 @@ exports =module.exports = Backbone.View.extend({
 			});
 
 		}else{ // create
-			$.ajax('/accounts',{
+			$.ajax(config.api.host + '/accounts',{
 				method: 'POST',
 				data: account,
 				success: function(){

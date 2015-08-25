@@ -2,6 +2,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     baseInfoTemplate = require('../../assets/templates/baseInfo.tpl'),
     Person = require('../models/Person');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -21,7 +22,7 @@ exports = module.exports = Backbone.View.extend({
 
 	load: function(){
 		var that = this;
-		$.ajax('persons/times?type=base', {
+		$.ajax(config.api.host + '/persons/times?type=base', {
 			method: 'GET',
 			success: function(data){
 				var limits = data.account || {};
@@ -38,7 +39,7 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 		var card_id = this.$('input[name=card_id]').val();
 		var card_name = this.$('input[name=card_name]').val();
-		$.ajax('/persons/check?type=base', {
+		$.ajax(config.api.host + '/persons/check?type=base', {
 			method: 'POST',
 			dataType: 'json',
 			data: {

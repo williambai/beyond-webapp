@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     wholeInfoTemplate = require('../../assets/templates/wholeInfo.tpl'),
     Person = require('../models/Person');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -25,7 +26,7 @@ exports = module.exports = Backbone.View.extend({
 
 	load: function(){
 		var that = this;
-		$.ajax('persons/times?type=whole', {
+		$.ajax(config.api.host + '/persons/times?type=whole', {
 			method: 'GET',
 			success: function(data){
 				var limits = data.account || {};
@@ -42,7 +43,7 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 		var card_id = this.$('input[name=card_id]').val();
 		var card_name = this.$('input[name=card_name]').val();
-		$.ajax('/persons/check?type=whole', {
+		$.ajax(config.api.host + '/persons/check?type=whole', {
 			method: 'POST',
 			dataType: 'json',
 			data: {

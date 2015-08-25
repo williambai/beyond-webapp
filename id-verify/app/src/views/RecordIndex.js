@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     recordIndexTemplate = require('../../assets/templates/recordIndex.tpl'),
     RecordListView = require('./_ListRecord');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -23,9 +24,9 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		this.recordListView = new RecordListView({
 			account: this.account,
-			url: '/records'
+			url: config.api.host + '/records'
 		});
-		this.recordListView.collectionUrl = '/records';
+		this.recordListView.collectionUrl = config.api.host + '/records';
 		this.recordListView.trigger('load');
 	},
 
@@ -37,7 +38,7 @@ exports = module.exports = Backbone.View.extend({
 	search: function(){
 		var that = this;
 		this.recordListView.$el.empty();
-		var url = '/records?type=search&searchStr=' + $('input[name=searchStr]').val();
+		var url = config.api.host + '/records?type=search&searchStr=' + $('input[name=searchStr]').val();
 		this.recordListView.collection.url = url;
 		this.recordListView.collectionUrl = url;
 		this.recordListView.collection.fetch({reset: true});

@@ -208,7 +208,7 @@ gulp.task('watch',function(){
 	gulp.watch(path.join(__dirname,'assets/css/**/*'),['css']);
 	gulp.watch(path.join(__dirname,'assets/**/*.html'),['html']);
 	gulp.watch(path.join(__dirname,'assets/**/*.jade'),['jade']);
-	gulp.watch(path.join(__dirname,config.dest),['public']);
+	gulp.watch(path.join(__dirname,config.dest,'**/*'),['public']);
 });
 
 /*======================================

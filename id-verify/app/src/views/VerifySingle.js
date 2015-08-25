@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     verifySingleTemplate = require('../../assets/templates/verifySingle.tpl'),
     itemVerifyTemplate = require('../../assets/templates/_itemVerify.tpl');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -45,7 +46,7 @@ exports = module.exports = Backbone.View.extend({
 
 		var pairs = [{card_id: '610125197004201212',card_name: '白卫'},{card_id: 1,card_name: 'test1'},{card_id:11,card_name: 'test11'}];
 
-		$.ajax('/persons/check?type=verify', {
+		$.ajax(config.api.host + '/persons/check?type=verify', {
 			method: 'POST',
 			dataType: 'json',
 			// data: {

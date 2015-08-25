@@ -1,13 +1,14 @@
 var $ = require('jquery'),
 	Backbone = require('backbone'),
 	router = new (require('./Router'))();
+var config = require('./conf');
 
 Backbone.$ = $;
 
 exports = module.exports = function(){
 
 	var checkLogin = function(callback){
-		$.ajax('/authenticated',{
+		$.ajax(config.api.host + '/authenticated',{
 			mathod: 'GET',
 			success: function(account){
 				if(account.errcode){

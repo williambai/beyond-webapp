@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     userIndexTemplate = require('../../assets/templates/userIndex.tpl'),
     UserListView = require('./_ListUser');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -22,9 +23,9 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		this.userListView = new UserListView({
 			account: this.account,
-			url: '/accounts'
+			url: config.api.host + '/accounts'
 		});
-		this.userListView.collectionUrl = '/accounts';
+		this.userListView.collectionUrl = config.api.host + '/accounts';
 		this.userListView.trigger('load');
 	},
 	scroll: function(){
@@ -34,7 +35,7 @@ exports = module.exports = Backbone.View.extend({
 	search: function(){
 		var that = this;
 		this.userListView.$el.empty();
-		var url = '/accounts?type=search&searchStr=' + $('input[name=searchStr]').val();
+		var url = config.api.host + '/accounts?type=search&searchStr=' + $('input[name=searchStr]').val();
 		this.userListView.collectionUrl = url;
 		this.userListView.collection.url = url;
 		this.userListView.collection.fetch({reset: true});

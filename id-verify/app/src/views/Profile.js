@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     profileTemplate = require('../../assets/templates/profile.tpl'),
     Account = require('../models/Account');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -28,7 +29,7 @@ exports = module.exports = Backbone.View.extend({
 
 	logout: function(){
 		this.appEvents.trigger('logout');
-		$.get('/logout');
+		$.get(config.api.host + '/logout');
 		return false;
 	},
 

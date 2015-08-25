@@ -2,6 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     loginTemplate = require('../../assets/templates/login.tpl');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -17,7 +18,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 	login: function(){
 		var that = this;
-		$.post('/login',{
+		$.post(config.api.host + '/login',{
 			email: $('input[name=email]').val(),
 			password: $('input[name=password]').val()
 		},function(account){
