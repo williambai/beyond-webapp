@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "app-demo-test": "jasmine-node demo/test",
-    "app-demo-dev": "pm2 start demo/app.js --watch demo/ --ignore-watch=\"demo/public/_tmp demo/public/upload\""
+    "app-demo-dev": "pm2 start demo/server.js --watch demo/ --ignore-watch=\"demo/public/_tmp demo/public/upload\""
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,24 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/williambai/beyond-webapp/issues"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "node-underscorify",
+        {
+          "extensions": [
+            "tpl"
+          ],
+          "requires": [
+            {
+              "variable": "_",
+              "module": "underscore"
+            }
+          ]
+        }
+      ]
+    ]
   },
   "homepage": "https://github.com/williambai/beyond-webapp",
   "dependencies": {
@@ -52,6 +70,9 @@
   },
   "devDependencies": {
     "amdclean": "^2.7.0",
+    "backbone": "^1.2.2",
+    "browserify": "^11.0.1",
+    "chart.js": "^1.0.2",
     "cordova": "^5.1.1",
     "del": "^1.2.0",
     "gulp": "^3.8.11",
@@ -69,11 +90,14 @@
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
     "gulp-zip": "^3.0.2",
+    "jquery": "^2.1.4",
+    "node-underscorify": "0.0.14",
     "node-webkit-builder": "^1.0.12",
     "requirejs": "^2.1.18",
     "run-sequence": "^1.1.0",
     "shelljs": "^0.5.1",
     "through": "^2.3.7",
+    "vinyl-source-stream": "^1.1.0",
     "webot-cli": "0.0.11"
   }
 }
