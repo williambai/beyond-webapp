@@ -1,19 +1,19 @@
 var config = {
-	src: 'src',
-	dest: '../_dest',
+
+	dest: '../_app',
 	server: {
 		host: '0.0.0.0',
 		port: '8000'
 	},
 	plugin: {
 		fonts: [
-   		   './assets/bower_components/font-awesome/fonts/*.*'   		   
+   		   '../../bower_components/font-awesome/fonts/*.*'   		   
       	],
       	css: [
-      		'./bower_components/bootstrap/dist/css/bootstrap.css',
-      		'./bower_components/bootstrap/dist/css/bootstrap.css.map'
       	],
       	images: [
+      	],
+      	js: [
       	]
 	}
 };
@@ -26,6 +26,9 @@ var path = require('path');
 var seq = require('run-sequence');
 var jade = require('gulp-jade');
 var del = require('del');
+var less = require('gulp-less');
+var cssmin = require('gulp-cssmin');
+var rename = require('gulp-rename');
 
 
 /*=========================================
@@ -35,7 +38,7 @@ var del = require('del');
 gulp.task('clean',function(cb) {
 	del([
 		path.join(config.dest,'**/*')
-	],cb);
+	],{force: true},cb);
 });
 
 /*==========================================
@@ -108,7 +111,7 @@ gulp.task('plugin-js',function(){
 
 gulp.task('js',function(){
 	var b = browserify({
-			entries: path.join(__dirname,config.src,'main.js'),
+			entries: path.join(__dirname,'/src/main.js'),
 			debug: false
 		});
 	var source = require('vinyl-source-stream');
@@ -119,8 +122,22 @@ gulp.task('js',function(){
 	b.transform(tplTransform);
 
 	return b.bundle()
-			.pipe(source('main1.js'))
-			.pipe(gulp.dest(path.join(__dirname,config.dest)));
+			.pipe(source('main.js'))
+			.pipe(gulp.dest(path.join(__dirname,config.dest,'js')));
+});
+
+/*======================================================================
+=            Compile less                            =
+======================================================================*/
+
+gulp.task('less',function(){
+	gulp.src(path.join(__dirname,'assets/less/app.less'))
+		.pipe(less({
+		  paths: [ path.resolve(__dirname,'public/less')]
+		}))
+		.pipe(cssmin())
+		.pipe(rename('app.css'))
+		.pipe(gulp.dest(path.join(config.dest,'css')));
 });
 
 /*======================================================================
@@ -128,7 +145,7 @@ gulp.task('js',function(){
 ======================================================================*/
 
 gulp.task('css',function(){
-	gulp.src(path.join(config.src, 'css/**/*'))
+	gulp.src(path.join(__dirname,'assets/css/**/*'))
 		.pipe(gulp.dest(path.join(config.dest,'css')));
 });
 
@@ -137,7 +154,7 @@ gulp.task('css',function(){
 ======================================================================*/
 
 gulp.task('images',function(){
-	gulp.src(path.join(config.src, 'images/**/*'))
+	gulp.src(path.join(__dirname, 'assets/images/**/*'))
 		.pipe(gulp.dest(path.join(config.dest,'images')));
 });
 
@@ -146,10 +163,19 @@ gulp.task('images',function(){
 ======================================================================*/
 
 gulp.task('jade',function(){
-	gulp.src(path.join(config.src, 'pages/*.jade'))
+	gulp.src(path.join(__dirname, 'assets/**/*.jade'))
 		.pipe(jade({
 			pretty: true
 		}))
+		.pipe(gulp.dest(config.dest));
+});
+
+/*=================================================
+=            Copy html files to dest              =
+=================================================*/
+
+gulp.task('html', function() {
+	gulp.src(path.join(__dirname,'assets/**/*.html'))
 		.pipe(gulp.dest(config.dest));
 });
 
@@ -161,9 +187,11 @@ gulp.task('watch',function(){
 	if(typeof config.server === 'object'){
 		gulp.watch([config.dest +'/**/*'],['livereload']);
 	}
-	gulp.watch(path.join(config.src,'js/**/*'),['js']);
-	gulp.watch(path.join(config.src,'css/**/*'),['css']);
-	gulp.watch(path.join(config.src,'pages/**/*'),['jade']);
+	gulp.watch(path.join(__dirname,'src/**/*'),['js']);
+	gulp.watch(path.join(__dirname,'assets/less/**/*'),['less']);
+	gulp.watch(path.join(__dirname,'assets/css/**/*'),['css']);
+	gulp.watch(path.join(__dirname,'assets/**/*.html'),['html']);
+	gulp.watch(path.join(__dirname,'assets/**/*.jade'),['jade']);
 });
 
 /*======================================
@@ -177,8 +205,10 @@ gulp.task('build',function(done) {
 					'plugin-images',
 					'plugin-js',
 					'js',
+					'less',
 					'css',
 					'images',
+					'html',
 					'jade',
 				];
 	seq('clean',tasks,done);	

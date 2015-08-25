@@ -3,6 +3,7 @@ logs
 *.log
 _tmp
 _dest
+_app
 
 # Runtime data
 pids
