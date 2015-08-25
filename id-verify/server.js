@@ -71,38 +71,10 @@ app.use(session({
         resave: true
     }));
 
-app.get('/', function(req,res){
-	res.render('index.jade',{layout: false});
-});
+// app.get('/', function(req,res){
+// 	res.render('index.jade',{layout: false});
+// });
 
-
-/** for development ONLY */
-app.get('/css/app.css', function(req,res){
-	res.set('Content-Type','text/css');
-	var through = require('through');
-	var gulp = require('gulp');
-	var less = require('gulp-less');
-	var cssmin = require('gulp-cssmin');
-	// create a stream that reads gulp File objects and outputs their contents
-	function sendTo(res) {   
-	    return through(
-	        function write(data) {    // this will be called once for each file
-	            res.write(data.contents);
-	        },
-	        function end() {    // this will be called when there are no more files
-	            res.end();
-	        }
-	    );
-	};
-
-	gulp.src([path.join(__dirname,'public','less','app.less')])
-	  .pipe(less({
-	    paths: [ path.resolve(__dirname,'public/less')]
-	  }))
-	  // .pipe(cssmin())
-	  .pipe(sendTo(res));
-
-});
 
 //登录判断中间件
 app.isLogined = function(req,res,next){

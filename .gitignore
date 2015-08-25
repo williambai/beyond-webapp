@@ -4,6 +4,7 @@ logs
 _tmp
 _dest
 _app
+public
 
 # Runtime data
 pids

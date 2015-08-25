@@ -1,6 +1,7 @@
 var config = {
 
-	dest: '../_app',
+	dest: '../_app', 
+	dest2: '../public', 
 	server: {
 		host: '0.0.0.0',
 		port: '8000'
@@ -29,7 +30,8 @@ var del = require('del');
 var less = require('gulp-less');
 var cssmin = require('gulp-cssmin');
 var rename = require('gulp-rename');
-
+var uglify = require('gulp-uglify');
+var streamify = require('gulp-streamify');
 
 /*=========================================
 =            Clean dest folder            =
@@ -37,7 +39,8 @@ var rename = require('gulp-rename');
 
 gulp.task('clean',function(cb) {
 	del([
-		path.join(config.dest,'**/*')
+		path.join(config.dest,'**/*'),
+		path.join(config.dest2,'**/*')
 	],{force: true},cb);
 });
 
@@ -115,14 +118,16 @@ gulp.task('js',function(){
 			debug: false
 		});
 	var source = require('vinyl-source-stream');
-	var tplTransform = require('node-underscorify').transform({
-		    extensions: ['tpl'],
-		});
+	// var tplTransform = require('node-underscorify').transform({
+	// 	    extensions: ['tpl'],
+	// 	});
 
-	b.transform(tplTransform);
+	// b.transform(tplTransform);
 
 	return b.bundle()
 			.pipe(source('main.js'))
+			// .pipe(streamify(uglify()))
+			.pipe(rename('main.js'))
 			.pipe(gulp.dest(path.join(__dirname,config.dest,'js')));
 });
 
@@ -179,6 +184,17 @@ gulp.task('html', function() {
 		.pipe(gulp.dest(config.dest));
 });
 
+
+/*=================================================
+=            Copy _app/ files to public/          =
+=================================================*/
+
+gulp.task('public', function() {
+	gulp.src(path.join(__dirname, config.dest,'/**/*'))
+		.pipe(gulp.dest(path.join(__dirname,config.dest2)));
+});
+
+
 /*===================================================================
 =            Watch for source changes and rebuild/reload            =
 ===================================================================*/
@@ -192,6 +208,7 @@ gulp.task('watch',function(){
 	gulp.watch(path.join(__dirname,'assets/css/**/*'),['css']);
 	gulp.watch(path.join(__dirname,'assets/**/*.html'),['html']);
 	gulp.watch(path.join(__dirname,'assets/**/*.jade'),['jade']);
+	gulp.watch(path.join(__dirname,config.dest),['public']);
 });
 
 /*======================================
@@ -211,7 +228,7 @@ gulp.task('build',function(done) {
 					'html',
 					'jade',
 				];
-	seq('clean',tasks,done);	
+	seq('clean',tasks,'public',done);	
 });
 
 /*====================================
