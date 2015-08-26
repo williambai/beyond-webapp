@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "description": "build app by using nodejs, mongodb, backbone, etc.",
   "private": true,
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "app-demo-test": "jasmine-node demo/test",
-    "app-demo-dev": "pm2 start demo/server.js --watch demo/ --ignore-watch=\"demo/public/_tmp demo/public/upload\""
+    "app-demo-dev": "pm2 start demo/server.js --watch demo/ --ignore-watch='demo/public/_tmp demo/public/upload'"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,12 @@
+{
+  "name": "id-verify",
+  "version": "1.0.1",
+  "description": "verify ID card information.",
+  "author": "William Bai",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "test": "jasmine-node test",
+    "dev": "pm2 start server.js --watch ./ --ignore-watch='./_app ./_dest ./app ./commands ./public'"
+  }
+}

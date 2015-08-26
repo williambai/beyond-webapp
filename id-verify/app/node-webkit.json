@@ -1,10 +1,10 @@
 {
-  "name": "我的工作网",
+  "name": "id",
   "main": "index.html",
   "version": "0.0.1",
   "single-instance": true,
   "window": {
-    "title": "Client App for Beyond",
+    "title": "公民身份验证平台Demo",
     "icon": "images/icon.png",
     "width": 1024,
     "height": 700,

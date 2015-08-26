@@ -1,9 +1,9 @@
 <?xml version='1.1' encoding='utf-8'?>
 <widget id="org.apache.cordova.example.HelloGulp" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Social Work</name>
+    <name>公民身份验证平台</name>
     <description>
-        Social Work for small business.
+        公民身份验证平台Demo
     </description>
-    <content src="http://sw.appmod.cn" />
+    <content src="index.html" />
     <access origin="*" />
 </widget>
