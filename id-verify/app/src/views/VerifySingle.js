@@ -26,7 +26,7 @@ exports = module.exports = Backbone.View.extend({
 
 	load: function(){
 		var that = this;
-		$.ajax('persons/times?type=verify', {
+		$.ajax(config.api.host + '/persons/times?type=verify', {
 			method: 'GET',
 			success: function(data){
 				var limits = data.account || {};

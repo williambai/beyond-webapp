@@ -235,11 +235,27 @@ gulp.task('build',function(done) {
 =            Default Task            =
 ====================================*/
 
-gulp.task('default',function(done){
+gulp.task('development',function(done){
 	var tasks = [];
 	if(typeof config.server === 'object'){
 		tasks.push('connect');
 	}
 	tasks.push('watch');
 	seq(tasks,done);
+});
+
+/*====================================
+=            Default Task            =
+====================================*/
+
+gulp.task('default', function(){
+  console.log("\nUsage:\n");
+  console.error("WARNING!!! ");
+  console.error("****This build will overwrite '../_app/' and '../public/' directory.****\n");
+  console.log("|- command: gulp development");
+  console.log("  |- description: to develop the application, which will watch files and create '../_app/' and '../public/' directory.\n");
+  console.log("|-command: gulp build");
+  console.log("  |- description: to build application into '../_app/' and '../public/' directory.\n");
+  console.log("|- command: gulp clean");
+  console.log("  |- description: to clean application.\n");
 });

@@ -18,7 +18,7 @@ exports = module.exports = Backbone.View.extend({
 	initialize: function(options){
 		this.appEvents = options.appEvents;
 		this.model = new Account();
-		this.model.url = '/accounts/me';
+		this.model.url = config.api.host + '/accounts/me';
 		this.on('load', this.load, this);
 		this.model.on('change', this.render, this);
 	},

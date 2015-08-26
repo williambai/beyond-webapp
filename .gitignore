@@ -1,9 +1,7 @@
 # Logs
 logs
 *.log
-_tmp
-_dest
-_app
+_*
 public
 
 # Runtime data
