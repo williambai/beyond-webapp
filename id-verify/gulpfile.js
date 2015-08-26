@@ -194,22 +194,22 @@ gulp.task('node-webkit-downloads',function(done){
   //   fs.mkdirSync(downloads);
   // }
   gulp.src(path.join(__dirname,'_dest','desktop',config.project.name,'linux32'))
-      .pipe(zip('SocialWork-linux32.zip'))
+      .pipe(zip(config.project.name + '-linux32.zip'))
       .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
   gulp.src(path.join(__dirname,'_dest','desktop',config.project.name,'linux64'))
-      .pipe(zip('SocialWork-linux64.zip'))
+      .pipe(zip(config.project.name + '-linux64.zip'))
       .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
   gulp.src(path.join(__dirname,'_dest','desktop',config.project.name,'win32'))
-      .pipe(zip('SocialWork-win32.zip'))
+      .pipe(zip(config.project.name + '-win32.zip'))
       .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
   gulp.src(path.join(__dirname,'_dest','desktop',config.project.name,'win64'))
-      .pipe(zip('SocialWork-win64.zip'))
+      .pipe(zip(config.project.name + '-win64.zip'))
       .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
   gulp.src(path.join(__dirname,'_dest','desktop',config.project.name,'osx32'))
-      .pipe(zip('SocialWork-osx32.zip'))
+      .pipe(zip(config.project.name + '-osx32.zip'))
       .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
   gulp.src(path.join(__dirname,'_dest','desktop',config.project.name,'osx64'))
-      .pipe(zip('SocialWork-osx64.zip'))
+      .pipe(zip(config.project.name + '-osx64.zip'))
       .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
   done();
 });

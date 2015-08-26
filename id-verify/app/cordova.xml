@@ -1,6 +1,6 @@
 <?xml version='1.1' encoding='utf-8'?>
 <widget id="org.apache.cordova.example.HelloGulp" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>公民身份验证平台</name>
+    <name>id-verify</name>
     <description>
         公民身份验证平台Demo
     </description>
