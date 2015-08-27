@@ -12,7 +12,17 @@ var config = {
         keystore_username: 'william',
         keystore_password: '123456',
       },
-      minify_images: true,
+      ios_sign: {
+          debug: {
+            codeSignIdentitiy: "iPhone Development",
+            provisioningProfile: "926c2bd6-8de9-4c2f-8407-1016d2d12954",
+          },
+          release: {
+            codeSignIdentitiy: "iPhone Distribution",
+            provisioningProfile: "70f699ad-faf1-4adE-8fea-9d84738fb306",
+          }
+       },
+       minify_images: true,
   };
 
 /*========================================
@@ -232,23 +242,27 @@ gulp.task('node-webkit', function(done){
 
 gulp.task('cordova',function(done){
   //NOTE: npm install cordova-cli -g
-  var buildDir = path.join(__dirname,'_dest','mobile');
-  var cordovaConfigFile = path.join(__dirname, 'app','cordova.xml');
+  var target_dir = path.join(__dirname,'_dest/mobile');
+  var config_file = path.join(__dirname, 'build/cordova/config.xml');
   var www_dir = path.join(__dirname,'_app');
+  var res_dir = path.join(__dirname,'build/cordova/res')
   var platforms = ['android','ios'];
   var plugins = ['org.apache.cordova.file'];
 
-  if(!fs.existsSync(buildDir)){
-   fs.mkdirSync(buildDir);
+  if(!fs.existsSync(target_dir)){
+   fs.mkdirSync(target_dir);
   }
-  var projectDir = path.join(__dirname);
-  process.chdir(buildDir);
+  var root_dir = path.join(__dirname);
+  process.chdir(target_dir);
 
-  if(!fs.existsSync(path.join(buildDir,'config.xml'))){
-    fs.symlinkSync(cordovaConfigFile, 'config.xml');
+  if(!fs.existsSync(path.join(target_dir,'config.xml'))){
+    fs.symlinkSync(config_file, 'config.xml');
   }
-  if(!fs.existsSync(path.join(buildDir,'www'))){
+  if(!fs.existsSync(path.join(target_dir,'www'))){
     fs.symlinkSync(www_dir, 'www');
+  }
+  if(!fs.existsSync(path.join(target_dir,'res'))){
+    fs.symlinkSync(res_dir, 'res');
   }
   plugins.forEach(function(plugin){
     sh.exec('cordova plugin add ' + plugin);
@@ -258,7 +272,7 @@ gulp.task('cordova',function(done){
     sh.exec('cordova platform add ' + platform);
   });
   sh.exec('cordova build --release');
-  process.chdir(projectDir);
+  process.chdir(root_dir);
   //copy to downloads directory
   var downloads = path.join(__dirname,'_dest','server','public','downloads');
   if(!fs.existsSync(downloads)){
