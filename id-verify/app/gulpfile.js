@@ -41,7 +41,6 @@ var streamify = require('gulp-streamify');
 gulp.task('clean',function(cb) {
 	del([
 		path.join(config.dest,'**/*'),
-		path.join(config.dest2,'**/*')
 	],{force: true},cb);
 });
 
@@ -204,7 +203,7 @@ gulp.task('watch',function(){
 	if(typeof config.server === 'object'){
 		gulp.watch([config.dest +'/**/*'],['livereload']);
 	}
-	gulp.watch(path.join(__dirname,'src/**/*'),['js']);
+	gulp.watch(path.join(__dirname,'**/*'),['js']);
 	gulp.watch(path.join(__dirname,'assets/less/**/*'),['less']);
 	gulp.watch(path.join(__dirname,'assets/css/**/*'),['css']);
 	gulp.watch(path.join(__dirname,'assets/**/*.html'),['html']);
