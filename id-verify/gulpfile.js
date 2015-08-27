@@ -7,6 +7,11 @@ var config = {
         name: 'id-verify',
       },
       cordova: false,
+      java_sign: {
+        keystore: '../build/test.keystore',
+        keystore_username: 'william',
+        keystore_password: '123456',
+      },
       minify_images: true,
   };
 
@@ -151,7 +156,7 @@ gulp.task('directory', function(done){
 ============================================*/
 
 gulp.task('package.json', function(done){
-  sh.rm(path.join(__dirname,'_dest','package.json'));
+  sh.rm(path.join(__dirname,'_app','package.json'));
   sh.cp(
     path.join(__dirname,'app','node-webkit.json'),
     path.join(__dirname,'_app','package.json')
@@ -260,12 +265,26 @@ gulp.task('cordova',function(done){
     fs.mkdirSync(downloads);
   }
   gulp.src(path.join(__dirname,'_dest','mobile','platforms/android/ant-build','CordovaApp-release-unsigned.apk'))
-      .pipe(rename('socialWork.apk'))
+      .pipe(rename(config.project.name +'.apk'))
       .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
   gulp.src(path.join(__dirname, '_dest','mobile','platforms/ios/build/**/*'))
-      .pipe(zip('socialWork.ipa'))
+      .pipe(zip(config.project.name + '.ipa'))
       .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
   done();
+});
+
+/*====================================
+=            sign Task            =
+====================================*/
+
+gulp.task('sign', function(done){
+  //java sign
+  sh.exec('jarsigner ' + 
+            ' -keystore ' + config.java_sign.keystore + 
+            ' -storepass ' + config.java_sign.keystore_password + 
+            ' -digestalg SHA1 -sigalg MD5withRSA ' + 
+            ' ./_dest/server/public/downloads/'+ config.project.name + '.apk ' + 
+            config.java_sign.keystore_username);
 });
 
 /*====================================
@@ -276,7 +295,7 @@ gulp.task('build:server', function(done){
   seq('clean:server','directory','server', done);
 });
 gulp.task('build:client', function(done){
-  seq('clean:mobile','clean:desktop','cordova','node-webkit', done);
+  seq('clean:mobile','clean:desktop','cordova','node-webkit', 'sign', done);
 });
 
 gulp.task('build', function(done){

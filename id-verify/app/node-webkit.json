@@ -1,5 +1,5 @@
 {
-  "name": "id",
+  "name": "id-verify",
   "main": "index.html",
   "version": "0.0.1",
   "single-instance": true,
