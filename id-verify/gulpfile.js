@@ -8,7 +8,7 @@ var config = {
       },
       cordova: false,
       java_sign: {
-        keystore: '../build/test.keystore',
+        keystore: './build/cordova/sign/test.keystore',
         keystore_username: 'william',
         keystore_password: '123456',
       },
@@ -168,7 +168,7 @@ gulp.task('directory', function(done){
 gulp.task('package.json', function(done){
   sh.rm(path.join(__dirname,'_app','package.json'));
   sh.cp(
-    path.join(__dirname,'app','node-webkit.json'),
+    path.join(__dirname,'build/node-webkit','package.json'),
     path.join(__dirname,'_app','package.json')
   );
   done();
@@ -195,6 +195,7 @@ gulp.task('node-webkit-builder', function(done){
     // nw.on('log', console.log);
     nw.build()
       .then(function(){
+        sh.rm(path.join(__dirname,'_app','package.json'));
         done();
       })
       .catch(function(err){
