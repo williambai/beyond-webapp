@@ -6,7 +6,6 @@ var config = {
       project: {
         name: 'id-verify',
       },
-      cordova: false,
       java_sign: {
         keystore: './build/cordova/sign/test.keystore',
         keystore_username: 'william',
@@ -245,6 +244,7 @@ gulp.task('cordova',function(done){
   //NOTE: npm install cordova-cli -g
   var target_dir = path.join(__dirname,'_dest/mobile');
   var config_file = path.join(__dirname, 'build/cordova/config.xml');
+  var build_file = path.join(__dirname, 'build/cordova/build.json');
   var www_dir = path.join(__dirname,'_app');
   var res_dir = path.join(__dirname,'build/cordova/res')
   var platforms = ['android','ios'];
@@ -258,6 +258,9 @@ gulp.task('cordova',function(done){
 
   if(!fs.existsSync(path.join(target_dir,'config.xml'))){
     fs.symlinkSync(config_file, 'config.xml');
+  }
+  if(!fs.existsSync(path.join(target_dir,'build.json'))){
+    fs.symlinkSync(build_file, 'build.json');
   }
   if(!fs.existsSync(path.join(target_dir,'www'))){
     fs.symlinkSync(www_dir, 'www');

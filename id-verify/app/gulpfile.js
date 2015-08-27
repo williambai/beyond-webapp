@@ -6,6 +6,7 @@ var config = {
 		host: '0.0.0.0',
 		port: '8000'
 	},
+    cordova: false,
 	plugin: {
 		fonts: [
    		   '../../bower_components/font-awesome/fonts/*.*'   		   
