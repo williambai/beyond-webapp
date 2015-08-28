@@ -86,10 +86,13 @@ gulp.task('server.js', function(done){
               '**/*.js',
               '!_*/**/*',
               '!app/**/*',
+              '!build/**/*',
               '!config/**/*',
               '!test/**/*',
               '!commands/**/*',
               '!gulpfile.js',
+              '!public/_tmp/**/**',
+              '!public/upload/**/*',
             ])
             .pipe(uglify())
             .pipe(gulp.dest('_dest/server'));
@@ -105,14 +108,18 @@ gulp.task('server.static', function(done){
     gulp.src([
               '**/*.jade',
               '**/*.@(html|htm)',
+              '**/*.@(json|txt)',
               '**/*.css',
               '**/*.@(eot|svg|ttf|woff|woff2|otf)',
               '**/*.@(png|jpg|gif)',
               '**/*.wsdl',
               '!_*/**/*',
               '!app/**/*',
+              '!build/**/*',
               '!test/**/*',
               '!config/**/*',
+              '!public/_*/**/*',
+              '!public/upload/**/*',
             ])
             .pipe(gulp.dest(path.join(__dirname,'_dest','server')));
    done();         
@@ -127,14 +134,18 @@ gulp.task('server', function(done) {
 ==================================*/
 
 gulp.task('directory', function(done){
+  var dest_dir = path.join(__dirname,'_dest');
   var serv = path.join(__dirname,'_dest','server');
   var pub = path.join(__dirname,'_dest','server','public');
   var downloads = path.join(__dirname,'_dest','server','public','downloads');
-  var uploads = path.join(__dirname,'_dest','server','public','uploads');
+  var uploads = path.join(__dirname,'_dest','server','public','upload');
   var updates = path.join(__dirname,'_dest','server','public','updates');
   var thirds = path.join(__dirname,'_dest','server','public','thirds');
   var images = path.join(__dirname,'_dest','server','public','images');
   
+  if(!fs.existsSync(dest_dir)){
+    fs.mkdirSync(dest_dir);
+  }
   if(!fs.existsSync(serv)){
     fs.mkdirSync(serv);
   }
