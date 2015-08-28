@@ -1,0 +1,1 @@
+require('./Entry_wechat')();

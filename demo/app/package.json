@@ -1,0 +1,28 @@
+{
+  "name": "social-work",
+  "version": "1.0.1",
+  "description": "Social Work Project",
+  "private": true,
+  "author": "Suzhou Beyond Co., Ltd.",
+  "scripts": {
+    "dev": "gulp development"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "node-underscorify",
+        {
+          "extensions": [
+            "tpl"
+          ],
+          "requires": [
+            {
+              "variable": "_",
+              "module": "underscore"
+            }
+          ]
+        }
+      ]
+    ]
+  }
+}

@@ -1,10 +1,15 @@
 {
   "name": "social-work",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Social Work Project",
   "private": true,
-  "main": "app.js",
   "author": "Suzhou Beyond Co., Ltd.",
+  "main": "server.js",
+  "scripts": {
+    "test": "jasmine-node test",
+    "dev": "pm2 start server.js --watch ./ --ignore-watch='./_app ./_dest ./app ./commands ./public'"
+  },
+
   "dependencies": {
     "alipay": "0.0.4",
     "async": "^1.2.1",

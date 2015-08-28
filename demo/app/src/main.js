@@ -1,0 +1,1 @@
+var Entry = require('./Entry')();
