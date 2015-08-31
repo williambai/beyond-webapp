@@ -1,49 +1,48 @@
-var nodemailer = require('nodemailer');
-//import the data layer
-var mongoose = require('mongoose');
-var config = {
-		server: require('../config/server'),
-		mail: require('../config/mail'),
-		db: require('../config/db')
-	};	
-	
-mongoose.connect(config.db.URI,function onMongooseError(err){
-	if(err) {
-		console.error('Error: can not open Mongodb.');
-		throw err;
-	}
-});
+var MongoClient = require('mongodb').MongoClient;
+var crypto = require('crypto');
+var async = require('async');
 
-//import the models
-var models = {
-		Account: require('../models/Account')(this,config,mongoose,nodemailer),
+var url = 'mongodb://localhost:27017/id-verify';
+
+var initAccount = function(db,callback){
+		var accounts = db.collection('accounts');
+		accounts.findOneAndUpdate(
+			{
+				email: 'admin1@pdbang.cn'
+			},
+			{
+				email: 'admin1@pdbang.cn',
+				username: 'admin1',
+				password: crypto.createHash('sha256').update('123456').digest('hex'),
+				avatar: '',
+				roles: {
+					admin: true,
+					agent: true,
+					user: true
+				},
+				business: {
+					stage: 'prod',
+					times: -1,
+					expired: -1
+				},
+				balance: 100000,
+			},
+			{
+				upsert: true
+			},
+			callback
+		);
 	};
 
-var Account = models.Account;
-
-
-//insert admin account
-Account.add(
-	{
-		id: 0,
-		username: 'admin',
-		avatar: '',
-	},
-	{
-		email: 'admin@pdbang.cn',
-		username: 'admin',
-		password: '123456',
-		avatar: '',
-		roles: {
-			admin: true,
-			agent: true,
-			user: true
-		},
-		business: {
-			stage: 'prod',
-			times: -1,
-			expired: -1
-		},
-		balance: 100000,
-	}
-);
+MongoClient.connect(url, function(err,db){
+	async.waterfall(
+		[
+			function(callback){
+				initAccount(db,callback);
+			},
+		],
+		function(err,result){
+			db.close();
+		}
+	);
+});
