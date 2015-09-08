@@ -10,7 +10,7 @@
                 <div class="panel-body">
                     <form role="form">
                         <div class="form-group">
-                            <input type="text" name="email" class="form-control input-sm" placeholder="邮件/用户名">
+                            <input type="text" name="email" class="form-control input-sm" placeholder="邮件/手机号码">
                         </div>
 
                         <div class="form-group">

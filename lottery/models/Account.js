@@ -16,7 +16,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		};
 	
 	var accountSchema = new mongoose.Schema({
-			createBy: {
+			createby: {
 				id: String,
 				username: String,
 				avatar: String,
@@ -85,7 +85,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			shaSum.update(password);
 
 			var user = new this.model({
-				createBy: {
+				createby: {
 					username: username,
 					avatar: '',
 				},
@@ -107,25 +107,29 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				enable: false,
 				registerCode: crypto.createHash('sha256').update(email + "beyond" + password).digest('hex')
 			});
-			user.createBy.id = user._id;
+			user.createby.id = user._id;
 
 			user.save(function(err){
 				if(err){
 					callback && callback(err);
 					return;					
 				}
-				var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
-				registerConfirmUrl += '?email=' + user.email + '&' + 'code=' + user.registerCode;
+				if(registerConfirmUrl && registerConfirmUrl.length > 0){
+					var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
+					registerConfirmUrl += '?email=' + user.email + '&' + 'code=' + user.registerCode;
 
-				smtpTransporter.sendMail(
-					{
-						from: 'idserivce@pdbang.cn',
-						to: user.email,
-						subject: '公民身份验证系统注册确认',
-						text: 'Click here to finish your registration: ' + registerConfirmUrl
-					},
-					callback
-				);
+					smtpTransporter.sendMail(
+						{
+							from: 'idserivce@pdbang.cn',
+							to: user.email,
+							subject: '祝您好运系统注册确认',
+							text: 'Click here to finish your registration: ' + registerConfirmUrl
+						},
+						callback
+					);
+				}else{
+					callback(null,user);
+				}
 			});
 		};
 
@@ -153,7 +157,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				shaSum.update(account.password);
 				account.password = shaSum.digest('hex');
 			}
-			account.createBy = creator;
+			account.createby = creator;
 			account.app = {
 				app_id: crypto.randomBytes(8).toString('hex'),
 				app_secret: crypto.randomBytes(16).toString('hex'),
@@ -302,7 +306,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 	Account.prototype.findById = function(accountId,select,callback){
 			callback = callback || function(){};
 			var _default = {
-				createBy: 0,
+				createby: 0,
 				password: 0,
 				registerCode: 0,
 			};
@@ -313,10 +317,24 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 				.exec(callback);
 		};
 
+	Account.prototype.findOne = function(query,select,callback){
+			callback = callback || function(){};
+			var _default = {
+				createby: 0,
+				password: 0,
+				registerCode: 0,
+			};
+			var selected = _.extend(_default,select);
+			this.model
+				.findOne(query)
+				.select(selected)
+				.exec(callback);
+		};
+
 	Account.prototype.findAll = function(createId,page,callback){
 			callback = callback || function(){};
 			var _default = {
-				createBy: 0,
+				createby: 0,
 				password: 0,
 				registerCode: 0,
 			};
@@ -325,7 +343,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			this.model
 				.find({})
 				.where({
-					'createBy.id': createId
+					'createby.id': createId
 				})
 				.select(_default)
 				.skip(page*per)
@@ -357,7 +375,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 					]
 				})
 				.where({
-					'createBy.id': createId
+					'createby.id': createId
 				})
 				.skip(page*per)
 				.limit(per)

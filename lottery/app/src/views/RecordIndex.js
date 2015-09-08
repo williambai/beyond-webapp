@@ -38,7 +38,7 @@ exports = module.exports = Backbone.View.extend({
 	search: function(){
 		var that = this;
 		this.recordListView.$el.empty();
-		var url = config.api.host + '/records?type=search&searchStr=' + $('input[name=searchStr]').val();
+		var url = config.api.host + '/records?type=search&from=' + $('input[name=from]').val() + '&to=' + $('input[name=to]').val() + '&searchStr=' + $('input[name=searchStr]').val();
 		this.recordListView.collection.url = url;
 		this.recordListView.collectionUrl = url;
 		this.recordListView.collection.fetch({reset: true});

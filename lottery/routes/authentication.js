@@ -41,6 +41,10 @@ module.exports = exports = function(app,models){
 					res.send({errcode:40100,errmsg: 'login error.'});
 					return;
 				}
+				if(!account){
+					res.send({errcode:40401,errmsg: 'user not exist.'});
+					return;
+				}
 				req.session.loggedIn = true;
 				req.session.account = account;
 				req.session.account.id = account._id;

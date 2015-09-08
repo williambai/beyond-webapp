@@ -206,6 +206,9 @@
 							},
 						],
 						function(err,result){
+							console.log('+++')
+							console.log(accountId)
+							console.log(result)
 							if(err){
 								res.send(err);
 								return;

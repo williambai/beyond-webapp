@@ -28,20 +28,20 @@ exports = module.exports = function(){
 	 * @param  {Function} callback [description]
 	 * @return {[type]}            [description]
 	 */
-	checkLogin = function(callback){
-		var account = {
-			username: 'test',
-			email: 'test100@pdbang.cn',
-			avatar: '',
-			roles: {
-				admin: true,
-				agent: true,
-				user: true
-			}
-		};
-		router.appEvents.trigger('logined',account);
-		return callback(true);
-	};
+	// checkLogin = function(callback){
+	// 	var account = {
+	// 		username: 'test',
+	// 		email: 'test100@pdbang.cn',
+	// 		avatar: '',
+	// 		roles: {
+	// 			admin: true,
+	// 			agent: true,
+	// 			user: true
+	// 		}
+	// 	};
+	// 	router.appEvents.trigger('logined',account);
+	// 	return callback(true);
+	// };
 
 	checkLogin(function(authenticated){
 		if(!authenticated){
