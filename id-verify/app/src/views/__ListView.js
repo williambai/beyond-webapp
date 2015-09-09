@@ -84,9 +84,9 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	scroll: function(){
-		 var viewH =this.$el.height();//可见高度  
+		 var viewH =$(window).height();//当前window可见高度  
          var contentH =this.$el.get(0).scrollHeight;//内容高度  
-         var scrollTop =this.$el.scrollTop();//滚动高度  
+         var scrollTop =$('#content').scrollTop();//可滚动容器的当前滚动高度  
         if(contentH - viewH - scrollTop <= 100) { //到达底部100px时,加载新内容
         	this.nextPage();
         }
