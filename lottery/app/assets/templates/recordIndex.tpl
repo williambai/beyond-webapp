@@ -1,3 +1,4 @@
+<p>注意：每日下午17:00集中出票，在此之前可以修改中奖号码，出票后不能修改。</p>
 <div>
 <form class="form-inline">
 	<div class="form-group">
@@ -21,6 +22,5 @@
 	<input type="submit" value="搜索" class="btn btn-primary"/>
 </form>
 </div>
-<p>注意：每日下午17:00集中出票，在此之前可以修改中奖号码，出票后不能修改。</p>
 <hr>
 <div id="recordlist"></div>

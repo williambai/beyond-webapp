@@ -43,7 +43,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function(){
-		this.$el.html(orderIndexTemplate());
+		this.$el.html(orderIndexTemplate({account: this.account}));
 		return this;
 	}
 });

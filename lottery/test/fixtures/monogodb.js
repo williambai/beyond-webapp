@@ -8,12 +8,14 @@ var url = 'mongodb://localhost:27017/lottery';
 var admin = {
 		id: new ObjectID(),
 		email: 'admin@pdbang.cn',
-		username: 'admin'
+		username: 'admin',
+		cardid: '123456789012345'
 	};
 var agent = {
 		id: new ObjectID(),
 		email: 'agent@pdbang.cn',
-		username: 'agent'
+		username: '中国移动浙江分公司温州子公司',
+		cardid: '123456789012345'
 	};
 var users = [];
 for(var i=0; i< 200; i++){
@@ -22,18 +24,21 @@ for(var i=0; i< 200; i++){
 			id: new ObjectID(),
 			mobile: '13900' + i,
 			username: 'real13900' + i,
+			cardid: '123456789012345'
 		});
 	}else if(i<100){
 		users.push({
 			id: new ObjectID(),
 			mobile: '1390' + i,
 			username: 'real1390' + i,
+			cardid: '123456789012345'
 		});
 	}else{
 		users.push({
 			id: new ObjectID(),
 			mobile: '139' + i,
 			username: 'real139' + i,
+			cardid: '123456789012345'
 		});
 	}
 }
@@ -72,6 +77,7 @@ var upsertAdmin = function(db,callback){
 				email: admin.email,
 				username: admin.username,
 				password: crypto.createHash('sha256').update('123456').digest('hex'),
+				cardid: admin.cardid,
 				avatar: '',
 				roles: {
 					admin: true,
@@ -108,6 +114,7 @@ var upsertAgent = function(db,callback){
 				email: agent.email,
 				username: agent.username,
 				password: crypto.createHash('sha256').update('123456').digest('hex'),
+				cardid: agent.cardid,
 				avatar: '',
 				roles: {
 					admin: true,
@@ -146,6 +153,7 @@ var upsertAccounts = function(db,callback){
 						email: user.mobile,
 						username: user.username,
 						password: crypto.createHash('sha256').update('123456').digest('hex'),
+						cardid: user.cardid,
 						avatar: '',
 						roles: {
 							admin: false,
@@ -158,7 +166,7 @@ var upsertAccounts = function(db,callback){
 							expired: -1
 						},
 						balance: 100000,
-						enable: true,
+						enable: !!(index%4) ? true: false,
 					},
 					{
 						upsert: true
@@ -190,6 +198,7 @@ var upsertOrders = function(db,callback){
 					username: user.username,
 				},
 				game: {
+					name: '双色球',
 					ltype: 'QGSLTO',
 					playtype: 1,
 					chipintype: 0,
@@ -236,14 +245,17 @@ var upsertRecords = function(db,callback){
 					id: user.id.toString('hex'),
 					email: user.mobile,
 					username: user.username,
+					cardid: user.cardid,
 				},
 				game: {
+					name: '双色球',
 					ltype: 'QGSLTO',
 					periodnum: '20150701',
 					playtype: 1,
 					chipintype: 0,
 					content: '01|02|03|04|05|06-07',
-					orderamount: 1,
+					amount: index%5,
+					sms: !!(index%2) ? true : false
 				},
 				createby: {
 					id: agent.id.toString('hex'),
@@ -251,7 +263,8 @@ var upsertRecords = function(db,callback){
 					username: agent.username,
 				},
 				messages: [],
-				status: 0, // 0: created, 1: requested, 2: responsed: success, -1: responsed: failure
+				status: index%4, // 0: created, 1: requested, 2: responsed: success, -1: responsed: failure
+				bonus: (index%16 == 3) ? 20.00 : 0,
 				lastupdatetime: new Date(),
 			},
 			{

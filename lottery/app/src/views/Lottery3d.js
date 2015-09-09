@@ -1,7 +1,6 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    userInfoTemplate = require('../../assets/templates/lotteryUser.tpl'),
     lottery3dTemplate = require('../../assets/templates/lottery3d.tpl');
 var config = require('../conf');
 
@@ -14,7 +13,6 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 
-		'submit form.user': 'userForm',
 		'submit form.lottery': 'lotteryForm',
 	},
 
@@ -27,18 +25,14 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 	},
 
-	userForm: function(){
-		this.$el.html(lottery3dTemplate());
-		return false;
-	},
 
 	lotteryForm: function(){
-		window.location.hash = 'order/detail';
+		window.location.hash = 'order/detail/empty';
 		return false;
 	},
 
 	render: function(){
-		this.$el.html(userInfoTemplate());
+		this.$el.html(lottery3dTemplate());
 		return this;
 	}
 

@@ -2,13 +2,19 @@
 	<div class="form-group">
 		<label>用户名：</label>
 		<div class="">
-			<input type="username" class="form-control" name="username" value="<%= user.username %>" placeholder="请输入真实姓名"/>
+			<input type="text" class="form-control" name="username" value="<%= user.username %>" placeholder="请输入真实姓名"/>
 		</div>
 	</div>
 	<div class="form-group">
-		<label>登录账号(email)：</label>
+		<label>登录账号(邮箱或手机号)：</label>
 		<div class="">
-			<input type="email" class="form-control" name="email" value="<%= user.email %>" placeholder="请使用电子邮件地址" <% if(user._id){ %> disabled <% } %>/>
+			<input type="text" class="form-control" name="email" value="<%= user.email %>" placeholder="请使用电子邮件地址" <% if(user._id){ %> disabled <% } %>/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label>身份证号码：</label>
+		<div class="">
+			<input type="text" class="form-control" name="cardid" value="<%= user.cardid %>" placeholder="请输入身份证号码"/>
 		</div>
 	</div>
 	<div class="form-group">
@@ -23,6 +29,7 @@
 			<input type="password" class="form-control" name="password2" placeholder="请输入六位以上数字或字母"/>
 		</div>
 	</div>
+<% if(user.roles.agent || user.roles.admin || !user._id){ %>
 	<div class="form-group">
 		<label>用户类型：</label>
 		<div class="">
@@ -67,13 +74,13 @@
 			<input type="number" class="form-control" name="business-limit" value="<%= user.business.limit %>"/>
 		</div>
 	</div>
-
 	<div class="form-group">
 		<label>有效期：</label>
 		<div class="">
-			<input type="date" class="form-control" name="business-expired" value="<%= user.business.expired %>" placeholder=""/>
+			<input type="text" class="form-control" name="business-expired" value="<%= user.business.expired %>" placeholder=""/>
 		</div>
 	</div>
+<% } %>
 
 	<div class="form-group">
 		<label>账户余额：</label>

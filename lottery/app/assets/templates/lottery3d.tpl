@@ -1,43 +1,22 @@
-<h4 class="text-center">彩票订单</h4>
+<h4 class="text-center">3D福彩</h4>
 <hr/>
-<form class="form-horizontal lottery">
-	<label>客户信息</label>
-	<input name="username" type="text" placeholder="姓名" class="form-control" disabled>
-	<span class="help-block"></span>
-	<input name="userid" type="text" placeholder="身份证号码" class="form-control" disabled>
-	<span class="help-block"></span>
-	<input name="phoneid" type="text" placeholder="手机号码" class="form-control" disabled>
-	<span class="help-block"></span>
-	<br>
-	<label>选号</label>
-	<input name="lottery_name" type="text" placeholder="3d" class="form-control" disabled>
-	<span class="help-block"></span>
-	<input name="lottery_code" type="text" placeholder="号码" class="form-control">
-	<span class="help-block"></span>
-	<br>
-
-	<label>周期</label>
-	<input name="lottery_period" type="text" placeholder="连续几期" class="form-control">
-	<span class="help-block"></span>
-	<br>
-	<label>费用</label>
-	<input name="lottery_cost" type="text" placeholder="费用" class="form-control" disabled>
-	<span class="help-block"></span>
-	<br>
-	<input type="checkbox">&nbsp;短信提醒
-	<input name="phoneid" type="text" placeholder="手机号码" class="form-control">
-	<span class="help-block"></span>
-	<br>
-	<input type="checkbox">&nbsp;中奖自动转账
-	<span class="help-block">*兑奖自动转账</span>
-	<input name="phoneid" type="text" placeholder="银行名称" class="form-control">
-	<span class="help-block"></span>
-	<input name="phoneid" type="text" placeholder="银行卡号码" class="form-control">
-	<span class="help-block"></span>
-	<input name="phoneid" type="text" placeholder="银行开户所在地" class="form-control">
-	<span class="help-block"></span>
-	<br>
-	<input type="submit" class="btn btn-primary btn-block" value="确认" />
-</form>
+<form>
+<p>
+<span class="ball on">01</span>&nbsp;&nbsp;&nbsp;
+<span class="ball">02</span>&nbsp;&nbsp;&nbsp;
+<span class="ball">03</span>&nbsp;&nbsp;&nbsp;
+<span class="ball">04</span>&nbsp;&nbsp;&nbsp;
+<span class="ball">05</span>&nbsp;&nbsp;&nbsp;
+<span class="ball">06</span>&nbsp;&nbsp;&nbsp;
+<span class="ball">07</span>&nbsp;&nbsp;&nbsp;
+<span class="ball">08</span>&nbsp;&nbsp;&nbsp;
+<span class="ball">09</span>&nbsp;&nbsp;&nbsp;
+<span class="ball">10</span>&nbsp;&nbsp;&nbsp;
+</p>
 <br>
-<div id="result"></div>
+<p>【您选择了x注，共￥12.00元】</p>
+<p>如中奖，奖金为xxxx元。</p>
+<h3 class="pull-right">合计：<span id="total_cost"></span>元</h3>
+<br>
+<input type="submit" class="btn btn-primary btn-block" value="确认" />
+</form>

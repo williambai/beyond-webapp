@@ -3,18 +3,18 @@
 </div>
 <p>&nbsp;</p>
 <hr>
-<h4>甲方：</h4>
-<h4>乙方：</h4>
+<h4>甲方：<%= account.username %></h4>
+<h4>乙方：<%= order.customer.username %></h4>
 
 <p>
 	甲方在提供 <u></u>
 	服务时，赠予乙方以下增值服务：
 </p>
 
-<p>彩票名称：</p>
-<p>彩票号码：</p>
-<p>起始档期：                  终止档期：                 连续共       期</p>
-<p>合计消费：               （积分或元）。</p>
+<p>彩票名称：<%= order.game.name %></p>
+<p>彩票号码：<%= order.game.content %></p>
+<p>连续&nbsp;<%= order.game.periods %>&nbsp;期</p>
+<p>合计消费：<%= (2 * Number(order.game.periods)).toFixed(2) %>（积分或元）。</p>
 乙方同意并接受以上服务。
 <p>乙方（签字）：</p>
 <p>年   月   日</p>
@@ -32,9 +32,9 @@
 
 <p>客户账号：</p>
 <hr>
-<h3>彩票信息</h3>
+<h3>兑奖凭证</h3>
 
-<p>姓名： 	身份证号：</p>
+<p>姓名：身份证号：</p>
 <p>类型	号码	档期</p>
 		
 

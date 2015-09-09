@@ -12,8 +12,10 @@ var ProfileView = require('./views/Profile');
 var Lottery3dView = require('./views/Lottery3d');
 var OrderIndexView = require('./views/OrderIndex');
 var OrderEditView = require('./views/OrderEdit');
+var OrderImportView = require('./views/OrderImport');
 var OrderDetailView = require('./views/OrderDetail');
 var RecordIndexView = require('./views/RecordIndex');
+var RecordEditView = require('./views/RecordEdit');
 var RecordStatsView = require('./views/RecordStats');
 
 Backbone.$ = $;
@@ -40,10 +42,11 @@ exports = module.exports = Backbone.Router.extend({
 		'lottery/3d': 'lottery3d',
 		'order/index': 'orderIndex',
 		'order/add': 'orderAdd',
+		'order/import': 'orderImport',
 		'order/update/:id': 'orderUpdate',
-		'order/detail': 'orderDetail',
+		'order/detail/:id': 'orderDetail',
 		'record/index': 'recordIndex',
-		// 'record/search': 'recordSearch',
+		'record/update/:id': 'recordUpdate',
 		'record/stats': 'recordStats',
 	},
 
@@ -229,6 +232,19 @@ exports = module.exports = Backbone.Router.extend({
 		}
 	},
 
+	orderImport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		if(this.account.roles.user){
+			this.appEvents.trigger('set:brand', '导入订单');
+			var orderImportView = new OrderImportView({account: this.account});
+			this.changeView(orderImportView);
+			orderImportView.trigger('load');
+		}
+	},
+
 	orderAdd: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
@@ -255,14 +271,14 @@ exports = module.exports = Backbone.Router.extend({
 		}
 	},
 
-	orderDetail: function(){
+	orderDetail: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		if(this.account.roles.user){
 			this.appEvents.trigger('set:brand', '订单详情');
-			var orderDetailView = new OrderDetailView({account: this.account});
+			var orderDetailView = new OrderDetailView({account: this.account,id: id});
 			this.changeView(orderDetailView);
 			orderDetailView.trigger('load');
 		}
@@ -278,6 +294,19 @@ exports = module.exports = Backbone.Router.extend({
 			var recordIndexView = new RecordIndexView({account: this.account});
 			this.changeView(recordIndexView);
 			recordIndexView.trigger('load');
+		}
+	},
+
+	recordUpdate: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		if(this.account.roles.user){
+			this.appEvents.trigger('set:brand', '修改彩票');
+			var recordEditView = new RecordEditView({account: this.account,id: id});
+			this.changeView(recordEditView);
+			recordEditView.trigger('load');
 		}
 	},
 

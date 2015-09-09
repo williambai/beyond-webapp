@@ -1,8 +1,13 @@
+<% if(account.roles.agent){ %>
 <div class="pull-right">
+	<a href="#order/detail/empty" class="btn btn-primary">空白合同</a>&nbsp;
+	<a href="#order/import" class="btn btn-primary">批量导入</a>&nbsp;
 	<a href="#order/add" class="btn btn-primary">新增订单</a>
 </div>
 <p>&nbsp;</p>
 <hr>
+<% } %>
+<p>注意：订单在首次出票前（一般在当日17:00前）可以修改或删除，一旦首次出票成功，则不能再修改或删除。</p>
 <div>
 <form class="form-inline">
 	<div class="form-group">
@@ -26,6 +31,5 @@
 	<input type="submit" value="过滤" class="btn btn-primary"/>
 </form>
 </div>
-<p>注意：订单在首次出票前（一般在当日17:00前）可以修改或删除，一旦首次出票成功，则不能再修改或删除。</p>
 <hr>
 <div id="list"></div>
