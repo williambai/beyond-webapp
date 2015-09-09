@@ -212,6 +212,7 @@ var upsertOrders = function(db,callback){
 					email: agent.email,
 					username: agent.username,
 				},
+				histroies: [],
 				records: [],
 				status: 0, //0: enable, -1: disable
 				expired: new Date((new Date()).getTime() + 1000*3600*24*10), 
@@ -262,7 +263,7 @@ var upsertRecords = function(db,callback){
 					email: agent.email,
 					username: agent.username,
 				},
-				messages: [],
+				histroies: [],
 				status: index%4, // 0: created, 1: requested, 2: responsed: success, -1: responsed: failure
 				bonus: (index%16 == 3) ? 20.00 : 0,
 				lastupdatetime: new Date(),

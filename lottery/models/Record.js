@@ -32,14 +32,14 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		);
 	};
 
-	Record.prototype.addMessage = function(id,message,callback){
+	Record.prototype.addHistory = function(id,history,callback){
 		callback = callback || function(){};
 		this.model.findOneAndUpdate(
 			{
 				_id: id
 			},
 			{
-				$push: {'messages': message}
+				$push: {'histroies': history}
 			},
 			callback
 		);

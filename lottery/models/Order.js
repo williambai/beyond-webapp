@@ -54,6 +54,19 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			callback
 		);
 	};
+	
+	Order.prototype.addHistory = function(id,history,callback){
+		callback = callback || function(){};
+		this.model.findOneAndUpdate(
+			{
+				_id: id
+			},
+			{
+				$push: {'histroies': history}
+			},
+			callback
+		);
+	};
 
 	Order.prototype.addRecord = function(id,record,callback){
 		callback = callback || function(){};
