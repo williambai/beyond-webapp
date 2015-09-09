@@ -17,8 +17,8 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	initialize: function(options){
-		this.id = options.id;
 		this.account = options.account;
+		this.id = options.id;
 		this.on('load', this.load,this);
 	},
 

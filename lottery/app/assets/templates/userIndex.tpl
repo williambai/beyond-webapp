@@ -7,7 +7,7 @@
 <form class="form-inline">
 	<div class="form-group">
 		<div class="input-group">
-			<input type="text" name="searchStr" class="form-control" placeholder="姓名或邮件" />
+			<input type="text" name="searchStr" class="form-control" placeholder="姓名、邮件或手机号" />
 		</div>
 	</div>
 	<input type="submit" value="搜索" class="btn btn-primary"/>

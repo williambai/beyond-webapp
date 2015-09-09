@@ -39,7 +39,7 @@ exports = module.exports = Backbone.Router.extend({
 		'user/edit/:id': 'userEdit',
 		'user/app/:id': 'userApp',
 		'user/add': 'userAdd', 
-		'lottery/3d': 'lottery3d',
+		'lottery/3d/:id': 'lottery3d',
 		'order/index': 'orderIndex',
 		'order/add': 'orderAdd',
 		'order/import': 'orderImport',
@@ -206,14 +206,14 @@ exports = module.exports = Backbone.Router.extend({
 		}
 	},
 
-	lottery3d: function(){
+	lottery3d: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		if(this.account.roles.user){
 			this.appEvents.trigger('set:brand', '3D福彩');
-			var lottery3dView = new Lottery3dView({account: this.account});
+			var lottery3dView = new Lottery3dView({account: this.account,id:id});
 			this.changeView(lottery3dView);
 			lottery3dView.trigger('load');
 		}

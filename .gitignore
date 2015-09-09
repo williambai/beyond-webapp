@@ -1,7 +1,7 @@
 # Logs
 logs
 *.log
-_*
+_*/
 public
 
 # Runtime data
