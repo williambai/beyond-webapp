@@ -23,6 +23,13 @@ exports = module.exports = Backbone.View.extend({
 			var id = $(current).attr('id');
 			var sure = confirm('是否要删除？');
 			if(sure){
+				// this.model.destroy({
+				// 	success: function(response){
+				// 		that.$el.html('');
+				// 	},
+				// 	error: function(response){
+				// 	}
+				// });
 				$.ajax({
 					url: '/orders/'+ id,
 					method: 'DELETE',

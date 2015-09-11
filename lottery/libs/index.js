@@ -35,16 +35,44 @@ Lottery.prototype.buildMessage = function(body,command){
 	return json2xml({message:message},{ header:true });	
 };
 
-Lottery.prototype.command1000 = function(body,callback){
+Lottery.prototype.request = function(body,command,callback){
 	request({
 		url: options.server.url,
 		method: 'POST',
-		body: this.buildMessage(body,'1000'),
+		body: this.buildMessage(body,command),
 	},function(err,body,response){
-		var messageRecieved = parser.toJson(body);
+		if(err) return callback(err);
 
+		var messageRecieved = parser.toJson(body);
 		callback(null,messageRecieved.body);
 	});
 };
+
+
+// Lottery.prototype.command1000 = function(body,callback){
+// 	request({
+// 		url: options.server.url,
+// 		method: 'POST',
+// 		body: this.buildMessage(body,'1000'),
+// 	},function(err,body,response){
+// 		if(err) return callback(err);
+
+// 		var messageRecieved = parser.toJson(body);
+// 		callback(null,messageRecieved.body);
+// 	});
+// };
+
+// Lottery.prototype.command1015 = function(body,callback){
+// 	request({
+// 		url: options.server.url,
+// 		method: 'POST',
+// 		body: this.buildMessage(body,'1015'),
+// 	},function(err,body,response){
+// 		if(err) return callback(err);
+
+// 		var messageRecieved = parser.toJson(body);
+// 		callback(null,messageRecieved.body);
+// 	});
+// };
 
 exports = module.exports = Lottery;
