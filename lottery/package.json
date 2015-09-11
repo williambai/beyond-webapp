@@ -6,7 +6,7 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "test": "node test/simulator & jasmine-node test --autotest --watch './'",
+    "test": "node test/simulator & mocha --watch 'test/routes'",
     "dev": "pm2 start server.js --watch ./ --ignore-watch='./_app ./_dest ./app ./commands ./public ./test'"
   }
 }

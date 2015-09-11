@@ -252,7 +252,7 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		if(this.account.roles.user){
 			this.appEvents.trigger('set:brand', '新增订单');
-			var orderEditView = new OrderEditView({account: this.account});
+			var orderEditView = new OrderEditView({account: this.account, router: this});
 			this.changeView(orderEditView);
 			orderEditView.trigger('load');
 		}
@@ -265,7 +265,7 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		if(this.account.roles.user){
 			this.appEvents.trigger('set:brand', '修改订单');
-			var orderEditView = new OrderEditView({account: this.account,id: id});
+			var orderEditView = new OrderEditView({account: this.account,id: id, router: this});
 			this.changeView(orderEditView);
 			orderEditView.trigger('load');
 		}

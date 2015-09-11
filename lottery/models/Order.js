@@ -1,5 +1,4 @@
-module.exports = exports = function(app, config,mongoose,nodemailer){
-	var order = null;
+module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
 			customer: {
@@ -27,35 +26,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 			lastupdatetime: Date,
 		});
 
-	var model = mongoose.model('Order', schema);
-
-	var Order = function(model){
-		this.model = model;
-	};
-
-	Order.prototype.add = function(object,callback){
-		callback = callback || function(){};
-		var order = new this.model(object);
-		order.save(callback);
-	};
-
-	Order.prototype.remove = function(id, callback){
-		callback = callback || function(){};
-		this.model.findByIdAndRemove(id,callback);
-	};
-
-	Order.prototype.update = function(id,orderSet,callback){
-		callback = callback || function(){};
-		this.model.findByIdAndUpdate(
-			id,
-			{
-				$set: orderSet
-			},
-			callback
-		);
-	};
-	
-	Order.prototype.addHistory = function(id,history,callback){
+	schema.static.addHistory = function(id,history,callback){
 		callback = callback || function(){};
 		this.model.findOneAndUpdate(
 			{
@@ -68,7 +39,7 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		);
 	};
 
-	Order.prototype.addRecord = function(id,record,callback){
+	schema.static.addRecord = function(id,record,callback){
 		callback = callback || function(){};
 		this.model.findOneAndUpdate(
 			{
@@ -81,24 +52,5 @@ module.exports = exports = function(app, config,mongoose,nodemailer){
 		);
 	};
 
-	Order.prototype.findById = function(id,callback){
-		callback = callback || function(){};
-		this.model.findById(id,callback);
-	};
-	
-	Order.prototype.findAll = function(query,page,callback){
-		callback = callback || function(){};
-		page = (!page || page<0) ? 0 : page;
-		var per = 20;
-		this.model
-			.find(query)
-			.skip(per*page)
-			.limit(per)
-			.exec(callback);
-	};
-
-	if(!order){
-		order = new Order(model);
-	}
-	return order;
+	return mongoose.model('Order', schema);
 };

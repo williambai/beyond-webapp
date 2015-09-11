@@ -9,7 +9,7 @@ var add = function(req,res){
 		async.waterfall(
 			[
 				function(callback){
-					models.Record.add(record,callback);
+					models.Record.save(record,callback);
 				}
 			],
 			function(err,result){
@@ -28,7 +28,7 @@ var remove = function(req,res){
 		async.waterfall(
 			[
 				function(callback){
-					models.Record.remove(id,callback);
+					models.Record.findByIdAndRemove(id,callback);
 				}
 			],
 			function(err,result){
@@ -41,13 +41,19 @@ var remove = function(req,res){
 		);
 	};
 
-	var update = function(req,res){
+var update = function(req,res){
 		var id = req.params.id;
 		var orderSet = req.body;
 		async.waterfall(
 			[
 				function(callback){
-					models.Record.update(id,orderSet,callback);
+					models.Record.findByIdAndUpdate(
+						id,
+						{
+							$set: recordSet
+						},
+						callback
+					);
 				}
 			],
 			function(err,result){
@@ -79,8 +85,10 @@ var getById = function(req,res){
 	};
 
 var getRecords = function(req,res){
+		var per = 20;
 		var type = req.query.type || '';
 		var page = req.query.page || 0;
+		page = (!page || page<0) ? 0 : page;
 		var accountId = req.session.account._id;
 		var roles = req.session.account.roles;
 
@@ -104,9 +112,13 @@ var getRecords = function(req,res){
 					[
 						function(callback){
 							if(roles.admin || roles.agent){
-								models.Record.findAll(query,page,callback);
+								models.Record
+									.find(query)
+									.skip(per*page)
+									.limit(per)
+									.exec(callback);
 							}else{
-								callback({errcode: 401001, errmsg: '没有权限'});
+								callback({code: 401001, message: '没有权限'});
 							}
 						},
 
@@ -127,9 +139,13 @@ var getRecords = function(req,res){
 					[
 						function(callback){
 							if(roles.admin || roles.agent){
-								models.Record.findAll(query,page,callback);
+								models.Record
+									.find(query)
+									.skip(per*page)
+									.limit(per)
+									.exec(callback);
 							}else{
-								callback({errcode: 401001, errmsg: '没有权限'});
+								callback({code: 401001, message: '没有权限'});
 							}
 						},				
 					],

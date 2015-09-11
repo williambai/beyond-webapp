@@ -35,10 +35,9 @@ var config = {
 
 //import the models
 var models = {
-		Account: require('./models/Account')(app,config,mongoose,nodemailer),
-		Customer: require('./models/Customer')(app,config,mongoose,nodemailer),
-		Order: require('./models/Order')(app,config,mongoose,nodemailer),
-		Record: require('./models/Record')(app,config,mongoose,nodemailer),
+		Account: require('./models/Account')(mongoose),
+		Order: require('./models/Order')(mongoose),
+		Record: require('./models/Record')(mongoose),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

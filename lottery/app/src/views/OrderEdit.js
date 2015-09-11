@@ -19,12 +19,14 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	initialize: function(options){
+		this.router = options.router;
 		this.account = options.account;
 		this.model = new Order();
 		if(options.id){
 			this.model.url = '/orders/' + options.id; 
 			this.model.fetch();
 		}
+		this.model.on('invalid',this.onInvalid, this);
 		this.model.on('change:game', this.onGameChanged, this);
 		this.model.on('change', this.render, this);
 		this.on('load', this.load, this);
@@ -33,6 +35,33 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		this.model.trigger('change:game');
 		this.render();
+	},
+
+	onInvalid: function(model,errors,options){
+		//username valid
+		if(!!errors.username){
+			this.$('#username')
+				.addClass('has-error');
+			this.$('#username span.help-block')
+				.text(errors.username);
+		}else{
+			this.$('#username')
+				.removeClass('has-error');
+			this.$('#username span.help-block')
+				.empty();
+		}
+		//email valid
+		if(!!errors.email){
+			this.$('#email')
+				.addClass('has-error');
+			this.$('#email span.help-block')
+				.text(errors.email);
+		}else{
+			this.$('#email')
+				.removeClass('has-error');
+			this.$('#email span.help-block')
+				.empty();
+		}
 	},
 
 	changeLtype: function(evt){
@@ -96,12 +125,9 @@ exports = module.exports = Backbone.View.extend({
 		customer.email = this.$('input[name=email]').val();
 		customer.username = this.$('input[name=username]').val()
 		this.model.set('customer', customer);
-		this.model.save();
-		// var _model = this.model.clone();
-		// _model.unset('lottery_cost');
-		// _model.unset('sms_cost');
-		// _model.unset('total_cost');
-		// this.model.save(_model.toJSON());
+		if(this.model.save()){
+			this.router.navigate('order/index',{trigger: true,replace: true});
+		};
 		return false;
 	},
 

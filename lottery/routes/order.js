@@ -1,67 +1,70 @@
 exports = module.exports = function(app,models){
+var crypto = require('crypto');
+var _ = require('underscore');
 var async = require('async');
 var lottery = require('../libs');
 
 var add = function(req,res){
-		var order = {
-				customer: req.body.customer,
-				game: {
-					ltype: req.body.game.ltype,
-					playtype: 1,
-					chipintype: 0,
-					content: req.body.game.content,
-					periods: req.body.game.periods,
-					sms: req.body.game.sms,
-					remained: req.body.game.periods
-				},
-				createby: {
-					id: req.session.account._id,
-					email: req.session.account.email,
-					username: req.session.account.username,
-				},
-				records: [],
-				status: 0, //0: enable, -1: disable
-				// expired: req.body.expired,
-				lastupdatetime: new Date(),
-			};
-		// console.log(req.body)
-		// console.log(order);		
+		var order = req.body;
+		order.customer = order.customer || {};
+		order.game = order.game || {};
+		order.game.playtype = 1;
+		order.game.chipintype = 0;
+		order.createby = {
+			id: req.session.account._id,
+			email: req.session.account.email,
+			username: req.session.account.username,
+		};
+		order.records = [];
+		order.status = 0;
+		order.lastupdatetime = new Date();
+
 		async.waterfall(
 			[
 				function _account(callback){
-					models.Account.findOne({
-						email: order.customer.email, 
-						username:order.customer.username
-					},
-					{},
-					function(err,account){
-						if(err){
-							callback(err);
-							return;
+					var user = order.customer;
+					if(!user.email || !user.username) return callback({code: 40100,message: '参数缺失'});
+					models.Account.findOne(
+						user,
+						function(err,account){
+							var user = order.customer;
+							if(err){
+								callback(err);
+								return;
+							}
+							if(!account){
+								user.createby = order.createby;
+								user.password = crypto.createHash('sha256')
+														.update((parseInt(1000000*Math.random())).toString())
+														.digest('hex');
+								user.roles = {
+										admin: false,
+										agent: false,
+										user: true
+									};
+									
+								user.business = {
+									type: {
+										SSQ: true,
+										QLC: true,
+										FC3D: true
+									}
+								};
+								user.balance = 0;
+								user.enable = true;
+								var user = new models.Account(user);
+								user.save(function(err){
+									callback(err,user);
+								});
+							}else{
+								callback(null,account);
+							}
 						}
-						if(!account){
-							models.Account.register(
-								order.customer.email,
-								(parseInt(1000000*Math.random())).toString(),
-								order.customer.username,
-								'',
-								function(err,newAccount){
-								if(err){
-									callback(err);
-									return;
-								}
-								callback(null,newAccount);
-							});
-						}else{
-							callback(null,account);
-						}
-					});
+					);
 				},
 				function _order(account,callback){
-					order.customer.id = account._id.toString();
-					order.customer.email = account.email;
-					order.customer.username = account.username;
-					models.Order.add(order,callback);
+					order.customer.id = account._id;
+					models.Order.create(order,callback);
 				}
 			],
 			function(err,result){
@@ -69,18 +72,17 @@ var add = function(req,res){
 					res.send(err);
 					return;
 				}
-				res.sendStatus(200);
+				res.send(result);
 			}
 		);
 	};
 
 var remove = function(req,res){
 		var id = req.params.id;
-		console.log(id)
 		async.waterfall(
 			[
 				function(callback){
-					models.Order.remove(id,callback);
+					models.Order.findByIdAndRemove(id,callback);
 				}
 			],
 			function(err,result){
@@ -149,7 +151,13 @@ var buyNow = function(req,res){
 		async.waterfall(
 			[
 				function(callback){
-					models.Order.update(id,orderSet,callback);
+					models.Order.findByIdAndUpdate(
+						id,
+						{
+							$set: orderSet
+						},
+						callback
+					);
 				}
 			],
 			function(err,result){
@@ -181,11 +189,12 @@ var getById = function(req,res){
 	};
 
 var getOrders = function(req,res){
+		var per = 20;
 		var type = req.query.type || '';
 		var page = req.query.page || 0;
+		page = (!page || page < 0) ? 0 : page;
 		var accountId = req.session.account._id;
 		var roles = req.session.account.roles;
-		
 		switch(type){
 			case 'search':
 				var now = new Date();
@@ -205,9 +214,12 @@ var getOrders = function(req,res){
 					[
 						function(callback){
 							if(roles.admin || roles.agent){
-								models.Order.findAll(query,page,callback);
+								models.Order.find(query)
+									.skip(per*page)
+									.limit(per)
+									.exec(callback);
 							}else{
-								callback({errcode: 401001, errmsg: '没有权限'});
+								callback({code: 401001, message: '没有权限'});
 							}
 						},
 
@@ -228,9 +240,12 @@ var getOrders = function(req,res){
 					[
 						function(callback){
 							if(roles.admin || roles.agent){
-								models.Order.findAll(query,page,callback);
+								models.Order.find(query)
+									.skip(per*page)
+									.limit(per)
+									.exec(callback);
 							}else{
-								callback({errcode: 401001, errmsg: '没有权限'});
+								callback({code: 401001, message: '没有权限'});
 							}
 						},				
 					],
@@ -246,6 +261,7 @@ var getOrders = function(req,res){
 		}
 
 	};
+
 var findByUser = function(req,res){
 	var userid = req.session.account._id;
 	var page = req.query.page || 0;

@@ -11,7 +11,7 @@ exports = module.exports = function(){
 		$.ajax(config.api.host + '/authenticated',{
 			mathod: 'GET',
 			success: function(account){
-				if(account.errcode){
+				if(account.code){
 					return callback(false);
 				}
 				router.appEvents.trigger('logined',account);
