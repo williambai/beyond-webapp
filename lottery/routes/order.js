@@ -156,6 +156,13 @@ var buyNow = function(req,res){
 						{
 							$set: orderSet
 						},
+						{
+							'new': true,
+							'select': {
+								histroies: 0,
+								records: 0
+							}
+						},
 						callback
 					);
 				}

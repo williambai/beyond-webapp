@@ -46,6 +46,7 @@ exports = module.exports = Backbone.Router.extend({
 		'order/update/:id': 'orderUpdate',
 		'order/detail/:id': 'orderDetail',
 		'record/index': 'recordIndex',
+		'records/order/:id': 'orderRecords',
 		'record/update/:id': 'recordUpdate',
 		'record/stats': 'recordStats',
 	},
@@ -284,6 +285,19 @@ exports = module.exports = Backbone.Router.extend({
 		}
 	},
 
+	orderRecords: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		if(this.account.roles.user || this.account.roles.app){
+			this.appEvents.trigger('set:brand','出票记录');
+			var recordIndexView = new RecordIndexView({account: this.account, url: '/records?type=order&id=' + id});
+			this.changeView(recordIndexView);
+			recordIndexView.trigger('load');
+		}
+	},
+
 	recordIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
@@ -291,7 +305,7 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		if(this.account.roles.user || this.account.roles.app){
 			this.appEvents.trigger('set:brand','出票记录');
-			var recordIndexView = new RecordIndexView({account: this.account});
+			var recordIndexView = new RecordIndexView({account: this.account,url: '/records'});
 			this.changeView(recordIndexView);
 			recordIndexView.trigger('load');
 		}

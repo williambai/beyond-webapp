@@ -12,6 +12,7 @@ exports = module.exports = Backbone.View.extend({
 	el: '#content',
 
 	initialize: function(options){
+		this.url = options.url;
 		this.account = options.account;
 		this.on('load', this.load, this);
 	},
@@ -24,9 +25,13 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		this.recordListView = new RecordListView({
 			account: this.account,
-			url: config.api.host + '/records'
+			url: config.api.host + this.url
 		});
-		this.recordListView.collectionUrl = config.api.host + '/records';
+		if(this.orderId){
+			this.recordListView.collectionUrl = config.api.host + this.url;
+		}else{
+			this.recordListView.collectionUrl = config.api.host + this.url;
+		}
 		this.recordListView.trigger('load');
 	},
 

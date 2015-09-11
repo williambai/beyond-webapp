@@ -9,7 +9,7 @@
 		<a href="#" class="remove" id="<%= order._id %>">删除</a>
 	</p>
 	<p>
-		<a>出票记录</a>
+		<a href="#records/order/<%= order._id %>">出票记录</a>
 		&nbsp;
 		<a>变更记录</a>
 	</p>
@@ -23,4 +23,5 @@
 	<p>
 		类型：<%= order.game.name %>，共&nbsp;<%= order.game.periods %>&nbsp;期，剩余&nbsp;<%= order.game.remained %>&nbsp;期</p>
 </div>
+<div class="list"></div>
 <hr>

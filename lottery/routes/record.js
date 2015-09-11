@@ -93,6 +93,44 @@ var getRecords = function(req,res){
 		var roles = req.session.account.roles;
 
 		switch(type){
+			case 'order':
+				async.waterfall(
+					[
+						function _req(callback){
+							var id = req.query.id;
+							if(!id) return callback({code: 401011, message: 'order id lost.'});
+							callback(null,id);
+						},
+						function(id,callback){
+							models.Order.findById(
+								id,
+								function(err,order){
+									if(err) return callback(err);
+									if(!order) return callback({code: 40400, message: 'order id not exist.'});
+									var records = order.records || [];
+									callback(null,records);
+								}
+							);
+						},
+						function(records,callback){
+							models.Record.find({
+								_id: {
+										$in: records
+									}
+								},
+								function(err,docs){
+									if(err) return callback(err);
+									callback(null,docs);
+								}
+							);
+						}
+					],
+					function(err,result){
+						if(err) return res.send(err);
+						res.send(result);
+					}
+				);
+				break;
 			case 'search':
 				var now = new Date();
 				var from = new Date(req.query.from || 0);
