@@ -1,3 +1,18 @@
+/**
+ * 状态图
+ * |- start(创建: add)
+ *   |- a(enable: true, lastupdatetime: now(), message: 已创建)
+ *     |- 修改 Account, GOTO a;
+ *     |- 删除 Account, GOTO end;
+ *     |- 禁用 Account, GOTO b;
+ *   |- b(enable: false, lastupdatetime: now(), message: 已禁用)
+ *     |- 修改 Account, GOTO b;
+ *     |- 删除 Account, GOTO end;
+ *     |- 启用 Account, GOTO a;
+ * |- end(删除: remove)
+ */
+
+
 module.exports = exports = function(mongoose){
 
 	var schemaOptions = {

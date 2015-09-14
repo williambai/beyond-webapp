@@ -51,6 +51,7 @@
     "express-session": "^1.11.2",
     "jade": "^1.10.0",
     "jsonfile": "^2.1.2",
+    "mongodb": "^2.0.42",
     "mongoose": "^4.0.3",
     "mongoose-tree": "^0.2.2",
     "multer": "^0.1.8",
