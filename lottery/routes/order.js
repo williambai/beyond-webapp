@@ -2,7 +2,7 @@ exports = module.exports = function(app,models){
 var crypto = require('crypto');
 var _ = require('underscore');
 var async = require('async');
-var lottery = require('../libs');
+var lottery = require('../libs/lottery');
 
 var add = function(req,res){
 		var order = req.body;

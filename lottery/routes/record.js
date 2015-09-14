@@ -1,6 +1,5 @@
 exports = module.exports = function(app,models){
 var async = require('async');
-var lottery = require('../libs');
 
 var add = function(req,res){
 		var record = {

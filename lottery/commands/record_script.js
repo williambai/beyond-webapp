@@ -7,7 +7,7 @@ var config = {
 		lottery: require('../config/lottery')
 	};		
 
-var Lottery = require('../libs');
+var Lottery = require('../libs/lottery');
 var lottery = new Lottery();
 
 //import the models
