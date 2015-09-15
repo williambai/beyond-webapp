@@ -2,11 +2,12 @@
 <hr/>
 <form class="lottery">
 	<div class="form-group" id="username">
-		<label>客户信息</label>
+		<label>姓名</label>
 		<input name="username" type="text" placeholder="姓名" value="<%= order.customer.username %>" class="form-control">
 		<span class="help-block"></span>
 	</div>
 	<div class="form-group" id="email">
+		<label>手机号码</label>
 		<input name="email" type="text" placeholder="手机号码" value="<%= order.customer.email %>" class="form-control">
 		<span class="help-block"></span>
 	</div>

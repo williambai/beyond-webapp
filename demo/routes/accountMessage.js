@@ -6,45 +6,46 @@
 		var accountId = req.params.aid == 'me' 
 							? req.session.accountId
 							: req.params.aid;
-		Account.findById(accountId, function(account){
-			if(!account){
-				res.sendStatus(404);
-				return;
-			}
-			var username = req.session.username || '匿名';
-			var avatar = req.session.avatar || '';
-			var text = req.body.status || '';
-			var attachments = req.body.attachments || [];
 
-			var statusNew = {
-				MsgType: 'mixed',
-				Content: text,
-				Urls: attachments
-			};
+		Account.findById(
+			accountId, 
+			function(err,account){
+				if(err) return res.send(err);
+				if(!account) return res.send({code: 40400, message: 'account not exist.'});
 
-			if(text.length<0){
-				res.sendStatus(400);
-				return;
+				var message = {
+						fromId: req.session.accountId,
+						toId: account._id,
+						fromUser:{},
+						toUser:{},
+						subject: '',
+						content: {
+							MsgType: 'mixed',
+							Content: req.body.status,
+							Urls: req.body.attachments
+						},
+						tags: [],
+						level: 0,
+						good: 0,
+						bad: 0,
+						score: 0,
+						createtime: new Date(),
+					};
+					message.fromUser[message.fromId] = {
+						username: req.session.username,
+						avatar: req.session.avatar
+					};
+					message.toUser[message.toId] ={
+						username: account.username,
+						avatar: account.avatar
+					};
+
+				Message.create(message, function(err,doc){
+					if(err) return res.send(err);
+					res.send(doc);
+				});
 			}
-			var action = 'status';//朋友圈
-			if(req.session.accountId != accountId){
-				action = 'message';//私信
-			}
-			Message.add(req.session.accountId,accountId,username,avatar,account.username,account.avatar,'',statusNew,function(status){
-				// if(status){
-				// 	app.triggerEvent('event:' + accountId, {
-				// 		action: action,
-				// 		from: accountId,
-				// 		data: {
-				// 			username: username,
-				// 			avatar: avatar,
-				// 			status: statusNew
-				// 		},
-				// 	});
-				// }
-			});
-		});
-		res.sendStatus(200);
+		);	
 	};
 
 	var remove = function(req,res){
@@ -56,44 +57,81 @@
 		var username = req.session.username;
 		if(req.body.good){
 			var good = req.body.good;
-			Message.updateVoteGood(id,accountId,username, function(success){
-				if(success){
-					res.sendStatus(200);
-				}else{
-					res.sendStatus(406);
+			Message.findOneAndUpdate(
+				{
+					 _id: id,
+					voters: {$nin: [accountId]}
+				},
+				{
+					$push: {
+						voters: accountId, 
+						votes: {
+							accountId: accountId,
+							username: voterUsername,
+							vote: 'good'
+						}
+					},
+					$inc: {good: 1, score: 1}
+				},
+				function(err,result){
+					if(err) return res.send(err);
+					res.send(result);
 				}
-			});
+			);	
 		}else if(req.body.bad){
 			var bad = req.body.bad;
-			Message.updateVoteBad(id,accountId,username, function(success){
-				if(success){
-					res.sendStatus(200);
-				}else{
-					res.sendStatus(406);
-				}
-			});
+			Message
+				.findOneAndUpdate(
+					{
+						_id: id,
+						voters: {$nin: [accountId]}
+					},
+					{
+						$push: {
+							voters: accountId, 
+							votes: {
+								accountId: accountId,
+								username: voterUsername,
+								vote: 'bad'
+							}
+						},
+						$inc: {bad: 1, score: -1}
+					},
+					function(err, result){
+						if(err) return res.send(err);
+						res.send(result);
+					}
+				);
 		}else{
-			res.sendStatus(400);
+			res.send({code: 40000, message: 'can not vote.'});
 		}
 	};
 
 	var updateComment = function(req,res){
-		var id = req.params.id;
-		var accountId = req.session.accountId;
-		var username = req.session.username;
-		var comment = req.body.comment || '';
-		if(comment.length == 0){
-			res.sendStatus(400);
-			return;
-		}
-		Message.addComment(id,accountId,username,comment,function(success){
-			if(success){
-				res.sendStatus(200);
-			}else{
-				res.sendStatus(406);
-			}
-		});
-	};
+			var id = req.params.id;
+			var accountId = req.session.accountId;
+			var username = req.session.username;
+			var comment = req.body.comment || '';
+			if(comment.length < 1) 
+				return res.send({code: 40000, message: 'comment length is 0.'});
+			Message
+				.findByIdAndUpdate(
+					id,
+					{
+						$push: {
+							comments: {
+								accountId: accountId,
+								username: username,
+								comment: comment
+							}
+						}
+					},
+					function(err,result){
+						if(err) return res.send(err);
+						res.send(result);
+					}
+				);
+		};
 
 	var getOne = function(req,res){
 		res.sendStatus(401);
@@ -104,18 +142,27 @@
 							? req.session.accountId
 							: req.params.aid;
 		var page = req.query.page || 0;
+		var per = 20;
 
 		if(isNaN(page)) page = 0;
 
-		Account.findById(accountId, function(account){
-			if(!account){
-				res.sendStatus(404);
-				return;
+		Account.findById(
+			accountId, 
+			function(err,account){
+				if(err) return res.send(err);
+				if(!account) return send({code: 40400,message: 'account not exist.'});
+				Message
+					.find({toId: accountId, fromId: accountId})
+					.sort({createtime:-1})
+					.skip(page*per)
+					.limit(per)
+					.exec(function(err,docs){
+						if(err) return res.send(err);
+						res.send(docs);
+					}
+				);
 			}
-			Message.getStatusById(accountId,page,function(status){
-				res.send(status);
-			});
-		});
+		);
 	};
 
 	var getCollectionByExchange = function(req,res){
@@ -127,22 +174,42 @@
 							? req.session.accountId
 							: req.params.aid;
 		var page = req.query.page || 0;
+		var per = 20;
 
 		if(isNaN(page)) page = 0;
 
-		Account.findById(accountId, function(account){
-			if(!account){
-				res.sendStatus(404);
-				return;
+		Account.findById(
+			accountId, 
+			function(err,account){
+				if(err) return res.send(err);
+				if(!account) return send({code: 40400,message: 'account not exist.'});
+				var contactIds = [];
+				account.contacts.forEach(function(contact){
+					contactIds.push(contact.accountId);
+				});
+
+				Message
+					.find({
+						$or: [
+								{
+									toId: accountId,
+									fromId: {$in: contactIds} 
+								},
+								{
+									fromId: accountId,
+									toId: {$in: contactIds} 
+								}
+							]
+					})
+					.sort({createtime:-1})
+					.skip(page*per)
+					.limit(per)
+					.exec(function(err,docs){
+						if(err) return res.send(err);
+						res.send(docs);
+					});
 			}
-			var contactIds = [];
-			account.contacts.forEach(function(contact){
-				contactIds.push(contact.accountId);
-			});
-			Message.getExchangeById(accountId,contactIds,page,function(status){
-				res.send(status);
-			});
-		});
+		);
 	};
 
 	var getCollectionByActivity = function(req,res){
@@ -150,22 +217,47 @@
 							? req.session.accountId
 							: req.params.aid;
 		var page = req.query.page || 0;
+		var per = 20;
 
 		if(isNaN(page)) page = 0;
+		
+		Account.findById(
+			accountId, 
+			function(err,account){
+				if(err) return res.send(err);
+				if(!account) return send({code: 40400,message: 'account not exist.'});
 
-		Account.findById(accountId, function(account){
-			if(!account){
-				res.sendStatus(404);
-				return;
+				var contactIds = [];
+				account.contacts.forEach(function(contact){
+					contactIds.push(contact.accountId);
+				});
+
+				var pairs = [];
+				contactIds.forEach(function(contantId){
+					pairs.push({
+						fromId: contantId,
+						toId: contantId
+					});
+				});
+
+				pairs.push({
+					toId: accountId,
+					fromId: accountId 
+				});
+
+				Message
+					.find({
+						$or: pairs
+					})
+					.sort({createtime:-1})
+					.skip(page*per)
+					.limit(per)
+					.exec(function(err,docs){
+						if(err) return res.send(err);
+						res.send(docs);
+					});
 			}
-			var contactIds = [];
-			account.contacts.forEach(function(contact){
-				contactIds.push(contact.accountId);
-			});
-			Message.getActivityById(accountId,contactIds,page,function(status){
-				res.send(status);
-			});
-		});
+		);
 	};
 
 /**

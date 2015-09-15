@@ -5,60 +5,45 @@ exports = module.exports = function(app,models){
 	var Account = models.Account;
 	var Status = models.ProjectMessage;
 
-	var getAll = function(req,res){
-			var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
-			var accountId = req.session.accountId;
-
-			async.waterfall(
-				[
-					function _project(callback){
-						Project.getByAccountId(accountId,page,function(data){
-							callback(null,data);
-						});
-					}
-				],
-				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
-					}
-					res.send(result);
-				}
-			);
-		};
-
 	var add = function(req,res){
-			var	name = req.body.name;
-			var description = req.body.description;
 			var accountId = req.session.accountId;
+			var project = req.project;
+			project.accountId = accountId;
+			project.createtime = new Date();
+			project.updatetime = new Date();
+			project.closed = false;
 
 			async.waterfall(
 				[
 					function _project(callback){
-						Project.add(accountId,{
-							name: name,
-							description: description
-						},function(project){
-							if(!project){
-								callback(400);
-								return;
-							}
-							callback(null,project);
+						Project.create(project,function(err,doc){
+							if(err) return callback(err);
+							callback(null,doc);
 						});
 					},
 					function _account(project,callback){
-						Account.addProject(accountId,project._id,project.name,1,function(err){
-							callback(null);
-						});
+						Account
+							.findByIdAndUpdate(
+								accountId,
+								{
+									$push: {
+										projects: {
+											_id: project._id,
+											name: project.name,
+											type: 0,
+											notification: 0,
+											agree: 0,
+										}
+									}
+								},
+								callback
+							);
 					}
 				],
 				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
-					}
+					if(err) return res.send(err);
 					res.sendStatus(200);
-				}			
+				}
 			);
 		};
 
@@ -67,16 +52,21 @@ exports = module.exports = function(app,models){
 			async.waterfall(
 				[
 					function _project(callback){
-						Project.close(id,function(success){
-							callback(null,success);
-						});
+						Project
+						.findByIdAndUpdate(
+							id,
+							{
+								$set: {
+									closed: true,
+									updatetime: new Date(),
+								}
+							},
+							callback
+						);
 					},
 				],
 				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
-					}
+					if(err) return res.send(err);
 					res.sendStatus(200);
 				}
 			);
@@ -87,69 +77,22 @@ exports = module.exports = function(app,models){
 			async.waterfall(
 				[
 					function _project(callback){
-						Project.open(id,function(success){
-							callback(null,success);
-						});
+						Project
+						.findByIdAndUpdate(
+							id,
+							{
+								$set: {
+									closed: false,
+									updatetime: new Date(),
+								}
+							},
+							callback
+						);
 					},
 				],
 				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
-					}
+					if(err) return res.send(err);
 					res.sendStatus(200);
-				}
-			);
-		};
-
-	var getOne = function(req,res){
-			var id = req.params.id;
-
-			async.waterfall(
-				[
-					function _project(callback){
-						Project.getById(id,function(data){
-							callback(null,data);
-						});
-					},
-				],
-				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
-					}
-					res.send(result);
-				}
-			);
-		};
-
-	var getContacts = function(req,res){
-			var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
-			var id = req.params.id;
-
-			async.waterfall(
-				[
-					function _project(callback){
-						Project.getById(id,function(project){
-							if(!project){
-								callback(404);
-								return;						
-							}
-							callback(null,project);
-						});
-					},
-					function _account(project,callback){
-						Account.findAll(project.contacts, page, function(accounts){
-							callback(null,accounts);
-						});
-					}
-				],
-				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
-					}
-					res.send(result);
 				}
 			);
 		};
@@ -161,34 +104,39 @@ exports = module.exports = function(app,models){
 
 			async.waterfall(
 				[
-					function _project(callback){
-						Project.getById(projectId,function(project){
-							if(!project){
-								callback(404);
-								return;
-							}
-							if(accountId != project.accountId){
-								callback(401);
-								return;
-							}
-							callback(null,project);						
-						});
+					function(callback){
+						Project.findByIdAndUpdate(
+							projectId,
+							{
+								$addToSet: {
+									contacts: contactId
+								}
+							},
+							callback
+						);
 					},
-					function _contact(project,callback){
-						Project.addContactById(project._id,contactId);
-						callback(null,project);
-					},
-					function _account(project,callback){
-						Account.addProject(contactId,project._id,project.name,0,function(err){
-							callback(null);
-						});
+
+					function(project,callback){
+						Account
+							.findByIdAndUpdate(
+								contactId,
+								{
+									$push: {
+										projects: {
+											_id: project._id,
+											name: project.name,
+											type: 0,
+											notification: 0,
+											agree: 0,
+										}
+									}
+								},
+								callback
+							);
 					}
 				],
-				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
-					}
+				function(err,result){
+					if(err) return res.send(err);
 					res.sendStatus(200);
 				}
 			);
@@ -205,43 +153,137 @@ exports = module.exports = function(app,models){
 
 			async.waterfall(
 				[
-					function _project(callback){
-						Project.getById(projectId,function(project){
-							if(!project){
-								callback(404);
-								return;
-							}
-							if(accountId != project.accountId){
-								callback(401);
-								return;
-							}
-							callback(null,project);
-						});
+					function(callback){
+						Project.findByIdAndUpdate(
+							projectId,
+							{
+								$pull: {
+									contacts: contactId
+								}
+							},
+							callback
+						);
 					},
-					function _contact(project,callback){
-						Project.removeContactById(project._id,contactId);
-						callback(null,project);
-					},
-					function _account(project,callback){
-						Account.removeProject(accountId,project._id);
-						callback(null,project);
-					}				
-				],
-				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
+
+					function(project,callback){
+						Account
+							.findByIdAndUpdate(
+								contactId,
+								{
+									$pull: {
+										'projects.$._id': projectId
+									}
+								},
+								callback
+							);
 					}
+				],
+				function(err,result){
+					if(err) return res.send(err);
 					res.sendStatus(200);
 				}
 			);
 		};
+
+
+	var getContacts = function(req,res){
+			var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
+			page = (!page || page < 0) ? 0 : page;
+			var per = 20;
+			var id = req.params.id;
+
+			async.waterfall(
+				[
+					function _project(callback){
+						Project.findById(id,function(err,project){
+							if(err) return callback(err);
+							if(!project || !project.contacts) return callback({code: 40400, message: 'project id not exsit.'});
+							
+							callback(null,project.contacts);
+						});
+					},
+					function _account(contacts,callback){
+						Account
+							.find({_id: {$in: contacts}})
+							.skip(page*per)
+							.limit(per)
+							.exec(callback);
+					}
+				],
+				function(err,result){
+					if(err) return res.send(err);
+					res.send(result);
+				}
+			);
+		};
+
+
+	var getProjects = function(req,res){
+			var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
+			page = (!page || page < 0) ? 0 : page;
+			var per = 20;
+			var accountId = req.session.accountId;
+
+			async.waterfall(
+				[
+					function(callback){
+						Project
+							.find({accountId:accountId})
+							.sort({updatetime:-1})
+							.skip(page*per)
+							.limit(per)
+							.exec(callback);
+					}
+				],
+				function(err,result){
+					if(err){
+						res.sendStatus(err);
+						return;
+					}
+					res.send(result);
+				}
+			);
+		};
+
+	var getById = function(req,res){
+			var id = req.params.id;
+
+			async.waterfall(
+				[
+					function(callback){
+						Project.findById(id,callback);
+					},
+				],
+				function(err,result){
+					if(err) return res.send(err);
+					res.send(result);
+				}
+			);
+		};
+
+
 /**
  * router outline
  */
- 	//add project
+ 	/**
+ 	 * add project
+ 	 * 
+ 	 */
  	app.post('/projects', app.isLogined, add);
- 	//update project to be closed
+
+ 	/**
+ 	 * remove project
+ 	 * 
+ 	 */
+
+ 	/**
+ 	 * update project
+ 	 *  type: 
+ 	 *        open
+ 	 *        close
+ 	 *        contact_add
+ 	 *        contact_remove
+ 	 */
  	app.post('/projects/:id/close', app.isLogined, close);
  	//update project to be opened
  	app.post('/projects/:id/open', app.isLogined, open);
@@ -251,12 +293,30 @@ exports = module.exports = function(app,models){
  	//update project by removing contact
  	app.delete('/projects/:pid/contacts/:cid', app.isLogined,removeContact);//Deprecated
  	app.delete('/project/contacts/:pid/:cid', app.isLogined,removeContact);
+
+ 	/**
+ 	 * get projects
+ 	 *   type: 
+ 	 *   	contacts
+ 	 */
+ 	app.get('/projects',app.isLogined, getProjects);
+ 	app.get('/project/contacts/:pid',app.isLogined, getContacts);
+
+ 	/**
+ 	 * get project by id
+ 	 * 
+ 	 */
+ 	app.get('/project/:id', app.isLogined, getById);
+
+
+
+
+
+
  	//query model
- 	app.get('/projects/:id', app.isLogined, getOne);//Deprecated
- 	app.get('/project/:id', app.isLogined, getOne);
+ 	app.get('/projects/:id', app.isLogined, getById);//Deprecated
  	//query projects of mine
- 	app.get('/projects',app.isLogined, getAll);
+ 	app.get('/projects',app.isLogined, getProjects);
  	//query project's contacts
  	app.get('/projects/:id/contacts',app.isLogined, getContacts);//Deprecated
- 	app.get('/project/contacts/:pid',app.isLogined, getContacts);
 };

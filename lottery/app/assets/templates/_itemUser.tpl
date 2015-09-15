@@ -1,10 +1,11 @@
 <div class="pull-right">
-	<% if(account.roles.app){ %>
-	<p><a href="#user/app/<%= user._id %>">应用管理</a></p>
+	<p class="text-right">
+	<% if(user.roles.app){ %>
+	<a href="#user/app/<%= user._id %>">应用管理</a>&nbsp;
 	<% } %>
-	<p><a href="#user/edit/<%= user._id %>">修改</a>&nbsp;<a href="#delete" id="">删除</a></p>
+	<a href="#user/edit/<%= user._id %>">修改</a>&nbsp;<a href="#delete" id="">删除</a></p>
 	<% if(account.roles.agent){ %>
-	<p><a href="#lottery/3d/<%= user._id %>">赠送彩票</a></p>
+	<p class="text-right"><a href="#lottery/3d/<%= user._id %>">赠送彩票</a></p>
 	<% } %>
 </div>
 <div>

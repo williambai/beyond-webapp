@@ -168,7 +168,33 @@ exports =module.exports = function(app,models){
 				var roomId = project.id;
 				socket.in(roomId).emit('project',{from: user, to: project, content: content});
 				/** save message */
-				models.ProjectMessage.add(user.id,project.id,user.username,user.avatar,'','','',content);
+				var message = {
+						fromId: user.id,
+						toId: project.id,
+						fromUser: {
+						},
+						toUser: {
+						},
+						subject: '',
+						content: content,
+						tags: [],
+						level: 0,
+						good: 0,
+						bad: 0,
+						score: 0,
+						createtime: new Date(),
+					};
+					message.fromUser[message.fromId] = {
+						username: user.username,
+						avatar: user.avatar
+					};
+					message.toUser[message.toId] ={
+						username: '',
+						avatar: ''
+					};
+					models.ProjectMessage.create(message,function(err,doc){
+						if(err) return console.error(err);
+					});
 			}else{
 				console.error('project error.');
 			}

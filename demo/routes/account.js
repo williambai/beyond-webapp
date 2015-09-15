@@ -1,12 +1,19 @@
  exports = module.exports = function(app,models){
- 	var debug = require('debug')('account:router');
+ 	var crypto = require('crypto');
  	var async = require('async');
  	var path = require('path');
  	var fs = require('fs');
 
+
+ 	var nodemailer = require('nodemailer');
+	var smtpTransport = require('nodemailer-smtp-transport');
+	var config = {
+			mail: require('../config/mail')
+		};		
+
 	var Account = models.Account;
 
-	var getOne = function(req,res){
+	var getById = function(req,res){
 			var meId = req.session.accountId;
 			var accountId = req.params.id == 'me' 
 								? meId
@@ -14,24 +21,19 @@
 
 			async.waterfall(
 				[
-					function _account(callback){
-						Account.findById(accountId, function(account){
-							if(!account){
-								callback(404);
-								return;
-							}
-							if(accountId == meId || Account.hasContact(account,meId)){
-								account.isFriend = true;
-							}
+					function(callback){
+						Account.findById(accountId, function(err,account){
+							if(err) return callback(err);
+							if(!account) return callback({code: 40400, message: 'account not exsit.'});
+							// if(accountId == meId || Account.hasContact(account,meId)){
+							// 	account.isFriend = true;
+							// }
 							callback(null,account);
 						});
 					}
 				],
-				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
-					}
+				function(err,result){
+					if(err) return res.send(err);
 					res.send(result);
 				}
 			);
@@ -58,13 +60,17 @@
 					res.sendStatus(400);
 					return;
 				}
-				Account.updateAvatar(accountId,avatar, function(err){
-					if(!err){
-						res.end(avatar);
-					}else{
-						res.end();
+				Account.findByIdAndUpdate(
+					accountId,
+					{
+						$set: {
+							avatar: avatar
+						}
+					}, function(err){
+						if(err) return res.send(err);
+						res.sendStatus(200);
 					}
-				});
+				);
 			});
 		};
 
@@ -72,50 +78,56 @@
 			var accountId = req.params.id == 'me' 
 								? req.session.accountId
 								: req.params.id;
-			var account = {};
-			if(req.body.username) account.username = req.body.username;
-			if(req.body.realname) account.realname = req.body.realname;
-			if(req.body.biography) account.biography = req.body.biography;
+			var account = req.body;
+			// if(req.body.username) account.username = req.body.username;
+			// if(req.body.realname) account.realname = req.body.realname;
+			// if(req.body.biography) account.biography = req.body.biography;
 			// console.log(account);
-			Account.updateAccount(accountId,account);
-			res.sendStatus(200);
+			Account.findByIdAndUpdate(
+				accountId,
+				account,
+				function(err){
+					if(err) return res.send(err);
+					res.sendStatus(200);
+				});
 		};
 
 	var getContacts = function(req,res){
 			var accountId = req.params.id == 'me' 
 								? req.session.accountId
 								: req.params.id;
-			Account.findById(accountId,function(account){
-				if(!account){
-					res.sendStatus(404);
-					return;
+			Account.findById(
+				accountId,
+				function(err,account){
+					if(err) return res.send(err);
+					if(!account || !account.contacts) return res.send({code: 40400, message: 'not exist.'});
+					res.send(account.contacts);
 				}
-				res.send(account.contacts);
-			});				
+			);				
 		};
 
 	var addContact = function(req,res){
 			var accountId = req.params.id == 'me' 
 								? req.session.accountId
 								: req.params.id;
-			var contactId = req.body.contactId;
+			var contact = req.body;
+			var contactId = contact.contactId;
 
-			if(null == contactId){
-				res.sendStatus(400);
-				return;
-			}
-			Account.findById(accountId,function(account){
-				if(account){
-					Account.findById(contactId,function(contact){
-						if(contact){
-							Account.addContact(account,contact);
-							//Make the reverse link
-							Account.addContact(contact,account);
-						}
-					});
+			if(null == contactId)
+				return res.send({code: 40000, message: 'parameter lost.'});
+
+			Account.findByIdAndUpdate(
+				accountId,
+				{
+					$push: {
+						contacts: contact
+					}
+				},
+				function(err,doc){
+					if(err) return res.send(err);
+					return res.send(doc);
 				}
-			});
-			res.sendStatus(200);
+			);
 		};
 
 	var removeContact = function(req,res){
@@ -124,22 +136,21 @@
 								: req.params.id;
 			var contactId = req.body.contactId;
 
-			if(null == contactId){
-				res.sendStatus(400);
-				return;
-			}
-			Account.findById(accountId,function(account){
-				if(account){
-					Account.findById(contactId,function(contact){
-						if(contact){
-							Account.removeContact(account,contactId);
-							//Kill the reverse link
-							Account.removeContact(contact,accountId);
-						}
-					});
+			if(null == contactId)
+				return res.send({code: 40000, message: 'parameter lost.'});
+
+			Account.findByIdAndUpdate(
+				accountId,
+				{
+					$pull: {
+						contacts: contactId
+					}
+				},
+				function(err,doc){
+					if(err) return res.send(err);
+					res.send(doc);
 				}
-			});
-			res.sendStatus(200);
+			);
 		};
 
 	var findAccounts = function(req,res){
@@ -148,13 +159,19 @@
 				res.sendStatus(400);
 				return;
 			}
-			Account.findByString(searchStr,function(accounts){
-				if(!accounts){
-					res.sendStatus(404);
-					return;
+			var searchRegex = new RegExp(searchStr,'i');
+			Account.find(
+				{
+					$or: [
+							{'username': {$regex: searchRegex}},
+							{'email': {$regex: searchRegex}}
+						]
+				},
+				function(err,accounts){
+					if(err) return res.send(err);
+					res.send(accounts);
 				}
-				res.send(accounts);
-			});
+			);
 		};
 
 	var getProjects = function(req,res){
@@ -165,24 +182,18 @@
 
 			async.waterfall(
 				[
-					function _account(callback){
-						Account.findById(accountId,function(account){
-							if(!account){
-								callback(404);
-								return;
-							}
+					function(callback){
+						Account.findById(
+							accountId,
+							function(err,account){
+								if(err) return res.send(err);
+								if(!account) return res.send({code: 40400, message: 'account not exist.'});
 							callback(null,account.projects);
 						});
 					},
-					function _project(projects,callback){
-						callback(null,projects);
-					}
 				],
-				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
-					}
+				function(err,result){
+					if(err) return res.send(err);
 					res.send(result);
 				}
 			);
@@ -193,12 +204,20 @@
 			var inviteUrl = 'http://' + req.header('host');
 			var username = req.session.username;
 			var email = req.session.email;
-			Account.inviteFriend(emails,inviteUrl,username,email,function(success){
-				if(!success){
-					console.err('email sender error.');
-				}
+
+			var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
+			inviteUrl = inviteUrl ? inviteUrl : 'http://localhost:8080';
+			emails.forEach(function(email){
+				smtpTransporter.sendMail({
+					from: 'socialworkserivce@appmod.cn',
+					to: email,
+					subject: '我的工作社交网--邀请信',
+					text: '您的朋友' + username + '(' + email + ')' + '邀请您加入。请点击：' + inviteUrl,
+				},function(err){
+					if(err) return res.send(err);
+					res.sendStatus(200);
+				});
 			});
-			res.sendStatus(200);
 		};
 
 /**
@@ -217,8 +236,8 @@
  	app.post('/accounts/:id/avatar', app.isLogined, updateAvatar);//Deprecated
  	app.post('/account/:id/avatar', app.isLogined, updateAvatar);
 	//query model
-	app.get('/accounts/:id', app.isLogined,getOne);//Deprecated
-	app.get('/account/:id', app.isLogined,getOne);
+	app.get('/accounts/:id', app.isLogined,getById);//Deprecated
+	app.get('/account/:id', app.isLogined,getById);
 	//query model's contacts
 	app.get('/accounts/:id/contacts',app.isLogined, getContacts);//Deprecated
 	app.get('/account/:id/contacts',app.isLogined, getContacts);

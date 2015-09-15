@@ -16,112 +16,139 @@
 
 			async.waterfall(
 				[
-					function _project(callback){
-						Project.getById(projectId,function(project){
-							if(!project){
-								callback(404);
-								return;
-							}
-							if(accountId != project.accountId){
-								callback(401);
-								return;
-							}
+					function(callback){
+						Project.findById(projectId,function(err,project){
+							if(err) return callback(err);
+							if(!project) return callback({code: 40000, message: 'project not exist.'});
+
+							if(accountId != project.accountId)
+								return callback({code: 40100, message: 'can not do.'});
 							callback(null,project);
 						});
 					},
-					function _status(project,callback){
-						Message.add(accountId,project._id,name,'','','',text);
-						callback(null);
+					function(project,callback){
+						var message = {
+								fromId: req.session.accountId,
+								toId: project._id,
+								fromUser:{},
+								toUser:{},
+								subject: '',
+								content: req.body.text,
+								tags: [],
+								level: 0,
+								good: 0,
+								bad: 0,
+								score: 0,
+								createtime: new Date(),
+							};
+							message.fromUser[message.fromId] = {
+								username: req.session.username,
+								avatar: req.session.avatar
+							};
+							message.toUser[message.toId] ={
+								username: '',
+								avatar: ''
+							};
+
+						Message.create(message, function(err,doc){
+							if(err) return res.send(err);
+							res.send(doc);
+						});
 					}
 				],
 				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
-					}
+					if(err) return res.send(err);
 					res.sendStatus(200);
 				}
 			);
 		};
 
 	var remove = function(req,res){
-			//TODO
-			var projectId = req.params.id || 0;
-			var accountId = req.session.accountId;
 
-			async.waterfall(
-				[
-					function _project(callback){
-						Project.getById(projectId,function(project){
-							if(!project){
-								callback(404);
-								return;
-							}
-							if(accountId != project.accountId){
-								callback(401);
-								return;
-							}
-							callback(null,project);
-						});					
-					},
-					function _status(project,callback){
-						Project.removeStatusById(project._id,accountId);
-						callback(null);
-					}
-				],
-				function _result(err,result){
-					if(err){
-						res.sendStatus(err);
-						return;
-					}
-					res.sendStatus(200);
-				}
-			);
 		};
+
 	var updateVote = function(req,res){
-			var id = req.params.id;
-			var accountId = req.session.accountId;
-			var username = req.session.username;
-			if(req.body.good){
-				var good = req.body.good;
-				Message.updateVoteGood(id,accountId,username, function(success){
-					if(success){
-						res.sendStatus(200);
-					}else{
-						res.sendStatus(406);
-					}
-				});
-			}else if(req.body.bad){
-				var bad = req.body.bad;
-				Message.updateVoteBad(id,accountId,username, function(success){
-					if(success){
-						res.sendStatus(200);
-					}else{
-						res.sendStatus(406);
-					}
-				});
-			}else{
-				res.sendStatus(400);
-			}
-		};
-
-	var updateComment = function(req,res){
 		var id = req.params.id;
 		var accountId = req.session.accountId;
 		var username = req.session.username;
-		var comment = req.body.comment || '';
-		if(comment.length == 0){
-			res.sendStatus(400);
-			return;
+		if(req.body.good){
+			var good = req.body.good;
+			Message.findOneAndUpdate(
+				{
+					 _id: id,
+					voters: {$nin: [accountId]}
+				},
+				{
+					$push: {
+						voters: accountId, 
+						votes: {
+							accountId: accountId,
+							username: voterUsername,
+							vote: 'good'
+						}
+					},
+					$inc: {good: 1, score: 1}
+				},
+				function(err,result){
+					if(err) return res.send(err);
+					res.send(result);
+				}
+			);	
+		}else if(req.body.bad){
+			var bad = req.body.bad;
+			Message
+				.findOneAndUpdate(
+					{
+						_id: id,
+						voters: {$nin: [accountId]}
+					},
+					{
+						$push: {
+							voters: accountId, 
+							votes: {
+								accountId: accountId,
+								username: voterUsername,
+								vote: 'bad'
+							}
+						},
+						$inc: {bad: 1, score: -1}
+					},
+					function(err, result){
+						if(err) return res.send(err);
+						res.send(result);
+					}
+				);
+		}else{
+			res.send({code: 40000, message: 'can not vote.'});
 		}
-		Message.addComment(id,accountId,username,comment,function(success){
-			if(success){
-				res.sendStatus(200);
-			}else{
-				res.sendStatus(406);
-			}
-		});
 	};
+
+	var updateComment = function(req,res){
+			var id = req.params.id;
+			var accountId = req.session.accountId;
+			var username = req.session.username;
+			var comment = req.body.comment || '';
+			if(comment.length < 1) 
+				return res.send({code: 40000, message: 'comment length is 0.'});
+			Message
+				.findByIdAndUpdate(
+					id,
+					{
+						$push: {
+							comments: {
+								accountId: accountId,
+								username: username,
+								comment: comment
+							}
+						}
+					},
+					function(err,result){
+						if(err) return res.send(err);
+						res.send(result);
+					}
+				);
+		};
+
 	var updateLevel = function(req,res){
 		var id = req.params.id;
 		var accountId = req.session.accountId;
@@ -142,31 +169,59 @@
 	};
 	
 	var getCollectionByStatus = function(req,res){
+		var accountId = req.params.aid == 'me' 
+							? req.session.accountId
+							: req.params.aid;
+		var page = req.query.page || 0;
+		var per = 20;
+
+		if(isNaN(page)) page = 0;
+
+		Account.findById(
+			accountId, 
+			function(err,account){
+				if(err) return res.send(err);
+				if(!account) return send({code: 40400,message: 'account not exist.'});
+				Message
+					.find({toId: accountId, fromId: accountId})
+					.sort({createtime:-1})
+					.skip(page*per)
+					.limit(per)
+					.exec(function(err,docs){
+						if(err) return res.send(err);
+						res.send(docs);
+					}
+				);
+			}
+		);
+	};
+	var getCollectionByStatus = function(req,res){
 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
+		var per = 20;
 		var id = req.params.pid;
 
 		async.waterfall(
 			[
-				function _project(callback){
-					Project.getById(id,function(project){
-						if(!project){
-							callback(404);
-							return;
-						}
+				function(callback){
+					Project.findById(id,function(err,project){
+						if(err) return res.send(err);
+						if(!project) return send({code: 40400,message: 'project not exist.'});
 						callback(null,project);
 					});
 				},
-				function _status(project,callback){
-					Message.getAllByToId(project._id,page,function(status){
-						callback(null,status);
-					});
+				function(project,callback){
+					Message
+						.find({
+							toId:project._id
+						})
+						.sort({createtime:-1})
+						.skip(page*per)
+						.limit(per)
+						.exec(callback);
 				}
 			],
-			function _result(err,result){
-				if(err){
-					res.sendStatus(err);
-					return;
-				}
+			function(err,result){
+				if(err) return res.send(err);
 				res.send(result);
 			}
 		);
