@@ -2,16 +2,14 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     projectStatusTemplate = require('../../assets/templates/projectStatus.tpl'),
-    bottomBarTemplate = require('../../assets/templates/_barProjectBottom.tpl'),
-    ScrollableView = require('./__ScrollableView'),
-    StatusView = require('./_ItemProjectStatus'),
-    Project = require('../models/Project'),
+    bottomBarTemplate = require('../../assets/templates/_barProject.tpl'),
+    StatusListView = require('./_ListProjectStatus'),
     Status = require('../models/Status'),
     StatusCollection = require('../models/StatusCollection');
 
 Backbone.$ = $;
 
-exports = module.exports = ScrollableView.extend({
+exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
 
@@ -23,35 +21,27 @@ exports = module.exports = ScrollableView.extend({
 	
 	initialize: function(options){
 		this.pid = options.pid;
-		// options.socketEvents.bind('status:me',this.onSocketStatusAdded, this);
-		this.collection = new StatusCollection();
-		this.collection.url = '/messages/project/status/'+ this.pid;
-		this.collectionUrl = this.collection.url;
-		this.collection.on('add', this.onStatusAdded, this);
-		this.collection.on('reset', this.onStatusCollectonReset, this);
+		options.socketEvents.bind('status:me',this.onSocketStatusAdded, this);
 		this.on('load', this.load, this);
 	},
 
 	load: function(){
-		this.collection.fetch();
+		this.loaded = true;
+		this.render();
+		this.statusListView = new StatusListView({
+			el: 'div.status_list',
+			url: '/statuses/project/' + this.pid,
+			account: this.account,
+		});
+		this.statusListView.trigger('load');
 	},
 
 	onSocketStatusAdded: function(data){
 		var newStatus = data.data;
-		this.collection.add(new Status({status: newStatus.status, name: newStatus.name}));
+		this.statusListView.trigger('append', newStatus);
+		// this.collection.add(new Status({status: newStatus.status, name: newStatus.name}));
 	},
 
-	onStatusCollectonReset: function(collection){
-		var that = this;
-		collection.each(function(model){
-			that.onStatusAdded(model);
-		});
-	},
-
-	onStatusAdded: function(status){
-		var statusHtml = (new StatusView({model: status})).render().el;
-		$(statusHtml).appendTo('.status_list').hide().fadeIn('slow');
-	},
 
 	editorToggle: function(){
 		if(this.$('.status-editor').hasClass('hidden')){
@@ -71,6 +61,11 @@ exports = module.exports = ScrollableView.extend({
 		// this.onStatusAdded(statusModel);
 		$('textarea[name=text]').val('');
 		this.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
+		return false;
+	},
+
+	scroll: function(){
+		this.statusListView.scroll();
 		return false;
 	},
 

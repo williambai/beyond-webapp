@@ -71,22 +71,30 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	voteGood: function(){
-		$.post(
-			'/message/project/vote/'+ this.model.get('_id'),
-			{
-				good: 1	
-			}
-		);
+		var that = this;
+
+		$.ajax({
+			url: '/messages/project/'+ that.model.get('_id') + '?type=vote',
+			type: 'PUT',
+			data: {
+					good: 1	
+				}
+		}).done(function(){
+		});
 		return false;
 	},
 
 	voteBad: function(){
-		$.post(
-			'/message/project/vote/'+ this.model.get('_id'),
-			{
-				bad: 1	
-			}
-		);
+		var that = this;
+
+		$.ajax({
+			url: '/messages/project/'+ that.model.get('_id') + '?type=vote',
+			type: 'PUT',
+			data: {
+					bad: 1	
+				}
+		}).done(function(){
+		});
 		return false;
 	},
 

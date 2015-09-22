@@ -5,13 +5,13 @@ var $ = require('jquery'),
     chatSessionTemplate = require('../../assets/templates/chat.tpl'),
     BottomBarView = require('./_FormChat'),
     ChatItemView = require('./_ItemChat')
-    ScrollableView = require('./__ScrollableView'),
+    ListView = require('./__ListView'),
     Chat = require('../models/Chat'),
     ChatCollection = require('../models/ChatCollection');
 
 Backbone.$ = $;
 
-exports = module.exports =  ScrollableView.extend({
+exports = module.exports =  ListView.extend({
 
 	el: '#content',
 

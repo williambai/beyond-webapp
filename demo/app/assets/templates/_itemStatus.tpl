@@ -1,12 +1,12 @@
 <div class="media">
 	<div class="pull-left">
-		<a href="#profile/<%= model.fromId %>
+		<a href="#profile/<%= model.uid %>
 			">
 			<img class="media-object" src="<%= model.avatar %>" width="64px;" height="64px;"></a>
 	</div>
 	<div class="media-body">
 		<h4 class="media-heading">
-			<a href="#status/<%= model.fromId %>
+			<a href="#status/<%= model.uid %>
 				">
 				<%= model.username %></a>
 		</h4>
@@ -24,7 +24,8 @@
 			</span>
 		</p>
 		<div class="comment-editor"></div>
-		<div class="comments"></div>
+		<div class="comments">
+		</div>
 	</div>
 	<div class="media-right"></div>
 </div>

@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     projectIndexTemplate = require('../../assets/templates/projectIndex.tpl'),
-    projectBarTemplate = require('../../assets/templates/_barProjectBottom.tpl'),
+    projectBarTemplate = require('../../assets/templates/_barProject.tpl'),
     Project = require('../models/Project');
 
 Backbone.$ = $;

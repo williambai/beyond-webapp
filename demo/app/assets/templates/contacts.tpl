@@ -3,4 +3,4 @@
 </div>
 <h2>好友</h2>
 
-<div id="contactlist"></div>
+<div id="list"></div>

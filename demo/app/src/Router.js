@@ -38,7 +38,7 @@ exports = module.exports = Backbone.Router.extend({
 	socketEvents: _.extend({},Backbone.Events),//socket events ---Deprecated!
 	routes: {
 		'': 'index',
-		'index': 'index',
+		'project/me': 'project',
 		'activity/:id': 'activity',
 		'message/:id': 'messageBox',
 		'status/:id': 'space',
@@ -77,14 +77,14 @@ exports = module.exports = Backbone.Router.extend({
 		/* load projects */
 		var projectsView = new ProjectsView({
 			socketEvents: this.socketEvents,
+			url: '/projects/account/me'
 		});
-		projectsView.collection.url = '/accounts/me/projects';
 		projectsView.trigger('load');
 		/* load contacts */
 		var contactsView = new ChatUsersView({
 			socketEvents: this.socketEvents,
+			url: '/friends/account/me'
 		});
-		contactsView.collection.url = '/accounts/me/contacts';
 		contactsView.trigger('load');
 	},
 
@@ -104,11 +104,15 @@ exports = module.exports = Backbone.Router.extend({
 	},
 
 	index: function(){
+		window.location.hash = 'activity/me';
+	},
+
+	project: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','主页');
+		this.appEvents.trigger('set:brand','项目');
 		var indexView = new IndexView({
 			socketEvents: this.socketEvents
 		});
@@ -121,7 +125,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','朋友圈');
+		this.appEvents.trigger('set:brand','同事圈');
 		var statusesView = new ActivityView({
 				id:id,
 				account: this.account,

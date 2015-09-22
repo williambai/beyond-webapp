@@ -25,7 +25,7 @@ exports = module.exports = Backbone.View.extend({
 		},function(data){
 			that.appEvents.trigger('logined',data);
 			that.socketEvents.trigger('app:logined',{accountId: data.id});
-			window.location.hash = 'index';
+			window.location.hash = 'activity/me';
 		}).error(function(){
 			$('#error').text('登录失败');
 			$('#error').slideDown();

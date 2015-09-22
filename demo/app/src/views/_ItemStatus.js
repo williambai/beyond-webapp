@@ -40,7 +40,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	_transformTime: function(){
-		var createtime = this.model.get('createtime');
+		var createtime = this.model.get('lastupdatetime');
 		var deltatime = MessageUtil.transformTime(createtime);
 		this.model.set('deltatime', deltatime);
 	},
@@ -77,19 +77,16 @@ exports = module.exports = Backbone.View.extend({
 
 	voteGood: function(){
 		var that = this;
-
-		$.ajax({
-			url: '/message/account/vote/'+ that.model.get('_id'),
-			type: 'POST',
-			data: {
-					good: 1	
-				}
-		}).done(function(){
+		var url = this.model.url;
+		this.model.url = 'statuses/account/me/' + this.model.get('_id')  + '?type=vote';
+		var success = this.model.save({vote:'good'},{patch: true});
+		if(success){
 			that.onVoterAdded({
 				accountId: that.account.id,
 				username: that.account.username
 			});
-		});
+		};
+		this.model.url = url;
 		return false;
 	},
 
@@ -102,7 +99,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	onCommenAdded: function(comment){
-		this.$('.comments').append('<p><a href="#profile/'+ comment.accountId +'">'+ comment.username + '</a>: ' + comment.comment + '</p>');
+		this.$('.comments').append('<p><a href="#profile/'+ comment.uid +'">'+ comment.username + '</a>: ' + comment.content + '</p>');
 	},
 
 	commentToggle: function(){
@@ -117,21 +114,18 @@ exports = module.exports = Backbone.View.extend({
 	submitComment: function(){
 		var comment = this.$('textarea[name=comment]').val() || '';
 		if(comment.length>0){
-			$.ajax({
-				url: '/message/account/comment/' + this.model.get('_id'),
-				type: 'POST',
-				data: {
+			var url = this.model.url;
+			this.model.url = 'statuses/account/me/' + this.model.get('_id') + '?type=comment';
+			var success = this.model.save({comment: comment},{patch: true});
+			if(success){
+				this.onCommenAdded({
+					accountId: this.account.id,
+					username: this.account.username,
 					comment: comment
-				}
-			}).done(function(){
-
-			});
-			this.onCommenAdded({
-				accountId: this.account.id,
-				username: this.account.username,
-				comment: comment
-			});
-			this.$('.comment-editor').html('');
+				});
+				this.$('.comment-editor').html('');
+			};
+			this.model.url = url;
 		}else{
 			this.$('textarea[name=comment]').attr('placeholder','没写评论哦');
 		}

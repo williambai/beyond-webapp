@@ -1,18 +1,13 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-    Backbone = require('backbone'),
+var ListView = require('./__ListView'),
     ProjectItemView = require('./_ItemProject'),
-    ChatView = require('./ProjectChat'),
-    ProjectCollection = require('../models/ProjectCollection'),
-    ChatCollection = require('../models/ChatCollection');
+    // ChatView = require('./ProjectChat'),
+    // ChatCollection = require('../models/ChatCollection'),
+    ProjectCollection = require('../models/ProjectCollection');
 
-Backbone.$ = $;
-
-exports = module.exports = Backbone.View.extend({
+exports = module.exports = ListView.extend({
 
 	el: '#projectlist',
-
-	loaded: false,
 
 	initialize: function(options){
 		this.socketEvents = options.socketEvents;
@@ -20,63 +15,41 @@ exports = module.exports = Backbone.View.extend({
 		this.chats = options.chats;
 		
 		this.collection = new ProjectCollection();
-		this.collection.url = '/projects';
-		this.collection.on('add', this.onProjectAdded, this);
-		this.collection.on('reset', this.onProjectCollectionReset, this);
-		this.on('load', this.load,this);
+		this.collection.url = options.url;
+		ListView.prototype.initialize.apply(this,options);
 	},
 
-	load: function(){
-		loaded = true;
-		this.render();
-		this.collection.fetch({reset:true});
+	getNewItemView: function(model){
+		return new ProjectItemView({model: model,socketEvents: this.socketEvents});
 	},
 
-	onProjectAdded: function(project){
-		var projectItemView = new ProjectItemView({model: project,socketEvents: this.socketEvents});
-		// projectItemView.bind('chat:start', this.startChatSession, this);
-		var projectItemHtml = projectItemView.render().el;
-		this.$el.append(projectItemHtml);
-	},
+	// // currentChatView: null,
+	// // chats: {},
+	// startChatSession: function(model){
+	// 	if(null != this.currentChatView){
+	// 		this.currentChatView.undelegateEvents();
+	// 	}
 
-	onProjectCollectionReset: function(collection){
-		var that = this;
-		this.$el.empty();
-		collection.each(function(project){
-			that.onProjectAdded(project);
-		});
-	},
-	// currentChatView: null,
-	// chats: {},
-	startChatSession: function(model){
-		if(null != this.currentChatView){
-			this.currentChatView.undelegateEvents();
-		}
+	// 	var roomId = model.get('accountId');
+	// 	if(!this.chats[roomId]){
+	// 		var chatCollection = new ChatCollection();
+	// 		var chatView = new ChatView({
+	// 				room: model,
+	// 				collection: chatCollection,
+	// 				socketEvents: this.socketEvents
+	// 			});
+	// 		chatView.render();
+	// 		chatCollection.url = '/chats/' + roomId;
+	// 		chatCollection.fetch();
+	// 		this.chats[roomId] = chatView;
+	// 	}else{
+	// 		var view = this.chats[roomId];
+	// 		view.delegateEvents();
+	// 		view.render();
+	// 		var collection = view.collection;
+	// 		collection.trigger('reset',collection);
+	// 	}
 
-		var roomId = model.get('accountId');
-		if(!this.chats[roomId]){
-			var chatCollection = new ChatCollection();
-			var chatView = new ChatView({
-					room: model,
-					collection: chatCollection,
-					socketEvents: this.socketEvents
-				});
-			chatView.render();
-			chatCollection.url = '/chats/' + roomId;
-			chatCollection.fetch();
-			this.chats[roomId] = chatView;
-		}else{
-			var view = this.chats[roomId];
-			view.delegateEvents();
-			view.render();
-			var collection = view.collection;
-			collection.trigger('reset',collection);
-		}
-
-		this.currentChatView = this.chats[roomId];
-	},
-
-	render: function(){
-		return this;
-	}
+	// 	this.currentChatView = this.chats[roomId];
+	// },
 });

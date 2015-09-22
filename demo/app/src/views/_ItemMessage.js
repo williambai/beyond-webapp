@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    statusTemplate = require('../../assets/templates/_itemStatus1.tpl'),
+    statusTemplate = require('../../assets/templates/_itemMessage.tpl'),
     commentFormTemplate = require('../../assets/templates/_formComment1.tpl'),
    	StatusView = require('./_ItemStatus');
 

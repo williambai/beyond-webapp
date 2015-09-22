@@ -4,8 +4,8 @@
 		<span class="caret"></span>
 	</button>
 </div>
-<h2>好友圈</h2>
+<h2>同事圈</h2>
 <hr>
 <div class="status-editor">
 </div>
-<div class="status-list"></div>
+<div id="status-list"></div>

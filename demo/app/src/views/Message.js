@@ -4,8 +4,7 @@ var $ = require('jquery'),
     loadingTemplate = require('../../assets/templates/loading.tpl'),
     messageTemplate = require('../../assets/templates/message.tpl'),
     StatusFormView = require('./_FormStatus'),
-    StatusListView = require('./_ListStatus'),
-    StatusView = require('./_ItemStatus1');
+    StatusListView = require('./_ListMessage');
 
 Backbone.$ = $;
 
@@ -32,9 +31,8 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 		this.statusListView = new StatusListView({
-			StatusView: StatusView,
 			el: 'div.status-list',
-			url: '/messages/account/exchange/'+ this.id,
+			url: '/messages/account/me',
 			account: this.account,
 		});
 		this.statusListView.trigger('load');
@@ -53,7 +51,7 @@ exports = module.exports = Backbone.View.extend({
 		status.fromUser = {};
 		status.fromUser[from.id] = from;
 		status.content = content;
-		this.statusListView.collection.trigger('add:prepend',status);
+		this.statusListView.trigger('prepend',status);
 	},
 
 	render: function(){

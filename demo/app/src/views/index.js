@@ -3,7 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     loadingTemplate = require('../../assets/templates/loading.tpl'),
     indexTemplate = require('../../assets/templates/index.tpl'),
-    ProjectWidget = require('./_WidgetProject');
+    ProjectList = require('./_ListProject2');
 
 Backbone.$ = $;
 
@@ -21,11 +21,11 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		this.loaded = true;
 		this.render();
-		this.projectWidget = new ProjectWidget({
+		this.projectList = new ProjectList({
 			el: '#project-widget',
 			socketEvents: this.socketEvents
 		});
-		this.projectWidget.trigger('load');
+		this.projectList.trigger('load');
 	},
 
 	render: function(){

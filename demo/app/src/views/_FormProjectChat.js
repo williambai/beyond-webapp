@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    bottomBar0Template = require('../../assets/templates/_barProjectBottom.tpl'),
+    bottomBar0Template = require('../../assets/templates/_barProject.tpl'),
     bottomBarTemplate = require('../../assets/templates/_formProjectChat.tpl'),
     Status = require('../models/Status');
 
@@ -63,7 +63,7 @@ exports = module.exports = Backbone.View.extend({
 		var formData = new FormData();
 		formData.append('files',evt.currentTarget.files[0]);
 		$.ajax({
-			url: '/attachment/add',
+			url: '/attachments',
 			type: 'POST',
 			data: formData,
 			cache: false,//MUST be false

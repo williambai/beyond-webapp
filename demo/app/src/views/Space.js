@@ -4,12 +4,11 @@ var $ = require('jquery'),
     loadingTemplate = require('../../assets/templates/loading.tpl'),
     activityTemplate = require('../../assets/templates/space.tpl'),
     StatusFormView = require('./_FormStatus'),
-    StatusListView = require('./_ListStatus'),
-    ScrollableView = require('./__ScrollableView');
+    StatusListView = require('./_ListStatus');
 
 Backbone.$ = $;
 
-exports = module.exports =ScrollableView.extend({
+exports = module.exports =Backbone.View.extend({
 
 	el: '#content',
 
@@ -34,7 +33,7 @@ exports = module.exports =ScrollableView.extend({
 		this.render();
 		this.statusListView = new StatusListView({
 			el: 'div.status-list',
-			url: '/messages/account/status/'+ this.id,
+			url: '/statuses/account/' + this.id,
 			account: this.account,
 		});
 		this.statusListView.trigger('load');
@@ -84,20 +83,7 @@ exports = module.exports =ScrollableView.extend({
 
 			}
 		});
-
-		// $.ajax({
-		// 	url: '/messages/account/'+ that.accountId,
-		// 	type: 'POST',
-		// 	data: {
-		// 			status: statusText,
-		// 			attachments: attachments
-		// 		}
-		// 	}).done(function(data){
-		// 		$('textarea[name=text]').val('');
-		// 		that.$('input[name=file]').val('');
-		// 		that.$('.attachments').empty();
-		// 		that.$('form').addClass('hidden');
-		// 	});			
+	
 	},
 
 	scroll: function(){

@@ -30,9 +30,11 @@ exports = module.exports = Backbone.View.extend({
 	addContact: function(){
 		var $responseArea = this.$('.actionArea');
 		$.ajax({
-				url: '/projects/'+ this.project.get('_id') +'/contacts',
-				type: 'POST',
-				data: {contactId: this.model.get('_id')},
+				url: '/projects/'+ this.project.get('_id') +'?type=contact_add',
+				type: 'PUT',
+				data: {
+					cid: this.model.get('_id')
+				},
 			}).done(function onSuccess(){
 				$responseArea.text('已添加成功！');
 			}).fail(function onError(){
@@ -46,10 +48,10 @@ exports = module.exports = Backbone.View.extend({
 			var $responseArea = this.$('.actionArea');
 			$responseArea.text('正在移除....');
 			$.ajax({
-					url: '/projects/'+ this.project.get('_id') +'/contacts/' + this.model.get('_id')
-					,type: 'DELETE'
+					url: '/projects/'+ this.project.get('_id') +'?type=contact_remove'
+					,type: 'PUT'
 					,data: {
-						contactId: this.model.get('accountId')
+						cid: this.model.get('_id')
 					}
 				}).done(function onSuccess(){
 					$responseArea.text('移除成功！')

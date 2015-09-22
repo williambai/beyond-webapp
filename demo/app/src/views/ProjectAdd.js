@@ -3,7 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     loadingTemplate = require('../../assets/templates/loading.tpl'),
     projectAddTemplate = require('../../assets/templates/projectAdd.tpl'),
-    Account = require('../models/Account');
+    Project = require('../models/Project');
 
 Backbone.$ = $;
 
@@ -17,24 +17,46 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options){
 		this.socketEvents = options.socketEvents;
+		this.model = new Project();
+		this.model.on('invalid', this.onInvalid, this);
 	},
 
 	addProject: function(){
-		var name = $('input[name=name]').val();
-		var description = $('textarea[name=description]').val();
-		if(name.length<2){
-			console.log('name too short.');
-			return false;
-		}
 		var that = this;
-		$.post('/projects',{
-			name: name,
-			description: description 
-		},function success(){
+		this.model.set('name',$('input[name=name]').val());
+		this.model.set('description',$('textarea[name=description]').val());
+		if(this.model.save()){
 			that.socketEvents.trigger('app:projects:reload');
-		});
-		window.location.hash = 'contact/add';
+			window.location.hash = 'contact/add';
+		}
 		return false;
+	},
+
+	onInvalid: function(model, error, options){
+		//valid name
+		if(!!error.name){
+			this.$('#name')
+				.addClass('has-error');
+			this.$('#name span.help-block')
+				.text(error.name);
+		}else{
+			this.$('#name')
+				.removeClass('has-error');
+			this.$('#name span.help-block')
+				.empty();
+		}
+		//valid description
+		if(!!error.description){
+			this.$('#description')
+				.addClass('has-error');
+			this.$('#description span.help-block')
+				.text(error.description);
+		}else{
+			this.$('#description')
+				.removeClass('has-error');
+			this.$('#description span.help-block')
+				.empty();
+		}
 	},
 
 	render: function(){

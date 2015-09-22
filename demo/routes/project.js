@@ -6,8 +6,8 @@ exports = module.exports = function(app,models){
 	var Status = models.ProjectMessage;
 
 	var add = function(req,res){
+			var project = req.body;
 			var accountId = req.session.accountId;
-			var project = req.project;
 			project.accountId = accountId;
 			project.createtime = new Date();
 			project.updatetime = new Date();
@@ -15,13 +15,13 @@ exports = module.exports = function(app,models){
 
 			async.waterfall(
 				[
-					function _project(callback){
+					function(callback){
 						Project.create(project,function(err,doc){
 							if(err) return callback(err);
 							callback(null,doc);
 						});
 					},
-					function _account(project,callback){
+					function(project,callback){
 						Account
 							.findByIdAndUpdate(
 								accountId,
@@ -40,225 +40,237 @@ exports = module.exports = function(app,models){
 							);
 					}
 				],
-				function _result(err,result){
+				function(err,result){
 					if(err) return res.send(err);
 					res.sendStatus(200);
 				}
 			);
 		};
+	
+	var remove = function(req,res){
 
-	var close = function(req,res){
+		};
+
+	var update = function(req,res){
+			var type = req.query.type || '';
 			var id = req.params.id;
-			async.waterfall(
-				[
-					function _project(callback){
-						Project
-						.findByIdAndUpdate(
-							id,
-							{
-								$set: {
-									closed: true,
-									updatetime: new Date(),
-								}
-							},
-							callback
-						);
-					},
-				],
-				function _result(err,result){
-					if(err) return res.send(err);
-					res.sendStatus(200);
-				}
-			);
-		};
-
-	var open = function(req,res){
-			var id = req.params.id;
-			async.waterfall(
-				[
-					function _project(callback){
-						Project
-						.findByIdAndUpdate(
-							id,
-							{
-								$set: {
-									closed: false,
-									updatetime: new Date(),
-								}
-							},
-							callback
-						);
-					},
-				],
-				function _result(err,result){
-					if(err) return res.send(err);
-					res.sendStatus(200);
-				}
-			);
-		};
-
-	var addContact = function(req,res){
-			var projectId = req.params.id || 0;
-			var contactId = req.body.contactId;
-			var accountId = req.session.accountId;
-
-			async.waterfall(
-				[
-					function(callback){
-						Project.findByIdAndUpdate(
-							projectId,
-							{
-								$addToSet: {
-									contacts: contactId
-								}
-							},
-							callback
-						);
-					},
-
-					function(project,callback){
-						Account
-							.findByIdAndUpdate(
-								contactId,
-								{
-									$push: {
-										projects: {
-											_id: project._id,
-											name: project.name,
-											type: 0,
-											notification: 0,
-											agree: 0,
+			switch(type){
+				case 'close':
+					async.waterfall(
+						[
+							function _project(callback){
+								Project
+								.findByIdAndUpdate(
+									id,
+									{
+										$set: {
+											closed: true,
+											updatetime: new Date(),
 										}
-									}
-								},
-								callback
-							);
-					}
-				],
-				function(err,result){
-					if(err) return res.send(err);
-					res.sendStatus(200);
-				}
-			);
-		};
-
-	var removeContact = function(req,res){
-			var projectId = req.params.pid;
-			var contactId = req.params.cid;
-			if(!contactId){
-				res.sendStatus(400);
-				return;
-			}
-			var accountId = req.session.accountId;
-
-			async.waterfall(
-				[
-					function(callback){
-						Project.findByIdAndUpdate(
-							projectId,
-							{
-								$pull: {
-									contacts: contactId
-								}
+									},
+									callback
+								);
 							},
-							callback
-						);
-					},
+						],
+						function _result(err,result){
+							if(err) return res.send(err);
+							res.sendStatus(200);
+						}
+					);
+					break;
+				case 'open':
+					async.waterfall(
+						[
+							function _project(callback){
+								Project
+								.findByIdAndUpdate(
+									id,
+									{
+										$set: {
+											closed: false,
+											updatetime: new Date(),
+										}
+									},
+									callback
+								);
+							},
+						],
+						function _result(err,result){
+							if(err) return res.send(err);
+							res.sendStatus(200);
+						}
+					);
+					break;
+				case 'contact_add':	
+					var cid = req.body.cid;
+					var accountId = req.session.accountId;
 
-					function(project,callback){
-						Account
-							.findByIdAndUpdate(
-								contactId,
-								{
-									$pull: {
-										'projects.$._id': projectId
-									}
-								},
-								callback
-							);
-					}
-				],
-				function(err,result){
-					if(err) return res.send(err);
-					res.sendStatus(200);
-				}
-			);
-		};
+					async.waterfall(
+						[
+							function(callback){
+								Project.findByIdAndUpdate(
+									id,
+									{
+										$addToSet: {
+											contacts: cid
+										}
+									},
+									callback
+								);
+							},
 
-
-	var getContacts = function(req,res){
-			var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
-			page = (!page || page < 0) ? 0 : page;
-			var per = 20;
-			var id = req.params.id;
-
-			async.waterfall(
-				[
-					function _project(callback){
-						Project.findById(id,function(err,project){
-							if(err) return callback(err);
-							if(!project || !project.contacts) return callback({code: 40400, message: 'project id not exsit.'});
-							
-							callback(null,project.contacts);
-						});
-					},
-					function _account(contacts,callback){
-						Account
-							.find({_id: {$in: contacts}})
-							.skip(page*per)
-							.limit(per)
-							.exec(callback);
-					}
-				],
-				function(err,result){
-					if(err) return res.send(err);
-					res.send(result);
-				}
-			);
-		};
-
-
-	var getProjects = function(req,res){
-			var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
-			page = (!page || page < 0) ? 0 : page;
-			var per = 20;
-			var accountId = req.session.accountId;
-
-			async.waterfall(
-				[
-					function(callback){
-						Project
-							.find({accountId:accountId})
-							.sort({updatetime:-1})
-							.skip(page*per)
-							.limit(per)
-							.exec(callback);
-					}
-				],
-				function(err,result){
-					if(err){
-						res.sendStatus(err);
+							function(project,callback){
+								Account
+									.findByIdAndUpdate(
+										cid,
+										{
+											$push: {
+												projects: {
+													_id: project._id,
+													name: project.name,
+													type: 0,
+													notification: 0,
+													agree: 0,
+												}
+											}
+										},
+										callback
+									);
+							}
+						],
+						function(err,result){
+							if(err) return res.send(err);
+							res.sendStatus(200);
+						}
+					);
+					break;
+				case 'contact_remove':
+					var cid = req.body.cid;
+					if(!cid){
+						res.sendStatus(400);
 						return;
 					}
-					res.send(result);
-				}
-			);
+					var accountId = req.session.accountId;
+
+					async.waterfall(
+						[
+							function(callback){
+								Project.findByIdAndUpdate(
+									id,
+									{
+										$pull: {
+											contacts: cid
+										}
+									},
+									callback
+								);
+							},
+
+							function(project,callback){
+								Account
+									.findByIdAndUpdate(
+										cid,
+										{
+											$pull: {
+												'projects.$._id': id
+											}
+										},
+										callback
+									);
+							}
+						],
+						function(err,result){
+							if(err) return res.send(err);
+							res.sendStatus(200);
+						}
+					);
+					break;	
+				default:
+					res.sendStatus(200);
+					break;	
+			}
 		};
 
-	var getById = function(req,res){
-			var id = req.params.id;
+	var getMore = function(req,res){
+			var type = req.query.type || '';
+			var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
+			page = (!page || page < 0) ? 0 : page;
+			var per = 20;
+			var accountId = req.session.accountId;
+			switch(type){
+				default:
+					async.waterfall(
+						[
+							function(callback){
+								Project
+									.find({accountId:accountId})
+									.sort({updatetime:-1})
+									.skip(page*per)
+									.limit(per)
+									.exec(callback);
+							}
+						],
+						function(err,result){
+							if(err){
+								res.sendStatus(err);
+								return;
+							}
+							res.send(result);
+						}
+					);
+					break;
+			}
 
-			async.waterfall(
-				[
-					function(callback){
-						Project.findById(id,callback);
-					},
-				],
-				function(err,result){
-					if(err) return res.send(err);
-					res.send(result);
-				}
-			);
+		};
+
+	var getOne = function(req,res){
+			var type = req.query.type || '';
+			var id = req.params.id;
+			switch(type){
+				case 'contact':
+					var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
+					page = (!page || page < 0) ? 0 : page;
+					var per = 20;
+
+					async.waterfall(
+						[
+							function _project(callback){
+								Project.findById(id,function(err,project){
+									if(err) return callback(err);
+									if(!project || !project.contacts) return callback({code: 40400, message: 'project id not exsit.'});
+									
+									callback(null,project.contacts);
+								});
+							},
+							function _account(contacts,callback){
+								Account
+									.find({_id: {$in: contacts}})
+									.skip(page*per)
+									.limit(per)
+									.exec(callback);
+							}
+						],
+						function(err,result){
+							if(err) return res.send(err);
+							res.send(result);
+						}
+					);
+					break;
+				default:
+					async.waterfall(
+						[
+							function(callback){
+								Project.findById(id,callback);
+							},
+						],
+						function(err,result){
+							if(err) return res.send(err);
+							res.send(result);
+						}
+					);
+					break;
+			}
+
 		};
 
 
@@ -275,7 +287,7 @@ exports = module.exports = function(app,models){
  	 * remove project
  	 * 
  	 */
-
+ 	 app.delete('/projects/:id', app.isLogined, remove);
  	/**
  	 * update project
  	 *  type: 
@@ -284,39 +296,18 @@ exports = module.exports = function(app,models){
  	 *        contact_add
  	 *        contact_remove
  	 */
- 	app.post('/projects/:id/close', app.isLogined, close);
- 	//update project to be opened
- 	app.post('/projects/:id/open', app.isLogined, open);
- 	//update project by adding contact
- 	app.post('/projects/:id/contacts',app.isLogined, addContact);//Deprecated
- 	app.post('/project/contacts/:pid',app.isLogined, addContact);
- 	//update project by removing contact
- 	app.delete('/projects/:pid/contacts/:cid', app.isLogined,removeContact);//Deprecated
- 	app.delete('/project/contacts/:pid/:cid', app.isLogined,removeContact);
+ 	app.put('/projects/:id', app.isLogined, update);
 
  	/**
  	 * get projects
- 	 *   type: 
- 	 *   	contacts
  	 */
- 	app.get('/projects',app.isLogined, getProjects);
- 	app.get('/project/contacts/:pid',app.isLogined, getContacts);
+ 	app.get('/projects',app.isLogined, getMore);
 
  	/**
- 	 * get project by id
- 	 * 
+ 	 * get project
+ 	 * 	   type: 
+ 	 * 	      contact
  	 */
- 	app.get('/project/:id', app.isLogined, getById);
+ 	app.get('/projects/:id', app.isLogined, getOne);
 
-
-
-
-
-
- 	//query model
- 	app.get('/projects/:id', app.isLogined, getById);//Deprecated
- 	//query projects of mine
- 	app.get('/projects',app.isLogined, getProjects);
- 	//query project's contacts
- 	app.get('/projects/:id/contacts',app.isLogined, getContacts);//Deprecated
 };

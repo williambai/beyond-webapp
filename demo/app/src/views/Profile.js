@@ -34,7 +34,7 @@ exports = module.exports = Backbone.View.extend({
 		this.model.url = '/accounts/'+ options.id;
 
 		this.statusCollection = new StatusCollection();
-		this.statusCollection.url = '/messages/account/status/' + options.id;
+		this.statusCollection.url = '/messages/account/' + options.id + '?type=status';
 
 		this.model.on('change',this.render,this);
 		this.statusCollection.on('add', this.onStatusAdded, this);

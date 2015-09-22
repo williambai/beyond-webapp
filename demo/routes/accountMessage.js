@@ -1,23 +1,32 @@
  exports = module.exports = function(app,models){
+ 	var _ = require('underscore');
+
 	var Account = models.Account;
 	var Message = models.AccountMessage;
 
 	var add = function(req,res){
-		var accountId = req.params.aid == 'me' 
-							? req.session.accountId
-							: req.params.aid;
+		if(req.params.aid == 'me' || req.params.aid == req.session.accountId) 
+			return res.send({code: 40100, message: 'not support.'});
+
+		var friendId = req.params.aid;
+		var me = req.session.account;
 
 		Account.findById(
-			accountId, 
+			friendId, 
 			function(err,account){
 				if(err) return res.send(err);
 				if(!account) return res.send({code: 40400, message: 'account not exist.'});
-
 				var message = {
-						fromId: req.session.accountId,
-						toId: account._id,
-						fromUser:{},
-						toUser:{},
+						from: {
+							uid: req.session.accountId,
+							username: me.username,
+							avatar: me.avatar,
+						},
+						to: {
+							uid: account._id,
+							username: accountId.username,
+							avatar: account.avatar,
+						},
 						subject: '',
 						content: {
 							MsgType: 'mixed',
@@ -25,19 +34,14 @@
 							Urls: req.body.attachments
 						},
 						tags: [],
-						level: 0,
+						comments:[],
+						weight: 0,
+						voters:[],
+						votes: [],
 						good: 0,
 						bad: 0,
 						score: 0,
-						createtime: new Date(),
-					};
-					message.fromUser[message.fromId] = {
-						username: req.session.username,
-						avatar: req.session.avatar
-					};
-					message.toUser[message.toId] ={
-						username: account.username,
-						avatar: account.avatar
+						lastupdatetime: new Date()
 					};
 
 				Message.create(message, function(err,doc){
@@ -49,238 +53,183 @@
 	};
 
 	var remove = function(req,res){
-
-	};
-	var updateVote = function(req,res){
-		var id = req.params.id;
-		var accountId = req.session.accountId;
-		var username = req.session.username;
-		if(req.body.good){
-			var good = req.body.good;
-			Message.findOneAndUpdate(
-				{
-					 _id: id,
-					voters: {$nin: [accountId]}
-				},
-				{
-					$push: {
-						voters: accountId, 
-						votes: {
-							accountId: accountId,
-							username: voterUsername,
-							vote: 'good'
-						}
-					},
-					$inc: {good: 1, score: 1}
-				},
-				function(err,result){
-					if(err) return res.send(err);
-					res.send(result);
-				}
-			);	
-		}else if(req.body.bad){
-			var bad = req.body.bad;
-			Message
-				.findOneAndUpdate(
-					{
-						_id: id,
-						voters: {$nin: [accountId]}
-					},
-					{
-						$push: {
-							voters: accountId, 
-							votes: {
-								accountId: accountId,
-								username: voterUsername,
-								vote: 'bad'
-							}
-						},
-						$inc: {bad: 1, score: -1}
-					},
-					function(err, result){
-						if(err) return res.send(err);
-						res.send(result);
-					}
-				);
-		}else{
-			res.send({code: 40000, message: 'can not vote.'});
-		}
+		if(req.params.aid != 'me') 
+			return res.send({code: 40100, message: 'not support.'});
+		res.send({code: 00000, message: 'not implemented.'});
 	};
 
-	var updateComment = function(req,res){
+	var update = function(req,res){
+			if(req.params.aid != 'me') 
+				return res.send({code: 40100, message: 'not support.'});
+			var type = req.query.type || '';
+
 			var id = req.params.id;
 			var accountId = req.session.accountId;
 			var username = req.session.username;
-			var comment = req.body.comment || '';
-			if(comment.length < 1) 
-				return res.send({code: 40000, message: 'comment length is 0.'});
-			Message
-				.findByIdAndUpdate(
-					id,
-					{
-						$push: {
-							comments: {
-								accountId: accountId,
-								username: username,
-								comment: comment
+			switch(type){
+				case 'vote':
+					if(req.body.good){
+						var good = req.body.good;
+						Message.findOneAndUpdate(
+							{
+								 _id: id,
+								voters: {$nin: [accountId]}
+							},
+							{
+								$push: {
+									voters: accountId, 
+									votes: {
+										accountId: accountId,
+										username: username,
+										vote: 'good'
+									}
+								},
+								$inc: {good: 1, score: 1}
+							},
+							function(err,result){
+								if(err) return res.send(err);
+								res.send(result);
 							}
-						}
-					},
-					function(err,result){
-						if(err) return res.send(err);
-						res.send(result);
-					}
-				);
-		};
-
-	var getOne = function(req,res){
-		res.sendStatus(401);
-	};
-	
-	var getCollectionByStatus = function(req,res){
-		var accountId = req.params.aid == 'me' 
-							? req.session.accountId
-							: req.params.aid;
-		var page = req.query.page || 0;
-		var per = 20;
-
-		if(isNaN(page)) page = 0;
-
-		Account.findById(
-			accountId, 
-			function(err,account){
-				if(err) return res.send(err);
-				if(!account) return send({code: 40400,message: 'account not exist.'});
-				Message
-					.find({toId: accountId, fromId: accountId})
-					.sort({createtime:-1})
-					.skip(page*per)
-					.limit(per)
-					.exec(function(err,docs){
-						if(err) return res.send(err);
-						res.send(docs);
-					}
-				);
-			}
-		);
-	};
-
-	var getCollectionByExchange = function(req,res){
-		if(req.params.aid != 'me'){
-			res.sendStatus(401);
-			return;
-		}
-		var accountId = req.params.aid == 'me' 
-							? req.session.accountId
-							: req.params.aid;
-		var page = req.query.page || 0;
-		var per = 20;
-
-		if(isNaN(page)) page = 0;
-
-		Account.findById(
-			accountId, 
-			function(err,account){
-				if(err) return res.send(err);
-				if(!account) return send({code: 40400,message: 'account not exist.'});
-				var contactIds = [];
-				account.contacts.forEach(function(contact){
-					contactIds.push(contact.accountId);
-				});
-
-				Message
-					.find({
-						$or: [
+						);	
+					}else if(req.body.bad){
+						var bad = req.body.bad;
+						Message
+							.findOneAndUpdate(
 								{
-									toId: accountId,
-									fromId: {$in: contactIds} 
+									_id: id,
+									voters: {$nin: [accountId]}
 								},
 								{
-									fromId: accountId,
-									toId: {$in: contactIds} 
+									$push: {
+										voters: accountId, 
+										votes: {
+											accountId: accountId,
+											username: username,
+											vote: 'bad'
+										}
+									},
+									$inc: {bad: 1, score: -1}
+								},
+								function(err, result){
+									if(err) return res.send(err);
+									res.send(result);
 								}
-							]
-					})
-					.sort({createtime:-1})
-					.skip(page*per)
-					.limit(per)
-					.exec(function(err,docs){
-						if(err) return res.send(err);
-						res.send(docs);
-					});
-			}
-		);
-	};
+							);
+					}else{
+						res.send({code: 40000, message: 'can not vote.'});
+					}
+					break;
+				case 'comment':
+					var comment = req.body.comment || '';
+					if(comment.length < 1) 
+						return res.send({code: 40000, message: 'comment length is 0.'});
+					Message
+						.findByIdAndUpdate(
+							id,
+							{
+								$push: {
+									comments: {
+										accountId: accountId,
+										username: username,
+										comment: comment
+									}
+								}
+							},
+							function(err,result){
+								if(err) return res.send(err);
+								res.send(result);
+							}
+						);		
+					break;				
+				default:
+					res.sendStatus(200);
+					break;
+			}		
+		};
 
-	var getCollectionByActivity = function(req,res){
-		var accountId = req.params.aid == 'me' 
-							? req.session.accountId
-							: req.params.aid;
-		var page = req.query.page || 0;
-		var per = 20;
 
-		if(isNaN(page)) page = 0;
-		
-		Account.findById(
-			accountId, 
-			function(err,account){
-				if(err) return res.send(err);
-				if(!account) return send({code: 40400,message: 'account not exist.'});
+	var getOne = function(req,res){
+			if(req.params.aid != 'me') 
+				return res.send({code: 40100, message: 'not support.'});
+			res.send({code: 00000, message: 'not implemented.'});
+		};
+	
+	var getMore =function(req,res){
+			var type = req.query.type || '';
+			
+			var aid = req.query.aid || 'me';
 
-				var contactIds = [];
-				account.contacts.forEach(function(contact){
-					contactIds.push(contact.accountId);
-				});
+			var accountId = aid == 'me' 
+								? req.session.accountId
+								: req.query.aid;
+			
+			var page = req.query.page || 0;
+			var per = 20;
+			if(isNaN(page)) page = 0;
 
-				var pairs = [];
-				contactIds.forEach(function(contantId){
-					pairs.push({
-						fromId: contantId,
-						toId: contantId
-					});
-				});
+			models.AccountFriend.find({
+					uid: accountId
+				},
+				function(err,friends){
+					if(err) return res.send(err);
+					if(_.isEmpty(friends)) return res.send([]);
+					var fids = _.pluck(friends, 'fid');
 
-				pairs.push({
-					toId: accountId,
-					fromId: accountId 
-				});
-
-				Message
-					.find({
-						$or: pairs
-					})
-					.sort({createtime:-1})
-					.skip(page*per)
-					.limit(per)
-					.exec(function(err,docs){
-						if(err) return res.send(err);
-						res.send(docs);
-					});
-			}
-		);
-	};
+					Message
+						.find({
+							$or: [
+									{
+										'to.uid': accountId,
+										'from.uid': {$in: fids} 
+									},
+									{
+										'from.uid': accountId,
+										'to.uid': {$in: fids} 
+									}
+								]
+						})
+						.sort({createtime:-1})
+						.skip(page*per)
+						.limit(per)
+						.exec(function(err,docs){
+							if(err) return res.send(err);
+							res.send(docs);
+						});
+				}
+			);
+		};
 
 /**
  * router outline
  */
-	//add
+	/**
+	 * add account's message
+	 */
 	app.post('/messages/account/:aid', app.isLogined, add);
-	//remove
-	app.delete('/message/account/:id',app.isLogined, remove);
-	//update model by category 'vote'
-	app.post('/message/account/vote/:id', app.isLogined, updateVote);
-	//update model by category 'comment'
-	app.post('/message/account/comment/:id', app.isLogined, updateComment);
-	//query model
-	app.get('/message/account/:id',app.isLogined, getOne);
-	//query collection by category 'status'
-	app.get('/messages/account/status/:aid', app.isLogined, getCollectionByStatus);
-	//query collection by category 'exchange'
-	app.get('/messages/account/exchange/:aid',app.isLogined, getCollectionByExchange);
-	//query collection by category 'activity'
-	app.get('/messages/account/activity/:aid',app.isLogined, getCollectionByActivity);
-	//query collection by search
-	app.get('/messages/account/search', function(req,res){
-		res.sendStatus(401);
-	});	
+	
+	/**
+	 * remove account's message
+	 */
+	app.delete('/messages/account/:aid/:id',app.isLogined, remove);
+
+	/**
+	 * update account's message
+	 * type:
+	 *     vote
+	 *     comment
+	 */
+	app.put('/messages/account/:aid/:id', app.isLogined, update);
+
+	/**
+	 * get account's message
+	 * 
+	 */
+	app.get('/messages/account/:aid/:id',app.isLogined, getOne);
+
+	/**
+	 * get account's messages
+	 * type:
+	 * 
+	 */
+	app.get('/messages/account/:aid', app.isLogined, getMore);
  };

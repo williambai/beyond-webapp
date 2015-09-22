@@ -81,7 +81,7 @@ module.exports = exports = function(app,models){
 				.findOne({
 					email: email,
 					password: crypto.createHash('sha256').update(password).digest('hex'),
-					enable: true,
+					'status.code': 0,
 				})
 				.exec(function(err,account){
 					if(err){
@@ -181,6 +181,27 @@ module.exports = exports = function(app,models){
 			}
 			res.render('resetPasswordSuccess.jade');
 		};
+		
+	var inviteFriend = function(req,res){
+			var emails = req.body.emails;
+			var inviteUrl = 'http://' + req.header('host');
+			var username = req.session.username;
+			var email = req.session.email;
+
+			var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
+			inviteUrl = inviteUrl ? inviteUrl : 'http://localhost:8080';
+			emails.forEach(function(email){
+				smtpTransporter.sendMail({
+					from: 'socialworkserivce@appmod.cn',
+					to: email,
+					subject: '我的工作社交网--邀请信',
+					text: '您的朋友' + username + '(' + email + ')' + '邀请您加入。请点击：' + inviteUrl,
+				},function(err){
+					if(err) return res.send(err);
+					res.sendStatus(200);
+				});
+			});
+		};
 
 	var authenticated = function(req,res){
 			if(req.session.loggedIn){
@@ -215,4 +236,6 @@ module.exports = exports = function(app,models){
  	app.post('/resetPassword', resetPassword);
  	//authenticated
  	app.get('/authenticated', authenticated);
-};
+ 	//invite
+	app.post('/invite/friend', app.isLogined, inviteFriend);
+ };

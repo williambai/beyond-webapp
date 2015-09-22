@@ -1,64 +1,21 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-    Backbone = require('backbone'),
-    ScrollableView = require('./__ScrollableView'),
-    StatusView = require('./_ItemStatus'),
-    Status = require('../models/Status'),
+var ListView = require('./__ListView'),
+    StatusItemView = require('./_ItemStatus'),
     StatusCollection = require('../models/StatusCollection');
 
-Backbone.$ = $;
+exports = module.exports = ListView.extend({
+	
+	el: '#status-list',
 
-exports = module.exports = ScrollableView.extend({
-
-	StatusView: StatusView,
 	initialize: function(options){
-		if(options.StatusView){
-			this.StatusView = options.StatusView;
-		}
 		this.account = options.account;
 
 		this.collection = new StatusCollection();
-		this.collection.url = options.url;//'/accounts/'+ options.id + '/activity';
-		this.collectionUrl = this.collection.url;
-
-		this.collection.on('reset', this.onStatusCollectonReset, this);
-		this.collection.on('add:prepend', this.onStatusAdded,this);
-		this.collection.on('add', this.append,this);
-		this.on('load', this.load, this);
+		this.collection.url = options.url;
+		ListView.prototype.initialize.apply(this,options);
 	},
 
-	load: function(){
-		this.loaded = true;
-		this.render();
-		this.collection.fetch({reset:true});
+	getNewItemView: function(model){
+		return new StatusItemView({account: this.account,model: model});
 	},
-
-	onStatusAdded: function(data){
-		var status = new Status(data);
-		//新进来的Status加在前面
-		this.collection.add(status,{silent: true,at: 0});
-		this.prepend(status);
-	},
-
-	onStatusCollectonReset: function(collection){
-		var that = this;
-		collection.each(function(model){
-			that.append(model);
-		});
-	},
-
-	prepend: function(status){
-		var statusHtml = (new this.StatusView({account: this.account,model: status})).render().el;
-		$(statusHtml).prependTo('.status-list').hide().fadeIn('slow');
-	},
-
-	append: function(status){
-		var statusHtml = (new this.StatusView({account: this.account,model: status})).render().el;
-		$(statusHtml).appendTo('.status-list').hide().fadeIn('slow');
-	},
-
-	render: function(){
-		return this;
-	},
-
 });

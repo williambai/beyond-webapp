@@ -5,4 +5,4 @@
 <% } %>
 <h2>成员</h2>
 
-<div id="contactlist"></div>
+<div id="list"></div>

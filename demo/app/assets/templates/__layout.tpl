@@ -6,12 +6,18 @@
 		</div>
 		<div class="scrollable-content">
 			<div class="list-group">
-				<a class="list-group-item active" href="#index"><i class="fa fa-home fa-fw"></i>&nbsp;主页<i class="fa fa-chevron-right pull-right"></i></a>
-				<a class="list-group-item" href="#activity/me"><i class="fa fa-users fa-fw"></i>&nbsp;朋友圈<span class="status-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
-				<a class="list-group-item" href="#message/me"><i class="fa fa-users fa-fw"></i>&nbsp;私信<span class="message-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
+				<a class="list-group-item active" href="#activity/me"><i class="fa fa-users fa-fw"></i>&nbsp;同事圈<span class="status-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
+				<a class="list-group-item" href="#project/me"><i class="fa fa-home fa-fw"></i>&nbsp;我的项目<i class="fa fa-chevron-right pull-right"></i></a>
+				<a class="list-group-item" href="#message/me"><i class="fa fa-users fa-fw"></i>&nbsp;我的私信<span class="message-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
+				<a class="list-group-item" href="#status/me"><i class="fa fa-home fa-fw"></i>&nbsp;我的发表<i class="fa fa-chevron-right pull-right"></i></a>
 				<a class="list-group-item" href="#profile/me"><i class="fa fa-meh-o fa-fw"></i>&nbsp;我的资料<i class="fa fa-chevron-right pull-right"></i></a>
+				<a class="list-group-item" href="#notify/me"><i class="fa fa-meh-o fa-fw"></i>&nbsp;系统通知<i class="fa fa-chevron-right pull-right"></i></a>
+
 			</div>
 			<div id="projectlist"></div>
+			<br/>
+			<br/>
+			<br/>
 		</div>
 	</div>
 </div>

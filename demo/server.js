@@ -25,12 +25,17 @@ app.randomHex = function(){
 
 //import the models
 var models = {
-		Account: require('./models/Account')(app,config,mongoose,nodemailer),
-		AccountMessage: require('./models/AccountMessage')(app,config,mongoose,nodemailer),
-		AccountChat: require('./models/AccountChat')(app,config,mongoose,nodemailer),
+		Account: require('./models/Account')(app,mongoose),
+		AccountNotification: require('./models/AccountNotification')(app,mongoose),
+		AccountFriend: require('./models/AccountFriend')(app,mongoose),
+		AccountStatus: require('./models/AccountStatus')(app,mongoose),
+		AccountActivity: require('./models/AccountActivity')(app,mongoose),
+		AccountMessage: require('./models/AccountMessage')(app,mongoose),
+		AccountChat: require('./models/AccountChat')(app,mongoose),
+		AccountProject: require('./models/AccountProject')(app,mongoose),
 
-		Project: require('./models/Project')(app,config,mongoose,nodemailer),
-		ProjectMessage: require('./models/ProjectMessage')(app,config,mongoose,nodemailer),
+		Project: require('./models/Project')(app,mongoose),
+		ProjectStatus: require('./models/ProjectStatus')(app,mongoose),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

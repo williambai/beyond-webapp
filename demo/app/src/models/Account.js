@@ -2,8 +2,9 @@ var Backbone = require('backbone');
 var StatusCollection = require('./StatusCollection');
 
 exports = module.exports = Backbone.Model.extend({
+	idAttribute: '_id',
 
-	urlRoot: '/accounts',
+	url: '/accounts',
 
 	defaults: {
 		email: '',

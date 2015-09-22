@@ -1,11 +1,10 @@
 var _ = require('underscore');
 var $ = require('jquery'),
-    Backbone = require('backbone'),
+	FormView = require('./__Form'),
+	Status = require('../models/Status'),
     statusFormTemplate = require('../../assets/templates/_formStatus.tpl');
 
-Backbone.$ = $;
-
-exports = module.exports = Backbone.View.extend({
+exports = module.exports = FormView.extend({
 	
 	el: '.status-editor',
 
@@ -17,6 +16,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	initialize: function(options){
+		this.model = new Status();
 	},
 
 	showFileExplorer: function(){
@@ -29,7 +29,7 @@ exports = module.exports = Backbone.View.extend({
 		var formData = new FormData();
 		formData.append('files',evt.currentTarget.files[0]);
 		$.ajax({
-			url: '/attachment/add',
+			url: '/attachments',
 			type: 'POST',
 			data: formData,
 			cache: false,//MUST be false
@@ -55,8 +55,8 @@ exports = module.exports = Backbone.View.extend({
 			var that = this;
 			var filename = $(evt.currentTarget).find('img').attr('src');
 			$.ajax({
-				url: 'attachment/remove',
-				type: 'POST',
+				url: 'attachment',
+				type: 'DELETE',
 				data: {
 					filename: filename
 				}
@@ -69,6 +69,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	submitForm: function(){
+		console.log('++++')
 		var that = this;
 		var statusText = that.$('textarea[name=text]').val();
 		var attachments = [];
@@ -76,16 +77,21 @@ exports = module.exports = Backbone.View.extend({
 		$attachments.each(function(index){
 			attachments.push($($attachments[index]).val());
 		});
+		this.model.set('content',statusText);
+		var success = this.model.save();
+		if(success){
+			this.callback();
+			//reset form
+			$('textarea[name=text]').val('');
+			that.$('input[name=file]').val('');
+			that.$('.attachments').empty();
+			that.$('form').addClass('hidden');
 
-		$('textarea[name=text]').val('');
-		that.$('input[name=file]').val('');
-		that.$('.attachments').empty();
-		that.$('form').addClass('hidden');
-
-		this.trigger('form:submit', {
-			text: statusText,
-			attachments: attachments,
-		});
+			this.trigger('form:submit', {
+				text: statusText,
+				attachments: attachments,
+			});
+		}
 		return false;
 	},
 

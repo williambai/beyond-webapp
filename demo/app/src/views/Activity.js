@@ -33,8 +33,8 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 		this.statusListView = new StatusListView({
-			el: 'div.status-list',
-			url: '/messages/account/activity/'+ this.id,
+			el: '#status-list',
+			url: '/activities/account/' + this.id,
 			account: this.account,
 		});
 		this.statusListView.trigger('load');
@@ -71,7 +71,7 @@ exports = module.exports = Backbone.View.extend({
 		status.fromUser = {};
 		status.fromUser[from.id] = from;
 		status.content = content;
-		this.statusListView.collection.trigger('add:prepend',status);
+		this.statusListView.trigger('prepend',status);
 	},
 
 	statusFormSubmit: function(form){
@@ -90,23 +90,9 @@ exports = module.exports = Backbone.View.extend({
 		status.fromUser[this.account.id] = this.account;
 		status.content = data;
 
-		this.statusListView.collection.trigger('add:prepend',status);
+		this.statusListView.trigger('prepend',status);
 
 		this.socketEvents.trigger('socket:out:status', data);
-
-		// $.ajax({
-		// 	url: '/messages/account/'+ that.accountId,
-		// 	type: 'POST',
-		// 	data: {
-		// 			status: statusText,
-		// 			attachments: attachments
-		// 		}
-		// 	}).done(function(data){
-		// 		$('textarea[name=text]').val('');
-		// 		that.$('input[name=file]').val('');
-		// 		that.$('.attachments').empty();
-		// 		that.$('form').addClass('hidden');
-		// 	});
 
 	},
 	

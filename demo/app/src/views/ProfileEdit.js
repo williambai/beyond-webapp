@@ -36,8 +36,8 @@ exports = module.exports = Backbone.View.extend({
 		var formData = new FormData();
 		formData.append('files',evt.currentTarget.files[0]);
 		$.ajax({
-			url: '/accounts/me/avatar',
-			type: 'POST',
+			url: '/accounts/me?type=avatar',
+			type: 'PUT',
 			data: formData,
 			cache: false,//MUST be false
 			processData: false,//MUST be false

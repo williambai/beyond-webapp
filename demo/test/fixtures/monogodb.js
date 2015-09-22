@@ -48,6 +48,9 @@ mongoose.connect(config.db.URI,function onMongooseError(err){
  * 
  */
 var avatar = [
+	'upload/1433476695765.jpg',
+	'upload/1433489948391.jpg',
+	'upload/1435739478908.jpg',
 ];
 
 var users = [];
@@ -224,7 +227,7 @@ var upsertFriends = function(callback){
 
 var upsertAccountStatuses = function(callback){
 		var upsertStatus = function(index){
-				var user = users[0];
+				var user = users[index%5];
 				var commentUser = users[1];
 				var replyUser = users[2];
 				var message = {

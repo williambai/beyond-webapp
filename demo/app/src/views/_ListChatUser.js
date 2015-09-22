@@ -1,52 +1,54 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-    Backbone = require('backbone'),
-    ChatUserView = require('./_ItemChatUser'),
+var ChatUserView = require('./_ItemChatUser'),
     ChatView = require('./Chat'),
+    ListView = require('./__ListView'),
     ContactCollection = require('../models/ContactCollection'),
     ChatCollection = require('../models/ChatCollection');
 
-Backbone.$ = $;
-
-exports = module.exports = Backbone.View.extend({
+exports = module.exports = ListView.extend({
 
 	el: '#chat',
-	loaded: false,
 
 	initialize: function(options){
 		this.socketEvents = options.socketEvents;
 		this.collection = new ContactCollection();
-		this.collection.url = '/accounts/me/contacts';
-		this.collection.on('reset', this.onCollectionReset, this);
-		this.on('load', this.load, this);
+		this.collection.url = options.url || '/accounts/me?type=contact';
 
 		this.currentChatView = options.currentChatView;
 		this.chats = options.chats;
-	},
-	load: function(){
-		this.loaded = true;
-		this.collection.fetch({reset:true});
-	},
-	onContactAdded: function(contact){
-		var chatUserView = new ChatUserView({
-			model: contact,
-			socketEvents: this.socketEvents
-		});
-		chatUserView.bind('chat:start', this.startChat, this);
-		var chatUserHtml = chatUserView.render().el;
-		this.$el.append(chatUserHtml);
+		ListView.prototype.initialize.apply(this,options);
 	},
 
-	onCollectionReset: function(collection){
-		var that = this;
-		that.$el.empty();
-		collection.each(function(contact){
-			that.onContactAdded(contact);
-		});
+	getNewItemView: function(model){
+		var chatUserItemView = new ChatUserView({socketEvents: this.socketEvents,model: model});
+		chatUserItemView.bind('chat:start', this.startChat, this);
+		return chatUserItemView;
 	},
-	render: function(){
-		return this;
-	},
+
+	// load: function(){
+	// 	this.loaded = true;
+	// 	this.collection.fetch({reset:true});
+	// },
+	// onContactAdded: function(contact){
+	// 	var chatUserView = new ChatUserView({
+	// 		model: contact,
+	// 		socketEvents: this.socketEvents
+	// 	});
+	// 	chatUserView.bind('chat:start', this.startChat, this);
+	// 	var chatUserHtml = chatUserView.render().el;
+	// 	this.$el.append(chatUserHtml);
+	// },
+
+	// onCollectionReset: function(collection){
+	// 	var that = this;
+	// 	that.$el.empty();
+	// 	collection.each(function(contact){
+	// 		that.onContactAdded(contact);
+	// 	});
+	// },
+	// render: function(){
+	// 	return this;
+	// },
 	// currentChatView: null,
 	// chats: {},
 	startChat: function(model){
