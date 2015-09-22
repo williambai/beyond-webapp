@@ -9,10 +9,9 @@ module.exports = exports = function(app,mongoose){
 			content: {
 				subject: String,
 				body: String,
-				url: String,
-				thumbnail: String,
+				urls: {},
+				thumbnails: {},
 				format: String,
-				urls: [],
 				location_x: Number,
 				location_y: Number,
 				scale: Number,

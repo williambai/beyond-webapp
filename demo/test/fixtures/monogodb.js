@@ -225,17 +225,21 @@ var upsertFriends = function(callback){
 		upsertFriend(1);
 	};
 
+var messages = require('./messages');
+
 var upsertAccountStatuses = function(callback){
 		var upsertStatus = function(index){
 				var user = users[index%5];
 				var commentUser = users[1];
 				var replyUser = users[2];
+				var msg = messages[index%10] || {};
 				var message = {
 					uid: user._id,
 					username: user.username,
 					avatar: user.avatar,
 					subject: '',
-					content: '这是第 '+ index +' 条消息',
+					type: msg.type || 'text',
+					content: msg.content || {body: '这是第 '+ index +' 条消息'},
 					tags: [],
 					comments: [{
 						uid: commentUser._id,
@@ -352,12 +356,13 @@ var upsertAccountMessages = function(callback){
 					username: users[1].username,
 					avatar: users[1].avatar,
 				};
-
+			var msg = messages[index%10] || {};
 			var message = {
 					from: index%2 ? user1 : user2,
 					to: index%2 ? user2 : user1,
 					subject: '',
-					content: '这是第 '+ index +' 条私信',
+					type: msg.type || 'text',
+					content: msg.content || {body: '这是第 '+ index +' 条私信'},
 					tags: [],
 					comments: [{
 						uid: user1._id,
@@ -503,6 +508,7 @@ var upsertProjects = function(callback){
 var upsertProjectStatuses = function(callback){
 		var upsertProjectStatus = function(index){
 				var user = users[index%3];
+				var msg = messages[index%10] || {};
 				var message = {
 						pid: pid,//project id
 						createby: {
@@ -511,7 +517,8 @@ var upsertProjectStatuses = function(callback){
 							avatar: (user.avatar).toString(),
 						},
 						subject: '',
-						content: 'project status ' + index,
+						type: msg.type || 'text',
+						content: msg.content || {body: '这是第 '+ index +' 条 project status'},
 						tags: [],
 						comments: [{
 							uid: user._id,

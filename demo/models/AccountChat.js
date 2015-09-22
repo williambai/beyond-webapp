@@ -1,6 +1,5 @@
 module.exports = exports = function(app,mongoose){
 
-	//new version
 	var schema = new mongoose.Schema({
 			user:{
 				uid: String, //uid > fid
@@ -12,7 +11,18 @@ module.exports = exports = function(app,mongoose){
 				username: String,
 				avatar: String,
 			},	
-			message: {},
+			type: String,//text|image|vioce|video|shortvideo|location|moreimage
+			content: {
+				subject: String,
+				body: String,
+				urls: {},
+				thumbnails: {},
+				format: String,
+				location_x: Number,
+				location_y: Number,
+				scale: Number,
+				label: String,
+			},
 			lastupdatetime: Date
 		});
 
