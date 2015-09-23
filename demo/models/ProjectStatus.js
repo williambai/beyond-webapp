@@ -15,8 +15,10 @@ module.exports = exports = function(app,mongoose){
 				urls: {},
 				thumbnails: {},
 				format: String,
-				location_x: Number,
-				location_y: Number,
+				location: {
+					// type: String,
+					// coordinates: [Number]
+				},
 				scale: Number,
 				label: String,
 			},

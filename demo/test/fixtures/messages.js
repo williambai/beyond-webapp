@@ -70,9 +70,11 @@ messages.push({
 messages.push({
 	type: 'location',
 	content:{
-		location_x: 120.0000,
-		location_y: 36.0000,
-		scale: 10,
+		location: {
+			type: 'Point',
+			coordinates: [126.0001,36.0001]
+		},
+		scale: 11,
 		subject: '',
 	},
 });
