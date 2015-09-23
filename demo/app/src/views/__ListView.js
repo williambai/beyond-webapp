@@ -19,11 +19,19 @@ exports = module.exports = Backbone.View.extend({
 		this.on('append', this.onModelAppend,this);
 		this.on('prepend', this.onModelPrepend,this);
 		this.on('load', this.load, this);
+		this.on('refresh', this.refresh, this);
 	},
 
 	load: function(){
 		this.loaded = true;
 		this.render();
+		this.collection.fetch({reset:true});
+	},
+
+	refresh: function(url){
+		this.$el.empty();
+		this.collection.url = url;
+		this.collectionUrl = this.collection.url;
 		this.collection.fetch({reset:true});
 	},
 

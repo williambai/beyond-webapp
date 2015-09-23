@@ -2,8 +2,9 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     loadingTemplate = require('../../assets/templates/loading.tpl'),
-    indexTemplate = require('../../assets/templates/index.tpl'),
-    ProjectList = require('./_ListProject2');
+    projectTemplate = require('../../assets/templates/project.tpl'),
+    SearchView = require('./_SearchProject'),
+    ListView = require('./_ListProject2');
 
 Backbone.$ = $;
 
@@ -19,20 +20,27 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	load: function(){
+		var that = this;
 		this.loaded = true;
 		this.render();
-		this.projectList = new ProjectList({
+		this.listView = new ListView({
 			el: '#project-widget',
 			socketEvents: this.socketEvents
 		});
-		this.projectList.trigger('load');
+		this.searchView = new SearchView({
+
+		});
+		this.searchView.done = function(url){
+			that.listView.trigger('refresh',url);
+		};
+		this.listView.trigger('load');
 	},
 
 	render: function(){
 		if(!this.loaded){
 			this.$el.html(loadingTemplate());
 		}else{
-			this.$el.html(indexTemplate());
+			this.$el.html(projectTemplate());
 		}
 		return this;
 	},

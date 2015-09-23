@@ -1,8 +1,8 @@
-<div class="pull-right">
+<div class="pull-right" id="search">
 	<div class="btn-group">
-		<button class="btn btn-primary">全部</button>
-		<button class="btn btn-default">主持项目</button>
-		<button class="btn btn-default">参与项目</button>
+		<button class="btn btn-primary" id="all">全部</button>
+		<button class="btn btn-default" id="presenter">主持项目</button>
+		<button class="btn btn-default" id="attendee">参与项目</button>
 	</div>
 </div>
 <h2>我的项目</h2>

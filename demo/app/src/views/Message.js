@@ -3,8 +3,8 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     loadingTemplate = require('../../assets/templates/loading.tpl'),
     messageTemplate = require('../../assets/templates/message.tpl'),
-    StatusFormView = require('./_FormStatus'),
-    StatusListView = require('./_ListMessage');
+    SearchView = require('./_SearchMessage'),
+    ListView = require('./_ListMessage');
 
 Backbone.$ = $;
 
@@ -28,18 +28,25 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	load: function(){
+		var that = this;
 		this.loaded = true;
 		this.render();
-		this.statusListView = new StatusListView({
+		this.listView = new ListView({
 			el: 'div.status-list',
 			url: '/messages/account/me',
 			account: this.account,
 		});
-		this.statusListView.trigger('load');
+		this.searchView = new SearchView({
+
+		});
+		this.searchView.done = function(url){
+			that.listView.trigger('refresh',url);
+		};
+		this.listView.trigger('load');
 	},
 
 	scroll: function(){
-		this.statusListView.scroll();
+		this.listView.scroll();
 		return false;
 	},
 
@@ -51,7 +58,7 @@ exports = module.exports = Backbone.View.extend({
 		status.fromUser = {};
 		status.fromUser[from.id] = from;
 		status.content = content;
-		this.statusListView.trigger('prepend',status);
+		this.listView.trigger('prepend',status);
 	},
 
 	render: function(){

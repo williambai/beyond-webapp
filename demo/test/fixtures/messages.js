@@ -39,23 +39,23 @@ messages.push({
 	type: 'voice',
 	content:{
 		urls: '',
-		format: 'arm',
+		format: 'mp3',
 	},
 });
 
 messages.push({
 	type: 'shortvideo',
 	content:{
-		urls: '',
-		thumbnails: '',
+		urls: 'http://www.w3school.com.cn/i/movie.mp4',
+		thumbnails: 'http://i2.letvimg.com/lc01_yunzhuanma/201509/22/09/07/c27ccc1c317580bf811b7a77db23ea67_35207705/thumb/2_400_225.jpg',
 	},
 });
 
 messages.push({
 	type: 'video',
 	content:{
-		urls: '',
-		thumbnails: '',
+		urls: 'http://www.w3school.com.cn/i/movie.mp4',
+		thumbnails: 'http://i2.letvimg.com/lc01_yunzhuanma/201509/22/09/07/c27ccc1c317580bf811b7a77db23ea67_35207705/thumb/2_400_225.jpg',
 	},
 });
 

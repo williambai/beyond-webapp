@@ -5,7 +5,7 @@ var Backbone = require('backbone');
 var ProjectsView = require('./views/_ListProject');
 var ChatUsersView = require('./views/_ListChatUser');
 var LayoutView = require('./views/__Layout');
-var IndexView = require('./views/Index');
+var ProjectView = require('./views/Project');
 var RegisterView = require('./views/Register');
 var LoginView = require('./views/Login');
 var ForgotPasswordView = require('./views/ForgotPassword');
@@ -113,11 +113,11 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','项目');
-		var indexView = new IndexView({
+		var projectView = new ProjectView({
 			socketEvents: this.socketEvents
 		});
-		this.changeView(indexView);
-		indexView.trigger('load');
+		this.changeView(projectView);
+		projectView.trigger('load');
 	},
 
 	activity: function(id){

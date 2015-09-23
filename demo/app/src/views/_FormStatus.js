@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var $ = require('jquery'),
-	FormView = require('./__Form'),
+	FormView = require('./__FormView'),
 	Status = require('../models/Status'),
     statusFormTemplate = require('../../assets/templates/_formStatus.tpl');
 
