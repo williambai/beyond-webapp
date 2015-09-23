@@ -5,7 +5,7 @@
 		<button class="btn btn-default" id="attendee">参与项目</button>
 	</div>
 </div>
-<h2>我的项目</h2>
+<h2>&nbsp;</h2>
 <hr>
 <div id="project-widget">
 	<div class="my-projects">

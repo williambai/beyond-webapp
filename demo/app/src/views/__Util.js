@@ -2,6 +2,63 @@ var _ = require('underscore');
 
 exports = module.exports = {
 
+	buildContent: function(type,content){
+		var type = type || '';
+
+		switch(type){
+			case 'text':
+				var body = (content.body && content.body.trim()) || '';
+				var newContent = '';
+				if(/^http.*(png|jpg|git)$/.test(body)){
+					newContent += '<img src="' + body +'" width="50%" target-data="'+ body +'" target-type="image">';
+				}else if(/^http.*pdf$/.test(body)){
+					newContent += '<a href="' + body + '">';
+					newContent += '<img src="images/pdf.png" target-data="'+ body +'" target-type="pdf">';
+					newContent += '</a>'; 
+				}else{
+					newContent += '<p>'+ body + '</p>';
+				}
+				return newContent;
+
+			case 'file':
+				newContent = '<p>'+ content.body + '</p>';
+				return newContent;
+
+			case 'image':
+				return '<p><img src="' + content.urls + '" target-data="'+ content.urls +'" target-type="image"></p>';
+			
+			case 'mixed':
+				var newContent = '<p>' + content.body + '</p>';
+				for(var i=0; i<content.urls.length; i++){
+					if(/[png|jpg]$/.test(content.urls[i])){
+						newContent += '<img src="' + content.urls[i] +'" width="' + parseInt(50/content.urls.length-1) +'%" target-data="'+ content.urls[i] +'" target-type="image">';
+					}else if(/[pdf]$/.test(content.urls[i])){
+						newContent += '<a href="' + content.urls[i] + '">';
+						newContent += '<img src="images/pdf.png" target-data="'+ content.urls[i] +'" target-type="pdf">';
+						newContent += '</a>'; 
+					}
+				}
+				return newContent;
+			
+			case 'link':
+				var newContent = '<a href="' + content.urls + '" target="_blank">';
+				newContent += '<h4>' +content.subject + '</h4>';
+				newContent += '<p>'+ content.body + '</p>';
+				return newContent;
+
+			case 'video':
+				break;
+			case 'shortvideo':
+				break;
+			case 'location':
+				break;
+			case 'email':
+				break;
+			default:
+				break;	
+		}
+	},
+
 	convertContent: function(contentObject){
 		if(!contentObject){
 			return;

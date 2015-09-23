@@ -112,7 +112,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','项目');
+		this.appEvents.trigger('set:brand','我的项目');
 		var projectView = new ProjectView({
 			socketEvents: this.socketEvents
 		});

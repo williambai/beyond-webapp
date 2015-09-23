@@ -1,6 +1,14 @@
 var messages = [];
 
 messages.push({
+	type: 'file',
+	content:{
+		urls: '.pdf',
+		format: 'pdf',
+	}
+});
+
+messages.push({
 	type: 'image',
 	content:{
 		urls: 'http://g.hiphotos.baidu.com/image/pic/item/7aec54e736d12f2e373b6a504cc2d562853568c0.jpg',
@@ -10,18 +18,18 @@ messages.push({
 messages.push({
 	type: 'mixed',
 	content:{
-		body: '',
+		body: 'mixed type body',
 		urls: [
 			'http://g.hiphotos.baidu.com/image/pic/item/7aec54e736d12f2e373b6a504cc2d562853568c0.jpg',
-			'http://g.hiphotos.baidu.com/image/pic/item/7aec54e736d12f2e373b6a504cc2d562853568c0.jpg',
-			'http://g.hiphotos.baidu.com/image/pic/item/7aec54e736d12f2e373b6a504cc2d562853568c0.jpg',
-			'http://g.hiphotos.baidu.com/image/pic/item/7aec54e736d12f2e373b6a504cc2d562853568c0.jpg',
-			'http://g.hiphotos.baidu.com/image/pic/item/7aec54e736d12f2e373b6a504cc2d562853568c0.jpg',
-			'http://g.hiphotos.baidu.com/image/pic/item/7aec54e736d12f2e373b6a504cc2d562853568c0.jpg',
-			'http://g.hiphotos.baidu.com/image/pic/item/7aec54e736d12f2e373b6a504cc2d562853568c0.jpg',
-			'http://g.hiphotos.baidu.com/image/pic/item/7aec54e736d12f2e373b6a504cc2d562853568c0.jpg',
-			'http://g.hiphotos.baidu.com/image/pic/item/7aec54e736d12f2e373b6a504cc2d562853568c0.jpg',
-			'http://g.hiphotos.baidu.com/image/pic/item/7aec54e736d12f2e373b6a504cc2d562853568c0.jpg',
+			'http://preview.quanjing.com/chineseview073/zrgrf-ingwrb-005421.jpg',
+			'http://preview.quanjing.com/chineseview073/zrgrf-ingwrb-005305.jpg',
+			'http://preview.quanjing.com/chineseview073/zrgrf-ingwrb-005307.jpg',
+			'http://preview.quanjing.com/chineseview073/zrgrf-ingwrb-005425.jpg',
+			'http://preview.quanjing.com/chineseview073/zrgrf-ingwrb-005365.jpg',
+			'http://preview.quanjing.com/chineseview073/zrgrf-ingwrb-005436.jpg',
+			'http://preview.quanjing.com/chineseview073/zrgrf-ingwrb-005457.jpg',
+			'http://preview.quanjing.com/chineseview073/zrgrf-ingwrb-005383.jpg',
+			'http://preview.quanjing.com/chineseview073/zrgrf-ingwrb-005366.jpg',
 		]
 	},
 });
@@ -55,7 +63,7 @@ messages.push({
 	type: 'video',
 	content:{
 		urls: 'http://www.w3school.com.cn/i/movie.mp4',
-		thumbnails: 'http://i2.letvimg.com/lc01_yunzhuanma/201509/22/09/07/c27ccc1c317580bf811b7a77db23ea67_35207705/thumb/2_400_225.jpg',
+		thumbnails: 'http://preview.quanjing.com/chineseview073/zrgrf-ingwrb-005366.jpg',
 	},
 });
 

@@ -6,8 +6,8 @@ Backbone.$ = $;
 
 exports = module.exports = Backbone.View.extend({
 
-	callback: function(){
-		console.log('form callback is called....');
+	done: function(){
+		console.log('form done is called....');
 	},
 
 });

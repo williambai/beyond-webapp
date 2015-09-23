@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     statusTemplate = require('../../assets/templates/_itemProjectStatus.tpl'),
     modalTemplate = require('../../assets/templates/_modal.tpl'),
+    require('./__ModalView'),
     MessageUtil = require('./__Util');
 
 Backbone.$ = $;
@@ -29,8 +30,10 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	_convertContent: function(){
+		var type = this.model.get('type');
 		var contentObject = this.model.get('content');
-		var newContent = MessageUtil.convertContent(contentObject);
+		var newContent = MessageUtil.buildContent(type, contentObject);
+		// var newContent = MessageUtil.convertContent(contentObject);
 		this.model.set('content',newContent);
 	},
 
