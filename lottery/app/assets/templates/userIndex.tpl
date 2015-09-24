@@ -3,7 +3,7 @@
 </div>
 <p>&nbsp;</p>
 <hr>
-<div>
+<div id="search">
 <form class="form-inline">
 	<div class="form-group">
 		<div class="input-group">

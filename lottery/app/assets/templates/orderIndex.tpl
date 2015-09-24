@@ -8,7 +8,7 @@
 <hr>
 <% } %>
 <p>注意：订单在首次出票前（一般在当日17:00前）可以修改或删除，一旦首次出票成功，则不能再修改或删除。</p>
-<div>
+<div id="search">
 <form class="form-inline">
 	<div class="form-group">
 		<label>从：</label>

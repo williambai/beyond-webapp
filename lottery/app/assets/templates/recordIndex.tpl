@@ -1,5 +1,5 @@
 <p>注意：每日下午17:00集中出票，在此之前可以修改中奖号码，出票后不能修改。</p>
-<div>
+<div id="search">
 <form class="form-inline">
 	<div class="form-group">
 		<label>从：</label>

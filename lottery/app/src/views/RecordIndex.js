@@ -2,6 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     recordIndexTemplate = require('../../assets/templates/recordIndex.tpl'),
+    SearchRecordView = require('./_SearchRecord'),
     RecordListView = require('./_ListRecord');
 var config = require('../conf');
 
@@ -19,34 +20,24 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'submit form': 'search'
 	},
 
 	load: function(){
+		var that = this;
 		this.recordListView = new RecordListView({
 			account: this.account,
 			url: config.api.host + this.url
 		});
-		if(this.orderId){
-			this.recordListView.collectionUrl = config.api.host + this.url;
-		}else{
-			this.recordListView.collectionUrl = config.api.host + this.url;
-		}
+
+		this.searchRecordView = new SearchRecordView();
+		this.searchRecordView.done = function(url){
+			that.recordListView.trigger('refresh', url);
+		};
 		this.recordListView.trigger('load');
 	},
 
 	scroll: function(){
 		this.recordListView.scroll();
-		return false;
-	},
-
-	search: function(){
-		var that = this;
-		this.recordListView.$el.empty();
-		var url = config.api.host + '/records?type=search&from=' + $('input[name=from]').val() + '&to=' + $('input[name=to]').val() + '&searchStr=' + $('input[name=searchStr]').val();
-		this.recordListView.collection.url = url;
-		this.recordListView.collectionUrl = url;
-		this.recordListView.collection.fetch({reset: true});
 		return false;
 	},
 
