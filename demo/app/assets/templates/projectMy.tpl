@@ -6,6 +6,7 @@
 	</div>
 </div>
 <h2>&nbsp;</h2>
+<p class="text-right">您还没有项目，现在<a href="#project/add">创建项目</a>或<a href="#projects">参与项目</a>。</p>
 <hr>
 <div id="project-widget">
 </div>

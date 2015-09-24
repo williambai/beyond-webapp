@@ -1,5 +1,5 @@
 <div class="jumbotron">
-	<h1 class="text-center">来，一起互动吧</h1>
+	<h1 class="text-center">来吧！一起做事</h1>
 	<div class="text-center" id="search">
 		<form class="form-inline">
 			<div class="form-group">
@@ -10,6 +10,7 @@
 		</form>
 	</div>
 </div>
+<p class="text-right">您还没有创建项目，现在<a href="#project/add">创建项目</a>。</p>
 <hr>
 <div class="row">
 	<div class="col-md-6">
