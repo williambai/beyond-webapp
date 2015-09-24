@@ -41,6 +41,7 @@ module.exports = exports = function(app,mongoose){
 			good: Number,
 			bad: Number,
 			score: Number,
+			secret: Boolean, //false: public or true: private(default)
 			lastupdatetime: Date
 		});
 

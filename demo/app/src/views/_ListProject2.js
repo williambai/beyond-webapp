@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var ProjectItemView = require('./_ItemProject'),
+var ProjectItemView = require('./_ItemProject2'),
     ListView = require('./__ListView'),
     ProjectCollection = require('../models/ProjectCollection');
 

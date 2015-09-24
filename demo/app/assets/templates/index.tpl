@@ -1,20 +1,23 @@
-<div class="center-block">
-	<form class="form-inline">
-		<div class="form-group">
-			<label></label>
-			<input class="form-control" placeholder="项目名称">
-		</div>
-		<button class="btn btn-primary">搜索</button>
-	</form>
+<div class="jumbotron">
+	<h1 class="text-center">来，一起互动吧</h1>
+	<div class="text-center" id="search">
+		<form class="form-inline">
+			<div class="form-group">
+				<label></label>
+				<input name="searchStr" class="form-control" placeholder="项目名称">
+			</div>
+			<button name="search" class="btn btn-primary">搜索</button>
+		</form>
+	</div>
 </div>
-
+<hr>
 <div class="row">
 	<div class="col-md-6">
 		<div>
 			<h4>最活跃的项目</h4>
 			<div id="hot">
 			</div>
-			<a href="#">更多...</a>
+			<a href="#projects?type=hot_more">更多...</a>
 		</div>
 	</div>
 	<div class="col-md-6">
@@ -22,7 +25,7 @@
 			<h4>人气最旺的项目</h4>
 			<div id="top">
 			</div>
-			<a href="#">更多...</a>
+			<a href="#projects?type=top_more">更多...</a>
 		</div>
 	</div>
 </div>

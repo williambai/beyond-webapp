@@ -3,9 +3,10 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 
 var IndexView = require('./views/Index');
-var ProjectsView = require('./views/_ListProject');
-var ChatUsersView = require('./views/_ListChatUser');
+var ProjectListView = require('./views/_ListProject');
+var ChatUserListView = require('./views/_ListChatUser');
 var LayoutView = require('./views/__Layout');
+var ProjectsView = require('./views/Projects');
 var MyProjectView = require('./views/ProjectMy');
 var RegisterView = require('./views/Register');
 var LoginView = require('./views/Login');
@@ -40,7 +41,8 @@ exports = module.exports = Backbone.Router.extend({
 	routes: {
 		'': 'index',
 		'index': 'index',
-		'project/me': 'project',
+		'projects': 'projects',
+		'project/me': 'projectMy',
 		'activity/:id': 'activity',
 		'message/:id': 'messageBox',
 		'space/:id': 'space',
@@ -77,13 +79,13 @@ exports = module.exports = Backbone.Router.extend({
 		this.account = account;
 		this.logined = true;
 		/* load projects */
-		var projectsView = new ProjectsView({
+		var projectsView = new ProjectListView({
 			socketEvents: this.socketEvents,
 			url: '/projects/account/me'
 		});
 		projectsView.trigger('load');
 		/* load contacts */
-		var contactsView = new ChatUsersView({
+		var contactsView = new ChatUserListView({
 			socketEvents: this.socketEvents,
 			url: '/friends/account/me'
 		});
@@ -118,7 +120,20 @@ exports = module.exports = Backbone.Router.extend({
 		indexView.trigger('load');
 	},
 
-	project: function(){
+	projects: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','所有项目');
+		var projectsView = new ProjectsView({
+			socketEvents: this.socketEvents
+		});
+		this.changeView(projectsView);
+		projectsView.trigger('load');
+	},
+
+	projectMy: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
