@@ -219,6 +219,7 @@
 	 *     comment
 	 */
 	app.put('/messages/account/:aid/:id', app.isLogined, update);
+	app.patch('/messages/account/:aid/:id', app.isLogined, update);
 
 	/**
 	 * get account's message

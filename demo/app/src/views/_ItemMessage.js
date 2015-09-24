@@ -24,6 +24,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 	events: {
 		'click .comment-toggle': 'commentToggle',
+		'submit form': 'submitComment',
 	},
 
 	_convertContent: function(){
@@ -56,6 +57,27 @@ exports = module.exports = Backbone.View.extend({
 			this.$('.comment-editor').html(commentFormTemplate()).hide().fadeIn('slow');
 		}else{
 			this.$('.comment-editor').html('');
+		}
+		return false;
+	},
+
+	submitComment: function(){
+		var comment = this.$('textarea[name=comment]').val() || '';
+		if(comment.length>0){
+			var url = this.model.url;
+			this.model.url = 'messages/account/me/' + this.model.get('_id') + '?type=comment';
+			var success = this.model.save({comment: comment},{patch: true});
+			if(success){
+				this.onCommenAdded({
+					accountId: this.account.id,
+					username: this.account.username,
+					comment: comment
+				});
+				this.$('.comment-editor').html('');
+			};
+			this.model.url = url;
+		}else{
+			this.$('textarea[name=comment]').attr('placeholder','没写评论哦');
 		}
 		return false;
 	},

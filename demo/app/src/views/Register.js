@@ -1,13 +1,17 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-    Backbone = require('backbone'),
+var FormView = require('./__FormView'),
+	$ = require('jquery'),
+    Register = require('../models/Register'),
     registerTemplate = require('../../assets/templates/register.tpl');
 
-Backbone.$ = $;
-
-exports = module.exports = Backbone.View.extend({
+exports = module.exports = FormView.extend({
 
 	el: '#content',
+
+	initialize: function(options){
+		this.model = new Register();
+		FormView.prototype.initialize.apply(this,options);
+	},
 
 	events: {
 		'submit form': 'register',
@@ -15,17 +19,30 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	register: function(){
-		$.post('/register',{
-					username: $('input[name=username]').val(),
-					email: $('input[name=email').val(),
-					password: $('input[name=password').val()
-				}, 
-				function success(data){
+		var that = this;
+		this.model.set('username', $('input[name=username]').val());
+		this.model.set('email', $('input[name=email').val());
+		this.model.set('password', $('input[name=password').val());
+		this.model.set('cpassword', $('input[name=cpassword').val());
+		
+		var xhr = this.model.save();
+		if(xhr){
+			xhr
+				.success(function(data){
+					if(!!data.code){
+						that.$('#error').html('<div class="alert alert-dander">' + data.message + '</div>');
+						that.$('#error').slideDown();
+						return;
+					}
 					window.location.hash = 'login';
 				})
-		 .error(function(data){
-					console.log(data);
+				.error(function(err){
+					console.log(err);
+					that.$('#error').html('<div class="alert alert-danger">unknown error</div>');
+					that.$('#error').slideDown();
 				});
+		}
+
 		return false;
 	},
 

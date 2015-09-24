@@ -1,20 +1,23 @@
 <p></p>
 <p></p>
-<div class="container">
-    <div class="row centered-form">
-        <div class="col-xs-12 col-sm-10 col-md-8">
+<div class="">
+    <div class="">
+        <div class="">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title text-center">登&nbsp;&nbsp;录</h3>
                 </div>
                 <div class="panel-body">
+                    <div id="error"></div>
                     <form role="form">
-                        <div class="form-group">
+                        <div class="form-group" id="email">
                             <input type="text" name="email" class="form-control input-sm" placeholder="邮件/用户名">
+                            <span class="help-block"></span>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" id="password">
                             <input type="password" name="password" class="form-control input-sm" placeholder="密码">
+                            <span class="help-block"></span>
                         </div>
 
                         <div class="form-group">
@@ -31,7 +34,7 @@
     </div>
 </div>
 
-<p></p>
+<!-- <p></p>
 <p></p>
 <h2>客户端程序下载</h2>
 <hr>
@@ -111,4 +114,11 @@
     <div class="media-right">
     </div>
 </div>
-<hr>
+<hr> -->
+
+<div class="text-center">
+    <hr>
+    <p>版权所有@2014~2015&nbsp;&nbsp;苏州白杨软件有限公司</p>
+    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
+</div>
+
