@@ -3,10 +3,10 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     statusTemplate = require('../../assets/templates/_itemProjectStatus.tpl'),
     modalTemplate = require('../../assets/templates/_modal.tpl'),
-    require('./__ModalView'),
     MessageUtil = require('./__Util');
 
 Backbone.$ = $;
+require('./__ModalView');
 
 exports = module.exports = Backbone.View.extend({
 

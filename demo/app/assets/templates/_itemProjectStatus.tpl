@@ -5,7 +5,7 @@
 		</a>
 	</div>
 	<div class="media-body">
-		<a href="#status/<%= model.fromId %>">
+		<a href="#space/<%= model.fromId %>">
 			<h4 class="media-heading"><%= model.username %></h4>
 		</a>
 		<%= model.content %>

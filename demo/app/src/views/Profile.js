@@ -20,14 +20,12 @@ exports = module.exports = Backbone.View.extend({
 		'click .logout': 'logout',
 	},
 
-	uiControl: {},
-
 	initialize: function(options){
 		this.appEvents = options.appEvents;
 		if(options.id == 'me') {
-			this.uiControl.me = true;
+			this.me = true;
 		}else{
-			this.uiControl.me = false;
+			this.me = false;
 		}
 		this.socketEvents = options.socketEvents;
 		this.model = new Account();
@@ -77,7 +75,7 @@ exports = module.exports = Backbone.View.extend({
 			// 	this.socketEvents.bind('status' + this.model.get('_id'), this.onSocketonStatusAdded, this);
 			// }
 			this.$el.html(profileTemplate({
-				ui: this.uiControl,
+				me: this.me,
 				account: this.model.toJSON()
 			}));
 			// var that = this;

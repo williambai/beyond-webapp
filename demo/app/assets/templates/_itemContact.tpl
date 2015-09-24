@@ -18,10 +18,10 @@
 		<div class="media-heading"><h1><%= model.username %></h1></div>
 			<p>
 			<% if(model.accountId){ %>	
-				<a href="#status/<%= model.accountId %>">看一看</a>
+				<a href="#space/<%= model.accountId %>">看一看</a>
 			<% }else{ %>
 				<a href="#profile/<%= model._id %>">个人资料</a> &nbsp;
-				<a href="#status/<%= model._id %>">看一看</a>
+				<a href="#space/<%= model._id %>">看一看</a>
 			<% } %>	
 			</p>
 	</div>

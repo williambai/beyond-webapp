@@ -1,4 +1,4 @@
-<% if(ui.me){ %>
+<% if(me){ %>
 <div class="editor-layer">
 	<a class="btn btn-primary pull-right editor-control" href="#profile/me/edit">编辑</a>
 	<p>&nbsp;</p>
@@ -13,7 +13,9 @@
 	<div class="media-body">
 		<h2 class="media-heading"><%= account.username %></h2>
 		<h4><%= account.realname %></h4>
-		<a href="#status/<%= account._id %>">私信TA</a>
+		<% if(!me){ %>
+		<a href="#space/<%= account._id %>">私信TA</a>
+		<% } %>
 	</div>
 </div>
 <p class="clearfix"></p>
@@ -25,11 +27,11 @@
 	<p class="small">比较懒，没写自我介绍</p>
 <% } %>
 <hr>
-<% if(!ui.me){ %>
+<% if(!me){ %>
 <h2>动态</h2>
 <hr>
 <div class="status-list"></div>
-<a class="pull-right" href="#status/<%= account._id %>">更多...</a>
+<a class="pull-right" href="#space/<%= account._id %>">更多...</a>
 <p>&nbsp;</p>
 
 <h2>好友</h2>
@@ -37,7 +39,7 @@
 <div class="contact-list"></div>
 <% } %>
 
-<% if(ui.me){ %>
+<% if(me){ %>
 <hr>
 <div class="button-layer">
 	<a href="#" class="btn btn-block btn-danger logout">退出</a>

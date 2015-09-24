@@ -16,13 +16,13 @@
 
 		<% if(ui.showToUser){ %>
 			<h4 class="media-heading">
-				<a href="#status/<%= model.to.uid %>
+				<a href="#space/<%= model.to.uid %>
 					">
 					<%= model.to.username %></a>&nbsp;<i class="fa fa-chevron-left small"></i><i class="fa fa-chevron-left small"></i>&nbsp;<span class="small">我</span>
 			</h4>
 		<% }else{ %>
 			<h4 class="media-heading">
-				<a href="#status/<%= model.from.uid %>
+				<a href="#space/<%= model.from.uid %>
 					">
 					<%= model.from.username %></a>&nbsp;<i class="fa fa-chevron-right small"></i><i class="fa fa-chevron-right small"></i>&nbsp;<span class="small">我</span>
 			</h4>

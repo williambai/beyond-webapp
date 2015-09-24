@@ -2,10 +2,11 @@ var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
 
+var IndexView = require('./views/Index');
 var ProjectsView = require('./views/_ListProject');
 var ChatUsersView = require('./views/_ListChatUser');
 var LayoutView = require('./views/__Layout');
-var ProjectView = require('./views/Project');
+var MyProjectView = require('./views/ProjectMy');
 var RegisterView = require('./views/Register');
 var LoginView = require('./views/Login');
 var ForgotPasswordView = require('./views/ForgotPassword');
@@ -38,10 +39,11 @@ exports = module.exports = Backbone.Router.extend({
 	socketEvents: _.extend({},Backbone.Events),//socket events ---Deprecated!
 	routes: {
 		'': 'index',
+		'index': 'index',
 		'project/me': 'project',
 		'activity/:id': 'activity',
 		'message/:id': 'messageBox',
-		'status/:id': 'space',
+		'space/:id': 'space',
 		'chat/:id': 'chat',
 		'login': 'login',
 		'register': 'register',
@@ -104,7 +106,16 @@ exports = module.exports = Backbone.Router.extend({
 	},
 
 	index: function(){
-		window.location.hash = 'activity/me';
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','首页');
+		var indexView = new IndexView({
+			socketEvents: this.socketEvents
+		});
+		this.changeView(indexView);
+		indexView.trigger('load');
 	},
 
 	project: function(){
@@ -113,7 +124,7 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','我的项目');
-		var projectView = new ProjectView({
+		var projectView = new MyProjectView({
 			socketEvents: this.socketEvents
 		});
 		this.changeView(projectView);
@@ -206,6 +217,9 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','个人资料');
+		if(id == this.account.id){
+			id = 'me';
+		}
 		var profileView = new ProfileView({
 				id:id,
 				appEvents: this.appEvents,

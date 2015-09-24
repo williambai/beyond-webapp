@@ -23,6 +23,11 @@ exports = module.exports =Backbone.View.extend({
 
 	initialize: function(options){
 		this.id = options.id;
+		if(options.id == 'me' || options.id == options.account.id){
+			this.me = true;
+		}else{
+			this.me = false;
+		}
 		this.account = options.account;
 		this.socketEvents = options.socketEvents;
 		this.on('load', this.load, this);
@@ -93,9 +98,9 @@ exports = module.exports =Backbone.View.extend({
 
 	render: function(){
 		if(!this.loaded){
-			this.$el.html(loadingTemplate());
+			this.$el.html(loadingTemplate({me: this.me}));
 		}else{
-			this.$el.html(activityTemplate());
+			this.$el.html(activityTemplate({me: this.me}));
 		}
 		return this;
 	},
