@@ -3,7 +3,8 @@
 <p>所有成员在项目中享有信息公开透明及平等沟通的权利，无组织架构层次约束。一旦您在项目中加入了对方，对方就可以查看该项目团员的所有沟通历史，发表自己的见解，实现以项目目标为导向的扁平化协作管理。</p>
 <p>按项目组织知识，是为了团队更好地及时沟通，分享工作经验，使后加入的成员快速了解项目，了解团队，让知识有效传递。</p>
 <hr>
-<form>
+<div id="projectForm">
+<form >
 	<div class="form-group" id="name">
 		<label>项目名称(15字以内)：</label>
 		<input type="text" name="name" placeholder="如：办公用品采购，客户xxx项目" class="form-control"/>
@@ -16,5 +17,4 @@
 	</div>
 	<input type="submit" value="下一步" class="btn btn-primary btn-block"/>
 </form>
-
-<div id="results"></div>
+</div>

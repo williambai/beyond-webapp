@@ -6,12 +6,18 @@ exports = module.exports = Backbone.Model.extend({
 	url: '/projects',
 
 	validate: function(attrs, options){
-		var errors = {};
+		var errors = [];
 		if(attrs.name.length < 2){
-			errors.name = '名称太短，取一个能代表项目的短语';
+			errors.push({
+				name: 'name',
+				message: '名称太短，取一个能代表项目的短语',
+			});
 		}
 		if(attrs.description.length < 20){
-			errors.description = '描述过于简单，再多写点...';
+			errors.push({
+				name: 'description',
+				message: '描述过于简单，再多写点...',
+			});
 		}
 		if(!_.isEmpty(errors)) return errors;
 	},

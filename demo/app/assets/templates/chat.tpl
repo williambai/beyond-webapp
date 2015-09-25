@@ -1,2 +1,2 @@
 <span class="name"></span>
-<div class="chat_log"></div>
+<div id="list"></div>

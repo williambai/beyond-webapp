@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     projectChatTemplate = require('../../assets/templates/projectChat.tpl'),
-    BottomBarView = require('./_FormProjectChat'),
+    ChatFormView = require('./_FormProjectChat'),
     ChatListView = require('./_ListProjectChat'),
     Project = require('../models/Project');
 
@@ -52,14 +52,14 @@ exports = module.exports = Backbone.View.extend({
 	render: function(){
 		//增加 bottom Bar
 		if(this.model.get('_id') && $('.navbar-absolute-bottom').length == 0){
-			var bottomBarView = new BottomBarView({
+			var chatFormView = new ChatFormView({
 					id: this.id,
 					project: this.model,
 					account: this.account,
 					socketEvents: this.socketEvents,
 					parentView: this,
 				});
-			$(bottomBarView.render().el).prependTo('.app');
+			$(chatFormView.render().el).prependTo('.app');
 			if(!$('body').hasClass('has-navbar-bottom')){
 				$('body').addClass('has-navbar-bottom');
 			}

@@ -1,12 +1,13 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    bottomBarTemplate = require('../../assets/templates/_formChat.tpl'),
+    chatFormTemplate = require('../../assets/templates/_formChat.tpl'),
+    FormView = require('./__FormView'),
     Chat = require('../models/Chat');
 
 Backbone.$ = $;
 
-exports = module.exports = Backbone.View.extend({
+exports = module.exports = FormView.extend({
 
 	className: 'bottom-bar',
 
@@ -104,7 +105,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function(){
-		this.$el.html(bottomBarTemplate());
+		this.$el.html(chatFormTemplate());
 		return this;
 	}
 });

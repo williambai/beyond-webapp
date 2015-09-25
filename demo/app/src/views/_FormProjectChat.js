@@ -1,13 +1,14 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    bottomBar0Template = require('../../assets/templates/_barProject.tpl'),
-    bottomBarTemplate = require('../../assets/templates/_formProjectChat.tpl'),
+    menuBarTemplate = require('../../assets/templates/_barProject.tpl'),
+    chatFormTemplate = require('../../assets/templates/_formProjectChat.tpl'),
+    FormView = require('./__FormView'),
     Status = require('../models/Status');
 
 Backbone.$ = $;
 
-exports = module.exports = Backbone.View.extend({
+exports = module.exports = FormView.extend({
 
 	className: 'bottom-bar',
 
@@ -112,9 +113,9 @@ exports = module.exports = Backbone.View.extend({
 
 	render: function(){
 		if(this.barToggle){
-			this.$el.html(bottomBarTemplate({project: this.project.toJSON()}));
+			this.$el.html(chatFormTemplate({project: this.project.toJSON()}));
 		}else{
-			this.$el.html(bottomBar0Template({id: this.id}));
+			this.$el.html(menuBarTemplate({id: this.id}));
 		}
 		return this;
 	}

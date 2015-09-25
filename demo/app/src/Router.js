@@ -343,6 +343,7 @@ exports = module.exports = Backbone.Router.extend({
 				socketEvents: this.socketEvents
 			});
 		this.changeView(projectAddView);
+		projectAddView.trigger('load');
 	},
 
 	projectChat: function(id){
