@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     addContactTemplate = require('../../assets/templates/contactAdd.tpl'),
-    ContactListView = require('./_ListContact');
+    ContactListView = require('./_ListContact2');
 
 Backbone.$ = $;
 

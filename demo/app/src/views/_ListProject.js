@@ -1,8 +1,6 @@
 var _ = require('underscore');
 var ListView = require('./__ListView'),
     ProjectItemView = require('./_ItemProject'),
-    // ChatView = require('./ProjectChat'),
-    // ChatCollection = require('../models/ChatCollection'),
     ProjectCollection = require('../models/ProjectCollection');
 
 exports = module.exports = ListView.extend({
@@ -23,33 +21,4 @@ exports = module.exports = ListView.extend({
 		return new ProjectItemView({model: model,socketEvents: this.socketEvents});
 	},
 
-	// // currentChatView: null,
-	// // chats: {},
-	// startChatSession: function(model){
-	// 	if(null != this.currentChatView){
-	// 		this.currentChatView.undelegateEvents();
-	// 	}
-
-	// 	var roomId = model.get('accountId');
-	// 	if(!this.chats[roomId]){
-	// 		var chatCollection = new ChatCollection();
-	// 		var chatView = new ChatView({
-	// 				room: model,
-	// 				collection: chatCollection,
-	// 				socketEvents: this.socketEvents
-	// 			});
-	// 		chatView.render();
-	// 		chatCollection.url = '/chats/' + roomId;
-	// 		chatCollection.fetch();
-	// 		this.chats[roomId] = chatView;
-	// 	}else{
-	// 		var view = this.chats[roomId];
-	// 		view.delegateEvents();
-	// 		view.render();
-	// 		var collection = view.collection;
-	// 		collection.trigger('reset',collection);
-	// 	}
-
-	// 	this.currentChatView = this.chats[roomId];
-	// },
 });

@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     statusTemplate = require('../../assets/templates/_itemMessage.tpl'),
     commentFormTemplate = require('../../assets/templates/_formComment1.tpl'),
+    modalTemplate = require('../../assets/templates/_modal.tpl'),
     MessageUtil = require('./__Util');
 
 Backbone.$ = $;
@@ -25,6 +26,7 @@ exports = module.exports = Backbone.View.extend({
 	events: {
 		'click .comment-toggle': 'commentToggle',
 		'submit form': 'submitComment',
+		'click .media-body img': 'showInModal',
 	},
 
 	_convertContent: function(){
@@ -57,6 +59,27 @@ exports = module.exports = Backbone.View.extend({
 			this.$('.comment-editor').html(commentFormTemplate()).hide().fadeIn('slow');
 		}else{
 			this.$('.comment-editor').html('');
+		}
+		return false;
+	},
+
+	showInModal: function(evt){
+		var targetType = $(evt.currentTarget).attr('target-type');			
+		var targetData = $(evt.currentTarget).attr('target-data');
+		if(targetType != 'image' && targetType != 'video'){
+			window.open(targetData,'_blank');
+			return false;
+		}
+		if(targetType == 'image'){
+		    // Create a modal view class
+	    	var Modal = Backbone.Modal.extend({
+	    	  template: modalTemplate(),
+	    	  cancelEl: '.bbm-button'
+	    	});
+			// Render an instance of your modal
+			var modalView = new Modal();
+			$('body').append(modalView.render().el);
+			$('.bbm-modal__section').html('<img src="' + targetData +'">');
 		}
 		return false;
 	},

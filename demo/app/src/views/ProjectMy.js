@@ -34,6 +34,7 @@ exports = module.exports = Backbone.View.extend({
 			that.listView.trigger('refresh',url);
 		};
 		this.listView.trigger('load');
+		this.searchView.trigger('load');
 	},
 
 	render: function(){

@@ -12,6 +12,15 @@ exports = module.exports = Backbone.View.extend({
 	addbutton: false,
 	removeButton: false,
 
+	initialize: function(options){
+		if(options.addButton){
+			this.addButton = options.addButton;
+		}
+		if(options.removeButton){
+			this.removeButton = options.removeButton;
+		}
+	},
+
 	events: {
 		'click .addbutton': 'addContact',
 		'click .removebutton': 'removeContact'
@@ -50,15 +59,6 @@ exports = module.exports = Backbone.View.extend({
 					$responseArea.text('移除失败');
 				});
 			return false;
-		}
-	},
-
-	initialize: function(options){
-		if(options.addButton){
-			this.addButton = options.addButton;
-		}
-		if(options.removeButton){
-			this.removeButton = options.removeButton;
 		}
 	},
 

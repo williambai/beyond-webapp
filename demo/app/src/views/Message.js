@@ -36,13 +36,12 @@ exports = module.exports = Backbone.View.extend({
 			url: '/messages/account/me',
 			account: this.account,
 		});
-		this.searchView = new SearchView({
-
-		});
+		this.searchView = new SearchView();
 		this.searchView.done = function(url){
 			that.listView.trigger('refresh',url);
 		};
 		this.listView.trigger('load');
+		this.searchView.trigger('load');
 	},
 
 	scroll: function(){

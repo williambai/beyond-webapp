@@ -11,4 +11,4 @@
 	<input type="submit" value="搜索" class="btn btn-primary"/>
 </form>
 
-<div id="results"></div>
+<div id="list"></div>

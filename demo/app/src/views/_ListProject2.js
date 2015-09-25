@@ -10,7 +10,7 @@ exports = module.exports = ListView.extend({
 	initialize: function(options){
 		this.socketEvents = options.socketEvents;
 		this.collection = new ProjectCollection();
-		this.collection.url = '/projects/account/me';
+		this.collection.url = options.url || '/projects/account/me';
 		ListView.prototype.initialize.apply(this,options);
 	},
 

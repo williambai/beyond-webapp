@@ -7,11 +7,11 @@
 	</div>
 	<div class="actionArea pull-right">
 		<% if(addButton){ %>
-				<button class="addbutton">添加为好友</button>
+				<button class="addbutton">邀请</button>
 		<% } %>
 
 		<% if(removeButton){ %>
-				<button class="removebutton">移除好友</button>
+				<button class="removebutton">移除</button>
 		<% } %>
 	</div>
 	<div class="media-body">

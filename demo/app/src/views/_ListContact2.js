@@ -13,7 +13,7 @@ exports = module.exports = ListView.extend({
 	},
 
 	getNewItemView: function(model){
-		return new ContactItemView({model: model,removeButton: true});
+		return new ContactItemView({model: model,addButton: true});
 	},
 
 });

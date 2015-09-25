@@ -33,7 +33,6 @@ exports = module.exports = Backbone.View.extend({
 		this.hotListView.trigger('load');
 		this.projectSearchView = new ProjectSearchView();
 		this.projectSearchView.done = function(url){
-			console.log(url)
 			window.location.hash = url;
 		};
 	},
