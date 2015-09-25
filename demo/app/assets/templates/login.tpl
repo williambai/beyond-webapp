@@ -3,7 +3,7 @@
 <div class="">
     <div class="">
         <div class="">
-            <div class="panel panel-default">
+            <div class="panel panel-default" id="loginForm">
                 <div class="panel-heading">
                     <h3 class="panel-title text-center">登&nbsp;&nbsp;录</h3>
                 </div>

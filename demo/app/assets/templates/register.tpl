@@ -2,7 +2,7 @@
 <div class="">
 	<div class="">
 		<div class="">
-			<div class="panel panel-default">
+			<div class="panel panel-default" id="registerForm">
 				<div class="panel-heading">
 					<h3 class="panel-title text-center">注册</h3>
 				</div>

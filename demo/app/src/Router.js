@@ -197,18 +197,23 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','注册');
-		this.changeView(new RegisterView());
+		var registerView = new RegisterView();
+		this.changeView(registerView);
+		registerView.trigger('load');
 	},
+	
 	login: function(){
 		if(this.logined){
 			window.location.hash = 'index';
 			return;
 		}
 		this.appEvents.trigger('set:brand','登录');
-		this.changeView(new LoginView({
+		var loginView = new LoginView({
 			appEvents: this.appEvents,
 			socketEvents: this.socketEvents,
-		}));
+		});
+		this.changeView(loginView);
+		loginView.trigger('load');
 	},
 	forgotPassword: function(){
 		if(this.logined){

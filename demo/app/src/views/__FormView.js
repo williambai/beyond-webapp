@@ -8,6 +8,11 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options){
 		this.model.on('invalid', this.onInvalid, this);
+		this.on('load', this.load, this);
+	},
+
+	load: function(){
+		this.render();
 	},
 
 	onInvalid: function(model,errors,options){
@@ -23,6 +28,10 @@ exports = module.exports = Backbone.View.extend({
 
 	done: function(){
 		console.log('form done is called....');
+	},
+
+	render: function(){
+		return this;
 	},
 
 });

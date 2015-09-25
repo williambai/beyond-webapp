@@ -11,6 +11,7 @@ exports = module.exports = function(){
 			$.ajax('/authenticated',{
 				mathod: 'GET',
 				success: function(data){
+					if(!!data.code)	return callback(false);
 					router.appEvents.trigger('logined',data);
 					router.socketEvents.trigger('app:logined',{accountId: data.id});
 					return callback(true);
