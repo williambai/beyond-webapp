@@ -69,7 +69,6 @@ exports = module.exports = FormView.extend({
 	},
 
 	submitForm: function(){
-		console.log('++++')
 		var that = this;
 		var statusText = that.$('textarea[name=text]').val();
 		var attachments = [];

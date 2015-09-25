@@ -8,6 +8,7 @@ var ChatUserListView = require('./views/_ListChatUser');
 var LayoutView = require('./views/__Layout');
 var ProjectsView = require('./views/Projects');
 var MyProjectView = require('./views/ProjectMy');
+var NotificationView = require('./views/Notification');
 var RegisterView = require('./views/Register');
 var LoginView = require('./views/Login');
 var ForgotPasswordView = require('./views/ForgotPassword');
@@ -46,6 +47,7 @@ exports = module.exports = Backbone.Router.extend({
 		'activity/:id': 'activity',
 		'message/:id': 'messageBox',
 		'space/:id': 'space',
+		'notify/me': 'notify',
 		'chat/:id': 'chat',
 		'login': 'login',
 		'register': 'register',
@@ -174,6 +176,20 @@ exports = module.exports = Backbone.Router.extend({
 			});
 		this.changeView(statusesView);
 		statusesView.trigger('load');
+	},
+
+	notify: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','通知');
+		var notificationView = new NotificationView({
+				account: this.account,
+				socketEvents: this.socketEvents
+			});
+		this.changeView(notificationView);
+		notificationView.trigger('load');
 	},
 
 	space: function(id){

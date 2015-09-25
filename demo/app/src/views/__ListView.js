@@ -8,6 +8,10 @@ Backbone.$ = $;
 
 exports = module.exports = Backbone.View.extend({
 	el: '#list',
+
+	isScrollUp: false,//默认向下滚动
+	contentH: 0,//向上滚动需要
+
 	page: 0,
 	hasmore: true,
 	collectionUrl: '',
@@ -20,6 +24,8 @@ exports = module.exports = Backbone.View.extend({
 		this.on('prepend', this.onModelPrepend,this);
 		this.on('load', this.load, this);
 		this.on('refresh', this.refresh, this);
+		this.on('scroll:up', this.scrollUp, this);
+		this.on('scroll:down', this.scroll, this);
 	},
 
 	load: function(){
@@ -37,10 +43,20 @@ exports = module.exports = Backbone.View.extend({
 
 	onCollectonAppend: function(collection){
 		var that = this;
-		collection.each(function(model){
-			var itemHtml = that.getNewItemView(model).render().el;
-			that.$el.append(itemHtml);
-		});
+		if(that.isScrollUp){
+			collection.each(function(model){
+				var itemHtml = that.getNewItemView(model).render().el;
+				that.$el.prepend(itemHtml);
+				that.collection.add(model,{at: 0});
+			});
+			that.contentH =that.$el.get(0).scrollHeight - that.contentH;
+			$('#content').animate({scrollTop: that.contentH},1);
+		}else{
+			collection.each(function(model){
+				var itemHtml = that.getNewItemView(model).render().el;
+				that.$el.append(itemHtml);
+			});
+		}
 	},
 
 	onModelAppend: function(model){
@@ -106,7 +122,7 @@ exports = module.exports = Backbone.View.extend({
 						that.$el.prepend(loadMoreTemplate({loading: false}));
 						that.hasmore = false;
 					}else{
-						that.collection.add(collection,{at: 0});
+						that.collection.add(collection);
 						that.hasmore = true;
 					}
 				},
@@ -125,17 +141,20 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	scroll: function(){
-		 var viewH =$(window).height();//当前window可见高度  
-         var contentH =this.$el.get(0).scrollHeight;//内容高度  
-         var scrollTop =$('#content').scrollTop();//可滚动容器的当前滚动高度  
-         // console.log(contentH + '-' + viewH + '-' + scrollTop);
+		var scrollTop =$('#content').scrollTop();//可滚动容器的当前滚动高度  
+		var viewH =$(window).height();//当前window可见高度  
+		var contentH =this.$el.get(0).scrollHeight;//内容高度  
+		// console.log(contentH + '-' + viewH + '-' + scrollTop);
         if(contentH - viewH - scrollTop <= 100) { //到达底部100px时,加载新内容
         	this.nextPage();
         }
 	},	
 
 	scrollUp: function(){
-         var scrollTop =$('#content').scrollTop();//滚动高度  
+		var scrollTop =$('#content').scrollTop();//滚动高度  
+		// var viewH =$(window).height();//当前window可见高度  
+		// var contentH =this.$el.get(0).scrollHeight;//内容高度  
+		// console.log(contentH + '-' + viewH + '-' + scrollTop);
          if(scrollTop <=100){
          	this.prevPage();
          }

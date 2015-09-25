@@ -5,6 +5,7 @@ messages.push({
 	content:{
 		urls: '.pdf',
 		format: 'pdf',
+		thumbnails: 'image/pdf.png',
 	}
 });
 

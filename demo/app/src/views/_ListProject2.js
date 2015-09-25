@@ -1,6 +1,8 @@
 var _ = require('underscore');
-var ProjectItemView = require('./_ItemProject2'),
+var $ = require('jquery'),
+    Backbone = require('backbone'),
     ListView = require('./__ListView'),
+    projectItemTemplate = require('../../assets/templates/_itemProject2.tpl'),
     ProjectCollection = require('../models/ProjectCollection');
 
 exports = module.exports = ListView.extend({
@@ -15,24 +17,13 @@ exports = module.exports = ListView.extend({
 	},
 
 	getNewItemView: function(model){
-		return new ProjectItemView({socketEvents: this.socketEvents,model: model});
+		var ItemView = Backbone.View.extend({
+			render: function(){
+				this.$el.html(projectItemTemplate(this.model.toJSON()));
+				return this;
+			},
+		});
+		return new ItemView({model:model});
 	},
 
-	// onProjectAdded: function(project){
-	// 	var projectItemHtml = projectItemTemplate({project: project.toJSON()});
-	// 	if(project.get('type') == 1){
-	// 		this.$('.my-projects-none').remove();
-	// 		$(projectItemHtml).appendTo('.my-projects');
-	// 	}else{
-	// 		this.$('.other-projects-none').remove();
-	// 		$(projectItemHtml).appendTo('.other-projects');
-	// 	}
-	// },
-
-	// onProjectCollectionReset: function(collection){
-	// 	var that = this;
-	// 	collection.each(function(project){
-	// 		that.onProjectAdded(project);
-	// 	});
-	// },
 });
