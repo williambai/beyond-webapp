@@ -25,27 +25,41 @@ exports = module.exports = FormView.extend({
 	},
 
 	sendChat: function(){
+		var that = this;
 		var chatText = $('input[name=chat]').val();
 		if(chatText && /[^\s]+/.test(chatText)){
-			var chatObject = {
-				fromId: 'me',
-				toId: this.id,
-				username: '我：',
-				avatar: this.account.avatar,
-				status: chatText
-			};
-			var chat = new Chat(chatObject);
-			this.parentView.collection.add(chat);
-			this.parentView.onChatAdded(chat);
+			var chat = new Chat();
+			chat.url = '/chats/account/' + this.id;
+			chat.set('type','text');
+			chat.set('content',
+				{
+					body: chatText
+				}
+			);
+			if(chat.isValid()){
+				// that.socketEvents.trigger('socket:chat',{
+				// 	action: 'chat',
+				// 	to: that.id,
+				// 	text: chatText
+				// });
 
-			this.socketEvents.trigger('socket:out:chat',{
-				to: {
-					id: this.id
-				},
-				content: chatText
-			});
+				var xhr = chat.save();
+				if(xhr){
+					xhr
+						.success(function(model){
+							if(!!model.code){
+								console.log(model);
+								return;
+							}
+							$('input[name=chat]').val('');
+							that.success(new Chat(model));
+						})
+						.error(function(err){
+							console.log(err);
+						});
+				}				
+			}
 		}
-		$('input[name=chat]').val('');
 		return false;
 	},
 

@@ -16,7 +16,7 @@ exports = module.exports = {
 					newContent += '<img src="images/pdf.png" target-data="'+ body +'" target-type="pdf">';
 					newContent += '</a>'; 
 				}else{
-					newContent += '<p>'+ body + '</p>';
+					newContent += '<span>'+ body + '</span>';
 				}
 				return newContent;
 
@@ -25,10 +25,10 @@ exports = module.exports = {
 				return newContent;
 
 			case 'image':
-				return '<p><img src="' + content.urls + '" target-data="'+ content.urls +'" target-type="image"></p>';
+				return '<span><img src="' + content.urls + '" target-data="'+ content.urls +'" target-type="image"></span>';
 			
 			case 'mixed':
-				var newContent = '<p>' + content.body + '</p>';
+				var newContent = '<span>' + content.body + '</span>';
 				for(var i=0; i<content.urls.length; i++){
 					if(/[png|jpg]$/.test(content.urls[i])){
 						newContent += '<img src="' + content.urls[i] +'" width="' + parseInt(50/content.urls.length-1) +'%" target-data="'+ content.urls[i] +'" target-type="image">';
@@ -43,7 +43,7 @@ exports = module.exports = {
 			case 'link':
 				var newContent = '<a href="' + content.urls + '" target="_blank">';
 				newContent += '<h4>' +content.subject + '</h4>';
-				newContent += '<p>'+ content.body + '</p>';
+				newContent += '<span>'+ content.body + '</span>';
 				return newContent;
 
 			case 'video':

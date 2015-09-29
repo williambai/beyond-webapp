@@ -5,14 +5,14 @@
 	var Message = models.ProjectStatus;
 
 	var add = function(req,res){
-			var projectId = req.params.pid || 0;
+			var projectId = req.params.pid;
 			var accountId = req.session.accountId;
-			var name = req.session.username || '匿名';
-			var text = req.body.text || '';
-			if(text.length<1){
-				res.sendStatus(400);
-				return;
-			}
+			var message = req.body;
+			message.createby = {
+				uid: req.session.accountId,
+				username: req.session.username,
+				avatar: req.session.avatar
+			};
 
 			async.waterfall(
 				[
@@ -20,35 +20,10 @@
 						Project.findById(projectId,function(err,project){
 							if(err) return callback(err);
 							if(!project) return callback({code: 40000, message: 'project not exist.'});
-
-							if(accountId != project.accountId)
-								return callback({code: 40100, message: 'can not do.'});
 							callback(null,project);
 						});
 					},
 					function(project,callback){
-						var message = {
-								fromId: req.session.accountId,
-								toId: project._id,
-								fromUser:{},
-								toUser:{},
-								subject: '',
-								content: req.body.text,
-								tags: [],
-								level: 0,
-								good: 0,
-								bad: 0,
-								score: 0,
-								createtime: new Date(),
-							};
-							message.fromUser[message.fromId] = {
-								username: req.session.username,
-								avatar: req.session.avatar
-							};
-							message.toUser[message.toId] ={
-								username: '',
-								avatar: ''
-							};
 
 						Message.create(message, function(err,doc){
 							if(err) return res.send(err);
@@ -192,7 +167,7 @@
 								.find({
 									pid:project._id
 								})
-								.sort({createtime:-1})
+								.sort({_id:-1})
 								.skip(page*per)
 								.limit(per)
 								.exec(callback);

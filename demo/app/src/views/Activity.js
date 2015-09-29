@@ -33,7 +33,7 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 		this.statusListView = new StatusListView({
-			el: '#status-list',
+			el: '#list',
 			url: '/activities/account/' + this.id,
 			account: this.account,
 		});
@@ -41,16 +41,22 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	editorToggle: function(){
+		var that = this;
 		if(this.$('.status-editor form').length == 0){
 			var statusFormView = new StatusFormView({
 				el: '.status-editor',
 			});
-			statusFormView.on('form:submit', this.statusFormSubmit, this);
+			statusFormView.success = function(status){
+				that.statusListView.trigger('prepend',status);
+			};
 			statusFormView.render();
 			this.$('.status-editor form').addClass('');
+
+			this.statusFormView = statusFormView;
 			return false;
 		}
 		if(this.$('.status-editor form').hasClass('hidden')){
+			this.statusFormView.reset();
 			this.$('.status-editor form').removeClass('hidden');
 		}else{
 			this.$('.status-editor form').addClass('hidden');
@@ -63,39 +69,10 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
-	onSocketStatusAdded: function(data){
-		var from = data.from;
-		var content = data.content;
-		var status = {};
-		status.fromId = from.id;
-		status.fromUser = {};
-		status.fromUser[from.id] = from;
-		status.content = content;
+	onSocketStatusAdded: function(status){
 		this.statusListView.trigger('prepend',status);
 	},
 
-	statusFormSubmit: function(form){
-		var text = form.text;
-		var attachments = form.attachments;
-
-		var data = {
-			MsgType: 'mixed',
-			Content: text,
-			Urls: attachments
-		};
-
-		var status = {};
-		status.fromId = this.account.id;
-		status.fromUser = {};
-		status.fromUser[this.account.id] = this.account;
-		status.content = data;
-
-		this.statusListView.trigger('prepend',status);
-
-		this.socketEvents.trigger('socket:out:status', data);
-
-	},
-	
 	render: function(){
 		if(!this.loaded){
 			this.$el.html(loadingTemplate());

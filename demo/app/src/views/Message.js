@@ -32,7 +32,6 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 		this.listView = new ListView({
-			el: 'div.status-list',
 			url: '/messages/account/me',
 			account: this.account,
 		});

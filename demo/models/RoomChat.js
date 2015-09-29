@@ -2,9 +2,11 @@ module.exports = exports = function(app,mongoose){
 
 	var schema = new mongoose.Schema({
 			rid: String,//room id
-			uid: String,
-			username: String,
-			avatar: String,
+			createby: {
+				uid: String,
+				username: String,
+				avatar: String,
+			},
 			message: {},
 			lastupdatetime: Date
 		});

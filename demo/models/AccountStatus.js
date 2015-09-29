@@ -32,17 +32,17 @@ module.exports = exports = function(app,mongoose){
 					content: {},
 				}]
 			}],
-			weight: Number, // important index: 0~100
+			weight: {type: Number, default: 0}, // important index: 0~100
 			voters:[String],//accountId
 			votes: [{
 				uid: String,
 				username: String,
 				vote: String,
-			}],//accountId,username,vote(good or bad)
-			good: Number,
-			bad: Number,
-			score: Number,
-			lastupdatetime: Date
+			}],
+			good: {type: Number, default: 0},
+			bad: {type: Number, default: 0},
+			score: {type: Number, default: 0},
+			lastupdatetime: {type: Date, default: Date.now}
 		});
 
 	schema.set('collection', 'account.statuses');

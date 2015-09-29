@@ -9,7 +9,7 @@
 	var add = function(req,res){
 			if(req.params.aid != 'me') 
 				return res.send({code: 40100, message: 'not support.'});
-
+			var message = req.body;
 			var accountId = req.session.accountId;
 			async.waterfall(
 				[
@@ -26,26 +26,9 @@
 						);
 					},
 					function(account,callback){
-						var message = {
-								uid: account._id,
-								username: account.username,
-								avatar: account.avatar,
-								subject: '',
-								content: {
-									MsgType: 'mixed',
-									Content: req.body.status,
-									Urls: req.body.attachments
-								},
-								tags: [],
-								comments: [],
-								weight: 0, // important index: 0~100
-								voters:[],//accountId
-								votes: [],//accountId,username,vote(good or bad)
-								good: 0,
-								bad: 0,
-								score: 0,
-								lastupdatetime: new Date()
-							};
+						message.uid = account._id;
+						message.username = account.username;
+						message.avatar = account.avatar;
 
 						Status.create(message, function(err,doc){
 							if(err) return res.send(err);
@@ -72,6 +55,7 @@
 									},
 									{
 										$push: {
+											$at: 0,
 											statuses: doc
 										}
 									},
@@ -220,6 +204,7 @@
 						.find({
 							uid: accountId
 						})
+						.sort({_id: -1})
 						.skip(page*per)
 						.limit(per)
 						.exec(function(err,docs){

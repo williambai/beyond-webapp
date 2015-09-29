@@ -8,4 +8,4 @@
 <hr>
 <div class="status-editor">
 </div>
-<div id="status-list"></div>
+<div id="list"></div>

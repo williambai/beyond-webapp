@@ -85,8 +85,9 @@ exports = module.exports = FormView.extend({
 			body: statusText,
 		});
 		if(this.model.isValid()){
-			// that.socketEvents.trigger('socket:status',{
+			// that.socketEvents.trigger('socket:message',{
 			// });
+
 			var xhr = this.model.save();
 			if(xhr){
 				xhr

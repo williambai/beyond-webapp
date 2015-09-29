@@ -21,6 +21,9 @@ exports = module.exports = Backbone.View.extend({
 			appEvents: this.appEvents,
 			socketEvents: this.socketEvents,
 		});
+		loginForm.success = function(){
+			window.location.hash = 'index';
+		}
 		loginForm.trigger('load');
 	},
 

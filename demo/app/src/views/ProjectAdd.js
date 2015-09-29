@@ -18,6 +18,9 @@ exports = module.exports = Backbone.View.extend({
 
 	load: function(){
 		var projectFormView = new ProjectFormView({socketEvents: this.socketEvents});
+		projectFormView.success = function(){
+			window.location.hash = 'contact/add';
+		};
 		projectFormView.trigger('load');
 	},
 

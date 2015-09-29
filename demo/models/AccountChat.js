@@ -1,17 +1,17 @@
 module.exports = exports = function(app,mongoose){
 
 	var schema = new mongoose.Schema({
-			user:{
-				uid: String, //uid > fid
-				username: String,
-				avatar: String,
-			},
-			friend: {
-				uid: String,// fid < uid
+			uid: String,
+			fid: String,
+			createby: {
+				uid: String,
 				username: String,
 				avatar: String,
 			},	
-			type: String,//text|image|vioce|video|shortvideo|location|moreimage
+			type: {
+				type: String, 
+				enum: 'text|image|mixed|vioce|video|shortvideo|location|email'.split('|')
+			},
 			content: {
 				subject: String,
 				body: String,
@@ -23,7 +23,7 @@ module.exports = exports = function(app,mongoose){
 				scale: Number,
 				label: String,
 			},
-			lastupdatetime: Date
+			lastupdatetime: {type: Date, default: Date.now}
 		});
 
 	schema.set('collection','account.chats');

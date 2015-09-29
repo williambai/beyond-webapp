@@ -10,9 +10,10 @@
 <h2>我的发表</h2>
 <% }else{ %>
 <h2>TA的发表</h2>
+<p class="bg-success" id="feedback"></p>
 <% } %>
 
 <hr>
 <div class="status-editor">
 </div>
-<div class="status-list"></div>
+<div id="list"></div>

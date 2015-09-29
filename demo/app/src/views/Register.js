@@ -16,6 +16,9 @@ exports = module.exports = Backbone.View.extend({
 
 	load: function(){
 		var registerFormView = new RegisterFormView();
+		registerFormView.success = function(){
+			window.location.hash = 'login';
+		};
 		registerFormView.trigger('load');
 	},
 

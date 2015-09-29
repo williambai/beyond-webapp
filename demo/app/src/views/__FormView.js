@@ -26,8 +26,8 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
-	done: function(){
-		console.log('form done is called....');
+	success: function(){
+		console.log('form success is called....please implement success().');
 	},
 
 	render: function(){

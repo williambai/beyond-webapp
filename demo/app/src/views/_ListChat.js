@@ -7,6 +7,7 @@ var ListView = require('./__ListView'),
 exports = module.exports = ListView.extend({
 
 	initialize: function(options){
+		this.account = options.account;
 		this.collection = new StatusCollection();
 		this.collection.url = options.url;
 		options.socketEvents.off('socket:in:chat');

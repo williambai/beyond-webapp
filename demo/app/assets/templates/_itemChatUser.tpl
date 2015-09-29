@@ -1,4 +1,4 @@
-<a class="list-group-item media" href="#chat/<%= model._id %>">
+<a class="list-group-item media" href="#chat/<%= model.fid %>">
 	<div class="pull-left">
 		<% if(model.avatar && model.avatar.length > 3){ %>
 			<img src="<%= model.avatar %>" width="36px;">

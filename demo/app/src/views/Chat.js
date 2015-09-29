@@ -41,6 +41,7 @@ exports = module.exports =  Backbone.View.extend({
 	},
 
 	render: function(){
+		var that = this;
 		//增加 bottom Bar
 		if($('.navbar-absolute-bottom').length == 0){
 			var chatFromView = new ChatFormView({
@@ -49,6 +50,10 @@ exports = module.exports =  Backbone.View.extend({
 					socketEvents: this.socketEvents,
 					parentView: this,
 				});
+			chatFromView.success = function(chat){
+				that.chatListView.trigger('append', chat);
+			};
+			this.chatFromView = chatFromView;
 			$(chatFromView.render().el).prependTo('.app');
 			if(!$('body').hasClass('has-navbar-bottom')){
 				$('body').addClass('has-navbar-bottom');

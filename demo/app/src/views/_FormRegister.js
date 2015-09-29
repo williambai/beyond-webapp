@@ -33,7 +33,7 @@ exports = module.exports = FormView.extend({
 						that.$('#error').slideDown();
 						return;
 					}
-					window.location.hash = 'login';
+					that.done();
 				})
 				.error(function(err){
 					console.log(err);

@@ -1,13 +1,13 @@
 var _ = require('underscore');
 var ListView = require('./__ListView'),
     MessageItemView = require('./_ItemMessage'),
-    StatusCollection = require('../models/StatusCollection');
+    MessageCollection = require('../models/MessageCollection');
 
 exports = module.exports = ListView.extend({
 
 	initialize: function(options){
 		this.account = options.account;
-		this.collection = new StatusCollection();
+		this.collection = new MessageCollection();
 		this.collection.url = options.url;
 		ListView.prototype.initialize.apply(this,options);
 	},

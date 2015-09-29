@@ -31,7 +31,7 @@ exports = module.exports = FormView.extend({
 						return;
 					}
 					that.socketEvents.trigger('app:projects:reload');
-					window.location.hash = 'contact/add';
+					that.success();
 				})
 				.error(function(err){
 					console.log(err);

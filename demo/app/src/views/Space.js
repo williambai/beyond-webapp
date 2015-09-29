@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     loadingTemplate = require('../../assets/templates/loading.tpl'),
     spaceTemplate = require('../../assets/templates/space.tpl'),
+    MessageFormView = require('./_FormMessage'),
     StatusListView = require('./_ListStatus');
 
 Backbone.$ = $;
@@ -14,6 +15,7 @@ exports = module.exports =Backbone.View.extend({
 	loaded: false,
 
 	events: {
+		'click .editor-toggle': 'editorToggle',
 		'scroll': 'scroll',
 	},
 
@@ -33,11 +35,36 @@ exports = module.exports =Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 		this.statusListView = new StatusListView({
-			el: 'div.status-list',
+			el: '#list',
 			url: '/statuses/account/' + this.id,
 			account: this.account,
 		});
 		this.statusListView.trigger('load');
+	},
+
+	editorToggle: function(){
+		var that = this;
+		if(this.$('.status-editor form').length == 0){
+			var messageFormView = new MessageFormView({
+				el: '.status-editor',
+			});
+			messageFormView.success = function(status){
+				that.$('#feedback').html('私信已发送成功');
+			};
+			messageFormView.render();
+			this.$('.status-editor form').addClass('');
+
+			this.messageFormView = messageFormView;
+			return false;
+		}
+		if(this.$('.status-editor form').hasClass('hidden')){
+			this.messageFormView.reset();
+			that.$('#feedback').empty();
+			this.$('.status-editor form').removeClass('hidden');
+		}else{
+			this.$('.status-editor form').addClass('hidden');
+		}
+		return false;
 	},
 
 	scroll: function(){

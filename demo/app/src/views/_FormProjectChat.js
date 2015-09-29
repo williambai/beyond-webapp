@@ -4,7 +4,7 @@ var $ = require('jquery'),
     menuBarTemplate = require('../../assets/templates/_barProject.tpl'),
     chatFormTemplate = require('../../assets/templates/_formProjectChat.tpl'),
     FormView = require('./__FormView'),
-    Status = require('../models/Status');
+    Chat = require('../models/ProjectStatus');
 
 Backbone.$ = $;
 
@@ -30,27 +30,42 @@ exports = module.exports = FormView.extend({
 	},
 
 	sendChat: function(){
+		var that = this;
 		var chatText = $('input[name=chat]').val();
 		if(chatText && /[^\s]+/.test(chatText)){
+			var chat = new Chat();
+			chat.url = '/statuses/project/' + this.id;
+			chat.set('type','text');
+			chat.set('content',
+				{
+					body: chatText
+				}
+			);
+			if(chat.isValid()){
+				// that.socketEvents.trigger('socket:out:project',{
+				// 	to: {
+				// 		id: that.id
+				// 	},
+				// 	content: chat.toJSON(),
+				// });
+				var xhr = chat.save();
+				if(xhr){
+					xhr
+						.success(function(model){
+							if(!!model.code){
+								console.log(model);
+								return;
+							}
+							$('input[name=chat]').val('');
+							that.success(new Chat(model));
+						})
+						.error(function(err){
+							console.log(err);
+						});
+				}				
+			}
 
-			var status = new Status({
-				fromId: this.account.id,
-				toId: this.id,
-				username: this.account.username,
-				avatar: this.account.avatar,
-				content: chatText
-			});
-			this.parentView.collection.add(status);
-			this.parentView.onChatAdded(status);
-
-			this.socketEvents.trigger('socket:out:project',{
-				to: {
-					id: this.id
-				},
-				content: chatText
-			});
 		}
-		$('input[name=chat]').val('');
 		return false;
 	},
 

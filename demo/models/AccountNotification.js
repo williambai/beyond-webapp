@@ -2,19 +2,18 @@ module.exports = exports = function(app,mongoose){
 
 	var schema = new mongoose.Schema({
 			uid: String,
-			from: [{
+			createby: {
 				uid: String,
 				username: String,
 				avatar: String,
-				type: String,
-				content: {},
-				actions: [{
-					method: String,
-					label: String,
-					enable: Boolean,
-					script: String
-				}],
-				lastupdatetime: Date
+			},
+			type: String,
+			content: {},
+			actions: [{
+				method: String,
+				label: String,
+				enable: Boolean,
+				script: String
 			}],
 			status: {
 				code: Number,
