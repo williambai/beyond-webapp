@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    addContactTemplate = require('../../assets/templates/projectContactSearch.tpl'),
-    ContactListView = require('./_ListContact'),
+    addFriendTemplate = require('../../assets/templates/projectFriendSearch.tpl'),
+    FriendListView = require('./_ListFriend'),
     Project = require('../models/Project');
 
 Backbone.$ = $;
@@ -34,13 +34,13 @@ exports = module.exports = Backbone.View.extend({
 		var url = '/accounts?type=search' + 
 				'&searchStr=' + 
 				$('input[name=searchStr]').val() + emailDomain;
-		var contactListView = new ContactListView({url: url});
+		var contactListView = new FriendListView({url: url});
 		contactListView.trigger('load');
 		return false;
 	},
 
 	render: function(){
-		this.$el.html(addContactTemplate({model:{_id: this.pid}}));
+		this.$el.html(addFriendTemplate({model:{_id: this.pid}}));
 		return this;
 	}
 });

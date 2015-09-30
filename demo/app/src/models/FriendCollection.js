@@ -1,6 +1,6 @@
 var Backbone = require('backbone');
-var Contact = require('./Contact');
+var Friend = require('./Friend');
 
 exports = module.exports = Backbone.Collection.extend({
-	model: Contact
+	model: Friend
 });

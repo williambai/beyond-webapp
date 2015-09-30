@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    contactTemplate = require('../../assets/templates/_itemProjectContact.tpl');
+    contactTemplate = require('../../assets/templates/_itemProjectFriend.tpl');
 
 Backbone.$ = $;
 
@@ -13,8 +13,8 @@ exports = module.exports = Backbone.View.extend({
 	removeButton: false,
 
 	events: {
-		'click .addbutton': 'addContact',
-		'click .removebutton': 'removeContact'
+		'click .addbutton': 'addFriend',
+		'click .removebutton': 'removeFriend'
 	},
 
 	initialize: function(options){
@@ -27,7 +27,7 @@ exports = module.exports = Backbone.View.extend({
 		}
 	},
 
-	addContact: function(){
+	addFriend: function(){
 		var $responseArea = this.$('.actionArea');
 		$.ajax({
 				url: '/projects/'+ this.project.get('_id') +'?type=contact_add',
@@ -43,7 +43,7 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
-	removeContact: function(){
+	removeFriend: function(){
 		if(confirm('确认移除'+ this.model.get('username')+'用户吗？')){
 			var $responseArea = this.$('.actionArea');
 			$responseArea.text('正在移除....');

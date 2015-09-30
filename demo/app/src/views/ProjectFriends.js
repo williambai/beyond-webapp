@@ -1,11 +1,11 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    contactsTemplate = require('../../assets/templates/projectContacts.tpl'),
+    friendsTemplate = require('../../assets/templates/projectFriends.tpl'),
     projectBarTemplate = require('../../assets/templates/_barProject.tpl'),
-    ContactListView = require('./_ListContact'),
+    FriendListView = require('./_ListFriend'),
     Project = require('../models/Project'),
-    ContactCollection = require('../models/ContactCollection');
+    FriendCollection = require('../models/FriendCollection');
 
 Backbone.$ = $;
 
@@ -30,7 +30,7 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 		var url = '/accounts/project/' + this.pid;
-		var contactListView = new ContactListView({url: url});
+		var contactListView = new FriendListView({url: url});
 		contactListView.trigger('load');
 		var that = this;
 		// this.model.fetch({
@@ -60,7 +60,7 @@ exports = module.exports = Backbone.View.extend({
 				$('body').addClass('has-navbar-bottom');
 			}
 		}
-		this.$el.html(contactsTemplate({project:this.model.toJSON()}));
+		this.$el.html(friendsTemplate({project:this.model.toJSON()}));
 		return this;
 	}
 

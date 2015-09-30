@@ -26,7 +26,7 @@
 <div class="sidebar sidebar-right">
 <div class="scrollable" style="padding-top:70px;">
 	<div class="scrollable-header app-name">
-		我的好友<a href="#contacts/me" class="pull-right"><i class="fa fa-search"></i>管理</a>
+		我的好友<a href="#friends/me" class="pull-right"><i class="fa fa-search"></i>管理</a>
 	</div>
   <div class="scrollable-content">
       <div id="chat" class="list-group">

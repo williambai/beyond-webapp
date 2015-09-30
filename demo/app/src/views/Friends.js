@@ -1,9 +1,9 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    contactsTemplate = require('../../assets/templates/contacts.tpl'),
-    ContactListView = require('./_ListContact'),
-    ContactCollection = require('../models/ContactCollection');
+    friendsTemplate = require('../../assets/templates/friends.tpl'),
+    ListView = require('./_ListFriend'),
+    FriendCollection = require('../models/FriendCollection');
 
 Backbone.$ = $;
 
@@ -19,12 +19,12 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		this.load = true;
 		var url = '/friends/account/' + this.accountId;
-		var contactListView = new ContactListView({url: url});
-		contactListView.trigger('load');
+		var listView = new ListView({url: url});
+		listView.trigger('load');
 	},
 
 	render: function(){
-		this.$el.html(contactsTemplate());
+		this.$el.html(friendsTemplate());
 		return this;
 	}
 

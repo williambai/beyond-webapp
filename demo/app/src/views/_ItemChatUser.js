@@ -21,12 +21,12 @@ exports = module.exports = Backbone.View.extend({
 
 		options.socketEvents.bind(
 				'socket:in:login:'+ accountId,
-				this.handleContactLogin,
+				this.handleFriendLogin,
 				this
 			);
 		options.socketEvents.bind(
 				'socket:in:logout:' + accountId,
-				this.handleContactLogout,
+				this.handleFriendLogout,
 				this				
 			);
 		options.socketEvents.bind(
@@ -36,12 +36,12 @@ exports = module.exports = Backbone.View.extend({
 			);
 	},
 
-	handleContactLogin: function(eventObj){
+	handleFriendLogin: function(eventObj){
 		this.model.set('online', true);
 		this.$el.find('.label').addClass('label-success').html('<i>在线</i>');
 	},
 
-	handleContactLogout: function(eventObj){
+	handleFriendLogout: function(eventObj){
 		this.model.set('online', false);
 		this.$el.find('.label').removeClass('label-success').html('<i>离线</i>');
 	},
@@ -72,7 +72,7 @@ exports = module.exports = Backbone.View.extend({
 	render: function(){
 		this.$el.html(chatUserTemplate({model: this.model.toJSON()}));
 		if(this.model.get('online')){
-			this.handleContactLogin();
+			this.handleFriendLogin();
 		}
 
 		return this;

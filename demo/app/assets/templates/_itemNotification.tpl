@@ -1,6 +1,17 @@
-<a class="list-group-item" href="#">
-	<span class="project-chat-unread  pull-right">
-		<i class="fa fa-chevron-right"></i>
-	</span>
-	<%= name %>
-</a>
+<hr>
+<div class="media" id="<%= model._id %>">
+	<% if(model.status && model.status.code == 0){ %>
+	<div class="actionArea pull-right">
+		<% model.actions = model.actions || [] %>
+		<% model.actions.forEach(function(action){ %>
+		<button name="<%= action.name %>"><%= action.label %></button>
+		<% });%>
+	</div>
+	<% } %>
+	<div class="media-body">
+		<div class="media-heading">
+			<h4><%= model.subject %></h4>
+		</div>
+		<p><%= model.body %></p>
+	</div>
+</div>

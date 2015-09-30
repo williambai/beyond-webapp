@@ -15,15 +15,15 @@ var ForgotPasswordView = require('./views/ForgotPassword');
 var ForgotPasswordSuccessView = require('./views/ForgotPasswordSuccess');
 var ProfileView = require('./views/Profile');
 var ProfileEditView = require('./views/ProfileEdit');
-var ContactsView = require('./views/Contacts');
-var ContactAddView = require('./views/ContactSearch');
-var ContactInviteView = require('./views/ContactInvite');
+var FriendsView = require('./views/Friends');
+var FriendAddView = require('./views/FriendAdd');
+var FriendInviteView = require('./views/FriendInvite');
 var ProjectIndexView = require('./views/ProjectIndex');
 var ProjectAddView = require('./views/ProjectAdd');
 var ProjectChatView = require('./views/ProjectChat');
 var ProjectStatusView = require('./views/ProjectStatus');
-var ProjectContactsView = require('./views/ProjectContacts');
-var ProjectContactAddView = require('./views/ProjectContactSearch');
+var ProjectFriendsView = require('./views/ProjectFriends');
+var ProjectFriendAddView = require('./views/ProjectFriendSearch');
 var ActivityView = require('./views/Activity');
 var MessageView = require('./views/Message');
 var SpaceView = require('./views/Space');
@@ -55,15 +55,15 @@ exports = module.exports = Backbone.Router.extend({
 		'forgotpassword/success': 'forgotPasswordSuccess',
 		'profile/:id': 'profile',
 		'profile/me/edit': 'profileEdit',
-		'contacts/:id': 'contacts',
-		'contact/add': 'addContact',
-		'contact/invite': 'inviteContact',
+		'friends/:id': 'friends',
+		'friend/add': 'addFriend',
+		'friend/invite': 'inviteFriend',
 		'project/add': 'addProject',
 		'project/chat/:id': 'projectChat',
 		'projects/:pid/index': 'projectIndex',
 		'projects/:pid/status': 'projectStatus',
-		'projects/:pid/contact/add': 'projectContactAdd',
-		'projects/:pid/contacts(/:cid)': 'projectContacts',
+		'projects/:pid/friend/add': 'projectFriendAdd',
+		'projects/:pid/friends(/:cid)': 'projectFriends',
 	},
 	initialize: function(){
 		this.appEvents.on('logined',this.onLogined,this);
@@ -86,12 +86,12 @@ exports = module.exports = Backbone.Router.extend({
 			url: '/projects/account/me'
 		});
 		projectsView.trigger('load');
-		/* load contacts */
-		var contactsView = new ChatUserListView({
+		/* load friends */
+		var friendsView = new ChatUserListView({
 			socketEvents: this.socketEvents,
 			url: '/friends/account/me'
 		});
-		contactsView.trigger('load');
+		friendsView.trigger('load');
 	},
 
 	onLogout: function(){
@@ -276,32 +276,32 @@ exports = module.exports = Backbone.Router.extend({
 		profileEditView.trigger('load');
 	},
 
-	contacts: function(id){
+	friends: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','我的好友');
-		var contactsView = new ContactsView({id:id});
-		this.changeView(contactsView);
-		contactsView.trigger('load');
+		var friendsView = new FriendsView({id:id});
+		this.changeView(friendsView);
+		friendsView.trigger('load');
 	},
-	addContact: function(){
+	addFriend: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','搜索和添加好友');
-		this.changeView(new ContactAddView({account: this.account}));
+		this.changeView(new FriendAddView({account: this.account}));
 	},
 
-	inviteContact: function(){
+	inviteFriend: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','邀请好友');
-		this.changeView(new ContactInviteView());
+		this.changeView(new FriendInviteView());
 	},
 	
 	chat: function(id){
@@ -375,31 +375,31 @@ exports = module.exports = Backbone.Router.extend({
 		projectView.trigger('load');
 	},
 	
-	projectContacts: function(pid,cid){
+	projectFriends: function(pid,cid){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','项目成员');
 		var contactId = cid ? cid: 'me';
-		var projectContactView = new ProjectContactsView({
+		var projectFriendView = new ProjectFriendsView({
 				pid:pid,
 				account: this.account
 			});
-		this.changeView(projectContactView);
-		projectContactView.trigger('load');
+		this.changeView(projectFriendView);
+		projectFriendView.trigger('load');
 	},
 
-	projectContactAdd: function(pid){
+	projectFriendAdd: function(pid){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','新增项目成员');
-		var projectContactAddView = new ProjectContactAddView({
+		var projectFriendAddView = new ProjectFriendAddView({
 				pid: pid,
 				account: this.account
 			});
-		this.changeView(projectContactAddView);			
+		this.changeView(projectFriendAddView);			
 	},
 });

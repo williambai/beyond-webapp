@@ -102,6 +102,9 @@ var dropCollections = function(done){
 	async.series(
 		[
 			function(callback){
+				models.AccountNotification.remove(callback);
+			},
+			function(callback){
 				models.ProjectStatus.remove(callback);
 			},
 			function(callback){
@@ -568,15 +571,53 @@ var upsertProjectStatuses = function(callback){
 		upsertProjectStatus(0);	
 	};
 
+upsertAccountNotifications = function(callback){
+	var upsertAccountNotification = function(index){
+			var friend = users[index];
+			var notification = {
+					uid: users[0]._id,
+					createby: {
+						uid: friend._id,
+						username: friend.username,
+						avatar: friend.avatar
+					},
+					subject: '好友邀请',
+					body: friend.username + '邀请你为好友',
+					actions: [
+						{
+							name: 'agree',
+							url: '/friends/account/me/' + friend._id + '?type=agree',
+							method: 'PUT',
+							label: '接受',
+							enable: true
+						}
+					],
+					status: {
+						code: 0,
+						message: '等待处理'
+					},
+				};
+			models.AccountNotification.create(notification, function(err){
+				if(err) return callback(err);
+				index ++;
+				if(index>100) return callback(null);
+				upsertAccountNotification(index);
+			});
+
+		};
+	upsertAccountNotification(0);
+};
+
 async.waterfall(
 	[
 		dropCollections,
 		upsertAccounts,
-		upsertFriends,
+		// upsertFriends,
 		upsertAccountStatuses,
 		upsertAccountMessages,
 		upsertProjects,
 		upsertProjectStatuses,
+		// upsertAccountNotifications,
 	],
 	function(err,result){
 		if(err) console.log(err);

@@ -46,7 +46,7 @@ exports = module.exports = Backbone.View.extend({
 	render: function(){
 		this.$el.html(projectIndexTemplate({
 				project: this.model.toJSON(),
-				contacts_num: this.model.get('contacts') ? this.model.get('contacts').length : 0
+				friends_num: this.model.get('friends') ? this.model.get('friends').length : 0
 			}));
 		return this;
 	}

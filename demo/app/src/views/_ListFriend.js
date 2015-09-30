@@ -1,19 +1,19 @@
 var _ = require('underscore');
 var ListView = require('./__ListView'),
-    ContactItemView = require('./_ItemContact'),
-    ContactCollection = require('../models/ContactCollection');
+    ItemView = require('./_ItemFriend'),
+    FriendCollection = require('../models/FriendCollection');
 
 exports = module.exports = ListView.extend({
 	el: '#list',
 
 	initialize: function(options){
-		this.collection = new ContactCollection();
+		this.collection = new FriendCollection();
 		this.collection.url = options.url;
 		ListView.prototype.initialize.apply(this,options);
 	},
 
 	getNewItemView: function(model){
-		return new ContactItemView({model: model,addButton: true});
+		return new ItemView({model: model});
 	},
 
 });

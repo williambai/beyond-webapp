@@ -7,19 +7,21 @@ module.exports = exports = function(app,mongoose){
 				username: String,
 				avatar: String,
 			},
-			type: String,
-			content: {},
+			subject: String,
+			body: String,
 			actions: [{
+				name: String,
 				method: String,
 				label: String,
 				enable: Boolean,
+				url: String,
 				script: String
 			}],
 			status: {
 				code: Number,
 				message: String
 			},
-			lastupdatetime: Date
+			lastupdatetime: {type: Date, default: Date.now}
 		});
 
 	schema.set('collection','account.notifications');

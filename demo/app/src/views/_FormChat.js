@@ -37,10 +37,10 @@ exports = module.exports = FormView.extend({
 				}
 			);
 			if(chat.isValid()){
-				// that.socketEvents.trigger('socket:chat',{
+				// that.socketEvents.trigger('socket:out:chat',{
 				// 	action: 'chat',
 				// 	to: that.id,
-				// 	text: chatText
+				// 	text: chat.toJSON()
 				// });
 
 				var xhr = chat.save();

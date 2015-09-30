@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var ListView = require('./__ListView'),
-    itemTemplate = require('../../assets/templates/_itemNotification.tpl'),
+    // itemTemplate = require('../../assets/templates/_itemNotification.tpl'),
+    ItemView = require('./_itemNotification'),
     NotificationCollection = require('../models/NotificationCollection');
 
 exports = module.exports = ListView.extend({
@@ -13,12 +14,12 @@ exports = module.exports = ListView.extend({
 	},
 
 	getNewItemView: function(model){
-		var ItemView = Backbone.View.extend({
-			render: function(){
-				this.$el.html(itemTemplate(this.model.toJSON()));
-				return this;
-			},
-		});
+		// var ItemView = Backbone.View.extend({
+		// 	render: function(){
+		// 		this.$el.html(itemTemplate(this.model.toJSON()));
+		// 		return this;
+		// 	},
+		// });
 		return new ItemView({model:model});
 	},
 

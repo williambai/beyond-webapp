@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    contactInviteTemplate = require('../../assets/templates/contactInvite.tpl'),
-    contactInviteSucessTemplate = require('../../assets/templates/contactInviteSuccess.tpl');
+    friendInviteTemplate = require('../../assets/templates/friendInvite.tpl'),
+    friendInviteSucessTemplate = require('../../assets/templates/friendInviteSuccess.tpl');
 
 Backbone.$ = $;
 
@@ -36,12 +36,12 @@ exports = module.exports = Backbone.View.extend({
 
 			}
 		);
-		this.$el.html(contactInviteSucessTemplate());
+		this.$el.html(friendInviteSucessTemplate());
 		return false;
 	},
 
 	render: function(){
-		this.$el.html(contactInviteTemplate());
+		this.$el.html(friendInviteTemplate());
 		return this;
 	}
 });

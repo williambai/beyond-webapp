@@ -13,6 +13,7 @@ module.exports = exports = function(app,mongoose){
 			uid: String,
 			fid: String,//friend id
 			username: String,
+			realname: String,//original username
 			avatar: String,
 			status: {
 				code: Number,

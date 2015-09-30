@@ -2,7 +2,7 @@ var _ = require('underscore');
 var ChatUserView = require('./_ItemChatUser'),
     ChatView = require('./Chat'),
     ListView = require('./__ListView'),
-    ContactCollection = require('../models/ContactCollection'),
+    FriendCollection = require('../models/FriendCollection'),
     ChatCollection = require('../models/ChatCollection');
 
 exports = module.exports = ListView.extend({
@@ -11,8 +11,8 @@ exports = module.exports = ListView.extend({
 
 	initialize: function(options){
 		this.socketEvents = options.socketEvents;
-		this.collection = new ContactCollection();
-		this.collection.url = options.url || '/accounts/me?type=contact';
+		this.collection = new FriendCollection();
+		this.collection.url = options.url || '/accounts/me?type=friend';
 
 		this.currentChatView = options.currentChatView;
 		this.chats = options.chats;
@@ -29,9 +29,9 @@ exports = module.exports = ListView.extend({
 	// 	this.loaded = true;
 	// 	this.collection.fetch({reset:true});
 	// },
-	// onContactAdded: function(contact){
+	// onFriendAdded: function(friend){
 	// 	var chatUserView = new ChatUserView({
-	// 		model: contact,
+	// 		model: friend,
 	// 		socketEvents: this.socketEvents
 	// 	});
 	// 	chatUserView.bind('chat:start', this.startChat, this);
@@ -42,8 +42,8 @@ exports = module.exports = ListView.extend({
 	// onCollectionReset: function(collection){
 	// 	var that = this;
 	// 	that.$el.empty();
-	// 	collection.each(function(contact){
-	// 		that.onContactAdded(contact);
+	// 	collection.each(function(friend){
+	// 		that.onFriendAdded(friend);
 	// 	});
 	// },
 	// render: function(){

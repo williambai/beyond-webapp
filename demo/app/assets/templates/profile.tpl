@@ -36,7 +36,7 @@
 
 <h2>好友</h2>
 <hr>
-<div class="contact-list"></div>
+<div class="friend-list"></div>
 <% } %>
 
 <% if(me){ %>
