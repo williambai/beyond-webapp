@@ -1,6 +1,6 @@
-<div class="container">
-	<div class="row centered-form">
-		<div class="col-xs-12 col-sm-10 col-md-8">
+<div class="">
+	<div class="">
+		<div class="">
 		<div class="panel panel-default">
 			<div class="panel-heading">
                     <h3 class="panel-title text-center">找回密码</h3>

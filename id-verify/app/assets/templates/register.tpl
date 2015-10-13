@@ -1,10 +1,10 @@
-<!-- <h1>注册</h1> -->
-<div class="container">
-	<div class="row centered-form">
-		<div class="col-xs-12 col-sm-10 col-md-8">
+<!-- <h1>申请</h1> -->
+<div class="">
+	<div class="">
+		<div class="">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title text-center">注册</h3>
+					<h3 class="panel-title text-center">申请</h3>
 				</div>
 				<div class="panel-body">
 					<form>
@@ -29,7 +29,7 @@
                     	</div>
                     	<br>
 						<div class="form-group">
-							<input type="submit" value="现在注册" class="btn btn-primary btn-block"/>
+							<input type="submit" value="现在申请" class="btn btn-primary btn-block"/>
 						</div>
 					</form>					
 				</div>

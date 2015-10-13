@@ -3,6 +3,9 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 
 var IndexView = require('./views/Index');
+var RegisterView = require('./views/Register');
+var ForgotPasswordView = require('./views/ForgotPassword');
+var ForgotPasswordSuccessView = require('./views/ForgotPasswordSuccess');
 var LoginView = require('./views/Login');
 var LayoutView = require('./views/Layout');
 var UserIndexView = require('./views/UserIndex');
@@ -92,7 +95,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'index';
 			return;
 		}
-		this.appEvents.trigger('set:brand','注册');
+		this.appEvents.trigger('set:brand','申请注册');
 		this.changeView(new RegisterView());
 	},
 
