@@ -5,7 +5,7 @@
 	</div>
 <% if(project.isOwner){ %>	
 	<div class="actionArea pull-right">
-		<button class="removebutton">移除成员</button>
+		<button class="addbutton">添加为成员</button>
 	</div>
 <% } %>
 	<div class="media-body">

@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    contactTemplate = require('../../assets/templates/_itemProjectFriend.tpl');
+    itemTemplate = require('../../assets/templates/_itemProjectFriend.tpl');
 
 Backbone.$ = $;
 
@@ -9,38 +9,12 @@ exports = module.exports = Backbone.View.extend({
 
 	tagName: 'div',
 
-	addbutton: false,
-	removeButton: false,
-
 	events: {
-		'click .addbutton': 'addFriend',
 		'click .removebutton': 'removeFriend'
 	},
 
 	initialize: function(options){
 		this.project = options.project;
-		if(options.addButton){
-			this.addButton = options.addButton;
-		}
-		if(options.removeButton){
-			this.removeButton = options.removeButton;
-		}
-	},
-
-	addFriend: function(){
-		var $responseArea = this.$('.actionArea');
-		$.ajax({
-				url: '/projects/'+ this.project.get('_id') +'?type=contact_add',
-				type: 'PUT',
-				data: {
-					cid: this.model.get('_id')
-				},
-			}).done(function onSuccess(){
-				$responseArea.text('已添加成功！');
-			}).fail(function onError(){
-				$responseArea.text('添加失败！');
-			});
-		return false;
 	},
 
 	removeFriend: function(){
@@ -64,11 +38,8 @@ exports = module.exports = Backbone.View.extend({
 
 
 	render: function(){
-		this.$el.html(contactTemplate({
-			project: this.project.toJSON(),
+		this.$el.html(itemTemplate({
 			model: this.model.toJSON(),
-			addButton: this.addButton,
-			removeButton: this.removeButton
 		}));
 		return this;
 	}

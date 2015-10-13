@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    accountItemTemplate = require('../../assets/templates/_itemAccount.tpl');
+    accountItemTemplate = require('../../assets/templates/_itemProjectAccount.tpl');
 
 Backbone.$ = $;
 
@@ -10,6 +10,7 @@ exports = module.exports = Backbone.View.extend({
 	tagName: 'div',
 
 	initialize: function(options){
+		this.pid = options.pid;
 	},
 
 	events: {
@@ -20,10 +21,10 @@ exports = module.exports = Backbone.View.extend({
 		var $responseArea = this.$('.actionArea');
 
 		$.ajax({
-				url: '/friends/account/me',
+				url: '/friends/project/' + this.pid,
 				type: 'POST',
 				data: {
-					fid: this.model.get('_id')
+					uid: this.model.get('_id')
 				}
 			}).done(function onSuccess(){
 				$responseArea.text('已邀请！');

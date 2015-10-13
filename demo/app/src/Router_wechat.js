@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
 
-var ProjectsView = require('./views/Projects_wechat');
+var ProjectView = require('./views/Project_wechat');
 var ProjectIndexView = require('./views/ProjectIndex_wechat');
 var LoginView = require('./views/Login_wechat');
 var ProfileView = require('./views/Profile_wechat');
@@ -78,7 +78,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		var projectsView = new ProjectsView({
+		var projectsView = new ProjectView({
 		});
 		projectsView.collection.url = '/accounts/me/projects';
 		projectsView.trigger('load');

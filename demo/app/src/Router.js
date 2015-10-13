@@ -6,7 +6,7 @@ var IndexView = require('./views/Index');
 var ProjectListView = require('./views/_ListProject');
 var ChatUserListView = require('./views/_ListChatUser');
 var LayoutView = require('./views/__Layout');
-var ProjectsView = require('./views/Projects');
+var ProjectView = require('./views/Project');
 var MyProjectView = require('./views/ProjectMy');
 var NotificationView = require('./views/Notification');
 var RegisterView = require('./views/Register');
@@ -23,7 +23,7 @@ var ProjectAddView = require('./views/ProjectAdd');
 var ProjectChatView = require('./views/ProjectChat');
 var ProjectStatusView = require('./views/ProjectStatus');
 var ProjectFriendsView = require('./views/ProjectFriends');
-var ProjectFriendAddView = require('./views/ProjectFriendSearch');
+var ProjectFriendAddView = require('./views/ProjectFriendAdd');
 var ActivityView = require('./views/Activity');
 var MessageView = require('./views/Message');
 var SpaceView = require('./views/Space');
@@ -128,7 +128,7 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','所有项目');
-		var projectsView = new ProjectsView({
+		var projectsView = new ProjectView({
 			socketEvents: this.socketEvents
 		});
 		this.changeView(projectsView);
@@ -381,7 +381,6 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','项目成员');
-		var contactId = cid ? cid: 'me';
 		var projectFriendView = new ProjectFriendsView({
 				pid:pid,
 				account: this.account

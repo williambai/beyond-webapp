@@ -3,7 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     friendsTemplate = require('../../assets/templates/projectFriends.tpl'),
     projectBarTemplate = require('../../assets/templates/_barProject.tpl'),
-    FriendListView = require('./_ListFriend'),
+    FriendListView = require('./_ListProjectFriend'),
     Project = require('../models/Project'),
     FriendCollection = require('../models/FriendCollection');
 
@@ -16,9 +16,9 @@ exports = module.exports = Backbone.View.extend({
 	initialize: function(options){
 		this.pid = options.pid;
 		this.account = options.account;
-		this.model = new Project();
-		this.model.url = '/projects/' + options.pid;
-		this.model.on('change', this.render,this);
+		this.project = new Project();
+		this.project.url = '/projects/' + options.pid;
+		this.project.on('change', this.render,this);
 		this.on('load',this.load,this);
 	},
 	
@@ -30,17 +30,17 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 		var url = '/accounts/project/' + this.pid;
-		var contactListView = new FriendListView({url: url});
-		contactListView.trigger('load');
+		var friendListView = new FriendListView({url: url});
+		friendListView.trigger('load');
 		var that = this;
-		// this.model.fetch({
-		// 	success: function(model){
-		// 		if(that.account.id == model.get('accountId')){
-		// 			model.set('isOwner', true);
-		// 		}
-		// 		that.collection.fetch();
-		// 	}
-		// });
+		this.project.fetch({
+			success: function(model){
+				var createby = model.get('createby');
+				if(that.account.id == createby.uid){
+					that.project.set('isOwner', true);
+				}
+			}
+		});
 	},
 
 	render: function(){
@@ -60,7 +60,7 @@ exports = module.exports = Backbone.View.extend({
 				$('body').addClass('has-navbar-bottom');
 			}
 		}
-		this.$el.html(friendsTemplate({project:this.model.toJSON()}));
+		this.$el.html(friendsTemplate({project:this.project.toJSON()}));
 		return this;
 	}
 

@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    contactTemplate = require('../../assets/templates/_itemNotification.tpl');
+    itemTemplate = require('../../assets/templates/_itemNotification.tpl');
 
 Backbone.$ = $;
 
@@ -49,7 +49,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function(){
-		this.$el.html(contactTemplate({
+		this.$el.html(itemTemplate({
 			model: this.model.toJSON()
 		}));
 		return this;

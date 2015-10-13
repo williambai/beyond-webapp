@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    contactTemplate = require('../../assets/templates/_itemFriend.tpl');
+    friendItemTemplate = require('../../assets/templates/_itemFriend.tpl');
 
 Backbone.$ = $;
 
@@ -34,7 +34,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function(){
-		this.$el.html(contactTemplate({
+		this.$el.html(friendItemTemplate({
 			model: this.model.toJSON()
 		}));
 		return this;

@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    addFriendTemplate = require('../../assets/templates/projectFriendSearch.tpl'),
-    FriendListView = require('./_ListFriend'),
+    addFriendTemplate = require('../../assets/templates/projectFriendAdd.tpl'),
+    AccountListView = require('./_ListProjectAccount'),
     Project = require('../models/Project');
 
 Backbone.$ = $;
@@ -15,6 +15,7 @@ exports = module.exports = Backbone.View.extend({
 		'submit form': 'search'
 	},
 	initialize: function(options){
+		var that = this;
 		this.pid = options.pid;
 		this.account = options.account;
 		this.project = new Project();
@@ -23,7 +24,7 @@ exports = module.exports = Backbone.View.extend({
 		this.project.fetch({
 			success: function(model){
 				if(that.account.id == model.get('accountId')){
-					model.set('isOwner', true);
+					that.project.set('isOwner', true);
 				}
 			}
 		});
@@ -34,8 +35,8 @@ exports = module.exports = Backbone.View.extend({
 		var url = '/accounts?type=search' + 
 				'&searchStr=' + 
 				$('input[name=searchStr]').val() + emailDomain;
-		var contactListView = new FriendListView({url: url});
-		contactListView.trigger('load');
+		var accountListView = new AccountListView({url: url, pid: this.pid});
+		accountListView.trigger('load');
 		return false;
 	},
 

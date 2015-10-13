@@ -4,6 +4,10 @@ var _ = require('underscore');
 exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
 	url: '/projects',
+	
+	default: {
+		isOwner: false,
+	},
 
 	validate: function(attrs, options){
 		var errors = [];
