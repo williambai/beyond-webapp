@@ -1,6 +1,6 @@
-<div class="container">
-	<div class="row centered-form">
-		<div class="col-xs-12 col-sm-10 col-md-8">
+<div class="">
+	<div class="">
+		<div class="">
 		<div class="panel panel-default">
 			<div class="panel-heading">
                     <h3 class="panel-title text-center">找回密码</h3>
@@ -8,8 +8,8 @@
 			<div class="panel-body">
 				<form>
 					<div class="form-group">
-						<label for="email">您的邮件地址：</label>
-						<input type="text" name="email" class="form-control" placeholder="邮箱"/>
+						<label for="email">您申请用的邮箱地址或手机号码：</label>
+						<input type="text" name="email" class="form-control" placeholder="邮箱地址/手机号码"/>
 					</div>
                         <div class="form-group">
                         	<a href="#login" class="pull-right">换个账号，去登录！</a>
@@ -23,4 +23,11 @@
 		</div>
 	</div>
 </div>
+</div>
+<div class="text-center">
+    <hr>
+    <div class="text-center">
+    <p>版权所有@2014~2015&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
+    </div>
 </div>

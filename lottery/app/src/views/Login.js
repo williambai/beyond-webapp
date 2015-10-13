@@ -22,6 +22,8 @@ exports = module.exports = Backbone.View.extend({
 			email: $('input[name=email]').val(),
 			password: $('input[name=password]').val()
 		},function(account){
+			account.logined = 2;
+
 			that.appEvents.trigger('logined',account);
 			window.location.hash = 'index';
 		}).error(function(){

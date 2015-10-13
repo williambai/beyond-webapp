@@ -5,14 +5,25 @@
 		</div>
 		<div class="scrollable-content">
 			<div class="list-group">
+				<% if(account.logined == 0){ %>
+				<a class="list-group-item active" href="#login"><i class="fa fa-home fa-fw"></i>&nbsp;登录<i class="fa fa-chevron-right pull-right"></i></a>
+				<% }else if(account.logined == 1){ %>
+				<a class="list-group-item active" href="#login/need"><i class="fa fa-home fa-fw"></i>&nbsp;完善信息<i class="fa fa-chevron-right pull-right"></i></a>
+				<% }else{%>
 				<a class="list-group-item active" href="#index"><i class="fa fa-home fa-fw"></i>&nbsp;主页<i class="fa fa-chevron-right pull-right"></i></a>
 				<% if(account.roles.user){ %>
 				<a class="list-group-item" href="#lottery/3d/me"><i class="fa fa-users fa-fw"></i>&nbsp;3D福彩<span class="message-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
 				<a class="list-group-item" href="#lottery/ssq/me"><i class="fa fa-users fa-fw"></i>&nbsp;双色球<span class="message-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
 				<a class="list-group-item" href="#lottery/qlc/me"><i class="fa fa-users fa-fw"></i>&nbsp;七乐彩<span class="message-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
 				<% } %>
+				<% } %>
 			</div>
 			<div class="list-group">
+				<% if(account.logined == 0){ %>
+				
+				<% }else if(account.logined == 1){ %>
+				<a class="list-group-item" href="#logout"><i class="fa fa-meh-o fa-fw"></i>&nbsp;退出系统<i class="fa fa-chevron-right pull-right"></i></a>
+				<% }else{ %>
 				<% if(account.roles.agent || account.roles.app){ %>
 				<a class="list-group-item" href="#order/index"><i class="fa fa-users fa-fw"></i>&nbsp;订单管理<span class="status-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
 				<% } %>
@@ -23,6 +34,7 @@
 				<a class="list-group-item" href="#user/index"><i class="fa fa-users fa-fw"></i>&nbsp;用户管理<span class="status-unread pull-right"><i class="fa fa-chevron-right"></i></span></a>
 				<% } %>
 				<a class="list-group-item" href="#profile"><i class="fa fa-meh-o fa-fw"></i>&nbsp;我的资料<i class="fa fa-chevron-right pull-right"></i></a>
+				<% } %>
 			</div>
 		</div>
 	</div>

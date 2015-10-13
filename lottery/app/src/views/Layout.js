@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     loadingTemplate = require('../../assets/templates/loading.tpl'),
     layoutTemplate = require('../../assets/templates/__layout.tpl');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -30,12 +31,14 @@ exports = module.exports = Backbone.View.extend({
 		'click #right-sidebar-toggle': 'rightSideBarToggle',
 		'click .sidebar-left': 'closeLeftSideBar',
 		'click .sidebar-right': 'closeRightSideBar',
+		'click a[href="#logout"]': 'logout',
 	},
 
 	load: function(){
 		this.loaded = true;
 		if(!this.account){
 			this.account = {
+				logined: 0,
 				roles: {'admin': false,
 					'agent': false,
 					'user': false
@@ -96,6 +99,12 @@ exports = module.exports = Backbone.View.extend({
 
 	updateBrand: function(brand){
 		this.$('.navbar-brand').text(brand || '');
+	},
+
+	logout: function(){
+		this.appEvents.trigger('logout');
+		$.get(config.api.host + '/logout');
+		return false;
 	},
 
 	render: function(){

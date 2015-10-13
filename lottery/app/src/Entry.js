@@ -14,6 +14,8 @@ exports = module.exports = function(){
 				if(account.code){
 					return callback(false);
 				}
+				account.logined = 2;
+
 				router.appEvents.trigger('logined',account);
 				return callback(true);
 			},

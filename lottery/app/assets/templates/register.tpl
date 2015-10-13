@@ -1,13 +1,13 @@
 <!-- <h1>注册</h1> -->
-<div class="container">
-	<div class="row centered-form">
-		<div class="col-xs-12 col-sm-10 col-md-8">
+<div class="">
+	<div class="">
+		<div class="">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title text-center">注册</h3>
 				</div>
 				<div class="panel-body">
-					<form>
+					<form id="registerForm">
 						<div class="form-group">
 							<label for="username">姓名：</label>
 							<input type="text" name="username" class="form-control input-sm" placeholder="姓名"/>
@@ -37,3 +37,12 @@
 		</div>
 	</div>
 </div>
+
+<div class="text-center">
+    <hr>
+    <div class="text-center">
+    <p>版权所有@2014~2015&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
+    </div>
+</div>
+
