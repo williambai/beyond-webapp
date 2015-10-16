@@ -6,9 +6,7 @@ var config = {
 		db: require('../config/db'),
 		lottery: require('../config/lottery')
 	};		
-
-var Lottery = require('../libs/lottery');
-var lottery = new Lottery();
+var request = require('request');
 
 //import the models
 var models = {
@@ -44,12 +42,22 @@ var requestLotteryFromRecord = function(){
 					//检查今天是否已经处理
 					//请求 Lottery.command1000
 					function(record,callback){
-						var body = {};
-						lottery.command1000(body,function(err,message){
-							if(err) return callback(err);
-							record.histories.push(message);
-							callback(null,record);
-						};
+						var body = '';
+						request(
+							{
+								url: 'http://localhost:9001/getlot/1000',
+								method: 'POST',
+								headers: {
+									'content-type': 'application/xml'
+								},
+								body: body
+							},
+							function(err,response){
+								if(err) return callback(err);
+								record.histories.push(response.body);
+								callback(null,record);
+							}
+						);
 					},
 					//更新Record
 					function(record,callback){
@@ -61,7 +69,7 @@ var requestLotteryFromRecord = function(){
 					//发送SMS
 				],
 				function(err,result){
-					if(err) return callback(err);
+					if(err) return console.log(err);
 					stream.resume();
 				}
 			);
