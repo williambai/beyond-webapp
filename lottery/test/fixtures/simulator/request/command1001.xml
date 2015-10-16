@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message>
+	<head>
+		<version>1.0.0.0</version>
+		<merchantid>886544</merchantid>
+		<messageid>886544201211171353116903423</messageid>
+		<command>1001</command>
+		<encrypt>0</encrypt>
+		<compress>0</compress>
+		<timestamp>20121026214317</timestamp>
+		<bodymd>d22d43f6f5bc618e746a08d2d6f61192</bodymd>
+	</head>
+	<body>
+		<ltype>QGSLTO</ltype>
+		<periodnum>2012127</periodnum>
+		<batchno>886544201211171353116801419</batchno>
+	</body>
+</message>

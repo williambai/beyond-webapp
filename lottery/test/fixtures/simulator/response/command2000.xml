@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message>
+	<head>
+		<messageid>886544201211171353116903425</messageid>
+		<command>2000</command>
+		<encrypt>0</encrypt>
+		<compress>0</compress>
+		<timestamp>20121026214317</timestamp>
+		<bodymd>d22d43f6f5bc618e746a08d2d6f61192</bodymd>
+	</head>
+	<body>￼
+		<ltype>QGSLTO</ltype>
+		<periodnum>2012127</periodnum>
+		<batchno>886544201211171353116801419</batchno>
+		<allprintresult>1</allprintresult>￼￼￼￼￼￼
+		<records>
+			<record>
+				<orderno>ABC13531168011521</orderno>
+				<printresult>1</printresult>
+				<printtime>20121026214134</printtime>
+				<failreason>00</failreason>
+				<ordermoney>1000</ordermoney>
+				<cpserial>f70c440a3549d1685a44689811ff6580</cpserial>
+			</record>
+		</records>
+	</body>
+</message>

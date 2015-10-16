@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message>
+	<head>
+		<version>1.0.0.0</version>
+		<merchantid>888888</merchantid>
+		<messageid>888888201211171353117315429</messageid>
+		<command>1003</command>
+		<encrypt>1</encrypt>
+		<compress>0</compress>
+		<timestamp>20121026215009</timestamp>
+		<bodymd>68ee8737b8ecb6d69971c742dc71f87a</bodymd>
+	</head>
+	<body>TJ7qEj8rUEnghdX59RmYWGNhmnJJ7mrldtVSHcU8jtXHwDRm gOfrwfWDwI2GLOrZBnn+jQJ6xUR6JFpkVeyKN5vhlXdcxPTXc/B9uji0CDJDZaH fXgE5w+tZV2f/juYz</body>
+	<headmd>ef5b804e16ecd8edac33baf5a9217a64</headmd>
+</message>

@@ -7,6 +7,7 @@
   "main": "server.js",
   "scripts": {
     "test": "node test/simulator & mocha --watch 'test/routes'",
+    "test_api": "mocha --watch 'test/api'",
     "dev": "pm2 start server.js --watch ./ --ignore-watch='./_app ./_dest ./app ./commands ./public ./test'"
   }
 }
