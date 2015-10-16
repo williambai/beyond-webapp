@@ -153,7 +153,7 @@ server.use(function(req,res,next){
 server.use(function(req,res,next){
 	var encrypt = req.body.match(/<encrypt>(.*)<\/encrypt>/)[1];
 	var messageid = req.body.match(/<messageid>(.*)<\/messageid>/)[1];
-	var messageid_mine = options.merchantid + messageid + '220121117';
+	var messageid_mine = options.merchantid  + '20121117' + messageid;
 	req.body = req.body.replace(/<messageid>(.*)<\/messageid>/,'<message>' +messageid_mine + '</message>');	
 	
 	var md5;
@@ -169,7 +169,8 @@ server.use(function(req,res,next){
 	}
 	console.log('md5 to lottery server: ');
 	console.log(md5)
-	req.body = req.body.replace(/<bodymd>(.*)<\/bodymd>/,'<bodymd>' + md5 + '<\/bodymd>')
+	req.body = req.body.replace(/<merchantid>(.*)<\/merchantid>/,'<merchantid>' + options.merchantid + '</merchantid>');
+	req.body = req.body.replace(/<bodymd>(.*)<\/bodymd>/,'<bodymd>' + md5 + '<\/bodymd>');
 	next();
 });
 

@@ -89,11 +89,11 @@ describe('test api commands', function() {
 					'<version>1.0.0.0</version>' +
 					'<merchantid>886544</merchantid>' +
 					'<command>1123</command>' +
-					'<messageid>886544201211171353116903423</messageid>' +
+					'<messageid>886544012345678901</messageid>' +
 					'<encrypt>0</encrypt>' +
 					'<compress>0</compress>' +
 					'<timestamp>20121117094823</timestamp>' +
-					'<bodymd>4a5971ff39290668ce358f48b9f1a85e</bodymd>' +
+					'<bodymd>67ca03231d2f29f50f087ea585b9026c</bodymd>' +
 				'</head>' +
 				'<body>' +
 					'<ltype>QGSLTO</ltype>' +
@@ -115,11 +115,11 @@ describe('test api commands', function() {
 						'<version>1.0.0.0</version>' +
 						'<merchantid>886544</merchantid>' +
 						'<command>1000</command>' +
-						'<messageid>886544201211171353116903423</messageid>' +
+						'<messageid>886544012345678901</messageid>' +
 						'<encrypt>0</encrypt>' +
 						'<compress>0</compress>' +
 						'<timestamp>20121117094823</timestamp>' +
-						'<bodymd>4a5971ff39290668ce358f48b9f1a85e</bodymd>' +
+						'<bodymd>67ca03231d2f29f50f087ea585b9026c</bodymd>' +
 					'</head>' +
 					'<body>' +
 						'<ltype>QGSLTO</ltype>' +
@@ -140,7 +140,7 @@ describe('test api commands', function() {
 						'<version>1.0.0.0</version>' +
 						'<merchantid>000000</merchantid>' +
 						'<command>1000</command>' +
-						'<messageid>000000201211171353116903423</messageid>' +
+						'<messageid>886544012345678901</messageid>' +
 						'<encrypt>1</encrypt>' +
 						'<compress>0</compress>' +
 						'<timestamp>20121117094823</timestamp>' +
