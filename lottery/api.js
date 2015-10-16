@@ -231,7 +231,29 @@ server.post('/api',function(req,res){
 });	
 
 server.post('/api/callback', function(req,res){
-	res.send('hello world!');
+	req.body = req.body.toString();
+	var command = req.body.match(/<command>(.*)<\/command>/)[1];
+	request(
+		{
+			url: 'http://customer_callback_url',
+			headers:{
+				'content-type': 'application/xml',
+			},
+			method: 'POST',
+			body: req.body, 
+		}, 
+		function(err,response){
+			if(err)
+				return res.send(
+						'<?xml version="1.0" encoding="utf-8"?>'+
+						'<error>'+
+							'<code>30110</code>' +
+							'<message>no response.</message>' +
+						'</error>'
+					);	
+			res.send(response.body);
+		}
+	);
 });
 
 server.listen(config.server.PORT + 443, function() {
