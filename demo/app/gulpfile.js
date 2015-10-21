@@ -19,7 +19,7 @@ var config = {
       	]
 	}
 };
-
+var sh = require('shelljs');
 
 var browserify = require('browserify');
 var gulp = require('gulp');
@@ -27,7 +27,6 @@ var connect = require('gulp-connect');
 var path = require('path');
 var seq = require('run-sequence');
 var jade = require('gulp-jade');
-var del = require('del');
 var less = require('gulp-less');
 var cssmin = require('gulp-cssmin');
 var rename = require('gulp-rename');
@@ -38,12 +37,22 @@ var streamify = require('gulp-streamify');
 =            Clean dest folder            =
 =========================================*/
 
-gulp.task('clean',function(cb) {
-	del([
-		path.join(config.dest,'**/*'),
-	],{force: true},cb);
+gulp.task('clean',function(done) {
+	sh.rm('-rf', path.join(config.dest,'*'));
+	done();
 });
 
+/*=========================================
+=            Create dest folder            =
+=========================================*/
+
+gulp.task('mkdir', function(done){
+	var dest_dir = path.join(__dirname,config.dest);
+	if(!sh.test(dest_dir)){
+		sh.mkdir('-p', dest_dir);
+	}
+	done();
+});
 /*==========================================
 =            Start a web server            =
 ==========================================*/
@@ -220,6 +229,7 @@ gulp.task('watch',function(){
 
 gulp.task('build',function(done) {
 	var tasks = [
+					'mkdir',
 					'plugin-fonts',
 					'plugin-css',
 					'plugin-images',
@@ -239,7 +249,7 @@ gulp.task('build',function(done) {
 ====================================*/
 
 gulp.task('development',function(done){
-	var tasks = [];
+	var tasks = ['build'];
 	if(typeof config.server === 'object'){
 		tasks.push('connect');
 	}
