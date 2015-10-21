@@ -30,7 +30,6 @@ var config = {
 var sh = require('shelljs');
 
 var gulp           = require('gulp'),
-    del            = require('del'),
     replace        = require('gulp-replace');
     seq            = require('run-sequence'),
     jade           = require('gulp-jade'),
@@ -61,27 +60,49 @@ gulp.on('err', function(e) {
 =========================================*/
 
 gulp.task('clean:server', function(done){
-  del.sync(path.join(__dirname,'_dest/server'));
+  sh.rm('-rf',path.join(__dirname,'_dest/server'));
   done();
 });
 gulp.task('clean:desktop', function(done){
-  del.sync(path.join(__dirname,'_dest/desktop'));
+  sh.rm('-rf',path.join(__dirname,'_dest/desktop'));
   done();
 });
 gulp.task('clean:mobile',function(done){
-  del.sync(path.join(__dirname,'_dest/mobile'));
+  sh.rm('-rf',path.join(__dirname,'_dest/mobile'));
   done();
 });
 
-gulp.task('clean', function (cb) {
-  seq('clean:server','clean:desktop','clean:mobile',cb);
+gulp.task('clean', function(done) {
+  seq('clean:server','clean:desktop','clean:mobile',done);
+});
+
+
+/*==================================
+=    prepare for server built      =
+==================================*/
+
+gulp.task('server:prepare', function(done){
+  var dirs = [
+        path.join(__dirname,'_dest'),
+        path.join(__dirname,'_dest','server','public','downloads'),
+        path.join(__dirname,'_dest','server','public','upload'),
+        path.join(__dirname,'_dest','server','public','updates'),
+        path.join(__dirname,'_dest','server','public','thirds'),
+        path.join(__dirname,'_dest','server','public','images')
+      ];
+  for(var i in dirs){
+    if(!sh.test('-d', dirs[i])){
+      sh.mkdir('-p', dirs[i]);
+    }
+  }
+  done();
 });
 
 /*==================================
-=       Copy server related        =
+=       build js for server        =
 ==================================*/
 
-gulp.task('server.js', function(done){
+gulp.task('server:js', function(done){
     gulp.src([
               '**/*.js',
               '!_*/**/*',
@@ -104,7 +125,12 @@ gulp.task('server.js', function(done){
     done();
 });
 
-gulp.task('server.static', function(done){
+
+/*==================================
+=       Copy server related        =
+==================================*/
+
+gulp.task('server:copy', function(done){
     gulp.src([
               '**/*.jade',
               '**/*.@(html|htm)',
@@ -125,71 +151,34 @@ gulp.task('server.static', function(done){
    done();         
 });
 
-gulp.task('server', function(done) {
-    seq('server.js','server.static',done);
-});
-
-/*==================================
-=            mkdir for server      =
-==================================*/
-
-gulp.task('directory', function(done){
-  var dest_dir = path.join(__dirname,'_dest');
-  var serv = path.join(__dirname,'_dest','server');
-  var pub = path.join(__dirname,'_dest','server','public');
-  var downloads = path.join(__dirname,'_dest','server','public','downloads');
-  var uploads = path.join(__dirname,'_dest','server','public','upload');
-  var updates = path.join(__dirname,'_dest','server','public','updates');
-  var thirds = path.join(__dirname,'_dest','server','public','thirds');
-  var images = path.join(__dirname,'_dest','server','public','images');
-  
-  if(!fs.existsSync(dest_dir)){
-    fs.mkdirSync(dest_dir);
-  }
-  if(!fs.existsSync(serv)){
-    fs.mkdirSync(serv);
-  }
-  if(!fs.existsSync(pub)){
-    fs.mkdirSync(pub);
-  }
-  if(!fs.existsSync(downloads)){
-    fs.mkdirSync(downloads);
-  }
-  if(!fs.existsSync(uploads)){
-    fs.mkdirSync(uploads);
-  }
-  if(!fs.existsSync(updates)){
-    fs.mkdirSync(updates);
-  }
-  if(!fs.existsSync(thirds)){
-    fs.mkdirSync(thirds);
-  }
-  if(!fs.existsSync(images)){
-    fs.mkdirSync(images);
-  }
-  done();
-});
 
 /*===========================================
 =   build node-webkit clients(APP):         =
 =   win32,win64,osx32,osx64,linux32,linux64 =
 ============================================*/
 
-gulp.task('package.json', function(done){
+gulp.task('node-webkit:prepare', function(done){
+  var www_dir = path.join(__dirname,'_dest/desktop/www');
+  if(!sh.test(www_dir)){
+    sh.mkdir('-p',www_dir);
+  }
+  sh.cp('-rf',
+        path.join(__dirname,'_app/*'),
+        www_dir);
   sh.cp('-f',
-    path.join(__dirname,'build/node-webkit','package.json'),
-    path.join(__dirname,'_app','package.json')
-  );
+        path.join(__dirname,'build/node-webkit','package.json'),
+        www_dir);
+
   done();
 });
 
-gulp.task('node-webkit-builder', function(done){
+gulp.task('node-webkit:builder', function(done){
   var NwBuilder = require('node-webkit-builder');
   var nw = new NwBuilder({
-        files: path.join(__dirname,'_app','**/**'),
+        files: path.join(__dirname,'_dest/desktop/www','**/**'),
         platforms: ['win','osx','linux'],
         version: '0.12.2',//download node-webkit version
-        appName: config.project.name,
+        appName: 'platforms',
         buildDir: path.join(__dirname,'./_dest/desktop'),
         cacheDir: path.join(__dirname,'../_cache'),
         buildType: 'default',
@@ -204,9 +193,6 @@ gulp.task('node-webkit-builder', function(done){
     // nw.on('log', console.log);
     nw.build()
       .then(function(){
-        if(sh.test('-f',path.join(__dirname,'_app','package.json'))){
-          sh.rm('-f',path.join(__dirname,'_app','package.json'));
-        }
         done();
       })
       .catch(function(err){
@@ -214,35 +200,35 @@ gulp.task('node-webkit-builder', function(done){
       });
 });
 
-gulp.task('node-webkit-downloads',function(done){
+gulp.task('node-webkit:deploy',function(done){
   //zip&copy to downloads
-  // var downloads = path.join(__dirname,'_dest','server','public','downloads');
-  // if(!fs.existsSync(downloads)){
-  //   fs.mkdirSync(downloads);
-  // }
-  gulp.src(path.join(__dirname,'_dest','desktop',config.project.name,'linux32'))
+  var deploy_dir = path.join(__dirname,'_dest','server','public','downloads');
+  if(!sh.test('-d',deploy_dir)){
+    sh.mkdir('-p', deploy_dir);
+  }
+  gulp.src(path.join(__dirname,'_dest/desktop/platforms','linux32'))
       .pipe(zip(config.project.name + '-linux32.zip'))
-      .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
-  gulp.src(path.join(__dirname,'_dest','desktop',config.project.name,'linux64'))
+      .pipe(gulp.dest(deploy_dir));
+  gulp.src(path.join(__dirname,'_dest/desktop/platforms','linux64'))
       .pipe(zip(config.project.name + '-linux64.zip'))
-      .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
-  gulp.src(path.join(__dirname,'_dest','desktop',config.project.name,'win32'))
+      .pipe(gulp.dest(deploy_dir));
+  gulp.src(path.join(__dirname,'_dest/desktop/platforms','win32'))
       .pipe(zip(config.project.name + '-win32.zip'))
-      .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
-  gulp.src(path.join(__dirname,'_dest','desktop',config.project.name,'win64'))
+      .pipe(gulp.dest(deploy_dir));
+  gulp.src(path.join(__dirname,'_dest/desktop/platforms','win64'))
       .pipe(zip(config.project.name + '-win64.zip'))
-      .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
-  gulp.src(path.join(__dirname,'_dest','desktop',config.project.name,'osx32'))
+      .pipe(gulp.dest(deploy_dir));
+  gulp.src(path.join(__dirname,'_dest/desktop/platforms','osx32'))
       .pipe(zip(config.project.name + '-osx32.zip'))
-      .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
-  gulp.src(path.join(__dirname,'_dest','desktop',config.project.name,'osx64'))
+      .pipe(gulp.dest(deploy_dir));
+  gulp.src(path.join(__dirname,'_dest/desktop/platforms','osx64'))
       .pipe(zip(config.project.name + '-osx64.zip'))
-      .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
+      .pipe(gulp.dest(deploy_dir));
   done();
 });
 
 gulp.task('node-webkit', function(done){
-  seq('package.json','node-webkit-builder','node-webkit-downloads',done);
+  seq('node-webkit:prepare','node-webkit:builder','node-webkit:deploy',done);
 });
 
 
@@ -318,7 +304,7 @@ gulp.task('android:sign', function(done){
 ====================================*/
 
 gulp.task('build:server', function(done){
-  seq('clean:server','directory','server', done);
+  seq('clean:server','server:prepare','server:js','server:copy', done);
 });
 
 gulp.task('build:mobile', function(done){
