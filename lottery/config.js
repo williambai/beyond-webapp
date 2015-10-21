@@ -6,6 +6,12 @@ exports = module.exports = {
       project: {
         name: 'lottery',
       },
+      platforms: {
+        android: {
+          sdk: 'android-19', //android sdk that has been installed
+          version: '3.5.1', // see README.txt
+        }
+      },
       java_sign: {
         keystore: './build/cordova/sign/test.keystore',
         keystore_username: 'william',

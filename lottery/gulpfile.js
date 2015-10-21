@@ -218,7 +218,6 @@ gulp.task('cordova',function(done){
   var root_dir = path.join(__dirname);
   var target_dir = path.join(__dirname,'_dest/mobile');
   var config_file = path.join(__dirname, 'build/cordova/config.xml');
-  var build_file = path.join(__dirname, 'build/cordova/build.json');
   var www_dir = path.join(__dirname,'_app/*');
   var res_dir = path.join(__dirname,'build/cordova/res')
   var platforms = ['android','ios'];
@@ -227,7 +226,6 @@ gulp.task('cordova',function(done){
     sh.mkdir(target_dir);
   }
   sh.cp(config_file,target_dir);
-  sh.cp(build_file,target_dir);
   sh.cp('-r',www_dir, path.join(__dirname,'_dest/mobile/www'));
   sh.cp('-r',res_dir, target_dir);
   sh.cd(target_dir);
