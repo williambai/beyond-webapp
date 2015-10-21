@@ -176,8 +176,7 @@ gulp.task('directory', function(done){
 ============================================*/
 
 gulp.task('package.json', function(done){
-  sh.rm(path.join(__dirname,'_app','package.json'));
-  sh.cp(
+  sh.cp('-f',
     path.join(__dirname,'build/node-webkit','package.json'),
     path.join(__dirname,'_app','package.json')
   );
@@ -205,7 +204,9 @@ gulp.task('node-webkit-builder', function(done){
     // nw.on('log', console.log);
     nw.build()
       .then(function(){
-        sh.rm(path.join(__dirname,'_app','package.json'));
+        if(sh.test('-f',path.join(__dirname,'_app','package.json'))){
+          sh.rm('-f',path.join(__dirname,'_app','package.json'));
+        }
         done();
       })
       .catch(function(err){
@@ -253,50 +254,40 @@ gulp.task('node-webkit', function(done){
 
 gulp.task('cordova',function(done){
   //NOTE: npm install cordova-cli -g
+  var root_dir = path.join(__dirname);
   var target_dir = path.join(__dirname,'_dest/mobile');
   var config_file = path.join(__dirname, 'build/cordova/config.xml');
   var build_file = path.join(__dirname, 'build/cordova/build.json');
-  var www_dir = path.join(__dirname,'_app');
+  var www_dir = path.join(__dirname,'_app/*');
   var res_dir = path.join(__dirname,'build/cordova/res')
   var platforms = ['android','ios'];
-  var plugins = ['org.apache.cordova.file'];
 
-  if(!fs.existsSync(target_dir)){
-   fs.mkdirSync(target_dir);
+  if(!sh.test('-d', target_dir)){
+    sh.mkdir(target_dir);
   }
-  var root_dir = path.join(__dirname);
-  process.chdir(target_dir);
+  sh.cp(config_file,target_dir);
+  sh.cp(build_file,target_dir);
+  sh.cp('-r',www_dir, path.join(__dirname,'_dest/mobile/www'));
+  sh.cp('-r',res_dir, target_dir);
+  sh.cd(target_dir);
 
-  if(!fs.existsSync(path.join(target_dir,'config.xml'))){
-    fs.symlinkSync(config_file, 'config.xml');
+  for(var i in platforms){
+    sh.exec('cordova platform add ' + platforms[i]);
   }
-  if(!fs.existsSync(path.join(target_dir,'build.json'))){
-    fs.symlinkSync(build_file, 'build.json');
-  }
-  if(!fs.existsSync(path.join(target_dir,'www'))){
-    fs.symlinkSync(www_dir, 'www');
-  }
-  if(!fs.existsSync(path.join(target_dir,'res'))){
-    fs.symlinkSync(res_dir, 'res');
-  }
-  plugins.forEach(function(plugin){
-    sh.exec('cordova plugin add ' + plugin);
-  });
-
-  platforms.forEach(function(platform){
-    sh.exec('cordova platform add ' + platform);
-  });
+  
+  sh.exec('cordova prepare');
   sh.exec('cordova build --release');
-  process.chdir(root_dir);
+  sh.cd(root_dir);
+  
   //copy to downloads directory
   var downloads = path.join(__dirname,'_dest','server','public','downloads');
-  if(!fs.existsSync(downloads)){
-    fs.mkdirSync(downloads);
+  if(!sh.test('-d',downloads)){
+    sh.mkdir(downloads);
   }
   gulp.src(path.join(__dirname,'_dest','mobile','platforms/android/ant-build','CordovaApp-release-unsigned.apk'))
       .pipe(rename(config.project.name +'.apk'))
       .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
-  gulp.src(path.join(__dirname, '_dest','mobile','platforms/ios/build/**/*'))
+  gulp.src(path.join(__dirname, '_dest','mobile','platforms/ios', config.project.name,'**/*'))
       .pipe(zip(config.project.name + '.ipa'))
       .pipe(gulp.dest(path.join(__dirname,'_dest','server','public','downloads')));
   done();
@@ -306,14 +297,20 @@ gulp.task('cordova',function(done){
 =            sign Task            =
 ====================================*/
 
-gulp.task('sign', function(done){
+gulp.task('android:sign', function(done){
   //java sign
-  sh.exec('jarsigner ' + 
-            ' -keystore ' + config.java_sign.keystore + 
-            ' -storepass ' + config.java_sign.keystore_password + 
-            ' -digestalg SHA1 -sigalg MD5withRSA ' + 
-            ' ./_dest/server/public/downloads/'+ config.project.name + '.apk ' + 
-            config.java_sign.keystore_username);
+  var unsigned_file = path.join(__dirname,'/_dest/server/public/downloads', config.project.name + '.apk ');
+  if(sh.test('-f', unsigned_file)){
+    sh.exec('jarsigner ' + 
+              ' -keystore ' + config.java_sign.keystore + 
+              ' -storepass ' + config.java_sign.keystore_password + 
+              ' -digestalg SHA1 -sigalg MD5withRSA ' + 
+              ' ./_dest/server/public/downloads/'+ config.project.name + '.apk ' + 
+              config.java_sign.keystore_username);
+  }else{
+    console.log('WARNING: unsigned .apk file does not found, so unsigned.');
+  }
+  done();
 });
 
 /*====================================
@@ -323,8 +320,17 @@ gulp.task('sign', function(done){
 gulp.task('build:server', function(done){
   seq('clean:server','directory','server', done);
 });
+
+gulp.task('build:mobile', function(done){
+  seq('clean:mobile','cordova','android:sign',done);
+});
+
+gulp.task('build:desktop', function(done){
+  seq('clean:desktop','node-webkit',done);
+});
+
 gulp.task('build:client', function(done){
-  seq('clean:mobile','clean:desktop','cordova','node-webkit', 'sign', done);
+  seq('build:mobile','build:desktop', done);
 });
 
 gulp.task('build', function(done){
@@ -345,4 +351,8 @@ gulp.task('default', function(){
   console.log("  |- description: to deploy application's server.\n");
   console.log("|- command: gulp build:client");
   console.log("  |- description: to deploy cordova and node-webkit clients.\n");
+  console.log("|- command: gulp build:mobile");
+  console.log("  |- description: to deploy cordova clients only.\n");
+  console.log("|- command: gulp build:desktop");
+  console.log("  |- description: to deploy node-webkit clients only.\n");
 });
