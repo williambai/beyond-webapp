@@ -229,6 +229,7 @@ gulp.task('cordova',function(done){
   sh.cp(config_file,target_dir);
   // sh.cp(build_file,target_dir);
   sh.cp('-r',www_dir, path.join(__dirname,'_dest/mobile/www'));
+  sh.cp('-rf',path.join(__dirname,'build/cordova/www/*'),path.join(__dirname,'_dest/mobile/www'));
   sh.cp('-r',res_dir, target_dir);
   sh.cd(target_dir);
 
