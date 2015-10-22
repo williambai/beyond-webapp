@@ -221,7 +221,7 @@ gulp.task('cordova',function(done){
   var build_file = path.join(__dirname, 'build/cordova/build.json');
   var www_dir = path.join(__dirname,'_app/*');
   var res_dir = path.join(__dirname,'build/cordova/res')
-  var platforms = ['android@' + config.platforms.android.version,'ios'];
+  var platforms = ['android@' + config.platforms.android.version,'ios','browser'];
 
   if(!sh.test('-d', target_dir)){
     sh.mkdir(target_dir);

@@ -5,6 +5,7 @@ var router = new (require('./Router'))();
 var Socket = require('./Socket');
 
 Backbone.$ = $;
+window.$ = $;
 
 exports = module.exports = function(){
 	var checkLogin = function(callback){

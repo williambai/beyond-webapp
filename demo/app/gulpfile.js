@@ -249,7 +249,7 @@ gulp.task('build',function(done) {
 ====================================*/
 
 gulp.task('development',function(done){
-	var tasks = ['build'];
+	var tasks = [];
 	if(typeof config.server === 'object'){
 		tasks.push('connect');
 	}

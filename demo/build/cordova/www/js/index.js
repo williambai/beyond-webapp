@@ -40,12 +40,29 @@ var app = {
 
         // Called when background mode has been activated
         cordova.plugins.backgroundMode.onactivate = function () {
-            setTimeout(function () {
-                // Modify the currently displayed notification
-                cordova.plugins.backgroundMode.configure({
-                    text:'Running in background for more than 5s now.'
+            setInterval(function(){
+                window.$.ajax({
+                    url: 'http://localhost:8080/push',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(result){
+                        cordova.plugins.backgroundMode.configure({
+                            text:'Running in background on success.'
+                        });
+                    },
+                    error: function(xhr){
+                        cordova.plugins.backgroundMode.configure({
+                            text:'Running in background on error. ' + parseInt(Math.random()*10000)
+                        });
+                    }
                 });
-            }, 5000);
+            },5000);
+            // setTimeout(function () {
+            //     // Modify the currently displayed notification
+            //     cordova.plugins.backgroundMode.configure({
+            //         text:'Running in background for more than 5s now.'
+            //     });
+            // }, 5000);
         };
         app.receivedEvent('deviceready');
     },
