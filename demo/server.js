@@ -85,6 +85,9 @@ app.get('/', function(req,res){
 
 //登录判断中间件
 app.isLogined = function(req,res,next){
+	console.log('===')
+	console.log(req.headers)
+	console.log(req.session)
 	if(req.session.loggedIn){
 		next();
 	}else{
@@ -95,7 +98,7 @@ app.isLogined = function(req,res,next){
 //设置跨域访问
 app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type,x-access-token");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
     res.header("X-Powered-By",' 3.2.1')
     res.header("Content-Type", "application/json;charset=utf-8");

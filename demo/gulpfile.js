@@ -1,4 +1,4 @@
-var config = require('./config');
+var config = require('./build/cordova/config');
 /*========================================
 =            Requiring stuffs            =
 ========================================*/

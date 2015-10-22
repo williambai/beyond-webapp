@@ -1,5 +1,5 @@
 /*=====================================
-=        Default Configuration        =
+=        Configuration for Gulp       =
 =====================================*/
 
 exports = module.exports = {
