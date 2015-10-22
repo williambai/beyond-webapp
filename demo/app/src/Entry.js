@@ -10,9 +10,13 @@ window.$ = $;
 
 exports = module.exports = function(){
 	var checkLogin = function(callback){
-			$.ajax(config.api.host + '/authenticated',{
-				mathod: 'GET',
-				success: function(data){
+		$.ajax(config.api.host + '/authenticated', {
+					mathod: 'GET',
+					xhrFields: {
+						withCredentials: true
+					},
+					crossDomain: true,
+					success: function(data) {
 					if(!!data.code)	return callback(false);
 					router.appEvents.trigger('logined',data);
 					router.socketEvents.trigger('app:logined',{accountId: data.id});

@@ -31,14 +31,24 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		this.loaded = true;
 		this.render();
-		this.collection.fetch({reset:true});
+		this.collection.fetch({
+			reset:true,
+			xhrFields: {
+				withCredentials: true
+			},
+		});
 	},
 
 	refresh: function(url){
 		this.$el.empty();
 		this.collection.url = url;
 		this.collectionUrl = this.collection.url;
-		this.collection.fetch({reset:true});
+		this.collection.fetch({
+			reset:true,
+			xhrFields: {
+				withCredentials: true
+			},
+		});
 	},
 
 	onCollectonAppend: function(collection){

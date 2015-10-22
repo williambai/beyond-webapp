@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    Login = require('../models/Login');
+	Login = require('../models/Login');
 
 exports = module.exports = FormView.extend({
 
@@ -12,19 +12,24 @@ exports = module.exports = FormView.extend({
 		'swiperight': 'toRegisterForm',
 	},
 
-	initialize: function(options){
+	initialize: function(options) {
 		this.appEvents = options.appEvents;
 		this.socketEvents = options.socketEvents;
 		this.model = new Login();
-		FormView.prototype.initialize.apply(this,options);
+		FormView.prototype.initialize.apply(this, options);
 	},
 
-	login: function(){
+	login: function() {
 		var that = this;
-		this.model.set('email',$('input[name=email]').val());
-		this.model.set('password',$('input[name=password]').val());
+		this.model.set('email', $('input[name=email]').val());
+		this.model.set('password', $('input[name=password]').val());
+
 		if(this.model.isValid()){
-			var xhr = this.model.save();
+			var xhr = this.model.save(null, {
+				xhrFields: {
+					withCredentials: true
+				},
+			});
 			if(xhr){
 				xhr
 					.success(function(data){
@@ -47,7 +52,7 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	toRegisterForm: function(){
+	toRegisterForm: function() {
 		window.location.hash = 'register';
 		return false;
 	},

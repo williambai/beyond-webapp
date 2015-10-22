@@ -18,8 +18,8 @@ exports = module.exports = Backbone.Model.extend({
 
 	initialize: function(){
 		this.status = new StatusCollection();
-		this.status.url = '/accounts' + this.id + '/status';
+		this.status.url = config.api.host + '/accounts' + this.id + '/status';
 		this.activity = new StatusCollection();
-		this.activity.url = '/accounts' + this.id + '/activity';
+		this.activity.url = config.api.host + '/accounts' + this.id + '/activity';
 	}
 });

@@ -44,14 +44,28 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		this.loaded = true;
 		this.render();
-		this.model.fetch();
-		this.statusCollection.fetch();
+		this.model.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
+		});
+		this.statusCollection.fetch({
+			xhrFields: {
+				withCredentials: true
+			},			
+		});
 	},
 
 	logout: function(){
 		this.appEvents.trigger('logout');
 		this.socketEvents.trigger('app:logout');
-		$.get(config.api.host + '/logout');
+		$.ajax({
+			url: config.api.host + '/logout',
+			type: 'GET',
+			xhrFields: {
+				withCredentials: true
+			},
+		});
 		return false;
 	},
 
