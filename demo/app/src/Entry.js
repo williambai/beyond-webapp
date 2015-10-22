@@ -3,13 +3,14 @@ var Backbone = require('backbone');
 
 var router = new (require('./Router'))();
 var Socket = require('./Socket');
+var config = require('./conf');
 
 Backbone.$ = $;
 window.$ = $;
 
 exports = module.exports = function(){
 	var checkLogin = function(callback){
-			$.ajax('/authenticated',{
+			$.ajax(config.api.host + '/authenticated',{
 				mathod: 'GET',
 				success: function(data){
 					if(!!data.code)	return callback(false);

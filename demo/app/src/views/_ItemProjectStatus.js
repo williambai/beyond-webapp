@@ -4,6 +4,7 @@ var $ = require('jquery'),
     statusTemplate = require('../../assets/templates/_itemProjectStatus.tpl'),
     modalTemplate = require('../../assets/templates/_modal.tpl'),
     MessageUtil = require('./__Util');
+var config = require('../conf');
 
 Backbone.$ = $;
 require('./__ModalView');
@@ -77,7 +78,7 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 
 		$.ajax({
-			url: '/messages/project/'+ that.model.get('_id') + '?type=vote',
+			url: config.api.host + '/messages/project/'+ that.model.get('_id') + '?type=vote',
 			type: 'PUT',
 			data: {
 					good: 1	
@@ -91,7 +92,7 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 
 		$.ajax({
-			url: '/messages/project/'+ that.model.get('_id') + '?type=vote',
+			url: config.api.host + '/messages/project/'+ that.model.get('_id') + '?type=vote',
 			type: 'PUT',
 			data: {
 					bad: 1	

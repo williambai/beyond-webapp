@@ -4,6 +4,7 @@ var $ = require('jquery'),
     loadingTemplate = require('../../assets/templates/loading.tpl'),
     profileEditTemplate = require('../../assets/templates/profileEdit.tpl'),
     Account = require('../models/Account');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -36,7 +37,7 @@ exports = module.exports = Backbone.View.extend({
 		var formData = new FormData();
 		formData.append('files',evt.currentTarget.files[0]);
 		$.ajax({
-			url: '/accounts/me?type=avatar',
+			url: config.api.host + '/accounts/me?type=avatar',
 			type: 'PUT',
 			data: formData,
 			cache: false,//MUST be false
@@ -54,7 +55,7 @@ exports = module.exports = Backbone.View.extend({
 
 	updateProfile: function(){
 		$.post(
-			'/accounts/me',
+			config.api.host + '/accounts/me',
 			{
 				username: this.$('input[name=username]').val(),
 				realname: this.$('input[name=realname]').val(),

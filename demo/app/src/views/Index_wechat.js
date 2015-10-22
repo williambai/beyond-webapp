@@ -4,6 +4,7 @@ var $ = require('jquery'),
     indexTemplate = require('../../assets/templates/index.tpl'),
     ProjectItemView = require('../../ProjectItem'),
     ProjectCollection = require('../models/ProjectCollection');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -20,7 +21,7 @@ exports = module.exports = Backbone.View.extend({
 	initialize: function(options){
 		this.socketEvents = options.socketEvents;
 		this.collection = new ProjectCollection();
-		this.collection.url = '/accounts/me/projects';
+		this.collection.url = config.api.host + '/accounts/me/projects';
 		this.collection.on('add', this.onProjectAdded, this);
 		this.collection.on('reset', this.onProjectCollectionReset, this);
 		this.on('load', this.load,this);

@@ -7,6 +7,7 @@ var $ = require('jquery'),
     Status = require('../models/Status'),
     StatusCollection = require('../models/StatusCollection'),
     Account = require('../models/Account');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -29,10 +30,10 @@ exports = module.exports = Backbone.View.extend({
 		}
 		this.socketEvents = options.socketEvents;
 		this.model = new Account();
-		this.model.url = '/accounts/'+ options.id;
+		this.model.url = config.api.host + '/accounts/'+ options.id;
 
 		this.statusCollection = new StatusCollection();
-		this.statusCollection.url = '/messages/account/' + options.id + '?type=status';
+		this.statusCollection.url = config.api.host + '/messages/account/' + options.id + '?type=status';
 
 		this.model.on('change',this.render,this);
 		this.statusCollection.on('add', this.onStatusAdded, this);
@@ -50,7 +51,7 @@ exports = module.exports = Backbone.View.extend({
 	logout: function(){
 		this.appEvents.trigger('logout');
 		this.socketEvents.trigger('app:logout');
-		$.get('/logout');
+		$.get(config.api.host + '/logout');
 		return false;
 	},
 

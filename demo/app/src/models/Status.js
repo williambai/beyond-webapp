@@ -1,7 +1,9 @@
 var Backbone = require('backbone');
+var config = require('../conf');
+
 exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
-	url: '/statuses/account/me',
+	url: config.api.host + '/statuses/account/me',
 	defaults: {
 		username: '',
 		avatar: '',

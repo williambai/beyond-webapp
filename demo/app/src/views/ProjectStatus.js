@@ -6,6 +6,7 @@ var $ = require('jquery'),
     StatusListView = require('./_ListProjectStatus'),
     Status = require('../models/Status'),
     StatusCollection = require('../models/StatusCollection');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -30,7 +31,7 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 		this.statusListView = new StatusListView({
 			el: 'div.status_list',
-			url: '/statuses/project/' + this.pid,
+			url: config.api.host + '/statuses/project/' + this.pid,
 			account: this.account,
 		});
 		this.statusListView.trigger('load');
@@ -54,7 +55,7 @@ exports = module.exports = Backbone.View.extend({
 	updateStatus: function(){
 		var statusCollection = this.collection;
 		var statusText = $('textarea[name=text]').val();
-		$.post('/messages/project/'+ this.pid,{text: statusText},function(data){
+		$.post(config.api.host + '/messages/project/'+ this.pid,{text: statusText},function(data){
 			// statusCollection.add(new Status({status: statusText,name:{first:'我'}}));
 		});
 		// var statusModel = new Status({status:statusText,name: {first:'我'}});

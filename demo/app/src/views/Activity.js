@@ -5,6 +5,7 @@ var $ = require('jquery'),
     activityTemplate = require('../../assets/templates/activity.tpl'),
     StatusFormView = require('./_FormStatus'),
     StatusListView = require('./_ListStatus');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -34,7 +35,7 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 		this.statusListView = new StatusListView({
 			el: '#list',
-			url: '/activities/account/' + this.id,
+			url: config.api.host + '/activities/account/' + this.id,
 			account: this.account,
 		});
 		this.statusListView.trigger('load');

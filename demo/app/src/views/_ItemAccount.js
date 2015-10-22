@@ -2,6 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     accountItemTemplate = require('../../assets/templates/_itemAccount.tpl');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -20,7 +21,7 @@ exports = module.exports = Backbone.View.extend({
 		var $responseArea = this.$('.actionArea');
 
 		$.ajax({
-				url: '/friends/account/me',
+				url: config.api.host + '/friends/account/me',
 				type: 'POST',
 				data: {
 					fid: this.model.get('_id')

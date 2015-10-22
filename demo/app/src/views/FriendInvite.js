@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     friendInviteTemplate = require('../../assets/templates/friendInvite.tpl'),
     friendInviteSucessTemplate = require('../../assets/templates/friendInviteSuccess.tpl');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -30,7 +31,7 @@ exports = module.exports = Backbone.View.extend({
 				emails.push($(this).val());
 			}
 		});
-		$.post('/account/invite/friend',{
+		$.post(config.api.host + '/account/invite/friend',{
 				emails: emails
 			},function(){
 

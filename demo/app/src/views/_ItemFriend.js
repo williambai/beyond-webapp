@@ -2,6 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     friendItemTemplate = require('../../assets/templates/_itemFriend.tpl');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -22,7 +23,7 @@ exports = module.exports = Backbone.View.extend({
 			var $responseArea = this.$('.actionArea');
 			$responseArea.text('正在移除....');
 			$.ajax({
-					url: '/friends/account/me/' + this.model.get('fid'),
+					url: config.api.host + '/friends/account/me/' + this.model.get('fid'),
 					type: 'DELETE'
 				}).done(function onSuccess(){
 					$responseArea.text('移除成功！')

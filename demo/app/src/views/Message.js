@@ -5,6 +5,7 @@ var $ = require('jquery'),
     messageTemplate = require('../../assets/templates/message.tpl'),
     SearchView = require('./_SearchMessage'),
     ListView = require('./_ListMessage');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -32,7 +33,7 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 		this.listView = new ListView({
-			url: '/messages/account/me',
+			url: config.api.host + '/messages/account/me',
 			account: this.account,
 		});
 		this.searchView = new SearchView();

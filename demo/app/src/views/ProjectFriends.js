@@ -6,6 +6,7 @@ var $ = require('jquery'),
     FriendListView = require('./_ListProjectFriend'),
     Project = require('../models/Project'),
     FriendCollection = require('../models/FriendCollection');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -17,7 +18,7 @@ exports = module.exports = Backbone.View.extend({
 		this.pid = options.pid;
 		this.account = options.account;
 		this.project = new Project();
-		this.project.url = '/projects/' + options.pid;
+		this.project.url = config.api.host + '/projects/' + options.pid;
 		this.project.on('change', this.render,this);
 		this.on('load',this.load,this);
 	},
@@ -29,7 +30,7 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		this.loaded = true;
 		this.render();
-		var url = '/accounts/project/' + this.pid;
+		var url = config.api.host + '/accounts/project/' + this.pid;
 		var friendListView = new FriendListView({url: url});
 		friendListView.trigger('load');
 		var that = this;

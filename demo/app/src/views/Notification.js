@@ -5,6 +5,7 @@ var $ = require('jquery'),
     loadingTemplate = require('../../assets/templates/loading.tpl'),
     notificationTemplate = require('../../assets/templates/notification.tpl'),
     NotificationListView = require('./_ListNotification');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -31,7 +32,7 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 		this.notificationListView = new NotificationListView({
-			url: '/notifications/account/me',
+			url: config.api.host + '/notifications/account/me',
 			account: this.account,
 		});
 		this.notificationListView.trigger('load');

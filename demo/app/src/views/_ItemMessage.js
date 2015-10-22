@@ -5,6 +5,7 @@ var $ = require('jquery'),
     commentFormTemplate = require('../../assets/templates/_formComment1.tpl'),
     modalTemplate = require('../../assets/templates/_modal.tpl'),
     MessageUtil = require('./__Util');
+var config = require('../conf');
 
 Backbone.$ = $;
 require('./__ModalView');
@@ -88,7 +89,7 @@ exports = module.exports = Backbone.View.extend({
 		var comment = this.$('textarea[name=comment]').val() || '';
 		if(comment.length>0){
 			var url = this.model.url;
-			this.model.url = 'messages/account/me/' + this.model.get('_id') + '?type=comment';
+			this.model.url = config.api.host + 'messages/account/me/' + this.model.get('_id') + '?type=comment';
 			var success = this.model.save({comment: comment},{patch: true});
 			if(success){
 				this.onCommenAdded({

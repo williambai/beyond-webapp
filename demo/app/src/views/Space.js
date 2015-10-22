@@ -5,6 +5,7 @@ var $ = require('jquery'),
     spaceTemplate = require('../../assets/templates/space.tpl'),
     MessageFormView = require('./_FormMessage'),
     StatusListView = require('./_ListStatus');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -36,7 +37,7 @@ exports = module.exports =Backbone.View.extend({
 		this.render();
 		this.statusListView = new StatusListView({
 			el: '#list',
-			url: '/statuses/account/' + this.id,
+			url: config.api.host + '/statuses/account/' + this.id,
 			account: this.account,
 		});
 		this.statusListView.trigger('load');

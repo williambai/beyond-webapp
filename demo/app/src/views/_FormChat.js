@@ -4,6 +4,7 @@ var $ = require('jquery'),
     chatFormTemplate = require('../../assets/templates/_formChat.tpl'),
     FormView = require('./__FormView'),
     Chat = require('../models/Chat');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -29,7 +30,7 @@ exports = module.exports = FormView.extend({
 		var chatText = $('input[name=chat]').val();
 		if(chatText && /[^\s]+/.test(chatText)){
 			var chat = new Chat();
-			chat.url = '/chats/account/' + this.id;
+			chat.url = config.api.host + '/chats/account/' + this.id;
 			chat.set('type','text');
 			chat.set('content',
 				{
@@ -73,7 +74,7 @@ exports = module.exports = FormView.extend({
 		var formData = new FormData();
 		formData.append('files',evt.currentTarget.files[0]);
 		$.ajax({
-			url: '/attachments',
+			url: config.api.host + '/attachments',
 			type: 'POST',
 			data: formData,
 			cache: false,//MUST be false

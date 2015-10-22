@@ -4,6 +4,7 @@ var ChatUserView = require('./_ItemChatUser'),
     ListView = require('./__ListView'),
     FriendCollection = require('../models/FriendCollection'),
     ChatCollection = require('../models/ChatCollection');
+var config = require('../conf');
 
 exports = module.exports = ListView.extend({
 
@@ -12,7 +13,7 @@ exports = module.exports = ListView.extend({
 	initialize: function(options){
 		this.socketEvents = options.socketEvents;
 		this.collection = new FriendCollection();
-		this.collection.url = options.url || '/accounts/me?type=friend';
+		this.collection.url = options.url || config.api.host + '/accounts/me?type=friend';
 
 		this.currentChatView = options.currentChatView;
 		this.chats = options.chats;
@@ -65,7 +66,7 @@ exports = module.exports = ListView.extend({
 					socketEvents: this.socketEvents
 				});
 			chatView.render();
-			chatCollection.url = '/chats/' + roomId;
+			chatCollection.url = config.api.host + '/chats/' + roomId;
 			chatCollection.fetch({reset:true});
 			this.chats[roomId] = chatView;
 		}else{

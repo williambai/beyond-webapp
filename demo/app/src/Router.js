@@ -28,6 +28,7 @@ var ActivityView = require('./views/Activity');
 var MessageView = require('./views/Message');
 var SpaceView = require('./views/Space');
 var ChatView = require('./views/Chat');
+var config = require('./conf');
 
 Backbone.$ = $;
 
@@ -83,13 +84,13 @@ exports = module.exports = Backbone.Router.extend({
 		/* load projects */
 		var projectsView = new ProjectListView({
 			socketEvents: this.socketEvents,
-			url: '/projects/account/me'
+			url: config.api.host + '/projects/account/me'
 		});
 		projectsView.trigger('load');
 		/* load friends */
 		var friendsView = new ChatUserListView({
 			socketEvents: this.socketEvents,
-			url: '/friends/account/me'
+			url: config.api.host + '/friends/account/me'
 		});
 		friendsView.trigger('load');
 	},

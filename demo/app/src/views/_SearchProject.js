@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     SearchView = require('./__SearchView');
+var config = require('../conf');
 
 exports = module.exports = SearchView.extend({
 	el: '#search',
@@ -10,7 +11,7 @@ exports = module.exports = SearchView.extend({
 	},
 
 	submit: function(evt){
-		var uri = 'projects?type=search&search=';
+		var uri = config.api.host + '/projects?type=search&search=';
 		this.done(uri);
 		return false;
 	},

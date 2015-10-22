@@ -4,6 +4,7 @@ var $ = require('jquery'),
     addFriendTemplate = require('../../assets/templates/projectFriendAdd.tpl'),
     AccountListView = require('./_ListProjectAccount'),
     Project = require('../models/Project');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -19,7 +20,7 @@ exports = module.exports = Backbone.View.extend({
 		this.pid = options.pid;
 		this.account = options.account;
 		this.project = new Project();
-		this.project.url = '/projects/' + options.pid;
+		this.project.url = config.api.host + '/projects/' + options.pid;
 		var that = this;
 		this.project.fetch({
 			success: function(model){
@@ -32,7 +33,7 @@ exports = module.exports = Backbone.View.extend({
 
 	search: function(){
 		var emailDomain = this.account.email.substr(this.account.email.indexOf('@'));
-		var url = '/accounts?type=search' + 
+		var url = config.api.host + '/accounts?type=search' + 
 				'&searchStr=' + 
 				$('input[name=searchStr]').val() + emailDomain;
 		var accountListView = new AccountListView({url: url, pid: this.pid});

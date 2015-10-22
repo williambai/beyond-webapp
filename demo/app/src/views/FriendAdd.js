@@ -3,6 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     addFriendTemplate = require('../../assets/templates/friendAdd.tpl'),
     AccountListView = require('./_ListAccount');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -20,7 +21,7 @@ exports = module.exports = Backbone.View.extend({
 
 	search: function(){
 		var emailDomain = this.account.email.substr(this.account.email.indexOf('@'));
-		var url = '/accounts?type=search' + 
+		var url = config.api.host + '/accounts?type=search' + 
 				'&searchStr=' + 
 				$('input[name=searchStr]').val() + emailDomain;
 		var accountListView = new AccountListView({url: url});

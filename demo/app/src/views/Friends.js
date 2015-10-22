@@ -4,6 +4,7 @@ var $ = require('jquery'),
     friendsTemplate = require('../../assets/templates/friends.tpl'),
     ListView = require('./_ListFriend'),
     FriendCollection = require('../models/FriendCollection');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -18,7 +19,7 @@ exports = module.exports = Backbone.View.extend({
 
 	load: function(){
 		this.load = true;
-		var url = '/friends/account/' + this.accountId;
+		var url = config.api.host + '/friends/account/' + this.accountId;
 		var listView = new ListView({url: url});
 		listView.trigger('load');
 	},

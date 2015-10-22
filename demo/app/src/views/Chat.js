@@ -5,6 +5,7 @@ var $ = require('jquery'),
     chatSessionTemplate = require('../../assets/templates/chat.tpl'),
     ChatFormView = require('./_FormChat'),
     ChatListView = require('./_ListChat');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -27,7 +28,7 @@ exports = module.exports =  Backbone.View.extend({
 		this.loaded = true;
 		var that = this;
 		this.render();
-		var url = '/chats/account/' + that.id;
+		var url = config.api.host + '/chats/account/' + that.id;
 		that.chatListView = new ChatListView({url: url,account: that.account, socketEvents: that.socketEvents});
 		that.chatListView.isScrollUp = true;
 		that.chatListView.trigger('load');

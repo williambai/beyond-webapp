@@ -2,6 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     itemTemplate = require('../../assets/templates/_itemProjectFriend.tpl');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -22,7 +23,7 @@ exports = module.exports = Backbone.View.extend({
 			var $responseArea = this.$('.actionArea');
 			$responseArea.text('正在移除....');
 			$.ajax({
-					url: '/projects/'+ this.project.get('_id') +'?type=contact_remove'
+					url: config.api.host + '/projects/'+ this.project.get('_id') +'?type=contact_remove'
 					,type: 'PUT'
 					,data: {
 						cid: this.model.get('_id')

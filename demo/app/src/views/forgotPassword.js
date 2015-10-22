@@ -2,6 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     forgotPasswordTemplate = require('../../assets/templates/forgotPassword.tpl');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -13,7 +14,7 @@ exports = module.exports = Backbone.View.extend({
 		'submit form': 'forgotPassword'
 	},
 	forgotPassword: function(){
-		$.post('/forgotPassword',{
+		$.post(config.api.host + '/forgotPassword',{
 			email: $('input[name=email]').val()
 		},function(data){
 			window.location.hash = 'forgotpassword/success';

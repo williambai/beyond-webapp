@@ -5,6 +5,7 @@ var $ = require('jquery'),
     ChatFormView = require('./_FormProjectChat'),
     ChatListView = require('./_ListProjectChat'),
     Project = require('../models/Project');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -21,7 +22,7 @@ exports = module.exports = Backbone.View.extend({
 		this.account = options.account;
 		this.socketEvents = options.socketEvents;
 		this.model = new Project();
-		this.model.url = '/projects/' + options.id;
+		this.model.url = config.api.host + '/projects/' + options.id;
 		this.model.on('change', this.render,this);
 		this.on('load', this.load, this);
 	},
@@ -34,7 +35,7 @@ exports = module.exports = Backbone.View.extend({
 				if(that.account.id == model.get('accountId')){
 					model.set('isOwner', true);
 				}
-				var url = '/statuses/project/' + that.pid;
+				var url = config.api.host + '/statuses/project/' + that.pid;
 				that.chatListView = new ChatListView({url: url,account: that.account, socketEvents: that.socketEvents});
 				that.chatListView.isScrollUp = true;
 				that.chatListView.trigger('load');

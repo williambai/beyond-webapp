@@ -2,6 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     itemTemplate = require('../../assets/templates/_itemNotification.tpl');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -33,7 +34,7 @@ exports = module.exports = Backbone.View.extend({
 			}).done(function onSuccess(){
 				$responseArea.text('已处理！');
 				$.ajax({
-					url: '/notifications/account/me/' + that.model.get('_id'),
+					url: config.api.host + '/notifications/account/me/' + that.model.get('_id'),
 					type: 'PUT',
 					data: {
 						status: {

@@ -4,6 +4,7 @@ var $ = require('jquery'),
     projectIndexTemplate = require('../../assets/templates/projectIndex.tpl'),
     projectBarTemplate = require('../../assets/templates/_barProject.tpl'),
     Project = require('../models/Project');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -19,7 +20,7 @@ exports = module.exports = Backbone.View.extend({
 		this.pid = options.pid;
 		this.account = options.account;
 		this.model = new Project();
-		this.model.url = '/projects/' + options.pid;
+		this.model.url = config.api.host + '/projects/' + options.pid;
 		this.model.on('change', this.render,this);
 		this.on('load', this.load,this);
 	},
@@ -42,13 +43,13 @@ exports = module.exports = Backbone.View.extend({
 			if(confirm('你确定要打开项目吗？')){
 				that.model.set('closed', false);
 				that.render();
-				$.post('/projects/'+ this.model.get('_id') + '/open');
+				$.post(config.api.host + '/projects/'+ this.model.get('_id') + '/open');
 			}
 		}else{
 			if(confirm('你确定要关闭项目吗？')){
 				that.model.set('closed', true);
 				that.render();
-				$.post('/projects/'+ this.model.get('_id') + '/close');
+				$.post(config.api.host + '/projects/'+ this.model.get('_id') + '/close');
 			}
 		}
 		return false;

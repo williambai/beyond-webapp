@@ -3,6 +3,7 @@ var $ = require('jquery'),
 	FormView = require('./__FormView'),
 	Status = require('../models/Status'),
     statusFormTemplate = require('../../assets/templates/_formStatus.tpl');
+var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 	
@@ -33,7 +34,7 @@ exports = module.exports = FormView.extend({
 		var formData = new FormData();
 		formData.append('files',evt.currentTarget.files[0]);
 		$.ajax({
-			url: '/attachments',
+			url: config.api.host + '/attachments',
 			type: 'POST',
 			data: formData,
 			cache: false,//MUST be false
@@ -59,7 +60,7 @@ exports = module.exports = FormView.extend({
 			var that = this;
 			var filename = $(evt.currentTarget).find('img').attr('src');
 			$.ajax({
-				url: 'attachment',
+				url: config.api.host + '/attachment',
 				type: 'DELETE',
 				data: {
 					filename: filename

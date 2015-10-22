@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     SearchView = require('./__SearchView');
+var config = require('../conf');
 
 exports = module.exports = SearchView.extend({
 	el: '#search',
@@ -18,21 +19,21 @@ exports = module.exports = SearchView.extend({
 
 	allBox: function(evt){
 		this._pre(evt);
-		var uri = 'messages/account/me?type=all';
+		var uri = config.api.host + '/messages/account/me?type=all';
 		this.done(uri);
 		return false;
 	},
 
 	inBox: function(evt){
 		this._pre(evt);
-		var uri = 'messages/account/me?type=inbox';
+		var uri = config.api.host + '/messages/account/me?type=inbox';
 		this.done(uri);
 		return false;
 	},
 
 	outBox: function(evt){
 		this._pre(evt);
-		var uri = 'messages/account/me?type=outbox';
+		var uri = config.api.host + '/messages/account/me?type=outbox';
 		this.done(uri);
 		return false;
 	},

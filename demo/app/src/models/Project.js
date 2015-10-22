@@ -1,9 +1,10 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
+var config = require('../conf');
 
 exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
-	url: '/projects',
+	url: config.api.host + '/projects',
 	
 	default: {
 		isOwner: false,

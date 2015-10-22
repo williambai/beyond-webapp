@@ -1,10 +1,11 @@
 var Backbone = require('backbone');
 var StatusCollection = require('./StatusCollection');
+var config = require('../conf');
 
 exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
 
-	url: '/accounts',
+	url: config.api.host + '/accounts',
 
 	defaults: {
 		email: '',

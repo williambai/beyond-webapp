@@ -4,6 +4,7 @@ var $ = require('jquery'),
     ListView = require('./__ListView'),
     projectItemTemplate = require('../../assets/templates/_itemProject2.tpl'),
     ProjectCollection = require('../models/ProjectCollection');
+var config = require('../conf');
 
 exports = module.exports = ListView.extend({
 
@@ -12,7 +13,7 @@ exports = module.exports = ListView.extend({
 	initialize: function(options){
 		this.socketEvents = options.socketEvents;
 		this.collection = new ProjectCollection();
-		this.collection.url = options.url || '/projects/account/me';
+		this.collection.url = options.url || config.api.host + '/projects/account/me';
 		ListView.prototype.initialize.apply(this,options);
 	},
 
