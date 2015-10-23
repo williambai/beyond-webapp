@@ -94,6 +94,9 @@ exports = module.exports = Backbone.View.extend({
 			}
 			++this.page;
 			this.collection.fetch({
+				xhrFields: {
+					withCredentials: true
+				},
 				data: {
 					page: that.page,
 				},
@@ -137,6 +140,9 @@ exports = module.exports = Backbone.View.extend({
 			}
 			++this.page;
 			this.collection.fetch({
+				xhrFields: {
+					withCredentials: true
+				},
 				data: {
 					page: that.page,
 				},

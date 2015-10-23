@@ -24,7 +24,11 @@ exports = module.exports = Backbone.View.extend({
 
 	load: function() {
 		this.loaded = true;
-		this.model.fetch();
+		this.model.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
+		});
 	},
 
 	events: {

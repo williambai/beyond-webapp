@@ -1,27 +1,30 @@
 var _ = require('underscore');
 var ChatUserView = require('./_ItemChatUser'),
-    ChatView = require('./Chat'),
-    ListView = require('./__ListView'),
-    FriendCollection = require('../models/FriendCollection'),
-    ChatCollection = require('../models/ChatCollection');
+	ChatView = require('./Chat'),
+	ListView = require('./__ListView'),
+	FriendCollection = require('../models/FriendCollection'),
+	ChatCollection = require('../models/ChatCollection');
 var config = require('../conf');
 
 exports = module.exports = ListView.extend({
 
 	el: '#chat',
 
-	initialize: function(options){
+	initialize: function(options) {
 		this.socketEvents = options.socketEvents;
 		this.collection = new FriendCollection();
 		this.collection.url = options.url || config.api.host + '/accounts/me?type=friend';
 
 		this.currentChatView = options.currentChatView;
 		this.chats = options.chats;
-		ListView.prototype.initialize.apply(this,options);
+		ListView.prototype.initialize.apply(this, options);
 	},
 
-	getNewItemView: function(model){
-		var chatUserItemView = new ChatUserView({socketEvents: this.socketEvents,model: model});
+	getNewItemView: function(model) {
+		var chatUserItemView = new ChatUserView({
+			socketEvents: this.socketEvents,
+			model: model
+		});
 		chatUserItemView.bind('chat:start', this.startChat, this);
 		return chatUserItemView;
 	},
@@ -52,29 +55,34 @@ exports = module.exports = ListView.extend({
 	// },
 	// currentChatView: null,
 	// chats: {},
-	startChat: function(model){
-		if(null != this.currentChatView){
+	startChat: function(model) {
+		if (null != this.currentChatView) {
 			this.currentChatView.undelegateEvents();
 		}
-		
+
 		var roomId = model.get('accountId');
-		if(!this.chats[roomId]){
+		if (!this.chats[roomId]) {
 			var chatCollection = new ChatCollection();
 			var chatView = new ChatView({
-					room: model,
-					collection: chatCollection,
-					socketEvents: this.socketEvents
-				});
+				room: model,
+				collection: chatCollection,
+				socketEvents: this.socketEvents
+			});
 			chatView.render();
 			chatCollection.url = config.api.host + '/chats/' + roomId;
-			chatCollection.fetch({reset:true});
+			chatCollection.fetch({
+				xhrFields: {
+					withCredentials: true
+				},
+				reset: true
+			});
 			this.chats[roomId] = chatView;
-		}else{
+		} else {
 			var view = this.chats[roomId];
 			view.delegateEvents();
 			view.render();
 			var collection = view.collection;
-			collection.trigger('reset',collection);
+			collection.trigger('reset', collection);
 		}
 
 		this.currentChatView = this.chats[roomId];

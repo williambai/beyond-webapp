@@ -1,12 +1,12 @@
 var _ = require('underscore');
 var $ = require('jquery'),
-    Backbone = require('backbone'),
-    loadingTemplate = require('../../assets/templates/loading.tpl'),
-    profileTemplate = require('../../assets/templates/profile_wechat.tpl'),
-    StatusView = require('./_ItemStatus'),
-    Status = require('../models/Status'),
-    StatusCollection = require('../models/StatusCollection'),
-    Account = require('../models/Account');
+	Backbone = require('backbone'),
+	loadingTemplate = require('../../assets/templates/loading.tpl'),
+	profileTemplate = require('../../assets/templates/profile_wechat.tpl'),
+	StatusView = require('./_ItemStatus'),
+	Status = require('../models/Status'),
+	StatusCollection = require('../models/StatusCollection'),
+	Account = require('../models/Account');
 
 Backbone.$ = $;
 
@@ -20,22 +20,26 @@ exports = module.exports = Backbone.View.extend({
 		'click .logout': 'logout',
 	},
 
-	initialize: function(options){
+	initialize: function(options) {
 		this.appEvents = options.appEvents;
 		this.socketEvents = options.socketEvents;
 		this.model = new Account();
-		this.model.url = '/accounts/'+ options.id;
-		this.model.on('change',this.render,this);
-		this.on('load',this.load,this);
+		this.model.url = '/accounts/' + options.id;
+		this.model.on('change', this.render, this);
+		this.on('load', this.load, this);
 	},
 
-	load: function(){
+	load: function() {
 		this.loaded = true;
 		this.render();
-		this.model.fetch();
+		this.model.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
+		});
 	},
 
-	logout: function(){
+	logout: function() {
 		$.ajax({
 			url: config.api.host + '/logout',
 			type: 'GET',
@@ -52,10 +56,10 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
-	render: function(){
-		if(!this.loaded){
+	render: function() {
+		if (!this.loaded) {
 			this.$el.html(loadingTemplate());
-		}else{
+		} else {
 			this.$el.html(profileTemplate({
 				account: this.model.toJSON()
 			}));

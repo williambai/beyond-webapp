@@ -28,6 +28,9 @@ exports = module.exports = Backbone.View.extend({
 	load: function() {
 		var that = this;
 		this.model.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
 			success: function(model) {
 				if (that.account.id == model.get('accountId')) {
 					model.set('isOwner', true);

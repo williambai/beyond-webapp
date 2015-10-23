@@ -35,6 +35,9 @@ exports = module.exports = Backbone.View.extend({
 		friendListView.trigger('load');
 		var that = this;
 		this.project.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
 			success: function(model){
 				var createby = model.get('createby');
 				if(that.account.id == createby.uid){

@@ -23,6 +23,9 @@ exports = module.exports = Backbone.View.extend({
 		this.project.url = config.api.host + '/projects/' + options.pid;
 		var that = this;
 		this.project.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
 			success: function(model){
 				if(that.account.id == model.get('accountId')){
 					that.project.set('isOwner', true);

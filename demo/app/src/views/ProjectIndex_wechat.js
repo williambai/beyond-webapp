@@ -25,7 +25,11 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	load: function() {
-		this.model.fetch();
+		this.model.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
+		});
 	},
 
 	checkIn: function() {
