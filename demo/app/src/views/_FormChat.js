@@ -20,20 +20,21 @@ exports = module.exports = FormView.extend({
 	},
 
 	events: {
-		'submit form': 'sendChat',
+		'submit form': 'sendText',
 		'click .send-file': 'showFileExplorer',
-		'change input[name=file]': 'uploadFile',
+		'change input[name=file]': 'sendFile',
 	},
 
-	sendChat: function() {
+	sendText: function() {
 		var that = this;
-		var chatText = $('input[name=chat]').val();
-		if (chatText && /[^\s]+/.test(chatText)) {
-			var chat = new Chat();
-			chat.url = config.api.host + '/chats/account/' + this.id;
+		var text = $('input[name=chat]').val();
+		if (text && /[^\s]+/.test(text)) {
+			var chat = new Chat({
+				fid: this.id
+			});
 			chat.set('type', 'text');
 			chat.set('content', {
-				body: chatText
+				body: text
 			});
 			if (chat.isValid()) {
 				// that.socketEvents.trigger('socket:out:chat',{
@@ -67,7 +68,7 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	uploadFile: function(evt) {
+	sendFile: function(evt) {
 		var that = this;
 		var formData = new FormData();
 		formData.append('files', evt.currentTarget.files[0]);
@@ -83,34 +84,38 @@ exports = module.exports = FormView.extend({
 			contentType: false, //MUST be false
 		}).done(function(data) {
 			if (data && data.type) {
-				var chatText = config.api.host + '/' + data.filename;
-				// if(/jpg|png/.test(data.type)){
-				var chatObject = {
-					fromId: 'me',
-					toId: that.id,
-					username: '我：',
-					avatar: that.account.avatar,
-					status: chatText
-				};
-				var chat = new Chat(chatObject);
-				that.parentView.collection.add(chat);
-				that.parentView.onChatAdded(chat);
-
-				that.socketEvents.trigger('socket:out:chat', {
-					to: {
-						id: this.id
-					},
-					content: chatText
+				var chat = new Chat({
+					fid: that.id
+				});
+				chat.set('type', 'image');
+				chat.set('content', {
+					urls: config.api.host + data.filename,
 				});
 
+				var xhr = chat.save();
+				if (xhr) {
+					xhr
+						.success(function(model) {
+							if (!!model.code) return console.log(model);
+							that.success(new Chat(model));
+						})
+						.error(function(err) {
+							console.log(err);
+						});
+				}
+				// that.socketEvents.trigger('socket:out:chat', {
+				// 	to: {
+				// 		id: this.id
+				// 	},
+				// 	content: chatText
+				// });
 				// that.socketEvents.trigger('socket:chat',{
 				// 	action: 'chat',
 				// 	to: that.id,
 				// 	text: chatText
 				// });
-				that.$('input[name=file]').val('');
-				// }
 			}
+			that.$('input[name=file]').val('');
 		}).fail(function(err) {
 			that.$('input[name=file]').val('');
 			console.log(err);

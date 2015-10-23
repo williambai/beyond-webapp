@@ -81,15 +81,16 @@ exports = module.exports = FormView.extend({
 
 	submitForm: function() {
 		var that = this;
-		var statusText = that.$('textarea[name=text]').val();
+		var text = that.$('textarea[name=text]').val();
 		var attachments = [];
 		var $attachments = that.$('input[name=attachment]') || [];
 		$attachments.each(function(index) {
 			attachments.push($($attachments[index]).val());
 		});
-		this.model.set('type', 'text');
+		this.model.set('type', 'mixed');
 		this.model.set('content', {
-			body: statusText,
+			body: text,
+			urls: attachments
 		});
 		if (this.model.isValid()) {
 			// that.socketEvents.trigger('socket:status',{

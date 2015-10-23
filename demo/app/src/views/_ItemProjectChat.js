@@ -2,7 +2,6 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     chatItemTemplate = require('../../assets/templates/_itemProjectChat.tpl'),
-    chatItemImageTemplate = require('../../assets/templates/_itemChatImage.tpl'),
     MessageUtil = require('./__Util');
 
 Backbone.$ = $;
@@ -14,7 +13,7 @@ exports = module.exports = Backbone.View.extend({
 	initialize: function(options){
 		this._convertContent();
 		var createby = this.model.get('createby');
-		if(options.account.id == createby.uid){
+		if(createby && options.account.id == createby.uid){
 			this.model.set('from', 'me');
 		}
 	},

@@ -29,7 +29,7 @@ exports = module.exports = {
 			
 			case 'mixed':
 				var newContent = '<span>' + content.body + '</span>';
-				for(var i=0; i<content.urls.length; i++){
+				for(var i in content.urls){
 					if(/[png|jpg]$/.test(content.urls[i])){
 						newContent += '<img src="' + content.urls[i] +'" width="' + parseInt(50/content.urls.length-1) +'%" target-data="'+ content.urls[i] +'" target-type="image">';
 					}else if(/[pdf]$/.test(content.urls[i])){
@@ -114,10 +114,10 @@ exports = module.exports = {
 	},
 
 	transformTime: function(createtime){
-		var deltatime = (_.now() - new Date(createtime).getTime())/1000;
-		var days = parseInt(deltatime/(24*60*60));
-		var hours = parseInt(deltatime/(60*60));
-		var mins = parseInt(deltatime/60);
+		var deltatime = (new Date().getTime() - new Date(createtime).getTime())/1000;
+		var days = Math.floor(deltatime/(24*60*60));
+		var hours = Math.floor(deltatime/(60*60));
+		var mins = Math.floor(deltatime/60);
 		if(days>0){
 			return days + ' 天之前';
 		}else if(hours>0){

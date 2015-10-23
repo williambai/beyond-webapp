@@ -18,7 +18,7 @@ exports = module.exports = Backbone.View.extend({
 		this.account = options.account;
 		this._convertContent();
 		this._transformTime();
-		if (this.model.get('fromId') == this.account.id) {
+		if (this.model.get('from').uid == this.account.id) {
 			this.uiControl.showToUser = true;
 		} else {
 			this.uiControl.showToUser = false;
@@ -89,8 +89,8 @@ exports = module.exports = Backbone.View.extend({
 		var comment = this.$('textarea[name=comment]').val() || '';
 		if (comment.length > 0) {
 			var url = this.model.url;
-			this.model.url = config.api.host + 'messages/account/me/' + this.model.get('_id') + '?type=comment';
-			var success = this.model.save({
+			this.model.url = config.api.host + '/messages/account/me/' + this.model.get('_id') + '?type=comment';
+			var xhr = this.model.save({
 				comment: comment
 			}, {
 				xhrFields: {
@@ -98,11 +98,11 @@ exports = module.exports = Backbone.View.extend({
 				},
 				patch: true
 			});
-			if (success) {
+			if (xhr) {
 				this.onCommenAdded({
-					accountId: this.account.id,
+					uid: this.account.id,
 					username: this.account.username,
-					comment: comment
+					content: comment
 				});
 				this.$('.comment-editor').html('');
 			};

@@ -4,7 +4,7 @@ var $ = require('jquery'),
 	menuBarTemplate = require('../../assets/templates/_barProject.tpl'),
 	chatFormTemplate = require('../../assets/templates/_formProjectChat.tpl'),
 	FormView = require('./__FormView'),
-	Chat = require('../models/ProjectStatus');
+	ProjectStatus = require('../models/ProjectStatus');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -24,30 +24,31 @@ exports = module.exports = FormView.extend({
 	barToggle: true,
 
 	events: {
-		'submit form': 'sendChat',
+		'submit form': 'sendText',
 		'click .send-file': 'showFileExplorer',
-		'change input[name=file]': 'uploadFile',
+		'change input[name=file]': 'sendFile',
 		'click .chat-toggle': 'changeToolbar'
 	},
 
-	sendChat: function() {
+	sendText: function() {
 		var that = this;
-		var chatText = $('input[name=chat]').val();
-		if (chatText && /[^\s]+/.test(chatText)) {
-			var chat = new Chat();
-			chat.url = config.api.host + '/statuses/project/' + this.id;
-			chat.set('type', 'text');
-			chat.set('content', {
-				body: chatText
+		var text = $('input[name=chat]').val();
+		if (text && /[^\s]+/.test(text)) {
+			var projectStatus = new ProjectStatus({
+				pid: that.id
 			});
-			if (chat.isValid()) {
+			projectStatus.set('type', 'text');
+			projectStatus.set('content', {
+				body: text
+			});
+			if (projectStatus.isValid()) {
 				// that.socketEvents.trigger('socket:out:project',{
 				// 	to: {
 				// 		id: that.id
 				// 	},
-				// 	content: chat.toJSON(),
+				// 	content: projectStatus.toJSON(),
 				// });
-				var xhr = chat.save(null, {
+				var xhr = projectStatus.save(null, {
 					xhrFields: {
 						withCredentials: true
 					},
@@ -55,12 +56,9 @@ exports = module.exports = FormView.extend({
 				if (xhr) {
 					xhr
 						.success(function(model) {
-							if (!!model.code) {
-								console.log(model);
-								return;
-							}
+							if (!!model.code) return console.log(model);
 							$('input[name=chat]').val('');
-							that.success(new Chat(model));
+							that.success(new ProjectStatus(model));
 						})
 						.error(function(err) {
 							console.log(err);
@@ -77,7 +75,7 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	uploadFile: function(evt) {
+	sendFile: function(evt) {
 		var that = this;
 		var formData = new FormData();
 		formData.append('files', evt.currentTarget.files[0]);
@@ -94,25 +92,35 @@ exports = module.exports = FormView.extend({
 			contentType: false, //MUST be false
 		}).done(function(data) {
 			if (data && data.type) {
-				var content = 'http://' + location.host + data.filename;
-				// if(/jpg|png/.test(data.type)){
-				var status = new Status({
-					fromId: that.account.id,
-					toId: that.id,
-					username: that.account.username,
-					avatar: that.account.avatar,
-					content: content
+				var projectStatus = new ProjectStatus({
+					pid: that.id
 				});
-				that.parentView.collection.add(status);
-				that.parentView.onChatAdded(status);
-
-				that.socketEvents.trigger('socket:out:project', {
-					to: {
-						id: that.id
-					},
-					content: content,
+				projectStatus.set('type', 'image');
+				projectStatus.set('content', {
+					urls: config.api.host + data.filename,
 				});
+				// that.socketEvents.trigger('socket:out:project', {
+				// 	to: {
+				// 		id: that.id
+				// 	},
+				// 	content: projectStatus.toJSON(),
+				// });
 				// }
+				var xhr = projectStatus.save(null, {
+					xhrFields: {
+						withCredentials: true
+					},
+				});
+				if (xhr) {
+					xhr
+						.success(function(model) {
+							if (!!model.code) return console.log(model);
+							that.success(new ProjectStatus(model));
+						})
+						.error(function(err) {
+							console.log(err);
+						});
+				}
 			}
 			that.$('input[name=file]').val('');
 		}).fail(function(err) {

@@ -8,11 +8,13 @@
 			var projectId = req.params.pid;
 			var accountId = req.session.accountId;
 			var message = req.body;
+			message.pid = projectId;
 			message.createby = {
 				uid: req.session.accountId,
 				username: req.session.username,
 				avatar: req.session.avatar
 			};
+			message.lastupdatetime = new Date();
 
 			async.waterfall(
 				[

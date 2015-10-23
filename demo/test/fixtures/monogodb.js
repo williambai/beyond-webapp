@@ -208,7 +208,7 @@ var upsertFriends = function(callback){
 						username: user.username,
 						avatar: user.avatar,
 						status: {
-							code: i%4,
+							code: index%4,
 							message: message,
 						},
 						histories: [],
@@ -612,12 +612,12 @@ async.waterfall(
 	[
 		dropCollections,
 		upsertAccounts,
-		// upsertFriends,
+		upsertFriends,
 		upsertAccountStatuses,
 		upsertAccountMessages,
 		upsertProjects,
 		upsertProjectStatuses,
-		// upsertAccountNotifications,
+		upsertAccountNotifications,
 	],
 	function(err,result){
 		if(err) console.log(err);

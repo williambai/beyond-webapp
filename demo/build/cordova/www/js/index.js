@@ -33,6 +33,23 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
+        document.addEventListener("online", app.onlineEvent, false);
+        document.addEventListener("offline", app.offlineEvent, false);
+        app.backgroundModePlugin();
+    },
+    //network online: hide offline tip
+    onlineEvent: function(){
+        var parentElement = document.getElementById('deviceready');
+        parentElement.setAttribute('style', 'display:none;');
+    },
+
+    //network online: display offline tip
+    offlineEvent: function(){
+        var parentElement = document.getElementById('deviceready');
+        parentElement.setAttribute('style', 'display:block;');
+    },
+
+    backgroundModePlugin: function(){
         // Android customization
         cordova.plugins.backgroundMode.setDefaults({ text:'Doing heavy tasks.'});
         // Enable background mode
@@ -64,7 +81,6 @@ var app = {
             //     });
             // }, 5000);
         };
-        app.receivedEvent('deviceready');
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {

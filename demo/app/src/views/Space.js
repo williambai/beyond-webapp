@@ -48,6 +48,7 @@ exports = module.exports =Backbone.View.extend({
 		if(this.$('.status-editor form').length == 0){
 			var messageFormView = new MessageFormView({
 				el: '.status-editor',
+				fid: that.id
 			});
 			messageFormView.success = function(status){
 				that.$('#feedback').html('私信已发送成功');

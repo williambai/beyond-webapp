@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	FormView = require('./__FormView'),
-	Status = require('../models/Status'),
-	statusFormTemplate = require('../../assets/templates/_formStatus.tpl');
+	Message = require('../models/Message'),
+	formTemplate = require('../../assets/templates/_formStatus.tpl');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
@@ -17,11 +17,15 @@ exports = module.exports = FormView.extend({
 	},
 
 	initialize: function(options) {
-		this.model = new Status();
+		this.model = new Message({
+			fid: options.fid
+		});
 	},
 
 	reset: function() {
-		this.model = new Status();
+		this.model = new Message({
+			fid: options.fid
+		});
 	},
 
 	showFileExplorer: function() {
@@ -81,15 +85,16 @@ exports = module.exports = FormView.extend({
 
 	submitForm: function() {
 		var that = this;
-		var statusText = that.$('textarea[name=text]').val();
+		var text = that.$('textarea[name=text]').val();
 		var attachments = [];
 		var $attachments = that.$('input[name=attachment]') || [];
 		$attachments.each(function(index) {
 			attachments.push($($attachments[index]).val());
 		});
-		this.model.set('type', 'text');
+		this.model.set('type', 'mixed');
 		this.model.set('content', {
-			body: statusText,
+			body: text,
+			urls: attachments,
 		});
 		if (this.model.isValid()) {
 			// that.socketEvents.trigger('socket:message',{
@@ -114,7 +119,7 @@ exports = module.exports = FormView.extend({
 						that.$('.attachments').empty();
 						that.$('form').addClass('hidden');
 
-						that.success(new Status(model));
+						that.success(new Message(model));
 					})
 					.error(function(err) {
 						console.log(err);
@@ -128,7 +133,7 @@ exports = module.exports = FormView.extend({
 	},
 
 	render: function() {
-		this.$el.html(statusFormTemplate());
+		this.$el.html(formTemplate());
 		return this;
 	},
 
