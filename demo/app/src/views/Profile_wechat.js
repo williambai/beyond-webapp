@@ -36,7 +36,17 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	logout: function(){
-		$.get('/logout');
+		$.ajax({
+			url: config.api.host + '/logout',
+			type: 'GET',
+			xhrFields: {
+				withCredentials: true
+			},
+		}).done(function() {
+
+		}).fail(function() {
+
+		});
 		this.appEvents.trigger('logout');
 		window.location.hash = 'login';
 		return false;

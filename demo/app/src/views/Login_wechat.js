@@ -1,7 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
-    Backbone = require('backbone'),
-    loginTemplate = require('../../assets/templates/login_wechat.tpl');
+	Backbone = require('backbone'),
+	loginTemplate = require('../../assets/templates/login_wechat.tpl');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -12,24 +13,30 @@ exports = module.exports = Backbone.View.extend({
 	events: {
 		'submit form': 'login'
 	},
-	initialize: function(options){
+	initialize: function(options) {
 		this.appEvents = options.appEvents;
 	},
-	login: function(){
+	login: function() {
 		var that = this;
-		$.post('/login',{
-			email: $('input[name=email]').val(),
-			password: $('input[name=password]').val()
-		},function(data){
-			that.appEvents.trigger('logined',data);
+		$.ajax({
+			url: config.api.host + '/login',
+			xhrFields: {
+				withCredentials: true
+			},
+			data: {
+				email: $('input[name=email]').val(),
+				password: $('input[name=password]').val()
+			}
+		}).done(function(data) {
+			that.appEvents.trigger('logined', data);
 			window.location.hash = 'index';
-		}).error(function(){
+		}).fail(function() {
 			$('#error').text('登录失败');
 			$('#error').slideDown();
 		});
 		return false;
 	},
-	render: function(){
+	render: function() {
 		this.$el.html(loginTemplate());
 		return this;
 	},

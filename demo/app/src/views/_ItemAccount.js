@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
-    Backbone = require('backbone'),
-    accountItemTemplate = require('../../assets/templates/_itemAccount.tpl');
+	Backbone = require('backbone'),
+	accountItemTemplate = require('../../assets/templates/_itemAccount.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -10,31 +10,33 @@ exports = module.exports = Backbone.View.extend({
 
 	tagName: 'div',
 
-	initialize: function(options){
-	},
+	initialize: function(options) {},
 
 	events: {
 		'click .addbutton': 'addFriend',
 	},
 
-	addFriend: function(){
+	addFriend: function() {
 		var $responseArea = this.$('.actionArea');
 
 		$.ajax({
-				url: config.api.host + '/friends/account/me',
-				type: 'POST',
-				data: {
-					fid: this.model.get('_id')
-				}
-			}).done(function onSuccess(){
-				$responseArea.text('已邀请！');
-			}).fail(function onError(){
-				$responseArea.text('邀请失败！');
-			});
+			url: config.api.host + '/friends/account/me',
+			type: 'POST',
+			data: {
+				fid: this.model.get('_id')
+			},
+			xhrFields: {
+				withCredentials: true
+			},
+		}).done(function onSuccess() {
+			$responseArea.text('已邀请！');
+		}).fail(function onError() {
+			$responseArea.text('邀请失败！');
+		});
 		return false;
 	},
 
-	render: function(){
+	render: function() {
 		this.$el.html(accountItemTemplate({
 			model: this.model.toJSON(),
 			addButton: this.addButton,

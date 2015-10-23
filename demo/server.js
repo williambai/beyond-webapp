@@ -85,9 +85,6 @@ app.get('/', function(req,res){
 
 //登录判断中间件
 app.isLogined = function(req,res,next){
-	console.log('===')
-	console.log(req.headers)
-	console.log(req.session)
 	if(req.session.loggedIn){
 		next();
 	}else{

@@ -21,7 +21,11 @@ exports = module.exports = FormView.extend({
 		var that = this;
 		this.model.set('name',$('input[name=name]').val());
 		this.model.set('description',$('textarea[name=description]').val());
-		var xhr = this.model.save();
+		var xhr = this.model.save(null, {
+				xhrFields: {
+					withCredentials: true
+				},
+			});
 		if(xhr){
 			xhr
 				.success(function(data){

@@ -2,11 +2,11 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	FormView = require('./__FormView'),
 	Status = require('../models/Status'),
-    statusFormTemplate = require('../../assets/templates/_formStatus.tpl');
+	statusFormTemplate = require('../../assets/templates/_formStatus.tpl');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
-	
+
 	el: '.status-editor',
 
 	events: {
@@ -16,47 +16,48 @@ exports = module.exports = FormView.extend({
 		'submit form': 'submitForm',
 	},
 
-	initialize: function(options){
+	initialize: function(options) {
 		this.model = new Status();
 	},
 
-	reset: function(){
+	reset: function() {
 		this.model = new Status();
 	},
 
-	showFileExplorer: function(){
+	showFileExplorer: function() {
 		$('input[name=file]').click();
 		return false;
 	},
 
-	addAttachment: function(evt){
+	addAttachment: function(evt) {
 		var that = this;
 		var formData = new FormData();
-		formData.append('files',evt.currentTarget.files[0]);
+		formData.append('files', evt.currentTarget.files[0]);
 		$.ajax({
 			url: config.api.host + '/attachments',
 			type: 'POST',
 			data: formData,
-			cache: false,//MUST be false
-			processData: false,//MUST be false
-			contentType:false,//MUST be false
-			success: function(data){
-				if(data && data.type){
-					// if(/jpg|png/.test(data.type)){
-						that.$('.attachments').append('<span class="attachment"><input type="hidden" name="attachment" value="'+ data.filename +'"><img src="'+ data.filename +'" width="80px" height="80px">&nbsp;</span>');
-						that.$('input[name=file]').val('');
-					// }
-				}
+			xhrFields: {
+				withCredentials: true
 			},
-			error: function(err){
-			  console.log(err);
-			},
+			cache: false, //MUST be false
+			processData: false, //MUST be false
+			contentType: false, //MUST be false
+		}).done(function(data) {
+			if (data && data.type) {
+				// if(/jpg|png/.test(data.type)){
+				that.$('.attachments').append('<span class="attachment"><input type="hidden" name="attachment" value="' + data.filename + '"><img src="' + data.filename + '" width="80px" height="80px">&nbsp;</span>');
+				that.$('input[name=file]').val('');
+				// }
+			}
+		}).fail(function(err) {
+			console.log(err);
 		});
-      return false;
+		return false;
 	},
 
-	removeAttachment: function(evt){
-		if(confirm('放弃上传它吗？')){
+	removeAttachment: function(evt) {
+		if (confirm('放弃上传它吗？')) {
 			var that = this;
 			var filename = $(evt.currentTarget).find('img').attr('src');
 			$.ajax({
@@ -64,35 +65,44 @@ exports = module.exports = FormView.extend({
 				type: 'DELETE',
 				data: {
 					filename: filename
-				}
-			}).done(function(){
+				},
+				xhrFields: {
+					withCredentials: true
+				},
+			}).done(function() {
 				//remove attatchment
 				$(evt.currentTarget).remove();
+			}).fail(function() {
+
 			});
 		}
 		return false;
 	},
 
-	submitForm: function(){
+	submitForm: function() {
 		var that = this;
 		var statusText = that.$('textarea[name=text]').val();
 		var attachments = [];
-		var $attachments = that.$('input[name=attachment]') ||[];
-		$attachments.each(function(index){
+		var $attachments = that.$('input[name=attachment]') || [];
+		$attachments.each(function(index) {
 			attachments.push($($attachments[index]).val());
 		});
-		this.model.set('type','text');
-		this.model.set('content',{
+		this.model.set('type', 'text');
+		this.model.set('content', {
 			body: statusText,
 		});
-		if(this.model.isValid()){
+		if (this.model.isValid()) {
 			// that.socketEvents.trigger('socket:status',{
 			// });
-			var xhr = this.model.save();
-			if(xhr){
+			var xhr = this.model.save(null, {
+				xhrFields: {
+					withCredentials: true
+				},
+			});
+			if (xhr) {
 				xhr
-					.success(function(model){
-						if(!!model.code){
+					.success(function(model) {
+						if (!!model.code) {
 							that.$('#error').html('<div class="alert alert-danger">' + model.message + '</div>');
 							that.$('#error').slideDown();
 							return;
@@ -105,18 +115,18 @@ exports = module.exports = FormView.extend({
 
 						that.success(new Status(model));
 					})
-					.error(function(err){
+					.error(function(err) {
 						console.log(err);
 						that.$('#error').html('<div class="alert alert-danger">unknown error</div>');
 						that.$('#error').slideDown();
 					});
-			}			
+			}
 		}
 
 		return false;
 	},
 
-	render: function(){
+	render: function() {
 		this.$el.html(statusFormTemplate());
 		return this;
 	},

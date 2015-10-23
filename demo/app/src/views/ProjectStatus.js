@@ -1,11 +1,11 @@
 var _ = require('underscore');
 var $ = require('jquery'),
-    Backbone = require('backbone'),
-    projectStatusTemplate = require('../../assets/templates/projectStatus.tpl'),
-    bottomBarTemplate = require('../../assets/templates/_barProject.tpl'),
-    StatusListView = require('./_ListProjectStatus'),
-    Status = require('../models/Status'),
-    StatusCollection = require('../models/StatusCollection');
+	Backbone = require('backbone'),
+	projectStatusTemplate = require('../../assets/templates/projectStatus.tpl'),
+	bottomBarTemplate = require('../../assets/templates/_barProject.tpl'),
+	StatusListView = require('./_ListProjectStatus'),
+	Status = require('../models/Status'),
+	StatusCollection = require('../models/StatusCollection');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -19,14 +19,14 @@ exports = module.exports = Backbone.View.extend({
 		'submit form': 'updateStatus',
 		'scroll': 'scroll',
 	},
-	
-	initialize: function(options){
+
+	initialize: function(options) {
 		this.pid = options.pid;
-		options.socketEvents.bind('status:me',this.onSocketStatusAdded, this);
+		options.socketEvents.bind('status:me', this.onSocketStatusAdded, this);
 		this.on('load', this.load, this);
 	},
 
-	load: function(){
+	load: function() {
 		this.loaded = true;
 		this.render();
 		this.statusListView = new StatusListView({
@@ -37,26 +37,36 @@ exports = module.exports = Backbone.View.extend({
 		this.statusListView.trigger('load');
 	},
 
-	onSocketStatusAdded: function(data){
+	onSocketStatusAdded: function(data) {
 		var newStatus = data.data;
 		this.statusListView.trigger('append', newStatus);
 		// this.collection.add(new Status({status: newStatus.status, name: newStatus.name}));
 	},
 
 
-	editorToggle: function(){
-		if(this.$('.status-editor').hasClass('hidden')){
+	editorToggle: function() {
+		if (this.$('.status-editor').hasClass('hidden')) {
 			this.$('.status-editor').removeClass('hidden').hide().fadeIn('slow');
-		}else{
+		} else {
 			this.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
 		}
 	},
 
-	updateStatus: function(){
+	updateStatus: function() {
 		var statusCollection = this.collection;
 		var statusText = $('textarea[name=text]').val();
-		$.post(config.api.host + '/messages/project/'+ this.pid,{text: statusText},function(data){
+		$.ajax({
+			url: config.api.host + '/messages/project/' + this.pid,
+			xhrFields: {
+				withCredentials: true
+			},
+			data: {
+				text: statusText
+			}
+		}).done(function(data) {
 			// statusCollection.add(new Status({status: statusText,name:{first:'我'}}));
+		}).fail(function() {
+
 		});
 		// var statusModel = new Status({status:statusText,name: {first:'我'}});
 		// this.onStatusAdded(statusModel);
@@ -65,21 +75,28 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
-	scroll: function(){
+	scroll: function() {
 		this.statusListView.scroll();
 		return false;
 	},
 
-	render: function(){
+	render: function() {
 		//增加 bottom Bar
-		if($('.navbar-absolute-bottom').length == 0){
-			var bottomBarHtml = bottomBarTemplate({id:this.pid});
-			$('.app').prepend('<div class="bottom-bar">' +bottomBarHtml + '</div>');
-			if(!$('body').hasClass('has-navbar-bottom')){
+		if ($('.navbar-absolute-bottom').length == 0) {
+			var bottomBarHtml = bottomBarTemplate({
+				id: this.pid
+			});
+			$('.app').prepend('<div class="bottom-bar">' + bottomBarHtml + '</div>');
+			if (!$('body').hasClass('has-navbar-bottom')) {
 				$('body').addClass('has-navbar-bottom');
 			}
 		}
-		this.$el.html(projectStatusTemplate({model:{_id: this.pid, name: '动态'}}));
+		this.$el.html(projectStatusTemplate({
+			model: {
+				_id: this.pid,
+				name: '动态'
+			}
+		}));
 		return this;
 	},
 });

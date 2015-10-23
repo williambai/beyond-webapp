@@ -24,7 +24,11 @@ exports = module.exports = FormView.extend({
 		this.model.set('password', $('input[name=password').val());
 		this.model.set('cpassword', $('input[name=cpassword').val());
 		
-		var xhr = this.model.save();
+		var xhr = this.model.save(null, {
+				xhrFields: {
+					withCredentials: true
+				},
+			});
 		if(xhr){
 			xhr
 				.success(function(data){
