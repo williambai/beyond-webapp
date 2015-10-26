@@ -1,10 +1,11 @@
-var sio = require('socket.io-client')('http://localhost:8080');
+var config = require('./conf');
 
 exports = module.exports = function(options){
 	
 	var eventDispatcher = options.eventDispatcher;
 
 	var connectSocket = function(socketAccount){
+			var sio = require('socket.io-client')(config.api.host);
 			var accountId = socketAccount && socketAccount.accountId;
 			var socket = sio.connect();
 
@@ -52,6 +53,7 @@ exports = module.exports = function(options){
 			});
 
 			socket.on('login', function(data){
+				console.log('++++++')
 				if(data && data.from){
 					var user = data.from;
 					var eventName = 'socket:in:login:' + user.id;

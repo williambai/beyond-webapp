@@ -46,8 +46,9 @@ exports = module.exports = Backbone.View.extend({
 		if(this.$('.status-editor form').length == 0){
 			var statusFormView = new StatusFormView({
 				el: '.status-editor',
+				socketEvents: that.socketEvents
 			});
-			statusFormView.success = function(status){
+			statusFormView.done = function(status){
 				that.statusListView.trigger('prepend',status);
 			};
 			statusFormView.render();

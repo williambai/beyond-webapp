@@ -64,7 +64,7 @@ exports = module.exports = Backbone.View.extend({
 					socketEvents: this.socketEvents,
 					parentView: this,
 				});
-			chatFormView.success = function(model){
+			chatFormView.done = function(model){
 				that.chatListView.trigger('append', model);
 			};
 			$(chatFormView.render().el).prependTo('.app');

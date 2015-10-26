@@ -37,12 +37,6 @@ exports = module.exports = FormView.extend({
 				body: text
 			});
 			if (chat.isValid()) {
-				// that.socketEvents.trigger('socket:out:chat',{
-				// 	action: 'chat',
-				// 	to: that.id,
-				// 	text: chat.toJSON()
-				// });
-
 				var xhr = chat.save();
 				if (xhr) {
 					xhr
@@ -52,7 +46,15 @@ exports = module.exports = FormView.extend({
 								return;
 							}
 							$('input[name=chat]').val('');
-							that.success(new Chat(model));
+
+							//update UI
+							that.done(new Chat(model));
+							//trigger socket.io
+							that.socketEvents.trigger('socket:out:chat',{
+								action: 'chat',
+								to: that.id,
+								text: chat.toJSON()
+							});
 						})
 						.error(function(err) {
 							console.log(err);
@@ -97,7 +99,7 @@ exports = module.exports = FormView.extend({
 					xhr
 						.success(function(model) {
 							if (!!model.code) return console.log(model);
-							that.success(new Chat(model));
+							that.done(new Chat(model));
 						})
 						.error(function(err) {
 							console.log(err);

@@ -18,6 +18,7 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.model = new Status();
+		this.socketEvents = options.socketEvents;
 	},
 
 	reset: function() {
@@ -93,8 +94,6 @@ exports = module.exports = FormView.extend({
 			urls: attachments
 		});
 		if (this.model.isValid()) {
-			// that.socketEvents.trigger('socket:status',{
-			// });
 			var xhr = this.model.save(null, {
 				xhrFields: {
 					withCredentials: true
@@ -114,7 +113,10 @@ exports = module.exports = FormView.extend({
 						that.$('.attachments').empty();
 						that.$('form').addClass('hidden');
 
-						that.success(new Status(model));
+						//update UI
+						that.done(new Status(model));
+						//trigger socket.io
+						that.socketEvents.trigger('socket:out:status',model);
 					})
 					.error(function(err) {
 						console.log(err);

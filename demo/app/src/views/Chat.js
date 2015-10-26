@@ -51,7 +51,7 @@ exports = module.exports =  Backbone.View.extend({
 					socketEvents: this.socketEvents,
 					parentView: this,
 				});
-			chatFromView.success = function(chat){
+			chatFromView.done = function(chat){
 				that.chatListView.trigger('append', chat);
 			};
 			this.chatFromView = chatFromView;

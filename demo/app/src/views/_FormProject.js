@@ -34,8 +34,10 @@ exports = module.exports = FormView.extend({
 						that.$('#error').slideDown();
 						return;
 					}
+					//update UI
+					that.done();
+					//trigger socket.io
 					that.socketEvents.trigger('app:projects:reload');
-					that.success();
 				})
 				.error(function(err){
 					console.log(err);

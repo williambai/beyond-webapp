@@ -42,12 +42,6 @@ exports = module.exports = FormView.extend({
 				body: text
 			});
 			if (projectStatus.isValid()) {
-				// that.socketEvents.trigger('socket:out:project',{
-				// 	to: {
-				// 		id: that.id
-				// 	},
-				// 	content: projectStatus.toJSON(),
-				// });
 				var xhr = projectStatus.save(null, {
 					xhrFields: {
 						withCredentials: true
@@ -58,7 +52,16 @@ exports = module.exports = FormView.extend({
 						.success(function(model) {
 							if (!!model.code) return console.log(model);
 							$('input[name=chat]').val('');
-							that.success(new ProjectStatus(model));
+
+							//update UI
+							that.done(new ProjectStatus(model));
+							//trigger socket.io
+							that.socketEvents.trigger('socket:out:project',{
+								to: {
+									id: that.id
+								},
+								content: projectStatus.toJSON(),
+							});
 						})
 						.error(function(err) {
 							console.log(err);
@@ -115,7 +118,7 @@ exports = module.exports = FormView.extend({
 					xhr
 						.success(function(model) {
 							if (!!model.code) return console.log(model);
-							that.success(new ProjectStatus(model));
+							that.done(new ProjectStatus(model));
 						})
 						.error(function(err) {
 							console.log(err);

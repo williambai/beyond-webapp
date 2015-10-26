@@ -37,6 +37,7 @@ exports = module.exports = FormView.extend({
 						that.$('#error').slideDown();
 						return;
 					}
+					//update UI
 					that.done();
 				})
 				.error(function(err){

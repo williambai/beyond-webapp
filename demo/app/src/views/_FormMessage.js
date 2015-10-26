@@ -17,14 +17,16 @@ exports = module.exports = FormView.extend({
 	},
 
 	initialize: function(options) {
+		this.fid = options.fid;
+		this.socketEvents = options.socketEvents;
 		this.model = new Message({
-			fid: options.fid
+			fid: options.fid,
 		});
 	},
 
 	reset: function() {
 		this.model = new Message({
-			fid: options.fid
+			fid: this.fid,
 		});
 	},
 
@@ -97,9 +99,6 @@ exports = module.exports = FormView.extend({
 			urls: attachments,
 		});
 		if (this.model.isValid()) {
-			// that.socketEvents.trigger('socket:message',{
-			// });
-
 			var xhr = this.model.save(null, {
 				xhrFields: {
 					withCredentials: true
@@ -119,7 +118,11 @@ exports = module.exports = FormView.extend({
 						that.$('.attachments').empty();
 						that.$('form').addClass('hidden');
 
-						that.success(new Message(model));
+						//update UI
+						that.done(new Message(model));
+						//trigger socket.io
+						that.socketEvents.trigger('socket:message',{
+						});
 					})
 					.error(function(err) {
 						console.log(err);

@@ -17,14 +17,14 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	load: function(){
-		var loginForm = new LoginFormView({
+		var loginFormView = new LoginFormView({
 			appEvents: this.appEvents,
 			socketEvents: this.socketEvents,
 		});
-		loginForm.success = function(){
+		loginFormView.done = function(){
 			window.location.hash = 'index';
 		}
-		loginForm.trigger('load');
+		loginFormView.trigger('load');
 	},
 
 	render: function(){

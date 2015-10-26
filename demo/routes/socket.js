@@ -117,6 +117,8 @@ exports =module.exports = function(app,models){
 			socket.leaveAll();
 		});
 		socket.on('status', function(content){
+			console.log('++++++')
+			console.log(content)
 			var user = socket.user;
 			if(user && user.id){
 				var roomId = user.id;
