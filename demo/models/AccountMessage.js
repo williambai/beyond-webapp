@@ -113,11 +113,6 @@ module.exports = exports = function(app,mongoose){
 				}]				
 			}],
 			weight: Number, // important index: 0~100
-			// voters:[],//accountId
-			// votes: [],//accountId,username,vote(good or bad)
-			// good: Number,
-			// bad: Number,
-			// score: Number,
 			lastupdatetime: Date
 		});
 

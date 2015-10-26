@@ -5,6 +5,7 @@ var $ = require('jquery'),
     indexTemplate = require('../../assets/templates/index.tpl'),
     ProjectSearchView = require('./_SearchProject'),
     ProjectListView = require('./_ListProject2');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -23,10 +24,12 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 		this.hotListView = new ProjectListView({
 			el: '#hot',
+			url: config.api.host + '/projects?type=hot',
 			socketEvents: this.socketEvents
 		});
 		this.topListView = new ProjectListView({
 			el: '#top',
+			url: config.api.host + '/projects?type=top',
 			socketEvents: this.socketEvents
 		});
 		this.topListView.trigger('load');

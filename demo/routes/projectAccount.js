@@ -7,32 +7,89 @@ exports = module.exports = function(app, models) {
 				code: 40100,
 				message: 'not support.'
 			});
+		var type = req.query.type || '';
 		var aid = req.session.accountId;
 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
 		page = isNaN(page) ? 0 : page;
 		var per = 20;
-
-		models.ProjectAccount
-			.find({
-				uid: aid
-			})
-			// .skip(page*per)
-			// .limit(per)
-			.exec(function(err, docs) {
-				if (err) return res.send(err);
-				if (!docs) return res.send(null);
-				var pids = _.pluck(docs, 'pid');
-				models.Project
+		switch (type) {
+			case 'presenter':
+				models.ProjectAccount
 					.find({
-						_id: {
-							$in: pids
+						uid: aid,
+						roles: {
+							$in: ['presenter']
 						}
 					})
+					.skip(page * per)
+					.limit(per)
 					.exec(function(err, docs) {
 						if (err) return res.send(err);
-						res.send(docs);
+						if (!docs) return res.send([]);
+						var pids = _.pluck(docs, 'pid');
+						models.Project
+							.find({
+								_id: {
+									$in: pids
+								}
+							})
+							.exec(function(err, docs) {
+								if (err) return res.send(err);
+								res.send(docs);
+							});
 					});
-			});
+				break;
+			case 'attendee':
+				models.ProjectAccount
+					.find({
+						uid: aid,
+						roles: {
+							$in: ['attendee']
+						}
+					})
+					.skip(page * per)
+					.limit(per)
+					.exec(function(err, docs) {
+						if (err) return res.send(err);
+						if (!docs) return res.send([]);
+						var pids = _.pluck(docs, 'pid');
+						models.Project
+							.find({
+								_id: {
+									$in: pids
+								}
+							})
+							.exec(function(err, docs) {
+								if (err) return res.send(err);
+								res.send(docs);
+							});
+					});
+				break;
+			default:
+				models.ProjectAccount
+					.find({
+						uid: aid
+					})
+					// .skip(page*per)
+					// .limit(per)
+					.exec(function(err, docs) {
+						if (err) return res.send(err);
+						if (!docs) return res.send(null);
+						var pids = _.pluck(docs, 'pid');
+						models.Project
+							.find({
+								_id: {
+									$in: pids
+								}
+							})
+							.exec(function(err, docs) {
+								if (err) return res.send(err);
+								res.send(docs);
+							});
+					});
+				break;
+		}
+
 	};
 
 	var getAccountsByProjectId = function(req, res) {
@@ -43,7 +100,7 @@ exports = module.exports = function(app, models) {
 		models.ProjectAccount.find({
 			pid: pid
 		}).exec(function(err, docs) {
-			if(err) return res.send(err);
+			if (err) return res.send(err);
 			return res.send(docs);
 		});
 

@@ -1,7 +1,7 @@
 module.exports = exports = function(app,mongoose){
 
 	var schema = new mongoose.Schema({
-			uid: mongoose.Schema.ObjectId,//account id
+			uid: String,//account id
 			statuses: [String],
 			lastupdatetime: Date
 		});

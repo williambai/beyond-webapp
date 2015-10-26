@@ -4,11 +4,10 @@ module.exports = exports = function(app,mongoose){
 			name: String,
 			avatar: String,
 			description: String,
-			users: [{
-				uid: String,
-				username: String,
-				avatar: String,
-			}],
+			status: {
+				code: Number,//0: 正常；
+				message: String,
+			},
 			lastupdatetime: {type: Date}
 		});
 

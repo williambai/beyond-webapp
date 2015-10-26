@@ -13,7 +13,6 @@ module.exports = exports = function(app,mongoose){
 			uid: String,
 			username: String,
 			avatar: String,
-			// subject: String,
 			type: {
 				type: String, 
 				enum: 'text|file|image|link|mixed|voice|video|shortvideo|location|email'.split('|')

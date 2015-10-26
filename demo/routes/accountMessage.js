@@ -180,29 +180,11 @@
  		var page = req.query.page || 0;
  		var per = 20;
  		if (isNaN(page)) page = 0;
-
- 		models.AccountFriend.find({
- 				uid: accountId
- 			},
- 			function(err, friends) {
- 				if (err) return res.send(err);
- 				if (_.isEmpty(friends)) return res.send([]);
- 				var fids = _.pluck(friends, 'fid');
- 				Message
- 					.find({
- 						$or: [{
- 							'to.uid': accountId,
- 							'from.uid': {
- 								$in: fids
- 							}
- 						}, {
- 							'from.uid': accountId,
- 							'to.uid': {
- 								$in: fids
- 							}
- 						}]
- 					})
- 					.sort({
+ 		switch (type) {
+ 			case 'inbox':
+ 				Message.find({
+ 						'to.uid': accountId,
+ 					}).sort({
  						_id: -1
  					})
  					.skip(page * per)
@@ -211,8 +193,56 @@
  						if (err) return res.send(err);
  						res.send(docs);
  					});
- 			}
- 		);
+ 				break;
+ 			case 'outbox':
+ 				Message.find({
+ 						'from.uid': accountId,
+ 					}).sort({
+ 						_id: -1
+ 					})
+ 					.skip(page * per)
+ 					.limit(per)
+ 					.exec(function(err, docs) {
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 				break;
+ 			default:
+ 				models.AccountFriend.find({
+ 						uid: accountId
+ 					},
+ 					function(err, friends) {
+ 						if (err) return res.send(err);
+ 						if (_.isEmpty(friends)) return res.send([]);
+ 						var fids = _.pluck(friends, 'fid');
+ 						Message
+ 							.find({
+ 								$or: [{
+ 									'to.uid': accountId,
+ 									'from.uid': {
+ 										$in: fids
+ 									}
+ 								}, {
+ 									'from.uid': accountId,
+ 									'to.uid': {
+ 										$in: fids
+ 									}
+ 								}]
+ 							})
+ 							.sort({
+ 								_id: -1
+ 							})
+ 							.skip(page * per)
+ 							.limit(per)
+ 							.exec(function(err, docs) {
+ 								if (err) return res.send(err);
+ 								res.send(docs);
+ 							});
+ 					}
+ 				);
+ 				break;
+ 		}
+
  	};
 
  	/**
