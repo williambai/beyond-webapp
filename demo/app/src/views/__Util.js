@@ -44,6 +44,7 @@ exports = module.exports = {
 				var newContent = '<a href="' + content.urls + '" target="_blank">';
 				newContent += '<h4>' +content.subject + '</h4>';
 				newContent += '<span>'+ content.body + '</span>';
+				newContent += '</a>';
 				return newContent;
 
 			case 'video':

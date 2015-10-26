@@ -110,7 +110,7 @@ exports = module.exports = Backbone.View.extend({
 						}));
 						that.hasmore = false;
 					} else {
-						that.collection.add(collection);
+						that.collection.add(collection.models);
 						that.hasmore = true;
 					}
 				},
@@ -156,7 +156,7 @@ exports = module.exports = Backbone.View.extend({
 						}));
 						that.hasmore = false;
 					} else {
-						that.collection.add(collection);
+						that.collection.add(collection.models);
 						that.hasmore = true;
 					}
 				},

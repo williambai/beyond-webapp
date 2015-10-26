@@ -12,8 +12,8 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options){
 		this._convertContent();
-		var createby = this.model.get('createby');
-		if(createby && options.account.id == createby.uid){
+		var createby = this.model.get('createby') || {};
+		if(options.account.id == createby.uid){
 			this.model.set('from', 'me');
 		}
 	},

@@ -27,30 +27,19 @@ exports = module.exports = Backbone.View.extend({
 	initialize: function() {
 		this._convertContent();
 		this._transformTime();
-		this._transformAvatar();
 	},
 
 	_convertContent: function() {
 		var type = this.model.get('type');
 		var contentObject = this.model.get('content');
 		var newContent = MessageUtil.buildContent(type, contentObject);
-		// var newContent = MessageUtil.convertContent(contentObject);
 		this.model.set('content', newContent);
 	},
 
 	_transformTime: function() {
-		var createtime = this.model.get('createtime');
-		var deltatime = MessageUtil.transformTime(createtime);
+		var lastupdatetime = this.model.get('lastupdatetime');
+		var deltatime = MessageUtil.transformTime(lastupdatetime);
 		this.model.set('deltatime', deltatime);
-	},
-
-	_transformAvatar: function() {
-		var fromId = this.model.get('fromId');
-		var fromUser = this.model.get('fromUser');
-		if (fromUser && fromId) {
-			this.model.set('avatar', fromUser[fromId].avatar);
-			this.model.set('username', fromUser[fromId].username);
-		}
 	},
 
 	showInModal: function(evt) {
@@ -77,7 +66,7 @@ exports = module.exports = Backbone.View.extend({
 	voteGood: function() {
 		var that = this;
 		$.ajax({
-			url: config.api.host + '/messages/project/' + that.model.get('_id') + '?type=vote',
+			url: config.api.host + '/statuses/project/' + that.model.get('_id') + '?type=vote',
 			type: 'PUT',
 			xhrFields: {
 				withCredentials: true
@@ -97,7 +86,7 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 
 		$.ajax({
-			url: config.api.host + '/messages/project/' + that.model.get('_id') + '?type=vote',
+			url: config.api.host + '/statuses/project/' + that.model.get('_id') + '?type=vote',
 			type: 'PUT',
 			xhrFields: {
 				withCredentials: true

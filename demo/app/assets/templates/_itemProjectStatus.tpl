@@ -9,10 +9,28 @@
 			<h4 class="media-heading"><%= model.createby.username %></h4>
 		</a>
 		<%= model.content %>
-		<div class="statusControl">
+		<p>
+			<%= model.deltatime %>
+			<span class="pull-right">
+					评分：<%= model.score %>&nbsp;&nbsp;<a class="level"><span class="levelControl">重要度：<%= model.level %>&nbsp;&nbsp;</span></a>
+					&nbsp;
+					<a class="good"> <i class="fa fa-thumbs-o-up"></i>
+						顶
+					</a>
+					&nbsp;
+					<a class="bad"> <i class="fa fa-thumbs-o-down"></i>
+						砸
+					</a>
+					&nbsp;
+					<a class="comment-toggle"> <i class="fa fa-pencil-square-o"></i>
+						评论
+					</a>
+					&nbsp;
+			</span>
+		</p>
+		<div class="comment-editor"></div>
+		<div class="comments">
 		</div>
-		<p><a class="level">重要度：<%= model.level %></a>&nbsp; <a class="good">顶</a>&nbsp;<a class="bad">砸</a>&nbsp;评分：<span><%= model.score %></span></p>
-		<div class="levelControl"></div>
 	</div>
 	<div class="media-right">
 	</div>

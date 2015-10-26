@@ -49,14 +49,14 @@ exports = module.exports = Backbone.View.extend({
 		this.model.set('deltatime', deltatime);
 	},
 
-	_transformAvatar: function(){
-		var fromId = this.model.get('fromId');
-		var fromUser = this.model.get('fromUser');
-		if(fromUser && fromId){
-			this.model.set('avatar', fromUser[fromId].avatar);
-			this.model.set('username', fromUser[fromId].username);
-		}
-	},
+	// _transformAvatar: function(){
+	// 	var fromId = this.model.get('fromId');
+	// 	var fromUser = this.model.get('fromUser');
+	// 	if(fromUser && fromId){
+	// 		this.model.set('avatar', fromUser[fromId].avatar);
+	// 		this.model.set('username', fromUser[fromId].username);
+	// 	}
+	// },
 
 	showInModal: function(evt){
 		var targetType = $(evt.currentTarget).attr('target-type');			

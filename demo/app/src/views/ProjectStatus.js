@@ -15,14 +15,11 @@ exports = module.exports = Backbone.View.extend({
 	el: '#content',
 
 	events: {
-		'click .editor-toggle': 'editorToggle',
-		'submit form': 'updateStatus',
 		'scroll': 'scroll',
 	},
 
 	initialize: function(options) {
 		this.pid = options.pid;
-		options.socketEvents.bind('status:me', this.onSocketStatusAdded, this);
 		this.on('load', this.load, this);
 	},
 
@@ -32,51 +29,13 @@ exports = module.exports = Backbone.View.extend({
 		this.statusListView = new StatusListView({
 			el: 'div.status_list',
 			url: config.api.host + '/statuses/project/' + this.pid,
-			account: this.account,
 		});
+		this.statusListView.isScrollUp = false;
 		this.statusListView.trigger('load');
 	},
 
-	onSocketStatusAdded: function(data) {
-		var newStatus = data.data;
-		this.statusListView.trigger('append', newStatus);
-		// this.collection.add(new Status({status: newStatus.status, name: newStatus.name}));
-	},
-
-
-	editorToggle: function() {
-		if (this.$('.status-editor').hasClass('hidden')) {
-			this.$('.status-editor').removeClass('hidden').hide().fadeIn('slow');
-		} else {
-			this.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
-		}
-	},
-
-	updateStatus: function() {
-		var statusCollection = this.collection;
-		var statusText = $('textarea[name=text]').val();
-		$.ajax({
-			url: config.api.host + '/messages/project/' + this.pid,
-			xhrFields: {
-				withCredentials: true
-			},
-			data: {
-				text: statusText
-			}
-		}).done(function(data) {
-			// statusCollection.add(new Status({status: statusText,name:{first:'我'}}));
-		}).fail(function() {
-
-		});
-		// var statusModel = new Status({status:statusText,name: {first:'我'}});
-		// this.onStatusAdded(statusModel);
-		$('textarea[name=text]').val('');
-		this.$('.status-editor').addClass('hidden').hide().fadeOut('slow');
-		return false;
-	},
-
 	scroll: function() {
-		this.statusListView.scroll();
+		this.statusListView && this.statusListView.trigger('scroll:down');
 		return false;
 	},
 
