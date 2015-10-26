@@ -22,8 +22,8 @@ var ProjectIndexView = require('./views/ProjectIndex');
 var ProjectAddView = require('./views/ProjectAdd');
 var ProjectChatView = require('./views/ProjectChat');
 var ProjectStatusView = require('./views/ProjectStatus');
-var ProjectFriendsView = require('./views/ProjectFriends');
-var ProjectFriendAddView = require('./views/ProjectFriendAdd');
+var ProjectMembersView = require('./views/ProjectMembers');
+var ProjectMemberAddView = require('./views/ProjectMemberAdd');
 var ActivityView = require('./views/Activity');
 var MessageView = require('./views/Message');
 var SpaceView = require('./views/Space');
@@ -63,8 +63,8 @@ exports = module.exports = Backbone.Router.extend({
 		'project/chat/:id': 'projectChat',
 		'projects/:pid/index': 'projectIndex',
 		'projects/:pid/status': 'projectStatus',
-		'projects/:pid/friend/add': 'projectFriendAdd',
-		'projects/:pid/friends(/:cid)': 'projectFriends',
+		'projects/:pid/member/add': 'projectMemberAdd',
+		'projects/:pid/members(/:cid)': 'projectMembers',
 	},
 	initialize: function(){
 		this.appEvents.on('logined',this.onLogined,this);
@@ -376,30 +376,30 @@ exports = module.exports = Backbone.Router.extend({
 		projectView.trigger('load');
 	},
 	
-	projectFriends: function(pid,cid){
+	projectMembers: function(pid,cid){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','项目成员');
-		var projectFriendView = new ProjectFriendsView({
+		var projectMemberView = new ProjectMembersView({
 				pid:pid,
 				account: this.account
 			});
-		this.changeView(projectFriendView);
-		projectFriendView.trigger('load');
+		this.changeView(projectMemberView);
+		projectMemberView.trigger('load');
 	},
 
-	projectFriendAdd: function(pid){
+	projectMemberAdd: function(pid){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','新增项目成员');
-		var projectFriendAddView = new ProjectFriendAddView({
+		var projectMemberAddView = new ProjectMemberAddView({
 				pid: pid,
 				account: this.account
 			});
-		this.changeView(projectFriendAddView);			
+		this.changeView(projectMemberAddView);			
 	},
 });

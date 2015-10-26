@@ -7,8 +7,11 @@ module.exports = exports = function(app,mongoose){
 				username: String,
 				avatar: String,
 			},
-			subject: String,
-			body: String,
+			type: String,
+			content: {
+				subject: String,
+				body: String,
+			},
 			actions: [{
 				name: String,
 				method: String,

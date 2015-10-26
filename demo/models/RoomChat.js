@@ -7,7 +7,23 @@ module.exports = exports = function(app,mongoose){
 				username: String,
 				avatar: String,
 			},
-			message: {},
+			type: {
+				type: String, 
+				enum: 'text|file|image|link|mixed|voice|video|shortvideo|location|email'.split('|')
+			},
+			content: {
+				subject: String,
+				body: String,
+				urls: {},
+				thumbnails: {},
+				format: String,
+				location: {
+					// type: String,
+					// coordinates: [Number]
+				},
+				scale: Number,
+				label: String,
+			},
 			lastupdatetime: Date
 		});
 

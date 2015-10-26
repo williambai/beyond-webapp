@@ -32,7 +32,7 @@ var models = {
 		AccountActivity: require('./models/AccountActivity')(app,mongoose),
 		AccountMessage: require('./models/AccountMessage')(app,mongoose),
 		AccountChat: require('./models/AccountChat')(app,mongoose),
-		AccountProject: require('./models/AccountProject')(app,mongoose),
+		ProjectAccount: require('./models/ProjectAccount')(app,mongoose),
 
 		Project: require('./models/Project')(app,mongoose),
 		ProjectStatus: require('./models/ProjectStatus')(app,mongoose),

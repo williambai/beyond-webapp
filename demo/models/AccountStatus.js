@@ -1,11 +1,23 @@
 module.exports = exports = function(app,mongoose){
 
+	var schemaOptions = {
+			toJSON: {
+				virtuals: true
+			},
+			toObject: {
+				virtuals: true
+			}
+		};
+
 	var schema = new mongoose.Schema({
 			uid: String,
 			username: String,
 			avatar: String,
-			subject: String,
-			type: String,//text|image|vioce|video|shortvideo|location|moreimage
+			// subject: String,
+			type: {
+				type: String, 
+				enum: 'text|file|image|link|mixed|voice|video|shortvideo|location|email'.split('|')
+			},
 			content: {
 				subject: String,
 				body: String,
@@ -41,9 +53,13 @@ module.exports = exports = function(app,mongoose){
 			}],
 			good: {type: Number, default: 0},
 			bad: {type: Number, default: 0},
-			score: {type: Number, default: 0},
+			// score: {type: Number, default: 0},
 			lastupdatetime: {type: Date, default: Date.now}
 		});
+
+	schema.virtual('score').get(function(){
+		return (this.good - this.bad);
+	});
 
 	schema.set('collection', 'account.statuses');
 

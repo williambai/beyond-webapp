@@ -13,7 +13,7 @@
 					信息
 				</a>
 				<a href="#projects/<%= id %>
-					/friends" class="btn btn-navbar">
+					/members" class="btn btn-navbar">
 					<i class="fa fa-users fa-navbar"></i>
 					成员
 				</a>

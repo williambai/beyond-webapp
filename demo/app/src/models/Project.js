@@ -6,8 +6,10 @@ exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
 	url: config.api.host + '/projects',
 	
-	default: {
+	defaults: {
 		isOwner: false,
+		createby: {},
+		status: {}
 	},
 
 	validate: function(attrs, options){

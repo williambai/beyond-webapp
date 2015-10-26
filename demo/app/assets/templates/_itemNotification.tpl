@@ -10,8 +10,8 @@
 	<% } %>
 	<div class="media-body">
 		<div class="media-heading">
-			<h4><%= model.subject %></h4>
+			<h4><%= model.content.subject %></h4>
 		</div>
-		<p><%= model.body %></p>
+		<p><%= model.content.body %></p>
 	</div>
 </div>

@@ -82,7 +82,10 @@ module.exports = exports = function(app,mongoose){
 				username: String,
 				avatar: String,
 			},
-			type: String,//text|image|vioce|video|shortvideo|location|moreimage
+			type: {
+				type: String, 
+				enum: 'text|file|image|link|mixed|voice|video|shortvideo|location|email'.split('|')
+			},
 			content: {
 				subject: String,
 				body: String,
@@ -110,11 +113,11 @@ module.exports = exports = function(app,mongoose){
 				}]				
 			}],
 			weight: Number, // important index: 0~100
-			voters:[],//accountId
-			votes: [],//accountId,username,vote(good or bad)
-			good: Number,
-			bad: Number,
-			score: Number,
+			// voters:[],//accountId
+			// votes: [],//accountId,username,vote(good or bad)
+			// good: Number,
+			// bad: Number,
+			// score: Number,
 			lastupdatetime: Date
 		});
 

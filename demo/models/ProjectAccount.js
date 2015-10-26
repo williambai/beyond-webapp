@@ -13,7 +13,7 @@ module.exports = exports = function(app,mongoose){
 			},
 			lastupdatetime: Date,
 		});
-	schema.set('collection', 'account.projects');
+	schema.set('collection', 'project.accounts');
 
-	return mongoose.model('AccountProject', schema);
+	return mongoose.model('ProjectAccount', schema);
 };

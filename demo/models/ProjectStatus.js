@@ -1,5 +1,15 @@
 module.exports = exports = function(app,mongoose){
 
+	var schemaOptions = {
+			toJSON: {
+				virtuals: true
+			},
+			toObject: {
+				virtuals: true
+			}
+		};
+
+
 	var schema = new mongoose.Schema({
 			pid: String,//project id
 			createby: {
@@ -7,8 +17,10 @@ module.exports = exports = function(app,mongoose){
 				username: String,
 				avatar: String,
 			},
-			subject: String,
-			type: String,//text|image|vioce|video|shortvideo|location|moreimage
+			type: {
+				type: String, 
+				enum: 'text|file|image|link|mixed|voice|video|shortvideo|location|email'.split('|')
+			},
 			content: {
 				subject: String,
 				body: String,
@@ -40,10 +52,13 @@ module.exports = exports = function(app,mongoose){
 			votes: [],//accountId,username,vote(good or bad)
 			good: Number,
 			bad: Number,
-			score: Number,
 			secret: Boolean, //false: public or true: private(default)
 			lastupdatetime: Date
 		});
+
+	schema.virtual('score').get(function(){
+		return (this.good - this.bad);
+	});
 
 	schema.set('collection', 'project.statuses');
 

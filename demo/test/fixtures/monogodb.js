@@ -22,7 +22,7 @@ var models = {
 		AccountChat: require('../../models/AccountChat')(app,mongoose),
 		AccountFriend: require('../../models/AccountFriend')(app,mongoose),
 		AccountMessage: require('../../models/AccountMessage')(app,mongoose),
-		AccountProject: require('../../models/AccountProject')(app,mongoose),
+		ProjectAccount: require('../../models/ProjectAccount')(app,mongoose),
 		AccountRoom: require('../../models/AccountRoom')(app,mongoose),
 		AccountStatus: require('../../models/AccountStatus')(app,mongoose),
 
@@ -111,7 +111,7 @@ var dropCollections = function(done){
 				models.Project.remove(callback);
 			},
 			function(callback){
-				models.AccountProject.remove(callback);
+				models.ProjectAccount.remove(callback);
 			},
 			function(callback){
 				models.AccountChat.remove(callback);
@@ -415,7 +415,7 @@ var upsertProjects = function(callback){
 				models.Project.create(project, function(err,project){
 					if(err) return callback(err);
 					if(index == 0) pid = (project._id).toString();
-					models.AccountProject.create(
+					models.ProjectAccount.create(
 						[
 							{
 								uid: (user._id).toString(),//account id
@@ -581,8 +581,11 @@ upsertAccountNotifications = function(callback){
 						username: friend.username,
 						avatar: friend.avatar
 					},
-					subject: '好友邀请',
-					body: friend.username + '邀请你为好友',
+					type: 'invite',
+					content: {
+						subject: '好友邀请',
+						body: friend.username + '邀请你为好友',
+					},
 					actions: [
 						{
 							name: 'agree',

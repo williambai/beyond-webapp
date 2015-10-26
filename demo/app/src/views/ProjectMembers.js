@@ -1,11 +1,10 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    friendsTemplate = require('../../assets/templates/projectFriends.tpl'),
+    membersTemplate = require('../../assets/templates/projectMembers.tpl'),
     projectBarTemplate = require('../../assets/templates/_barProject.tpl'),
-    FriendListView = require('./_ListProjectFriend'),
-    Project = require('../models/Project'),
-    FriendCollection = require('../models/FriendCollection');
+    MemberListView = require('./_ListProjectMember'),
+    Project = require('../models/Project');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -30,9 +29,6 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		this.loaded = true;
 		this.render();
-		var url = config.api.host + '/accounts/project/' + this.pid;
-		var friendListView = new FriendListView({url: url});
-		friendListView.trigger('load');
 		var that = this;
 		this.project.fetch({
 			xhrFields: {
@@ -43,6 +39,9 @@ exports = module.exports = Backbone.View.extend({
 				if(that.account.id == createby.uid){
 					that.project.set('isOwner', true);
 				}
+				var url = config.api.host + '/accounts/project/' + that.pid;
+				var memberListView = new MemberListView({url: url,project:that.project});
+				memberListView.trigger('load');
 			}
 		});
 	},
@@ -64,7 +63,7 @@ exports = module.exports = Backbone.View.extend({
 				$('body').addClass('has-navbar-bottom');
 			}
 		}
-		this.$el.html(friendsTemplate({project:this.project.toJSON()}));
+		this.$el.html(membersTemplate({project:this.project.toJSON()}));
 		return this;
 	}
 

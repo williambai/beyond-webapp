@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    addFriendTemplate = require('../../assets/templates/projectFriendAdd.tpl'),
+    addMemberTemplate = require('../../assets/templates/projectMemberAdd.tpl'),
     AccountListView = require('./_ListProjectAccount'),
     Project = require('../models/Project');
 var config = require('../conf');
@@ -45,7 +45,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function(){
-		this.$el.html(addFriendTemplate({model:{_id: this.pid}}));
+		this.$el.html(addMemberTemplate({model:{_id: this.pid}}));
 		return this;
 	}
 });

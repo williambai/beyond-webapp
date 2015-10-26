@@ -10,7 +10,7 @@ module.exports = exports = function(app,mongoose){
 			},	
 			type: {
 				type: String, 
-				enum: 'text|image|mixed|vioce|video|shortvideo|location|email'.split('|')
+				enum: 'text|file|image|link|mixed|voice|video|shortvideo|location|email'.split('|')
 			},
 			content: {
 				subject: String,

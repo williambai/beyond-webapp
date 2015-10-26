@@ -32,7 +32,8 @@ exports = module.exports = Backbone.View.extend({
 				withCredentials: true
 			},
 			success: function(model) {
-				if (that.account.id == model.get('accountId')) {
+				var createby = model.get('createby') || {};
+				if (that.account.id == createby.uid) {
 					model.set('isOwner', true);
 				}
 			}
