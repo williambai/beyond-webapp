@@ -37,8 +37,8 @@ exports = module.exports = Backbone.View.extend({
 			account: this.account,
 		});
 		this.searchView = new SearchView();
-		this.searchView.done = function(url){
-			that.listView.trigger('refresh',url);
+		this.searchView.done = function(query){
+			that.listView.trigger('refresh',config.api.host + '/messages/account/me?' + query);
 		};
 		this.listView.trigger('load');
 		this.searchView.trigger('load');

@@ -191,16 +191,34 @@ exports = module.exports = function(app, models) {
 		var per = 20;
 		var accountId = req.session.accountId;
 		switch (type) {
+			case 'search':
+				var searchStr = req.query.searchStr || '';
+				var searchRegex = new RegExp(searchStr, 'i');
+				Project.find({
+						'name': {
+							$regex: searchRegex
+						}
+					}).sort({
+						lastupdatetime: -1
+					})
+					.skip(page * per)
+					.limit(per)
+					.exec(function(err, docs) {
+						if (err) return res.send(err);
+						res.send(docs);
+					});
+				break;
 			case 'hot':
 				Project
 					.find({})
 					.sort({
-						members: -1,lastupdatetime: -1
+						members: -1,
+						lastupdatetime: -1
 					})
 					.skip(page * per)
 					.limit(per)
-					.exec(function(err,docs){
-						if(err) return res.send(err);
+					.exec(function(err, docs) {
+						if (err) return res.send(err);
 						res.send(docs);
 					});
 
@@ -213,8 +231,8 @@ exports = module.exports = function(app, models) {
 					})
 					.skip(page * per)
 					.limit(per)
-					.exec(function(err,docs){
-						if(err) return res.send(err);
+					.exec(function(err, docs) {
+						if (err) return res.send(err);
 						res.send(docs);
 					});
 
@@ -224,8 +242,7 @@ exports = module.exports = function(app, models) {
 					[
 						function(callback) {
 							Project
-								.find({
-								})
+								.find({})
 								.sort({
 									lastupdatetime: -1
 								})

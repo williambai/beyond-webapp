@@ -14,8 +14,8 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 	},
 
-	done: function(uri){
-		console.log('search done is called. uri:' + uri);
+	done: function(query){
+		console.log('search done is called. query:' + query);
 	},
 
 	render: function(){

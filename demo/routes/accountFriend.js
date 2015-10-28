@@ -40,7 +40,8 @@ exports = module.exports = function(app, models) {
 					models.AccountFriend
 						.findOneAndUpdate({
 								uid: req.session.accountId,
-								fid: fid
+								fid: fid,
+								'status.code': {$ne: 2}
 							}, {
 								$set: invitor
 							}, {
@@ -54,7 +55,8 @@ exports = module.exports = function(app, models) {
 					models.AccountFriend
 						.findOneAndUpdate({
 								uid: fid,
-								fid: req.session.accountId
+								fid: req.session.accountId,
+								'status.code': {$ne: 2}
 							}, {
 								$set: invitee
 							}, {
@@ -109,8 +111,6 @@ exports = module.exports = function(app, models) {
 			});
 		var uid = req.session.accountId;
 		var fid = req.params.id;
-		console.log(uid)
-		console.log(fid)
 		async.waterfall(
 			[
 				function(callback) {

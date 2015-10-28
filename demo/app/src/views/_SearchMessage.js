@@ -19,22 +19,22 @@ exports = module.exports = SearchView.extend({
 
 	allBox: function(evt){
 		this._pre(evt);
-		var uri = config.api.host + '/messages/account/me?type=all';
-		this.done(uri);
+		var query = 'type=all';
+		this.done(query);
 		return false;
 	},
 
 	inBox: function(evt){
 		this._pre(evt);
-		var uri = config.api.host + '/messages/account/me?type=inbox';
-		this.done(uri);
+		var query = 'type=inbox';
+		this.done(query);
 		return false;
 	},
 
 	outBox: function(evt){
 		this._pre(evt);
-		var uri = config.api.host + '/messages/account/me?type=outbox';
-		this.done(uri);
+		var query = 'type=outbox';
+		this.done(query);
 		return false;
 	},
 

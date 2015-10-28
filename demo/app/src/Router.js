@@ -44,6 +44,7 @@ exports = module.exports = Backbone.Router.extend({
 		'': 'index',
 		'index': 'index',
 		'projects': 'projects',
+		'projects(/:type/(:searchStr))': 'projects',
 		'project/me': 'projectMy',
 		'activity/:id': 'activity',
 		'message/:id': 'messageBox',
@@ -60,11 +61,11 @@ exports = module.exports = Backbone.Router.extend({
 		'friend/add': 'addFriend',
 		'friend/invite': 'inviteFriend',
 		'project/add': 'addProject',
-		'project/chat/:id': 'projectChat',
-		'projects/:pid/index': 'projectIndex',
-		'projects/:pid/status': 'projectStatus',
-		'projects/:pid/member/add': 'projectMemberAdd',
-		'projects/:pid/members(/:cid)': 'projectMembers',
+		'project/:pid/chat': 'projectChat',
+		'project/:pid/index': 'projectIndex',
+		'project/:pid/status': 'projectStatus',
+		'project/:pid/member/add': 'projectMemberAdd',
+		'project/:pid/members(/:cid)': 'projectMembers',
 	},
 	initialize: function(){
 		this.appEvents.on('logined',this.onLogined,this);
@@ -123,13 +124,15 @@ exports = module.exports = Backbone.Router.extend({
 		indexView.trigger('load');
 	},
 
-	projects: function(){
+	projects: function(type,searchStr){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','所有项目');
 		var projectsView = new ProjectView({
+			type: type,
+			searchStr: searchStr,
 			socketEvents: this.socketEvents
 		});
 		this.changeView(projectsView);
@@ -347,14 +350,14 @@ exports = module.exports = Backbone.Router.extend({
 		projectAddView.trigger('load');
 	},
 
-	projectChat: function(id){
+	projectChat: function(pid){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','项目即时沟通');
 		var chatView = new ProjectChatView({
-				id: id,
+				id: pid,
 				account: this.account,
 				socketEvents: this.socketEvents
 			});

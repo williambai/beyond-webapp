@@ -5,6 +5,7 @@ var $ = require('jquery'),
     projectTemplate = require('../../assets/templates/projectMy.tpl'),
     SearchView = require('./_SearchProjectMy'),
     ListView = require('./_ListProject2');
+var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -25,13 +26,14 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 		this.listView = new ListView({
 			el: '#project-widget',
+			url: config.api.host + '/projects/account/me',
 			socketEvents: this.socketEvents
 		});
 		this.searchView = new SearchView({
 
 		});
-		this.searchView.done = function(url){
-			that.listView.trigger('refresh',url);
+		this.searchView.done = function(query){
+			that.listView.trigger('refresh',config.api.host + '/projects/account/me?' + query);
 		};
 		this.listView.trigger('load');
 		this.searchView.trigger('load');

@@ -18,7 +18,7 @@
 			<h4>最活跃的项目</h4>
 			<div id="hot">
 			</div>
-			<a href="#projects?type=hot_more">更多...</a>
+			<a href="#projects/hot/">更多...</a>
 		</div>
 	</div>
 	<div class="col-md-6">
@@ -26,7 +26,7 @@
 			<h4>人气最旺的项目</h4>
 			<div id="top">
 			</div>
-			<a href="#projects?type=top_more">更多...</a>
+			<a href="#projects/top/">更多...</a>
 		</div>
 	</div>
 </div>

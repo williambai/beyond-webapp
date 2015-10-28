@@ -34,6 +34,7 @@ exports = module.exports = function(app,models){
 				.find({
 					uid: aid,
 				})
+				.sort({_id: -1})
 				.skip(page*per)
 				.limit(per)
 				.exec(function(err,docs){

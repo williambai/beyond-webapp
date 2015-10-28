@@ -19,21 +19,21 @@ exports = module.exports = SearchView.extend({
 
 	all: function(evt){
 		this._pre(evt);
-		var uri = config.api.host + '/projects/account/me?type=all';
+		var uri = 'type=all';
 		this.done(uri);
 		return false;
 	},
 
 	presenter: function(evt){
 		this._pre(evt);
-		var uri = config.api.host + '/projects/account/me?type=presenter';
+		var uri = 'type=presenter';
 		this.done(uri);
 		return false;
 	},
 
 	attendee: function(evt){
 		this._pre(evt);
-		var uri = config.api.host + '/projects/account/me?type=attendee';
+		var uri = 'type=attendee';
 		this.done(uri);
 		return false;
 	},

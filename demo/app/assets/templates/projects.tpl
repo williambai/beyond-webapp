@@ -1,8 +1,8 @@
-<div class="text-right">
+<div class="text-right" id="search">
 	<form class="form-inline">
 		<div class="form-group">
 			<label></label>
-			<input class="form-control" placeholder="项目名称">
+			<input name="searchStr" class="form-control" placeholder="项目名称">
 		</div>
 		<button class="btn btn-primary">搜索</button>
 	</form>

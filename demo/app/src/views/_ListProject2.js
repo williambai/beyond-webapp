@@ -13,7 +13,7 @@ exports = module.exports = ListView.extend({
 	initialize: function(options){
 		this.socketEvents = options.socketEvents;
 		this.collection = new ProjectCollection();
-		this.collection.url = options.url || config.api.host + '/projects/account/me';
+		this.collection.url = options.url;
 		ListView.prototype.initialize.apply(this,options);
 	},
 
