@@ -116,7 +116,7 @@ exports = module.exports = FormView.extend({
 						//update UI
 						that.done(new Status(model));
 						//trigger socket.io
-						that.socketEvents.trigger('socket:out:status',model);
+						that.socketEvents.trigger('socket:out:status', model);
 					})
 					.error(function(err) {
 						console.log(err);

@@ -27,7 +27,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	done: function(){
-		console.log('form done is called....please implement done().');
+		console.log('form done is called....please implement done() on container(parent view).');
 	},
 
 	render: function(){

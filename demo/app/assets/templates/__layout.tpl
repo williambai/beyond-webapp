@@ -11,7 +11,7 @@
 			<div class="list-group">
 				<a class="list-group-item active" href="#index"> <i class="fa fa-users fa-fw"></i>
 					&nbsp;首页
-					<span class="status-unread pull-right">
+					<span class="pull-right">
 						<i class="fa fa-chevron-right"></i>
 					</span>
 				</a>

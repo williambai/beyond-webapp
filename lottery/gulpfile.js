@@ -18,7 +18,6 @@ var gulp           = require('gulp'),
     rename         = require('gulp-rename'),
     zip            = require('gulp-zip'),
     ignore         = require('gulp-ignore'),
-    rimraf         = require('gulp-rimraf'),
     path           = require('path'),
     fs             = require('fs');
 

@@ -53,7 +53,6 @@ exports = module.exports = function(options){
 			});
 
 			socket.on('login', function(data){
-				console.log('++++++')
 				if(data && data.from){
 					var user = data.from;
 					var eventName = 'socket:in:login:' + user.id;

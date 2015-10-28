@@ -3,7 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     layoutTemplate = require('../../assets/templates/__layout.tpl'),
     loadingTemplate = require('../../assets/templates/loading.tpl');
-
+var Badge = require('../models/BadgeLocal');
 
 Backbone.$ = $;
 
@@ -11,12 +11,13 @@ exports = module.exports = Backbone.View.extend({
 
 	el: 'body',
 
-	chatUnreadNum: 0, //未读聊天消息数量
-	messageUnreadNum: 0, //好友未读私信数量
-	statusUnreadNum: 0, //好友圈未读新消息数量
+	badge: {},
 
 	loaded: false,
 	initialize: function(options){
+		this.badge = new Badge();
+		this.badge.on('change',this.badgeRender,this);
+
 		this.appEvents = options.appEvents;
 		this.socketEvents = options.socketEvents;
 
@@ -43,6 +44,7 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		this.loaded = true;
 		this.render();
+		this.badge.fetch();
 	},
 
 	activeItem: function(evt){
@@ -50,12 +52,13 @@ exports = module.exports = Backbone.View.extend({
 		this.$('.list-group-item').removeClass('active');
 		this.$(currentItem).addClass('active');
 		if(this.$(currentItem).find('.status-unread').length > 0){
-			this.statusUnreadNum = 0;
-			this.$('.status-unread').html('<i class="fa fa-chevron-right"></i>');
+			this.badge.set('statusUnreadNum', 0);
+			// this.$('.status-unread').html('<i class="fa fa-chevron-right"></i>');
 		}else if(this.$(currentItem).find('.message-unread').length > 0){
-			this.messageUnreadNum = 0;
-			this.$('.message-unread').html('<i class="fa fa-chevron-right"></i>');
+			this.badge.set('messageUnreadNum', 0);
+			// this.$('.message-unread').html('<i class="fa fa-chevron-right"></i>');
 		}
+		this.badge.save();
 	},
 
 	leftSideBarToggle: function(){
@@ -99,32 +102,44 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	onChatIn: function(){
-		this.chatUnreadNum ++;
-		if(this.chatUnreadNum < 1) {
-			this.chatUnreadNum = 0;
-			this.$('.chat-total-unread').text('');
-		}else{
-			this.$('.chat-total-unread').text(this.chatUnreadNum);
-		}
+		var chatUnreadNum = this.badge.get('chatUnreadNum') + 1;
+		this.badge.set('chatUnreadNum', chatUnreadNum);
+		this.badge.save();
 	},
 
 	onMessageIn: function(data){
-		this.messageUnreadNum ++;
-		if(this.messageUnreadNum < 1) {
-			this.messageUnreadNum = 0;
-			this.$('.message-unread').html('<i class="fa fa-chevron-right"></i>');
-		}else{
-			this.$('.message-unread').html('<span class="badge">' + this.messageUnreadNum + '</span>');
-		}
+		var messageUnreadNum = this.badge.get('messageUnreadNum') + 1;
+		this.badge.set('messageUnreadNum',messageUnreadNum);
+		this.badge.save();
 	},
 
 	onStatusIn: function(data){
-		this.statusUnreadNum ++;
-		if(this.statusUnreadNum < 1) {
-			this.statusUnreadNum = 0;
+		var statusUnreadNum = this.badge.get('statusUnreadNum') + 1;
+		this.badge.set('statusUnreadNum', statusUnreadNum);
+		this.badge.save();
+	},
+
+	badgeRender: function(){
+		var chatUnreadNum = this.badge.get('chatUnreadNum');
+		if(chatUnreadNum < 1) {
+			chatUnreadNum = 0;
+			this.$('.chat-total-unread').text('');
+		}else{
+			this.$('.chat-total-unread').text(chatUnreadNum);
+		}
+		var messageUnreadNum = this.badge.get('messageUnreadNum');
+		if(messageUnreadNum < 1) {
+			messageUnreadNum = 0;
+			this.$('.message-unread').html('<i class="fa fa-chevron-right"></i>');
+		}else{
+			this.$('.message-unread').html('<span class="badge">' + messageUnreadNum + '</span>');
+		}
+		var statusUnreadNum = this.badge.get('statusUnreadNum');
+		if(statusUnreadNum < 1) {
+			statusUnreadNum = 0;
 			this.$('.status-unread').html('<i class="fa fa-chevron-right"></i>');
 		}else{
-			this.$('.status-unread').html('<span class="badge">' + this.statusUnreadNum + '</span>');
+			this.$('.status-unread').html('<span class="badge">' + statusUnreadNum + '</span>');
 		}
 	},
 
