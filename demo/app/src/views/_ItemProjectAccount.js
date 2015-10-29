@@ -15,23 +15,44 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	events: {
-		'click .addbutton': 'addFriend',
+		'click .addbutton': 'invite',
 	},
 
-	addFriend: function() {
+	invite: function() {
+		var that = this;
 		var $responseArea = this.$('.actionArea');
 
 		$.ajax({
-			url: config.api.host + '/friends/project/' + this.pid,
+			url: config.api.host + '/accounts/project/' + that.pid,
 			type: 'POST',
 			xhrFields: {
 				withCredentials: true
 			},
 			data: {
-				uid: this.model.get('_id')
+				uid: that.model.get('_id'),
+				username: that.model.get('username'),
+				avatar: that.model.get('avatar'),
 			}
 		}).done(function() {
-			$responseArea.text('已邀请！');
+			$.ajax({
+				url: config.api.host + '/notifications',
+				type: 'POST',
+				xhrFields: {
+					withCredentials: true
+				},
+				data: {
+					type: 'invite_join_project',
+					uid: that.model.get('_id'),
+					project: {
+						id: that.pid,
+						name: '=====',
+					},
+				},
+			}).done(function() {
+				$responseArea.text('已邀请！');
+			}).fail(function() {
+				$responseArea.text('邀请失败！');
+			});
 		}).fail(function() {
 			$responseArea.text('邀请失败！');
 		});

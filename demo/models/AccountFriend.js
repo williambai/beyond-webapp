@@ -1,33 +1,36 @@
-module.exports = exports = function(app,mongoose){
+module.exports = exports = function(app, mongoose) {
 
 	var schemaOptions = {
-			toJSON: {
-				virtuals: true
-			},
-			toObject: {
-				virtuals: true
-			}
-		};
+		toJSON: {
+			virtuals: true
+		},
+		toObject: {
+			virtuals: true
+		}
+	};
 
 	var schema = new mongoose.Schema({
-			uid: String,
-			fid: String,//friend id
-			username: String,
-			realname: String,//original username
-			avatar: String,
-			status: {
-				code: Number,
-				message: String
+		uid: String,
+		fid: String, //friend id
+		username: String,
+		realname: String, //original username
+		avatar: String,
+		status: {
+			code: {
+				type: Number,
+				enum: [0, 1, 2], //0: '是邀请方'; 1: '是受邀方'; 2: '是好友' 
 			},
-			histories: [],
-			lastupdatetime: Date
-		},schemaOptions);
+			message: String
+		},
+		histories: [],
+		lastupdatetime: Date
+	}, schemaOptions);
 
-	schema.virtual('online').get(function(){
+	schema.virtual('online').get(function() {
 		return app.isAccountOnline(this.get('fid'));
 	});
 
-	schema.set('collection','account.friends');
+	schema.set('collection', 'account.friends');
 
 	return mongoose.model('AccountFriend', schema);
 };

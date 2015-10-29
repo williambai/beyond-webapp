@@ -63,7 +63,7 @@
 	<div class="scrollable" style="padding-top:70px;">
 		<div class="scrollable-header app-name">
 			我的好友
-			<a href="#friends/me" class="pull-right">
+			<a href="#friends" class="pull-right">
 				<i class="fa fa-search"></i>
 				管理
 			</a>

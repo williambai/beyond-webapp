@@ -38,7 +38,7 @@ exports = module.exports = Backbone.View.extend({
 		}).done(function onSuccess() {
 			$responseArea.text('已处理！');
 			$.ajax({
-				url: config.api.host + '/notifications/account/me/' + that.model.get('_id'),
+				url: config.api.host + '/notifications/' + that.model.get('_id'),
 				type: 'PUT',
 				xhrFields: {
 					withCredentials: true

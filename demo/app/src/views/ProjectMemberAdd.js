@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
+	loadingTemplate = require('../../assets/templates/loading.tpl'),
     addMemberTemplate = require('../../assets/templates/projectMemberAdd.tpl'),
     AccountListView = require('./_ListProjectAccount'),
     Project = require('../models/Project');
@@ -12,6 +13,10 @@ exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
 
+	loaded: false,
+
+	authorized: false,
+
 	events: {
 		'submit form': 'search'
 	},
@@ -19,17 +24,25 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 		this.pid = options.pid;
 		this.account = options.account;
-		this.project = new Project();
-		this.project.url = config.api.host + '/projects/' + options.pid;
+		this.on('load', this.load, this);
+	},
+
+	load: function(){
 		var that = this;
+		this.loaded = true;
+		this.project = new Project();
+		this.project.url = config.api.host + '/projects/' + this.pid;
 		this.project.fetch({
 			xhrFields: {
 				withCredentials: true
 			},
 			success: function(model){
-				if(that.account.id == model.get('accountId')){
+				var createby = model.get('createby') || {};
+				if(that.account.id == createby.uid){
+					that.authorized = true;
 					that.project.set('isOwner', true);
 				}
+				that.render();
 			}
 		});
 	},
@@ -45,6 +58,14 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function(){
+		if(!this.loaded){
+			this.$el.html(loadingTemplate());
+			return this;
+		}
+		if(!this.authorized){
+			this.$el.html('401 unauthorized.');
+			return this;
+		}
 		this.$el.html(addMemberTemplate({model:{_id: this.pid}}));
 		return this;
 	}

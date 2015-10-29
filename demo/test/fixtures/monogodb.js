@@ -425,9 +425,10 @@ var upsertProjects = function(callback){
 								roles: ['presenter'], //0:参与; 1:主持
 								notification: true, //通知提醒，true: 接收；false: 拒绝
 								status: {
-									code: 0,//0: 正常；1: 待确认；-1: 拒绝/不显示
-									message: '正常',
+									code: 0,//0: 邀请；1: 同意；-1: 拒绝/不显示
+									message: '邀请中',
 								},
+								removable: false,
 								lastupdatetime: new Date(),
 							},
 							{
@@ -438,9 +439,10 @@ var upsertProjects = function(callback){
 								roles: ['attendee'], 
 								notification: true,
 								status: {
-									code: 0,
-									message: '正常',
+									code: 1,
+									message: '成为项目成员',
 								},
+								removable: true,
 								lastupdatetime: new Date(),
 							},
 							{
@@ -451,9 +453,10 @@ var upsertProjects = function(callback){
 								roles: ['attendee'], 
 								notification: true,
 								status: {
-									code: 0,
-									message: '正常',
+									code: 1,
+									message: '成为项目成员',
 								},
+								removable: true,
 								lastupdatetime: new Date(),
 							},
 							{
@@ -464,9 +467,10 @@ var upsertProjects = function(callback){
 								roles: ['attendee'], 
 								notification: true,
 								status: {
-									code: 0,
-									message: '正常',
+									code: 1,
+									message: '成为项目成员',
 								},
+								removable: true,
 								lastupdatetime: new Date(),
 							},
 							{
@@ -477,9 +481,10 @@ var upsertProjects = function(callback){
 								roles: ['attendee'], 
 								notification: true,
 								status: {
-									code: 0,
-									message: '正常',
+									code: 1,
+									message: '成为项目成员',
 								},
+								removable: true,
 								lastupdatetime: new Date(),
 							},
 							{
@@ -490,9 +495,10 @@ var upsertProjects = function(callback){
 								roles: ['attendee'], 
 								notification: true,
 								status: {
-									code: 0,
-									message: '正常',
+									code: 1,
+									message: '成为项目成员',
 								},
+								removable: true,
 								lastupdatetime: new Date(),
 							}
 						],

@@ -35,7 +35,7 @@ exports = module.exports = FormView.extend({
 						return;
 					}
 					//update UI
-					that.done();
+					that.done(data);
 					//trigger socket.io
 					that.socketEvents.trigger('app:projects:reload');
 				})

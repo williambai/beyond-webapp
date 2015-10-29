@@ -1,4 +1,4 @@
-<a class="list-group-item"  href="#projects/<%= _id %>/index">
+<a class="list-group-item"  href="#project/<%= _id %>/index">
 <!--  	<span class="pull-right">
  		<i class="fa fa-chevron-right"></i>
  	</span>

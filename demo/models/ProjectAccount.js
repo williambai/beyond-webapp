@@ -11,6 +11,7 @@ module.exports = exports = function(app,mongoose){
 				code: Number,//0: 正常；1: 待确认；-1: 拒绝/不显示
 				message: String,
 			},
+			removable: Boolean,//是否允许删除
 			lastupdatetime: Date,
 		});
 	schema.set('collection', 'project.accounts');

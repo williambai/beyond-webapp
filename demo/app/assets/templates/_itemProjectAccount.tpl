@@ -3,11 +3,9 @@
 	<div class="pull-left">
 		<img class="media-object" src="<%= model.avatar %>" width="64px;" height="64px;">
 	</div>
-<% if(project.isOwner){ %>	
 	<div class="actionArea pull-right">
 		<button class="addbutton">添加为成员</button>
 	</div>
-<% } %>
 	<div class="media-body">
 		<div class="media-heading"><h1><%= model.username %></h1></div>
 			<p>

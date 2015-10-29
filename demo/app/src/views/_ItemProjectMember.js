@@ -11,26 +11,25 @@ exports = module.exports = Backbone.View.extend({
 	tagName: 'div',
 
 	events: {
-		'click .removebutton': 'removeFriend'
+		'click .removebutton': 'remove'
 	},
 
 	initialize: function(options) {
 		this.project = options.project;
 	},
 
-	removeFriend: function() {
+	remove: function() {
 		if (confirm('确认移除' + this.model.get('username') + '用户吗？')) {
 			var $responseArea = this.$('.actionArea');
 			$responseArea.text('正在移除....');
 			$.ajax({
-				url: config.api.host + '/projects/' + this.project.get('_id') + '?type=contact_remove',
-				type: 'PUT',
+				url: config.api.host + '/accounts/project/' + this.model.get('_id'),
+				type: 'DELETE',
 				xhrFields: {
 					withCredentials: true
 				},
-				data: {
-					cid: this.model.get('_id')
-				}
+				// data: {
+				// }
 			}).done(function() {
 				$responseArea.text('移除成功！')
 			}).fail(function() {

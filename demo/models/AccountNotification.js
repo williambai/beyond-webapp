@@ -14,11 +14,12 @@ module.exports = exports = function(app,mongoose){
 			},
 			actions: [{
 				name: String,
-				method: String,
 				label: String,
-				enable: Boolean,
 				url: String,
-				script: String
+				method: String,
+				data: {},
+				script: String,
+				enable: Boolean,
 			}],
 			status: {
 				code: Number,

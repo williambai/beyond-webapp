@@ -57,7 +57,7 @@ exports = module.exports = Backbone.Router.extend({
 		'forgotpassword/success': 'forgotPasswordSuccess',
 		'profile/:id': 'profile',
 		'profile/me/edit': 'profileEdit',
-		'friends/:id': 'friends',
+		'friends': 'friends',
 		'friend/add': 'addFriend',
 		'friend/invite': 'inviteFriend',
 		'project/add': 'addProject',
@@ -91,7 +91,7 @@ exports = module.exports = Backbone.Router.extend({
 		/* load friends */
 		var friendsView = new ChatUserListView({
 			socketEvents: this.socketEvents,
-			url: config.api.host + '/friends/account/me'
+			url: config.api.host + '/friends/account'
 		});
 		friendsView.trigger('load');
 	},
@@ -280,13 +280,13 @@ exports = module.exports = Backbone.Router.extend({
 		profileEditView.trigger('load');
 	},
 
-	friends: function(id){
+	friends: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','我的好友');
-		var friendsView = new FriendsView({id:id});
+		var friendsView = new FriendsView();
 		this.changeView(friendsView);
 		friendsView.trigger('load');
 	},
@@ -403,6 +403,7 @@ exports = module.exports = Backbone.Router.extend({
 				pid: pid,
 				account: this.account
 			});
-		this.changeView(projectMemberAddView);			
+		this.changeView(projectMemberAddView);
+		projectMemberAddView.trigger('load');			
 	},
 });

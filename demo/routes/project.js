@@ -3,45 +3,66 @@ exports = module.exports = function(app, models) {
 
 	var Project = models.Project;
 	var Account = models.Account;
-	var Status = models.ProjectMessage;
+	var ProjectAccount = models.ProjectAccount;
 
 	var add = function(req, res) {
-		var project = req.body;
-		var accountId = req.session.accountId;
-		project.accountId = accountId;
-		project.createtime = new Date();
-		project.updatetime = new Date();
-		project.closed = false;
-
 		async.waterfall(
 			[
-				function(callback) {
+				function(callback){
+					var project = req.body;
+					project.createby = {
+						uid: req.session.accountId,
+						username: req.session.username,
+						avatar: req.session.avatar,
+					};
+					project.members = 0;
+					project.status = {
+						code: 0,
+						message: '正常',
+					};
+					callback(null, project);
+				},
+				function(project, callback) {
 					Project.create(project, function(err, doc) {
 						if (err) return callback(err);
 						callback(null, doc);
 					});
 				},
 				function(project, callback) {
-					Account
-						.findByIdAndUpdate(
-							accountId, {
-								$push: {
-									projects: {
-										_id: project._id,
-										name: project.name,
-										type: 0,
-										notification: 0,
-										agree: 0,
-									}
-								}
+					var member = {
+						uid: req.session.accountId,
+						pid: project._id,
+						username: req.session.username,
+						avatar: req.session.avatar,
+						roles: ['presenter'],
+						notification: true,
+						removable: false,
+						status: {
+							code: 1,
+							message: '初始主持人，成功加入项目',
+						},
+						lastupdatetime: new Date(),
+					};
+					models.ProjectAccount
+						.findOneAndUpdate({
+								pid: project._id,
+								uid: req.session.accountId,
+							}, {
+								$set: member
+							}, {
+								upsert: true,
+								new: true,
 							},
-							callback
+							function(err, doc) {
+								if (err) return callback(err);
+								callback(null, project);
+							}
 						);
 				}
 			],
 			function(err, result) {
 				if (err) return res.send(err);
-				res.sendStatus(200);
+				res.send(result);
 			}
 		);
 	};
@@ -62,8 +83,9 @@ exports = module.exports = function(app, models) {
 								.findByIdAndUpdate(
 									id, {
 										$set: {
-											closed: true,
-											updatetime: new Date(),
+											'status.code': 1,
+											'status.message': '关闭',
+											lastupdatetime: new Date(),
 										}
 									},
 									callback
@@ -84,8 +106,9 @@ exports = module.exports = function(app, models) {
 								.findByIdAndUpdate(
 									id, {
 										$set: {
-											closed: false,
-											updatetime: new Date(),
+											'status.code': 0,
+											'status.message': '正常',
+											lastupdatetime: new Date(),
 										}
 									},
 									callback
@@ -93,86 +116,6 @@ exports = module.exports = function(app, models) {
 						},
 					],
 					function _result(err, result) {
-						if (err) return res.send(err);
-						res.sendStatus(200);
-					}
-				);
-				break;
-			case 'contact_add':
-				var cid = req.body.cid;
-				var accountId = req.session.accountId;
-
-				async.waterfall(
-					[
-						function(callback) {
-							Project.findByIdAndUpdate(
-								id, {
-									$addToSet: {
-										contacts: cid
-									}
-								},
-								callback
-							);
-						},
-
-						function(project, callback) {
-							Account
-								.findByIdAndUpdate(
-									cid, {
-										$push: {
-											projects: {
-												_id: project._id,
-												name: project.name,
-												type: 0,
-												notification: 0,
-												agree: 0,
-											}
-										}
-									},
-									callback
-								);
-						}
-					],
-					function(err, result) {
-						if (err) return res.send(err);
-						res.sendStatus(200);
-					}
-				);
-				break;
-			case 'contact_remove':
-				var cid = req.body.cid;
-				if (!cid) {
-					res.sendStatus(400);
-					return;
-				}
-				var accountId = req.session.accountId;
-
-				async.waterfall(
-					[
-						function(callback) {
-							Project.findByIdAndUpdate(
-								id, {
-									$pull: {
-										contacts: cid
-									}
-								},
-								callback
-							);
-						},
-
-						function(project, callback) {
-							Account
-								.findByIdAndUpdate(
-									cid, {
-										$pull: {
-											'projects.$._id': id
-										}
-									},
-									callback
-								);
-						}
-					],
-					function(err, result) {
 						if (err) return res.send(err);
 						res.sendStatus(200);
 					}
@@ -268,42 +211,6 @@ exports = module.exports = function(app, models) {
 		var type = req.query.type || '';
 		var id = req.params.id;
 		switch (type) {
-			case 'contact':
-				var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
-				page = (!page || page < 0) ? 0 : page;
-				var per = 20;
-
-				async.waterfall(
-					[
-						function _project(callback) {
-							Project.findById(id, function(err, project) {
-								if (err) return callback(err);
-								if (!project || !project.contacts) return callback({
-									code: 40400,
-									message: 'project id not exsit.'
-								});
-
-								callback(null, project.contacts);
-							});
-						},
-						function _account(contacts, callback) {
-							Account
-								.find({
-									_id: {
-										$in: contacts
-									}
-								})
-								.skip(page * per)
-								.limit(per)
-								.exec(callback);
-						}
-					],
-					function(err, result) {
-						if (err) return res.send(err);
-						res.send(result);
-					}
-				);
-				break;
 			default:
 				async.waterfall(
 					[
