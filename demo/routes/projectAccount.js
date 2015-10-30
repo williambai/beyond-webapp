@@ -15,7 +15,7 @@ exports = module.exports = function(app, models) {
 						if (err) return callback(err);
 						if (_.isEmpty(doc)) return callback({
 							code: 40100,
-							message: 'unauthorized.'
+							errmsg: 'unauthorized.'
 						});
 						project = doc;
 						callback(null, doc);
@@ -152,7 +152,7 @@ exports = module.exports = function(app, models) {
 		if (req.params.aid != 'me')
 			return res.send({
 				code: 40100,
-				message: 'not support.'
+				errmsg: 'not support.'
 			});
 		var type = req.query.type || '';
 		var aid = req.session.accountId;

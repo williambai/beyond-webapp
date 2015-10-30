@@ -7,12 +7,12 @@
  		var email = req.body.email;
  		var password = req.body.password;
 		if(null == email || email.length<1 || null == password || password.length<1)
-			return res.send({code:40002,message: 'email or password is null.'});
+			return res.send({code:40002,errmsg: 'email or password is null.'});
 		if(!_.has(administrators,email))
-			return res.send({code: 40100, message: 'email does not exist.'});
+			return res.send({code: 40100, errmsg: 'email does not exist.'});
 		var hash_pass = crypto.createHash('sha256').update(password).digest('hex');
 		if(administrators[email] != hash_pass)
-			return res.send({code: 40101, message: 'password is incorrect.'});
+			return res.send({code: 40101, errmsg: 'password is incorrect.'});
 		res.send({email: email, token: hash_pass});
  	};
 

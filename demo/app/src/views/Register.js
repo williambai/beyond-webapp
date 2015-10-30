@@ -1,8 +1,9 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone');
-    RegisterFormView = require('./_FormRegister'),
-    registerTemplate = require('../templates/register.tpl');
+var RegisterFormView = require('./_FormRegister'),
+    registerTemplate = require('../templates/register.tpl'),
+    registerSuccessTemplate = require('../templates/registerSuccess.tpl');
 
 Backbone.$ = $;
 
@@ -15,9 +16,10 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	load: function(){
+		var that = this;
 		var registerFormView = new RegisterFormView();
 		registerFormView.done = function(){
-			window.location.hash = 'login';
+			that.$el.html(registerSuccessTemplate());
 		};
 		registerFormView.trigger('load');
 	},

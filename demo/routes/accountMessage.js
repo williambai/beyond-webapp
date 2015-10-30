@@ -8,7 +8,7 @@
  		if (req.params.aid == 'me' || req.params.aid == req.session.accountId)
  			return res.send({
  				code: 40100,
- 				message: 'not support.'
+ 				errmsg: 'not support.'
  			});
 
  		var friendId = req.params.aid;
@@ -26,7 +26,7 @@
  				if (err) return res.send(err);
  				if (!account) return res.send({
  					code: 40400,
- 					message: 'account not exist.'
+ 					errmsg: 'account not exist.'
  				});
  				message.to = {
  					uid: account._id,
@@ -46,11 +46,11 @@
  		if (req.params.aid != 'me')
  			return res.send({
  				code: 40100,
- 				message: 'not support.'
+ 				errmsg: 'not support.'
  			});
  		res.send({
  			code: 00000,
- 			message: 'not implemented.'
+ 			errmsg: 'not implemented.'
  		});
  	};
 
@@ -58,7 +58,7 @@
  		if (req.params.aid != 'me')
  			return res.send({
  				code: 40100,
- 				message: 'not support.'
+ 				errmsg: 'not support.'
  			});
  		var type = req.query.type || '';
 
@@ -123,7 +123,7 @@
  				} else {
  					res.send({
  						code: 40000,
- 						message: 'can not vote.'
+ 						errmsg: 'can not vote.'
  					});
  				}
  				break;
@@ -132,7 +132,7 @@
  				if (comment.length < 1)
  					return res.send({
  						code: 40000,
- 						message: 'comment length is 0.'
+ 						errmsg: 'comment length is 0.'
  					});
  				Message
  					.findByIdAndUpdate(
@@ -162,11 +162,11 @@
  		if (req.params.aid != 'me')
  			return res.send({
  				code: 40100,
- 				message: 'not support.'
+ 				errmsg: 'not support.'
  			});
  		res.send({
  			code: 00000,
- 			message: 'not implemented.'
+ 			errmsg: 'not implemented.'
  		});
  	};
 

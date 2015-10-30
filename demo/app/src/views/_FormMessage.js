@@ -87,6 +87,10 @@ exports = module.exports = FormView.extend({
 
 	submitForm: function() {
 		var that = this;
+		//clean errors
+		that.$('.form-group').removeClass('has-error');
+		that.$('.form-group span.help-block').empty();
+		//set model
 		var text = that.$('textarea[name=text]').val();
 		var attachments = [];
 		var $attachments = that.$('input[name=attachment]') || [];

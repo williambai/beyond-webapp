@@ -56,7 +56,7 @@
 					var contactId = contact.contactId;
 
 					if(null == contactId)
-						return res.send({code: 40000, message: 'parameter lost.'});
+						return res.send({code: 40000, errmsg: 'parameter lost.'});
 
 					Account.findByIdAndUpdate(
 						accountId,
@@ -75,7 +75,7 @@
 					var contactId = req.body.contactId;
 
 					if(null == contactId)
-						return res.send({code: 40000, message: 'parameter lost.'});
+						return res.send({code: 40000, errmsg: 'parameter lost.'});
 
 					Account.findByIdAndUpdate(
 						accountId,
@@ -114,7 +114,7 @@
 						accountId,
 						function(err,account){
 							if(err) return res.send(err);
-							if(!account || !account.contacts) return res.send({code: 40400, message: 'not exist.'});
+							if(!account || !account.contacts) return res.send({code: 40400, errmsg: 'not exist.'});
 							res.send(account.contacts);
 						}
 					);				
@@ -127,7 +127,7 @@
 									accountId,
 									function(err,account){
 										if(err) return res.send(err);
-										if(!account) return res.send({code: 40400, message: 'account not exist.'});
+										if(!account) return res.send({code: 40400, errmsg: 'account not exist.'});
 									callback(null,account.projects);
 								});
 							},
@@ -144,7 +144,7 @@
 							function(callback){
 								Account.findById(accountId, function(err,account){
 									if(err) return callback(err);
-									if(!account) return callback({code: 40400, message: 'account not exsit.'});
+									if(!account) return callback({code: 40400, errmsg: 'account not exsit.'});
 									// if(accountId == meId || Account.hasContact(account,meId)){
 									// 	account.isFriend = true;
 									// }

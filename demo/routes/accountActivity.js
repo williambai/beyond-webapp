@@ -5,7 +5,7 @@ exports = module.exports = function(app, models) {
 		if (req.params.aid != 'me')
 			return res.send({
 				code: 40100,
-				message: 'not support.'
+				errmsg: 'not support.'
 			});
 		var aid = req.session.accountId;
 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
@@ -46,7 +46,7 @@ exports = module.exports = function(app, models) {
 		if (req.params.aid != 'me')
 			return res.send({
 				code: 40100,
-				message: 'not support.'
+				errmsg: 'not support.'
 			});
 		var aid = req.session.accountId;
 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
@@ -61,7 +61,7 @@ exports = module.exports = function(app, models) {
 				if (err) return res.send(err);
 				if (!doc) return res.send({
 					code: 40400,
-					message: 'acount activity is not found.'
+					errmsg: 'acount activity is not found.'
 				});
 				models.AccountStatus
 					.find({

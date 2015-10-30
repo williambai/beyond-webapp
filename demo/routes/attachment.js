@@ -15,7 +15,7 @@ exports =module.exports = function(app,models){
 			var attachment = '/_tmp/' + filename;
 			fs.rename(tmp_path,new_path,function(err){
 				if(err) console.error(err);
-				if(err) return res.send({code: 40000, message: 'upload error.'});
+				if(err) return res.send({code: 40000, errmsg: 'upload error.'});
 
 				res.send({
 					type: file.extension,
@@ -29,7 +29,7 @@ exports =module.exports = function(app,models){
 			var file_path = path.join(__dirname, '../public/',filename);
 			fs.unlink(file_path,function(err){
 				if(err) console.error(err);
-				if(err) return res.send({code: 40100, message: 'delete file error.'});
+				if(err) return res.send({code: 40100, errmsg: 'delete file error.'});
 				
 				res.sendStatus(200);
 			});

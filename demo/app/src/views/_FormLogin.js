@@ -21,6 +21,10 @@ exports = module.exports = FormView.extend({
 
 	login: function() {
 		var that = this;
+		//clean errors
+		that.$('.form-group').removeClass('has-error');
+		that.$('.form-group span.help-block').empty();
+		//set model
 		this.model.set('email', $('input[name=email]').val());
 		this.model.set('password', $('input[name=password]').val());
 

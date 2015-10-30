@@ -28,16 +28,17 @@ module.exports = exports = function(app, models) {
 			var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
 
 			smtpTransporter.sendMail({
-					from: config.email.from,
+					from: config.mail.from,
 					to: user.email,
-					subject: config.email.subject,
-					text: config.email.text.replace(/\{[(a-z]+\}/ig, function(name) {
+					subject: config.mail.subject,
+					text: config.mail.text.replace(/\{[(a-z]+\}/ig, function(name) {
 						if (name == '{host}') return req.header('host');
 						if (name == '{email}') return user.email;
 						if (name == '{code}') return user.registerCode;
 					}),
 				},
 				function(succss) {
+					console.log('email send successfully.');
 				}
 			);
 		});
@@ -52,7 +53,8 @@ module.exports = exports = function(app, models) {
 					registerCode: code
 				}, {
 					$set: {
-						enable: 0
+						'status.code': 0,
+						'status.message': '注册成功，可以登陆'
 					}
 				},
 				function(result) {
@@ -69,35 +71,34 @@ module.exports = exports = function(app, models) {
 		var email = req.body.email;
 		var password = req.body.password;
 
-		if (null == email || email.length < 1 || null == password || password.length < 1) {
-			res.send({
+		if (null == email || email.length < 1 || null == password || password.length < 1)
+			return res.send({
 				code: 40002,
-				message: 'email or password is null.'
+				errmsg: 'email or password is null.'
 			});
-			return;
-		}
 
 		Account
 			.findOne({
-				email: email,
-				password: crypto.createHash('sha256').update(password).digest('hex'),
-				'status.code': 0,
+				email: email
 			})
 			.exec(function(err, account) {
-				if (err) {
-					res.send({
-						code: 40100,
-						message: 'login error.'
-					});
-					return;
-				}
-				if (!account) {
-					res.send({
+				if (err)
+					return res.send(err);
+				if (!account)
+					return res.send({
 						code: 40401,
-						message: 'user not exist.'
+						errmsg: '用户不存在。'
 					});
-					return;
-				}
+				if (account.status.code == -1)
+					return res.send({
+						code: 40402,
+						errmsg: '还未通过验证，请查看邮件，并尽快验证。'
+					});
+				if (account.password != crypto.createHash('sha256').update(password).digest('hex'))
+					return res.send({
+						code: 40403,
+						errmsg: '密码不正确。'
+					});
 				// console.log(email + ': login successfully.');
 				req.session.loggedIn = true;
 				req.session.accountId = account._id;
@@ -116,8 +117,8 @@ module.exports = exports = function(app, models) {
 
 	var logout = function(req, res) {
 		req.session.loggedIn = false;
-		console.log('logout:');
-		console.log(req.session);
+		// console.log('logout:');
+		// console.log(req.session);
 		res.sendStatus(200);
 	};
 
@@ -126,7 +127,7 @@ module.exports = exports = function(app, models) {
 		if (null == email || email.length < 1) {
 			res.send({
 				code: 40001,
-				message: 'email is null.'
+				errmsg: 'email is null.'
 			});
 			return;
 		}
@@ -153,7 +154,7 @@ module.exports = exports = function(app, models) {
 						if (!success) {
 							res.send({
 								errocde: 40401,
-								message: 'username does not exist.'
+								errmsg: 'username does not exist.'
 							});
 							return;
 						}

@@ -5,7 +5,7 @@ exports = module.exports = function(app, models) {
 		if (!req.body.type)
 			return res.send({
 				code: 40100,
-				message: 'parameter missed: type.'
+				errmsg: 'parameter missed: type.'
 			});
 
 		var type = req.body.type || '';

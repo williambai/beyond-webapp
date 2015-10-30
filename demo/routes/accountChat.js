@@ -21,7 +21,7 @@ exports = module.exports = function(app,models){
 							fid: friendId
 						},function(err,friend){
 							if(err) return callback(err);
-							if(_.isEmpty(friend)) return callback({code: 40400, message: 'friend is not exist.'});
+							if(_.isEmpty(friend)) return callback({code: 40400, errmsg: 'friend is not exist.'});
 							callback(null,friend);
 						});
 					},

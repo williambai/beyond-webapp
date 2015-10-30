@@ -82,6 +82,10 @@ exports = module.exports = FormView.extend({
 
 	submitForm: function() {
 		var that = this;
+		//clean errors
+		that.$('.form-group').removeClass('has-error');
+		that.$('.form-group span.help-block').empty();
+		//set model
 		var text = that.$('textarea[name=text]').val();
 		var attachments = [];
 		var $attachments = that.$('input[name=attachment]') || [];
@@ -118,7 +122,7 @@ exports = module.exports = FormView.extend({
 						//trigger socket.io
 						that.socketEvents.trigger('socket:out:status', data);
 					})
-					.error(function(xhr){
+					.error(function(xhr) {
 						that.$('#error').html('<div class="alert alert-danger">' + xhr.status + ': ' + xhr.responseText + '</div>');
 						that.$('#error').slideDown();
 					});

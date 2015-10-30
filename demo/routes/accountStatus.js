@@ -11,7 +11,7 @@
  		if (req.params.aid != 'me')
  			return res.send({
  				code: 40100,
- 				message: 'not support.'
+ 				errmsg: 'not support.'
  			});
  		var message = req.body;
  		var accountId = req.session.accountId;
@@ -26,7 +26,7 @@
  							if (!account)
  								return callback({
  									code: 40400,
- 									message: 'account not exist.'
+ 									errmsg: 'account not exist.'
  								});
  							return callback(null, account);
  						}
@@ -87,11 +87,11 @@
  		if (req.params.aid != 'me')
  			return res.send({
  				code: 40100,
- 				message: 'not support.'
+ 				errmsg: 'not support.'
  			});
  		res.send({
  			code: 00000,
- 			message: 'not implemented.'
+ 			errmsg: 'not implemented.'
  		});
  	};
 
@@ -99,7 +99,7 @@
  		if (req.params.aid != 'me')
  			return res.send({
  				code: 40100,
- 				message: 'not support.'
+ 				errmsg: 'not support.'
  			});
 
  		var id = req.params.id;
@@ -164,7 +164,7 @@
  				} else {
  					res.send({
  						code: 40000,
- 						message: 'can not vote.'
+ 						errmsg: 'can not vote.'
  					});
  				}
  				break;
@@ -173,7 +173,7 @@
  				if (comment.length < 1)
  					return res.send({
  						code: 40000,
- 						message: 'comment length is 0.'
+ 						errmsg: 'comment length is 0.'
  					});
  				Status
  					.findByIdAndUpdate(
@@ -212,11 +212,11 @@
  		if (req.params.aid != 'me')
  			return res.send({
  				code: 40100,
- 				message: 'not support.'
+ 				errmsg: 'not support.'
  			});
  		res.send({
  			code: 00000,
- 			message: 'not implemented.'
+ 			errmsg: 'not implemented.'
  		});
  	};
 
@@ -233,7 +233,7 @@
  				if (err) return res.send(err);
  				if (!account) return res.send({
  					code: 40400,
- 					message: 'account not exist.'
+ 					errmsg: 'account not exist.'
  				});
  				Status
  					.find({

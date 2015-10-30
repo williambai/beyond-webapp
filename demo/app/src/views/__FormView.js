@@ -17,8 +17,6 @@ exports = module.exports = Backbone.View.extend({
 
 	onInvalid: function(model,errors,options){
 		var that = this;
-		this.$('.form-group').removeClass('has-error');
-		this.$('.form-group span.help-block').empty();
 		_.each(errors,function(error){
 			that.$('#' + error.name).addClass('has-error');
 			that.$('#' + error.name +' span.help-block').text(error.message);

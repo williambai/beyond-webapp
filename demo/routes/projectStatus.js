@@ -21,7 +21,7 @@
 					function(callback){
 						Project.findById(projectId,function(err,project){
 							if(err) return callback(err);
-							if(!project) return callback({code: 40000, message: 'project not exist.'});
+							if(!project) return callback({code: 40000, errmsg: 'project not exist.'});
 							callback(null,project);
 						});
 					},
@@ -99,13 +99,13 @@
 								}
 							);
 					}else{
-						res.send({code: 40000, message: 'can not vote.'});
+						res.send({code: 40000, errmsg: 'can not vote.'});
 					}
 					break;
 				case 'comment':
 					var comment = req.body.comment || '';
 					if(comment.length < 1) 
-						return res.send({code: 40000, message: 'comment length is 0.'});
+						return res.send({code: 40000, errmsg: 'comment length is 0.'});
 					Message
 						.findByIdAndUpdate(
 							id,
@@ -159,7 +159,7 @@
 									id,
 									function(err,project){
 										if(err) return res.send(err);
-										if(!project) return res.send({code: 40400,message: 'project not exist.'});
+										if(!project) return res.send({code: 40400,errmsg: 'project not exist.'});
 										callback(null,project);
 									}
 								);
