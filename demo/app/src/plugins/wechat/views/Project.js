@@ -1,10 +1,9 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	indexTemplate = require('../../assets/templates/index.tpl'),
-	ProjectItemView = require('../../ProjectItem'),
+	projectsTemplate = require('../templates/projects.tpl'),
+	ProjectItemView = require('./_ItemProject'),
 	ProjectCollection = require('../models/ProjectCollection');
-var config = require('../conf');
 
 Backbone.$ = $;
 
@@ -12,23 +11,19 @@ exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
 
-	loaded: false,
-	events: {
-		'click .editor-toggle': 'editorToggle',
-		'submit form': 'updateStatus'
-	},
-
 	initialize: function(options) {
 		this.socketEvents = options.socketEvents;
+		this.currentChatView = options.currentChatView;
+		this.chats = options.chats;
+
 		this.collection = new ProjectCollection();
-		this.collection.url = config.api.host + '/accounts/me/projects';
+		this.collection.url = '/accounts/me/projects';
 		this.collection.on('add', this.onProjectAdded, this);
 		this.collection.on('reset', this.onProjectCollectionReset, this);
 		this.on('load', this.load, this);
 	},
 
 	load: function() {
-		loaded = true;
 		this.render();
 		this.collection.fetch({
 			xhrFields: {
@@ -61,7 +56,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
-		this.$el.html(indexTemplate());
+		this.$el.html(projectsTemplate());
 		return this;
-	},
+	}
 });

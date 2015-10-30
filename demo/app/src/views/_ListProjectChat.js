@@ -8,7 +8,7 @@ var $ = require('jquery'),
 
 Backbone.$ = $;
 
-var modalTemplate = require('../../assets/templates/_modal.tpl');
+var modalTemplate = require('../templates/_modal.tpl');
 require('./__ModalView');
 
 exports = module.exports = ListView.extend({

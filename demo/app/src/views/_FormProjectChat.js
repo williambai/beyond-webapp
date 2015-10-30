@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	menuBarTemplate = require('../../assets/templates/_barProject.tpl'),
-	chatFormTemplate = require('../../assets/templates/_formProjectChat.tpl'),
+	menuBarTemplate = require('../templates/_barProject.tpl'),
+	chatFormTemplate = require('../templates/_formProjectChat.tpl'),
 	FormView = require('./__FormView'),
 	ProjectStatus = require('../models/ProjectStatus');
 var config = require('../conf');

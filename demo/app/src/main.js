@@ -1,1 +1,1 @@
-var Entry = require('./Entry')();
+require('./index')();

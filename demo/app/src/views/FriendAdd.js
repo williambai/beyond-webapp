@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	addFriendTemplate = require('../../assets/templates/friendAdd.tpl'),
+	addFriendTemplate = require('../templates/friendAdd.tpl'),
 	AccountListView = require('./_ListAccount');
 var config = require('../conf');
 

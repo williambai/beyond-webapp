@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	projectStatusTemplate = require('../../assets/templates/projectStatus.tpl'),
-	bottomBarTemplate = require('../../assets/templates/_barProject.tpl'),
+	projectStatusTemplate = require('../templates/projectStatus.tpl'),
+	bottomBarTemplate = require('../templates/_barProject.tpl'),
 	StatusListView = require('./_ListProjectStatus'),
 	Status = require('../models/Status'),
 	StatusCollection = require('../models/StatusCollection');

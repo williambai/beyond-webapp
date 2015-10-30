@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTemplate = require('../../assets/templates/loading.tpl'),
-	profileTemplate = require('../../assets/templates/profile.tpl'),
+	loadingTemplate = require('../templates/loading.tpl'),
+	profileTemplate = require('../templates/profile.tpl'),
 	StatusView = require('./_ItemStatus'),
 	Status = require('../models/Status'),
 	StatusCollection = require('../models/StatusCollection'),

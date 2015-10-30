@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     ListView = require('./__ListView'),
-    projectItemTemplate = require('../../assets/templates/_itemProject2.tpl'),
+    projectItemTemplate = require('../templates/_itemProject2.tpl'),
     ProjectCollection = require('../models/ProjectCollection');
 var config = require('../conf');
 

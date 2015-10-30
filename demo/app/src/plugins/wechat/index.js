@@ -1,8 +1,8 @@
 var $ = require('jquery');
 var Backbone = require('backbone');
 
-var router = new(require('./Router_wechat'))();
-var config = require('./config');
+var router = new(require('./Router'))();
+var config = require('./conf');
 Backbone.$ = $;
 
 exports = module.exports = function() {
@@ -29,7 +29,7 @@ exports = module.exports = function() {
 			xhrFields: {
 				withCredentials: true
 			},
-		}).done(unction(data) {
+		}).done(function(data) {
 			callback();
 		}).fail(function() {
 			window.location.href = '/wechat/oauth2?originid=' + originid;

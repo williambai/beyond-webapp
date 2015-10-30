@@ -1,12 +1,10 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTemplate = require('../../assets/templates/loading.tpl'),
-	profileTemplate = require('../../assets/templates/profile_wechat.tpl'),
-	StatusView = require('./_ItemStatus'),
-	Status = require('../models/Status'),
-	StatusCollection = require('../models/StatusCollection'),
+	loadingTemplate = require('../templates/loading.tpl'),
+	profileTemplate = require('../templates/profile.tpl'),
 	Account = require('../models/Account');
+var config = require('../conf');
 
 Backbone.$ = $;
 

@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	FormView = require('./__FormView'),
 	Message = require('../models/Message'),
-	formTemplate = require('../../assets/templates/_formStatus.tpl');
+	formTemplate = require('../templates/_formStatus.tpl');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({

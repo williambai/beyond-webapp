@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    projectItemTemplate = require('../../assets/templates/_itemProject_wechat.tpl');
+    projectItemTemplate = require('../templates/_itemProject.tpl');
 
 Backbone.$ = $;
 

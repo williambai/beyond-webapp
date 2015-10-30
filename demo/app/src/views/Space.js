@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    loadingTemplate = require('../../assets/templates/loading.tpl'),
-    spaceTemplate = require('../../assets/templates/space.tpl'),
+    loadingTemplate = require('../templates/loading.tpl'),
+    spaceTemplate = require('../templates/space.tpl'),
     MessageFormView = require('./_FormMessage'),
     StatusListView = require('./_ListStatus');
 var config = require('../conf');

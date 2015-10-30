@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	friendItemTemplate = require('../../assets/templates/_itemFriend.tpl');
+	friendItemTemplate = require('../templates/_itemFriend.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;

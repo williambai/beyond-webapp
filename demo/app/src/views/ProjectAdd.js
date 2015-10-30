@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    loadingTemplate = require('../../assets/templates/loading.tpl'),
-    projectAddTemplate = require('../../assets/templates/projectAdd.tpl'),
+    loadingTemplate = require('../templates/loading.tpl'),
+    projectAddTemplate = require('../templates/projectAdd.tpl'),
     ProjectFormView = require('./_FormProject');
 
 Backbone.$ = $;

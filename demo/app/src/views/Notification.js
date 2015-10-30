@@ -2,8 +2,8 @@ var _ = require('underscore');
 
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    loadingTemplate = require('../../assets/templates/loading.tpl'),
-    notificationTemplate = require('../../assets/templates/notification.tpl'),
+    loadingTemplate = require('../templates/loading.tpl'),
+    notificationTemplate = require('../templates/notification.tpl'),
     NotificationListView = require('./_ListNotification');
 var config = require('../conf');
 

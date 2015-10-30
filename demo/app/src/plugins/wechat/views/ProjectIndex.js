@@ -1,10 +1,10 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	projectIndexTemplate = require('../../assets/templates/projectIndex_wechat.tpl'),
-	ProjectCheckInView = require('./ProjectCheckIn_wechat'),
+	projectIndexTemplate = require('../templates/projectIndex.tpl'),
+	ProjectCheckInView = require('./ProjectCheckIn'),
 	Project = require('../models/Project');
-var config = require('../config');
+var config = require('../conf');
 Backbone.$ = $;
 
 exports = module.exports = Backbone.View.extend({

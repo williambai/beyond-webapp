@@ -1,9 +1,9 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    statusTemplate = require('../../assets/templates/_itemStatus.tpl'),
-    commentFormTemplate = require('../../assets/templates/_formComment.tpl'),
-    modalTemplate = require('../../assets/templates/_modal.tpl'),
+    statusTemplate = require('../templates/_itemStatus.tpl'),
+    commentFormTemplate = require('../templates/_formComment.tpl'),
+    modalTemplate = require('../templates/_modal.tpl'),
     MessageUtil = require('./__Util');
 var config = require('../conf');
 

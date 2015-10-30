@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTemplate = require('../../assets/templates/loading.tpl'),
-	profileEditTemplate = require('../../assets/templates/profileEdit.tpl'),
+	loadingTemplate = require('../templates/loading.tpl'),
+	profileEditTemplate = require('../templates/profileEdit.tpl'),
 	Account = require('../models/Account');
 var config = require('../conf');
 

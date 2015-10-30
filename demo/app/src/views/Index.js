@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTemplate = require('../../assets/templates/loading.tpl'),
-	indexTemplate = require('../../assets/templates/index.tpl'),
+	loadingTemplate = require('../templates/loading.tpl'),
+	indexTemplate = require('../templates/index.tpl'),
 	ProjectSearchView = require('./_SearchProject'),
 	ProjectListView = require('./_ListProject2');
 var config = require('../conf');

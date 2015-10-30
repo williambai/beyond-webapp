@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    modalTemplate = require('../../assets/templates/_modal.tpl'),
-    chatSessionTemplate = require('../../assets/templates/chat.tpl'),
+    modalTemplate = require('../templates/_modal.tpl'),
+    chatSessionTemplate = require('../templates/chat.tpl'),
     ChatFormView = require('./_FormChat'),
     ChatListView = require('./_ListChat');
 var config = require('../conf');

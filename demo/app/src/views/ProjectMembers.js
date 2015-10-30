@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    membersTemplate = require('../../assets/templates/projectMembers.tpl'),
-    projectBarTemplate = require('../../assets/templates/_barProject.tpl'),
+    membersTemplate = require('../templates/projectMembers.tpl'),
+    projectBarTemplate = require('../templates/_barProject.tpl'),
     MemberListView = require('./_ListProjectMember'),
     Project = require('../models/Project');
 var config = require('../conf');

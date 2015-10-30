@@ -2,10 +2,10 @@ var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
 
-var ProjectView = require('./views/Project_wechat');
-var ProjectIndexView = require('./views/ProjectIndex_wechat');
-var LoginView = require('./views/Login_wechat');
-var ProfileView = require('./views/Profile_wechat');
+// var ProjectView = require('./views/Project');
+// var ProjectIndexView = require('./views/ProjectIndex');
+// var LoginView = require('./views/Login');
+var ProfileView = require('./views/Profile');
 var config = require('./conf/wechat');
 
 Backbone.$ = $;
@@ -61,10 +61,10 @@ exports = module.exports = Backbone.Router.extend({
 	},
 
 	profile: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
+		// if(!this.logined){
+		// 	window.location.hash = 'login';
+		// 	return;
+		// }
 		var profileView = new ProfileView({
 				id:'me',
 				appEvents: this.appEvents,

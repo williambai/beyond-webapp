@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    chatItemTemplate = require('../../assets/templates/_itemChat.tpl'),
+    chatItemTemplate = require('../templates/_itemChat.tpl'),
     MessageUtil = require('./__Util');
 
 Backbone.$ = $;

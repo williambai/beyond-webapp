@@ -146,6 +146,13 @@ gulp.task('main.js',function(done){
 	_bundleJS(entries,done);
 });
 
+gulp.task('wechat.js',function(done){
+	var entries = [
+		'wechat.js'
+	];
+	_bundleJS(entries,done);
+});
+
 gulp.task('admin.js',function(done){
 	var entries = [
 		'admin.js'
@@ -154,7 +161,7 @@ gulp.task('admin.js',function(done){
 });
 
 gulp.task('js', function(done){
-	seq('main.js','admin.js',done);
+	seq('main.js','wechat.js', 'admin.js',done);
 });
 /*======================================================================
 =            Compile less                            =

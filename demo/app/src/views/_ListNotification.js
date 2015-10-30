@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var ListView = require('./__ListView'),
-    // itemTemplate = require('../../assets/templates/_itemNotification.tpl'),
+    // itemTemplate = require('../templates/_itemNotification.tpl'),
     ItemView = require('./_itemNotification'),
     NotificationCollection = require('../models/NotificationCollection');
 

@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone');
     RegisterFormView = require('./_FormRegister'),
-    registerTemplate = require('../../assets/templates/register.tpl');
+    registerTemplate = require('../templates/register.tpl');
 
 Backbone.$ = $;
 

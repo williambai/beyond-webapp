@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
-    loadingTemplate = require('../../assets/templates/loading.tpl');
+    loadingTemplate = require('../templates/loading.tpl');
 
 
 Backbone.$ = $;

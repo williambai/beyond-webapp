@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	itemTemplate = require('../../assets/templates/_itemNotification.tpl');
+	itemTemplate = require('../templates/_itemNotification.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
