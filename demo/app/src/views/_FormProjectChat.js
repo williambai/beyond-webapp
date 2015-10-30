@@ -49,12 +49,12 @@ exports = module.exports = FormView.extend({
 				});
 				if (xhr) {
 					xhr
-						.success(function(model) {
-							if (!!model.code) return console.log(model);
+						.success(function(data) {
+							if (!!data.code) return console.log(data);
 							$('input[name=chat]').val('');
 
 							//update UI
-							that.done(new ProjectStatus(model));
+							that.done(new ProjectStatus(data));
 							//trigger socket.io
 							that.socketEvents.trigger('socket:out:project',{
 								to: {
@@ -63,8 +63,8 @@ exports = module.exports = FormView.extend({
 								content: projectStatus.toJSON(),
 							});
 						})
-						.error(function(err) {
-							console.log(err);
+						.error(function(xhr) {
+							console.log(xhr);
 						});
 				}
 			}
@@ -116,12 +116,12 @@ exports = module.exports = FormView.extend({
 				});
 				if (xhr) {
 					xhr
-						.success(function(model) {
-							if (!!model.code) return console.log(model);
-							that.done(new ProjectStatus(model));
+						.success(function(data) {
+							if (!!data.code) return console.log(data);
+							that.done(new ProjectStatus(data));
 						})
-						.error(function(err) {
-							console.log(err);
+						.error(function(xhr) {
+							console.log(xhr);
 						});
 				}
 			}

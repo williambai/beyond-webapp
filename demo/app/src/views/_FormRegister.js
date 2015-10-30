@@ -33,16 +33,19 @@ exports = module.exports = FormView.extend({
 			xhr
 				.success(function(data){
 					if(!!data.code){
-						that.$('#error').html('<div class="alert alert-dander">' + data.message + '</div>');
+						if(data.code == 11000){
+							that.$('#error').html('<div class="alert alert-danger">' + '该邮箱已注册' + '</div>');
+						}else{
+							that.$('#error').html('<div class="alert alert-danger">' + data.errmsg + '</div>');
+						}
 						that.$('#error').slideDown();
 						return;
 					}
 					//update UI
 					that.done();
 				})
-				.error(function(err){
-					console.log(err);
-					that.$('#error').html('<div class="alert alert-danger">unknown error</div>');
+				.error(function(xhr){
+					that.$('#error').html('<div class="alert alert-danger">' + xhr.status + ': ' + xhr.responseText + '</div>');
 					that.$('#error').slideDown();
 				});
 		}

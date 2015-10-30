@@ -106,9 +106,9 @@ exports = module.exports = FormView.extend({
 			});
 			if (xhr) {
 				xhr
-					.success(function(model) {
-						if (!!model.code) {
-							that.$('#error').html('<div class="alert alert-danger">' + model.message + '</div>');
+					.success(function(data) {
+						if (!!data.code) {
+							that.$('#error').html('<div class="alert alert-danger">' + data.errmsg + '</div>');
 							that.$('#error').slideDown();
 							return;
 						}
@@ -119,14 +119,13 @@ exports = module.exports = FormView.extend({
 						that.$('form').addClass('hidden');
 
 						//update UI
-						that.done(new Message(model));
+						that.done(new Message(data));
 						//trigger socket.io
 						that.socketEvents.trigger('socket:message',{
 						});
 					})
-					.error(function(err) {
-						console.log(err);
-						that.$('#error').html('<div class="alert alert-danger">unknown error</div>');
+					.error(function(xhr){
+						that.$('#error').html('<div class="alert alert-danger">' + xhr.status + ': ' + xhr.responseText + '</div>');
 						that.$('#error').slideDown();
 					});
 			}

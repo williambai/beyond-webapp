@@ -4,12 +4,12 @@ var config = require('../conf');
 
 exports = module.exports = Backbone.Model.extend({
 	url: config.api.host + '/register',
-	defaults: {
-		username: '',
-		email: '',
-		password:'',
-		cpassword: '',
-	},
+	// defaults: {
+	// 	username: '',
+	// 	email: '',
+	// 	password:'',
+	// 	cpassword: '',
+	// },
 
 	validate: function(attrs, options){
 		var errors = [];

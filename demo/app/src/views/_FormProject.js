@@ -30,7 +30,7 @@ exports = module.exports = FormView.extend({
 			xhr
 				.success(function(data){
 					if(!!data.code){
-						that.$('#error').html('<div class="alert alert-dander">' + data.message + '</div>');
+						that.$('#error').html('<div class="alert alert-dander">' + data.errmsg + '</div>');
 						that.$('#error').slideDown();
 						return;
 					}
@@ -39,9 +39,8 @@ exports = module.exports = FormView.extend({
 					//trigger socket.io
 					that.socketEvents.trigger('app:projects:reload');
 				})
-				.error(function(err){
-					console.log(err);
-					that.$('#error').html('<div class="alert alert-danger">unknown error</div>');
+				.error(function(xhr){
+					that.$('#error').html('<div class="alert alert-danger">' + xhr.status + ': ' + xhr.responseText + '</div>');
 					that.$('#error').slideDown();
 				});
 		}

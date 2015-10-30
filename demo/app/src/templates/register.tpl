@@ -6,8 +6,8 @@
 				<div class="panel-heading">
 					<h3 class="panel-title text-center">注册</h3>
 				</div>
-				<div id="error"></div>
 				<div class="panel-body">
+					<div id="error"></div>
 					<form>
 						<div class="form-group" id="username">
 							<label for="username">姓名：</label>

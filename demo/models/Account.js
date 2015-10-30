@@ -18,6 +18,11 @@ module.exports = exports = function(app,mongoose){
 				code: Number,//账号的有效性；-1：注册但不能登录；0：正常可登陆
 				message: String,
 			},
+			createby: {
+				uid: String,
+				username: String,
+				avatar: String,
+			},
 			lastupdatetime: Date
 		});
 

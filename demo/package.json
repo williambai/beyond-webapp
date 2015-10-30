@@ -6,8 +6,8 @@
   "author": "Suzhou Beyond Co., Ltd.",
   "main": "server.js",
   "scripts": {
-    "test": "jasmine-node test --autotest --watch ./",
-    "dev": "pm2 start server.js --watch ./ --ignore-watch='./_app ./_dest ./app ./commands ./public'"
+    "test": "mocha --watch 'test'",
+    "dev": "pm2 start server.js --watch ./ --ignore-watch='./_app ./_dest ./app ./commands ./public ./test'"
   },
 
   "dependencies": {
