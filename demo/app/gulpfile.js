@@ -121,28 +121,41 @@ gulp.task('plugin-js',function(){
 =            Compile js                            =
 ======================================================================*/
 
-gulp.task('js',function(){
-	var b = browserify({
-			entries: [
-				path.join(__dirname,'/src/main.js'),
-				// path.join(__dirname,'/src/main_wechat.js')
-			],
-			debug: false
-		});
-	var source = require('vinyl-source-stream');
+var source = require('vinyl-source-stream');
+var _bundleJS = function(arr,done){
+	var entry = arr.pop();
+	if(!entry) return done();
+	var b = browserify({debug: false});
+	b.add(path.join(__dirname,'src',entry));
 	// var tplTransform = require('node-underscorify').transform({
 	// 	    extensions: ['tpl'],
 	// 	});
 
 	// b.transform(tplTransform);
+	b.bundle()
+		 .pipe(source(entry))
+		// .pipe(streamify(uglify()))
+		.pipe(gulp.dest(path.join(__dirname,config.dest,'js')));
+	_bundleJS(arr,done);
+};
 
-	return b.bundle()
-			.pipe(source('main.js'))
-			// .pipe(streamify(uglify()))
-			// .pipe(rename('main.js'))
-			.pipe(gulp.dest(path.join(__dirname,config.dest,'js')));
+gulp.task('main.js',function(done){
+	var entries = [
+		'main.js',
+	];
+	_bundleJS(entries,done);
 });
 
+gulp.task('admin.js',function(done){
+	var entries = [
+		'admin.js'
+	];
+	_bundleJS(entries,done);
+});
+
+gulp.task('js', function(done){
+	seq('main.js','admin.js',done);
+});
 /*======================================================================
 =            Compile less                            =
 ======================================================================*/
