@@ -12,19 +12,24 @@
 						<i class="fa fa-chevron-right"></i>
 					</span>
 				</a>
-				<a class="list-group-item" href="#activity/me">
+				<a class="list-group-item" href="#">
 					<i class="fa fa-users fa-fw"></i>
 					&nbsp;组织管理
 					<span class="status-unread pull-right">
 						<i class="fa fa-chevron-right"></i>
 					</span>
 				</a>
-				<a class="list-group-item" href="#project/me">
+				<a class="list-group-item" href="#">
 					<i class="fa fa-home fa-fw"></i>
 					&nbsp;应用管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#profile/me">
+				<a class="list-group-item" href="#">
+					<i class="fa fa-home fa-fw"></i>
+					&nbsp;运维管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#profile">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;我的资料
 					<i class="fa fa-chevron-right pull-right"></i>
