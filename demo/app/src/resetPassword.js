@@ -21,8 +21,8 @@ var Router = Backbone.Router.extend({
 	},
 
 	routes: {
-		'': 'resetPassword',
 		'reset/token/:token': 'resetPassword',
+		'*path': 'index',
 	},
 
 	changeView: function(view){

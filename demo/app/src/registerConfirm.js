@@ -20,8 +20,8 @@ var Router = Backbone.Router.extend({
 	},
 
 	routes: {
-		'': 'email',
-		'email/:email/:code': 'email'
+		'email/:email/:code': 'email',
+		'*path': 'index',
 	},
 
 	changeView: function(view){
@@ -32,6 +32,10 @@ var Router = Backbone.Router.extend({
 		$('body').removeClass('has-navbar-bottom');
 		$('.bottom-bar').remove();
 		this.currentView.render();
+	},
+
+	index: function(){
+		window.location.href = '/';
 	},
 
 	email: function(email,code){
