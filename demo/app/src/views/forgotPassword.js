@@ -1,8 +1,9 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	forgotPasswordTemplate = require('../templates/forgotPassword.tpl');
-var config = require('../conf');
+    ForgotPasswordFormView = require('./_FormForgotPassword'),
+	forgotPasswordTemplate = require('../templates/forgotPassword.tpl'),
+    forgotPasswordSuccessTemplate = require('../templates/forgotPasswordSuccess.tpl');
 
 Backbone.$ = $;
 
@@ -10,28 +11,22 @@ exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
 
-	events: {
-		'submit form': 'forgotPassword'
+	initialize: function(options){
+		this.on('load', this.load, this);
 	},
-	forgotPassword: function() {
-		$.ajax({
-			url: config.api.host + '/forgotPassword',
-			type: 'POST',
-			xhrFields: {
-				withCredentials: true
-			},
-			data: {
-				email: $('input[name=email]').val()
-			}
-		}).done(function(data) {
-			window.location.hash = 'forgotpassword/success';
-		}).fail(function() {
 
-		});
-		return false;
+	load: function(){
+		var that = this;
+		var forgotPasswordFormView = new ForgotPasswordFormView();
+		forgotPasswordFormView.done = function(){
+			that.$el.html(forgotPasswordSuccessTemplate());
+		}
+		forgotPasswordFormView.trigger('load');
 	},
-	render: function() {
+
+	render: function(){
 		this.$el.html(forgotPasswordTemplate());
 		return this;
-	}
+	},
+
 });

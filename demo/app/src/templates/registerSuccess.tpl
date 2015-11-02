@@ -1,6 +1,22 @@
-<h4>恭喜您，注册成功！</h4>
+<p></p>
+<p></p>
+<div class="">
+	<div class="">
+		<div class="">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title text-center">注册成功</h3>
+				</div>
+				<div class="panel-body">
+					<p>恭喜您，注册成功!</p>
+					<p>您还不能登录，请检查您的邮箱，点击邮件中的链接激活您的账号。</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-<p>您还不能登录，请检查您的邮箱，点击邮件中的链接激活您的账号。</p>
+<p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>

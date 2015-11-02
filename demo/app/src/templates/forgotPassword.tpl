@@ -1,22 +1,24 @@
 <div class="">
 	<div class="">
 		<div class="">
-		<div class="panel panel-default">
+		<div class="panel panel-default" id="forgotPasswordForm">
 			<div class="panel-heading">
                     <h3 class="panel-title text-center">找回密码</h3>
 			</div>
 			<div class="panel-body">
-				<form>
-					<div class="form-group">
+				<div id="error"></div>
+				<form role="form">
+					<div class="form-group" id="email">
 						<label for="email">您的邮件地址：</label>
-						<input type="text" name="email" class="form-control" placeholder="邮箱"/>
+						<input type="text" name="email" class="form-control" placeholder="邮箱">
+						<span class="help-block"></span>
 					</div>
                         <div class="form-group">
                         	<a href="#login" class="pull-right">换个账号，去登录！</a>
                     	</div>
                     	<br>
 					<div class="form-group">
-						<input type="submit" value="重置密码" class="btn btn-primary btn-block"/>
+						<input type="submit" value="重置密码" class="btn btn-primary btn-block">
 					</div>
 				</form>
 			</div>

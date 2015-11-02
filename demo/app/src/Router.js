@@ -12,7 +12,7 @@ var NotificationView = require('./views/Notification');
 var RegisterView = require('./views/Register');
 var LoginView = require('./views/Login');
 var ForgotPasswordView = require('./views/ForgotPassword');
-var ForgotPasswordSuccessView = require('./views/ForgotPasswordSuccess');
+var ResetPasswordView = require('./views/ResetPassword');
 var ProfileView = require('./views/Profile');
 var ProfileEditView = require('./views/ProfileEdit');
 var FriendsView = require('./views/Friends');
@@ -54,7 +54,6 @@ exports = module.exports = Backbone.Router.extend({
 		'login': 'login',
 		'register': 'register',
 		'forgotpassword': 'forgotPassword',
-		'forgotpassword/success': 'forgotPasswordSuccess',
 		'profile/:id': 'profile',
 		'profile/me/edit': 'profileEdit',
 		'friends': 'friends',
@@ -241,16 +240,11 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','找回密码');
-		this.changeView(new ForgotPasswordView());
+		var forgotPassword = new ForgotPasswordView();
+		this.changeView(forgotPassword);
+		forgotPassword.trigger('load');
 	},
-	forgotPasswordSuccess: function(){
-		if(this.logined){
-			window.location.hash = 'index';
-			return;
-		}
-		this.appEvents.trigger('set:brand','找回密码');
-		this.changeView(new ForgotPasswordSuccessView());
-	},
+
 	profile: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';

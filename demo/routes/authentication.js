@@ -1,4 +1,5 @@
 module.exports = exports = function(app, models) {
+	var _ = require('underscore');
 	var crypto = require('crypto');
 	var nodemailer = require('nodemailer');
 	var smtpTransport = require('nodemailer-smtp-transport');
@@ -26,18 +27,20 @@ module.exports = exports = function(app, models) {
 			res.send(doc);
 
 			var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
-
-			smtpTransporter.sendMail({
-					from: config.mail.from,
-					to: user.email,
-					subject: config.mail.subject,
-					text: config.mail.text.replace(/\{[(a-z]+\}/ig, function(name) {
+			var text = config.mail.register_text.replace(/\{[(a-z]+\}/ig, function(name) {
 						if (name == '{host}') return req.header('host');
 						if (name == '{email}') return user.email;
 						if (name == '{code}') return user.registerCode;
-					}),
+					});
+
+			console.log('register confirm email text: ' + text);
+			smtpTransporter.sendMail({
+					from: config.mail.from,
+					to: user.email,
+					subject: config.mail.register_subject,
+					text: text,
 				},
-				function(succss) {
+				function(success) {
 					console.log('email send successfully.');
 				}
 			);
@@ -45,8 +48,19 @@ module.exports = exports = function(app, models) {
 	};
 
 	var confirm = function(req, res) {
-		var email = req.query.email;
-		var code = req.query.code;
+		var email = req.body.email;
+		var code = req.body.code;
+
+		if (null == email || !(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(email)))
+			return res.send({
+				code: 40101,
+				errmsg: '邮件地址错误'
+			});
+		if (null == code)
+			return res.send({
+				code: 40110,
+				errmsg: '验证码不存在',
+			});
 		Account
 			.findOneAndUpdate({
 					email: email,
@@ -56,13 +70,18 @@ module.exports = exports = function(app, models) {
 						'status.code': 0,
 						'status.message': '注册成功，可以登陆'
 					}
+				}, {
+					upsert: false,
 				},
-				function(result) {
-					if (result) {
-						res.render('registrationSuccess.jade');
-					} else {
-						res.render('registrationFailure.jade');
-					}
+				function(err, doc) {
+					if (err) return res.send(err);
+					if (!doc) return res.send({
+						code: 40400,
+						errmsg: '验证错误'
+					});
+					return res.send({
+						success: true
+					});
 				}
 			);
 	};
@@ -71,10 +90,16 @@ module.exports = exports = function(app, models) {
 		var email = req.body.email;
 		var password = req.body.password;
 
-		if (null == email || email.length < 1 || null == password || password.length < 1)
+		if (null == email || !(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(email)))
+			return res.send({
+				code: 40101,
+				errmsg: '不是有效的邮件地址'
+			});
+
+		if (null == password || password.length < 1)
 			return res.send({
 				code: 40002,
-				errmsg: 'email or password is null.'
+				errmsg: '忘记输入密码'
 			});
 
 		Account
@@ -124,74 +149,80 @@ module.exports = exports = function(app, models) {
 
 	var forgotPassword = function(req, res) {
 		var email = req.body.email;
-		if (null == email || email.length < 1) {
-			res.send({
-				code: 40001,
-				errmsg: 'email is null.'
+		if (null == email || !(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(email)))
+			return res.send({
+				code: 40101,
+				errmsg: '不是有效的邮件地址'
 			});
-			return;
-		}
+
 		var host = req.header('host');
-		var resetPasswordUrl = 'http://' + host + '/resetPassword';
+
 		Account.findOne({
 				email: email
 			},
 			function(err, doc) {
-				if (err) {
-					callback && callback(err);
-					return;
-				}
-				var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
-				resetPasswordUrl += '?account=' + doc._id;
+				if (err) return res.send(err);
+				if (!doc) return res.send({
+					code: 40400,
+					errmsg: '邮件不存在'
+				});
+				res.send(doc);
 
+				var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
+				var text = config.mail.reset_text.replace(/\{[(a-z]+\}/ig, function(name) {
+					if (name == '{host}') return req.header('host');
+					if (name == '{token}') return doc._id
+				});
+				console.log('forgot password email content: ' + text);
 				smtpTransporter.sendMail({
-						from: 'socialworkserivce@appmod.cn',
+						from: config.mail.from,
 						to: email,
-						subject: 'SocialWork Password Reset Request',
-						text: 'Click here to reset your password: ' + resetPasswordUrl
+						subject: config.mail.reset_subject,
+						text: text,
 					},
 					function(success) {
-						if (!success) {
-							res.send({
-								errocde: 40401,
-								errmsg: 'username does not exist.'
-							});
-							return;
-						}
-						res.sendStatus(200);
+						console.log('email send successfully.');
 					}
 				);
 			}
 		);
 	};
 
-	var resetPasswordForm = function(req, res) {
-		var accountId = req.param('account', null);
-		res.render('resetPassword.jade', {
-			locals: {
-				accountId: accountId
-			}
-		});
-
-	};
-
 	var resetPassword = function(req, res) {
-		var accountId = req.body.accountId;
+		var token = req.body.token;
+		if (null == token)
+			return res.send({
+				code: 40400,
+				errmsg: '无效的请求，缺少token'
+			});
+
 		var password = req.body.password;
-		if (null != accountId && null != password) {
-			Account.update({
-					_id: accountId
-				}, {
-					$set: {
-						password: crypto.createHash('sha256').update(newPassword).digest('hex')
-					}
-				}, {
-					upsert: false
-				},
-				callback
-			);
-		}
-		res.render('resetPasswordSuccess.jade');
+		var cpassword = req.body.cpassword;
+
+		if (null == password || null == cpassword || password.length < 5)
+			return res.send({
+				code: 40102,
+				errmsg: '密码长度不正确'
+			});
+		if (cpassword != password)
+			return res.send({
+				name: 40103,
+				errmsg: '两次输入不一致'
+			});
+		var id = token;
+		Account.findByIdAndUpdate(id, {
+				$set: {
+					password: crypto.createHash('sha256').update(password).digest('hex')
+				}
+			}, {
+				upsert: false
+			},
+			function(err, doc) {
+				if (err) return res.send(err);
+				res.send(doc);
+				// res.redirect('/reset_success.html');
+			}
+		);
 	};
 
 	var inviteFriend = function(req, res) {
@@ -235,16 +266,14 @@ module.exports = exports = function(app, models) {
 	//register
 	app.post('/register', register);
 	//confirm
-	app.get('/register/confirm', confirm);
+	app.post('/register/confirm', confirm);
 	//login
 	app.post('/login', login);
 	//logout
 	app.get('/logout', logout);
 	//forgot password
 	app.post('/forgotPassword', forgotPassword);
-	//reset password
-	app.get('/resetPassword', resetPasswordForm);
-	//reset password
+	// reset password
 	app.post('/resetPassword', resetPassword);
 	//authenticated
 	app.get('/authenticated', authenticated);
