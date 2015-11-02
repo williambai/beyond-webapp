@@ -17,11 +17,10 @@ exports = module.exports = Backbone.Router.extend({
 	currentView : null,
 	appEvents: _.extend({},Backbone.Events),//app inner events
 	routes: {
-		'': 'projects',
-		'index': 'projects',			
 		'project/:id': 'project',
 		'login': 'login',
 		'profile': 'profile',
+		'*path': 'projects',
 	},
 	
 	initialize: function(){

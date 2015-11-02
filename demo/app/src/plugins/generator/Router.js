@@ -14,9 +14,9 @@ exports = module.exports = Backbone.Router.extend({
 	appEvents: _.extend({},Backbone.Events),//app events
 
 	routes: {
-		'': 'index',
 		'index': 'index',
 		'login': 'login',
+		'*path': 'index',
 	},
 
 	initialize: function(){

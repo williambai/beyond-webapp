@@ -41,7 +41,6 @@ exports = module.exports = Backbone.Router.extend({
 	appEvents: _.extend({},Backbone.Events),//app events
 	socketEvents: _.extend({},Backbone.Events),//socket events ---Deprecated!
 	routes: {
-		'': 'index',
 		'index': 'index',
 		'projects': 'projects',
 		'projects(/:type/(:searchStr))': 'projects',
@@ -65,6 +64,7 @@ exports = module.exports = Backbone.Router.extend({
 		'project/:pid/status': 'projectStatus',
 		'project/:pid/member/add': 'projectMemberAdd',
 		'project/:pid/members(/:cid)': 'projectMembers',
+		'*path': 'default',
 	},
 	initialize: function(){
 		this.appEvents.on('logined',this.onLogined,this);
@@ -108,6 +108,12 @@ exports = module.exports = Backbone.Router.extend({
 		$('body').removeClass('has-navbar-bottom');
 		$('.bottom-bar').remove();
 		this.currentView.render();
+	},
+
+	default: function(){
+		if(!this.logined)
+			return window.location.hash = 'login';
+		window.location.hash = 'index';
 	},
 
 	index: function(){
