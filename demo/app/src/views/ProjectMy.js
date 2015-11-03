@@ -26,14 +26,14 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 		this.listView = new ListView({
 			el: '#project-widget',
-			url: config.api.host + '/projects/account/me',
+			url: config.api.host + '/project/accounts?type=me',
 			socketEvents: this.socketEvents
 		});
 		this.searchView = new SearchView({
 
 		});
 		this.searchView.done = function(query){
-			that.listView.trigger('refresh',config.api.host + '/projects/account/me?' + query);
+			that.listView.trigger('refresh',config.api.host + '/project/accounts?' + query);
 		};
 		this.listView.trigger('load');
 		this.searchView.trigger('load');

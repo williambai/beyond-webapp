@@ -39,7 +39,7 @@ exports = module.exports = Backbone.View.extend({
 				if(that.account.id == createby.uid){
 					that.project.set('isOwner', true);
 				}
-				var url = config.api.host + '/accounts/project/' + that.pid;
+				var url = config.api.host + '/project/accounts?type=project&pid=' + that.pid;
 				var memberListView = new MemberListView({url: url,project:that.project});
 				memberListView.trigger('load');
 			}

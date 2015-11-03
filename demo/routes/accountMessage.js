@@ -5,13 +5,8 @@
  	var Message = models.AccountMessage;
 
  	var add = function(req, res) {
- 		if (req.params.aid == 'me' || req.params.aid == req.session.accountId)
- 			return res.send({
- 				code: 40100,
- 				errmsg: 'not support.'
- 			});
 
- 		var friendId = req.params.aid;
+ 		var friendId = req.body.fid;
  		var message = req.body;
  		message.from = {
  			uid: req.session.accountId,
@@ -43,11 +38,6 @@
  	};
 
  	var remove = function(req, res) {
- 		if (req.params.aid != 'me')
- 			return res.send({
- 				code: 40100,
- 				errmsg: 'not support.'
- 			});
  		res.send({
  			code: 00000,
  			errmsg: 'not implemented.'
@@ -55,11 +45,6 @@
  	};
 
  	var update = function(req, res) {
- 		if (req.params.aid != 'me')
- 			return res.send({
- 				code: 40100,
- 				errmsg: 'not support.'
- 			});
  		var type = req.query.type || '';
 
  		var id = req.params.id;
@@ -173,10 +158,7 @@
  	var getMore = function(req, res) {
  		var type = req.query.type || '';
 
- 		var aid = req.query.aid || 'me';
-
- 		var accountId = aid == 'me' ? req.session.accountId : req.query.aid;
-
+ 		var accountId = req.session.accountId;
  		var page = req.query.page || 0;
  		var per = 20;
  		if (isNaN(page)) page = 0;
@@ -251,12 +233,12 @@
  	/**
  	 * add account's message
  	 */
- 	app.post('/messages/account/:aid', app.isLogined, add);
+ 	app.post('/account/messages', app.isLogined, add);
 
  	/**
  	 * remove account's message
  	 */
- 	app.delete('/messages/account/:aid/:id', app.isLogined, remove);
+ 	app.delete('/account/messages/:id', app.isLogined, remove);
 
  	/**
  	 * update account's message
@@ -264,19 +246,19 @@
  	 *     vote
  	 *     comment
  	 */
- 	app.put('/messages/account/:aid/:id', app.isLogined, update);
- 	app.patch('/messages/account/:aid/:id', app.isLogined, update);
+ 	app.put('/account/messages/:id', app.isLogined, update);
+ 	app.patch('/account/messages/:id', app.isLogined, update);
 
  	/**
  	 * get account's message
  	 * 
  	 */
- 	app.get('/messages/account/:aid/:id', app.isLogined, getOne);
+ 	app.get('/account/messages/:id', app.isLogined, getOne);
 
  	/**
  	 * get account's messages
  	 * type:
  	 * 
  	 */
- 	app.get('/messages/account/:aid', app.isLogined, getMore);
+ 	app.get('/account/messages', app.isLogined, getMore);
  };

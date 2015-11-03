@@ -9,6 +9,6 @@ exports = module.exports = Backbone.Model.extend({
 	},
 
 	initialize: function(options){
-		this.url = config.api.host + '/statuses/project/' + options.pid;
+		this.url = config.api.host + '/project/statuses';
 	},
 });

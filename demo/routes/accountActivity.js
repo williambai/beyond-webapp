@@ -2,11 +2,6 @@ exports = module.exports = function(app, models) {
 	var _ = require('underscore');
 
 	var getMore = function(req, res) {
-		if (req.params.aid != 'me')
-			return res.send({
-				code: 40100,
-				errmsg: 'not support.'
-			});
 		var aid = req.session.accountId;
 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
 		isNaN(page) ? 0 : page;
@@ -43,11 +38,6 @@ exports = module.exports = function(app, models) {
 	 * @deprecated
 	 */
 	var getMore1 = function(req, res) {
-		if (req.params.aid != 'me')
-			return res.send({
-				code: 40100,
-				errmsg: 'not support.'
-			});
 		var aid = req.session.accountId;
 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
 		isNaN(page) ? 0 : page;
@@ -86,5 +76,5 @@ exports = module.exports = function(app, models) {
 	 * get account's activities
 	 * 
 	 */
-	app.get('/activities/account/:aid', app.isLogined, getMore);
+	app.get('/account/activities', app.isLogined, getMore);
 }

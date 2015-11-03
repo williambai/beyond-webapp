@@ -89,7 +89,7 @@ exports = module.exports = Backbone.View.extend({
 		var comment = this.$('textarea[name=comment]').val() || '';
 		if (comment.length > 0) {
 			var url = this.model.url;
-			this.model.url = config.api.host + '/messages/account/me/' + this.model.get('_id') + '?type=comment';
+			this.model.url = config.api.host + '/account/messages/' + this.model.get('_id') + '?type=comment';
 			var xhr = this.model.save({
 				comment: comment
 			}, {

@@ -45,7 +45,7 @@ exports = module.exports = Backbone.Router.extend({
 		'projects': 'projects',
 		'projects(/:type/(:searchStr))': 'projects',
 		'project/me': 'projectMy',
-		'activity/:id': 'activity',
+		'activity/me': 'activity',
 		'message/:id': 'messageBox',
 		'space/:id': 'space',
 		'notify/me': 'notify',
@@ -56,7 +56,7 @@ exports = module.exports = Backbone.Router.extend({
 		'profile/:id': 'profile',
 		'profile/me/edit': 'profileEdit',
 		'friends': 'friends',
-		'friend/add': 'addFriend',
+		'friend/add/search(/:searchStr)': 'addFriend',
 		'friend/invite': 'inviteFriend',
 		'project/add': 'addProject',
 		'project/:pid/chat': 'projectChat',
@@ -84,13 +84,13 @@ exports = module.exports = Backbone.Router.extend({
 		/* load projects */
 		var projectsView = new ProjectListView({
 			socketEvents: this.socketEvents,
-			url: config.api.host + '/projects/account/me'
+			url: config.api.host + '/project/accounts?type=me'
 		});
 		projectsView.trigger('load');
 		/* load friends */
 		var friendsView = new ChatUserListView({
 			socketEvents: this.socketEvents,
-			url: config.api.host + '/friends/account'
+			url: config.api.host + '/account/friends?type=all'
 		});
 		friendsView.trigger('load');
 	},
@@ -157,14 +157,13 @@ exports = module.exports = Backbone.Router.extend({
 		projectView.trigger('load');
 	},
 
-	activity: function(id){
+	activity: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','同事圈');
 		var statusesView = new ActivityView({
-				id:id,
 				account: this.account,
 				socketEvents: this.socketEvents
 			});
@@ -290,15 +289,20 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(friendsView);
 		friendsView.trigger('load');
 	},
-	addFriend: function(){
+	addFriend: function(searchStr){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','搜索和添加好友');
-		this.changeView(new FriendAddView({account: this.account}));
+		var friendAddView = new FriendAddView({
+			router: this,
+			account: this.account,
+			searchStr: searchStr || '',
+		});
+		this.changeView(friendAddView);
+		friendAddView.trigger('load');
 	},
-
 	inviteFriend: function(){
 		if(!this.logined){
 			window.location.hash = 'login';

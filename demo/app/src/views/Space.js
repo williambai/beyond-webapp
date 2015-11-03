@@ -37,7 +37,7 @@ exports = module.exports =Backbone.View.extend({
 		this.render();
 		this.statusListView = new StatusListView({
 			el: '#list',
-			url: config.api.host + '/statuses/account/' + this.id,
+			url: config.api.host + '/account/statuses?uid=' + this.id,
 			account: this.account,
 		});
 		this.statusListView.trigger('load');

@@ -242,7 +242,7 @@ exports =module.exports = function(app,models){
 						username: '',
 						avatar: ''
 					};
-					models.ProjectMessage.create(message,function(err,doc){
+					models.ProjectStatus.create(message,function(err,doc){
 						if(err) return console.error(err);
 					});
 			}else{

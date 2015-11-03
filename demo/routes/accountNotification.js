@@ -143,23 +143,23 @@ exports = module.exports = function(app, models) {
 	 *       invite_friend
 	 *       invite_join_project
 	 */
-	app.post('/notifications', app.isLogined, add);
+	app.post('/account/notifications', app.isLogined, add);
 
 	/**
 	 * remove a notification
 	 * 
 	 */
-	app.delete('/notifications/:id', app.isLogined, remove);
+	app.delete('/account/notifications/:id', app.isLogined, remove);
 
 	/**
 	 * update a notification
 	 * 
 	 */
 
-	app.put('/notifications/:id', app.isLogined, update);
+	app.put('/account/notifications/:id', app.isLogined, update);
 	/**
 	 * get account's notifications
 	 * 
 	 */
-	app.get('/notifications', app.isLogined, getMore);
+	app.get('/account/notifications', app.isLogined, getMore);
 }

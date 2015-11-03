@@ -33,12 +33,12 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 		this.listView = new ListView({
-			url: config.api.host + '/messages/account/me',
+			url: config.api.host + '/account/messages',
 			account: this.account,
 		});
 		this.searchView = new SearchView();
 		this.searchView.done = function(query){
-			that.listView.trigger('refresh',config.api.host + '/messages/account/me?' + query);
+			that.listView.trigger('refresh',config.api.host + '/account/messages?' + query);
 		};
 		this.listView.trigger('load');
 		this.searchView.trigger('load');

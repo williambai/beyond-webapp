@@ -5,7 +5,7 @@ exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
 
 	initialize: function(options){
-		this.url = config.api.host + '/chats/account/' + options.fid;
+		this.url = config.api.host + '/account/chats';
 	},
 
 	validate: function(attrs, options){

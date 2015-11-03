@@ -21,7 +21,7 @@ exports = module.exports = Backbone.View.extend({
 		var $responseArea = this.$('.actionArea');
 
 		$.ajax({
-			url: config.api.host + '/friends/account',
+			url: config.api.host + '/account/friends',
 			type: 'POST',
 			data: {
 				fid: that.model.get('_id'),
@@ -33,7 +33,7 @@ exports = module.exports = Backbone.View.extend({
 			},
 		}).done(function onSuccess() {
 			$.ajax({
-				url: config.api.host + '/notifications',
+				url: config.api.host + '/account/notifications',
 				type: 'POST',
 				data: {
 					type: 'invite_friend',

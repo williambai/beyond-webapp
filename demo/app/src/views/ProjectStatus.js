@@ -28,7 +28,7 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 		this.statusListView = new StatusListView({
 			el: 'div.status_list',
-			url: config.api.host + '/statuses/project/' + this.pid,
+			url: config.api.host + '/project/statuses?pid=' + this.pid,
 		});
 		this.statusListView.isScrollUp = false;
 		this.statusListView.trigger('load');

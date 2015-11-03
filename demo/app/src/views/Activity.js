@@ -21,7 +21,6 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	initialize: function(options){
-		this.id = options.id;
 		this.account = options.account;
 		this.socketEvents = options.socketEvents;
 		if(options.socketEvents){
@@ -35,7 +34,7 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 		this.statusListView = new StatusListView({
 			el: '#list',
-			url: config.api.host + '/activities/account/' + this.id,
+			url: config.api.host + '/account/activities',
 			account: this.account,
 		});
 		this.statusListView.trigger('load');

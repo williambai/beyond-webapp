@@ -5,7 +5,7 @@ exports = module.exports = function(app,models){
 	var Chat = models.AccountChat;
 
 	var add = function(req,res){
-			var friendId = req.params.aid;
+			var friendId = req.body.fid;
 			var chat = req.body;
 			chat.createby = {
 				uid: req.session.accountId,
@@ -54,7 +54,7 @@ exports = module.exports = function(app,models){
 			models.AccountChat
 				.find({
 					'uid': req.session.accountId,
-					'fid': req.params.aid
+					'fid': req.query.fid
 				})
 				.sort({_id:-1})
 				.skip(page*per)
@@ -70,11 +70,11 @@ exports = module.exports = function(app,models){
 	/**
 	 * add account's message
 	 */
-	app.post('/chats/account/:aid', app.isLogined, add);
+	app.post('/account/chats', app.isLogined, add);
 
 	/**
 	 * get chats
 	 * 
 	 */
-	app.get('/chats/account/:aid', app.isLogined, getMore);
+	app.get('/account/chats', app.isLogined, getMore);
 }

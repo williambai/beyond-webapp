@@ -66,7 +66,7 @@ exports = module.exports = Backbone.View.extend({
 	voteGood: function() {
 		var that = this;
 		$.ajax({
-			url: config.api.host + '/statuses/project/' + that.model.get('_id') + '?type=vote',
+			url: config.api.host + '/project/statuses/' + that.model.get('_id') + '?type=vote',
 			type: 'PUT',
 			xhrFields: {
 				withCredentials: true
@@ -86,7 +86,7 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 
 		$.ajax({
-			url: config.api.host + '/statuses/project/' + that.model.get('_id') + '?type=vote',
+			url: config.api.host + '/project/statuses/' + that.model.get('_id') + '?type=vote',
 			type: 'PUT',
 			xhrFields: {
 				withCredentials: true

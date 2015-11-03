@@ -8,11 +8,6 @@
  	var Friend = models.AccountFriend;
 
  	var add = function(req, res) {
- 		if (req.params.aid != 'me')
- 			return res.send({
- 				code: 40100,
- 				errmsg: 'not support.'
- 			});
  		var message = req.body;
  		var accountId = req.session.accountId;
  		async.waterfall(
@@ -84,11 +79,6 @@
  	};
 
  	var remove = function(req, res) {
- 		if (req.params.aid != 'me')
- 			return res.send({
- 				code: 40100,
- 				errmsg: 'not support.'
- 			});
  		res.send({
  			code: 00000,
  			errmsg: 'not implemented.'
@@ -96,20 +86,14 @@
  	};
 
  	var update = function(req, res) {
- 		if (req.params.aid != 'me')
- 			return res.send({
- 				code: 40100,
- 				errmsg: 'not support.'
- 			});
-
  		var id = req.params.id;
  		var type = req.query.type || '';
  		var accountId = req.session.accountId;
  		var username = req.session.username;
  		switch (type) {
  			case 'vote':
- 				if (req.body.good) {
- 					var good = req.body.good;
+ 				if (req.body.vote == 'good') {
+ 					var good = req.body.vote;
  					Status.findOneAndUpdate({
  							_id: id,
  							voters: {
@@ -134,8 +118,8 @@
  							res.send(result);
  						}
  					);
- 				} else if (req.body.bad) {
- 					var bad = req.body.bad;
+ 				} else if (req.body.vote == 'bad') {
+ 					var bad = req.body.vote;
  					Status
  						.findOneAndUpdate({
  								_id: id,
@@ -221,7 +205,8 @@
  	};
 
  	var getMore = function(req, res) {
- 		var accountId = req.params.aid == 'me' ? req.session.accountId : req.params.aid;
+
+ 		var accountId = req.query.uid != 'me' ? req.query.uid : req.session.accountId;
 
  		var page = req.query.page || 0;
  		var per = 20;
@@ -258,12 +243,12 @@
  	/**
  	 * add account's status
  	 */
- 	app.post('/statuses/account/:aid', app.isLogined, add);
+ 	app.post('/account/statuses', app.isLogined, add);
 
  	/**
  	 * remove account's status
  	 */
- 	app.delete('/statuses/account/:aid/:id', app.isLogined, remove);
+ 	app.delete('/account/statuses/:id', app.isLogined, remove);
 
  	/**
  	 * update account's status
@@ -271,19 +256,19 @@
  	 *     vote
  	 *     comment
  	 */
- 	app.put('/statuses/account/:aid/:id', app.isLogined, update);
- 	app.patch('/statuses/account/:aid/:id', app.isLogined, update);
+ 	app.put('/account/statuses/:id', app.isLogined, update);
+ 	app.patch('/account/statuses/:id', app.isLogined, update);
 
  	/**
  	 * get account's status
  	 * 
  	 */
- 	app.get('/statuses/account/:aid/:id', app.isLogined, getOne);
+ 	app.get('/account/statuses/:id', app.isLogined, getOne);
 
  	/**
  	 * get account's statuses
  	 * type:
  	 * 
  	 */
- 	app.get('/statuses/account/:aid', app.isLogined, getMore);
+ 	app.get('/account/statuses', app.isLogined, getMore);
  };

@@ -5,7 +5,7 @@
 	var Message = models.ProjectStatus;
 
 	var add = function(req,res){
-			var projectId = req.params.pid;
+			var projectId = req.body.pid;
 			var accountId = req.session.accountId;
 			var message = req.body;
 			message.pid = projectId;
@@ -148,7 +148,7 @@
 		var type = req.query.type || '';
 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
 		var per = 20;
-		var id = req.params.pid;
+		var id = req.query.pid;
 		switch(type){
 			default:
 				async.waterfall(
@@ -190,12 +190,12 @@
 	/**
 	 * add
 	 */
-	app.post('/statuses/project/:pid', app.isLogined, add);
+	app.post('/project/statuses', app.isLogined, add);
 
 	/**
 	 * remove
 	 */
-	app.delete('/statuses/project/:pid/:id',app.isLogined, remove);
+	app.delete('/project/statuses/:id',app.isLogined, remove);
 
 	/**
 	 * update
@@ -205,15 +205,15 @@
 	 *    level
 	 *    
 	 */
-	app.put('/statuses/project/:pid/:id', app.isLogined, update);
+	app.put('/project/statuses/:id', app.isLogined, update);
 
 	/**
 	 * get one
 	 */
-	app.get('/statuses/project/:pid/:id',app.isLogined, getOne);
+	app.get('/project/statuses/:id',app.isLogined, getOne);
 
 	/**
 	 * get more
 	 */
-	app.get('/statuses/project/:pid', app.isLogined, getMore);
+	app.get('/project/statuses', app.isLogined, getMore);
  };

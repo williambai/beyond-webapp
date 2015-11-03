@@ -23,7 +23,7 @@ exports = module.exports = Backbone.View.extend({
 			var $responseArea = this.$('.actionArea');
 			$responseArea.text('正在移除....');
 			$.ajax({
-				url: config.api.host + '/accounts/project/' + this.model.get('_id'),
+				url: config.api.host + '/project/accounts/' + this.model.get('_id'),
 				type: 'DELETE',
 				xhrFields: {
 					withCredentials: true

@@ -28,7 +28,7 @@ exports = module.exports =  Backbone.View.extend({
 		this.loaded = true;
 		var that = this;
 		this.render();
-		var url = config.api.host + '/chats/account/' + that.id;
+		var url = config.api.host + '/account/chats?fid=' + that.id;
 		that.chatListView = new ChatListView({url: url,account: that.account, socketEvents: that.socketEvents});
 		that.chatListView.isScrollUp = true;
 		that.chatListView.trigger('load');

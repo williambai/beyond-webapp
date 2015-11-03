@@ -23,7 +23,7 @@ exports = module.exports = Backbone.View.extend({
 		var $responseArea = this.$('.actionArea');
 
 		$.ajax({
-			url: config.api.host + '/accounts/project/' + that.pid,
+			url: config.api.host + '/project/accounts?type=project&pid=' + that.pid,
 			type: 'POST',
 			xhrFields: {
 				withCredentials: true
@@ -35,7 +35,7 @@ exports = module.exports = Backbone.View.extend({
 			}
 		}).done(function() {
 			$.ajax({
-				url: config.api.host + '/notifications',
+				url: config.api.host + '/account/notifications',
 				type: 'POST',
 				xhrFields: {
 					withCredentials: true

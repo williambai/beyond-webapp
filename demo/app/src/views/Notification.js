@@ -32,7 +32,7 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 		this.notificationListView = new NotificationListView({
-			url: config.api.host + '/notifications',
+			url: config.api.host + '/account/notifications',
 			account: this.account,
 		});
 		this.notificationListView.trigger('load');

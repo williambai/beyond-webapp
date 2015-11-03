@@ -38,7 +38,7 @@ exports = module.exports = Backbone.View.extend({
 				if(that.account.id == model.get('accountId')){
 					model.set('isOwner', true);
 				}
-				var url = config.api.host + '/statuses/project/' + that.pid;
+				var url = config.api.host + '/project/statuses?pid=' + that.pid;
 				that.chatListView = new ChatListView({url: url,account: that.account, socketEvents: that.socketEvents});
 				that.chatListView.isScrollUp = true;
 				that.chatListView.trigger('load');

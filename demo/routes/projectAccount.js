@@ -148,18 +148,25 @@ exports = module.exports = function(app, models) {
 		);
 	};
 
-	var getProjectsByAccountId = function(req, res) {
-		if (req.params.aid != 'me')
-			return res.send({
-				code: 40100,
-				errmsg: 'not support.'
-			});
+	var getProjectAccounts = function(req, res) {
 		var type = req.query.type || '';
 		var aid = req.session.accountId;
 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
 		page = isNaN(page) ? 0 : page;
 		var per = 20;
 		switch (type) {
+			case 'project':
+				var pid = req.query.pid || '';
+				models.ProjectAccount.find({
+						pid: pid
+					})
+					.skip(page * per)
+					.limit(per)
+					.exec(function(err, docs) {
+						if (err) return res.send(err);
+						return res.send(docs);
+					});
+				break;
 			case 'presenter':
 				models.ProjectAccount
 					.find({
@@ -214,7 +221,7 @@ exports = module.exports = function(app, models) {
 							});
 					});
 				break;
-			default:
+			case 'me':
 				models.ProjectAccount
 					.find({
 						uid: aid,
@@ -238,21 +245,13 @@ exports = module.exports = function(app, models) {
 							});
 					});
 				break;
+			default:
+				res.send({
+					code: 40400,
+					errmsg: 'not support.'
+				});
+				break;
 		}
-
-	};
-
-	var getAccountsByProjectId = function(req, res) {
-		var pid = req.params.pid;
-		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
-		page = isNaN(page) ? 0 : page;
-		var per = 20;
-		models.ProjectAccount.find({
-			pid: pid
-		}).exec(function(err, docs) {
-			if (err) return res.send(err);
-			return res.send(docs);
-		});
 
 	};
 
@@ -263,27 +262,22 @@ exports = module.exports = function(app, models) {
 	/**
 	 * add account for the project
 	 */
-	app.post('/accounts/project/:pid', app.isLogined, add);
+	app.post('/project/accounts/:pid', app.isLogined, add);
 	/**
 	 * remove 
 	 */
-	app.delete('/accounts/project/:pid/:id', app.isLogined, remove);
+	app.delete('/project/accounts/:pid/:id', app.isLogined, remove);
 
 	/**
 	 * update project's member
 	 * 
 	 */
-	app.put('/accounts/project', app.isLogined, update);
-	app.put('/accounts/project/:pid', app.isLogined, update);
+	app.put('/project/accounts', app.isLogined, update);
+	app.put('/project/accounts/:pid', app.isLogined, update);
 
 	/**
-	 * get project's accounts
+	 * get project accounts
 	 */
-	app.get('/accounts/project/:pid', app.isLogined, getAccountsByProjectId);
-	/**
-	 * get account's projects
-	 * 
-	 */
-	app.get('/projects/account/:aid', app.isLogined, getProjectsByAccountId);
+	app.get('/project/accounts', app.isLogined, getProjectAccounts);
 
 }

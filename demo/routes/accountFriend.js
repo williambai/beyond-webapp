@@ -36,8 +36,8 @@ exports = module.exports = function(app, models) {
 				},
 				function(friend, callback) {
 					var invitee = {
-						uid: fid, 
-						fid: req.session.accountId,//friend id
+						uid: fid,
+						fid: req.session.accountId, //friend id
 						username: req.session.username,
 						realname: req.session.username,
 						avatar: req.session.avatar,
@@ -95,7 +95,7 @@ exports = module.exports = function(app, models) {
 		);
 	};
 
-	var block = function(){
+	var block = function() {
 		/** 删除从而拒绝对方关注自己 */
 		// function(friend, callback) {
 		// 	models.AccountFriend
@@ -166,21 +166,36 @@ exports = module.exports = function(app, models) {
 	};
 
 	var getMore = function(req, res) {
+		var type = req.query.type || '';
 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
 		page = (!page || page < 0) ? 0 : page;
 		var per = 20;
-
-		models.AccountFriend
-			.find({
-				uid: req.session.accountId,
-				'status.code': 2
-			})
-			// .skip(page*per)
-			// .limit(per)
-			.exec(function(err, docs) {
-				if (err) return res.send(err);
-				res.send(docs);
-			});
+		switch (type) {
+			case 'all':
+				models.AccountFriend
+					.find({
+						uid: req.session.accountId,
+						'status.code': 2
+					})
+					.exec(function(err, docs) {
+						if (err) return res.send(err);
+						res.send(docs);
+					});
+				break;
+			default:
+				models.AccountFriend
+					.find({
+						uid: req.session.accountId,
+						'status.code': 2
+					})
+					.skip(page * per)
+					.limit(per)
+					.exec(function(err, docs) {
+						if (err) return res.send(err);
+						res.send(docs);
+					});
+				break;
+		}
 	};
 	/**
 	 * router outline
@@ -188,23 +203,23 @@ exports = module.exports = function(app, models) {
 	/**
 	 * add a friend
 	 */
-	app.post('/friends/account', app.isLogined, add);
+	app.post('/account/friends', app.isLogined, add);
 
 	/**
 	 * remove friend relationship
 	 * 
 	 */
-	app.delete('/friends/account/:fid', app.isLogined, remove);
+	app.delete('/account/friends/:fid', app.isLogined, remove);
 
 	/**
 	 * update a friend
 	 * 
 	 */
-	app.put('/friends/account/:fid', app.isLogined, update);
+	app.put('/account/friends/:fid', app.isLogined, update);
 
 	/**
 	 * get account's friends
 	 * 
 	 */
-	app.get('/friends/account', app.isLogined, getMore);
+	app.get('/account/friends', app.isLogined, getMore);
 }
