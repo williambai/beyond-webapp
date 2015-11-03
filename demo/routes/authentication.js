@@ -28,10 +28,10 @@ module.exports = exports = function(app, models) {
 
 			var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
 			var text = config.mail.register_text.replace(/\{[(a-z]+\}/ig, function(name) {
-						if (name == '{host}') return req.header('host');
-						if (name == '{email}') return user.email;
-						if (name == '{code}') return user.registerCode;
-					});
+				if (name == '{host}') return req.header('host');
+				if (name == '{email}') return user.email;
+				if (name == '{code}') return user.registerCode;
+			});
 
 			console.log('register confirm email text: ' + text);
 			smtpTransporter.sendMail({
@@ -40,8 +40,9 @@ module.exports = exports = function(app, models) {
 					subject: config.mail.register_subject,
 					text: text,
 				},
-				function(success) {
-					console.log('email send successfully.');
+				function(err,info) {
+					if(err) return console.error(err);
+					console.log(info);
 				}
 			);
 		});
@@ -180,8 +181,9 @@ module.exports = exports = function(app, models) {
 						subject: config.mail.reset_subject,
 						text: text,
 					},
-					function(success) {
-						console.log('email send successfully.');
+					function(err,info) {
+						if(err) return console.error(err);
+						console.log(info);
 					}
 				);
 			}
@@ -226,22 +228,29 @@ module.exports = exports = function(app, models) {
 	};
 
 	var inviteFriend = function(req, res) {
-		var emails = req.body.emails;
-		var inviteUrl = 'http://' + req.header('host');
-		var username = req.session.username;
-		var email = req.session.email;
+		var emails = req.body.emails || [];
+		res.send({
+			success: true
+		});
 
 		var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
-		inviteUrl = inviteUrl ? inviteUrl : 'http://localhost:8080';
+
+		var text = config.mail.invite_text.replace(/\{[(a-z]+\}/ig, function(name) {
+			if (name == '{host}') return req.header('host');
+			if (name == '{username}') return req.session.username;
+			if (name == '{email}') return req.session.email;
+		});
+
+		console.log('invite email text: ' + text);
 		emails.forEach(function(email) {
 			smtpTransporter.sendMail({
-				from: 'socialworkserivce@appmod.cn',
+				from: config.mail.from,
 				to: email,
-				subject: '我的工作社交网--邀请信',
-				text: '您的朋友' + username + '(' + email + ')' + '邀请您加入。请点击：' + inviteUrl,
-			}, function(err) {
-				if (err) return res.send(err);
-				res.sendStatus(200);
+				subject: config.mail.invite_subject,
+				text: text,
+			}, function(err,info) {
+				if(err) return console.error(err);
+				console.log(info);
 			});
 		});
 	};
