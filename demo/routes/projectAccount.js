@@ -3,7 +3,7 @@ exports = module.exports = function(app, models) {
 	var async = require('async');
 
 	var add = function(req, res) {
-		var pid = req.params.pid;
+		var pid = req.body.pid;
 		var uid = req.body.uid;
 		var member = req.body;
 		var project = {};
@@ -23,7 +23,6 @@ exports = module.exports = function(app, models) {
 				},
 
 				function(doc, callback) {
-					member.pid = pid;
 					member.roles = ['attendee'];
 					member.notification = true;
 					member.removable = true;
@@ -51,35 +50,6 @@ exports = module.exports = function(app, models) {
 							}
 						);
 				},
-				function(projectAccount, callback) {
-					var notification = {
-						uid: uid,
-						createby: {
-							uid: req.session.accountId,
-							username: req.session.username,
-							avatar: req.session.avatar
-						},
-						type: 'invite' + '_' + pid,
-						content: {
-							subject: '项目邀请',
-							body: req.session.username + '邀请你加入项目: ' + project.name,
-						},
-						actions: [{
-							name: 'agree',
-							url: '/accounts/project/' + projectAccount._id + '?type=agree',
-							method: 'PUT',
-							label: '接受',
-							enable: true
-						}],
-						status: {
-							code: 0,
-							message: '等待处理'
-						},
-					};
-					models.AccountNotification
-						.create(notification, callback);
-
-				}
 			],
 			function(err, result) {
 				if (err) return res.send(err);
@@ -90,7 +60,7 @@ exports = module.exports = function(app, models) {
 
 	var update = function(req, res) {
 		var type = req.query.type || '';
-		var pid = req.params.pid;
+		var pid = req.query.pid;
 		switch (type) {
 			case 'agree':
 				async.waterfall(
@@ -262,18 +232,17 @@ exports = module.exports = function(app, models) {
 	/**
 	 * add account for the project
 	 */
-	app.post('/project/accounts/:pid', app.isLogined, add);
+	app.post('/project/accounts', app.isLogined, add);
 	/**
 	 * remove 
 	 */
-	app.delete('/project/accounts/:pid/:id', app.isLogined, remove);
+	app.delete('/project/accounts/:id', app.isLogined, remove);
 
 	/**
 	 * update project's member
 	 * 
 	 */
 	app.put('/project/accounts', app.isLogined, update);
-	app.put('/project/accounts/:pid', app.isLogined, update);
 
 	/**
 	 * get project accounts

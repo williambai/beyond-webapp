@@ -34,7 +34,7 @@ exports = module.exports = function(app, models) {
 					},
 					actions: [{
 						name: 'agree',
-						url: '/friends/account/me/' + req.session.accountId + '?type=agree',
+						url: '/account/friends?type=agree',
 						method: 'PUT',
 						label: '接受',
 						enable: true
@@ -60,7 +60,7 @@ exports = module.exports = function(app, models) {
 					},
 					actions: [{
 						name: 'agree',
-						url: '/accounts/project/' + project.id + '?type=agree',
+						url: '/project/accounts?type=agree&pid=' + project.id,
 						method: 'PUT',
 						data: {
 							pid: project.id

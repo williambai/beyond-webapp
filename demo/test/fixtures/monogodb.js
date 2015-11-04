@@ -595,7 +595,7 @@ upsertAccountNotifications = function(callback){
 					actions: [
 						{
 							name: 'agree',
-							url: '/friends/account/me/' + friend._id + '?type=agree',
+							url: '/account/friends?type=agree',
 							method: 'PUT',
 							label: '接受',
 							enable: true

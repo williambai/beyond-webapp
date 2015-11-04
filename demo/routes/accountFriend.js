@@ -111,8 +111,10 @@ exports = module.exports = function(app, models) {
 
 	var update = function(req, res) {
 		var uid = req.session.accountId;
-		var fid = req.params.fid;
 		var type = req.query.type || '';
+
+		var fid = req.body.fid;
+
 		switch (type) {
 			case 'agree':
 				async.waterfall(
@@ -215,7 +217,7 @@ exports = module.exports = function(app, models) {
 	 * update a friend
 	 * 
 	 */
-	app.put('/account/friends/:fid', app.isLogined, update);
+	app.put('/account/friends', app.isLogined, update);
 
 	/**
 	 * get account's friends

@@ -23,12 +23,13 @@ exports = module.exports = Backbone.View.extend({
 		var $responseArea = this.$('.actionArea');
 
 		$.ajax({
-			url: config.api.host + '/project/accounts?type=project&pid=' + that.pid,
+			url: config.api.host + '/project/accounts',
 			type: 'POST',
 			xhrFields: {
 				withCredentials: true
 			},
 			data: {
+				pid: that.pid,
 				uid: that.model.get('_id'),
 				username: that.model.get('username'),
 				avatar: that.model.get('avatar'),
