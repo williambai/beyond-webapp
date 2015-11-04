@@ -125,7 +125,7 @@ exports = module.exports = Backbone.View.extend({
 				this.onCommenAdded({
 					accountId: this.account.id,
 					username: this.account.username,
-					comment: comment
+					content: comment
 				});
 				this.$('.comment-editor').html('');
 			};

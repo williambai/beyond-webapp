@@ -90,6 +90,7 @@
  		var type = req.query.type || '';
  		var accountId = req.session.accountId;
  		var username = req.session.username;
+ 		var avatar = req.session.avatar;
  		switch (type) {
  			case 'vote':
  				if (req.body.vote == 'good') {
@@ -166,7 +167,8 @@
  								comments: {
  									accountId: accountId,
  									username: username,
- 									comment: comment
+ 									avatar: avatar,
+ 									content: req.body.comment,
  								}
  							}
  						},

@@ -19,6 +19,7 @@ exports = module.exports = FormView.extend({
 	initialize: function(options) {
 		this.model = new Status();
 		this.socketEvents = options.socketEvents;
+		FormView.prototype.initialize.apply(this, options);
 	},
 
 	reset: function() {
@@ -82,9 +83,6 @@ exports = module.exports = FormView.extend({
 
 	submitForm: function() {
 		var that = this;
-		//clean errors
-		that.$('.form-group').removeClass('has-error');
-		that.$('.form-group span.help-block').empty();
 		//set model
 		var text = that.$('textarea[name=text]').val();
 		var attachments = [];
@@ -98,6 +96,10 @@ exports = module.exports = FormView.extend({
 			urls: attachments
 		});
 		if (this.model.isValid()) {
+			//clean errors
+			that.$('.form-group').removeClass('has-error');
+			that.$('.form-group span.help-block').empty();
+
 			var xhr = this.model.save(null, {
 				xhrFields: {
 					withCredentials: true
