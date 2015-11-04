@@ -13,16 +13,17 @@ exports = module.exports = Backbone.Model.extend({
 		bad: 0,
 		score: 0,
 	},
-	validate: function(attrs, options){
+	validate: function(attrs, options) {
 		var content = attrs.content;
 		var errors = [];
-		if(_.isEmpty(content.urls) && content.body.length < 5){
+		if (content instanceof Object && _.isEmpty(content.urls) &&
+			_.isEmpty(content.body) && content.body.length < 5) {
 			errors.push({
 				name: 'text',
 				message: '内容太少了，多写点。。。',
 			});
 		}
-		if(!_.isEmpty(errors)) return errors;
+		if (!_.isEmpty(errors)) return errors;
 	},
 
 });

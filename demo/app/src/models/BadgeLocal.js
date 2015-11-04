@@ -7,8 +7,8 @@ exports = module.exports = Backbone.Model.extend({
 	localStorage: new Backbone.LocalStorage("badges"),
 
 	defaults: {
-		statusUnreadNum: 1,
-		messageUnreadNum: 2,
-		chatUnreadNum: 3,
+		statusUnreadNum: 0,
+		messageUnreadNum: 0,
+		chatUnreadNum: 0,
 	},
 });

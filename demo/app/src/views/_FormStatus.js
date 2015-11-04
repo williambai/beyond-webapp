@@ -17,6 +17,7 @@ exports = module.exports = FormView.extend({
 	},
 
 	initialize: function(options) {
+		this.options = options;
 		this.model = new Status();
 		this.socketEvents = options.socketEvents;
 		FormView.prototype.initialize.apply(this, options);
@@ -24,6 +25,7 @@ exports = module.exports = FormView.extend({
 
 	reset: function() {
 		this.model = new Status();
+		FormView.prototype.initialize.apply(this, this.options);
 	},
 
 	showFileExplorer: function() {

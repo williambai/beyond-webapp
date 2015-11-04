@@ -45,6 +45,7 @@ exports = module.exports =Backbone.View.extend({
 
 	editorToggle: function(){
 		var that = this;
+		that.$('#feedback').empty();
 		if(this.$('.status-editor form').length == 0){
 			var messageFormView = new MessageFormView({
 				el: '.status-editor',
@@ -52,6 +53,7 @@ exports = module.exports =Backbone.View.extend({
 				socketEvents: that.socketEvents
 			});
 			messageFormView.done = function(status){
+				that.messageFormView.reset();
 				that.$('#feedback').html('私信已发送成功');
 			};
 			messageFormView.render();
@@ -61,8 +63,6 @@ exports = module.exports =Backbone.View.extend({
 			return false;
 		}
 		if(this.$('.status-editor form').hasClass('hidden')){
-			this.messageFormView.reset();
-			that.$('#feedback').empty();
 			this.$('.status-editor form').removeClass('hidden');
 		}else{
 			this.$('.status-editor form').addClass('hidden');

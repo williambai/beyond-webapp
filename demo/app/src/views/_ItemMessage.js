@@ -57,9 +57,10 @@ exports = module.exports = Backbone.View.extend({
 
 	commentToggle: function() {
 		if (this.$('.comment-editor form').length == 0) {
+			$('.comment-editor').empty();
 			this.$('.comment-editor').html(commentFormTemplate()).hide().fadeIn('slow');
 		} else {
-			this.$('.comment-editor').html('');
+			$('.comment-editor').empty();
 		}
 		return false;
 	},
@@ -108,7 +109,7 @@ exports = module.exports = Backbone.View.extend({
 			};
 			this.model.url = url;
 		} else {
-			this.$('textarea[name=comment]').attr('placeholder', '没写评论哦');
+			this.$('textarea[name=comment]').attr('placeholder', '没写内容哦');
 		}
 		return false;
 	},

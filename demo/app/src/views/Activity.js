@@ -48,6 +48,7 @@ exports = module.exports = Backbone.View.extend({
 				socketEvents: that.socketEvents
 			});
 			statusFormView.done = function(status){
+				that.statusFormView.reset();
 				that.statusListView.trigger('prepend',status);
 			};
 			statusFormView.render();
@@ -57,7 +58,6 @@ exports = module.exports = Backbone.View.extend({
 			return false;
 		}
 		if(this.$('.status-editor form').hasClass('hidden')){
-			this.statusFormView.reset();
 			this.$('.status-editor form').removeClass('hidden');
 		}else{
 			this.$('.status-editor form').addClass('hidden');

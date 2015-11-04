@@ -17,17 +17,20 @@ exports = module.exports = FormView.extend({
 	},
 
 	initialize: function(options) {
+		this.options = options;
 		this.fid = options.fid;
 		this.socketEvents = options.socketEvents;
 		this.model = new Message({
 			fid: options.fid,
 		});
+		FormView.prototype.initialize.apply(this, options);
 	},
 
 	reset: function() {
 		this.model = new Message({
 			fid: this.fid,
 		});
+		FormView.prototype.initialize.apply(this, this.options);
 	},
 
 	showFileExplorer: function() {
@@ -87,9 +90,6 @@ exports = module.exports = FormView.extend({
 
 	submitForm: function() {
 		var that = this;
-		//clean errors
-		that.$('.form-group').removeClass('has-error');
-		that.$('.form-group span.help-block').empty();
 		//set model
 		var text = that.$('textarea[name=text]').val();
 		var attachments = [];
@@ -103,6 +103,9 @@ exports = module.exports = FormView.extend({
 			urls: attachments,
 		});
 		if (this.model.isValid()) {
+			//clean errors
+			that.$('.form-group').removeClass('has-error');
+			that.$('.form-group span.help-block').empty();
 			var xhr = this.model.save(null, {
 				xhrFields: {
 					withCredentials: true
