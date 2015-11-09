@@ -1,0 +1,15 @@
+{
+  "name": "stock",
+  "version": "1.0.1",
+  "description": "stock online trading.",
+  "author": "William Bai",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha --recursive --watch 'test'",
+    "dev": "pm2 start server.js --watch ./ --ignore-watch='./_app ./_dest ./app ./commands ./public'"
+  },
+  "dependencies": {
+    "robotjs": "^0.3.3"
+  }
+}
