@@ -1,0 +1,67 @@
+[{
+	"symbol": "sh600218",
+	"stock": {
+		"name": "全柴动力",
+		"code": "600218"
+	},
+	"params": {
+		"name": "T0",
+		"description": "T0 交易",
+		"risk_h": 20,
+		"risk_l": 10,
+		"init_p": 12.00,
+		"init_v": 2000,
+		"buy_lt": 3,
+		"sell_gt": 3,
+		"amount": 2000,
+		"method": "eq"
+	},
+	"status": {
+		"code": 1,
+		"message": "正常交易"
+	}
+}, {
+	"symbol": "sh601398",
+	"stock": {
+		"name": "工商银行",
+		"code": "601398"
+	},
+	"params": {
+		"name": "T0",
+		"description": "T0 交易",
+		"risk_h": 5,
+		"risk_l": 3.8,
+		"init_p": 4.6,
+		"init_v": 2000,
+		"buy_lt": 3,
+		"sell_gt": 3,
+		"amount": 2000,
+		"method": "eq"
+	},
+	"status": {
+		"code": 1,
+		"message": "正常交易"
+	}
+}, {
+	"symbol": "sh601111",
+	"stock": {
+		"name": "中国国航",
+		"code": "601111"
+	},
+	"params": {
+		"name": "T0",
+		"description": "T0 交易",
+		"risk_h": 12.5,
+		"risk_l": 6.5,
+		"init_p": 9.6,
+		"init_v": 2000,
+		"buy_lt": 3,
+		"sell_gt": 3,
+		"amount": 2000,
+		"method": "eq"
+	},
+	"status": {
+		"code": 0,
+		"message": "停止交易"
+	}
+}]

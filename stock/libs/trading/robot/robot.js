@@ -11,7 +11,6 @@ Robot.prototype.open = function(){
 };
 
 Robot.prototype.buy = function(symbol,price,amount,done){
-	done();
 	this.open();
 	robotJS.setMouseDelay(1000);
 	// robotJS.moveMouse(300,300);
@@ -21,10 +20,10 @@ Robot.prototype.buy = function(symbol,price,amount,done){
 	robotJS.keyTap('down');
 	robotJS.setKeyboardDelay(1000);
 	robotJS.typeString('buy ' + symbol + ' at: ' + price + ' by ' + amount);
+	done();
 };
 
 Robot.prototype.sell = function(symbol,price,amount,done){
-	done();
 	this.open();
 	robotJS.setMouseDelay(1000);
 	// robotJS.moveMouse(300,300);
@@ -34,18 +33,20 @@ Robot.prototype.sell = function(symbol,price,amount,done){
 	robotJS.keyTap('down');
 	robotJS.setKeyboardDelay(1000);
 	robotJS.typeString('sell ' + symbol + ' at: ' + price + ' by ' + amount);
+	done();
 };
 
-Robot.prototype.verify = function(pic, done){
+Robot.prototype.verify = function(data, done){
 	done(null,true);
 };
 
-Robot.prototype.confirm = function(){
+Robot.prototype.confirm = function(strategy,done){
 	this.open();
 	robotJS.setMouseDelay(1000);
 	// robotJS.moveMouse(300,300);
 	robotJS.mouseClick();
-	robotJS.typeString('confirm done.');
+	robotJS.typeString(strategy.symbol + ' confirm done.');
+	done();
 };
 
 exports = module.exports = function(options){

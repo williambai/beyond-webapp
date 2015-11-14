@@ -15,21 +15,26 @@ var config = {
 	}
 };
 
+var quote = require('../../../libs/trading/robot/quote');
 var t0 = require('../../../libs/trading/strategies/T0')(config.T0);
 
 
 
-describe('T+0 交易策略', function() {
-	it('期望：start() and stop() 正确', function() {
-		t0.start();
-		// setTimeout(function() {
-		// 	t0.stop();
-		// }, 11000);
-	});
-	it('期望: 上涨3%，买入', function() {
+xdescribe('T+0 交易策略', function() {
+	xit('期望：start() and stop() 正确', function() {
+			var intervalObject = setInterval(function() {
+				var symbols = _.keys(t0.options);
+				quote.getQuote(symbols[0], function(err, stock) {
+					if (err) return console.log(err);
+					t0.judge(stock);
+				});
+			}, 5000);
+			// setTimeout(function() {
+			// 	clearInterval(intervalObject);
+			// }, 11000);
+	}); it('期望: 上涨3%，买入', function() {
 
-	});
-	it('期望: 下跌3%，卖出', function() {
+}); it('期望: 下跌3%，卖出', function() {
 
-	});
+});
 });

@@ -4,6 +4,9 @@
   "description": "stock online trading.",
   "author": "William Bai",
   "private": true,
+  "bin": {
+    "stock-client": "./bin/client",
+  },
   "main": "server.js",
   "scripts": {
     "test": "mocha --recursive --watch 'test'",
