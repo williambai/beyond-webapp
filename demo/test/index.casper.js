@@ -10,6 +10,7 @@ var casper = require('casper').create({
 });
 phantom.cookiesEnabled = true;
 
+//load cookie
 var fs = require('fs');
 var system = require('system');
 var data = fs.read('./_tmp/_cookie.txt') || "[]";
@@ -21,13 +22,13 @@ casper.start('http://localhost:8080/index.html',function start(){
 
 });
 
-casper.thenBypassIf(function(){
+casper.thenBypassIf(function isLogin(){
 	var brand = this.getHTML('.navbar-brand');
 	return brand == '登录' ? false : true;
 },6);
 
 casper.then(function login() {
-	casper.waitForSelector('#loginForm');
+	this.waitForSelector('#loginForm');
 });
 
 casper.then(function fillLoginForm(){
@@ -38,14 +39,18 @@ casper.then(function fillLoginForm(){
 	this.capture('./_tmp/login.png');
 });
 
-casper.thenClick('input[type="submit"]',function submitLoginForm(){
+casper.then(function(){
+	this.click('input[type="submit"]');
+});
+
+casper.then(function(){
 	// require('utils').dump(phantom);
 });
 
 casper.then(function saveCookie(){
 	var fs = require('fs');
 	var cookies = JSON.stringify(phantom.cookies);
-	// this.echo(JSON.stringify(phantom.cookies));
+	this.echo(JSON.stringify(phantom.cookies));
 	fs.write('./_tmp/_cookie.txt', cookies, 644);
 });
 
@@ -55,7 +60,7 @@ casper.then(function reloadCookie(){
 });
 
 casper.then(function index() {
-	// this.echo(JSON.stringify(phantom.cookies));
+	this.echo(JSON.stringify(phantom.cookies));
 	this.open('http://localhost:8080/index.html#index', function() {
 		casper.waitForSelector('#hot');
 	});
