@@ -18,7 +18,7 @@ exports = module.exports = function(mongoose) {
 			type: Number,
 			required: '{PATH} is required!',
 		},
-		volume: {
+		quantity: {
 			type: Number,
 			required: '{PATH} is required!',
 		},

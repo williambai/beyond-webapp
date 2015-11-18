@@ -34,7 +34,7 @@ describe('期望：models/Trading正确', function() {
 			expect(errors['stock.symbol'].kind).to.be('required');
 			expect(errors['type'].kind).to.be('required');
 			expect(errors['price'].kind).to.be('required');
-			expect(errors['volume'].kind).to.be('required');
+			expect(errors['quantity'].kind).to.be('required');
 			expect(errors['date'].kind).to.be('required');
 			expect(errors['time'].kind).to.be('required');
 			done();
@@ -54,7 +54,7 @@ describe('期望：models/Trading正确', function() {
 			expect(errors['stock.symbol'].kind).to.be('required');
 			expect(errors['type'].kind).to.be('required');
 			expect(errors['price'].kind).to.be('required');
-			expect(errors['volume'].kind).to.be('required');
+			expect(errors['quantity'].kind).to.be('required');
 			expect(errors['date'].kind).to.be('regexp');
 			expect(errors['time'].kind).to.be('regexp');
 			done();
@@ -68,7 +68,7 @@ describe('期望：models/Trading正确', function() {
 			},
 			type: '买入',
 			price: 10,
-			volume: 1000,
+			quantity: 1000,
 			date: '1970-01-01',
 			time: '12:12:12'
 		});

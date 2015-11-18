@@ -30,7 +30,7 @@ Quote.getQuote = function(symbol, callback) {
 					lowest: quoteData[5], //今日最低价
 					buy: quoteData[6], //竞买价，即“买一”报价
 					sell: quoteData[7], //竞卖价，即“卖一”报价
-					volume: quoteData[8], //成交的股票数，由于股票交易以一百股为基本单位，所以在使用时，通常把该值除以一百
+					quantity: quoteData[8], //成交的股票数，由于股票交易以一百股为基本单位，所以在使用时，通常把该值除以一百
 					money: quoteData[9], //成交金额，单位为“元”，为了一目了然，通常以“万元”为成交金额的单位，所以通常把该值除以一万
 					buy_v1: quoteData[10], //“买一申请4695股，即47手
 					buy_p1: quoteData[11], //“买一报价

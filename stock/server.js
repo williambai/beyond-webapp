@@ -98,14 +98,18 @@ fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file){
 	require('./routes/' + routeName)(app,models);
 });
 
+
 app.server.listen(config.server.PORT,function(){
 	console.log(config.server.NAME + ' App is running at '+ config.server.PORT + ' now.');
 
-	//start child_process
-	process.on('exit', function(){
-		client.disconnect();
+	//kill child_process
+	process.on('SIGTERM', function(){
+		console.log('Master Got a SIGTERM, exiting...');
+		client.kill('SIGTERM');
+		process.exit(1);
 		console.log(config.server.NAME + ' App is shutdowned at '+ config.server.PORT + ' gracefully.');
 	});
+
 	client.on('exit', function(){
 		console.log('client exit');
 		client = require('child_process').fork('./client');

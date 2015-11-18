@@ -10,7 +10,7 @@ exports = module.exports = function(mongoose) {
 		lowest: Number,//今日最低价
 		buy: Number,//竞买价，即“买一”报价
 		sell: Number,//竞卖价，即“卖一”报价
-		volume: Number,//成交的股票数，由于股票交易以一百股为基本单位，所以在使用时，通常把该值除以一百
+		quantity: Number,//成交的股票数，由于股票交易以一百股为基本单位，所以在使用时，通常把该值除以一百
 		money: Number,//成交金额，单位为“元”，为了一目了然，通常以“万元”为成交金额的单位，所以通常把该值除以一万
 		buy_v1: Number,//“买一申请4695股，即47手
 		buy_p1: Number,//“买一报价

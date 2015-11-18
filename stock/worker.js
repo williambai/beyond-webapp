@@ -3,7 +3,7 @@ var async = require('async');
 var fs = require('fs');
 var path = require('path');
 var cst = require('./config/constant');
-var trading = require('./libs/trading')();
+var trading = require('./libs/trading');
 
 var intervalObject;
 
@@ -19,7 +19,32 @@ var models = {
 	Strategy: require('./models/Strategy')(mongoose),
 };
 
-trading.setModels(models);
+trading.on('quote', function(stock) {
+	console.log('quote: ');
+	models.StockQuote
+		.findOneAndUpdate({
+				'symbol': stock.symbol,
+				'date': stock.date,
+				'time': stock.time,
+			}, {
+				$set: stock
+			}, {
+				upsert: true
+			},
+			function(err, doc) {
+				if (err) return console.log(err);
+			}
+		);
+});
+
+trading.on('buy', function(stock){
+	console.log('buy: ');
+	models.Trading.create
+});
+
+trading.on('sell', function(stock){
+	console.log('sell: ');
+});
 
 var start = function() {
 
@@ -32,19 +57,25 @@ var start = function() {
 	var lastTimestamp = Date.now();
 	var interal = 5000;
 	intervalObject = setInterval(function() {
-		// console.log('+++')
-		// console.log(lastTimestamp)
-		trading.run(function(err, result) {
-			if (err) console.log(err);
-			// console.log(result);
-			var now = Date.now();
-			interal = now - lastTimestamp;
-			if (interal < 1) {
-				interal = 1;
-				console.log('执行时间太长，应调节间隔');
-			}
-			lastTimestamp = now;
-		});
+		models.Strategy
+			.find({
+				'status.code': 1
+			})
+			.exec(function(err, strategies) {
+				if (err) return console.log(err);
+				if (!strategies) return console.log('没有可执行的。');
+				trading.run(strategies, function(err, result) {
+					if (err) console.log(err);
+					// console.log(result);
+					var now = Date.now();
+					interal = now - lastTimestamp;
+					if (interal < 1) {
+						interal = 1;
+						console.log('执行时间太长，应调节间隔');
+					}
+					lastTimestamp = now;
+				});
+			});
 	}, interal);
 	process.send && process.send({
 		code: 200,
@@ -63,10 +94,10 @@ var stop = function() {
 };
 
 
-var keepAlive = function(){
-	return setInterval(function(){
+var keepAlive = function() {
+	return setInterval(function() {
 		process.send({});
-	},5000);
+	}, 5000);
 };
 
 /**
@@ -74,12 +105,18 @@ var keepAlive = function(){
  * @param  {[type]} msg) {	msg        message Object
  * @return {[type]}      [description]
  */
+
+process.on('SIGTERM', function() {
+	console.log('Worker Got a SIGTERM, exiting...');
+	process.exit(1);
+});
+
 process.on('message', function(msg) {
 	msg = msg || {};
 	var command = msg.command || '';
 	switch (command) {
 		case 'start':
-			keepAlive();
+			// keepAlive();
 			start();
 			break;
 		case 'stop':
@@ -90,20 +127,20 @@ process.on('message', function(msg) {
 	}
 });
 
-process.on('exit', function(){
+process.on('exit', function() {
 	//ONLY accept synchronous operations
 	console.log('exit');
 });
 
-process.on('error', function(err){
+process.on('error', function(err) {
 	console.log('error.');
-	process.exit();
+	process.exit(1);
 });
 
 //dev
-if(process.argv.length == 3){
+if (process.argv.length == 3) {
 	start();
-	setTimeout(function(){
+	setTimeout(function() {
 		stop();
-	},10000);
+	}, 10000);
 }

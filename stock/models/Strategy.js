@@ -92,7 +92,7 @@ exports = module.exports = function(mongoose) {
 				min: 0,
 				max: 100,
 			},
-			volume: {
+			quantity: {
 				type: Number, //买入量(股)
 				min: -100000,
 				max: 100000,
@@ -111,7 +111,7 @@ exports = module.exports = function(mongoose) {
 		// 	min: 0,
 		// 	max: 100,
 		// },
-		// last_volume: {
+		// last_quantity: {
 		// 	type: Number, //上次买入量(股)
 		// 	min: 1000,
 		// 	max: 10000,
