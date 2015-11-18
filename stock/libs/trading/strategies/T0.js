@@ -1,13 +1,12 @@
 var _ = require('underscore');
 
-var t0 = null;
-
 var T0 = function(options){
 	this.options = options || {};
+	_.extend(this,T0);
+	return this;
 };
 
-T0.prototype.judge = function(stock,strategy){
-	var that = t0;
+T0.judge = function(stock,strategy){
 	var symbol = strategy.symbol;
 	var params = strategy.params;
 	var top = (params.init_p * (1 + 0.01 * params.sell_gt)).toFixed(2);
@@ -22,8 +21,4 @@ T0.prototype.judge = function(stock,strategy){
 	}
 };
 
-exports = module.exports = function(options){
-	if(!t0)
-		t0 = new T0(options);
-	return t0;
-};
+exports = module.exports = T0;

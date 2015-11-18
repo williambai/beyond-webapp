@@ -50,7 +50,7 @@ exports = module.exports = function(mongoose) {
 		}
 	});
 
-	schema.set('collection', 'Tradings');
+	schema.set('collection', 'tradings');
 	if (mongoose.models.Trading) {
 		return mongoose.model('Trading');
 	}

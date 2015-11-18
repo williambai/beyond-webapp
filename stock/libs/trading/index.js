@@ -1,80 +1,119 @@
 var request = require('request');
+var util = require('util');
+var EventEmitter = require('events');
 var _ = require('underscore');
 var async = require('async');
-var robot = require('./robot/robot')();
-var quote = require('./robot/quote')();
-var T0 = require('./strategies/T0')();
+var robot = require('./robot/robot');
+var quote = require('./robot/quote');
+var T0 = require('./strategies/T0');
 
-var trading = null;
 var Trading = function(options) {
-	options = options || {};
-	this.models = options.models || {};
+	this.options = options || {};
+	this.models = this.options.models || {};
+	_.extend(this, Trading);
+	return this;
 };
 
-Trading.prototype.setModels = function(models) {
-	this.models = models;
+util.inherits(Trading, EventEmitter);
+_.extend(Trading, EventEmitter.prototype);
+
+var models = {};
+
+Trading.setModels = function(mods) {
+	models = mods;
 };
 
-Trading.prototype.getQuote = function(symbol, callback) {
+var getQuote = function(symbol, callback) {
 	quote.getQuote(symbol, callback);
 };
 
-Trading.prototype.buy = function(symbol, price, amount, done) {
-	robot.buy(symbol, price, amount,done);
+var buy = function(symbol, price, amount, done) {
+	// robot.buy(symbol, price, amount,done);
+	console.log('buy: ');
+	done(null, {});
 };
 
-Trading.prototype.sell = function(symbol, price, amount, done) {
-	robot.sell(symbol, price, amount,done);
+var sell = function(symbol, price, amount, done) {
+	// robot.sell(symbol, price, amount,done);
+	console.log('Sell: ')
+	done(null, {});
 };
 
-Trading.prototype.verify = function(data, done) {
-	robot.verify(data, done);
+var verify = function(data, done) {
+	// robot.verify(data, done);
+	done(null, {});
 };
 
-Trading.prototype.confirm = function(strategy,done) {
-	robot.confirm(strategy,done);
+var confirm = function(strategy, done) {
+	// robot.confirm(strategy,done);
+	done(null, {});
 };
 
-Trading.prototype.executeStrategy = function(strategy, done) {
-	var that = trading;
+var executeStrategy = function(strategy, done) {
 	var symbol = strategy.symbol;
-	that.getQuote(symbol, function(err, stock) {
+	getQuote(symbol, function(err, stock) {
 		async.waterfall(
 			[
-				function decide(callback) {
+				function saveQuote(callback) {
+					// models.StockQuote
+					// 	.findOneAndUpdate({
+					// 			'symbol': stock.symbol,
+					// 			'date': stock.date,
+					// 			'time': stock.time,
+					// 		}, {
+					// 			$set: stock
+					// 		}, {
+					// 			upsert: true
+					// 		},
+					// 		callback
+					// 	);
+					models.StockQuote.findOne({
+						'symbol': stock.symbol,
+						'date': stock.date,
+						'time': stock.time,
+					}, function(err, doc) {
+						if (err) return callback(err);
+						if (doc) return callback({
+							code: 40100,
+							errmsg: 'quote existed.'
+						});
+						models.StockQuote.create(stock,callback);
+					});
+				},
+				function decide(doc, callback) {
 					var judged = T0.judge(stock, strategy);
 					if (judged == -1) { //buy
-						that.buy(symbol, stock.price, strategy.init.amount, callback);
+						buy(symbol, stock.price, strategy.init.amount, callback);
 					} else if (judged == 1) { //sell
-						that.sell(symbol, stock.price, strategy.init.amount, callback);
+						sell(symbol, stock.price, strategy.init.amount, callback);
 					} else { //do nothing
-						callback(null,{});
+						callback(null, {});
 					}
 				},
 				function verify(data, callback) {
-					// that.verify(data, callback);
+					// Trding.verify(data, callback);
 					callback(null, true);
 				},
 				// function confirm(ok, callback) {
 				// 	if (ok) {
-				// 		that.confirm(strategy,function() {
+				// 		Trding.confirm(strategy,function() {
 				// 			callback(null, true);
 				// 		});
 				// 	} else {
 				// 		callback(null, false);
 				// 	}
 				// },
-				function save(confirm, callback){
-					if(confirm){
-						callback(null,true);
-					}else{
-						callback(null,false);
+				function save(confirm, callback) {
+					if (confirm) {
+						callback(null, true);
+					} else {
+						callback(null, false);
 					}
 				}
 			],
 			function(err, result) {
 				if (err) return console.log(err);
-				done(null,result);
+				done(null, result);
 			}
 		);
 
@@ -82,22 +121,24 @@ Trading.prototype.executeStrategy = function(strategy, done) {
 
 };
 
-Trading.prototype.run = function(done) {
-	var that = this;
+Trading.run = function(done) {
 	async.waterfall([
-			function(callback){
-				that.models.Strategy
+			function(callback) {
+				models.Strategy
 					.find({
 						'status.code': 1
 					})
-					.exec(function(err,docs){
-						if(err) return callback(err);
-						if(!docs) return callback({code: 40400, errmsg: '没有可执行的。'});
-						callback(null,docs);
+					.exec(function(err, docs) {
+						if (err) return callback(err);
+						if (!docs) return callback({
+							code: 40400,
+							errmsg: '没有可执行的。'
+						});
+						callback(null, docs);
 					});
 			},
-			function(strategies, callback){
-				async.eachSeries(strategies,that.executeStrategy,callback);
+			function(strategies, callback) {
+				async.eachSeries(strategies, executeStrategy, callback);
 			}
 		],
 		function(err, result) {
@@ -107,8 +148,4 @@ Trading.prototype.run = function(done) {
 	);
 };
 
-exports = module.exports = function(options) {
-	if (!trading)
-		trading = new Trading(options);
-	return trading;
-};
+exports = module.exports = Trading;

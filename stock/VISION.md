@@ -35,4 +35,6 @@
 ### 正常交易日的振幅，找出平均振幅
 ### 求取局部极值点，找到回撤幅度
 ## SVM算法
-### 
+## 技术
+### headless-browser-and-scraping-solutions
+http://stackoverflow.com/questions/18539491/headless-browser-and-scraping-solutions

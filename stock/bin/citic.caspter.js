@@ -117,7 +117,7 @@ if(bid == 'buy'){
 			this.capture('../_tmp/buyForm.png');
 		});
 		casper.then(function(){
-			this.echo(this.getHTML());
+			// this.echo(this.getHTML());
 		});
 		casper.then(function buyFormFill(){
 			this.sendKeys('input[name="stkcode"]',stock.code,{reset:true});
@@ -161,7 +161,7 @@ if(bid == 'buy'){
 			this.capture('../_tmp/saleForm.png');
 		});
 		casper.then(function(){
-			this.echo(this.getHTML());
+			// this.echo(this.getHTML());
 		});
 		casper.then(function saleFormFill(){
 			this.sendKeys('input[name="stkcode"]',stock.code,{reset:true});

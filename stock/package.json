@@ -5,7 +5,7 @@
   "author": "William Bai",
   "private": true,
   "bin": {
-    "stock-client": "./bin/client",
+    "stock-client": "./bin/client"
   },
   "main": "server.js",
   "scripts": {
@@ -13,6 +13,11 @@
     "dev": "pm2 start server.js --watch ./ --ignore-watch='./_app ./_dest ./app ./commands ./public'"
   },
   "dependencies": {
+    "node-tesseract": "^0.2.7",
     "robotjs": "^0.3.3"
+  },
+  "devDependencies": {
+    "casperjs": "^1.1.0-beta3",
+    "unirest": "^0.4.2"
   }
 }
