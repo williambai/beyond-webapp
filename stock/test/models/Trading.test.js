@@ -1,3 +1,4 @@
+var showConsoleLog = false;
 var mongoose = require('mongoose');
 var Model = require('../../models/Trading')(mongoose);
 
@@ -10,11 +11,6 @@ describe('期望：models/Trading正确', function() {
 
 	before(function(done) {
 		mongoose.connect(config.db.URI, function(err) {
-			if (err) {
-				console.log(err);
-				mongoose.disconnect();
-				return process.exit(1);
-			}
 			done();
 		});
 	});
@@ -75,5 +71,15 @@ describe('期望：models/Trading正确', function() {
 			done();
 		});
 	});
-
+	xit('测试用例模板', function() {
+		if (showConsoleLog) {
+			var logger = console.log;
+			console.log = function() {};
+		}
+		//write your code here
+		
+		if (showConsoleLog) {
+			console.log = logger;
+		}
+	});
 });

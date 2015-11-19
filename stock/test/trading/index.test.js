@@ -14,11 +14,6 @@ var models = {
 xdescribe('libs/Trading', function() {
 	before(function(done) {
 		mongoose.connect(config.db.URI, function(err) {
-			if (err) {
-				console.log(err);
-				mongoose.disconnect();
-				return process.exit(1);
-			}
 			done();
 		});
 	});

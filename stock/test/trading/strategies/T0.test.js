@@ -1,3 +1,4 @@
+var showConsoleLog = false;
 var _ = require('underscore');
 var expect = require('expect.js');
 var strategy = require('../../fixtures/strategies')[0];
@@ -5,7 +6,6 @@ var T0 = require('../../../libs/trading/strategies/T0');
 
 
 describe('T0 交易策略', function() {
-	var showConsoleLog = false;
 	var params = strategy.params;
 	var top = params.init_p * (1 + 0.01 * params.sell_gt);
 	var bottom = params.init_p * (1 - 0.01 * params.buy_lt);

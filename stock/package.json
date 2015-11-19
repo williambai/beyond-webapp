@@ -9,7 +9,7 @@
   },
   "main": "server.js",
   "scripts": {
-    "test": "mocha --recursive --watch 'test'",
+    "test": "mocha --recursive test",
     "dev": "pm2 start server.js --watch ./ --ignore-watch='./_app ./_dest ./app ./commands ./public'"
   },
   "dependencies": {
