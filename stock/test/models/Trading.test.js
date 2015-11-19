@@ -31,8 +31,8 @@ describe('期望：models/Trading正确', function() {
 			expect(err).to.be.ok();
 			expect(err.name).to.be('ValidationError');
 			var errors = err.errors;
-			expect(errors['stock.symbol'].kind).to.be('required');
-			expect(errors['type'].kind).to.be('required');
+			expect(errors['symbol'].kind).to.be('required');
+			expect(errors['direction'].kind).to.be('required');
 			expect(errors['price'].kind).to.be('required');
 			expect(errors['quantity'].kind).to.be('required');
 			expect(errors['date'].kind).to.be('required');
@@ -51,8 +51,8 @@ describe('期望：models/Trading正确', function() {
 			expect(err).to.be.ok();
 			expect(err.name).to.be('ValidationError');
 			var errors = err.errors;
-			expect(errors['stock.symbol'].kind).to.be('required');
-			expect(errors['type'].kind).to.be('required');
+			expect(errors['symbol'].kind).to.be('required');
+			expect(errors['direction'].kind).to.be('required');
 			expect(errors['price'].kind).to.be('required');
 			expect(errors['quantity'].kind).to.be('required');
 			expect(errors['date'].kind).to.be('regexp');
@@ -63,10 +63,8 @@ describe('期望：models/Trading正确', function() {
 
 	it('期望：validate检查通过', function(done) {
 		var model = new Model({
-			stock: {
-				symbol: 'sh600001'
-			},
-			type: '买入',
+			symbol: 'sh600001',
+			direction: '买入',
 			price: 10,
 			quantity: 1000,
 			date: '1970-01-01',

@@ -1,40 +1,80 @@
+var _ = require('underscore');
 var expect = require('expect.js');
+var strategy = require('../../fixtures/strategies')[0];
+var T0 = require('../../../libs/trading/strategies/T0');
 
-var config = {
-	T0: {
-		sh600218: {
-			risk_h: 15.00, //区间高点(元)
-			risk_l: 9.0, //区间地点(元)
-			bid_p: 11.80, //上次成交价(元)
-			bid_v: 1000, //上次买入量(股)
-			buy_at: 0.2, //上涨%百分比(绝对值)，买入
-			sell_at: 0.2, //下跌%百分比(绝对值)，卖出
-			quantity: 10000.00, //每次买入金额(元)
-			status: 0, //上次状态：0:买入; 1: 卖出
+
+describe('T0 交易策略', function() {
+	var showConsoleLog = false;
+	var params = strategy.params;
+	var top = params.init_p * (1 + 0.01 * params.sell_gt);
+	var bottom = params.init_p * (1 - 0.01 * params.buy_lt);
+	before(function() {
+		showConsoleLog = true;
+	});
+	after(function() {
+	});
+	it('期望：横盘不交易', function() {
+		if (showConsoleLog) {
+			var logger = console.log;
+			console.log = function() {};
 		}
-	}
-};
-
-var quote = require('../../../libs/trading/robot/quote');
-var t0 = require('../../../libs/trading/strategies/T0')(config.T0);
-
-
-
-xdescribe('T+0 交易策略', function() {
-	xit('期望：start() and stop() 正确', function() {
-			var intervalObject = setInterval(function() {
-				var symbols = _.keys(t0.options);
-				quote.getQuote(symbols[0], function(err, stock) {
-					if (err) return console.log(err);
-					t0.judge(stock);
-				});
-			}, 5000);
-			// setTimeout(function() {
-			// 	clearInterval(intervalObject);
-			// }, 11000);
-	}); it('期望: 上涨3%，买入', function() {
-
-}); it('期望: 下跌3%，卖出', function() {
-
-});
+		var quotes = [];
+		for (var i = 0; i < 100; i++) {
+			quotes.push({
+				date: '2015-01-01',
+				time: '10:00:00',
+				price: ((_.random((bottom + 0.01) * 100, (top - 0.01) * 100)) / 100).toFixed(2),
+			});
+		};
+		quotes.forEach(function(quote) {
+			// console.log(quote);
+			T0.judge(quote, strategy, function(err, data) {
+				expect(err).not.to.be.ok();
+				expect(data).not.to.be.ok();
+			});
+		});
+		if (showConsoleLog) {
+			console.log = logger;
+		}
+	});
+	it('期望: 单边上涨到[init_p * (1 + 0.01 * sell_gt)]，卖出', function() {
+		if (showConsoleLog) {
+			var logger = console.log;
+			console.log = function() {};
+		}
+		var quotes = [{
+			date: '2015-01-01',
+			time: '10:00:00',
+			price: (bottom + 0.01).toFixed(2),
+		}, {
+			date: '2015-01-01',
+			time: '10:00:00',
+			price: Math.ceil(bottom * (1 + 0.01 * params.sell_gt) + 0.01).toFixed(2),
+		}, ];
+		console.log(quotes);
+		T0.judge(quotes[0], strategy, function(err, data) {
+			expect(err).not.to.be.ok();
+			expect(data).not.to.be.ok();
+		});
+		T0.judge(quotes[1], strategy, function(err, data) {
+			expect(err).not.to.be.ok();
+			expect(data).to.be.ok();
+			expect(data.action).to.be.equal('sell');
+		});
+		if (showConsoleLog) {
+			console.log = logger;
+		}
+	});
+	xit('测试用例模板', function() {
+		if (showConsoleLog) {
+			var logger = console.log;
+			console.log = function() {};
+		}
+		//write your code here
+		
+		if (showConsoleLog) {
+			console.log = logger;
+		}
+	});
 });

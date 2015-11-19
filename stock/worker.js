@@ -61,6 +61,9 @@ trading.on('buy', function(trade) {
 							},
 							$inc: {
 								'times': 1
+							},
+							$set: {
+								lastTimestamp: Date.now()
 							}
 						}, {
 							upsert: false,
@@ -122,6 +125,9 @@ trading.on('sell', function(trade) {
 							},
 							$inc: {
 								'times': 1
+							},
+							$set: {
+								lastTimestamp: Date.now()
 							}
 						}, {
 							upsert: false,

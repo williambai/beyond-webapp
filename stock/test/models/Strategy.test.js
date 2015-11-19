@@ -32,14 +32,14 @@ describe('期望：models/Strategy正确', function() {
 			expect(err.name).to.be('ValidationError');
 			var errors = err.errors;
 			expect(errors['symbol'].kind).to.be('required');
-			expect(errors['init.name'].kind).to.be('required');
-			expect(errors['init.risk_h'].kind).to.be('required');
-			expect(errors['init.risk_l'].kind).to.be('required');
-			expect(errors['init.init_p'].kind).to.be('required');
-			expect(errors['init.init_v'].kind).to.be('required');
-			expect(errors['init.buy_lt'].kind).to.be('required');
-			expect(errors['init.sell_gt'].kind).to.be('required');
-			expect(errors['init.quantity'].kind).to.be('required');
+			expect(errors['params.name'].kind).to.be('required');
+			expect(errors['params.risk_h'].kind).to.be('required');
+			expect(errors['params.risk_l'].kind).to.be('required');
+			expect(errors['params.init_p'].kind).to.be('required');
+			expect(errors['params.init_v'].kind).to.be('required');
+			expect(errors['params.buy_lt'].kind).to.be('required');
+			expect(errors['params.sell_gt'].kind).to.be('required');
+			expect(errors['params.quantity'].kind).to.be('required');
 			done();
 		});
 	});
@@ -47,7 +47,7 @@ describe('期望：models/Strategy正确', function() {
 	it('期望：validate检查出不符合数据', function(done) {
 		var model = new Model({
 			symbol: 'sh600001',
-			init: {
+			params: {
 				name: 'T0',
 				risk_h: 10,
 				risk_l: 100,
@@ -64,9 +64,9 @@ describe('期望：models/Strategy正确', function() {
 			expect(err).to.be.ok();
 			expect(err.name).to.be('ValidationError');
 			var errors = err.errors;
-			expect(errors['init.risk_h'].kind).to.be('NumberError');
-			expect(errors['init.risk_l'].kind).to.be('NumberError');
-			expect(errors['init.method'].kind).to.be('enum');
+			expect(errors['params.risk_h'].kind).to.be('NumberError');
+			expect(errors['params.risk_l'].kind).to.be('NumberError');
+			expect(errors['params.method'].kind).to.be('enum');
 			done();
 		});
 	});
@@ -74,7 +74,7 @@ describe('期望：models/Strategy正确', function() {
 	it('期望：validate检查通过', function(done) {
 		var model = new Model({
 			symbol: 'sh600001',
-			init: {
+			params: {
 				name: 'T0',
 				risk_h: 100,
 				risk_l: 10,

@@ -20,34 +20,6 @@ var isTradingTime = function(time) {
 	return false;
 };
 
-T0.judge0 = function(stock, strategy, callback) {
-	var symbol = strategy.symbol;
-	var params = strategy.params;
-	var transactions = strategy.transactions || [];
-	var transaction = transactions.pop();
-	if (transaction) {
-		var top = (transaction.price * (1 + 0.01 * params.sell_gt)).toFixed(2);
-		var bottom = (transaction.price * (1 - 0.01 * params.buy_lt)).toFixed(2);
-		var direction = transaction.direction;
-		var quantity = transaction.quantity;
-	} else {
-		var top = (params.init_p * (1 + 0.01 * params.sell_gt)).toFixed(2);
-		var bottom = (params.init_p * (1 - 0.01 * params.buy_lt)).toFixed(2);
-	}
-	console.log(stock.date + ' ' + stock.time + ' ' + symbol + '(' + stock.price + ') ' + '[' + bottom + ' - ' + top + ']');
-	if (isTradingTime(stock.time) && stock.price < bottom) {
-		callback(null, {
-			action: 'buy'
-		});
-	} else if (isTradingTime(stock.time) && stock.price > top) {
-		callback(null, {
-			action: 'sell'
-		});
-	} else {
-		callback(null);
-	}
-};
-
 T0.judge = function(stock, strategy, callback) {
 	try {
 		var top, bottom, direction, quantity;
@@ -69,7 +41,9 @@ T0.judge = function(stock, strategy, callback) {
 		}
 		console.log(stock.date + ' ' + stock.time + ' ' + symbol + '(' + stock.price + ') ' + '[' + bottom + ' - ' + top + ']');
 		// is not trading time, do nothing
-		if(!isTradingTime(stock.time)) return callback(null);
+		if (!isTradingTime(stock.time)) return callback(null);
+		// is times more than times_max, do nothing
+		if(strategy.times > params.times_max) return callback(null);
 		// price is between bottom and top, do nothing
 		if (stock.price > bottom && stock.price < top) return callback(null);
 		//price is lower than bottom, think to buy
@@ -83,10 +57,15 @@ T0.judge = function(stock, strategy, callback) {
 					direction: '买入',
 				});
 			} else {
-				var last3Transactions = _.last(transactions, depth);
-				var last3Dirctions = _.uniq(_.pluck(last3Transactions, 'direction'));
-				//is not same direction?
-				if (last3Dirctions.length > 1) {
+				var directions = _.pluck(transactions, 'direction');
+				var countBuy = _.without(directions, '卖出');
+				var countSell = _.without(directions, '买入');
+				//is count of buy direction less than depth ? if yes, buy now
+				if ((countBuy.length - countSell.length) < depth) {
+					// //is not continuous same direction?
+					// var last3Transactions = _.last(transactions, depth);
+					// var last3Dirctions = _.uniq(_.pluck(last3Transactions, 'direction'));
+					// if (last3Dirctions.length > 1) {
 					return callback(null, {
 						action: 'buy',
 						price: stock.price,
@@ -110,10 +89,15 @@ T0.judge = function(stock, strategy, callback) {
 					direction: '卖出',
 				});
 			} else {
-				var last3Transactions = _.last(transactions, depth);
-				var last3Dirctions = _.uniq(_.pluck(last3Transactions, 'direction'));
-				//is not same direction?
-				if (last3Dirctions.length > 1) {
+				var directions = _.pluck(transactions, 'direction');
+				var countBuy = _.without(directions, '卖出');
+				var countSell = _.without(directions, '买入');
+				//is count of sell direction less than depth ? if yes, sell now
+				if ((countSell.length - countBuy.length) < depth) {
+					// //is not continuous same direction?
+					// var last3Transactions = _.last(transactions, depth);
+					// var last3Dirctions = _.uniq(_.pluck(last3Transactions, 'direction'));
+					// if (last3Dirctions.length > 1) {
 					return callback(null, {
 						action: 'sell',
 						price: stock.price,

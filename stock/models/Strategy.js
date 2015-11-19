@@ -28,7 +28,7 @@ exports = module.exports = function(mongoose) {
 				max: 100,
 				validate: [
 					function(val) {
-						if (this.init.risk_l > val) return false;
+						if (this.params.risk_l > val) return false;
 					},
 					'risk_h < risk_l is not allowed.',
 					'NumberError'
@@ -41,7 +41,7 @@ exports = module.exports = function(mongoose) {
 				max: 100,
 				validate: [
 					function(val) {
-						if (this.init.risk_h < val) return false;
+						if (this.params.risk_h < val) return false;
 					},
 					'risk_h > risk_l is not allowed.',
 					'NumberError'
@@ -78,11 +78,15 @@ exports = module.exports = function(mongoose) {
 			},
 			depth: {
 				type: Number, //连续买卖最大次数
-				default: 0,
+				default: 3,
 				min: 1,
-				max: 5,
+				max: 10,
 			},
-			times_max: Number, //允许最大交易次数
+			times_max: {
+				type:Number, //允许最大交易次数
+				default: 100,
+				min: 1,
+			},
 			method: {
 				type: String,
 				default: 'eq',
