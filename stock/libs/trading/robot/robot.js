@@ -12,7 +12,7 @@ Robot.open = function(){
 	shell.exec('open "/Applications/Microsoft Office 2011/Microsoft Word.app"');
 };
 
-Robot.buy = function(symbol,price,amount,done){
+Robot.buy = function(symbol,price,quantity,done){
 	this.open();
 	robotJS.setMouseDelay(1000);
 	// robotJS.moveMouse(300,300);
@@ -21,11 +21,11 @@ Robot.buy = function(symbol,price,amount,done){
 	robotJS.setKeyboardDelay(1000);
 	robotJS.keyTap('down');
 	robotJS.setKeyboardDelay(1000);
-	robotJS.typeString('buy ' + symbol + ' at: ' + price + ' by ' + amount);
+	robotJS.typeString('buy ' + symbol + ' at: ' + price + ' by ' + quantity);
 	done();
 };
 
-Robot.sell = function(symbol,price,amount,done){
+Robot.sell = function(symbol,price,quantity,done){
 	this.open();
 	robotJS.setMouseDelay(1000);
 	// robotJS.moveMouse(300,300);
@@ -34,7 +34,7 @@ Robot.sell = function(symbol,price,amount,done){
 	robotJS.setKeyboardDelay(1000);
 	robotJS.keyTap('down');
 	robotJS.setKeyboardDelay(1000);
-	robotJS.typeString('sell ' + symbol + ' at: ' + price + ' by ' + amount);
+	robotJS.typeString('sell ' + symbol + ' at: ' + price + ' by ' + quantity);
 	done();
 };
 

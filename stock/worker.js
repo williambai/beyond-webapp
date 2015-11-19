@@ -37,13 +37,126 @@ trading.on('quote', function(stock) {
 		);
 });
 
-trading.on('buy', function(stock){
+trading.on('buy', function(trade) {
 	console.log('buy: ');
-	models.Trading.create
+
+	trade = trade || {};
+	var stock = trade.stock;
+	var transaction = trade.transaction;
+	console.log('transaction: ' + JSON.stringify(transaction));
+
+	async.waterfall(
+		[
+			function pushTransaction(callback) {
+				models.Strategy
+					.findOneAndUpdate({
+							'symbol': stock.symbol
+						}, {
+							$push: {
+								'transactions': {
+									price: transaction.price,
+									quantity: transaction.quantity,
+									direction: transaction.direction
+								}
+							},
+							$inc: {
+								'times': 1
+							}
+						}, {
+							upsert: false,
+						},
+						function(err, result) {
+							if (err) return callback(err);
+							callback(null);
+						}
+					);
+			},
+			function saveTrading(callback) {
+				var newTrade = {
+						symbol: stock.symbol,
+						stock: stock.stock,
+						price: transaction.price,
+						quantity: transaction.quantity,
+						direction: transaction.direction,
+						status: {
+							code: -1,
+							message: '未成交',
+						},
+						tax: 0,
+						date: stock.date,
+						time: stock.time,
+					};
+				models.Trading.create(newTrade, function(err, doc) {
+					if (err) return callback(err);
+					callback(null);
+				});
+			},
+		],
+		function(err, result) {
+			if (err) return console.log(err);
+		}
+	);
+
 });
 
-trading.on('sell', function(stock){
+trading.on('sell', function(trade) {
 	console.log('sell: ');
+
+	trade = trade || {};
+	var stock = trade.stock;
+	var transaction = trade.transaction;
+	console.log('transaction: ' + JSON.stringify(transaction));
+	async.waterfall(
+		[
+			function pushTransaction(callback) {
+				models.Strategy
+					.findOneAndUpdate({
+							'symbol': stock.symbol
+						}, {
+							$push: {
+								transactions: {
+									price: transaction.price,
+									quantity: transaction.quantity,
+									direction: transaction.direction
+								}
+							},
+							$inc: {
+								'times': 1
+							}
+						}, {
+							upsert: false,
+						},
+						function(err, result) {
+							if (err) return callback(err);
+							callback(null);
+						}
+					);
+			},
+			function saveTrading(callback) {
+				var newTrade = {
+						symbol: stock.symbol,
+						stock: stock.stock,
+						price: transaction.price,
+						quantity: transaction.quantity,
+						direction: transaction.direction,
+						status: {
+							code: -1,
+							message: '未成交',
+						},
+						tax: 0,
+						date: stock.date,
+						time: stock.time,
+					};
+				models.Trading.create(newTrade, function(err, doc) {
+					if (err) return callback(err);
+					callback(null);
+				});
+			},
+		],
+		function(err, result) {
+			if (err) return console.log(err);
+		}
+	);
 });
 
 var start = function() {

@@ -1,4 +1,4 @@
-var client = require('child_process').fork('./client');
+var worker = require('child_process').fork('./worker');
 
 var fs = require('fs');
 var http = require('http');
@@ -105,20 +105,20 @@ app.server.listen(config.server.PORT,function(){
 	//kill child_process
 	process.on('SIGTERM', function(){
 		console.log('Master Got a SIGTERM, exiting...');
-		client.kill('SIGTERM');
+		worker.kill('SIGTERM');
 		process.exit(1);
 		console.log(config.server.NAME + ' App is shutdowned at '+ config.server.PORT + ' gracefully.');
 	});
 
-	client.on('exit', function(){
-		console.log('client exit');
-		client = require('child_process').fork('./client');
-		console.log('client restart');
-		client.send({command: 'start'});
+	worker.on('exit', function(){
+		console.log('worker exit');
+		worker = require('child_process').fork('./worker');
+		console.log('worker restart');
+		worker.send({command: 'start'});
 	});
-	client.on('message', function(msg){
+	worker.on('message', function(msg){
 		console.log(msg);
 	});
-	client.send({command: 'start'});
+	worker.send({command: 'start'});
 
 });

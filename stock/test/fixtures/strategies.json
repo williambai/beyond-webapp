@@ -11,9 +11,11 @@
 		"risk_l": 10,
 		"init_p": 12.00,
 		"init_v": 2000,
-		"buy_lt": 3,
-		"sell_gt": 3,
-		"amount": 2000,
+		"buy_lt": 1,
+		"sell_gt": 1,
+		"quantity": 2000,
+		"depth": 3,
+		"times_max": 1000,
 		"method": "eq"
 	},
 	"status": {
@@ -33,9 +35,11 @@
 		"risk_l": 3.8,
 		"init_p": 4.6,
 		"init_v": 2000,
-		"buy_lt": 3,
-		"sell_gt": 3,
-		"amount": 2000,
+		"buy_lt": 1,
+		"sell_gt": 1,
+		"quantity": 2000,
+		"depth": 3,
+		"times_max": 1000,
 		"method": "eq"
 	},
 	"status": {
@@ -55,9 +59,11 @@
 		"risk_l": 6.5,
 		"init_p": 9.6,
 		"init_v": 2000,
-		"buy_lt": 3,
-		"sell_gt": 3,
-		"amount": 2000,
+		"buy_lt": 1,
+		"sell_gt": 1,
+		"quantity": 2000,
+		"depth": 3,
+		"times_max": 1000,
 		"method": "eq"
 	},
 	"status": {

@@ -21,9 +21,6 @@ var dropCollections = function(done) {
 	async.series(
 		[
 			function(callback){
-				models.Trading.remove(callback);
-			},
-			function(callback){
 				models.Strategy.remove(callback);
 			}
 		],
@@ -38,7 +35,7 @@ var createStrategies = function(done){
 	var strategies = require('./strategies');
 	async.eachSeries(strategies,function(strategy,callback){
 		models.Strategy.create(strategy,function(err){
-			if(err) callback(err);
+			if(err) return callback(err);
 			callback(null);
 		});
 	},done);

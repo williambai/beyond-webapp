@@ -1,15 +1,15 @@
 exports = module.exports = function(mongoose) {
 
 	var schema = new mongoose.Schema({
+		symbol: {
+			type: String,
+			required: '{PATH} is required!',
+		},
 		stock: {
 			name: String,
 			code: String,
-			symbol: {
-				type: String,
-				required: '{PATH} is required!',
-			}
 		},
-		type: {
+		direction: {
 			type: String,
 			enum: '买入|卖出'.split('|'),
 			required: '{PATH} is required!',

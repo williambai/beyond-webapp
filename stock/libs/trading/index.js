@@ -19,26 +19,25 @@ _.extend(Trading, EventEmitter.prototype);
 var executeStrategy = function(strategy, done) {
 	var symbol = strategy.symbol;
 	quote.getQuote(symbol, function(err, stock) {
-		if(err) return done(err);
+		if (err) return done(err);
 		Trading.emit('quote', stock);
-		var judged = 0;
-		if (strategy.params.name == 'T0') {
-			judged = T0.judge(stock, strategy);
-		}
-		if (judged == -1) { //buy
-			Trading.emit('buy', {
-				stock: strategy.stock.code,
-				price: stock.price,
-				quantity: strategy.params.amount,
-			});
-		} else if (judged == 1) { //sell
-			Trading.emit('sell', {
-				stock: strategy.stock.code,
-				price: stock.price,
-				quantity: strategy.params.amount,
-			});
-		}
-		done(null);
+		T0.judge(stock, strategy, function(err, data) {
+			if (err || !data) return done(null);
+			if (data.action == 'buy') {
+				Trading.emit('buy', {
+					stock: stock,
+					strategy: strategy,
+					transaction: data,
+				});
+			} else if (data.action == 'sell') {
+				Trading.emit('sell', {
+					stock: stock,
+					strategy: strategy,
+					transaction: data,
+				});
+			}
+			done(null);
+		});
 	});
 
 };

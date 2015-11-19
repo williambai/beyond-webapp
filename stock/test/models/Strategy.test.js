@@ -39,7 +39,7 @@ describe('期望：models/Strategy正确', function() {
 			expect(errors['init.init_v'].kind).to.be('required');
 			expect(errors['init.buy_lt'].kind).to.be('required');
 			expect(errors['init.sell_gt'].kind).to.be('required');
-			expect(errors['init.amount'].kind).to.be('required');
+			expect(errors['init.quantity'].kind).to.be('required');
 			done();
 		});
 	});
@@ -55,7 +55,7 @@ describe('期望：models/Strategy正确', function() {
 				init_v: 1000,
 				buy_lt: 10,
 				sell_gt: 20,
-				amount: 1000,
+				quantity: 1000,
 				method: 'add'
 			},
 		});
@@ -82,7 +82,7 @@ describe('期望：models/Strategy正确', function() {
 				init_v: 1000,
 				buy_lt: 1,
 				sell_gt: 2,
-				amount: 1000,
+				quantity: 1000,
 				method: 'eq'
 			},
 			status: {
