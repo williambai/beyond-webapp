@@ -1,0 +1,28 @@
+{
+  "name": "beyond-spec1-generator",
+  "version": "1.0.1",
+  "description": "beyond standard web application generator.",
+  "private": true,
+  "author": "Suzhou Beyond Co., Ltd.",
+  "scripts": {
+    "dev": "gulp development"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "node-underscorify",
+        {
+          "extensions": [
+            "tpl"
+          ],
+          "requires": [
+            {
+              "variable": "_",
+              "module": "underscore"
+            }
+          ]
+        }
+      ]
+    ]
+  }
+}

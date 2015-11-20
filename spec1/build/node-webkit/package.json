@@ -1,0 +1,16 @@
+{
+  "name": "我的工作网",
+  "main": "index.html",
+  "version": "0.0.1",
+  "single-instance": true,
+  "window": {
+    "title": "Client App for Beyond",
+    "icon": "images/icon.png",
+    "width": 1024,
+    "height": 700,
+    "min_width": 800,
+    "min_height": 650,
+    "toolbar": true
+  },
+  "chromium-args": "--child-clean-exit"
+}
