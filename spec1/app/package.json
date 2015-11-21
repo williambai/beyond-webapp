@@ -5,7 +5,8 @@
   "private": true,
   "author": "Suzhou Beyond Co., Ltd.",
   "scripts": {
-    "dev": "gulp development"
+    "dev": "gulp development",
+    "casperjs": "cd test/modules && casperjs user.casper.js && cd ../.."
   },
   "browserify": {
     "transform": [

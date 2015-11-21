@@ -7,7 +7,6 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha --watch 'test'",
-    "casper": "cd test/modules && casperjs index.casper.js",
     "dev": "pm2 start server.js --watch ./ --ignore-watch='./_app ./_dest ./app ./commands ./public ./test'"
   },
 
