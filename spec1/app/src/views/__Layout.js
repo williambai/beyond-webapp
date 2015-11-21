@@ -9,7 +9,11 @@ Backbone.$ = $;
 exports = module.exports = Backbone.View.extend({
 
 	el: 'body',
+	layoutTemplate: layoutTemplate,
+
+	loadingTemplate: loadingTemplate,
 	loaded: false,
+	
 	initialize: function(options){
 		this.appEvents = options.appEvents;
 
@@ -82,9 +86,9 @@ exports = module.exports = Backbone.View.extend({
 
 	render: function(){
 		if(!this.loaded){
-			this.$el.html(loadingTemplate());
+			this.$el.html(this.loadingTemplate());
 		}else{
-			this.$el.html(layoutTemplate());
+			this.$el.html(this.layoutTemplate());
 		}
 		return this;
 	}
