@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
 var config = require('./conf');
-var LayoutView = require('./views/_LayoutResetPassword');
+var LayoutView = require('./views/__Layout');
 var ResetPassword = require('./models/ResetPassword');
 var ResetPasswordView = require('./views/ResetPassword');
 

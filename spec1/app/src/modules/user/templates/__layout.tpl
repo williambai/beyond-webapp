@@ -51,7 +51,6 @@
 		</div>
 		<div class="btn-group pull-right">
 			<div class="btn" id="right-sidebar-toggle">
-				<span class="badge chat-total-unread"></span>
 				<i class="fa fa-comment fa-lg"></i>
 				&nbsp;提醒
 			</div>

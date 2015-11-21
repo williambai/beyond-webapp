@@ -1,6 +1,5 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
-var StatusCollection = require('./StatusCollection');
 var config = require('../conf');
 
 exports = module.exports = Backbone.Model.extend({
@@ -12,17 +11,9 @@ exports = module.exports = Backbone.Model.extend({
 		email: '',
 		password:'',
 		username: '',
-		realname: '',
 		avatar: '',
 		biography: '',
 		status: {},
-	},
-
-	initialize: function(){
-		this.status = new StatusCollection();
-		this.status.url = config.api.host + '/accounts' + this.id + '/status';
-		this.activity = new StatusCollection();
-		this.activity.url = config.api.host + '/accounts' + this.id + '/activity';
 	},
 
 	validate: function(attrs, options){

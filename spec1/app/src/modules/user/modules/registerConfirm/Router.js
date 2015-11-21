@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
 var config = require('./conf');
-var LayoutView = require('./views/_LayoutRegisterConfirm');
+var LayoutView = require('./views/__Layout');
 var RegisterConfirmView = require('./views/RegisterConfirm');
 
 exports = module.exports = Backbone.Router.extend({

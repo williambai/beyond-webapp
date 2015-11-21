@@ -2,10 +2,6 @@
 	<div class="scrollable" style="padding-top:70px;">
 		<div class="scrollable-header app-name">
 			<a href="#" onclick="window.location.reload();return false;">{产品名称}</a>
-			&nbsp;
-			<a href="#project/add" class="pull-right"> <i class="fa fa-plus-square"></i>
-				项目
-			</a>
 		</div>
 		<div class="scrollable-content">
 			<div class="list-group">
@@ -33,7 +29,7 @@
 <div class="sidebar sidebar-right">
 	<div class="scrollable" style="padding-top:70px;">
 		<div class="scrollable-header app-name">
-			我的好友
+			待办事宜
 			<a href="#friends" class="pull-right">
 				<i class="fa fa-search"></i>
 				管理
@@ -46,7 +42,7 @@
 </div>
 <div class="app">
 	<div class="navbar navbar-app navbar-absolute-top">
-		<div class="navbar-brand navbar-brand-center">我的社交网络</div>
+		<div class="navbar-brand navbar-brand-center">{产品名称}</div>
 		<div class="btn-group pull-left">
 			<div class="btn sidebar-toggle" id="left-sidebar-toggle">
 				<i class="fa fa-bars fa-lg"></i>
@@ -55,9 +51,8 @@
 		</div>
 		<div class="btn-group pull-right">
 			<div class="btn" id="right-sidebar-toggle">
-				<span class="badge chat-total-unread"></span>
 				<i class="fa fa-comment fa-lg"></i>
-				&nbsp;通讯录
+				&nbsp;提醒
 			</div>
 		</div>
 	</div>
