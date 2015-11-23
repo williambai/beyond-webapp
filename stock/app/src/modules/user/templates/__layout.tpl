@@ -11,12 +11,16 @@
 						<i class="fa fa-chevron-right"></i>
 					</span>
 				</a>
+				<a class="list-group-item" href="#trading/record">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;交易记录
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
 				<a class="list-group-item" href="#profile/me">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;我的资料
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-
 			</div>
 			<div id="projectlist"></div>
 			<br/>

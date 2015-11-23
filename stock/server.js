@@ -25,6 +25,7 @@ var config = {
 //import the models
 var models = {
 		Account: require('./models/Account')(mongoose),
+		Trading: require('./models/Trading')(mongoose),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

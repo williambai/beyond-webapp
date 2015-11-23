@@ -10,6 +10,9 @@ var IndexView = require('./views/Index');
 var ProfileView = require('./views/Profile');
 var ProfileEditView = require('./views/ProfileEdit');
 
+var TradingRecord = require('./views/TradingRecord');
+var TradingGraph = require('./views/TradingGraph');
+
 var config = require('./conf');
 
 exports = module.exports = Backbone.Router.extend({
@@ -27,6 +30,8 @@ exports = module.exports = Backbone.Router.extend({
 		'forgotpassword': 'forgotPassword',
 		'profile/:id': 'profile',
 		'profile/me/edit': 'profileEdit',
+		'trading/record': 'tradingRecord',
+		'trading/graph/:symbol': 'tradingGraph',
 		'*path': 'index',
 	},
 
@@ -147,6 +152,28 @@ exports = module.exports = Backbone.Router.extend({
 		var profileEditView = new ProfileEditView();
 		this.changeView(profileEditView);
 		profileEditView.trigger('load');
+	},
+
+	tradingRecord: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '交易记录');
+		var tradingRecord = new TradingRecord();
+		this.changeView(tradingRecord);
+		tradingRecord.trigger('load');
+	},
+
+	tradingGraph: function(symbol) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '交易图表');
+		var tradingGraph = new TradingGraph({symbol: symbol});
+		this.changeView(tradingGraph);
+		tradingGraph.trigger('load');
 	},
 
 });
