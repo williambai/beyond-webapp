@@ -6,7 +6,7 @@
   "author": "Suzhou Beyond Co., Ltd.",
   "scripts": {
     "dev": "gulp development",
-    "casperjs": "cd test/modules && casperjs user.casper.js && cd ../.."
+    "test": "node test"
   },
   "browserify": {
     "transform": [

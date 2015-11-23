@@ -18,7 +18,7 @@ phantom.cookies = JSON.parse(data);
 
 casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 
-casper.start('http://localhost:8090/index.html',function start(){
+casper.start('http://localhost:8090/admin.html',function start(){
 
 });
 
@@ -35,8 +35,8 @@ casper.then(function fillLoginForm(){
 	this.evaluate(function(email, password) {
 		document.querySelector('input[name="email"]').setAttribute('value', email);
 		document.querySelector('input[name="password"]').setAttribute('value', password);
-	}, 'demo@appmod.cn', '123456');
-	this.capture('../_tmp/user_login.png');
+	}, 'admin@appmod.cn', '123456');
+	this.capture('../_tmp/admin_login.png');
 });
 
 casper.then(function(){
@@ -49,9 +49,9 @@ casper.then(function(){
 
 casper.then(function index() {
 	// this.echo(JSON.stringify(phantom.cookies));
-	this.open('http://localhost:8090/index.html#index', function() {
+	this.open('http://localhost:8090/admin.html#index', function() {
 	});
-	this.capture('../_tmp/user_index.png');
+	this.capture('../_tmp/admin_index.png');
 	var brand = this.getHTML('.navbar-brand');
 	// this.echo(brand);
 });
