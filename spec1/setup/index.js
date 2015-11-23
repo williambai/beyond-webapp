@@ -4,19 +4,12 @@ var crypto = require('crypto');
 var mongoose = require('mongoose');
 var ObjectID = require('mongodb').ObjectID;
 var config = {
-		db: require('../../config/db')
+		db: require('../config/db')
 	};		
-
-//app emulator
-var app = {
-	isAccountOnline: function(accountId){
-		return false;
-	}
-};
 
 //import the models
 var models = {
-		Account: require('../../models/Account')(mongoose),
+		Account: require('../models/Account')(mongoose),
 	};
 
 mongoose.connect(config.db.URI,function onMongooseError(err){
@@ -31,22 +24,7 @@ mongoose.connect(config.db.URI,function onMongooseError(err){
  * 
  */
 
-var users = [{
-	email: 'demo@appmod.cn',
-	password: crypto.createHash('sha256').update('123456').digest('hex'),
-	username: 'demo',
-	birthday: {
-		day: 20,
-		month: 5,
-		year: 1980
-	},
-	biography: '',
-	avatar: '',
-	status: {
-		code: 0,
-		message: '正常'
-	}
-}];
+var accounts = require('./accounts');
 
 var dropCollections = function(done) {
 	async.series(
@@ -64,15 +42,14 @@ var dropCollections = function(done) {
 
 /**
  * 
- * create Account and AccountActivity
+ * create Account
  * 
  */
 var upsertAccounts = function(callback) {
 	var upsertAccount = function(index) {
-		var user = users[index];
-		var clone = _.clone(user);
+		var account = accounts[index];
 		models.Account.create(
-			user,
+			account,
 			function(err, result) {
 				if (err) return callback(err);
 				callback(null);
@@ -92,5 +69,3 @@ async.series(
 		mongoose.disconnect();
 	}
 );
-
-
