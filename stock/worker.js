@@ -21,20 +21,22 @@ var models = {
 
 trading.on('quote', function(stock) {
 	console.log('quote: ');
-	models.StockQuote
-		.findOneAndUpdate({
-				'symbol': stock.symbol,
-				'date': stock.date,
-				'time': stock.time,
-			}, {
-				$set: stock
-			}, {
-				upsert: true
-			},
-			function(err, doc) {
-				if (err) return console.log(err);
-			}
-		);
+	if(stock.price != '0.00'){
+		models.StockQuote
+			.findOneAndUpdate({
+					'symbol': stock.symbol,
+					'date': stock.date,
+					'time': stock.time,
+				}, {
+					$set: stock
+				}, {
+					upsert: true
+				},
+				function(err, doc) {
+					if (err) return console.log(err);
+				}
+			);		
+	}
 });
 
 trading.on('buy', function(trade) {

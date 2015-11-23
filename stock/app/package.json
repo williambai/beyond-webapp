@@ -1,0 +1,29 @@
+{
+  "name": "stock-web-app",
+  "version": "1.0.1",
+  "description": "stock web app.",
+  "private": true,
+  "author": "Suzhou Beyond Co., Ltd.",
+  "scripts": {
+    "dev": "gulp development",
+    "test": "node test"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "node-underscorify",
+        {
+          "extensions": [
+            "tpl"
+          ],
+          "requires": [
+            {
+              "variable": "_",
+              "module": "underscore"
+            }
+          ]
+        }
+      ]
+    ]
+  }
+}

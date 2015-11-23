@@ -24,7 +24,7 @@ var config = {
 
 //import the models
 var models = {
-
+		Account: require('./models/Account')(mongoose),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){
@@ -57,20 +57,6 @@ app.use(session({
 		saveUninitialized: false,
         resave: true
     }));
-
-app.get('/', function(req,res){
-	res.render('index.jade',{layout: false});
-});
-
-// app.get('/download/:name', function(req,res){
-// 	var filename = req.params.name;
-// 	if(!fs.existsSync(path.join(__dirname,'public/downloads',filename))){
-// 		res.sendStatus(404);
-// 		return;
-// 	}
-// 	var file = path.join(__dirname,'public/downloads',filename);
-// 	res.download(file);
-// });
 
 //登录判断中间件
 app.isLogined = function(req,res,next){
