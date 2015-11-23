@@ -7,7 +7,7 @@ var config = require('../conf');
 
 Backbone.$ = $;
 
-var SearchView = require('../views/_SearchTradingRecord');
+var SearchView = require('../views/_Search1');
 var GraphView = require('../views/_GraphTradingRecord');
 
 exports = module.exports = Backbone.View.extend({

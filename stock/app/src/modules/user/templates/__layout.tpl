@@ -11,6 +11,11 @@
 						<i class="fa fa-chevron-right"></i>
 					</span>
 				</a>
+				<a class="list-group-item" href="#strategy">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;交易品种
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
 				<a class="list-group-item" href="#trading/record">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;交易记录

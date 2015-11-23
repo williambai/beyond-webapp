@@ -5,7 +5,7 @@ var $ = require('jquery'),
 	template = require('../templates/tradingRecord.tpl');
 var config = require('../conf');
 
-var SearchView = require('../views/_Search2');
+var SearchView = require('../views/_SearchTradingRecord');
 var ListView = require('../views/_ListTradingRecord');
 
 Backbone.$ = $;

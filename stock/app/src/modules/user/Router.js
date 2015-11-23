@@ -10,8 +10,9 @@ var IndexView = require('./views/Index');
 var ProfileView = require('./views/Profile');
 var ProfileEditView = require('./views/ProfileEdit');
 
-var TradingRecord = require('./views/TradingRecord');
-var TradingGraph = require('./views/TradingGraph');
+var TradingRecordView = require('./views/TradingRecord');
+var TradingGraphView = require('./views/TradingGraph');
+var TradingStrategyView = require('./views/TradingStrategy');
 
 var config = require('./conf');
 
@@ -30,6 +31,7 @@ exports = module.exports = Backbone.Router.extend({
 		'forgotpassword': 'forgotPassword',
 		'profile/:id': 'profile',
 		'profile/me/edit': 'profileEdit',
+		'strategy': 'strategy',
 		'trading/record': 'tradingRecord',
 		'trading/graph/:symbol': 'tradingGraph',
 		'*path': 'index',
@@ -154,15 +156,26 @@ exports = module.exports = Backbone.Router.extend({
 		profileEditView.trigger('load');
 	},
 
+	strategy: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '交易品种');
+		var tradingStrategyView = new TradingStrategyView();
+		this.changeView(tradingStrategyView);
+		tradingStrategyView.trigger('load');
+	},
+
 	tradingRecord: function() {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand', '交易记录');
-		var tradingRecord = new TradingRecord();
-		this.changeView(tradingRecord);
-		tradingRecord.trigger('load');
+		var tradingRecordView = new TradingRecordView();
+		this.changeView(tradingRecordView);
+		tradingRecordView.trigger('load');
 	},
 
 	tradingGraph: function(symbol) {
@@ -171,9 +184,9 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand', '交易图表');
-		var tradingGraph = new TradingGraph({symbol: symbol});
-		this.changeView(tradingGraph);
-		tradingGraph.trigger('load');
+		var tradingGraphView = new TradingGraphView({symbol: symbol});
+		this.changeView(tradingGraphView);
+		tradingGraphView.trigger('load');
 	},
 
 });

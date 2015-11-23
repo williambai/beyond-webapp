@@ -26,6 +26,7 @@ var config = {
 var models = {
 		Account: require('./models/Account')(mongoose),
 		Trading: require('./models/Trading')(mongoose),
+		Strategy: require('./models/Strategy')(mongoose),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

@@ -12,8 +12,14 @@
 			<input type="date" name="to" class="form-control" placeholder="" />
 		</div>
 	</div>
+	<div class="form-group">
+		<label></label>
+		<div class="input-group">
+			<input type="text" name="searchStr" class="form-control" placeholder="股票代码" />
+		</div>
+	</div>
 	<input type="submit" value="过滤" class="btn btn-primary"/>
 </form>
 </div>
 <hr>
-<div id="graph"></div>
+<div id="list"></div>
