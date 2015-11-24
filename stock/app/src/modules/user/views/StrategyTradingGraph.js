@@ -2,12 +2,11 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
 	loadingTemplate = require('../templates/loading.tpl'),
-	template = require('../templates/strategyTradingRecord.tpl');
+	template = require('../templates/strategyTradingGraph.tpl');
 var config = require('../conf');
 
-var ListView = require('../views/_ListTradingRecord');
-
 Backbone.$ = $;
+var GraphView = require('../views/_GraphTradingRecord');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -22,7 +21,6 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	events: {
-		'scroll': 'scroll',
 	},
 
 	load: function() {
@@ -30,13 +28,8 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
-		this.listView = new ListView();
-		this.listView.trigger('refresh',config.api.host + '/trading?type=search&searchStr=' + this.symbol + '&from=' + this.from);
-	},
-
-	scroll: function(){
-		this.listView.scroll();
-		return false;
+		this.graphView = new GraphView({symbol: this.symbol});
+		this.graphView.trigger('refresh', 'from=' + this.from);
 	},
 
 	render: function() {

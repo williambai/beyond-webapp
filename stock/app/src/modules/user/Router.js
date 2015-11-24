@@ -13,6 +13,8 @@ var ProfileEditView = require('./views/ProfileEdit');
 var TradingRecordView = require('./views/TradingRecord');
 var TradingGraphView = require('./views/TradingGraph');
 var TradingStrategyView = require('./views/TradingStrategy');
+var StrategyTradingRecordView = require('./views/StrategyTradingRecord');
+var StrategyTradingGraphView = require('./views/StrategyTradingGraph');
 
 var config = require('./conf');
 
@@ -32,6 +34,8 @@ exports = module.exports = Backbone.Router.extend({
 		'profile/:id': 'profile',
 		'profile/me/edit': 'profileEdit',
 		'strategy': 'strategy',
+		'strategy/trading/record/:symbol/:from': 'strategyTradingRecord',
+		'strategy/trading/graph/:symbol/:from': 'strategyTradingGraph',
 		'trading/record': 'tradingRecord',
 		'trading/graph/:symbol': 'tradingGraph',
 		'*path': 'index',
@@ -165,6 +169,31 @@ exports = module.exports = Backbone.Router.extend({
 		var tradingStrategyView = new TradingStrategyView();
 		this.changeView(tradingStrategyView);
 		tradingStrategyView.trigger('load');
+	},
+
+	strategyTradingRecord: function(symbol,from){
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '本轮交易记录');
+		var tradingRecordView = new StrategyTradingRecordView({
+			symbol: symbol,
+			from: from
+		});
+		this.changeView(tradingRecordView);
+		tradingRecordView.trigger('load');
+	},
+
+	strategyTradingGraph: function(symbol,from) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '本轮交易图表');
+		var tradingGraphView = new StrategyTradingGraphView({symbol: symbol,from: from});
+		this.changeView(tradingGraphView);
+		tradingGraphView.trigger('load');
 	},
 
 	tradingRecord: function() {

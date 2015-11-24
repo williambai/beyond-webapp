@@ -38,7 +38,7 @@ exports = module.exports = Backbone.View.extend({
 
 		var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
 
-		var x = d3.time.scale()
+		var x = d3.scale.linear()
 			.range([0, width]);
 
 		var y = d3.scale.linear()
@@ -69,8 +69,9 @@ exports = module.exports = Backbone.View.extend({
 		d3.json(this.url, function(err, data) {
 			if (err) throw err;
 
-			data.forEach(function(d) {
-				d.date = parseDate(d.date + ' ' + d.time);
+			data.forEach(function(d,i) {
+				// d.date = parseDate(d.date + ' ' + d.time);
+				d.date = i;
 			});
 
 			x.domain(d3.extent(data, function(d) {

@@ -11,6 +11,11 @@
 						<i class="fa fa-chevron-right"></i>
 					</span>
 				</a>
+				<!-- <a class="list-group-item" href="#evaluate">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;交易评估
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a> -->
 				<a class="list-group-item" href="#strategy">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;交易品种
