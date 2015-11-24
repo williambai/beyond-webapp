@@ -36,6 +36,10 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		this.loaded = true;
 		this.render();
+		//active menu
+		this.$('.list-group-item').removeClass('active');
+		var hash = window.location.hash || '#index';
+		this.$('a[href="' + hash + '"]').addClass('active');
 	},
 
 	activeItem: function(evt){

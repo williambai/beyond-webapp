@@ -12,6 +12,11 @@
 						<i class="fa fa-chevron-right"></i>
 					</span>
 				</a>
+				<a class="list-group-item" href="#platform">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;平台控制
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
 				<a class="list-group-item" href="#logout">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;退出

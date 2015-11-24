@@ -1,9 +1,15 @@
+var debug = true;
 var _ = require('underscore');
 var async = require('async');
 var fs = require('fs');
 var path = require('path');
 var cst = require('./config/constant');
 var trading = require('./libs/trading');
+
+var status = {
+	platform: false,
+	trade: false,
+};
 
 var intervalObject;
 
@@ -20,7 +26,7 @@ var models = {
 };
 
 trading.on('quote', function(stock) {
-	console.log('quote: ');
+	debug && console.log('quote: ');
 	if(stock.price != '0.00'){
 		models.StockQuote
 			.findOneAndUpdate({
@@ -40,7 +46,7 @@ trading.on('quote', function(stock) {
 });
 
 trading.on('buy', function(trade) {
-	console.log('buy: ');
+	debug && console.log('buy: ');
 
 	trade = trade || {};
 	var stock = trade.stock;
@@ -105,7 +111,7 @@ trading.on('buy', function(trade) {
 });
 
 trading.on('sell', function(trade) {
-	console.log('sell: ');
+	debug && console.log('sell: ');
 
 	trade = trade || {};
 	var stock = trade.stock;
@@ -167,8 +173,14 @@ trading.on('sell', function(trade) {
 	);
 });
 
-var start = function() {
+var getStatus = function(){
+	debug && console.log('collect status.');
+	process.send && process.send(status);
+};
 
+var start = function() {
+	if(status.platform) return;
+	debug && console.log('worker start.');
 	mongoose.connect(config.db.URI, function onMongooseError(err) {
 		if (err) {
 			console.error('Error: can not open Mongodb.');
@@ -198,22 +210,32 @@ var start = function() {
 				});
 			});
 	}, interal);
-	process.send && process.send({
-		code: 200,
-		status: 'Ok'
-	});
+	status.platform = true;
+	process.send && process.send(status);
 };
 
 var stop = function() {
-	console.log('\nclient stop.\n');
+	if(!status.platform) return;
+	debug && console.log('worker stop.');
 	intervalObject && clearInterval(intervalObject);
 	mongoose.disconnect();
-	process.send && process.send({
-		code: 200,
-		status: 'Ok'
-	});
+	status.platform = false;
+	process.send && process.send(status);
 };
 
+var startTrade = function(){
+	if(status.trade) return;
+	debug && console.log('trade start.');
+	status.trade = true;
+	process.send && process.send(status);
+};
+
+var stopTrade = function(){
+	if(!status.trade) return;
+	debug && console.log('trade stop.');
+	status.trade = false;
+	process.send && process.send(status);
+};
 
 var keepAlive = function() {
 	return setInterval(function() {
@@ -228,7 +250,7 @@ var keepAlive = function() {
  */
 
 process.on('SIGTERM', function() {
-	console.log('Worker Got a SIGTERM, exiting...');
+	debug && console.log('Worker Got a SIGTERM, exiting...');
 	process.exit(1);
 });
 
@@ -236,12 +258,21 @@ process.on('message', function(msg) {
 	msg = msg || {};
 	var command = msg.command || '';
 	switch (command) {
+		case 'status': 
+			getStatus();
+			break;
 		case 'start':
 			// keepAlive();
 			start();
 			break;
 		case 'stop':
 			stop();
+			break;
+		case 'startTrade':
+			startTrade();
+			break;
+		case 'stopTrade':
+			stopTrade();
 			break;
 		default:
 			break;
@@ -250,11 +281,11 @@ process.on('message', function(msg) {
 
 process.on('exit', function() {
 	//ONLY accept synchronous operations
-	console.log('exit');
+	debug && console.log('exit');
 });
 
 process.on('error', function(err) {
-	console.log('error.');
+	debug && console.log('error.');
 	process.exit(1);
 });
 
