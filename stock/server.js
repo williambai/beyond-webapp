@@ -121,6 +121,10 @@ app.server.listen(config.server.PORT, function() {
 		command: 'start'
 	});
 
+	app.post('/captcha', function(req,res){
+		res.send({});
+	});
+
 	app.get('/platform/status', function(req, res) {
 		res.send(workerStatus);
 	});

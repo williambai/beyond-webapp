@@ -9,6 +9,7 @@ var IndexView = require('./views/Index');
 var config = require('./conf');
 
 var PlatformView = require('./views/Platform');
+var CaptchaView = require('./views/Captcha');
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -22,6 +23,7 @@ exports = module.exports = Backbone.Router.extend({
 		'login': 'login',
 		'logout': 'logout',
 		'platform': 'platformControl',
+		'captcha': 'captcha',
 		'*path': 'index',
 	},
 
@@ -101,5 +103,16 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(platformView);
 		platformView.trigger('load');
+	},
+	captcha: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','验证码处理');
+		var captchaView = new CaptchaView({
+		});
+		this.changeView(captchaView);
+		captchaView.trigger('load');
 	},
 });

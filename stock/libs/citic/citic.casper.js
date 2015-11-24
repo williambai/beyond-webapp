@@ -17,7 +17,7 @@ var system = require('system');
 var data = fs.read('../_tmp/_cookie.txt') || "[]";
 phantom.cookies = JSON.parse(data);
 //load account
-var account = JSON.parse(fs.read('../config/citic.json') || "{}");
+var account = JSON.parse(fs.read('../../config/citic.json') || "{}");
 //captcha
 var code = '';
 
@@ -39,6 +39,7 @@ casper.then(function openLoginPage(){
 casper.then(function hasLoginForm() {
 	this.waitForSelector('div.login_content_l');
 	this.capture('../_tmp/captcha.png');
+	this.capture('../../public/images/captcha.png');
 	this.echo('captcha.png has been download, please open ../_tmp/captcha.png and read the code.','INFO');
 });
 
