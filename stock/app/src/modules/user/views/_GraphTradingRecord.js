@@ -69,7 +69,27 @@ exports = module.exports = Backbone.View.extend({
 		d3.json(this.url, function(err, data) {
 			if (err) throw err;
 
+			var balance=0, bonus = 0, buyTimes = 0, saleTimes = 0, times;
+			data.forEach(function(d,i){
+				if(d.direction == '买入'){
+					buyTimes++;
+					balance += d.price * d.quantity;
+				}else if(d.direction == '卖出'){
+					saleTimes++;
+					balance -= d.price * d.quantity;
+				}
+			});
+			times = Math.min(buyTimes,saleTimes);
+			buyTimes = 0;
+			saleTimes = 0;
 			data.forEach(function(d,i) {
+				if(d.direction == '买入' &&  buyTimes < times){
+					bonus -= d.price * d.quantity;
+					buyTimes++;
+				}else if(d.direction == '卖出' && saleTimes < times){
+					bonus += d.price * d.quantity;
+					saleTimes++;
+				}
 				// d.date = parseDate(d.date + ' ' + d.time);
 				d.date = i;
 			});
@@ -99,6 +119,22 @@ exports = module.exports = Backbone.View.extend({
 				.datum(data)
 				.attr("class", "line")
 				.attr("d", line);
+
+			svg.append("g")
+				.append("text")
+				.attr("transform","translate(" + (width-20) + ",20)")
+				.attr("y", 6)
+				.attr("dy", ".71em")
+				.style("text-anchor", "end")
+				.text('融资融券：￥'+ balance.toFixed(2));
+
+			svg.append("g")
+				.append("text")
+				.attr("transform","translate(" + (width-20) + ",20)")
+				.attr("y", 24)
+				.attr("dy", ".71em")
+				.style("text-anchor", "end")
+				.text('动态盈亏：￥' + bonus.toFixed(2));
 		});		
 	},
 	render: function() {

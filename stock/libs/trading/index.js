@@ -13,37 +13,96 @@ var Trading = function(options) {
 	return this;
 };
 
+var isTradingTime = function() {
+	var now = new Date();
+	var hh = now.getHours();
+	var mm = now.getMinutes();
+	var ss = now.getSeconds();
+	var morningBeginTime = 9 * 60 * 60 + 25 * 60; //9:25:00
+	var morningEndTime = 11 * 60 * 60 + 30 * 60; //11:30:00
+	var afternoonBeginTime = 13 * 60 * 60; //13:00:00
+	var afternonnEndTime = 15 * 60 * 60 + 5 * 60; //15:05:00
+	var seconds = (parseInt(hh) * 3600 + parseInt(mm) * 60 + parseInt(ss));
+	// if ((seconds > morningBeginTime && seconds < morningEndTime) ||
+	// 	(seconds > afternoonBeginTime && seconds < afternonnEndTime)) {
+	// 	return true;
+	// }
+	if ((seconds > morningBeginTime && seconds < afternonnEndTime)) {
+		return true;
+	}
+	return false;
+};
+
 util.inherits(Trading, EventEmitter);
 _.extend(Trading, EventEmitter.prototype);
 
-var executeStrategy = function(strategy, done) {
-	var symbol = strategy.symbol;
-	quote.getQuote(symbol, function(err, stock) {
-		if (err) return done(err);
-		Trading.emit('quote', stock);
-		T0.judge(stock, strategy, function(err, data) {
+var executeStrategy = function(stocks) {
+	return function(strategy, done) {
+		var symbol = strategy.symbol;
+		Trading.emit('quote', stocks[symbol]);
+		T0.judge(stocks[symbol], strategy, function(err, data) {
 			if (err || !data) return done(null);
 			if (data.action == 'buy') {
 				Trading.emit('buy', {
-					stock: stock,
+					stock: stocks[symbol],
 					strategy: strategy,
 					transaction: data,
 				});
 			} else if (data.action == 'sell') {
 				Trading.emit('sell', {
-					stock: stock,
+					stock: stocks[symbol],
 					strategy: strategy,
 					transaction: data,
 				});
 			}
 			done(null);
 		});
-	});
-
+	};
 };
 
+
 Trading.run = function(strategies, done) {
-	async.eachSeries(strategies, executeStrategy, done);
+	if(!isTradingTime()) return;
+	var symbols = _.pluck(strategies, 'symbol');
+	quote.getQuotes(symbols, function(err, stocks) {
+		if (err) return done(err);
+		async.eachSeries(strategies, executeStrategy(stocks), done);
+	}, done);
+};
+
+/**
+ * @deprecated [description]
+ */
+Trading.run1 = function(strategies, done) {
+	if(!isTradingTime()) return;
+
+	var symbols = _.pluck(strategies, 'symbol');
+	quote.getQuotes(symbols, function(err, stocks) {
+		if (err) return done(err);
+		// console.log(stocks);
+		async.eachSeries(strategies, function(strategy, callback) {
+			if (err) return callback(err);
+			var symbol = strategy.symbol;
+			Trading.emit('quote', stocks[symbol]);
+			T0.judge(stocks[symbol], strategy, function(err, data) {
+				if (err || !data) return callback(null);
+				if (data.action == 'buy') {
+					Trading.emit('buy', {
+						stock: stocks[symbol],
+						strategy: strategy,
+						transaction: data,
+					});
+				} else if (data.action == 'sell') {
+					Trading.emit('sell', {
+						stock: stocks[symbol],
+						strategy: strategy,
+						transaction: data,
+					});
+				}
+				callback(null);
+			});
+		}, done);
+	});
 };
 
 exports = module.exports = Trading;
