@@ -122,6 +122,8 @@ app.server.listen(config.server.PORT, function() {
 	});
 
 	app.post('/captcha', function(req,res){
+		var captcha = req.body.captcha;
+		worker.send({command: 'captcha', captcha: captcha});
 		res.send({});
 	});
 

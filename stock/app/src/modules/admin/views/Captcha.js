@@ -29,10 +29,14 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	submit: function(){
+		captcha = this.$('input[name=captcha]').val();
+		if(captcha.length < 1) return false;
 		$.ajax({
 			url: config.api.host + '/captcha',
 			type: 'POST',
-			data: {},
+			data: {
+				captcha: captcha,
+			},
 			xhrFields: {
 				withCredentials: true
 			},

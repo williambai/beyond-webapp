@@ -5,6 +5,7 @@ var fs = require('fs');
 var path = require('path');
 var cst = require('./config/constant');
 var trading = require('./libs/trading');
+var citic = require('./libs/citic');
 
 var status = {
 	platform: false,
@@ -243,6 +244,9 @@ var keepAlive = function() {
 	}, 5000);
 };
 
+var captcha = function(options){
+	debug && console.log(options);
+};
 /**
  * client process
  * @param  {[type]} msg) {	msg        message Object
@@ -274,6 +278,9 @@ process.on('message', function(msg) {
 		case 'stopTrade':
 			stopTrade();
 			break;
+		case 'captcha':
+			captcha(msg);
+			break;	
 		default:
 			break;
 	}
