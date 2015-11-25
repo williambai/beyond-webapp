@@ -5,7 +5,7 @@ var casper = require('casper').create({
 		loadImages: true,
 		loadPlugins: false
 	},
-	timeout: 10000,
+	timeout: 100000,
 	logLevel: "info",
 	verbose: true
 });
@@ -39,7 +39,6 @@ casper.then(function openLoginPage(){
 casper.then(function hasLoginForm() {
 	this.waitForSelector('div.login_content_l');
 	this.capture('../_tmp/captcha.png');
-	this.capture('../../public/images/captcha.png');
 	this.echo('captcha.png has been download, please open ../_tmp/captcha.png and read the code.','INFO');
 });
 
@@ -68,137 +67,138 @@ casper.then(function loginFormFill(){
 	// this.sendKeys('input[name="trdpwd"]',account.password);
 	// this.sendKeys('input[name="vcode"]',code);
 	this.capture('../_tmp/login.png');
+	this.capture('../../public/images/captcha.png');
 });
 
-casper.then(function loginSubmit(){
-	this.click('input#submit_btn');
-});
+// casper.then(function loginSubmit(){
+// 	this.click('input#submit_btn');
+// });
 
-casper.then(function loginSubmitSuccess(){
-	this.capture('../_tmp/professional2.png');
-	var fs = require('fs');
-	var cookies = JSON.stringify(phantom.cookies);
-	// this.echo(JSON.stringify(phantom.cookies));
-	fs.write('../_tmp/_cookie.txt', cookies, 644);
-	// this.wait(4000);
-	//require('utils').dump(phantom);
-});
+// casper.then(function loginSubmitSuccess(){
+// 	this.capture('../_tmp/professional2.png');
+// 	var fs = require('fs');
+// 	var cookies = JSON.stringify(phantom.cookies);
+// 	// this.echo(JSON.stringify(phantom.cookies));
+// 	fs.write('../_tmp/_cookie.txt', cookies, 644);
+// 	// this.wait(4000);
+// 	//require('utils').dump(phantom);
+// });
 
-casper.then(function openprofessionalPage(){
-	casper.open('https://etrade.cs.ecitic.com/ymtrade/professional.jsp');
-});
+// casper.then(function openprofessionalPage(){
+// 	casper.open('https://etrade.cs.ecitic.com/ymtrade/professional.jsp');
+// });
 
-casper.then(function(){
-	// this.echo(this.getHTML());
-	this.capture('../_tmp/professional3.png');
-});
+// casper.then(function(){
+// 	// this.echo(this.getHTML());
+// 	this.capture('../_tmp/professional3.png');
+// });
 
-casper.then(function(){
-	if(!this.exists('#menuTD')){
-		this.echo('do not authenticated.','ERROR');
-		this.exit();
-	}
-});
+// casper.then(function(){
+// 	if(!this.exists('#menuTD')){
+// 		this.echo('do not authenticated.','ERROR');
+// 		this.exit();
+// 	}
+// });
 
-var bid = 'sale';
-var stock = {
-	code: '600218',
-	price: '12.80',
-	quantity: '1000',
-};
+// var bid = 'sale';
+// var stock = {
+// 	code: '600218',
+// 	price: '12.80',
+// 	quantity: '1000',
+// };
 
-if(bid == 'buy'){	
-	casper.then(function clickBuy(){
-		this.echo('buy');
-		this.click('#gp_buy');
-	});
+// if(bid == 'buy'){	
+// 	casper.then(function clickBuy(){
+// 		this.echo('buy');
+// 		this.click('#gp_buy');
+// 	});
 
-	casper.withFrame('mainFrame',function(){
-		casper.then(function buyForm(){
-			this.capture('../_tmp/buyForm.png');
-		});
-		casper.then(function(){
-			// this.echo(this.getHTML());
-		});
-		casper.then(function buyFormFill(){
-			this.sendKeys('input[name="stkcode"]',stock.code,{reset:true});
-			this.wait(2000);
-			// this.waitFor(function check(){
-			// 	return this.evaluate(function(){
-			// 		return document.querySelector('input[name="price"]').getAttibute('name');
-			// 	});
-			// });
-			this.capture('../_tmp/buyFormCodeFilled.png');
-		});
-		casper.then(function buyFormFillPrice(){
-			this.sendKeys('input[name="price"]',stock.price,{reset:true});
-			this.wait(1000);
-			this.capture('../_tmp/buyFormPriceFilled.png');
-		});
-		casper.then(function buyFormFillQuantity(){
-			this.sendKeys('input[name="qty"]',stock.quantity,{reset:true});
-			this.wait(1000);
-			this.capture('../_tmp/buyFormQuantityFilled.png');
-		});
-		casper.then(function buyFormSubmit(){
-			this.click('input[type="button"]');
-		});
-		casper.then(function buyFormSubmitPopup(){
-			this.waitForSelector('div#popup_container');
-			this.capture('../_tmp/buyPopup.png');
-		});
-		casper.then(function buyFormSubmitConfirm(){
-			this.click('#popup_cancel');
-			this.capture('../_tmp/buyPopupConfirmed.png');
-		});
-	});
-}else if(bid == 'sale'){
-	casper.then(function clickSell(){
-		this.echo('sale');
-		this.click('#gp_sale')
-	});
-	casper.withFrame('mainFrame',function(){
-		casper.then(function saleForm(){
-			this.capture('../_tmp/saleForm.png');
-		});
-		casper.then(function(){
-			// this.echo(this.getHTML());
-		});
-		casper.then(function saleFormFill(){
-			this.sendKeys('input[name="stkcode"]',stock.code,{reset:true});
-			this.wait(2000);
-			this.capture('../_tmp/saleFormCodeFilled.png');
-		});
-		casper.then(function saleFormFillPrice(){
-			this.sendKeys('input[name="price"]',stock.price,{reset:true});
-			this.wait(1000);
-			this.capture('../_tmp/saleFormPriceFilled.png');
-		});
-		casper.then(function saleFormFillQuantity(){
-			this.sendKeys('input[name="qty"]',stock.quantity,{reset:true});
-			this.wait(1000);
-			this.capture('../_tmp/saleFormQuantityFilled.png');
-		});
-		casper.then(function saleFormSubmit(){
-			this.click('input[type="button"]');
-		});
-		casper.then(function saleFormSubmitPopup(){
-			this.waitForSelector('div#popup_container');
-			this.capture('../_tmp/salePopup.png');
-		});
-		casper.then(function saleFormSubmitConfirm(){
-			this.click('#popup_cancel');
-			this.capture('../_tmp/salePopupConfirmed.png');
-		});
-	});
-}
+// 	casper.withFrame('mainFrame',function(){
+// 		casper.then(function buyForm(){
+// 			this.capture('../_tmp/buyForm.png');
+// 		});
+// 		casper.then(function(){
+// 			// this.echo(this.getHTML());
+// 		});
+// 		casper.then(function buyFormFill(){
+// 			this.sendKeys('input[name="stkcode"]',stock.code,{reset:true});
+// 			this.wait(2000);
+// 			// this.waitFor(function check(){
+// 			// 	return this.evaluate(function(){
+// 			// 		return document.querySelector('input[name="price"]').getAttibute('name');
+// 			// 	});
+// 			// });
+// 			this.capture('../_tmp/buyFormCodeFilled.png');
+// 		});
+// 		casper.then(function buyFormFillPrice(){
+// 			this.sendKeys('input[name="price"]',stock.price,{reset:true});
+// 			this.wait(1000);
+// 			this.capture('../_tmp/buyFormPriceFilled.png');
+// 		});
+// 		casper.then(function buyFormFillQuantity(){
+// 			this.sendKeys('input[name="qty"]',stock.quantity,{reset:true});
+// 			this.wait(1000);
+// 			this.capture('../_tmp/buyFormQuantityFilled.png');
+// 		});
+// 		casper.then(function buyFormSubmit(){
+// 			this.click('input[type="button"]');
+// 		});
+// 		casper.then(function buyFormSubmitPopup(){
+// 			this.waitForSelector('div#popup_container');
+// 			this.capture('../_tmp/buyPopup.png');
+// 		});
+// 		casper.then(function buyFormSubmitConfirm(){
+// 			this.click('#popup_cancel');
+// 			this.capture('../_tmp/buyPopupConfirmed.png');
+// 		});
+// 	});
+// }else if(bid == 'sale'){
+// 	casper.then(function clickSell(){
+// 		this.echo('sale');
+// 		this.click('#gp_sale')
+// 	});
+// 	casper.withFrame('mainFrame',function(){
+// 		casper.then(function saleForm(){
+// 			this.capture('../_tmp/saleForm.png');
+// 		});
+// 		casper.then(function(){
+// 			// this.echo(this.getHTML());
+// 		});
+// 		casper.then(function saleFormFill(){
+// 			this.sendKeys('input[name="stkcode"]',stock.code,{reset:true});
+// 			this.wait(2000);
+// 			this.capture('../_tmp/saleFormCodeFilled.png');
+// 		});
+// 		casper.then(function saleFormFillPrice(){
+// 			this.sendKeys('input[name="price"]',stock.price,{reset:true});
+// 			this.wait(1000);
+// 			this.capture('../_tmp/saleFormPriceFilled.png');
+// 		});
+// 		casper.then(function saleFormFillQuantity(){
+// 			this.sendKeys('input[name="qty"]',stock.quantity,{reset:true});
+// 			this.wait(1000);
+// 			this.capture('../_tmp/saleFormQuantityFilled.png');
+// 		});
+// 		casper.then(function saleFormSubmit(){
+// 			this.click('input[type="button"]');
+// 		});
+// 		casper.then(function saleFormSubmitPopup(){
+// 			this.waitForSelector('div#popup_container');
+// 			this.capture('../_tmp/salePopup.png');
+// 		});
+// 		casper.then(function saleFormSubmitConfirm(){
+// 			this.click('#popup_cancel');
+// 			this.capture('../_tmp/salePopupConfirmed.png');
+// 		});
+// 	});
+// }
 
 //save cookies
-casper.then(function saveCookie(){
-	var fs = require('fs');
-	var cookies = JSON.stringify(phantom.cookies);
-	// this.echo(JSON.stringify(phantom.cookies));
-	fs.write('../_tmp/_cookie.txt', cookies, 644);
-});
+// casper.then(function saveCookie(){
+// 	var fs = require('fs');
+// 	var cookies = JSON.stringify(phantom.cookies);
+// 	// this.echo(JSON.stringify(phantom.cookies));
+// 	fs.write('../_tmp/_cookie.txt', cookies, 644);
+// });
 
 casper.run();

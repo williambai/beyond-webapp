@@ -1,49 +1,51 @@
 var async = require('async');
-var child = require('child_process');
-
-var cwd = process.cwd();
+var spawn = require('child_process').spawn;
 
 async.waterfall(
 	[
 		function(callback){
-			command = 'cd ' + __dirname ;
-			command += ' && casperjs ./user.casper.js';
-			command += ' && cd ' + cwd;
-			child.exec(command,function(err,stdout,stderr){
-				if(err) return callback(err);
-				console.log(stdout);
+			var child = spawn('casperjs',['./user.casper.js'],{
+				cwd: __dirname,
+			});
+			child.stdout.on('end', function(){
+				process.stdin.end();
 				callback(null);
-			});			
+			});
+			child.stdout.pipe(process.stdout);
+			process.stdin.pipe(child.stdin);
 		},
 		function(callback){
-			command = 'cd ' + __dirname ;
-			command += ' && casperjs ./confirm.casper.js';
-			command += ' && cd ' + cwd;
-			child.exec(command,function(err,stdout,stderr){
-				if(err) return callback(err);
-				console.log(stdout);
+			var child = spawn('casperjs',['./confirm.casper.js'],{
+				cwd: __dirname,
+			});
+			child.stdout.on('end', function(){
+				process.stdin.end();
 				callback(null);
-			});			
+			});
+			child.stdout.pipe(process.stdout);
+			process.stdin.pipe(child.stdin);
 		},
 		function(callback){
-			command = 'cd ' + __dirname ;
-			command += ' && casperjs ./reset.casper.js';
-			command += ' && cd ' + cwd;
-			child.exec(command,function(err,stdout,stderr){
-				if(err) return callback(err);
-				console.log(stdout);
+			var child = spawn('casperjs',['./reset.casper.js'],{
+				cwd: __dirname,
+			});
+			child.stdout.on('end', function(){
+				process.stdin.end();
 				callback(null);
-			});			
+			});
+			child.stdout.pipe(process.stdout);
+			process.stdin.pipe(child.stdin);
 		},
 		function(callback){
-			command = 'cd ' + __dirname ;
-			command += ' && casperjs ./admin.casper.js';
-			command += ' && cd ' + cwd;
-			child.exec(command,function(err,stdout,stderr){
-				if(err) return callback(err);
-				console.log(stdout);
+			var child = spawn('casperjs',['./admin.casper.js'],{
+				cwd: __dirname,
+			});
+			child.stdout.on('end', function(){
+				process.stdin.end();
 				callback(null);
-			});			
+			});
+			child.stdout.pipe(process.stdout);
+			process.stdin.pipe(child.stdin);
 		},
 	],
 	function(err,result){
