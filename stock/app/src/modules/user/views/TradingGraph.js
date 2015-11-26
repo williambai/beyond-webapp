@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTemplate = require('../templates/loading.tpl'),
-	template = require('../templates/tradingGraph.tpl');
+	loadingTemplate = _.template(require('../templates/loading.tpl')),
+	template = _.template(require('../templates/tradingGraph.tpl'));
 var config = require('../conf');
 
 Backbone.$ = $;

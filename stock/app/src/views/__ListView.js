@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadMoreTemplate = require('../templates/__load-more.tpl');
+	loadMoreTemplate = _.template(require('../templates/__load-more.tpl'));
 
 
 Backbone.$ = $;
@@ -55,7 +55,7 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 		if (that.isScrollUp) {
 			collection.each(function(model) {
-				var itemHtml = that.getNewItemView(model).render().el;
+				var itemHtml = that.getNewItemView(model);
 				that.$el.prepend(itemHtml);
 				that.collection.add(model, {
 					at: 0
@@ -67,20 +67,20 @@ exports = module.exports = Backbone.View.extend({
 			}, 1);
 		} else {
 			collection.each(function(model) {
-				var itemHtml = that.getNewItemView(model).render().el;
+				var itemHtml = that.getNewItemView(model);
 				that.$el.append(itemHtml);
 			});
 		}
 	},
 
 	onModelAppend: function(model) {
-		var itemHtml = this.getNewItemView(model).render().el;
+		var itemHtml = this.getNewItemView(model);
 		this.$el.append(itemHtml);
 		return this;
 	},
 
 	onModelPrepend: function(model) {
-		var itemHtml = this.getNewItemView(model).render().el;
+		var itemHtml = this.getNewItemView(model);
 		this.$el.prepend(itemHtml);
 	},
 

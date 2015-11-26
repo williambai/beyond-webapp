@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
     LoginFormView = require('./_FormLogin'),
-	loginTemplate = require('../templates/login.tpl');
+	loginTemplate = _.template(require('../templates/login.tpl'));
 
 Backbone.$ = $;
 

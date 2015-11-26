@@ -123,30 +123,13 @@ gulp.task('plugin-js',function(){
 ======================================================================*/
 
 var source = require('vinyl-source-stream');
-// var _bundleJS1 = function(arr,done){
-// 	var entry = arr.pop();
-// 	if(!entry) return done();
-// 	var b = browserify({debug: false});
-// 	b.add(path.join(__dirname,'src',entry));
-// 	// var tplTransform = require('node-underscorify').transform({
-// 	// 	    extensions: ['tpl'],
-// 	// 	});
-
-// 	// b.transform(tplTransform);
-// 	b.bundle()
-// 		 .pipe(source(entry))
-// 		// .pipe(streamify(uglify()))
-// 		.pipe(gulp.dest(path.join(__dirname,config.dest,'js')));
-// 	_bundleJS1(arr,done);
-// };
-
 var _bundleJS = function(arr,done){
 	var entry = arr.pop();
 	if(!entry) return done();
 	gulp.src(path.join(__dirname,'src',entry), { read: false })
 		.pipe(browserify({
 			transform: stringify({
-		        extensions: ['.html'], minify: true
+		        extensions: ['.tpl'], minify: true
 		    }),
 			debug: false
 		}))
@@ -154,8 +137,6 @@ var _bundleJS = function(arr,done){
 		.pipe(gulp.dest(path.join(__dirname,config.dest,'js')));
 	_bundleJS(arr,done);
 };
-
-
 
 gulp.task('index.js',function(done){
 	var entries = [

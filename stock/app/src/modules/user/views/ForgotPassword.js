@@ -2,8 +2,8 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
     ForgotPasswordFormView = require('./_FormForgotPassword'),
-	forgotPasswordTemplate = require('../templates/forgotPassword.tpl'),
-    forgotPasswordSuccessTemplate = require('../templates/forgotPasswordSuccess.tpl');
+	forgotPasswordTemplate = _.template(require('../templates/forgotPassword.tpl')),
+    forgotPasswordSuccessTemplate = _.template(require('../templates/forgotPasswordSuccess.tpl'));
 
 Backbone.$ = $;
 
