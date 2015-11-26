@@ -2,7 +2,7 @@
  var date = new Date(model.lastupdatetime);
 %>
 <div class="pull-right">
-	<p><a href="#strategy/update" id="">编辑</a>&nbsp;&nbsp;<a href="#strategy/trading/record/<%= model.symbol %>/<%= date.getTime() %>" id="">交易明细</a></p>
+	<p><a href="#strategy/edit/<%= model._id %>" id="">编辑</a>&nbsp;&nbsp;<a href="#strategy/trading/record/<%= model.symbol %>/<%= date.getTime() %>" id="">交易明细</a></p>
 	<!-- <button class="btn btn-primary btn-small">实时交易</button> -->
 </div>
 <div>
