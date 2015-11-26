@@ -13,7 +13,7 @@ exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
 	
-	compiled: _.template(template),
+	// compiled: _.template(template),
 
 	initialize: function(options) {
 		this.symbol = options.symbol;
@@ -35,8 +35,8 @@ exports = module.exports = Backbone.View.extend({
 		if (!this.loaded) {
 			this.$el.html(loadingTemplate());
 		} else {
-			// this.$el.html(template({model:this.strategyForm.model.toJSON()}));
-			this.$el.html(this.compiled({model:this.strategyForm.model.toJSON()}));
+			this.$el.html(template({model:this.strategyForm.model.toJSON()}));
+			// this.$el.html(this.compiled({model:this.strategyForm.model.toJSON()}));
 		}
 		return this;
 	},
