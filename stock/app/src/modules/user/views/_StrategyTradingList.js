@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTpl = require('../templates/loading.tpl');
+	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 var ListView = require('../views/_TradingList');
@@ -10,7 +10,7 @@ Backbone.$ = $;
 
 exports = module.exports = Backbone.View.extend({
 
-	el: '#content',
+	el: '#list',
 
 	loadingTemplate: _.template(loadingTpl),
 	template: _.template('<h4>本轮交易记录</h4><p>自xxx起的交易记录。</p><hr><div id="list"></div>'),

@@ -3,9 +3,9 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 
 var LayoutView = require('./views/__Layout');
-var RegisterView = require('./views/Register');
-var ForgotPasswordView = require('./views/ForgotPassword');
-var LoginView = require('./views/Login');
+var RegisterView = require('./views/_CommonRegister');
+var ForgotPasswordView = require('./views/_CommonForgotPassword');
+var LoginView = require('./views/_CommonLogin');
 var IndexView = require('./views/Index');
 var ProfileView = require('./views/Profile');
 var ProfileEditView = require('./views/ProfileEdit');
@@ -96,7 +96,9 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand', '注册');
-		var registerView = new RegisterView();
+		var registerView = new RegisterView({
+			el: '#content'
+		});
 		this.changeView(registerView);
 		registerView.trigger('load');
 	},
@@ -107,7 +109,9 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand', '找回密码');
-		var forgotPassword = new ForgotPasswordView();
+		var forgotPassword = new ForgotPasswordView({
+			el: '#content'
+		});
 		this.changeView(forgotPassword);
 		forgotPassword.trigger('load');
 	},
@@ -119,6 +123,7 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand', '登录');
 		var loginView = new LoginView({
+			el: '#content',
 			appEvents: this.appEvents,
 		});
 		this.changeView(loginView);

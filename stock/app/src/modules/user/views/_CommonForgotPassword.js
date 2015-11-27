@@ -2,6 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	FormView = require('./__FormView'),
 	ForgotPassword = require('../models/ForgotPassword');
+var commonTpl = require('../templates/_common.tpl');
 
 var config = require('../conf');
 
@@ -10,6 +11,11 @@ exports = module.exports = FormView.extend({
 	el: '#forgotPasswordForm',
 
 	initialize: function(options) {
+		var page = $(commonTpl);
+		var forgotPasswordTemplate = $('#forgotPasswordTemplate', page).html();
+		this.template = _.template(_.unescape(forgotPasswordTemplate || ''));
+		var forgotPasswordSuccessTemplate = $('#forgotPasswordSuccessTemplate', page).html();
+		this.successTemplate = _.template(_.unescape(forgotPasswordSuccessTemplate || ''));
 		this.model = new ForgotPassword();
 		FormView.prototype.initialize.apply(this, options);
 	},
@@ -51,5 +57,12 @@ exports = module.exports = FormView.extend({
 
 		}
 		return false;
+	},
+	done: function(){
+		this.$el.html(this.successTemplate());
+	},
+	render: function(){
+		this.$el.html(this.template({model: this.model.toJSON()}));
+		return this;
 	},
 });

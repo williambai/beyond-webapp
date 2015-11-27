@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTpl = require('../templates/loading.tpl');
+	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 var SearchView = require('../views/_TradingSearch');

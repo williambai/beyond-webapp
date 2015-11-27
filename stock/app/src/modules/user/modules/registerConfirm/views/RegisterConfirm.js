@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
 	registerConfirmResultTemplate = require('../templates/registerConfirmResult.tpl');
-var loadingTemplate = require('../templates/loading.tpl');
+var loadingTemplate = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;

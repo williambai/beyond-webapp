@@ -2,6 +2,7 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Login = require('../models/Login');
+var commonTpl = require('../templates/_common.tpl');
 
 exports = module.exports = FormView.extend({
 
@@ -13,6 +14,9 @@ exports = module.exports = FormView.extend({
 	},
 
 	initialize: function(options) {
+		var page = $(commonTpl);
+		var loginTemplate = $('#loginTemplate', page).html();
+		this.template = _.template(_.unescape(loginTemplate || ''));
 		this.appEvents = options.appEvents;
 		this.model = new Login();
 		FormView.prototype.initialize.apply(this, options);
@@ -60,4 +64,11 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	done: function(){
+		window.location.hash = 'index';
+	},
+	render: function(){
+		this.$el.html(this.template({model: this.model.toJSON()}));
+		return this;
+	},
 });

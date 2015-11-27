@@ -2,12 +2,18 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Register = require('../models/Register');
+var commonTpl = require('../templates/_common.tpl');
 
 exports = module.exports = FormView.extend({
 
 	el: '#registerForm',
 
 	initialize: function(options) {
+		var page = $(commonTpl);
+		var registerTemplate = $('#registerTemplate', page).html();
+		this.template = _.template(_.unescape(registerTemplate || ''));
+		var registerSuccessTemplate = $('#registerSuccessTemplate', page).html();
+		this.successTemplate = _.template(_.unescape(registerSuccessTemplate || ''));
 		this.model = new Register();
 		FormView.prototype.initialize.apply(this, options);
 	},
@@ -63,4 +69,11 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	done: function(){
+			this.$el.html(this.successTemplate());
+	},
+	render: function(){
+		this.$el.html(this.template({model: this.model.toJSON()}));
+		return this;
+	},
 });
