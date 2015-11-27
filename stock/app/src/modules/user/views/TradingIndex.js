@@ -1,12 +1,11 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTpl = require('../templates/loading.tpl'),
-	contentTpl = require('../templates/tradingRecord.tpl');
+	loadingTpl = require('../templates/loading.tpl');
 var config = require('../conf');
 
-var SearchView = require('../views/_Search2');
-var ListView = require('../views/_ListTradingRecord');
+var SearchView = require('../views/_TradingSearch');
+var ListView = require('../views/_TradingList');
 
 Backbone.$ = $;
 
@@ -15,15 +14,9 @@ exports = module.exports = Backbone.View.extend({
 	el: '#content',
 
 	loadingTemplate: _.template(loadingTpl),
-	template: _.template(contentTpl),
+	template: _.template('<div><div id="search"></div><hr><div id="list"></div></div>'),
 
 	initialize: function(options) {
-		var page = $(require('../templates/tradingRecord.tpl'));
-		this._searchTemplate = $('#search', page).html();
-		$('#search', page).empty();
-		this._itemRecordTemplate = $('#list', page).html();
-		$('#list', page).empty();
-		this.template = _.template($(page).html());
 		this.on('load', this.load, this);
 	},
 
@@ -38,7 +31,6 @@ exports = module.exports = Backbone.View.extend({
 
 		this.searchView = new SearchView({
 			el: '#search',
-			template: this._searchTemplate
 		});
 		this.searchView.done = function(query) {
 			that.listView.trigger('refresh', config.api.host + '/trading?type=search&' + query);
@@ -46,7 +38,6 @@ exports = module.exports = Backbone.View.extend({
 
 		this.listView = new ListView({
 			el: '#list',
-			template: this._itemRecordTemplate,
 		});
 
 		this.searchView.trigger('load');

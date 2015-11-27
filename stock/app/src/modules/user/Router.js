@@ -10,12 +10,15 @@ var IndexView = require('./views/Index');
 var ProfileView = require('./views/Profile');
 var ProfileEditView = require('./views/ProfileEdit');
 
-var TradingRecordView = require('./views/TradingRecord');
+var TradingIndexView = require('./views/TradingIndex');
 var TradingGraphView = require('./views/TradingGraph');
-var TradingStrategyView = require('./views/TradingStrategy');
-var StrategyTradingRecordView = require('./views/StrategyTradingRecord');
-var StrategyTradingGraphView = require('./views/StrategyTradingGraph');
-var StrategyEditView = require('./views/StrategyEdit');
+var StrategyTradingListView = require('./views/_StrategyTradingList');
+var StrategyTradingGraphView = require('./views/_StrategyTradingGraph');
+
+var StrategyIndexView = require('./views/StrategyIndex');
+var StrategyAddView = require('./views/_StrategyAdd');
+var StrategyEditView = require('./views/_StrategyEdit');
+var StrategyViewView = require('./views/_StrategyView');
 
 var config = require('./conf');
 
@@ -34,11 +37,13 @@ exports = module.exports = Backbone.Router.extend({
 		'forgotpassword': 'forgotPassword',
 		'profile/:id': 'profile',
 		'profile/me/edit': 'profileEdit',
-		'strategy': 'strategy',
-		'strategy/edit(/:symbol)': 'strategyEdit',
-		'strategy/trading/record/:symbol/:from': 'strategyTradingRecord',
+		'strategy': 'strategyIndex',
+		'strategy/new': 'strategyEdit',
+		'strategy/edit/:id': 'strategyEdit',
+		'strategy/view/:id': 'strategyView',
+		'strategy/trading/record/:symbol/:from': 'strategyTradingList',
 		'strategy/trading/graph/:symbol/:from': 'strategyTradingGraph',
-		'trading/record': 'tradingRecord',
+		'trading': 'tradingIndex',
 		'trading/graph/:symbol': 'tradingGraph',
 		'*path': 'index',
 	},
@@ -85,23 +90,23 @@ exports = module.exports = Backbone.Router.extend({
 		indexView.trigger('load');
 	},
 
-	register: function(){
-		if(this.logined){
+	register: function() {
+		if (this.logined) {
 			window.location.hash = 'index';
 			return;
 		}
-		this.appEvents.trigger('set:brand','注册');
+		this.appEvents.trigger('set:brand', '注册');
 		var registerView = new RegisterView();
 		this.changeView(registerView);
 		registerView.trigger('load');
 	},
 
-	forgotPassword: function(){
-		if(this.logined){
+	forgotPassword: function() {
+		if (this.logined) {
 			window.location.hash = 'index';
 			return;
 		}
-		this.appEvents.trigger('set:brand','找回密码');
+		this.appEvents.trigger('set:brand', '找回密码');
 		var forgotPassword = new ForgotPasswordView();
 		this.changeView(forgotPassword);
 		forgotPassword.trigger('load');
@@ -162,62 +167,96 @@ exports = module.exports = Backbone.Router.extend({
 		profileEditView.trigger('load');
 	},
 
-	strategy: function() {
+	strategyIndex: function() {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand', '交易品种');
-		var tradingStrategyView = new TradingStrategyView();
-		this.changeView(tradingStrategyView);
-		tradingStrategyView.trigger('load');
+		var strategyIndexView = new StrategyIndexView();
+		this.changeView(strategyIndexView);
+		strategyIndexView.trigger('load');
 	},
 
-	strategyEdit: function(symbol) {
+	strategyAdd: function() {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '品种详情');
-		var strategyEditView = new StrategyEditView({symbol:symbol});
+		this.appEvents.trigger('set:brand', '新增交易品种');
+		var strategyEditView = new StrategyAddView({
+			el: '#content'
+		});
 		this.changeView(strategyEditView);
 		strategyEditView.trigger('load');
 	},
 
-	strategyTradingRecord: function(symbol,from){
+	strategyView: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '查看交易品种');
+		var strategyViewView = new StrategyViewView({
+			id: id,
+			el: '#content'
+		});
+		this.changeView(strategyViewView);
+		strategyViewView.trigger('load');
+	},
+
+	strategyEdit: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '编辑交易品种');
+		var strategyEditView = new StrategyEditView({
+			id: id,
+			el: '#content'
+		});
+		this.changeView(strategyEditView);
+		strategyEditView.trigger('load');
+	},
+
+	strategyTradingList: function(symbol, from) {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand', '本轮交易记录');
-		var tradingRecordView = new StrategyTradingRecordView({
+		var tradingListView = new StrategyTradingListView({
 			symbol: symbol,
 			from: from
 		});
-		this.changeView(tradingRecordView);
-		tradingRecordView.trigger('load');
+		this.changeView(tradingListView);
+		tradingListView.trigger('load');
 	},
 
-	strategyTradingGraph: function(symbol,from) {
+	strategyTradingGraph: function(symbol, from) {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand', '本轮交易图表');
-		var tradingGraphView = new StrategyTradingGraphView({symbol: symbol,from: from});
+		var tradingGraphView = new StrategyTradingGraphView({
+			symbol: symbol,
+			from: from,
+			el: '#content'
+		});
 		this.changeView(tradingGraphView);
 		tradingGraphView.trigger('load');
 	},
 
-	tradingRecord: function() {
+	tradingIndex: function() {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand', '交易记录');
-		var tradingRecordView = new TradingRecordView();
-		this.changeView(tradingRecordView);
-		tradingRecordView.trigger('load');
+		var tradingIndexView = new TradingIndexView();
+		this.changeView(tradingIndexView);
+		tradingIndexView.trigger('load');
 	},
 
 	tradingGraph: function(symbol) {
@@ -226,7 +265,9 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand', '交易图表');
-		var tradingGraphView = new TradingGraphView({symbol: symbol});
+		var tradingGraphView = new TradingGraphView({
+			symbol: symbol
+		});
 		this.changeView(tradingGraphView);
 		tradingGraphView.trigger('load');
 	},

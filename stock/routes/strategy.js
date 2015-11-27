@@ -1,8 +1,38 @@
 exports = module.exports = function(app, models) {
 
-	var getOne = function(req,res){
-		models.Strategy.findById(req.params.id, function(err,doc){
-			if(err) return res.send(err);
+	var add = function(req, res) {
+		var strategy = req.body;
+		console.log(req.body)
+		strategy.params = strategy.params || {};
+		strategy.params.name = 'T0';
+		strategy.params.description = 'T0 交易';
+		strategy.times = 0;
+		strategy.method = 'eq';
+		strategy.lastupdatetime = new Date();
+		models.Strategy.create(strategy, function(err, doc) {
+			if (err) return res.send(err);
+			res.send(doc);
+		});
+	};
+
+	var update = function(req, res) {
+		var id = req.params.id;
+		var set = req.body;
+		set.transactions = [];
+		set.times = 0;
+		set.lastupdatetime = new Date();
+		models.Strategy.findByIdAndUpdate(id, {
+			$set: set,
+		}, {
+			upsert: false
+		}, function(err, doc) {
+			if (err) return res.send(err);
+			res.send(doc);
+		});
+	};
+	var getOne = function(req, res) {
+		models.Strategy.findById(req.params.id, function(err, doc) {
+			if (err) return res.send(err);
 			res.send(doc);
 		});
 	};
@@ -14,7 +44,7 @@ exports = module.exports = function(app, models) {
 		page = (!page || page < 0) ? 0 : page;
 		var query = {};
 		switch (type) {
-			case 'graph': 
+			case 'graph':
 				var now = new Date();
 				var symbol = req.query.symbol
 				var from = new Date(req.query.from || 0);
@@ -73,7 +103,9 @@ exports = module.exports = function(app, models) {
 				query = {};
 				models.Strategy
 					.find(query)
-					.select({transactions: 0})
+					.select({
+						transactions: 0
+					})
 					.sort({
 						_id: -1
 					})
@@ -91,6 +123,15 @@ exports = module.exports = function(app, models) {
 	 * router outline
 	 */
 
+	/**
+	 * post one
+	 */
+	app.post('/strategy', add);
+
+	/**
+	 * put one
+	 */
+	app.put('/strategy/:id', add);
 	/**
 	 * get one
 	 * 

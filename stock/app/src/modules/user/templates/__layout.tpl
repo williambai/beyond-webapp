@@ -21,7 +21,7 @@
 					&nbsp;交易品种
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#trading/record">
+				<a class="list-group-item" href="#trading">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;交易记录
 					<i class="fa fa-chevron-right pull-right"></i>

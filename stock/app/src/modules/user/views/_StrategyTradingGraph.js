@@ -1,19 +1,24 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTemplate = _.template(require('../templates/loading.tpl')),
-	template = _.template(require('../templates/strategyTradingRecord.tpl'));
+	loadingTpl = require('../templates/loading.tpl');
 var config = require('../conf');
 
-var ListView = require('../views/_ListTradingRecord');
+var strategyTpl = require('../templates/_entityStrategy.tpl');
 
 Backbone.$ = $;
+var GraphView = require('../views/_TradingGraph');
 
 exports = module.exports = Backbone.View.extend({
 
-	el: '#content',
+	el: '#graph',
+
+	loadingTemplate: _.template(loadingTpl),
 
 	initialize: function(options) {
+		var page = $(strategyTpl);
+		var graphTemplate = $('#graphTemplate', page).html();
+		this.template = _.template(_.unescape(graphTemplate || ''));
 		this.symbol = options.symbol;
 		var date = new Date();
 		date.setTime(options.from);
@@ -22,7 +27,6 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	events: {
-		'scroll': 'scroll',
 	},
 
 	load: function() {
@@ -30,20 +34,15 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
-		this.listView = new ListView();
-		this.listView.trigger('refresh',config.api.host + '/trading?type=search&searchStr=' + this.symbol + '&from=' + this.from);
-	},
-
-	scroll: function(){
-		this.listView.scroll();
-		return false;
+		this.graphView = new GraphView({symbol: this.symbol});
+		this.graphView.trigger('refresh', 'from=' + this.from);
 	},
 
 	render: function() {
 		if (!this.loaded) {
-			this.$el.html(loadingTemplate());
+			this.$el.html(this.loadingTemplate());
 		} else {
-			this.$el.html(template());
+			this.$el.html(this.template());
 		}
 		return this;
 	},

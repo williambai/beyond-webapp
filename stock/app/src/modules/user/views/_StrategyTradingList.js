@@ -1,16 +1,19 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTemplate = _.template(require('../templates/loading.tpl')),
-	template = _.template(require('../templates/strategyTradingGraph.tpl'));
+	loadingTpl = require('../templates/loading.tpl');
 var config = require('../conf');
 
+var ListView = require('../views/_TradingList');
+
 Backbone.$ = $;
-var GraphView = require('../views/_GraphTradingRecord');
 
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
+
+	loadingTemplate: _.template(loadingTpl),
+	template: _.template('<h4>本轮交易记录</h4><p>自xxx起的交易记录。</p><hr><div id="list"></div>'),
 
 	initialize: function(options) {
 		this.symbol = options.symbol;
@@ -21,6 +24,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	events: {
+		'scroll': 'scroll',
 	},
 
 	load: function() {
@@ -28,15 +32,20 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
-		this.graphView = new GraphView({symbol: this.symbol});
-		this.graphView.trigger('refresh', 'from=' + this.from);
+		this.listView = new ListView();
+		this.listView.trigger('refresh',config.api.host + '/trading?type=search&searchStr=' + this.symbol + '&from=' + this.from);
+	},
+
+	scroll: function(){
+		this.listView.scroll();
+		return false;
 	},
 
 	render: function() {
 		if (!this.loaded) {
-			this.$el.html(loadingTemplate());
+			this.$el.html(this.loadingTemplate());
 		} else {
-			this.$el.html(template());
+			this.$el.html(this.template());
 		}
 		return this;
 	},
