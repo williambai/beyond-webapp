@@ -8,11 +8,6 @@ exports = module.exports = FormView.extend({
 
 	el: '#loginForm',
 
-	events: {
-		'submit form': 'login',
-		'swiperight': 'toRegisterForm',
-	},
-
 	initialize: function(options) {
 		var page = $(commonTpl);
 		var loginTemplate = $('#loginTemplate', page).html();
@@ -22,39 +17,27 @@ exports = module.exports = FormView.extend({
 		FormView.prototype.initialize.apply(this, options);
 	},
 
+	events: {
+		'keyup input[type=text]': 'renderInputInvalid',
+		'blur input[type=text]': 'renderInputInvalid',
+		'keyup input[type=password]': 'renderInputInvalid',
+		'submit form': 'login',
+		'swiperight': 'toRegisterForm',
+	},
+
 	login: function() {
 		var that = this;
-		//clean errors
-		that.$('.form-group').removeClass('has-error');
-		that.$('.form-group span.help-block').empty();
-		//set model
-		this.model.set('email', $('input[name=email]').val());
-		this.model.set('password', $('input[name=password]').val());
-
-		if(this.model.isValid()){
-			var xhr = this.model.save(null, {
+		var arr = this.$('form').serializeArray();
+		arr.forEach(function(item){
+			that.model.set(item.name,item.value);
+		});
+		// console.log(this.model.toJSON());
+		if (this.model.isValid()) {
+			this.model.save(null, {
 				xhrFields: {
 					withCredentials: true
 				},
 			});
-			if(xhr){
-				xhr
-					.success(function(data){
-						if(!!data.code){
-							that.$('#error').html('<div class="alert alert-danger">' + data.errmsg + '</div>');
-							that.$('#error').slideDown();
-							return;
-						}
-						//update UI
-						that.done();
-						//trigger socket.io
-						that.appEvents.trigger('logined',data);
-					})
-					.error(function(xhr){
-						that.$('#error').html('<div class="alert alert-danger">' + xhr.status + ': ' + xhr.responseText + '</div>');
-						that.$('#error').slideDown();
-					});
-			}			
 		}
 		return false;
 	},
@@ -64,11 +47,40 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	done: function(){
+	validate: function(name, val) {
+		var error;
+		switch (name) {
+			case 'email':
+				if (!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(val))) {
+					error = {
+						name: 'email',
+						message: '不是有效的电子邮件',
+					};
+				}
+				break;
+			case 'password':
+				if (val.length < 5) {
+					error = {
+						name: 'password',
+						message: '密码长度不正确',
+					};
+				}
+				break;
+			default:
+				break;
+		}
+		if(!_.isEmpty(error))return error;
+	},
+
+	done: function(data) {
+		this.appEvents.trigger('logined',data);
 		window.location.hash = 'index';
 	},
-	render: function(){
-		this.$el.html(this.template({model: this.model.toJSON()}));
+
+	render: function() {
+		this.$el.html(this.template({
+			model: this.model.toJSON()
+		}));
 		return this;
 	},
 });

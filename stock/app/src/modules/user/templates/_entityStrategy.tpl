@@ -97,92 +97,83 @@
 									<input type="text" name="symbol" value="<%= model.symbol %>" class="form-control input-sm" placeholder="sh600030">
 									<span class="help-block"></span>
 								</div>
-								<div class="form-group" id="stock_name">
+								<div class="form-group" id="stock[name]">
 									<label>股票名称：</label>
-									<input type="text" name="stock_name" value="<%= model.stock.name %>" class="form-control input-sm" placeholder="中信证券">
+									<input type="text" name="stock[name]" value="<%= model.stock.name %>" class="form-control input-sm" placeholder="中信证券">
 									<span class="help-block"></span>
 								</div>
-								<div class="form-group" id="stock_code">
+								<div class="form-group" id="stock[code]">
 									<label>股票代码：</label>
-									<input type="text" name="stock_code" value="<%= model.stock.code %>" class="form-control input-sm" placeholder="600030">
+									<input type="text" name="stock[code]" value="<%= model.stock.code %>" class="form-control input-sm" placeholder="600030">
 									<span class="help-block"></span>
 								</div>
 								<fiedset>
 									<legend>参数设置</legend>
-									<div class="form-group" id="name">
+									<div class="form-group" id="params[name]">
 										<label>交易策略名称：</label>
-										<input type="text" name="name" value="<%= model.params.name %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[name]" value="<%= model.params.name %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="description">
+									<div class="form-group" id="params[description]">
 										<label>交易策略描述：</label>
-										<input type="text" name="description" value="<%= model.params.description %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[description]" value="<%= model.params.description %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="risk_h">
+									<div class="form-group" id="params[risk_h]">
 										<label>风险上限：</label>
-										<input type="text" name="risk_h" value="<%= model.params.risk_h %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[risk_h]" value="<%= model.params.risk_h %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="risk_l">
+									<div class="form-group" id="params[risk_l]">
 										<label>风险下限：</label>
-										<input type="text" name="risk_l" value="<%= model.params.risk_l %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[risk_l]" value="<%= model.params.risk_l %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="init_p">
+									<div class="form-group" id="params[init_p]">
 										<label>起始交易价格：</label>
-										<input type="text" name="init_p" value="<%= model.params.init_p %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[init_p]" value="<%= model.params.init_p %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="init_v">
+									<div class="form-group" id="params[init_v]">
 										<label>首次交易量：</label>
-										<input type="text" name="init_v" value="<%= model.params.init_v %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[init_v]" value="<%= model.params.init_v %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="buy_lt">
+									<div class="form-group" id="params[buy_lt]">
 										<label>下跌买入(%)：</label>
-										<input type="text" name="buy_lt" value="<%= model.params.buy_lt %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[buy_lt]" value="<%= model.params.buy_lt %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="sell_gt">
+									<div class="form-group" id="params[sell_gt]">
 										<label>上涨卖出(%)：</label>
-										<input type="text" name="sell_gt" value="<%= model.params.sell_gt %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[sell_gt]" value="<%= model.params.sell_gt %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="quantity">
+									<div class="form-group" id="params[quantity]">
 										<label>单次交易量：</label>
-										<input type="text" name="quantity" value="<%= model.params.quantity %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[quantity]" value="<%= model.params.quantity %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="times_max">
+									<div class="form-group" id="params[times_max]">
 										<label>最大交易次数：</label>
-										<input type="text" name="times_max" value="<%= model.params.times_max %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[times_max]" value="<%= model.params.times_max %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="depth">
+									<div class="form-group" id="params[depth]">
 										<label>最大交易深度：</label>
-										<input type="text" name="depth" value="<%= model.params.depth %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[depth]" value="<%= model.params.depth %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="method">
+									<div class="form-group" id="params[method]">
 										<label>交易方法：</label>
-										<input type="text" name="method" value="<%= model.params.method %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[method]" value="<%= model.params.method %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
 								</fiedset>
-								<div class="form-group" id="status">
-									<label>交易状态：</label>
-									<% if( model.status.code == 1){ %>
-									<input type="radio" name="status" value="0">
-									&nbsp;&nbsp;停止
-									<input type="radio" name="status" value="1" checked>
-									&nbsp;&nbsp;开启
-									<% }else{ %>
-									<input type="radio" name="status" value="0" checked>
-									&nbsp;&nbsp;停止
-									<input type="radio" name="status" value="1">
-									&nbsp;&nbsp;开启
-									<% } %>
+								<div class="form-group" id="status[code]">
+									<input type="hidden" name="status[code]" value="0">
+									<input type="checkbox" name="status[code]" value="1" checked>
+									&nbsp;&nbsp;开启交易
 									<span class="help-block"></span>
 								</div>
 								<div class="form-group" id="submit">
@@ -220,76 +211,76 @@
 									<input type="text" name="symbol" value="<%= model.symbol %>" class="form-control input-sm" placeholder="" readonly>
 									<span class="help-block"></span>
 								</div>
-								<div class="form-group" id="stock_name">
+								<div class="form-group" id="stock[name]">
 									<label>股票名称：</label>
-									<input type="text" name="stock_name" value="<%= model.stock.name %>" class="form-control input-sm" placeholder="" readonly>
+									<input type="text" name="stock[name]" value="<%= model.stock.name %>" class="form-control input-sm" placeholder="" readonly>
 									<span class="help-block"></span>
 								</div>
-								<div class="form-group" id="stock_code">
+								<div class="form-group" id="stock[code]">
 									<label>股票代码：</label>
-									<input type="text" name="stock_code" value="<%= model.stock.code %>" class="form-control input-sm" placeholder="" readonly>
+									<input type="text" name="stock[code]" value="<%= model.stock.code %>" class="form-control input-sm" placeholder="" readonly>
 									<span class="help-block"></span>
 								</div>
 								<fiedset>
 									<legend>参数设置</legend>
-									<div class="form-group" id="name">
+									<div class="form-group" id="params[name]">
 										<label>交易策略名称：</label>
-										<input type="text" name="name" value="<%= model.params.name %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[name]" value="<%= model.params.name %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="description">
+									<div class="form-group" id="params[description]">
 										<label>交易策略描述：</label>
-										<input type="text" name="description" value="<%= model.params.description %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[description]" value="<%= model.params.description %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="risk_h">
+									<div class="form-group" id="params[risk_h]">
 										<label>风险上限：</label>
-										<input type="text" name="risk_h" value="<%= model.params.risk_h %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[risk_h]" value="<%= model.params.risk_h %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="risk_l">
+									<div class="form-group" id="params[risk_l]">
 										<label>风险下限：</label>
-										<input type="text" name="risk_l" value="<%= model.params.risk_l %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[risk_l]" value="<%= model.params.risk_l %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="init_p">
+									<div class="form-group" id="params[init_p]">
 										<label>起始交易价格：</label>
-										<input type="text" name="init_p" value="<%= model.params.init_p %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[init_p]" value="<%= model.params.init_p %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="init_v">
+									<div class="form-group" id="params[init_v]">
 										<label>首次交易量：</label>
-										<input type="text" name="init_v" value="<%= model.params.init_v %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[init_v]" value="<%= model.params.init_v %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="buy_lt">
+									<div class="form-group" id="params[buy_lt]">
 										<label>下跌买入(%)：</label>
-										<input type="text" name="buy_lt" value="<%= model.params.buy_lt %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[buy_lt]" value="<%= model.params.buy_lt %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="sell_gt">
+									<div class="form-group" id="params[sell_gt]">
 										<label>上涨卖出(%)：</label>
-										<input type="text" name="sell_gt" value="<%= model.params.sell_gt %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[sell_gt]" value="<%= model.params.sell_gt %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="quantity">
+									<div class="form-group" id="params[quantity]">
 										<label>单次交易量：</label>
-										<input type="text" name="quantity" value="<%= model.params.quantity %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[quantity]" value="<%= model.params.quantity %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="times_max">
+									<div class="form-group" id="params[times_max]">
 										<label>最大交易次数：</label>
-										<input type="text" name="times_max" value="<%= model.params.times_max %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[times_max]" value="<%= model.params.times_max %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="depth">
+									<div class="form-group" id="params[depth]">
 										<label>最大交易深度：</label>
-										<input type="text" name="depth" value="<%= model.params.depth %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[depth]" value="<%= model.params.depth %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="method">
+									<div class="form-group" id="params[method]">
 										<label>交易方法：</label>
-										<input type="text" name="method" value="<%= model.params.method %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[method]" value="<%= model.params.method %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
 								</fiedset>
@@ -298,18 +289,14 @@
 									<input type="text" name="times" value="<%= model.times %>" class="form-control input-sm" placeholder="" readonly>
 									<span class="help-block"></span>
 								</div>
-								<div class="form-group" id="status">
-									<label>交易状态：</label>
+								<div class="form-group" id="status[code]">
+									<input type="hidden" name="status[code]" value="0">
 									<% if( model.status.code == 1){ %>
-									<input type="radio" name="status" value="0">
-									&nbsp;&nbsp;停止
-									<input type="radio" name="status" value="1" checked>
-									&nbsp;&nbsp;开启
+									<input type="checkbox" name="status[code]" value="1" checked>
+									&nbsp;&nbsp;开启交易
 									<% }else{ %>
-									<input type="radio" name="status" value="0" checked>
-									&nbsp;&nbsp;停止
-									<input type="radio" name="status" value="1">
-									&nbsp;&nbsp;开启
+									<input type="checkbox" name="status[code]" value="1">
+									&nbsp;&nbsp;开启交易
 									<% } %>
 									<span class="help-block"></span>
 								</div>
@@ -346,96 +333,87 @@
 									<input type="text" name="symbol" value="<%= model.symbol %>" class="form-control input-sm" placeholder="">
 									<span class="help-block"></span>
 								</div>
-								<div class="form-group" id="stock_name">
+								<div class="form-group" id="stock[name]">
 									<label>股票名称：</label>
-									<input type="text" name="stock_name" value="<%= model.stock.name %>" class="form-control input-sm" placeholder="">
+									<input type="text" name="stock[name]" value="<%= model.stock.name %>" class="form-control input-sm" placeholder="">
 									<span class="help-block"></span>
 								</div>
-								<div class="form-group" id="stock_code">
+								<div class="form-group" id="stock[code]">
 									<label>股票代码：</label>
-									<input type="text" name="stock_code" value="<%= model.stock.code %>" class="form-control input-sm" placeholder="">
+									<input type="text" name="stock[code]" value="<%= model.stock.code %>" class="form-control input-sm" placeholder="">
 									<span class="help-block"></span>
 								</div>
 								<fiedset>
 									<legend>参数设置</legend>
-									<div class="form-group" id="name">
+									<div class="form-group" id="params[name]">
 										<label>交易策略名称：</label>
-										<input type="text" name="name" value="<%= model.params.name %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[name]" value="<%= model.params.name %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="description">
+									<div class="form-group" id="params[description]">
 										<label>交易策略描述：</label>
-										<input type="text" name="description" value="<%= model.params.description %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[description]" value="<%= model.params.description %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="risk_h">
+									<div class="form-group" id="params[risk_h]">
 										<label>风险上限：</label>
-										<input type="text" name="risk_h" value="<%= model.params.risk_h %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[risk_h]" value="<%= model.params.risk_h %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="risk_l">
+									<div class="form-group" id="params[risk_l]">
 										<label>风险下限：</label>
-										<input type="text" name="risk_l" value="<%= model.params.risk_l %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[risk_l]" value="<%= model.params.risk_l %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="init_p">
+									<div class="form-group" id="params[init_p]">
 										<label>起始交易价格：</label>
-										<input type="text" name="init_p" value="<%= model.params.init_p %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[init_p]" value="<%= model.params.init_p %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="init_v">
+									<div class="form-group" id="params[init_v]">
 										<label>首次交易量：</label>
-										<input type="text" name="init_v" value="<%= model.params.init_v %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[init_v]" value="<%= model.params.init_v %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="buy_lt">
+									<div class="form-group" id="params[buy_lt]">
 										<label>下跌买入(%)：</label>
-										<input type="text" name="buy_lt" value="<%= model.params.buy_lt %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[buy_lt]" value="<%= model.params.buy_lt %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="sell_gt">
+									<div class="form-group" id="params[sell_gt]">
 										<label>上涨卖出(%)：</label>
-										<input type="text" name="sell_gt" value="<%= model.params.sell_gt %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[sell_gt]" value="<%= model.params.sell_gt %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="quantity">
+									<div class="form-group" id="params[quantity]">
 										<label>单次交易量：</label>
-										<input type="text" name="quantity" value="<%= model.params.quantity %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[quantity]" value="<%= model.params.quantity %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="times_max">
+									<div class="form-group" id="params[times_max]">
 										<label>最大交易次数：</label>
-										<input type="text" name="times_max" value="<%= model.params.times_max %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[times_max]" value="<%= model.params.times_max %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="depth">
+									<div class="form-group" id="params[depth]">
 										<label>最大交易深度：</label>
-										<input type="text" name="depth" value="<%= model.params.depth %>" class="form-control input-sm" placeholder="">
+										<input type="text" name="params[depth]" value="<%= model.params.depth %>" class="form-control input-sm" placeholder="">
 										<span class="help-block"></span>
 									</div>
-									<div class="form-group" id="method">
+									<div class="form-group" id="params[method]">
 										<label>交易方法：</label>
-										<input type="text" name="method" value="<%= model.params.method %>" class="form-control input-sm" placeholder="" readonly>
+										<input type="text" name="params[method]" value="<%= model.params.method %>" class="form-control input-sm" placeholder="" readonly>
 										<span class="help-block"></span>
 									</div>
 								</fiedset>
-								<!-- <div class="form-group" id="times">
-									<label>已交易次数：</label>
-									<input type="text" name="times" value="<%= model.times %>" class="form-control input-sm" placeholder="" readonly>
-									<span class="help-block"></span>
-								</div> -->
-								<div class="form-group" id="status">
-									<label>交易状态：</label>
+								<div class="form-group" id="status[code]">
+									<input type="hidden" name="status[code]" value="0">
 									<% if( model.status.code == 1){ %>
-									<input type="radio" name="status" value="0">
-									&nbsp;&nbsp;停止
-									<input type="radio" name="status" value="1" checked>
-									&nbsp;&nbsp;开启
+									<input type="checkbox" name="status[code]" value="1" checked>
+									&nbsp;&nbsp;开启交易
 									<% }else{ %>
-									<input type="radio" name="status" value="0" checked>
-									&nbsp;&nbsp;停止
-									<input type="radio" name="status" value="1">
-									&nbsp;&nbsp;开启
+									<input type="checkbox" name="status[code]" value="1">
+									&nbsp;&nbsp;开启交易
 									<% } %>
 									<span class="help-block"></span>
 								</div>

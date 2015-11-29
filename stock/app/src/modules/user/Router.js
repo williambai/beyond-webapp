@@ -38,7 +38,7 @@ exports = module.exports = Backbone.Router.extend({
 		'profile/:id': 'profile',
 		'profile/me/edit': 'profileEdit',
 		'strategy': 'strategyIndex',
-		'strategy/new': 'strategyEdit',
+		'strategy/new': 'strategyAdd',
 		'strategy/edit/:id': 'strategyEdit',
 		'strategy/view/:id': 'strategyView',
 		'strategy/trading/record/:symbol/:from': 'strategyTradingList',

@@ -19,47 +19,26 @@ exports = module.exports = FormView.extend({
 	},
 
 	events: {
+		'keyup input[type=text]': 'renderInputInvalid',
+		'blur input[type=text]': 'renderInputInvalid',
+		'keyup input[type=password]': 'renderInputInvalid',
 		'submit form': 'register',
 		'swipeleft': 'swipeToLoginForm',
 	},
 
 	register: function() {
 		var that = this;
-		//clean errors
-		that.$('.form-group').removeClass('has-error');
-		that.$('.form-group span.help-block').empty();
-		//set model
-		this.model.set('username', $('input[name=username]').val());
-		this.model.set('email', $('input[name=email').val());
-		this.model.set('password', $('input[name=password').val());
-		this.model.set('cpassword', $('input[name=cpassword').val());
-
+		var arr = this.$('form').serializeArray();
+		arr.forEach(function(item) {
+			that.model.set(item.name, item.value);
+		});
+		// console.log(this.model.toJSON());
 		if (this.model.isValid()) {
-			var xhr = this.model.save(null, {
+			this.model.save(null, {
 				xhrFields: {
 					withCredentials: true
 				},
 			});
-			if (xhr) {
-				xhr
-					.success(function(data) {
-						if (!!data.code) {
-							if (data.code == 11000) {
-								that.$('#error').html('<div class="alert alert-danger">' + '该邮箱已注册' + '</div>');
-							} else {
-								that.$('#error').html('<div class="alert alert-danger">' + data.errmsg + '</div>');
-							}
-							that.$('#error').slideDown();
-							return;
-						}
-						//update UI
-						that.done();
-					})
-					.error(function(xhr) {
-						that.$('#error').html('<div class="alert alert-danger">' + xhr.status + ': ' + xhr.responseText + '</div>');
-						that.$('#error').slideDown();
-					});
-			}
 		}
 		return false;
 	},
@@ -69,11 +48,58 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	done: function(){
-			this.$el.html(this.successTemplate());
+	validate: function(name, val) {
+		var error;
+		switch (name) {
+			case 'username':
+				if (!/^([a-zA-Z0-9_-])+$/.test(val)) {
+					error = {
+						name: 'username',
+						message: '用户名不合法'
+					};
+				}
+				break;
+			case 'email':
+				if (!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(val))) {
+					error = {
+						name: 'email',
+						message: '不是有效的电子邮件',
+					};
+				}
+				break;
+			case 'password':
+				if (val.length < 5) {
+					error = {
+						name: 'password',
+						message: '密码长度不正确',
+					};
+				}
+				break;
+			case 'cpassword':
+				var password = this.$('input[name=password]').val();
+				console.log(password)
+				console.log(val)
+				if (val != password) {
+					error = {
+						name: 'cpassword',
+						message: '两次输入不一致',
+					};
+				}
+				break;
+			default:
+				break;
+		}
+		if (!_.isEmpty(error)) return error;
 	},
-	render: function(){
-		this.$el.html(this.template({model: this.model.toJSON()}));
+
+	done: function() {
+		this.$el.html(this.successTemplate());
+	},
+
+	render: function() {
+		this.$el.html(this.template({
+			model: this.model.toJSON()
+		}));
 		return this;
 	},
 });

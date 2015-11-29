@@ -23,7 +23,12 @@ module.exports = exports = function(app, models) {
 		user.lastupdatetime = new Date();
 
 		Account.create(user, function(err, doc) {
-			if (err) return res.send(err);
+			if (err){
+				if(err.code == 11000){
+					return res.send({code: 11000, errmsg: '该邮箱已注册'});
+				}
+ 				return res.send(err);
+ 			}
 			res.send(doc);
 
 			var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));

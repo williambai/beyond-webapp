@@ -15,20 +15,25 @@ var Trading = function(options) {
 
 var isTradingTime = function() {
 	var now = new Date();
+	var day = now.getDay();
 	var hh = now.getHours();
 	var mm = now.getMinutes();
 	var ss = now.getSeconds();
 	var morningBeginTime = 9 * 60 * 60 + 25 * 60; //9:25:00
-	var morningEndTime = 11 * 60 * 60 + 30 * 60; //11:30:00
-	var afternoonBeginTime = 13 * 60 * 60; //13:00:00
+	var morningEndTime = 11 * 60 * 60 + 35 * 60; //11:35:00
+	var afternoonBeginTime = 13 * 60 * 60 - 5*60; //12:55:00
 	var afternonnEndTime = 15 * 60 * 60 + 5 * 60; //15:05:00
 	var seconds = (parseInt(hh) * 3600 + parseInt(mm) * 60 + parseInt(ss));
-	// if ((seconds > morningBeginTime && seconds < morningEndTime) ||
-	// 	(seconds > afternoonBeginTime && seconds < afternonnEndTime)) {
-	// 	return true;
-	// }
-	if ((seconds > morningBeginTime && seconds < afternonnEndTime)) {
-		return true;
+	//is working day?
+	if (day > 0 && day < 6) {
+		//is trading time?
+		if ((seconds > morningBeginTime && seconds < morningEndTime) ||
+			(seconds > afternoonBeginTime && seconds < afternonnEndTime)) {
+			return true;
+		}
+		// if ((seconds > morningBeginTime && seconds < afternonnEndTime)) {
+		// 	return true;
+		// }
 	}
 	return false;
 };
@@ -62,7 +67,7 @@ var executeStrategy = function(stocks) {
 
 
 Trading.run = function(strategies, done) {
-	if(!isTradingTime()) return;
+	if (!isTradingTime()) return;
 	var symbols = _.pluck(strategies, 'symbol');
 	quote.getQuotes(symbols, function(err, stocks) {
 		if (err) return done(err);
@@ -74,7 +79,7 @@ Trading.run = function(strategies, done) {
  * @deprecated [description]
  */
 Trading.run1 = function(strategies, done) {
-	if(!isTradingTime()) return;
+	if (!isTradingTime()) return;
 
 	var symbols = _.pluck(strategies, 'symbol');
 	quote.getQuotes(symbols, function(err, stocks) {
