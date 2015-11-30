@@ -12,8 +12,8 @@ module.exports = exports = function(app, models) {
 		var user = req.body || {};
 
 		var password = user.password;
-		user.password = crypto.createHash('sha256').update(password).digest('hex');
 
+		user.password = crypto.createHash('sha256').update(password).digest('hex');
 		user.registerCode = crypto.createHash('sha256').update(user.email + "beyond" + password).digest('hex');
 
 		user.status = {
@@ -23,7 +23,12 @@ module.exports = exports = function(app, models) {
 		user.lastupdatetime = new Date();
 
 		Account.create(user, function(err, doc) {
-			if (err) return res.send(err);
+			if (err) {
+				if(err.code == 11000){
+					return res.send({code: 11000, errmsg: '该邮箱已注册'});
+				}
+				return res.send(err);
+			}
 			res.send(doc);
 
 			var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
@@ -125,12 +130,11 @@ module.exports = exports = function(app, models) {
 						errmsg: '密码不正确。'
 					});
 				console.log(email + ': login successfully.');
-				console.log(req.session);
 				req.session.loggedIn = true;
 				req.session.accountId = account._id;
 				req.session.email = account.email;
 				req.session.username = account.username;
-				req.session.avatar = account.avatar;
+				req.session.avatar = account.avatar || '';
 				res.send({
 					id: req.session.accountId,
 					email: req.session.email,
@@ -143,7 +147,7 @@ module.exports = exports = function(app, models) {
 
 	var logout = function(req, res) {
 		req.session.loggedIn = false;
-		// console.log('logout:');
+		console.log(req.session.email + ' user logout.');
 		// console.log(req.session);
 		res.sendStatus(200);
 	};
@@ -222,7 +226,6 @@ module.exports = exports = function(app, models) {
 			function(err, doc) {
 				if (err) return res.send(err);
 				res.send(doc);
-				// res.redirect('/reset_success.html');
 			}
 		);
 	};

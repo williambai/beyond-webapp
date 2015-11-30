@@ -61,14 +61,12 @@ exports = module.exports = FormView.extend({
 	submit: function() {
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		// console.log(this.model.toJSON());
-		if (this.model.hasChanged()) {
-			this.model.save(null, {
-				xhrFields: {
-					withCredentials: true
-				},
-			});
-		}
+		// console.log(this.model.attributes);
+		this.model.save(null, {
+			xhrFields: {
+				withCredentials: true
+			},
+		});
 		return false;
 	},
 

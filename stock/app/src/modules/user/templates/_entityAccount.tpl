@@ -189,17 +189,12 @@
 		</div>
 	</div>
 	<div id="editTemplate">
-		<div class="form-group">
-			<% if(/\.png$/.test(model.avatar)){ %>
-			<!-- <img src="<%= model.avatar %>" width="120px" height="160px"> -->
-			<% }else{ %>
-			<img src="" width="120px" height="160px">
-			<% } %>
-			<br>
-			<input type="file" name="avatar"/>
-		</div>
-
-		<div id="accountForm">
+		<div>
+			<div class="form-group">
+				<img src="" width="120px" height="160px"/>
+				<br>
+				<input type="file" name="avatar">
+			</div>
 			<form>
 				<div class="form-group">
 					<label for="username">姓名：</label>

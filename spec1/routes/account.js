@@ -1,18 +1,9 @@
  exports = module.exports = function(app, models) {
- 	var crypto = require('crypto');
  	var async = require('async');
  	var path = require('path');
  	var fs = require('fs');
 
-
- 	var nodemailer = require('nodemailer');
- 	var smtpTransport = require('nodemailer-smtp-transport');
- 	var config = {
- 		mail: require('../config/mail')
- 	};
-
  	var Account = models.Account;
-
 
  	var update = function(req, res) {
  		var accountId = req.params.id == 'me' ? req.session.accountId : req.params.id;
@@ -33,142 +24,52 @@
  				fs.rename(tmp_path, new_path, function(err) {
  					if (err) {
  						console.log(err);
- 						res.sendStatus(400);
- 						return;
+ 						return res.send(err);
  					}
  					Account.findByIdAndUpdate(
  						accountId, {
  							$set: {
  								avatar: avatar
  							}
+ 						}, {
+ 							'new': true,
+ 							'upsert': false,
  						},
- 						function(err) {
+ 						function(err, doc) {
  							if (err) return res.send(err);
- 							res.sendStatus(200);
+ 							res.send({
+ 								src: avatar
+ 							});
  						}
  					);
  				});
  				break;
- 			case 'contact_add':
- 				var contact = req.body;
- 				var contactId = contact.contactId;
-
- 				if (null == contactId)
- 					return res.send({
- 						code: 40000,
- 						errmsg: 'parameter lost.'
- 					});
-
+ 			default:
  				Account.findByIdAndUpdate(
  					accountId, {
- 						$push: {
- 							contacts: contact
- 						}
- 					},
- 					function(err, doc) {
- 						if (err) return res.send(err);
- 						return res.send(doc);
- 					}
- 				);
- 				break;
- 			case 'contact_remove':
- 				var contactId = req.body.contactId;
-
- 				if (null == contactId)
- 					return res.send({
- 						code: 40000,
- 						errmsg: 'parameter lost.'
- 					});
-
- 				Account.findByIdAndUpdate(
- 					accountId, {
- 						$pull: {
- 							contacts: contactId
- 						}
+ 						$set: account,
+ 					}, {
+ 						'new': true,
+ 						'upsert': false,
  					},
  					function(err, doc) {
  						if (err) return res.send(err);
  						res.send(doc);
- 					}
- 				);
- 				break;
- 			default:
- 				Account.findByIdAndUpdate(
- 					accountId,
- 					account,
- 					function(err) {
- 						if (err) return res.send(err);
- 						res.sendStatus(200);
  					});
  				break;
  		}
  	};
 
  	var getOne = function(req, res) {
- 		var type = req.query.type || '';
- 		var meId = req.session.accountId;
- 		var accountId = req.params.id == 'me' ? meId : req.params.id;
- 		switch (type) {
- 			case 'contact':
- 				Account.findById(
- 					accountId,
- 					function(err, account) {
- 						if (err) return res.send(err);
- 						if (!account || !account.contacts) return res.send({
- 							code: 40400,
- 							errmsg: 'not exist.'
- 						});
- 						res.send(account.contacts);
- 					}
- 				);
- 				break;
- 			case 'project':
- 				async.waterfall(
- 					[
- 						function(callback) {
- 							Account.findById(
- 								accountId,
- 								function(err, account) {
- 									if (err) return res.send(err);
- 									if (!account) return res.send({
- 										code: 40400,
- 										errmsg: 'account not exist.'
- 									});
- 									callback(null, account.projects);
- 								});
- 						},
- 					],
- 					function(err, result) {
- 						if (err) return res.send(err);
- 						res.send(result);
- 					}
- 				);
- 				break;
- 			default:
- 				async.waterfall(
- 					[
- 						function(callback) {
- 							Account.findById(accountId, function(err, account) {
- 								if (err) return callback(err);
- 								if (!account) return callback({
- 									code: 40400,
- 									errmsg: 'account not exsit.'
- 								});
- 								// if(accountId == meId || Account.hasContact(account,meId)){
- 								// 	account.isFriend = true;
- 								// }
- 								callback(null, account);
- 							});
- 						}
- 					],
- 					function(err, result) {
- 						if (err) return res.send(err);
- 						res.send(result);
- 					}
- 				);
- 				break;
- 		}
-
+ 		var accountId = req.params.id == 'me' ? req.session.accountId : req.params.id;
+ 		Account.findById(accountId)
+ 			.select({
+ 				password: 0
+ 			})
+ 			.exec(function(err, doc) {
+ 				if (err) return res.send(err);
+ 				res.send(doc);
+ 			});
  	};
 
  	var getMore = function(req, res) {
@@ -195,9 +96,9 @@
  					})
  					.skip(per * page)
  					.limit(per)
- 					.exec(function(err, accounts) {
+ 					.exec(function(err, docs) {
  						if (err) return res.send(err);
- 						res.send(accounts);
+ 						res.send(docs);
  					});
  				break;
  			default:
@@ -205,9 +106,9 @@
  					.find({})
  					.skip(per * page)
  					.limit(per)
- 					.exec(function(err, accounts) {
+ 					.exec(function(err, docs) {
  						if (err) return res.send(err);
- 						res.send(accounts);
+ 						res.send(docs);
  					});
  				break;
  		}
@@ -219,8 +120,6 @@
  	/**
  	 * update account
  	 * type:
- 	 *     contact_add
- 	 *     contact_remove
  	 *     avatar
  	 *     
  	 */
@@ -234,8 +133,6 @@
  	/**
  	 * get accounts
  	 * type:
- 	 *    contact
- 	 *    project
  	 *    search
  	 */
  	app.get('/accounts', app.isLogined, getMore);

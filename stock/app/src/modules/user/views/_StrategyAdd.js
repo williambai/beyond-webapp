@@ -33,15 +33,12 @@ exports = module.exports = FormView.extend({
 		}else{
 			arr.status.message = '正常交易';
 		}
-		// console.log(this.model.changed);
-
-		if (this.model.hasChanged()) {
-			this.model.save(this.changed, {
-				xhrFields: {
-					withCredentials: true
-				},
-			});
-		}
+		// console.log(this.model.attributes);
+		this.model.save(null, {
+			xhrFields: {
+				withCredentials: true
+			},
+		});
 		return false;
 	},
 
