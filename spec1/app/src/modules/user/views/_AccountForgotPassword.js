@@ -1,32 +1,36 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	FormView = require('./__FormView'),
-	ResetPassword = require('../models/ResetPassword');
+	ForgotPassword = require('../models/ForgotPassword');
+var accountTpl = require('../templates/_entityAccount.tpl');
 
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
-	el: '#resetPasswordForm',
+	el: '#forgotPasswordForm',
 
 	initialize: function(options) {
-		this.model = new ResetPassword();
-		this.model.set('token', options.token);
+		var page = $(accountTpl);
+		var forgotPasswordTemplate = $('#forgotPasswordTemplate', page).html();
+		this.template = _.template(_.unescape(forgotPasswordTemplate || ''));
+		var forgotPasswordSuccessTemplate = $('#forgotPasswordSuccessTemplate', page).html();
+		this.successTemplate = _.template(_.unescape(forgotPasswordSuccessTemplate || ''));
+		this.model = new ForgotPassword();
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
-		'submit form': 'resetPassword'
+		'submit form': 'forgotPassword'
 	},
 
-	resetPassword: function() {
+	forgotPassword: function() {
 		var that = this;
 		//clean errors
 		that.$('.form-group').removeClass('has-error');
 		that.$('.form-group span.help-block').empty();
 		//set model
-		this.model.set('password', $('input[name=password').val());
-		this.model.set('cpassword', $('input[name=cpassword').val());
+		that.model.set('email', $('input[name=email]').val());
 
 		if (that.model.isValid()) {
 			var xhr = that.model.save(null, {
@@ -53,5 +57,12 @@ exports = module.exports = FormView.extend({
 
 		}
 		return false;
+	},
+	done: function(){
+		this.$el.html(this.successTemplate());
+	},
+	render: function(){
+		this.$el.html(this.template({model: this.model.toJSON()}));
+		return this;
 	},
 });

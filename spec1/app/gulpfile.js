@@ -21,7 +21,7 @@ var config = {
 };
 var sh = require('shelljs');
 
-var browserify = require('browserify');
+var browserify = require('gulp-browserify');
 var gulp = require('gulp');
 var connect = require('gulp-connect');
 var path = require('path');
@@ -32,6 +32,7 @@ var cssmin = require('gulp-cssmin');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var streamify = require('gulp-streamify');
+var stringify = require('stringify');
 
 /*=========================================
 =            Clean dest folder            =
@@ -125,15 +126,13 @@ var source = require('vinyl-source-stream');
 var _bundleJS = function(arr,done){
 	var entry = arr.pop();
 	if(!entry) return done();
-	var b = browserify({debug: false});
-	b.add(path.join(__dirname,'src',entry));
-	// var tplTransform = require('node-underscorify').transform({
-	// 	    extensions: ['tpl'],
-	// 	});
-
-	// b.transform(tplTransform);
-	b.bundle()
-		 .pipe(source(entry))
+	gulp.src(path.join(__dirname,'src',entry), { read: false })
+		.pipe(browserify({
+			transform: stringify({
+		        extensions: ['.tpl'], minify: true
+		    }),
+			debug: false
+		}))
 		// .pipe(streamify(uglify()))
 		.pipe(gulp.dest(path.join(__dirname,config.dest,'js')));
 	_bundleJS(arr,done);

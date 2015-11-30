@@ -3,7 +3,7 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 var config = require('./conf');
 var LayoutView = require('./views/__Layout');
-var RegisterConfirmView = require('./views/RegisterConfirm');
+var RegisterConfirmView = require('./views/_AccountRegisterConfirm');
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -39,6 +39,7 @@ exports = module.exports = Backbone.Router.extend({
 	email: function(email,code){
 		this.appEvents.trigger('set:brand','账号激活');
 		var registerConfirm = new RegisterConfirmView({
+			el: '#content',
 			email: email,
 			code: code,
 		});

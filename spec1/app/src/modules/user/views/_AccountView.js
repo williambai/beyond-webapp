@@ -1,29 +1,33 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTemplate = require('../templates/loading.tpl'),
-	profileEditTemplate = require('../templates/profileEdit.tpl'),
+	FormView = require('./__FormView'),
+	accountTpl = require('../templates/_entityAccount.tpl'),
 	Account = require('../models/Account');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-exports = module.exports = Backbone.View.extend({
+exports = module.exports = FormView.extend({
 
-	el: '#content',
-
-	loaded: false,
+	el: '#accountForm',
 
 	initialize: function(options) {
+		var page = $(accountTpl);
+		var viewTemplate = $('#viewTemplate', page).html();
+		this.template = _.template(_.unescape(viewTemplate || ''));
+		this.appEvents = options.appEvents;
+		if (options.id == 'me') {
+			this.me = true;
+		} else {
+			this.me = false;
+		}
 		this.model = new Account();
-		this.model.url = '/accounts/me';
-
-		this.model.bind('change', this.render, this);
-		this.on('load', this.load, this);
+		this.model.url = this.model.url + '/' + options.id;
+		FormView.prototype.initialize.apply(this, options);
 	},
 
 	load: function() {
-		this.loaded = true;
 		this.model.fetch({
 			xhrFields: {
 				withCredentials: true
@@ -33,7 +37,7 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'change input[name=avatar]': 'uploadAvatar',
-		'submit form': 'updateProfile',
+		'click .logout': 'logout',
 	},
 
 	uploadAvatar: function(evt) {
@@ -58,32 +62,32 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
-	updateProfile: function() {
+	logout: function() {
+		this.appEvents.trigger('logout');
 		$.ajax({
-			url: config.api.host + '/accounts/me',
-			type: 'PUT',
+			url: config.api.host + '/logout',
+			type: 'GET',
 			xhrFields: {
 				withCredentials: true
 			},
-			data: {
-				username: this.$('input[name=username]').val(),
-				realname: this.$('input[name=realname]').val(),
-				biography: this.$('textarea[name=biography]').val(),
-			},
 		}).done(function() {
-			window.location.hash = 'profile/me';
-		}).fail(function failure(err) {
-			console.log(err);
+
+		}).fail(function() {
+
 		});
 		return false;
 	},
 
+	//fetch event: done
+	done: function(response) {
+		this.render();
+	},
+
 	render: function() {
-		if (!this.loaded) {
-			this.$el.html(loadingTemplate());
-		} else {
-			this.$el.html(profileEditTemplate(this.model.toJSON()));
-		}
+		this.$el.html(this.template({
+			me: this.me,
+			account: this.model.toJSON()
+		}));
 		return this;
 	}
 });

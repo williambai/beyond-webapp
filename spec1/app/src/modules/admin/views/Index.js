@@ -1,10 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
-	Backbone = require('backbone');
-
-var	loadingTemplate = require('../templates/loading.tpl'),
-	indexTemplate = require('../templates/index.tpl');
-
+	Backbone = require('backbone'),
+	loadingTemplate = _.template(require('../templates/__loading.tpl')),
+	indexTemplate = _.template(require('../templates/index.tpl'));
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -12,7 +10,6 @@ Backbone.$ = $;
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
-	loaded: false,
 
 	initialize: function(options) {
 		this.on('load', this.load, this);

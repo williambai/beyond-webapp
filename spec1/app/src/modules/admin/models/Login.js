@@ -6,10 +6,6 @@ exports = module.exports = Backbone.Model.extend({
 	
 	url: config.api.host + '/admin/login',
 
-	defaults: {
-		email: '',
-		password:'',
-	},
 	validate: function(attrs, options){
 		var errors = [];
 		if(!( /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(attrs.email))){

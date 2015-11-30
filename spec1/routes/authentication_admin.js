@@ -22,7 +22,7 @@
 		req.session.isAdmin = false;
 		// console.log('logout:');
 		// console.log(req.session);
-		res.sendStatus(200);
+		res.send({});
 	};
 
  	var authenticated = function(req,res){

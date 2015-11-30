@@ -7,23 +7,5 @@
   "scripts": {
     "dev": "gulp development",
     "test": "node test"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "node-underscorify",
-        {
-          "extensions": [
-            "tpl"
-          ],
-          "requires": [
-            {
-              "variable": "_",
-              "module": "underscore"
-            }
-          ]
-        }
-      ]
-    ]
   }
 }

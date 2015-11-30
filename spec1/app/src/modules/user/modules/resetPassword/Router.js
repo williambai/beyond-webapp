@@ -3,15 +3,14 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 var config = require('./conf');
 var LayoutView = require('./views/__Layout');
-var ResetPassword = require('./models/ResetPassword');
-var ResetPasswordView = require('./views/ResetPassword');
+var ResetPasswordView = require('./views/_AccountResetPass');
 
 exports = module.exports = Backbone.Router.extend({
 
-	currentView : null,
-	appEvents: _.extend({},Backbone.Events),//app events
+	currentView: null,
+	appEvents: _.extend({}, Backbone.Events), //app events
 
-	initialize: function(){
+	initialize: function() {
 		var layoutView = new LayoutView({
 			appEvents: this.appEvents,
 		});
@@ -23,8 +22,8 @@ exports = module.exports = Backbone.Router.extend({
 		'*path': 'index',
 	},
 
-	changeView: function(view){
-		if(null != this.currentView){
+	changeView: function(view) {
+		if (null != this.currentView) {
 			this.currentView.undelegateEvents();
 		}
 		this.currentView = view;
@@ -33,13 +32,16 @@ exports = module.exports = Backbone.Router.extend({
 		this.currentView.render();
 	},
 
-	index: function(){
+	index: function() {
 		window.location.href = '/';
 	},
 
-	resetPassword: function(token){
-		this.appEvents.trigger('set:brand','密码重置');
-		var resetPassword = new ResetPasswordView({token:token});
+	resetPassword: function(token) {
+		this.appEvents.trigger('set:brand', '密码重置');
+		var resetPassword = new ResetPasswordView({
+			el: '#content',
+			token: token
+		});
 		this.changeView(resetPassword);
 		resetPassword.trigger('load');
 	},

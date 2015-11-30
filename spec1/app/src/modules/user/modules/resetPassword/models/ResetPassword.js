@@ -6,10 +6,6 @@ exports = module.exports = Backbone.Model.extend({
 	
 	url: config.api.host + '/resetPassword',
 
-	defaults: {
-		email: '',
-	},
-
 	validate: function(attrs, options){
 		var errors = [];
 

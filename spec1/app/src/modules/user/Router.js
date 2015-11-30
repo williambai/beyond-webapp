@@ -2,13 +2,14 @@ var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
 
+
 var LayoutView = require('./views/__Layout');
-var RegisterView = require('./views/Register');
-var ForgotPasswordView = require('./views/ForgotPassword');
-var LoginView = require('./views/Login');
+var RegisterView = require('./views/_AccountRegister');
+var ForgotPasswordView = require('./views/_AccountForgotPassword');
+var LoginView = require('./views/_AccountLogin');
+var ProfileViewView = require('./views/_AccountView');
+var ProfileEditView = require('./views/_AccountEdit');
 var IndexView = require('./views/Index');
-var ProfileView = require('./views/Profile');
-var ProfileEditView = require('./views/ProfileEdit');
 
 var config = require('./conf');
 
@@ -25,7 +26,7 @@ exports = module.exports = Backbone.Router.extend({
 		'logout': 'logout',
 		'register': 'register',
 		'forgotpassword': 'forgotPassword',
-		'profile/:id': 'profile',
+		'profile/:id': 'profileView',
 		'profile/me/edit': 'profileEdit',
 		'*path': 'index',
 	},
@@ -78,7 +79,9 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','注册');
-		var registerView = new RegisterView();
+		var registerView = new RegisterView({
+			el: '#content'
+		});
 		this.changeView(registerView);
 		registerView.trigger('load');
 	},
@@ -89,7 +92,9 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','找回密码');
-		var forgotPassword = new ForgotPasswordView();
+		var forgotPassword = new ForgotPasswordView({
+			el: '#content'
+		});
 		this.changeView(forgotPassword);
 		forgotPassword.trigger('load');
 	},
@@ -101,6 +106,7 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand', '登录');
 		var loginView = new LoginView({
+			el: '#content',
 			appEvents: this.appEvents,
 		});
 		this.changeView(loginView);
@@ -120,7 +126,7 @@ exports = module.exports = Backbone.Router.extend({
 		});
 	},
 
-	profile: function(id) {
+	profileView: function(id) {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
@@ -129,13 +135,14 @@ exports = module.exports = Backbone.Router.extend({
 		if (id == this.account.id) {
 			id = 'me';
 		}
-		var profileView = new ProfileView({
+		var profileViewView = new ProfileViewView({
+			el: '#content',
 			id: id,
 			appEvents: this.appEvents,
 			socketEvents: this.socketEvents
 		});
-		this.changeView(profileView);
-		profileView.trigger('load');
+		this.changeView(profileViewView);
+		profileViewView.trigger('load');
 	},
 
 	profileEdit: function() {
@@ -144,7 +151,9 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand', '编辑个人资料');
-		var profileEditView = new ProfileEditView();
+		var profileEditView = new ProfileEditView({
+			el: '#content'
+		});
 		this.changeView(profileEditView);
 		profileEditView.trigger('load');
 	},

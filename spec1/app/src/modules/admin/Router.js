@@ -1,12 +1,11 @@
 var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
+var config = require('./conf');
 
 var LayoutView = require('./views/__Layout');
-var LoginView = require('./views/Login');
+var LoginView = require('./views/_AccountLogin');
 var IndexView = require('./views/Index');
-
-var config = require('./conf');
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -71,6 +70,7 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand','登录');
 		var loginView = new LoginView({
+			el: '#content',
 			appEvents: this.appEvents,
 		});
 		this.changeView(loginView);
@@ -87,5 +87,5 @@ exports = module.exports = Backbone.Router.extend({
 			},
 			crossDomain: true,
 		});
-	}
+	},
 });
