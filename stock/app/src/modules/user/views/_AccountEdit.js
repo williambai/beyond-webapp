@@ -10,7 +10,7 @@ Backbone.$ = $;
 
 exports = module.exports = FormView.extend({
 
-	// el: '#accountForm',
+	el: '#accountForm',
 
 	modelFilled: false,
 
@@ -83,11 +83,8 @@ exports = module.exports = FormView.extend({
 	},
 
 	render: function() {
-		if(this.model.get('_id')){
-			console.log('++++')
-			console.log(this.model.toJSON())
-			this.$el.html(this.template({model:this.model.toJSON()}));
-		}
+		this.$el.html(this.template({model:this.model.toJSON()}));
+		this.$('img').attr('src', this.model.get('avatar'));
 		return this;
 	}
 });

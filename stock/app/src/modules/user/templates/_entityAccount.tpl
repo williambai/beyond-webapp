@@ -189,7 +189,7 @@
 		</div>
 	</div>
 	<div id="editTemplate">
-		<div>
+		<div id="accountForm">
 			<div class="form-group">
 				<img src="" width="120px" height="160px"/>
 				<br>

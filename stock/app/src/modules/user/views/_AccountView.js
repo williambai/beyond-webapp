@@ -88,6 +88,7 @@ exports = module.exports = FormView.extend({
 			me: this.me,
 			account: this.model.toJSON()
 		}));
+		this.$('img').attr('src', this.model.get('avatar'));
 		return this;
 	}
 });
