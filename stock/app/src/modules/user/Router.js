@@ -3,12 +3,12 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 
 var LayoutView = require('./views/__Layout');
-var RegisterView = require('./views/_CommonRegister');
-var ForgotPasswordView = require('./views/_CommonForgotPassword');
-var LoginView = require('./views/_CommonLogin');
-var IndexView = require('./views/Index');
-var ProfileView = require('./views/Profile');
+var RegisterView = require('./views/_AccountRegister');
+var ForgotPasswordView = require('./views/_AccountForgotPassword');
+var LoginView = require('./views/_AccountLogin');
+var ProfileViewView = require('./views/_AccountView');
 var ProfileEditView = require('./views/_AccountEdit');
+var IndexView = require('./views/Index');
 
 var TradingIndexView = require('./views/TradingIndex');
 var TradingGraphView = require('./views/TradingGraph');
@@ -35,7 +35,7 @@ exports = module.exports = Backbone.Router.extend({
 		'logout': 'logout',
 		'register': 'register',
 		'forgotpassword': 'forgotPassword',
-		'profile/:id': 'profile',
+		'profile/:id': 'profileView',
 		'profile/me/edit': 'profileEdit',
 		'strategy': 'strategyIndex',
 		'strategy/new': 'strategyAdd',
@@ -143,7 +143,7 @@ exports = module.exports = Backbone.Router.extend({
 		});
 	},
 
-	profile: function(id) {
+	profileView: function(id) {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
@@ -152,13 +152,13 @@ exports = module.exports = Backbone.Router.extend({
 		if (id == this.account.id) {
 			id = 'me';
 		}
-		var profileView = new ProfileView({
+		var profileViewView = new ProfileViewView({
+			el: '#content',
 			id: id,
 			appEvents: this.appEvents,
-			socketEvents: this.socketEvents
 		});
-		this.changeView(profileView);
-		profileView.trigger('load');
+		this.changeView(profileViewView);
+		profileViewView.trigger('load');
 	},
 
 	profileEdit: function() {

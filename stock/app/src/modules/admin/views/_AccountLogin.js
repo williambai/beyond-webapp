@@ -1,20 +1,19 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-	Register = require('../models/Register');
-var commonTpl = require('../templates/_common.tpl');
+	Login = require('../models/Login');
+var accountTpl = require('../templates/_entityAccount.tpl');
 
 exports = module.exports = FormView.extend({
 
-	el: '#registerForm',
+	el: '#loginForm',
 
 	initialize: function(options) {
-		var page = $(commonTpl);
-		var registerTemplate = $('#registerTemplate', page).html();
-		this.template = _.template(_.unescape(registerTemplate || ''));
-		var registerSuccessTemplate = $('#registerSuccessTemplate', page).html();
-		this.successTemplate = _.template(_.unescape(registerSuccessTemplate || ''));
-		this.model = new Register();
+		var page = $(accountTpl);
+		var loginTemplate = $('#loginTemplate', page).html();
+		this.template = _.template(_.unescape(loginTemplate || ''));
+		this.appEvents = options.appEvents;
+		this.model = new Login();
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -22,15 +21,15 @@ exports = module.exports = FormView.extend({
 		'keyup input[type=text]': 'renderInputInvalid',
 		'blur input[type=text]': 'renderInputInvalid',
 		'keyup input[type=password]': 'renderInputInvalid',
-		'submit form': 'register',
-		'swipeleft': 'swipeToLoginForm',
+		'submit form': 'login',
+		'swiperight': 'toRegisterForm',
 	},
 
-	register: function() {
+	login: function() {
 		var that = this;
 		var arr = this.$('form').serializeArray();
-		arr.forEach(function(item) {
-			that.model.set(item.name, item.value);
+		arr.forEach(function(item){
+			that.model.set(item.name,item.value);
 		});
 		// console.log(this.model.changed);
 		if (this.model.hasChanged()) {
@@ -43,22 +42,14 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	swipeToLoginForm: function() {
-		window.location.hash = 'login';
+	toRegisterForm: function() {
+		window.location.hash = 'register';
 		return false;
 	},
 
 	validate: function(name, val) {
 		var error;
 		switch (name) {
-			case 'username':
-				if (!/^([a-zA-Z0-9_-])+$/.test(val)) {
-					error = {
-						name: 'username',
-						message: '用户名不合法'
-					};
-				}
-				break;
 			case 'email':
 				if (!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(val))) {
 					error = {
@@ -75,25 +66,15 @@ exports = module.exports = FormView.extend({
 					};
 				}
 				break;
-			case 'cpassword':
-				var password = this.$('input[name=password]').val();
-				console.log(password)
-				console.log(val)
-				if (val != password) {
-					error = {
-						name: 'cpassword',
-						message: '两次输入不一致',
-					};
-				}
-				break;
 			default:
 				break;
 		}
-		if (!_.isEmpty(error)) return error;
+		if(!_.isEmpty(error))return error;
 	},
 
-	done: function() {
-		this.$el.html(this.successTemplate());
+	done: function(data) {
+		this.appEvents.trigger('logined',data);
+		window.location.hash = 'index';
 	},
 
 	render: function() {

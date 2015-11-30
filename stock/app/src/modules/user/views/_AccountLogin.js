@@ -2,14 +2,14 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Login = require('../models/Login');
-var commonTpl = require('../templates/_common.tpl');
+var accountTpl = require('../templates/_entityAccount.tpl');
 
 exports = module.exports = FormView.extend({
 
 	el: '#loginForm',
 
 	initialize: function(options) {
-		var page = $(commonTpl);
+		var page = $(accountTpl);
 		var loginTemplate = $('#loginTemplate', page).html();
 		this.template = _.template(_.unescape(loginTemplate || ''));
 		this.appEvents = options.appEvents;

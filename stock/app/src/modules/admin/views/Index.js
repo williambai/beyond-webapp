@@ -2,8 +2,8 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone');
 
-var	loadingTemplate = require('../templates/loading.tpl'),
-	indexTemplate = require('../templates/index.tpl');
+var	loadingTpl= require('../templates/__loading.tpl'),
+	templateTpl = require('../templates/index.tpl');
 
 var config = require('../conf');
 
@@ -13,6 +13,9 @@ exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
 	loaded: false,
+
+	template: _.template(templateTpl),
+	loadingTemplate: _.template(loadingTpl),
 
 	initialize: function(options) {
 		this.on('load', this.load, this);
@@ -26,9 +29,9 @@ exports = module.exports = Backbone.View.extend({
 
 	render: function() {
 		if (!this.loaded) {
-			this.$el.html(loadingTemplate());
+			this.$el.html(this.loadingTemplate());
 		} else {
-			this.$el.html(indexTemplate());
+			this.$el.html(this.template());
 		}
 		return this;
 	},

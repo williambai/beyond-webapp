@@ -2,8 +2,8 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone');
 
-var loadingTemplate = require('../templates/loading.tpl'),
-	template = require('../templates/platform.tpl');
+var loadingTpl = require('../templates/__loading.tpl'),
+	templateTpl = require('../templates/platform.tpl');
 
 var Platform = require('../models/Platform');
 var config = require('../conf');
@@ -14,6 +14,9 @@ exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
 	loaded: false,
+
+	template: _.template(templateTpl),
+	loadingTemplate: _.template(loadingTpl),
 
 	initialize: function(options) {
 		this.model = new Platform();
@@ -101,9 +104,9 @@ exports = module.exports = Backbone.View.extend({
 
 	render: function() {
 		if (!this.loaded) {
-			this.$el.html(loadingTemplate());
+			this.$el.html(this.loadingTemplate());
 		} else {
-			this.$el.html(template({model: this.model.toJSON()}));
+			this.$el.html(this.template({model: this.model.toJSON()}));
 		}
 		return this;
 	},

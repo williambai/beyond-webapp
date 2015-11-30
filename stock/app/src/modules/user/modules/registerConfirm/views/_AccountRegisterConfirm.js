@@ -1,18 +1,23 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	registerConfirmResultTemplate = require('../templates/registerConfirmResult.tpl');
-var loadingTemplate = require('../templates/__loading.tpl');
+	accountTpl = require('../templates/_entityAccount.tpl');
+var loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
 exports = module.exports = Backbone.View.extend({
 
-	el: '#content',
-	loaded: false,
+	el: '#registerConfirm',
+
+	loadingTemplate: _.template(loadingTpl),
 
 	initialize: function(options) {
+		var page = $(accountTpl);
+		var confirmTemplate = $('#registerConfirmTemplate', page).html();
+		this.template = _.template(_.unescape(confirmTemplate || ''));
+
 		this.email = options.email;
 		this.code = options.code;
 		this.on('load', this.load, this);
@@ -34,17 +39,17 @@ exports = module.exports = Backbone.View.extend({
 			crossDomain: true,
 		}).done(function(data) {
 			if (!!data.code) {
-				that.$el.html(registerConfirmResultTemplate({success:false, message: data}));
+				that.$el.html(that.template({success:false, message: data}));
 				return;
 			}
-			that.$el.html(registerConfirmResultTemplate({success: true, message: data}));
+			that.$el.html(that.template({success: true, message: data}));
 		}).error(function(xhr) {
-			that.$el.html(registerConfirmResultTemplate({success: false, message: data}));
+			that.$el.html(that.template({success: false, message: data}));
 		});
 	},
 
 	render: function() {
-		this.$el.html(loadingTemplate());
+		this.$el.html(this.loadingTemplate());
 		return this;
 	},
 

@@ -1,15 +1,14 @@
 var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
-
-var LayoutView = require('./views/__Layout');
-var LoginView = require('./views/Login');
-var IndexView = require('./views/Index');
-
 var config = require('./conf');
 
-var PlatformView = require('./views/Platform');
-var CaptchaView = require('./views/Captcha');
+var LayoutView = require('./views/__Layout');
+var LoginView = require('./views/_AccountLogin');
+var IndexView = require('./views/Index');
+
+var PlatformView = require('./views/_PlatformControl');
+var CaptchaView = require('./views/_PlatformCaptcha');
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -76,6 +75,7 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand','登录');
 		var loginView = new LoginView({
+			el: '#content',
 			appEvents: this.appEvents,
 		});
 		this.changeView(loginView);
