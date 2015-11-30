@@ -1,9 +1,10 @@
 var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
+var config = require('./conf');
 
 var LayoutView = require('./views/__Layout');
-var LoginView = require('./views/Login');
+var LoginView = require('./views/_AccountLogin');
 var IndexView = require('./views/Index');
 
 exports = module.exports = Backbone.Router.extend({
@@ -16,6 +17,7 @@ exports = module.exports = Backbone.Router.extend({
 	routes: {
 		'index': 'index',
 		'login': 'login',
+		'logout': 'logout',
 		'*path': 'index',
 	},
 
@@ -24,7 +26,6 @@ exports = module.exports = Backbone.Router.extend({
 		this.appEvents.on('logout', this.onLogout,this);
 		var layoutView = new LayoutView({
 			appEvents: this.appEvents,
-			socketEvents: this.socketEvents,
 		});
 		layoutView.trigger('load');
 	},
@@ -58,7 +59,6 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand','首页');
 		var indexView = new IndexView({
-			socketEvents: this.socketEvents
 		});
 		this.changeView(indexView);
 		indexView.trigger('load');
@@ -70,10 +70,22 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand','登录');
 		var loginView = new LoginView({
+			el: '#content',
 			appEvents: this.appEvents,
-			socketEvents: this.socketEvents,
 		});
 		this.changeView(loginView);
 		loginView.trigger('load');
+	},
+	logout: function(){
+		this.logined = false;
+		window.location.hash = 'login';
+		$.ajax({
+			url: config.api.host + '/admin/logout',
+			type: 'GET',
+			xhrFields: {
+				withCredentials: true
+			},
+			crossDomain: true,
+		});
 	},
 });

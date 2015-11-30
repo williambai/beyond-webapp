@@ -11,18 +11,15 @@ exports = module.exports = function() {
 
 	var checkLogin = function(callback) {
 		$.ajax({
-			url: config.api.host + '/authenticated',
-			type: 'GET',
+			url: config.api.host + '/admin/authenticated',
+			type: 'POST',
 			xhrFields: {
 				withCredentials: true
 			},
 			crossDomain: true,
 		}).done(function(data) {
-			if (!!data.code) return callback(false);
+			if (data && data.code) return callback(false);
 			router.appEvents.trigger('logined', data);
-			router.socketEvents.trigger('app:logined', {
-				accountId: data.id
-			});
 			return callback(true);
 		}).fail(function() {
 			return callback(false);
@@ -39,9 +36,6 @@ exports = module.exports = function() {
 		// 	success: function(data) {
 		// 		if (!!data.code) return callback(false);
 		// 		router.appEvents.trigger('logined', data);
-		// 		router.socketEvents.trigger('app:logined', {
-		// 			accountId: data.id
-		// 		});
 		// 		return callback(true);
 		// 	},
 		// 	error: function() {

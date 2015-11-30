@@ -9,11 +9,11 @@ Backbone.$ = $;
 exports = module.exports = Backbone.View.extend({
 
 	el: 'body',
-	layoutTemplate: layoutTemplate,
-
-	loadingTemplate: loadingTemplate,
 	loaded: false,
-	
+
+	layoutTemplate: _.template(layoutTemplate),
+	loadingTemplate: _.template(loadingTemplate),
+
 	initialize: function(options){
 		this.appEvents = options.appEvents;
 
