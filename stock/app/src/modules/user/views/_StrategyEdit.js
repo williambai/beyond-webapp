@@ -8,6 +8,8 @@ exports = module.exports = FormView.extend({
 
 	el: '#strategyForm',
 
+	modelFilled: false,
+
 	initialize: function(options) {
 		var page = $(strategyTpl);
 		var editTemplate = $('#editTemplate', page).html();
@@ -15,7 +17,6 @@ exports = module.exports = FormView.extend({
 		this.model = new TradingStrategy();
 		this.model._id = options.id;
 		FormView.prototype.initialize.apply(this, options);
-		this.model.on('sync', this.render, this);
 	},
 
 	events: {
@@ -23,38 +24,46 @@ exports = module.exports = FormView.extend({
 	},
 
 	load: function(){
-		if(this.model._id){
-			this.model.url = this.model.url + '/' + this.model._id;
-			this.model.fetch({
-				xhrFields: {
-					withCredentials: true
-				},
-			});
-		}else{
-			this.render();
-		}
+		this.model.url = this.model.url + '/' + this.model._id;
+		this.model.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
+		});
 	},
 
 	submit: function() {
 		var that = this;
-		var arr = this.$('form').serializeJSON();
-		this.model.set(arr);
-		if(arr.status.code == 0){
-			arr.status.message = '停止交易';
+		var object = this.$('form').serializeJSON();
+		this.model.set(object);
+		if(object.status.code == 0){
+			object.status.message = '停止交易';
 		}else{
-			arr.status.message = '正常交易';
+			object.status.message = '正常交易';
 		}
-		console.log(this.model.toJSON());
-
-		// if (this.model.isValid()) {
-		// 	this.model.save(null, {
-		// 		xhrFields: {
-		// 			withCredentials: true
-		// 		},
-		// 	});
-		// }
+		// console.log(this.model.changed);
+		if (this.model.hasChanged()) {
+			this.model.save(null, {
+				xhrFields: {
+					withCredentials: true
+				},
+			});
+		}
 		return false;
 	},
+	
+	//fetch event: done
+	done: function(response){
+		if(!this.modelFilled){
+			//first fetch: get model
+			this.modelFilled = true;
+			this.render();
+		}else{
+			//second fetch: submit
+			window.location.hash = 'strategy';
+		}
+	},
+
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
 		return this;

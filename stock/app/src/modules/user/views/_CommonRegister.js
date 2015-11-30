@@ -32,9 +32,9 @@ exports = module.exports = FormView.extend({
 		arr.forEach(function(item) {
 			that.model.set(item.name, item.value);
 		});
-		// console.log(this.model.toJSON());
-		if (this.model.isValid()) {
-			this.model.save(null, {
+		// console.log(this.model.changed);
+		if (this.model.hasChanged()) {
+			this.model.save(this.model.changed, {
 				xhrFields: {
 					withCredentials: true
 				},

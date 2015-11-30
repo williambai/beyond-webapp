@@ -39,10 +39,6 @@ exports = module.exports = Backbone.View.extend({
 			//clean error
 			parent.removeClass('has-error');
 			$(parent).find('span.help-block').empty();
-			// var attr = {};
-			// attr[item.name] = item.value;
-			// that.model.set(attr);
-			// console.log(that.model.toJSON())
 		});
 	},
 
@@ -53,24 +49,29 @@ exports = module.exports = Backbone.View.extend({
 		that.$('.form-group span.help-block').empty();
 		//set errors
 		_.each(errors,function(error){
-			that.$('#' + error.name).addClass('has-error');
-			that.$('#' + error.name +' span.help-block').text(error.message);
+			var parent = that.$('input[name="' + error.name + '"]').parent('.form-group');
+			parent.addClass('has-error');
+			$(parent).find('span.help-block').text(error.message);
 		});
 		return false;
 	},
 
 	renderServerInvalid: function(model,response,options){
+		//clean error
+		this.$('.error').empty();
 		//no invalid, trigger 'done'
 		if(!response.code) return this.trigger('done',response);
-		//has invalid,show it
-		this.$('#error').html('<div class="alert alert-danger">' + response.errmsg + '</div>');
-		this.$('#error').slideDown();
+		//has invalid,set error
+		this.$('form').prepend('<div class="error"><div class="alert alert-danger">' + response.errmsg + '</div></div>');
+		this.$('.error').slideDown();
 	},
 
 	renderServerError: function(model,response,options){
-		this.$('#error').html('<div class="alert alert-danger">' + response.status + ': ' + response.responseText + '</div>');
-		this.$('#error').slideDown();
-
+		//clean error
+		this.$('.error').empty();
+		//set error
+		this.$('form').prepend('<div class="error"><div class="alert alert-danger">' + response.status + ': ' + response.responseText + '</div></div>');
+		this.$('.error').slideDown();
 	},
 
 	/**

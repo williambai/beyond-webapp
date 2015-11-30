@@ -5,9 +5,9 @@ var config = require('../conf');
 exports = module.exports = Backbone.Model.extend({
 	url: config.api.host + '/forgotPassword',
 
-	validate: function(attrs, options) {
+	validate: function(model, options) {
 		var errors = [];
-		if (!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(attrs.email))) {
+		if (!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(model.email))) {
 			errors.push({
 				name: 'email',
 				message: '不是有效的电子邮件',

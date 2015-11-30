@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTemplate = _.template(require('../templates/__loading.tpl')),
-	profileEditTemplate = _.template(require('../templates/profileEdit.tpl')),
+	loadingTpl = require('../templates/__loading.tpl'),
+	contentTpl = require('../templates/profileEdit.tpl'),
 	Account = require('../models/Account');
 var config = require('../conf');
 
@@ -13,6 +13,8 @@ exports = module.exports = Backbone.View.extend({
 	el: '#content',
 
 	loaded: false,
+	loadingTemplate: _.template(loadingTpl),
+	template: _.template(contentTpl),
 
 	initialize: function(options) {
 		this.model = new Account();
@@ -80,9 +82,9 @@ exports = module.exports = Backbone.View.extend({
 
 	render: function() {
 		if (!this.loaded) {
-			this.$el.html(loadingTemplate());
+			this.$el.html(this.loadingTemplate());
 		} else {
-			this.$el.html(profileEditTemplate(this.model.toJSON()));
+			this.$el.html(this.template(this.model.toJSON()));
 		}
 		return this;
 	}

@@ -15,7 +15,6 @@ exports = module.exports = FormView.extend({
 		this.model = new TradingStrategy();
 		this.model._id = options.id;
 		FormView.prototype.initialize.apply(this, options);
-		this.model.on('sync', this.render, this);
 	},
 
 	events: {
@@ -28,6 +27,10 @@ exports = module.exports = FormView.extend({
 				withCredentials: true
 			},
 		});
+	},
+
+	done: function(response){
+		this.render();
 	},
 
 	render: function(){

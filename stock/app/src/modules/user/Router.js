@@ -8,7 +8,7 @@ var ForgotPasswordView = require('./views/_CommonForgotPassword');
 var LoginView = require('./views/_CommonLogin');
 var IndexView = require('./views/Index');
 var ProfileView = require('./views/Profile');
-var ProfileEditView = require('./views/ProfileEdit');
+var ProfileEditView = require('./views/_AccountEdit');
 
 var TradingIndexView = require('./views/TradingIndex');
 var TradingGraphView = require('./views/TradingGraph');
@@ -167,7 +167,9 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand', '编辑个人资料');
-		var profileEditView = new ProfileEditView();
+		var profileEditView = new ProfileEditView({
+			el: '#content'
+		});
 		this.changeView(profileEditView);
 		profileEditView.trigger('load');
 	},

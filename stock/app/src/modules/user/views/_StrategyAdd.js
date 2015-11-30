@@ -33,16 +33,20 @@ exports = module.exports = FormView.extend({
 		}else{
 			arr.status.message = '正常交易';
 		}
-		console.log(this.model.toJSON());
+		// console.log(this.model.changed);
 
-		// if (this.model.isValid()) {
-		// 	this.model.save(null, {
-		// 		xhrFields: {
-		// 			withCredentials: true
-		// 		},
-		// 	});
-		// }
+		if (this.model.hasChanged()) {
+			this.model.save(this.changed, {
+				xhrFields: {
+					withCredentials: true
+				},
+			});
+		}
 		return false;
+	},
+
+	done: function(response){
+		window.location.hash = 'strategy';
 	},
 
 	render: function(){

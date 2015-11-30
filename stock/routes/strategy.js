@@ -1,8 +1,8 @@
 exports = module.exports = function(app, models) {
 
 	var add = function(req, res) {
-		var strategy = req.body;
 		console.log(req.body)
+		var strategy = req.body;
 		strategy.params = strategy.params || {};
 		strategy.params.name = 'T0';
 		strategy.params.description = 'T0 交易';
@@ -16,6 +16,7 @@ exports = module.exports = function(app, models) {
 	};
 
 	var update = function(req, res) {
+		console.log(req.body)
 		var id = req.params.id;
 		var set = req.body;
 		set.transactions = [];
@@ -131,7 +132,7 @@ exports = module.exports = function(app, models) {
 	/**
 	 * put one
 	 */
-	app.put('/strategy/:id', add);
+	app.put('/strategy/:id', update);
 	/**
 	 * get one
 	 * 

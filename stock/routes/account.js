@@ -98,7 +98,7 @@
  					account,
  					function(err) {
  						if (err) return res.send(err);
- 						res.sendStatus(200);
+ 						res.send({});
  					});
  				break;
  		}
@@ -148,7 +148,9 @@
  				async.waterfall(
  					[
  						function(callback) {
- 							Account.findById(accountId, function(err, account) {
+ 							Account.findById(accountId)
+ 								.select({password: 0})
+ 								.exec(function(err, account) {
  								if (err) return callback(err);
  								if (!account) return callback({
  									code: 40400,
