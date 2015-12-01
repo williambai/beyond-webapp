@@ -4,65 +4,49 @@
 			<div id="search">
 			</div>
 			<hr/>
-			<div class="panel panel-default">
-				<div class="pull-left">
-					<button class="btn btn-danger">编辑</button>
-				</div>
-				<div class="pull-right">
-					<a href="#strategy/import" class="btn btn-info">导入</a>
-					<a href="#strategy/export" class="btn btn-info">导出</a>
-					<a href="#strategy/new" class="btn btn-info">新增</a>
-				</div>
-				<div class="panel-heading">
-					<h3 class="panel-title text-center">&nbsp;</h3>
-				</div>
-				<div class="panel-body">
-					<div id="list"></div>
+			<div id="panel">
+				<div class="panel panel-default">
+					<div class="pull-left">
+						<button class="btn btn-danger">编辑</button>
+					</div>
+					<div class="pull-right">
+						<a href="#strategy/import" class="btn btn-info">导入</a>
+						<a href="#strategy/export" class="btn btn-info">导出</a>
+						<a href="#strategy/new" class="btn btn-info">新增</a>
+					</div>
+					<div class="panel-heading">
+						<h3 class="panel-title text-center">&nbsp;</h3>
+					</div>
+					<div class="panel-body">
+						<div id="list"></div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div id="searchTemplate">
-		<form class="form-inline">
-			<div class="form-group">
-				<label>从：</label>
-				<div class="input-group">
-					<input type="date" name="from" class="form-control" placeholder="" />
+		<div class="">
+			<form class="form-inline">
+				<div class="form-group">
+					<label>从：</label>
+					<input type="date" name="from" class="form-control" placeholder="">
 				</div>
-			</div>
-			<div class="form-group">
-				<label>到：</label>
-				<div class="input-group">
-					<input type="date" name="to" class="form-control" placeholder="" />
+				<div class="form-group">
+					<label>&nbsp;&nbsp;到：</label>
+					<input type="date" name="to" class="form-control" placeholder="">
 				</div>
-			</div>
-			<div class="form-group">
-				<label></label>
-				<div class="input-group">
-					<input type="text" name="searchStr" class="form-control" placeholder="股票代码" />
+				<div class="form-group">
+					<label>&nbsp;&nbsp;</label>
+					<input type="text" name="searchStr" class="form-control" placeholder="股票代码">
 				</div>
-			</div>
-			<input type="submit" value="过滤" class="btn btn-primary"/>
-		</form>
-	</div>
-	<div id="listTemplate">
-		<div class="panel panel-default">
-			<div class="pull-left">
-				<a href="#strategy/import" class="btn btn-info">导入</a>
-				<a href="#strategy/export" class="btn btn-info">导出</a>
-				<a href="#strategy/new" class="btn btn-info">新增</a>
-			</div>
-			<div class="pull-right">
-				<a href="#strategy/new" class="btn btn-info">新增</a>
-			</div>
-			<div class="panel-heading">
-				<h3 class="panel-title text-center">&nbsp;</h3>
-			</div>
-			<div class="panel-body">
-				<div id="list">
+				<div class="form-group">
+					<label>&nbsp;&nbsp;</label>
+					<input type="submit" value="过滤" class="btn btn-primary">
 				</div>
-			</div>
+			</form>
 		</div>
+	</div>
+	<div id="panelTemplate">
 	</div>
 	<div id="itemTemplate">
 		<div class="pull-right">
@@ -433,44 +417,46 @@
 			<button onclick="window.history.back();return false;" class="btn btn-primary" id="back">返回</button>
 		</div>
 		<hr/>
-		<form class="form-inline">
-			<div class="form-group">
-				<label>从：</label>
-				<div class="input-group">
-					<input type="date" name="from" class="form-control" placeholder="" />
-				</div>
+		<div class="panel panel-default" id="exportForm">
+			<div class="panel-heading">
+				<h3 class="panel-title text-center">导出</h3>
 			</div>
-			<div class="form-group">
-				<label>到：</label>
-				<div class="input-group">
-					<input type="date" name="to" class="form-control" placeholder="" />
-				</div>
+			<div class="panel-body">
+				<form>
+					<div class="form-group">
+						<label>起始日期：</label>
+						<input type="date" name="from" class="form-control" placeholder="">
+					</div>
+					<div class="form-group">
+						<label>截止日期：</label>
+						<input type="date" name="to" class="form-control" placeholder="">
+					</div>
+					<div class="form-group">
+						<label>过滤关键字：</label>
+						<input type="text" name="searchStr" class="form-control" placeholder="股票代码" />
+					</div>
+				</form>
+				<input type="submit" value="导出" class="btn btn-block btn-primary"/>
 			</div>
-			<div class="form-group">
-				<label></label>
-				<div class="input-group">
-					<input type="text" name="searchStr" class="form-control" placeholder="股票代码" />
-				</div>
-			</div>
-			<!-- <a href="/export/strategy" class="btn btn-primary">导出</a> -->
-			<input type="submit" value="导出" class="btn btn-primary"/>
-		</form>
+		</div>
 	</div>
 	<div id="importTemplate">
 		<div>
 			<button onclick="window.history.back();return false;" class="btn btn-primary" id="back">返回</button>
 		</div>
 		<hr/>
-		<form class="form-inline">
+		<p>请点击<i class="fa fa-plus-circle"></i>选择要上传的文件，点击已上传的文件，可以取消上传。</p>
+		<form>
 			<div class="form-group">
-				<label>从：</label>
-				<div class="input-group">
-					<input type="file" name="file" class="form-control" placeholder="" />
-				</div>
+				<span class="attachments"></span>
+				<span>
+					<button class="btn btn-promary send-file"> <i class="fa fa-5x fa-plus-circle"></i>
+					</button>
+				</span>
 			</div>
-			<input type="submit" value="导入" class="btn btn-primary"/>
+			<input type="submit" value="导入" class="btn btn-block btn-primary"/>
 		</form>
-
+		<input class="hidden" type="file" name="file"/>
 	</div>
 	<div id="listTradingTemplate">
 	</div>

@@ -2,48 +2,60 @@
 	<div id="indexTemplate">
 		<div id="search"></div>
 		<hr>
-		<div id="list"></div>
+		<div id="panel">
+			<div class="panel panel-default">
+				<div class="pull-right">
+					<a href="#trading/export" class="btn btn-info">导出</a>
+				</div>
+				<div class="panel-heading">
+					<h3 class="panel-title text-center">&nbsp;</h3>
+				</div>
+				<div class="panel-body">
+					<div id="list"></div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div id="searchTemplate">
-		<form class="form-inline">
-			<div class="form-group">
-				<label>从：</label>
-				<div class="input-group">
-					<input type="date" name="from" class="form-control" placeholder="" />
+		<div class="">
+			<form class="form-inline">
+				<div class="form-group">
+					<label>从：</label>
+					<input type="date" name="from" class="form-control" placeholder="">
 				</div>
-			</div>
-			<div class="form-group">
-				<label>到：</label>
-				<div class="input-group">
-					<input type="date" name="to" class="form-control" placeholder="" />
+				<div class="form-group">
+					<label>&nbsp;&nbsp;到：</label>
+					<input type="date" name="to" class="form-control" placeholder="">
 				</div>
-			</div>
-			<div class="form-group">
-				<label></label>
-				<div class="input-group">
-					<input type="text" name="searchStr" class="form-control" placeholder="股票代码" />
+				<div class="form-group">
+					<label>&nbsp;&nbsp;</label>
+					<input type="text" name="searchStr" class="form-control" placeholder="股票代码">
 				</div>
-			</div>
-			<input type="submit" value="过滤" class="btn btn-primary"/>
-		</form>
+				<div class="form-group">
+					<label>&nbsp;&nbsp;</label>
+					<input type="submit" value="过滤" class="btn btn-primary">
+				</div>
+			</form>
+		</div>
 	</div>
 	<hr/>
 	<div id="search2Template">
-		<form class="form-inline">
-			<div class="form-group">
-				<label>从：</label>
-				<div class="input-group">
-					<input type="date" name="from" class="form-control" placeholder="" />
+		<div class="">
+			<form class="form-inline">
+				<div class="form-group">
+					<label>从：</label>
+					<input type="date" name="from" class="form-control" placeholder="">
 				</div>
-			</div>
-			<div class="form-group">
-				<label>到：</label>
-				<div class="input-group">
-					<input type="date" name="to" class="form-control" placeholder="" />
+				<div class="form-group">
+					<label>&nbsp;&nbsp;到：</label>
+					<input type="date" name="to" class="form-control" placeholder="">
 				</div>
-			</div>
-			<input type="submit" value="过滤" class="btn btn-primary"/>
-		</form>
+				<div class="form-group">
+					<label>&nbsp;&nbsp;</label>
+					<input type="submit" value="过滤" class="btn btn-primary">
+				</div>
+			</form>
+		</div>
 	</div>
 	<hr/>
 	<div id="listTemplate">
