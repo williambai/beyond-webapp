@@ -33,7 +33,7 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 
 		this.graphView = new GraphView({symbol: this.symbol});
-		this.graphView.trigger('refresh', config.api.host + '/trading?type=strategy&symbol=' + this.symbol + '&from=' + this.from);
+		this.graphView.trigger('refresh', config.api.host + '/trading?type=graph&symbol=' + this.symbol + '&from=' + this.from);
 	},
 
 	render: function() {

@@ -67,7 +67,7 @@ exports = module.exports = Backbone.View.extend({
 
 		d3.json(this.url, function(err, data) {
 			if (err) throw err;
-
+			data = _.sortBy(data,'_id');
 			var balance=0, bonus = 0, buyTimes = 0, saleTimes = 0, times;
 			data.forEach(function(d,i){
 				if(d.direction == '买入'){

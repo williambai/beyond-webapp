@@ -25,6 +25,7 @@
 	<div id="listTemplate">
 		<div class="panel panel-default">
 			<div class="pull-left">
+				<a href="/export/strategy" class="btn btn-info" onclick="return false;">导出</a>
 				<button class="btn btn-danger">编辑</button>
 			</div>
 			<div class="pull-right">
@@ -395,7 +396,7 @@
 									<span class="help-block"></span>
 								</div>
 								<div class="form-group">
-									<input type="submit" value="提&nbsp;&nbsp;交" class="btn btn-danger btn-block"></div>
+									<input type="submit" value="重新开始" class="btn btn-danger btn-block"></div>
 							</form>
 						</div>
 					</div>

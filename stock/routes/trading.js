@@ -10,8 +10,10 @@ exports = module.exports = function(app, models) {
 			case 'graph': 
 				var now = new Date();
 				var symbol = req.query.symbol
-				var from = new Date(req.query.from || 0);
-				var to = new Date(req.query.to || now);
+				var from = new Date();
+				from.setTime(req.query.from || 0);
+				var to = new Date();
+				to.setTime(req.query.to || now);
 				query = {
 					'symbol': symbol,
 					'lastupdatetime': {
@@ -22,7 +24,7 @@ exports = module.exports = function(app, models) {
 				models.Trading
 					.find(query)
 					.sort({
-						_id: 1
+						'_id': 1
 					})
 					.exec(function(err, docs) {
 						if (err) return res.send(err);
@@ -46,7 +48,7 @@ exports = module.exports = function(app, models) {
 				models.Trading
 					.find(query)
 					.sort({
-						_id: 1
+						_id: -1
 					})
 					.skip(per * page)
 					.limit(per)
