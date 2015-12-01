@@ -26,12 +26,12 @@ exports = module.exports = FormView.extend({
 
 	submit: function() {
 		var that = this;
-		var arr = this.$('form').serializeJSON();
-		this.model.set(arr);
-		if(arr.status.code == 0){
-			arr.status.message = '停止交易';
+		var object = this.$('form').serializeJSON();
+		this.model.set(object);
+		if(object.status.code == 0){
+			object.status.message = '停止交易';
 		}else{
-			arr.status.message = '正常交易';
+			object.status.message = '正常交易';
 		}
 		// console.log(this.model.attributes);
 		this.model.save(null, {

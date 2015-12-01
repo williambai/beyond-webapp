@@ -1,4 +1,27 @@
 <div>
+	<div id="indexTemplate">
+		<div>
+			<div id="search">
+			</div>
+			<hr/>
+			<div class="panel panel-default">
+				<div class="pull-left">
+					<button class="btn btn-danger">编辑</button>
+				</div>
+				<div class="pull-right">
+					<a href="#strategy/import" class="btn btn-info">导入</a>
+					<a href="#strategy/export" class="btn btn-info">导出</a>
+					<a href="#strategy/new" class="btn btn-info">新增</a>
+				</div>
+				<div class="panel-heading">
+					<h3 class="panel-title text-center">&nbsp;</h3>
+				</div>
+				<div class="panel-body">
+					<div id="list"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div id="searchTemplate">
 		<form class="form-inline">
 			<div class="form-group">
@@ -25,8 +48,9 @@
 	<div id="listTemplate">
 		<div class="panel panel-default">
 			<div class="pull-left">
-				<a href="/export/strategy" class="btn btn-info" onclick="return false;">导出</a>
-				<button class="btn btn-danger">编辑</button>
+				<a href="#strategy/import" class="btn btn-info">导入</a>
+				<a href="#strategy/export" class="btn btn-info">导出</a>
+				<a href="#strategy/new" class="btn btn-info">新增</a>
 			</div>
 			<div class="pull-right">
 				<a href="#strategy/new" class="btn btn-info">新增</a>
@@ -403,6 +427,50 @@
 				</div>
 			</div>
 		</div>
+	</div>
+	<div id="exportTemplate">
+		<div>
+			<button onclick="window.history.back();return false;" class="btn btn-primary" id="back">返回</button>
+		</div>
+		<hr/>
+		<form class="form-inline">
+			<div class="form-group">
+				<label>从：</label>
+				<div class="input-group">
+					<input type="date" name="from" class="form-control" placeholder="" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label>到：</label>
+				<div class="input-group">
+					<input type="date" name="to" class="form-control" placeholder="" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label></label>
+				<div class="input-group">
+					<input type="text" name="searchStr" class="form-control" placeholder="股票代码" />
+				</div>
+			</div>
+			<!-- <a href="/export/strategy" class="btn btn-primary">导出</a> -->
+			<input type="submit" value="导出" class="btn btn-primary"/>
+		</form>
+	</div>
+	<div id="importTemplate">
+		<div>
+			<button onclick="window.history.back();return false;" class="btn btn-primary" id="back">返回</button>
+		</div>
+		<hr/>
+		<form class="form-inline">
+			<div class="form-group">
+				<label>从：</label>
+				<div class="input-group">
+					<input type="file" name="file" class="form-control" placeholder="" />
+				</div>
+			</div>
+			<input type="submit" value="导入" class="btn btn-primary"/>
+		</form>
+
 	</div>
 	<div id="listTradingTemplate">
 	</div>

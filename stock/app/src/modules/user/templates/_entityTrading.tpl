@@ -1,4 +1,9 @@
 <div>
+	<div id="indexTemplate">
+		<div id="search"></div>
+		<hr>
+		<div id="list"></div>
+	</div>
 	<div id="searchTemplate">
 		<form class="form-inline">
 			<div class="form-group">

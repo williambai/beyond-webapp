@@ -10,16 +10,17 @@ var ProfileViewView = require('./views/_AccountView');
 var ProfileEditView = require('./views/_AccountEdit');
 var IndexView = require('./views/Index');
 
-var TradingIndexView = require('./views/TradingIndex');
+var TradingIndexView = require('./views/_TradingIndex');
 var TradingGraphView = require('./views/TradingGraph');
 var StrategyTradingListView = require('./views/_StrategyTradingList');
 var StrategyTradingGraphView = require('./views/_StrategyTradingGraph');
 
-var StrategyIndexView = require('./views/StrategyIndex');
+var StrategyIndexView = require('./views/_StrategyIndex');
 var StrategyAddView = require('./views/_StrategyAdd');
 var StrategyEditView = require('./views/_StrategyEdit');
 var StrategyViewView = require('./views/_StrategyView');
-
+var StrategyExportView = require('./views/_StrategyExport');
+var StrategyImportView = require('./views/_StrategyImport');
 var config = require('./conf');
 
 exports = module.exports = Backbone.Router.extend({
@@ -41,6 +42,8 @@ exports = module.exports = Backbone.Router.extend({
 		'strategy/new': 'strategyAdd',
 		'strategy/edit/:id': 'strategyEdit',
 		'strategy/view/:id': 'strategyView',
+		'strategy/export': 'strategyExport',
+		'strategy/import': 'strategyImport',
 		'strategy/trading/record/:symbol/:from': 'strategyTradingList',
 		'strategy/trading/graph/:symbol/:from': 'strategyTradingGraph',
 		'trading': 'tradingIndex',
@@ -180,7 +183,9 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand', '交易品种');
-		var strategyIndexView = new StrategyIndexView();
+		var strategyIndexView = new StrategyIndexView({
+			el: '#content'
+		});
 		this.changeView(strategyIndexView);
 		strategyIndexView.trigger('load');
 	},
@@ -224,6 +229,34 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(strategyEditView);
 		strategyEditView.trigger('load');
+	},
+
+	strategyExport: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '导出交易品种');
+		var strategyExportView = new StrategyExportView({
+			id: id,
+			el: '#content'
+		});
+		this.changeView(strategyExportView);
+		strategyExportView.trigger('load');
+	},
+
+	strategyImport: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '导入交易品种');
+		var strategyImportView = new StrategyImportView({
+			id: id,
+			el: '#content'
+		});
+		this.changeView(strategyImportView);
+		strategyImportView.trigger('load');
 	},
 
 	strategyTradingList: function(symbol, from) {

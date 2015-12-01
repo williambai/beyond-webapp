@@ -1,22 +1,25 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-	loadingTpl = require('../templates/__loading.tpl'),
-	contentTpl = require('../templates/strategyIndex.tpl');
+    tradingTpl = require('../templates/_entityTrading.tpl'),
+	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
-var SearchView = require('../views/_StrategySearch');
-var ListView = require('../views/_StrategyList');
+var SearchView = require('../views/_TradingSearch');
+var ListView = require('../views/_TradingList');
 
 Backbone.$ = $;
 
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
+
 	loadingTemplate: _.template(loadingTpl),
-	template: _.template(contentTpl),
 
 	initialize: function(options) {
+		var page = $(tradingTpl);
+		var indexTemplate = $('#indexTemplate', page).html();
+		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
 	},
 
@@ -32,8 +35,8 @@ exports = module.exports = Backbone.View.extend({
 		this.searchView = new SearchView({
 			el: '#search',
 		});
-		this.searchView.done = function(query){
-			that.listView.trigger('refresh', config.api.host + '/strategy?type=search&' + query);
+		this.searchView.done = function(query) {
+			that.listView.trigger('refresh', config.api.host + '/trading?type=search&' + query);
 		};
 
 		this.listView = new ListView({
@@ -44,7 +47,7 @@ exports = module.exports = Backbone.View.extend({
 		this.listView.trigger('load');
 	},
 
-	scroll: function(){
+	scroll: function() {
 		this.listView.scroll();
 		return false;
 	},

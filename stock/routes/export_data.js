@@ -58,4 +58,8 @@ exports = module.exports = function(app, models) {
 	 * export trading as excel format
 	 */
 	app.get('/export/trading', exportTrading);
+	/**
+	 * export strategy as excel format
+	 */
+	app.get('/export/strategy', exportTrading);
 }
