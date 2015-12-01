@@ -1,7 +1,6 @@
 exports = module.exports = function(app, models) {
 
 	var add = function(req, res) {
-		console.log(req.body)
 		var strategy = req.body;
 		strategy.params = strategy.params || {};
 		strategy.params.name = 'T0';
@@ -18,12 +17,12 @@ exports = module.exports = function(app, models) {
 	var update = function(req, res) {
 		console.log(req.body)
 		var id = req.params.id;
-		var set = req.body;
-		set.transactions = [];
-		set.times = 0;
-		set.lastupdatetime = new Date();
+		var strategy = req.body;
+		strategy.transactions = [];
+		strategy.times = 0;
+		strategy.lastupdatetime = new Date();
 		models.Strategy.findByIdAndUpdate(id, {
-			$set: set,
+			$set: strategy,
 		}, {
 			upsert: false
 		}, function(err, doc) {

@@ -17,9 +17,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.symbol = options.symbol;
-		var date = new Date();
-		date.setTime(options.from);
-		this.from = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+		this.from = options.from;
 		this.on('load', this.load, this);
 	},
 
@@ -33,7 +31,7 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 
 		this.listView = new ListView();
-		this.listView.trigger('refresh',config.api.host + '/trading?type=search&searchStr=' + this.symbol + '&from=' + this.from);
+		this.listView.trigger('refresh',config.api.host + '/trading?type=strategy&symbol=' + this.symbol + '&from=' + this.from);
 	},
 
 	scroll: function(){

@@ -1,4 +1,9 @@
+var log4js = require('log4js');
+var path = require('path');
 var _ = require('underscore');
+log4js.configure(path.join(__dirname,'../../..','log4js.json'));
+var logger = log4js.getLogger('trading');
+logger.setLevel('DEBUG');
 
 var T0 = function(options) {
 	this.options = options || {};
@@ -22,94 +27,92 @@ var isTradingTime = function(time) {
 
 T0.judge = function(stock, strategy, callback) {
 	try {
-		var top, bottom, direction, quantity;
+		var price, top, bottom, quantity, direction;
 		stock = stock || {};
 		strategy = strategy || {};
+		var price = Number(stock.price);
 		var symbol = strategy.symbol;
 		var params = strategy.params;
 		var depth = params.depth || 0;
 		var transactions = strategy.transactions || [];
 		var transaction = _.last(transactions);
 		if (_.isEmpty(transaction)) {
-			top = (params.init_p * (1 + 0.01 * params.sell_gt)).toFixed(2);
-			bottom = (params.init_p * (1 - 0.01 * params.buy_lt)).toFixed(2);
+			top = Number((params.init_p * (1 + 0.01 * params.sell_gt)).toFixed(2));
+			bottom = Number((params.init_p * (1 - 0.01 * params.buy_lt)).toFixed(2));
+			quantity = Number(params.quantity);
 		} else {
-			top = (transaction.price * (1 + 0.01 * params.sell_gt)).toFixed(2);
-			bottom = (transaction.price * (1 - 0.01 * params.buy_lt)).toFixed(2);
+			top = Number((transaction.price * (1 + 0.01 * params.sell_gt)).toFixed(2));
+			bottom = Number((transaction.price * (1 - 0.01 * params.buy_lt)).toFixed(2));
 			direction = transaction.direction;
-			quantity = transaction.quantity;
+			quantity = Number(transaction.quantity);
 		}
-		console.log(stock.date + ' ' + stock.time + ' ' + symbol + '(' + stock.price + ') ' + '[' + bottom + ' - ' + top + ']');
+		logger.info(stock.date + ' ' + stock.time + ' ' + symbol + '(' + stock.price + ') ' + '[' + bottom + ' - ' + top + ']');
 		// is not trading time, do nothing
 		if (!isTradingTime(stock.time)) return callback(null);
 		// is times more than times_max, do nothing
 		if(strategy.times > params.times_max) return callback(null);
 		// price is between bottom and top, do nothing
-		if (stock.price > bottom && stock.price < top) return callback(null);
+		if (price > bottom && price < top) return callback(null);
 		//price is lower than bottom, think to buy
-		if (stock.price <= bottom) {
+		logger.debug(symbol + ' last transaction: ' + JSON.stringify(transaction));
+		if (price <= bottom) {
 			//transaction is less than depth, do buy transaction
-			if (transactions.length < depth) {
+			if (_.isEmpty(transactions)) {
 				return callback(null, {
 					action: 'buy',
-					price: stock.price,
-					quantity: params.quantity,
+					price: price,
+					quantity: quantity,
 					direction: '买入',
 				});
 			} else {
 				var directions = _.pluck(transactions, 'direction');
 				var countBuy = _.without(directions, '卖出');
 				var countSell = _.without(directions, '买入');
+				logger.info(symbol + '[buy,sell] count:' + countBuy.length + ',' + countSell.length);
 				//is count of buy direction less than depth ? if yes, buy now
 				if ((countBuy.length - countSell.length) < depth) {
-					// //is not continuous same direction?
-					// var last3Transactions = _.last(transactions, depth);
-					// var last3Dirctions = _.uniq(_.pluck(last3Transactions, 'direction'));
-					// if (last3Dirctions.length > 1) {
+					// //is not same direction depth too many?
 					return callback(null, {
 						action: 'buy',
-						price: stock.price,
-						quantity: params.quantity,
+						price: price,
+						quantity: quantity,
 						direction: '买入',
 					});
 				} else {
 					return callback(null);
 				}
 			}
-
-		}
-		//price is higher than top, think to sell
-		if (stock.price >= top) {
-			//transaction is less than depth, do sell transaction
-			if (transactions.length < depth) {
+		}else if (price >= top) {
+			//price is higher than top, think to sell
+			if (_.isEmpty(transactions)) {
+				//transaction is less than depth, do sell transaction
 				return callback(null, {
 					action: 'sell',
-					price: stock.price,
-					quantity: params.quantity,
+					price: price,
+					quantity: quantity,
 					direction: '卖出',
 				});
 			} else {
 				var directions = _.pluck(transactions, 'direction');
 				var countBuy = _.without(directions, '卖出');
 				var countSell = _.without(directions, '买入');
+				logger.info(symbol + '[buy,sell] count:' + countBuy.length + ',' + countSell.length);
 				//is count of sell direction less than depth ? if yes, sell now
 				if ((countSell.length - countBuy.length) < depth) {
-					// //is not continuous same direction?
-					// var last3Transactions = _.last(transactions, depth);
-					// var last3Dirctions = _.uniq(_.pluck(last3Transactions, 'direction'));
-					// if (last3Dirctions.length > 1) {
+					// is not same direction depth too many?
 					return callback(null, {
 						action: 'sell',
-						price: stock.price,
-						quantity: params.quantity,
+						price: price,
+						quantity: quantity,
 						direction: '卖出',
 					});
 				} else {
 					return callback(null);
 				}
 			}
+		}else{
+			return callback(null);
 		}
-		return callback(null);
 	} catch (err) {
 		return callback(err);
 	}

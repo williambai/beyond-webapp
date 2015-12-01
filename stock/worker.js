@@ -1,4 +1,5 @@
 var debug = true;
+var log4js = require('log4js');
 var _ = require('underscore');
 var async = require('async');
 var fs = require('fs');
@@ -6,6 +7,10 @@ var path = require('path');
 var cst = require('./config/constant');
 var trading = require('./libs/trading');
 var citic = require('./libs/citic');
+
+log4js.configure(path.join(__dirname,'log4js.json'));
+var logger = log4js.getLogger('worker');
+logger.setLevel('DEBUG');
 
 var status = {
 	platform: false,
@@ -27,7 +32,7 @@ var models = {
 };
 
 trading.on('quote', function(stock) {
-	debug && console.log('quote: ');
+	logger.info('quote: ' + JSON.stringify(stock.symbol));
 	if(stock.price != '0.00'){
 		models.StockQuote
 			.findOneAndUpdate({
@@ -40,19 +45,17 @@ trading.on('quote', function(stock) {
 					upsert: true
 				},
 				function(err, doc) {
-					if (err) return console.log(err);
+					if (err) return logger.error(err);
 				}
 			);		
 	}
 });
 
 trading.on('buy', function(trade) {
-	debug && console.log('buy: ');
-
 	trade = trade || {};
 	var stock = trade.stock;
 	var transaction = trade.transaction;
-	console.log('transaction: ' + JSON.stringify(transaction));
+	logger.info('buy transaction: ' + JSON.stringify(transaction));
 
 	async.waterfall(
 		[
@@ -70,9 +73,6 @@ trading.on('buy', function(trade) {
 							},
 							$inc: {
 								'times': 1
-							},
-							$set: {
-								lastTimestamp: Date.now()
 							}
 						}, {
 							upsert: false,
@@ -105,19 +105,17 @@ trading.on('buy', function(trade) {
 			},
 		],
 		function(err, result) {
-			if (err) return console.log(err);
+			if (err) return logger.error(err);
 		}
 	);
 
 });
 
 trading.on('sell', function(trade) {
-	debug && console.log('sell: ');
-
 	trade = trade || {};
 	var stock = trade.stock;
 	var transaction = trade.transaction;
-	console.log('transaction: ' + JSON.stringify(transaction));
+	logger.info('sell transaction: ' + JSON.stringify(transaction));
 	async.waterfall(
 		[
 			function pushTransaction(callback) {
@@ -134,9 +132,6 @@ trading.on('sell', function(trade) {
 							},
 							$inc: {
 								'times': 1
-							},
-							$set: {
-								lastTimestamp: Date.now()
 							}
 						}, {
 							upsert: false,
@@ -169,55 +164,55 @@ trading.on('sell', function(trade) {
 			},
 		],
 		function(err, result) {
-			if (err) return console.log(err);
+			if (err) return logger.error(err);
 		}
 	);
 });
 
 var getStatus = function(){
-	debug && console.log('collect status.');
+	logger.info('collect status.');
 	process.send && process.send(status);
 };
 
 var start = function() {
 	if(status.platform) return;
-	debug && console.log('worker start.');
+	logger.info('worker start.');
 	mongoose.connect(config.db.URI, function onMongooseError(err) {
 		if (err) {
-			console.error('Error: can not open Mongodb.');
+			logger.error('Error: can not open Mongodb.');
 			throw err;
 		}
 	});
 	var lastTimestamp = Date.now();
-	var interal = 5000;
+	var interval = 5000;
 	intervalObject = setInterval(function() {
+		logger.debug('interval: ' + interval);
 		models.Strategy
 			.find({
 				'status.code': 1
 			})
 			.exec(function(err, strategies) {
-				if (err) return console.log(err);
-				if (!strategies) return console.log('没有可执行的。');
+				if (err) return logger.error(err);
+				if (_.isEmpty(strategies)) return logger.warn('没有可执行的。');
 				trading.run(strategies, function(err, result) {
-					if (err) console.log(err);
-					// console.log(result);
+					if (err) return logger.error(err);
 					var now = Date.now();
-					interal = now - lastTimestamp;
-					if (interal < 1) {
-						interal = 1;
-						console.log('执行时间太长，应调节间隔');
+					interval = now - lastTimestamp;
+					if (interval < 1) {
+						interval = 1;
+						logger.warn('执行时间太长，应调节间隔');
 					}
 					lastTimestamp = now;
 				});
 			});
-	}, interal);
+	}, interval);
 	status.platform = true;
 	process.send && process.send(status);
 };
 
 var stop = function() {
 	if(!status.platform) return;
-	debug && console.log('worker stop.');
+	logger.info('worker stop.');
 	intervalObject && clearInterval(intervalObject);
 	mongoose.disconnect();
 	status.platform = false;
@@ -226,14 +221,14 @@ var stop = function() {
 
 var startTrade = function(){
 	if(status.trade) return;
-	debug && console.log('trade start.');
+	logger.info('trade start.');
 	status.trade = true;
 	process.send && process.send(status);
 };
 
 var stopTrade = function(){
 	if(!status.trade) return;
-	debug && console.log('trade stop.');
+	logger.info('trade stop.');
 	status.trade = false;
 	process.send && process.send(status);
 };
@@ -245,7 +240,7 @@ var keepAlive = function() {
 };
 
 var captcha = function(options){
-	debug && console.log(options);
+	logger.info(options);
 };
 /**
  * client process
@@ -254,7 +249,7 @@ var captcha = function(options){
  */
 
 process.on('SIGTERM', function() {
-	debug && console.log('Worker Got a SIGTERM, exiting...');
+	logger.info('Worker Got a SIGTERM, exiting...');
 	process.exit(1);
 });
 
@@ -288,11 +283,11 @@ process.on('message', function(msg) {
 
 process.on('exit', function() {
 	//ONLY accept synchronous operations
-	debug && console.log('exit');
+	logger.info('exit');
 });
 
 process.on('error', function(err) {
-	debug && console.log('error.');
+	logger.error('error.');
 	process.exit(1);
 });
 

@@ -3,11 +3,6 @@
   "version": "0.0.1",
   "description": "build app by using nodejs, mongodb, backbone, etc.",
   "private": true,
-  "main": "server.js",
-  "scripts": {
-    "app-demo-test": "jasmine-node demo/test",
-    "app-demo-dev": "pm2 start demo/server.js --watch demo/ --ignore-watch='./_app ./_dest ./app ./commands ./public'"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/williambai/beyond-webapp.git"
@@ -19,24 +14,6 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/williambai/beyond-webapp/issues"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "node-underscorify",
-        {
-          "extensions": [
-            "tpl"
-          ],
-          "requires": [
-            {
-              "variable": "_",
-              "module": "underscore"
-            }
-          ]
-        }
-      ]
-    ]
   },
   "homepage": "https://github.com/williambai/beyond-webapp",
   "dependencies": {
@@ -55,6 +32,7 @@
     "jade": "^1.10.0",
     "json2xml": "^0.1.2",
     "jsonfile": "^2.1.2",
+    "log4js": "^0.6.29",
     "mongodb": "^2.0.46",
     "mongoose": "^4.2.3",
     "mongoose-tree": "^0.2.2",

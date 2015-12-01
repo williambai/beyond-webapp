@@ -1,9 +1,5 @@
+var log4js = require('log4js');
 var worker = require('child_process').fork('./worker');
-var workerStatus = {
-	platform: false,
-	trade: false,
-};
-
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
@@ -14,6 +10,15 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var app = express();
 var nodemailer = require('nodemailer');
+
+log4js.configure(path.join(__dirname,'log4js.json'));
+var logger = log4js.getLogger('server');
+logger.setLevel('DEBUG');
+
+var workerStatus = {
+	platform: false,
+	trade: false,
+};
 
 //create an http server
 app.server = http.createServer(app);
@@ -35,7 +40,7 @@ var models = {
 
 mongoose.connect(config.db.URI, function onMongooseError(err) {
 	if (err) {
-		console.error('Error: can not open Mongodb.');
+		logger.error('Error: can not open Mongodb.');
 		throw err;
 	}
 });
@@ -94,27 +99,27 @@ fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file) {
 
 
 app.server.listen(config.server.PORT, function() {
-	console.log(config.server.NAME + ' App is running at ' + config.server.PORT + ' now.');
+	logger.info(config.server.NAME + ' App is running at ' + config.server.PORT + ' now.');
 
 	//kill child_process
 	process.on('SIGTERM', function() {
-		console.log('Master Got a SIGTERM, exiting...');
+		logger.info('Master Got a SIGTERM, exiting...');
 		worker.kill('SIGTERM');
 		process.exit(1);
-		console.log(config.server.NAME + ' App is shutdowned at ' + config.server.PORT + ' gracefully.');
+		logger.info(config.server.NAME + ' App is shutdowned at ' + config.server.PORT + ' gracefully.');
 	});
 
 	worker.on('exit', function() {
-		console.log('worker exit');
+		logger.info('worker exit');
 		worker = require('child_process').fork('./worker');
-		console.log('worker restart');
+		logger.info('worker restart');
 		worker.send({
 			command: 'start'
 		});
 	});
 	
 	worker.on('message', function(msg) {
-		console.log(msg);
+		logger.info(msg);
 		workerStatus = msg;
 	});
 	worker.send({
@@ -132,13 +137,13 @@ app.server.listen(config.server.PORT, function() {
 	});
 
 	app.post('/platform/start', function(req, res) {
-		console.log('start platform');
+		logger.info('start platform');
 		worker.send({command: 'start'});
 		res.send({});
 	});
 
 	app.post('/platform/stop', function(req, res) {
-		console.log('stop platform');
+		logger.info('stop platform');
 		worker.send({command: 'stop'});
 		res.send({});
 	});

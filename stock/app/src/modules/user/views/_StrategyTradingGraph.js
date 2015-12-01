@@ -20,9 +20,7 @@ exports = module.exports = Backbone.View.extend({
 		var graphTemplate = $('#graphTemplate', page).html();
 		this.template = _.template(_.unescape(graphTemplate || ''));
 		this.symbol = options.symbol;
-		var date = new Date();
-		date.setTime(options.from);
-		this.from = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+		this.from = options.from;
 		this.on('load', this.load, this);
 	},
 
@@ -35,7 +33,7 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 
 		this.graphView = new GraphView({symbol: this.symbol});
-		this.graphView.trigger('refresh', 'from=' + this.from);
+		this.graphView.trigger('refresh', config.api.host + '/trading?type=strategy&symbol=' + this.symbol + '&from=' + this.from);
 	},
 
 	render: function() {

@@ -29,6 +29,30 @@ exports = module.exports = function(app, models) {
 						res.send(docs);
 					});
 				break;
+			case 'strategy':
+				var now = new Date();
+				var symbol = req.query.symbol
+				var from = new Date();
+				from.setTime(req.query.from || 0);
+				var to = new Date();
+				to.setTime(req.query.to || now);
+				query = {
+					'symbol': symbol,
+					'lastupdatetime': {
+						$gte: from,
+						$lt: to
+					}
+				};
+				models.Trading
+					.find(query)
+					.sort({
+						_id: 1
+					})
+					.exec(function(err, docs) {
+						if (err) return res.send(err);
+						res.send(docs);
+					});
+				break;
 			case 'search':
 				var now = new Date();
 				var from = new Date(req.query.from || 0);

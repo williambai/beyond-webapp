@@ -15,14 +15,13 @@ exports = module.exports = Backbone.View.extend({
 		this.on('refresh', this.refresh, this);
 	},
 
-	load: function(query) {
+	load: function() {
 		this.url = config.api.host + '/trading?type=graph&symbol=' + this.symbol;
 		this.render();
 	},
 
-	refresh: function(query) {
-		this.url = config.api.host + '/trading?type=graph&symbol=' + this.symbol;
-		this.url += '&' + query;
+	refresh: function(url) {
+		this.url = url;
 		this.render();
 	},
 

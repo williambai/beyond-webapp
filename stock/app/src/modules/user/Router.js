@@ -233,6 +233,7 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand', '本轮交易记录');
 		var tradingListView = new StrategyTradingListView({
+			el: '#content',
 			symbol: symbol,
 			from: from
 		});
