@@ -48,6 +48,8 @@ exports = module.exports = function(app, models) {
 					.sort({
 						_id: 1
 					})
+					.skip(per * page)
+					.limit(per)
 					.exec(function(err, docs) {
 						if (err) return res.send(err);
 						res.send(docs);

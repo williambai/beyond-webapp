@@ -40,7 +40,12 @@ exports = module.exports = Backbone.View.extend({
 		if (!this.loaded) {
 			this.$el.html(this.loadingTemplate());
 		} else {
-			this.$el.html(this.template());
+			var date = new Date();
+			date.setTime(this.from);
+			this.$el.html(this.template({
+				symbol: this.symbol,
+				from: date.toLocaleString()
+			}));
 		}
 		return this;
 	},

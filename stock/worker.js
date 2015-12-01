@@ -10,7 +10,7 @@ var citic = require('./libs/citic');
 
 log4js.configure(path.join(__dirname,'log4js.json'));
 var logger = log4js.getLogger('worker');
-logger.setLevel('DEBUG');
+logger.setLevel('INFO');
 
 var status = {
 	platform: false,

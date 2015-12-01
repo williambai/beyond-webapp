@@ -77,15 +77,15 @@
 		<hr/>
 	</div>
 	<div id="addTemplate">
-		<p></p>
-		<p></p>
+		<div class="pull-left">
+			<button onclick="window.history.back();return false;" class="btn btn-primary" id="back">返回</button>
+		</div>
+		<p>&nbsp;</p>
+		<hr/>
 		<div class="">
 			<div class="">
 				<div class="">
 					<div class="panel panel-default" id="strategyForm">
-						<div class="pull-left">
-							<button onclick="window.history.back();return false;" class="btn btn-primary" id="back">返回</button>
-						</div>
 						<div class="panel-heading">
 							<h3 class="panel-title text-center">新增交易品种</h3>
 						</div>
@@ -170,22 +170,23 @@
 		</div>
 	</div>
 	<div id="viewTemplate">
-		<p></p>
-		<p></p>
+		<div class="pull-left">
+			<button onclick="window.history.back();return false;" class="btn btn-primary" id="back">返回</button>
+		</div>
+		<div class="pull-right">
+			<% if(model._id){ %>
+			<a href="#strategy/edit/<%= model._id %>" class="btn btn-primary" id="edit">编辑</a>
+			<% } %>
+		</div>
+		</p>&nbsp;<p>
+		<hr/>
 		<div class="">
 			<div class="">
 				<div class="">
 					<div class="panel panel-default" id="strategyForm">
-						<div class="pull-left">
-							<button onclick="window.history.back();return false;" class="btn btn-primary" id="back">返回</button>
-						</div>
-						<div class="pull-right">
-							<% if(model._id){ %>
-							<a href="#strategy/edit/<%= model._id %>" class="btn btn-primary" id="edit">编辑</a>
-							<% } %>
-						</div>
+						
 						<div class="panel-heading">
-							<h3 class="panel-title text-center">交易品种</h3>
+							<h3 class="panel-title text-center">交易品种详情</h3>
 						</div>
 						<div class="panel-body">
 							<form role="form">
@@ -285,22 +286,22 @@
 		</div>
 	</div>
 	<div id="editTemplate">
-		<p></p>
-		<p></p>
+		<div class="pull-left">
+			<button onclick="window.history.back();return false;" class="btn btn-primary" id="back">返回</button>
+		</div>
+		<div class="pull-right">
+			<% if(model._id){ %>
+			<a href="#strategy/edit/<%= model._id %>" class="btn btn-primary" id="edit">编辑</a>
+			<% } %>
+		</div>
+		<p>&nbsp;</p>
+		<hr/>
 		<div class="">
 			<div class="">
 				<div class="">
 					<div class="panel panel-default" id="strategyForm">
-						<div class="pull-left">
-							<button onclick="window.history.back();return false;" class="btn btn-primary" id="back">返回</button>
-						</div>
-						<div class="pull-right">
-							<% if(model._id){ %>
-							<a href="#strategy/edit/<%= model._id %>" class="btn btn-primary" id="edit">编辑</a>
-							<% } %>
-						</div>
 						<div class="panel-heading">
-							<h3 class="panel-title text-center">交易品种</h3>
+							<h3 class="panel-title text-center">修改交易品种</h3>
 						</div>
 						<div class="panel-body">
 							<form role="form">
@@ -402,10 +403,49 @@
 			</div>
 		</div>
 	</div>
+	<div id="listTradingTemplate">
+	</div>
+	<hr/>
+	<div id="itemTradingTemplate">
+		<div class="pull-right">
+			<p>
+				<a href="#/trading/update" id="">成交</a>
+				&nbsp;
+			</p>
+		</div>
+		<div>
+			<% var date = new Date(model.lastupdatetime); %>
+			<h4>
+				<%= model.symbol %>
+				&nbsp;&nbsp;
+				<% if(model.direction == '买入'){ %>
+				<span style="background-color: green;color:white;">
+					<%= model.direction %></span>
+				<% }else{ %>
+				<span style="background-color: red;color:white;">
+					<%= model.direction %></span>
+				<% } %>
+				：￥ <u><%= model.price %></u>
+				&nbsp;&nbsp;
+				<%= model.status.message %></h4>
+			<p>
+				交易日期：
+				<%= model.date %>
+				，交易时间：
+				<%= model.time %></p>
+			<p>
+				生成时间：
+				<%= date.getFullYear() +'-' + (1+date.getMonth()) + '-' + (date.getDate()) + ' '+ date.getHours() + ':'+ date.getMinutes() + ':'+ date.getSeconds() %></p>
+		</div>
+		<hr/>
+	</div>
+	<hr>
 	<div id="graphTemplate">
-		<h4>本轮交易图表</h4>
-		<p>自xxx起。</p>
-		<hr>
+		<div>
+			<a class="btn btn-primary" onclick="window.history.back();return false;">返回</a>
+		</div>
+		<hr/>
+		<p><strong><%= symbol %></strong>&nbsp;自&nbsp;<strong><%= from %></strong>&nbsp;起的交易记录。</p>
 		<div id="graph"></div>
 	</div>
 </div>

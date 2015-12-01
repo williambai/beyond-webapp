@@ -14,7 +14,7 @@ exports = module.exports = Backbone.View.extend({
 	el: '#content',
 
 	loadingTemplate: _.template(loadingTpl),
-	template: _.template('<div id="search"></div><hr><div id="graph"></div>'),
+	template: _.template('<div><a class="btn btn-primary" onclick="window.history.back();return false;">返回</a></div><hr/><div id="search"></div><div id="graph"></div>'),
 
 	initialize: function(options) {
 		this.symbol = options.symbol;
