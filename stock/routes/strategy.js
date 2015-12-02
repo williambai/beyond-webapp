@@ -44,32 +44,13 @@ exports = module.exports = function(app, models) {
 		page = (!page || page < 0) ? 0 : page;
 		var query = {};
 		switch (type) {
-			case 'graph':
-				var now = new Date();
-				var symbol = req.query.symbol
-				var from = new Date(req.query.from || 0);
-				var to = new Date(req.query.to || now);
-				query = {
-					'symbol': symbol,
-					'lastupdatetime': {
-						$gte: from,
-						$lt: to
-					}
-				};
-				models.Strategy
-					.find(query)
-					.sort({
-						_id: 1
-					})
-					.exec(function(err, docs) {
-						if (err) return res.send(err);
-						res.send(docs);
-					});
-				break;
 			case 'search':
 				var now = new Date();
-				var from = new Date(req.query.from || 0);
-				var to = new Date(req.query.to || now);
+				var symbol = req.query.symbol
+				var from = new Date();
+				from.setTime(req.query.from || 0);
+				var to = new Date();
+				to.setTime(req.query.to || now);
 				var searchStr = req.query.searchStr || '';
 				var searchRegex = new RegExp(searchStr, 'i');
 				query = {
@@ -90,7 +71,7 @@ exports = module.exports = function(app, models) {
 				models.Strategy
 					.find(query)
 					.sort({
-						_id: -1
+						lastupdatetime: -1
 					})
 					.skip(per * page)
 					.limit(per)
@@ -107,7 +88,7 @@ exports = module.exports = function(app, models) {
 						transactions: 0
 					})
 					.sort({
-						_id: -1
+						lastupdatetime: -1
 					})
 					.skip(per * page)
 					.limit(per)

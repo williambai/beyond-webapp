@@ -77,7 +77,7 @@
 					<%= model.status.message %></span>
 				<% } %></h4>
 			<p>
-				创建时间：
+				开始时间：
 				<%= date.getFullYear() +'-' + (1+date.getMonth()) + '-' + (date.getDate()) + ' '+ date.getHours() + ':'+ date.getMinutes() + ':'+ date.getSeconds() %>
 				&nbsp;&nbsp;交易次数：
 				<%= model.times %></p>
