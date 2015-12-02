@@ -12,7 +12,7 @@ exports = module.exports = function() {
 	var checkLogin = function(callback) {
 		$.ajax({
 			url: config.api.host + '/admin/authenticated',
-			type: 'POST',
+			type: 'GET',
 			xhrFields: {
 				withCredentials: true
 			},

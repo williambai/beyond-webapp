@@ -61,7 +61,7 @@
  	//logout
  	app.get('/admin/logout', logout);
  	//authenticate
- 	app.post('/admin/authenticated', authenticated);
+ 	app.get('/admin/authenticated', authenticated);
 
  	//
 
