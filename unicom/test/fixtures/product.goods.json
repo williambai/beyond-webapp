@@ -1,0 +1,15 @@
+[{
+	"name": "奖品名称",
+	"description":"奖品描述",
+	"thumb_image_url": "thumb_image_url",
+	"image_url": "image_url",
+	"category": "电子产品",
+	"type": "实物",
+	"price": 10,
+	"quantity": 100,
+	"condition": "",
+	"status": {
+		"code": 1,
+		"message": "有效",
+	}
+}]

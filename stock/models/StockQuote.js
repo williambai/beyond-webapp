@@ -40,5 +40,6 @@ exports = module.exports = function(mongoose) {
 	if (mongoose.models.StockQuote) {
 		return mongoose.model('StockQuote');
 	}
+	schema.index({symbol:1,date:1,time:1});
 	return mongoose.model('StockQuote', schema);
 };

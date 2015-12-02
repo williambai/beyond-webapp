@@ -1,0 +1,13 @@
+{
+  "name": "pdbang-unicom",
+  "version": "1.0.1",
+  "description": "pdbang unicom",
+  "private": true,
+  "author": "Suzhou PDBang Co., Ltd.",
+  "main": "server.js",
+  "scripts": {
+    "setup": "node setup",
+    "test": "mocha test",
+    "dev": "pm2 start server.js --watch ./ --ignore-watch='./_app ./_dest ./app ./commands ./public ./logs ./test'"
+  }
+}

@@ -1,0 +1,40 @@
+[{
+	"customer": {
+		"name": "张三",
+		"mobile": "18610001234"
+	},
+	"goods": {
+		"name":"物料1",
+		"code":"物料编码1"
+	},
+	"status": {
+		"code": 0,
+		"message": "创建",
+	}
+},{
+	"customer": {
+		"name": "张三",
+		"mobile": "18610001234"
+	},
+	"goods": {
+		"name":"物料1",
+		"code":"物料编码1"
+	},
+	"status": {
+		"code": 1,
+		"message": "已通过",
+	}
+},{
+	"customer": {
+		"name": "张三",
+		"mobile": "18610001234"
+	},
+	"goods": {
+		"name":"物料1",
+		"code":"物料编码1"
+	},
+	"status": {
+		"code": -1,
+		"message": "已作废",
+	}
+}]

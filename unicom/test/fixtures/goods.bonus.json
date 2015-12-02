@@ -1,0 +1,22 @@
+[{
+	"product": "物料ID1",
+	"description": "奖励政策描述",
+	"coin": 10,
+	"starttime": 0,
+	"endtime": 0,
+	"status": {
+		"code": 0,
+		"message": "停用",
+	}	
+},,
+{
+	"product": "物料ID2",
+	"description": "奖励政策描述",
+	"coin": 10,
+	"starttime": 0,
+	"endtime": 0,
+	"status": {
+		"code": 1,
+		"message": "启用",
+	}	
+}]

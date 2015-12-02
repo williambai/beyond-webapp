@@ -1,0 +1,11 @@
+[{
+	"name": "banner1",
+	"image_url": "image_url",
+	"target_url": "target_url",
+	"display_sort": 2
+},{
+	"name": "banner2",
+	"image_url": "image_url",
+	"target_url": "target_url",
+	"display_sort": 1
+}]

@@ -1,0 +1,20 @@
+[{
+	"name": "物料名称1",
+	"code": "物料ID1",
+	"description": "物料描述",
+	"category": "金币兑换",
+	"status": {
+		"code": 0,
+		"message": "停用",
+	}	
+},
+{
+	"name": "物料名称2",
+	"code": "物料ID2",
+	"description": "物料描述",
+	"category": "金币兑换",
+	"status": {
+		"code": 0,
+		"message": "停用",
+	}	
+}]

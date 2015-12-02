@@ -1,0 +1,16 @@
+[{
+	"name": "欧尚大卖场",
+	"code": "OSDMC",
+	"address": "星塘街8号",
+	"tags": [],
+	"grid": "",
+	"department": ""
+},{
+	"name": "百润发大卖场",
+	"address": "东环路128号",
+	"code": "BRFDMC",
+	"tags": [],
+	"grid": "",
+	"department": ""	
+}
+]

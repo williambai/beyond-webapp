@@ -1,0 +1,25 @@
+[{
+	"customer":{
+		"name": "张三",
+		"mobile": "18610001234"
+	},
+	"goods": {
+
+		},
+	"status": {
+		"code": 0,
+		"message": "未兑换",
+	}
+},{
+	"customer":{
+		"name": "张三",
+		"mobile": "18610001234"
+	},
+	"goods": {
+
+		},
+	"status": {
+		"code": 1,
+		"message": "已兑换",
+	}
+}]
