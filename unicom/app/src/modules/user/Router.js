@@ -11,6 +11,11 @@ var ProfileViewView = require('./views/_AccountView');
 var ProfileEditView = require('./views/_AccountEdit');
 var IndexView = require('./views/Index');
 
+var CardIndexView = require('./views/_CardIndex');
+var PushIndexView = require('./views/_PushIndex');
+var DataIndexView = require('./views/_DataIndex');
+var SmsIndexView = require('./views/_SmsIndex');
+
 var config = require('./conf');
 
 exports = module.exports = Backbone.Router.extend({
@@ -28,6 +33,12 @@ exports = module.exports = Backbone.Router.extend({
 		'forgotpassword': 'forgotPassword',
 		'profile/:id': 'profileView',
 		'profile/me/edit': 'profileEdit',
+
+		'card/index': 'cardIndex',
+		'push/index': 'pushIndex',
+		'data/index': 'dataIndex',
+		'sms/index': 'smsIndex',
+
 		'*path': 'index',
 	},
 
@@ -158,4 +169,55 @@ exports = module.exports = Backbone.Router.extend({
 		profileEditView.trigger('load');
 	},
 
+	cardIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '卡号');
+		var cardIndexView = new CardIndexView({
+			el: '#content'
+		});
+		this.changeView(cardIndexView);
+		cardIndexView.trigger('load');
+	},
+
+	pushIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '内容推荐');
+		var pushIndexView = new PushIndexView({
+			el: '#content'
+		});
+		this.changeView(pushIndexView);
+		pushIndexView.trigger('load');
+	},
+
+	dataIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '流量推荐');
+		var dataIndexView = new DataIndexView({
+			el: '#content'
+		});
+		this.changeView(dataIndexView);
+		dataIndexView.trigger('load');
+	},
+
+	smsIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '流量推荐');
+		var smsIndexView = new SmsIndexView({
+			el: '#content'
+		});
+		this.changeView(smsIndexView);
+		smsIndexView.trigger('load');
+	},	
 });

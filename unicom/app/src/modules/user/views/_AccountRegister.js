@@ -4,6 +4,8 @@ var FormView = require('./__FormView'),
 	Register = require('../models/Register');
 var accountTpl = require('../templates/_entityAccount.tpl');
 
+var SelectChannelView = require('./_AccountSelectChannel');
+
 exports = module.exports = FormView.extend({
 
 	el: '#registerForm',
@@ -15,6 +17,13 @@ exports = module.exports = FormView.extend({
 		var registerSuccessTemplate = $('#registerSuccessTemplate', page).html();
 		this.successTemplate = _.template(_.unescape(registerSuccessTemplate || ''));
 		this.model = new Register();
+
+		this.selectChannelView = new SelectChannelView({
+			el: '#content',
+			parentView: this,
+		});
+		this.on('back', this.render,this);
+
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -22,8 +31,16 @@ exports = module.exports = FormView.extend({
 		'keyup input[type=text]': 'renderInputInvalid',
 		'blur input[type=text]': 'renderInputInvalid',
 		'keyup input[type=password]': 'renderInputInvalid',
+		'click #selectChannel': 'selectChannel',
 		'submit form': 'register',
 		'swipeleft': 'swipeToLoginForm',
+	},
+
+	selectChannel: function(){
+		var object = this.$('form').serializeJSON();
+		this.model.set(object);
+		this.selectChannelView.render();
+		return false;
 	},
 
 	register: function() {

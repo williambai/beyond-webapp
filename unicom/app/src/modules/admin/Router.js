@@ -5,6 +5,7 @@ var config = require('./conf');
 
 var LayoutView = require('./views/__Layout');
 var LoginView = require('./views/_AccountLogin');
+var ProfileViewView = require('./views/_AccountView');
 var IndexView = require('./views/Index');
 
 exports = module.exports = Backbone.Router.extend({
@@ -18,6 +19,7 @@ exports = module.exports = Backbone.Router.extend({
 		'index': 'index',
 		'login': 'login',
 		'logout': 'logout',
+		'profile/:id': 'profileView',
 		'*path': 'index',
 	},
 
@@ -87,5 +89,24 @@ exports = module.exports = Backbone.Router.extend({
 			},
 			crossDomain: true,
 		});
+	},
+
+	profileView: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '个人资料');
+		if (id == this.account.id) {
+			id = 'me';
+		}
+		var profileViewView = new ProfileViewView({
+			el: '#content',
+			id: id,
+			appEvents: this.appEvents,
+			socketEvents: this.socketEvents
+		});
+		this.changeView(profileViewView);
+		profileViewView.trigger('load');
 	},
 });

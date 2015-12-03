@@ -13,22 +13,37 @@
 							<form>
 								<div class="form-group" id="username">
 									<label for="username">姓名：</label>
-									<input type="text" name="username" class="form-control input-sm" placeholder="姓名"/>
+									<input type="text" name="username" value="<%= model.username %>" class="form-control input-sm" placeholder="姓名"/>
 									<span class="help-block"></span>
 								</div>
-								<div class="form-group" id="email">
+								<div class="form-group">
 									<label>邮件：</label>
-									<input type="text" name="email" class="form-control input-sm" placeholder="邮件"/>
+									<input type="text" name="email" value="<%= model.email %>" class="form-control input-sm" placeholder="邮件"/>
 									<span class="help-block"></span>
 								</div>
-								<div class="form-group" id="password">
+								<div class="form-group">
 									<label>密码：</label>
-									<input type="password" name="password" class="form-control input-sm" placeholder="数字或字母，不少于六位"/>
+									<input type="password" name="password" value="<%= model.password %>" class="form-control input-sm" placeholder="数字或字母，不少于六位"/>
 									<span class="help-block"></span>
 								</div>
-								<div class="form-group" id="cpassword">
+								<div class="form-group">
 									<label>密码（再来一次）：</label>
-									<input type="password" name="cpassword" class="form-control input-sm" placeholder="请再次输入密码"/>
+									<input type="password" name="cpassword" value="<%= model.cpassword %>" class="form-control input-sm" placeholder="请再次输入密码"/>
+									<span class="help-block"></span>
+								</div>
+								<div class="form-group">
+									<label>渠道名称：<a href="#" id="selectChannel">请选择渠道名称</a></label>
+									<input type="text" name="channel[name]" class="form-control input-sm" disabled>
+									<span class="help-block"></span>
+								</div>
+								<div class="form-group">
+									<label>渠道代码：</label>
+									<input type="text" name="channel[code]" class="form-control input-sm" disabled>
+									<span class="help-block"></span>
+								</div>
+								<div class="form-group">
+									<label>渠道地址：</label>
+									<input type="text" name="channel[address]" class="form-control input-sm" disabled>
 									<span class="help-block"></span>
 								</div>
 		                        <div class="form-group">
@@ -79,6 +94,17 @@
 		    <p>版权所有@2014~2015&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>		
+	</div>
+	<div id="channelSearchTemplate">
+		<button class="btn btn-primary back">返回</button>
+		<hr>
+        <form role="form">
+	        <div class="form-group">
+	            <input type="text" name="search" class="form-control input-sm" placeholder="渠道名称">
+	            <span class="help-block"></span>
+	        </div>
+        </form>
+        <div id="list">渠道列表，请选择一个</div>
 	</div>
 	<div id="loginTemplate">
 		<p></p>
