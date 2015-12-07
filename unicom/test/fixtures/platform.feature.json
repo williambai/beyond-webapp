@@ -1,0 +1,9 @@
+[{
+	"name": "名称",
+	"description": "功能描述",
+	"code": "功能代码",
+	"status": {
+		"code": 0,
+		"message": "停用"
+	}
+}]

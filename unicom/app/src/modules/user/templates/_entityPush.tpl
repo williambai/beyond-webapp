@@ -1,7 +1,7 @@
 <div>
 	<div id="indexTemplate">
 		<div class="btn-group btn-group-justified">
-			<div class="btn btn-primary">推荐应用</div>
+			<div class="btn btn-success">推荐应用</div>
 			<div class="btn btn-default">推荐活动</div>
 		</div>
 		<div id="list">

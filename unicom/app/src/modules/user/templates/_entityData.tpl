@@ -1,7 +1,7 @@
 <div>
 	<div id="indexTemplate">
 		<div class="btn-group btn-group-justified">
-			<div class="btn btn-primary">2G用户</div>
+			<div class="btn btn-success">2G用户</div>
 			<div class="btn btn-default">3G用户</div>
 		</div>
 		<div id="list">

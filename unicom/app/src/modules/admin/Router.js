@@ -8,6 +8,8 @@ var LoginView = require('./views/_AccountLogin');
 var ProfileViewView = require('./views/_AccountView');
 var IndexView = require('./views/Index');
 
+var AccountIndexView = require('./views/_AccountIndex');
+
 exports = module.exports = Backbone.Router.extend({
 
 	account: null,//login account
@@ -20,6 +22,7 @@ exports = module.exports = Backbone.Router.extend({
 		'login': 'login',
 		'logout': 'logout',
 		'profile/:id': 'profileView',
+		'user/index': 'accountIndex',
 		'*path': 'index',
 	},
 
@@ -109,4 +112,17 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(profileViewView);
 		profileViewView.trigger('load');
 	},
+
+	accountIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','账号管理');
+		var accountIndexView = new AccountIndexView({
+		});
+		this.changeView(accountIndexView);
+		accountIndexView.trigger('load');
+	},	
+
 });

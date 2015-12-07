@@ -32,7 +32,7 @@
 					&nbsp;网格设置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#channel/index">
+				<a class="list-group-item" href="#channel/category/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;渠道类型设置
 					<i class="fa fa-chevron-right pull-right"></i>

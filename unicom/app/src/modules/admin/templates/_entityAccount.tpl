@@ -1,4 +1,68 @@
 <div>
+	<div id="indexTemplate">
+		<div id="search">
+		</div>
+		<hr/>
+		<div class="panel panel-default">
+			<div class="pull-right">
+				<button class="btn btn-primary">新增</button>
+			</div>
+			<div class="panel-heading">
+				<h4 class="panel-title text-center">账号列表</h4>
+			</div>
+			<div class="panel-body">
+				<div id="list">
+					<hr/>
+					<div class="media">
+						<div class="media-left">
+							<a href="#">
+								<img class="media-object" src="" alt="" height="50px" width="50px">
+							</a>
+						</div>
+						<div class="media-body">
+							<h4 class="media-heading">用户名</h4>
+							<p>用户账号，用户角色</p>
+						</div>
+						<div class="media-right">
+							<button class="btn btn-info">编辑</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="searchTemplate">
+		<form id="searchForm" class="form-inline">
+			<div class="form-group">
+				<label>搜索：</label>
+				<input type="text" name="searchStr" class="form-control" placeholder="用户名/用户账号">
+			</div>
+			<div class="form-group">
+				<input type="hidden" name="status[code]" value="0">
+				<input type="checkbox" name="status[code]" value="1">有效
+			</div>
+			<div class="form-group">
+				<input type="submit" value="查询" class="btn btn-info">
+			</div>
+		</form>
+	</div>
+	<div id="itemTemplate">
+		<hr/>
+		<div class="media">
+			<div class="media-left">
+				<a href="#">
+					<img class="media-object" src="" alt="" height="50px" width="50px">
+				</a>
+			</div>
+			<div class="media-body">
+				<h5 class="media-heading">用户名</h5>
+				<p>用户账号，用户角色</p>
+			</div>
+			<div class="media-right">
+				<button class="btn btn-info">编辑</button>
+			</div>
+		</div>
+	</div>
 	<div id="loginTemplate">
 		<p></p>
 		<p></p>

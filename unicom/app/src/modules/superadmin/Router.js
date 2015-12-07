@@ -7,6 +7,9 @@ var LayoutView = require('./views/__Layout');
 var LoginView = require('./views/_AccountLogin');
 var IndexView = require('./views/Index');
 
+var RoleIndexView = require('./views/_RoleIndex');
+var ChannelCategoryIndexView = require('./views/_ChannelCategoryIndex');
+
 exports = module.exports = Backbone.Router.extend({
 
 	account: null,//login account
@@ -18,6 +21,8 @@ exports = module.exports = Backbone.Router.extend({
 		'index': 'index',
 		'login': 'login',
 		'logout': 'logout',
+		'role/index': 'roleIndex',
+		'channel/category/index': 'channelCategoryIndex',
 		'*path': 'index',
 	},
 
@@ -88,4 +93,29 @@ exports = module.exports = Backbone.Router.extend({
 			crossDomain: true,
 		});
 	},
+
+	roleIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','角色设置');
+		var roleIndexView = new RoleIndexView({
+		});
+		this.changeView(roleIndexView);
+		roleIndexView.trigger('load');
+	},
+
+	channelCategoryIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','渠道类型设置');
+		var channelCategoryIndexView = new ChannelCategoryIndexView({
+		});
+		this.changeView(channelCategoryIndexView);
+		channelCategoryIndexView.trigger('load');
+	},
+
 });
