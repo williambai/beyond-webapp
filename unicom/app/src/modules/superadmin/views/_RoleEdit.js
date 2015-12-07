@@ -6,7 +6,7 @@ var FormView = require('./__FormView'),
 
 exports = module.exports = FormView.extend({
 
-	el: '#strategyForm',
+	el: '#roleForm',
 
 	modelFilled: false,
 

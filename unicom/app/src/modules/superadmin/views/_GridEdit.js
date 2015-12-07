@@ -1,18 +1,21 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    roleTpl = require('../templates/_entityRole.tpl'),
-	Role = require('../models/Role');
+    gridTpl = require('../templates/_entityGrid.tpl'),
+	Grid = require('../models/Grid');
 
 exports = module.exports = FormView.extend({
 
-	el: '#roleForm',
+	el: '#gridForm',
+
+	modelFilled: false,
 
 	initialize: function(options) {
-		var page = $(roleTpl);
-		var addTemplate = $('#addTemplate', page).html();
-		this.template = _.template(_.unescape(addTemplate || ''));
-		this.model = new Role();
+		var page = $(gridTpl);
+		var editTemplate = $('#editTemplate', page).html();
+		this.template = _.template(_.unescape(editTemplate || ''));
+		this.model = new Grid();
+		this.model._id = options.id;
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -21,7 +24,12 @@ exports = module.exports = FormView.extend({
 	},
 
 	load: function(){
-		this.render();
+		this.model.url = this.model.url + '/' + this.model._id;
+		this.model.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
+		});
 	},
 
 	submit: function() {
@@ -41,9 +49,17 @@ exports = module.exports = FormView.extend({
 		});
 		return false;
 	},
-
+	
+	//fetch event: done
 	done: function(response){
-		window.location.hash = 'role/index';
+		if(!this.modelFilled){
+			//first fetch: get model
+			this.modelFilled = true;
+			this.render();
+		}else{
+			//second fetch: submit
+			window.location.hash = 'grid/index';
+		}
 	},
 
 	render: function(){

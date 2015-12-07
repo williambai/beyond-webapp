@@ -7,8 +7,11 @@ var LayoutView = require('./views/__Layout');
 var LoginView = require('./views/_AccountLogin');
 var IndexView = require('./views/Index');
 
+var FeatureIndexView = require('./views/_FeatureIndex');
 var RoleIndexView = require('./views/_RoleIndex');
 var ChannelCategoryIndexView = require('./views/_ChannelCategoryIndex');
+var GridIndexView = require('./views/_GridIndex');
+var DepartmentIndexView = require('./views/_DepartmentIndex');
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -21,8 +24,11 @@ exports = module.exports = Backbone.Router.extend({
 		'index': 'index',
 		'login': 'login',
 		'logout': 'logout',
+		'feature/index': 'featureIndex',
 		'role/index': 'roleIndex',
 		'channel/category/index': 'channelCategoryIndex',
+		'grid/index': 'gridIndex',
+		'department/index': 'departmentIndex',
 		'*path': 'index',
 	},
 
@@ -94,6 +100,18 @@ exports = module.exports = Backbone.Router.extend({
 		});
 	},
 
+	featureIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','角色设置');
+		var featureIndexView = new FeatureIndexView({
+		});
+		this.changeView(featureIndexView);
+		featureIndexView.trigger('load');
+	},
+
 	roleIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
@@ -118,4 +136,27 @@ exports = module.exports = Backbone.Router.extend({
 		channelCategoryIndexView.trigger('load');
 	},
 
+	gridIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','网格设置');
+		var gridIndexView = new GridIndexView({
+		});
+		this.changeView(gridIndexView);
+		gridIndexView.trigger('load');
+	},
+
+	departmentIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','组织设置');
+		var departmentIndexView = new DepartmentIndexView({
+		});
+		this.changeView(departmentIndexView);
+		departmentIndexView.trigger('load');
+	},
 });

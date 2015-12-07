@@ -1,18 +1,18 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    roleTpl = require('../templates/_entityRole.tpl'),
-	Role = require('../models/Role');
+    roleTpl = require('../templates/_entityFeature.tpl'),
+	Feature = require('../models/Feature');
 
 exports = module.exports = FormView.extend({
 
-	el: '#roleForm',
+	el: '#featureForm',
 
 	initialize: function(options) {
 		var page = $(roleTpl);
 		var addTemplate = $('#addTemplate', page).html();
 		this.template = _.template(_.unescape(addTemplate || ''));
-		this.model = new Role();
+		this.model = new Feature();
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -43,7 +43,7 @@ exports = module.exports = FormView.extend({
 	},
 
 	done: function(response){
-		window.location.hash = 'role/index';
+		window.location.hash = 'feature/index';
 	},
 
 	render: function(){
