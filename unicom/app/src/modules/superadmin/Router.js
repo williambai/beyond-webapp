@@ -105,7 +105,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','角色设置');
+		this.appEvents.trigger('set:brand','功能设置');
 		var featureIndexView = new FeatureIndexView({
 		});
 		this.changeView(featureIndexView);

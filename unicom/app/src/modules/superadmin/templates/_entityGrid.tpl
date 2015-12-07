@@ -1,7 +1,5 @@
 <div>
 	<div id="indexTemplate">
-		<div id="search">
-		</div>
 		<div class="panel panel-default">
 			<div class="pull-right">
 				<button class="btn btn-primary add">新增</button>
@@ -10,6 +8,8 @@
 				<h4 class="panel-title text-center">网格管理</h4>
 			</div>
 			<div class="panel-body">
+				<div id="search">
+				</div>
 				<div id="list">
 					<hr/>
 					<div class="pull-right">
@@ -26,14 +26,17 @@
 		<form id="searchForm" class="form-inline">
 			<div class="form-group">
 				<label>搜索：</label>
-				<input type="text" name="searchStr" class="form-control" placeholder="网格名称或网格代码">
+				<input type="text" name="searchStr" class="form-control" placeholder="网格名称或网格代码">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
-				<input type="hidden" name="status[code]" value="0">
-				<input type="checkbox" name="status[code]" value="1">有效
+				<select class="form-control">
+					<option>全部</option>
+					<option>有效</option>
+					<option>无效</option>
+				</select>&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
-				<input type="submit" value="查询" class="btn btn-info">
+				<input type="submit" value="查询" class="btn btn-info btn-block">
 			</div>
 		</form>
 	</div>

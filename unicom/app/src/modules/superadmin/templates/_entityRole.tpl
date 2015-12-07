@@ -5,7 +5,7 @@
 				<button class="btn btn-primary add">新增</button>
 			</div>
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">所有角色</h4>
+				<h4 class="panel-title text-center">角色管理</h4>
 			</div>
 			<div class="panel-body">
 				<div id="list">

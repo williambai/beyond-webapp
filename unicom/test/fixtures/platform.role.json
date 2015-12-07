@@ -1,0 +1,16 @@
+[{
+	"name": "物料管理员",
+	"features": [],
+	"status": {
+		"code": 0,
+		"message": "无效"
+	}
+},{
+	"name": "金币管理员",
+	"features": [],
+	"status": {
+		"code": 1,
+		"message": "有效"
+	}
+}
+]

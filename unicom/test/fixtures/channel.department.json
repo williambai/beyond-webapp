@@ -1,10 +1,15 @@
 [{
+	"_id": "0000000241d515ba03e12b50",
 	"name": "苏州总公司",
 	"code": "SZFGS"
 }, {
+	"_id": "0000000241d515ba03e12b51",
 	"name": "昆山分公司",
-	"code": "KSFGS"
+	"code": "KSFGS",
+	"parent": "0000000241d515ba03e12b50"
 }, {
+	"_id":"0000000241d515ba03e12b52",
 	"name": "园区分公司",
-	"code": "YQFGS"
+	"code": "YQFGS",
+	"parent": "0000000241d515ba03e12b50"
 }]
