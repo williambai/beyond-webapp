@@ -1,6 +1,6 @@
 [{
 	"name": "物料名称1",
-	"code": "物料ID1",
+	"nickname": "物料ID1",
 	"description": "简要物料说明1",
 	"thumb_image_ul": "image_url",
 	"target_url": "target_url",
@@ -11,7 +11,7 @@
 	}
 }, {
 	"name": "物料名称2",
-	"code": "物料ID2",
+	"nickname": "物料ID2",
 	"description": "简要物料说明2",
 	"thumb_image_ul": "image_url",
 	"target_url": "target_url",

@@ -8,6 +8,9 @@ var LoginView = require('./views/_AccountLogin');
 var IndexView = require('./views/Index');
 
 var FeatureIndexView = require('./views/_FeatureIndex');
+var FeatureEditView = require('./views/_FeatureEdit');
+var FeatureAddView = require('./views/_FeatureAdd');
+
 var RoleIndexView = require('./views/_RoleIndex');
 var ChannelCategoryIndexView = require('./views/_ChannelCategoryIndex');
 var GridIndexView = require('./views/_GridIndex');
@@ -25,6 +28,8 @@ exports = module.exports = Backbone.Router.extend({
 		'login': 'login',
 		'logout': 'logout',
 		'feature/index': 'featureIndex',
+		'feature/add': 'featureAdd',	
+		'feature/edit/:id': 'featureEdit',
 		'role/index': 'roleIndex',
 		'channel/category/index': 'channelCategoryIndex',
 		'grid/index': 'gridIndex',
@@ -107,9 +112,40 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand','功能设置');
 		var featureIndexView = new FeatureIndexView({
+			router: this,
+			el: '#content',
 		});
 		this.changeView(featureIndexView);
 		featureIndexView.trigger('load');
+	},
+
+	featureAdd: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','新增功能');
+		var featureAddView = new FeatureAddView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(featureAddView);
+		featureAddView.trigger('load');
+	},
+
+	featureEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改功能');
+		var featureEditView = new FeatureEditView({
+			router: this,
+			el: '#content',
+			id: id
+		});
+		this.changeView(featureEditView);
+		featureEditView.trigger('load');
 	},
 
 	roleIndex: function(){

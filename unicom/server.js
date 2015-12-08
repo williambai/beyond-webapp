@@ -23,6 +23,11 @@ var config = {
 //import the models
 var models = {
 		Account: require('./models/Account')(mongoose),
+		PlatformFeature: require('./models/PlatformFeature')(mongoose),
+		PlatformRole: require('./models/PlatformRole')(mongoose),
+		ChannelCategory: require('./models/ChannelCategory')(mongoose),
+		ChannelDepartment: require('./models/ChannelDepartment')(mongoose),
+		ChannelGrid: require('./models/ChannelGrid')(mongoose),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){
@@ -98,7 +103,8 @@ app.all('*', function(req, res, next) {
 
 //import the routes
 fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file){
-	var routeName = file.substr(0,file.indexOf('.'));
+	// var routeName = file.substr(0,file.indexOf('.'));
+	var routeName = file.substr(0,file.length-3);
 	require('./routes/' + routeName)(app,models);
 });
 

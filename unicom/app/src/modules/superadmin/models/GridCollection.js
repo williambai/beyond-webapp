@@ -4,6 +4,6 @@ var config = require('../conf');
 var Model = require('./Grid');
 
 exports = module.exports = Backbone.Collection.extend({
-	url: config.api.host + '/grid',
+	url: config.api.host + 'channel/grids',
 	model: Model,
 });

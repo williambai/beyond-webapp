@@ -5,7 +5,7 @@
 	},
 	"goods": {
 		"name":"物料1",
-		"code":"物料编码1"
+		"nickname":"物料编码1"
 	},
 	"status": {
 		"code": 0,
@@ -18,7 +18,7 @@
 	},
 	"goods": {
 		"name":"物料1",
-		"code":"物料编码1"
+		"nickname":"物料编码1"
 	},
 	"status": {
 		"code": 1,
@@ -31,7 +31,7 @@
 	},
 	"goods": {
 		"name":"物料1",
-		"code":"物料编码1"
+		"nickname":"物料编码1"
 	},
 	"status": {
 		"code": -1,

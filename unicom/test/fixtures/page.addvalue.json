@@ -1,6 +1,6 @@
 [{
 	"name": "物料名称1",
-	"code": "物料ID1",
+	"nickname": "物料ID1",
 	"description": "物料描述",
 	"category": "业务类型/所属页面1",
 	"price": 10.00,
@@ -13,7 +13,7 @@
 	}
 }, {
 	"name": "物料名称2",
-	"code": "物料ID2",
+	"nickname": "物料ID2",
 	"description": "物料描述",
 	"category": "业务类型/所属页面2",
 	"price": 10.10,

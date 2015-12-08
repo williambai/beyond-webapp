@@ -1,14 +1,14 @@
 [
 {
 	"name": "孝感城北网格",
-	"code": "001AAA"
+	"nickname": "001AAA"
 },
 {
 	"name": "云梦城南网格",
-	"code": "002AAA"
+	"nickname": "002AAA"
 },
 {
 	"name": "应城城南网格",
-	"code": "003AAA"
+	"nickname": "003AAA"
 }
 ]

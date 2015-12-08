@@ -1,9 +1,16 @@
-module.exports = exports = function(mongoose){
+module.exports = exports = function(mongoose) {
 
 	var schema = new mongoose.Schema({
 		name: String,
 		description: String,
-		code: {
+		category: {
+			type: String,
+			enum: {
+				values: 'back|mobile'.split('|'), 
+				message: 'enum validator failed for path {PATH} with value {VALUE}',
+			}
+		},
+		nickname: {
 			type: String,
 			// unique: true,
 		},
@@ -25,6 +32,6 @@ module.exports = exports = function(mongoose){
 		}
 	});
 
-	schema.set('collection','platform.features');
-	return mongoose.model('PlatformFeature',schema);
+	schema.set('collection', 'platform.features');
+	return mongoose.model('PlatformFeature', schema);
 };

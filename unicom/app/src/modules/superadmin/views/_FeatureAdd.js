@@ -9,6 +9,7 @@ exports = module.exports = FormView.extend({
 	el: '#featureForm',
 
 	initialize: function(options) {
+		this.router = options.router;
 		var page = $(roleTpl);
 		var addTemplate = $('#addTemplate', page).html();
 		this.template = _.template(_.unescape(addTemplate || ''));
@@ -18,6 +19,7 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'submit form': 'submit',
+		'click .back': 'cancel',
 	},
 
 	load: function(){
@@ -42,8 +44,13 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	cancel: function(){
+		this.router.navigate('feature/index',{trigger: true, replace: true});
+		return false;
+	},
+
 	done: function(response){
-		window.location.hash = 'feature/index';
+		this.router.navigate('feature/index',{trigger: true, replace: true});
 	},
 
 	render: function(){
