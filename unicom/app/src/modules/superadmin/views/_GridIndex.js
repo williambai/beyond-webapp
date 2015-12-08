@@ -7,9 +7,8 @@ var config = require('../conf');
 
 Backbone.$ = $;
 
+var Grid = require('../models/Grid');
 var ListView = require('./_GridList');
-var AddView = require('./_GridAdd');
-var EditView = require('./_GridEdit');
 var SearchView = require('./_GridSearch');
 
 exports = module.exports = Backbone.View.extend({
@@ -19,16 +18,10 @@ exports = module.exports = Backbone.View.extend({
 	loadingTemplate: _.template(loadingTpl),
 
 	initialize: function(options) {
+		this.router = options.router;
 		var page = $(gridTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
-
-		this.addView = new AddView({
-			el: '#content',
-		});
-		this.editView = new EditView({
-			el: '#content',
-		});
 		this.on('load', this.load, this);
 	},
 
@@ -60,12 +53,24 @@ exports = module.exports = Backbone.View.extend({
 	},
 	
 	addGrid: function(){
-		this.addView.trigger('load');
+		this.router.navigate('grid/add',{trigger: true});
+		return false;
 	},
 
-	editGrid: function(){
-		this.editView.id = 'id';
-		this.editView.trigger('load');
+	editGrid: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('grid/edit/'+ id,{trigger: true});
+		return false;
+	},
+
+	removeGrid: function(evt){
+		if(window.confirm('您确信要删除吗？')){
+			var id = this.$(evt.currentTarget).parent().attr('id');
+			var model = new Grid({_id: id});
+			model.destroy({wait: true});
+			this.listView.trigger('refresh',model.urlRoot);
+		}
+		return false;
 	},
 
 	render: function() {

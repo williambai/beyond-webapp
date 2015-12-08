@@ -2,26 +2,44 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
     channelCategoryTpl = require('../templates/_entityChannelCategory.tpl'),
-	Role = require('../models/Role');
+	ChannelCategory = require('../models/ChannelCategory');
+var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
 	el: '#strategyForm',
 
 	initialize: function(options) {
+		this.router = options.router;
+		this.model = new ChannelCategory();
 		var page = $(channelCategoryTpl);
 		var addTemplate = $('#addTemplate', page).html();
 		this.template = _.template(_.unescape(addTemplate || ''));
-		this.model = new Role();
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
 		'submit form': 'submit',
+		'click .back': 'cancel',
 	},
 
 	load: function(){
+		var that = this;
 		this.render();
+		$.ajax({
+			url: config.api.host + '/platform/features',
+			type: 'GET',
+			xhrFields: {
+				withCredentials: true
+			},
+		}).done(function(data){
+			data = data || [];
+			var checkboxs = '';
+			data.forEach(function(item){
+				checkboxs += '<input type="checkbox" name="features[]" value="'+ item.nickname +'">&nbsp;'+ item.name +'&nbsp';
+			});
+			that.$('#features').html(checkboxs);
+		});
 	},
 
 	submit: function() {
@@ -42,8 +60,13 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	cancel: function(){
+		this.router.navigate('channel/category/index',{trigger: true, replace: true});
+		return false;
+	},
+
 	done: function(response){
-		window.location.hash = 'channel/category/index';
+		this.router.navigate('channel/category/index',{trigger: true, replace: true});
 	},
 
 	render: function(){

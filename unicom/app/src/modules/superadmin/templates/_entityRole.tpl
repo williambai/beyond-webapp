@@ -9,25 +9,18 @@
 			</div>
 			<div class="panel-body">
 				<div id="list">
-					<hr/>
-					<div class="pull-right">
-						<button class="btn btn-success edit">编辑</button>
-						<button class="btn btn-danger delete">删除</button>
-					</div>
-					<h4>角色名称</h4>
-					<p>状态</p>
 				</div>
 			</div>
 		</div>
 	</div>	
 	<div id="itemTemplate">
 		<hr/>
-		<div class="pull-right">
+		<div class="pull-right" id="<%= model._id %>">
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4>角色名称</h4>
-		<p>状态</p>
+		<h4><%= model.name %></h4>
+		<p><%= model.status.message %></p>
 	</div>
 	<div id="addTemplate">
 		<div class="panel panel-default">
@@ -48,15 +41,7 @@
 					</div>
 					<div class="form-group">
 						<label>角色权限：</label>
-						<div style="padding-left:30px;">
-							<input type="checkbox" name="feature[]" value="">&nbsp;权限管理&nbsp;
-							<input type="checkbox" name="feature[]" value="">&nbsp;物料管理&nbsp;
-							<input type="checkbox" name="feature[]" value="">&nbsp;报表管理&nbsp;
-							<input type="checkbox" name="feature[]" value="">&nbsp;报表管理&nbsp;
-							<input type="checkbox" name="feature[]" value="">&nbsp;报表管理&nbsp;
-							<input type="checkbox" name="feature[]" value="">&nbsp;报表管理&nbsp;
-							<input type="checkbox" name="feature[]" value="">&nbsp;报表管理&nbsp;
-							<input type="checkbox" name="feature[]" value="">&nbsp;报表管理&nbsp;
+						<div style="padding-left:30px;" id="features">
 						</div>
 					</div>
 					<div class="form-group">
@@ -72,7 +57,50 @@
 							<input type="submit" value="提交" class="btn btn-danger">
 						</div>
 						<div class="btn-group">
-							<input type="cancel" value="取消" class="btn btn-primary">
+							<button class="btn btn-primary back">取消</button>
+						</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div id="editTemplate">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title text-center">修改角色</h4>
+			</div>
+			<div class="panel-body">
+				<form id="roleForm">
+					<div class="form-group">
+						<label>角色名称：</label>
+						<input type="text" name="name" value="<%= model.name %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>角色描述：</label>
+						<input type="text" name="description" value="<%= model.description %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>角色权限：</label>
+						<div style="padding-left:30px;" id="features">
+						</div>
+					</div>
+					<div class="form-group">
+						<label>状态：</label>
+						<div style="padding-left:30px;">
+							<input type="hidden" name="status[code]" value="0">
+							<input type="checkbox" name="status[code]" value="1">有效
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group">
+							<input type="submit" value="提交" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-primary back">取消</button>
 						</div>
 						</div>
 					</div>

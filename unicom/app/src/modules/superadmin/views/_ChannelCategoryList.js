@@ -3,7 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     ListView = require('./__ListView'),
     channelCategoryTpl = require('../templates/_entityChannelCategory.tpl'),
-    RoleCollection = require('../models/RoleCollection');
+    ChannelCategoryCollection = require('../models/ChannelCategoryCollection');
 
 Backbone.$ = $;
 	
@@ -14,7 +14,7 @@ exports = module.exports = ListView.extend({
 		var page = $(channelCategoryTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
 		this.template = _.template(_.unescape(itemTemplate || ''));
-		this.collection = new RoleCollection();
+		this.collection = new ChannelCategoryCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){

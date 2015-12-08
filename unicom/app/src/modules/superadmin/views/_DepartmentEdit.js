@@ -3,6 +3,7 @@ var FormView = require('./__FormView'),
 	$ = require('jquery'),
     departmentTpl = require('../templates/_entityDepartment.tpl'),
 	Department = require('../models/Department');
+var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
@@ -11,20 +12,21 @@ exports = module.exports = FormView.extend({
 	modelFilled: false,
 
 	initialize: function(options) {
+		this.router = options.router;
+		this.model = new Department({_id: options.id});
 		var page = $(departmentTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
-		this.model = new Department();
-		this.model._id = options.id;
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
 		'submit form': 'submit',
+		'click .back': 'cancel',
+		'keyup input[name=parent_name]': 'getParentList',
 	},
 
 	load: function(){
-		this.model.url = this.model.url + '/' + this.model._id;
 		this.model.fetch({
 			xhrFields: {
 				withCredentials: true
@@ -32,15 +34,33 @@ exports = module.exports = FormView.extend({
 		});
 	},
 
+	getParentList: function(evt){
+		this.$('#departments').empty();
+		var that = this;
+		var searchStr = this.$(evt.currentTarget).val() || '';
+		if(searchStr.length >1){
+			$.ajax({
+				url: config.api.host + '/channel/departments?type=search&searchStr=' + searchStr,
+				type: 'GET',
+				xhrFields: {
+					withCredentials: true
+				},
+			}).done(function(data){
+				data = data || [];
+				var departments = '';
+				data.forEach(function(item){
+					departments += '<input type="radio" name="parent" value="'+ item._id +'">&nbsp;'+ item.name +'&nbsp' + '<br/>';
+				});
+				that.$('#departments').html(departments);
+			});				
+		}
+		return false;
+	},
+
 	submit: function() {
 		var that = this;
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		if(object.status.code == 0){
-			object.status.message = '无效';
-		}else{
-			object.status.message = '有效';
-		}
 		// console.log(this.model.attributes);
 		this.model.save(null, {
 			xhrFields: {
@@ -50,6 +70,24 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 	
+	cancel: function(){
+		this.router.navigate('department/index',{trigger: true, replace: true});
+		return false;
+	},
+	
+	//fetch event: done
+	done: function(response){
+		var that = this;
+		if(!this.modelFilled){
+			//first fetch: get model
+			this.modelFilled = true;
+			this.render();
+
+		}else{
+			//second fetch: submit
+			this.router.navigate('department/index',{trigger: true, replace: true});
+		}
+	},
 	//fetch event: done
 	done: function(response){
 		if(!this.modelFilled){

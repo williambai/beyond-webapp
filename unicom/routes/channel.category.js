@@ -1,46 +1,87 @@
  exports = module.exports = function(app, models) {
 
- 	var add = function(req,res){
- 		res.send({code: -1});
+ 	var add = function(req, res) {
+ 		var doc = new models.ChannelCategory(req.body);
+ 		doc.save(function(err) {
+ 			if (err) return res.send(err);
+ 			res.send({});
+ 		});
  	};
- 	var update = function(req,res){
- 		res.send({code: -1});
+ 	var remove = function(req,res){
+ 		var id = req.params.id;
+ 		models.ChannelCategory.findByIdAndRemove(id,function(err,doc){
+ 			if(err) return res.send(err);
+ 			res.send(doc);
+ 		});
  	};
- 	var getOne = function(req,res){
- 		res.send({code: -1});
+ 	var update = function(req, res) {
+ 		var id = req.params.id;
+ 		var set = req.body;
+ 		models.ChannelCategory.findByIdAndUpdate(id, {
+ 				$set: set
+ 			}, {
+ 				'upsert': false,
+ 				'new': true,
+ 			},
+ 			function(err, doc) {
+ 				if (err) return res.send(err);
+ 				res.send(doc);
+ 			}
+ 		);
  	};
- 	var getMore = function(req,res){
+ 	var getOne = function(req, res) {
+ 		var id = req.params.id;
+ 		models.ChannelCategory
+ 			.findById(id)
+ 			.exec(function(err, doc) {
+ 				if (err) return res.send(err);
+ 				res.send(doc);
+ 			});
+ 	};
+ 	var getMore = function(req, res) {
  		var per = 20;
-		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
+ 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
  		models.ChannelCategory
-				.find({})
-				.skip(per * page)
-				.limit(per)
-				.exec(function(err, docs) {
-					if (err) return res.send(err);
-					res.send(docs);
-				});
+ 			.find({})
+ 			.skip(per * page)
+ 			.limit(per)
+ 			.exec(function(err, docs) {
+ 				if (err) return res.send(err);
+ 				res.send(docs);
+ 			});
  	};
-	/**
+ 	/**
  	 * router outline
  	 */
  	/**
- 	 * update channel/categoies
+ 	 * add channel/categories
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/categoies/:id', update);
-
+ 	app.post('/channel/categories', add);
  	/**
- 	 * get channel/categoies
+ 	 * update channel/categories
+ 	 * type:
+ 	 *     
  	 */
- 	app.get('/channel/categoies/:id', getOne);
+ 	app.put('/channel/categories/:id', update);
 
  	/**
- 	 * get channel/categoies
+ 	 * delete channel/categories
+ 	 * type:
+ 	 *     
+ 	 */
+ 	app.delete('/channel/categories/:id', remove);
+ 	/**
+ 	 * get channel/categories
+ 	 */
+ 	app.get('/channel/categories/:id', getOne);
+
+ 	/**
+ 	 * get channel/categories
  	 * type:
  	 */
- 	app.get('/channel/categoies', getMore);
+ 	app.get('/channel/categories', getMore);
  };

@@ -3,36 +3,58 @@ var FormView = require('./__FormView'),
 	$ = require('jquery'),
     departmentTpl = require('../templates/_entityDepartment.tpl'),
 	Department = require('../models/Department');
+var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
 	el: '#departmentForm',
 
 	initialize: function(options) {
+		this.router = options.router;
+		this.model = new Department();
 		var page = $(departmentTpl);
 		var addTemplate = $('#addTemplate', page).html();
 		this.template = _.template(_.unescape(addTemplate || ''));
-		this.model = new Department();
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
 		'submit form': 'submit',
+		'click .back': 'cancel',
+		'keyup input[name=parent_name]': 'getParentList',
 	},
 
 	load: function(){
 		this.render();
 	},
 
+	getParentList: function(evt){
+		this.$('#departments').empty();
+		var that = this;
+		var searchStr = this.$(evt.currentTarget).val() || '';
+		if(searchStr.length >1){
+			$.ajax({
+				url: config.api.host + '/channel/departments?type=search&searchStr=' + searchStr,
+				type: 'GET',
+				xhrFields: {
+					withCredentials: true
+				},
+			}).done(function(data){
+				data = data || [];
+				var departments = '';
+				data.forEach(function(item){
+					departments += '<input type="radio" name="parent" value="'+ item._id +'">&nbsp;'+ item.name +'&nbsp' + '<br/>';
+				});
+				that.$('#departments').html(departments);
+			});				
+		}
+		return false;
+	},
+
 	submit: function() {
 		var that = this;
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		if(object.status.code == 0){
-			object.status.message = '无效';
-		}else{
-			object.status.message = '有效';
-		}
 		// console.log(this.model.attributes);
 		this.model.save(null, {
 			xhrFields: {
@@ -42,8 +64,13 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	cancel: function(){
+		this.router.navigate('department/index',{trigger: true, replace: true});
+		return false;
+	},
+
 	done: function(response){
-		window.location.hash = 'department/index';
+		this.router.navigate('department/index',{trigger: true, replace: true});
 	},
 
 	render: function(){

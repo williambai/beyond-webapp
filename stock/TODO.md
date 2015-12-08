@@ -31,3 +31,6 @@
 ##### phantomJS 100%
 ##### casperJS 80%
 
+### 历史成交分时明细数据
+#### 当天采集地址 http://vol.stock.hexun.com/Now/share/DealDetail.shtml?rank=3&code=600036
+#### 历史采集地址 http://vol.stock.hexun.com/Data/Stock/Trade/Min.ashx?code=600036&last=1&date=2015-12-03&count=20&page=1&callback=hx_json1449386031625869341

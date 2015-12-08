@@ -7,9 +7,8 @@ var config = require('../conf');
 
 Backbone.$ = $;
 
+var Category = require('../models/ChannelCategory');
 var ListView = require('./_ChannelCategoryList');
-var AddView = require('./_ChannelCategoryAdd');
-var EditView = require('./_ChannelCategoryEdit');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -18,24 +17,19 @@ exports = module.exports = Backbone.View.extend({
 	loadingTemplate: _.template(loadingTpl),
 
 	initialize: function(options) {
+		this.router = options.router;
 		var page = $(channelCategoryTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 
-		this.addView = new AddView({
-			el: '#content',
-		});
-		this.editView = new EditView({
-			el: '#content',
-		});
 		this.on('load', this.load, this);
 	},
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addCategrory',
-		'click .edit': 'editCategrory',
-		'click .delete': 'removeCategrory',
+		'click .add': 'addCategory',
+		'click .edit': 'editCategory',
+		'click .delete': 'removeCategory',
 	},
 
 	load: function() {
@@ -54,14 +48,26 @@ exports = module.exports = Backbone.View.extend({
 		this.listView.scroll();
 		return false;
 	},
-	
-	addCategrory: function(){
-		this.addView.trigger('load');
+
+	addCategory: function(){
+		this.router.navigate('channel/category/add',{trigger: true});
+		return false;
 	},
 
-	editCategrory: function(){
-		this.editView.id = 'id';
-		this.editView.trigger('load');
+	editCategory: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('channel/category/edit/'+ id,{trigger: true});
+		return false;
+	},
+
+	removeCategory: function(evt){
+		if(window.confirm('您确信要删除吗？')){
+			var id = this.$(evt.currentTarget).parent().attr('id');
+			var model = new Category({_id: id});
+			model.destroy({wait: true});
+			this.listView.trigger('refresh',model.urlRoot);
+		}
+		return false;
 	},
 
 	render: function() {

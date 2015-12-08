@@ -7,6 +7,7 @@ module.exports = exports = function(mongoose){
 			type: String,
 			unique: true,
 		},
+		features: []
 	});
 
 	schema.set('collection','channel.categories');

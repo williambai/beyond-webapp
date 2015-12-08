@@ -7,9 +7,8 @@ var config = require('../conf');
 
 Backbone.$ = $;
 
+var Role = require('../models/Role');
 var ListView = require('./_RoleList');
-var AddView = require('./_RoleAdd');
-var EditView = require('./_RoleEdit');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -18,16 +17,10 @@ exports = module.exports = Backbone.View.extend({
 	loadingTemplate: _.template(loadingTpl),
 
 	initialize: function(options) {
+		this.router = options.router;
 		var page = $(roleTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
-
-		this.addView = new AddView({
-			el: '#content',
-		});
-		this.editView = new EditView({
-			el: '#content',
-		});
 		this.on('load', this.load, this);
 	},
 
@@ -56,12 +49,24 @@ exports = module.exports = Backbone.View.extend({
 	},
 	
 	addRole: function(){
-		this.addView.trigger('load');
+		this.router.navigate('role/add',{trigger: true});
+		return false;
 	},
 
-	editRole: function(){
-		this.editView.id = 'id';
-		this.editView.trigger('load');
+	editRole: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('role/edit/'+ id,{trigger: true});
+		return false;
+	},
+
+	removeRole: function(evt){
+		if(window.confirm('您确信要删除吗？')){
+			var id = this.$(evt.currentTarget).parent().attr('id');
+			var model = new Role({_id: id});
+			model.destroy({wait: true});
+			this.listView.trigger('refresh',model.urlRoot);
+		}
+		return false;
 	},
 
 	render: function() {

@@ -11,13 +11,6 @@
 				<div id="search">
 				</div>
 				<div id="list">
-					<hr/>
-					<div class="pull-right">
-						<button class="btn btn-success edit">编辑</button>
-						<button class="btn btn-danger delete">删除</button>
-					</div>
-					<h4>网格名称</h4>
-					<p>网格编码，状态</p>
 				</div>
 			</div>
 		</div>
@@ -42,12 +35,12 @@
 	</div>
 	<div id="itemTemplate">
 		<hr/>
-		<div class="pull-right">
+		<div class="pull-right" id="<%= model._id %>">
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4>网格名称</h4>
-		<p>网格编码，状态</p>
+		<h4><%= model.name %></h4>
+		<p></p>
 	</div>
 	<div id="addTemplate">
 		<div class="panel panel-default">
@@ -67,18 +60,9 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>网格归属：</label>
-						<div style="padding-left:30px;">
-							<input type="checkbox" name="feature[]" value="">&nbsp;后台支撑&nbsp;
-							<input type="checkbox" name="feature[]" value="">&nbsp;渠道支撑&nbsp;
-						</div>
-					</div>
-					<div class="form-group">
-						<label>状态：</label>
-						<div style="padding-left:30px;">
-							<input type="hidden" name="status[code]" value="0">
-							<input type="checkbox" name="status[code]" value="1">有效
-						</div>
+						<label>网格编码：</label>
+						<input type="text" name="nickname" value="" class="form-control">
+						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
@@ -86,7 +70,7 @@
 							<input type="submit" value="提交" class="btn btn-danger">
 						</div>
 						<div class="btn-group">
-							<input type="cancel" value="取消" class="btn btn-primary">
+							<button class="btn btn-primary back">取消</button>
 						</div>
 						</div>
 					</div>
@@ -94,4 +78,40 @@
 			</div>
 		</div>
 	</div>
+	<div id="editTemplate">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title text-center">新增网格</h4>
+			</div>
+			<div class="panel-body">
+				<form id="roleForm">
+					<div class="form-group">
+						<label>网格名称：</label>
+						<input type="text" name="name" value="<%= model.name %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>网格描述：</label>
+						<input type="text" name="description" value="<%= model.description %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>网格编码：</label>
+						<input type="text" name="nickname" value="<%= model.nickname %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group">
+							<input type="submit" value="提交" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-primary back">取消</button>
+						</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>	
 </div>

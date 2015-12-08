@@ -3,6 +3,7 @@ var FormView = require('./__FormView'),
 	$ = require('jquery'),
     gridTpl = require('../templates/_entityGrid.tpl'),
 	Grid = require('../models/Grid');
+var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
@@ -11,20 +12,20 @@ exports = module.exports = FormView.extend({
 	modelFilled: false,
 
 	initialize: function(options) {
+		this.router = options.router;
+		this.model = new Grid({_id: options.id});
 		var page = $(gridTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
-		this.model = new Grid();
-		this.model._id = options.id;
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
 		'submit form': 'submit',
+		'click .back': 'cancel',
 	},
 
 	load: function(){
-		this.model.url = this.model.url + '/' + this.model._id;
 		this.model.fetch({
 			xhrFields: {
 				withCredentials: true
@@ -36,11 +37,6 @@ exports = module.exports = FormView.extend({
 		var that = this;
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		if(object.status.code == 0){
-			object.status.message = '无效';
-		}else{
-			object.status.message = '有效';
-		}
 		// console.log(this.model.attributes);
 		this.model.save(null, {
 			xhrFields: {
@@ -50,6 +46,12 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 	
+
+	cancel: function(){
+		this.router.navigate('grid/index',{trigger: true, replace: true});
+		return false;
+	},
+
 	//fetch event: done
 	done: function(response){
 		if(!this.modelFilled){
@@ -58,7 +60,7 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			window.location.hash = 'grid/index';
+			this.router.navigate('grid/index',{trigger: true, replace: true});
 		}
 	},
 

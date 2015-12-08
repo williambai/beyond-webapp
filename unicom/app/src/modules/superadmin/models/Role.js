@@ -4,6 +4,8 @@ var config = require('../conf');
 
 exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + 'platform/roles',
-	
+	urlRoot: config.api.host + '/platform/roles',
+	defaults: {
+		status: {}
+	}
 });
