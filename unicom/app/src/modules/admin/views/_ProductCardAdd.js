@@ -1,18 +1,18 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    recommendTpl = require('../templates/_entityPageRecommend.tpl'),
-	PageRecommend = require('../models/PageRecommend');
+    cardTpl = require('../templates/_entityProductCard.tpl'),
+	ProductCard = require('../models/ProductCard');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
-	el: '#recommendForm',
+	el: '#cardForm',
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new PageRecommend();
-		var page = $(recommendTpl);
+		this.model = new ProductCard();
+		var page = $(cardTpl);
 		var addTemplate = $('#addTemplate', page).html();
 		this.template = _.template(_.unescape(addTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -41,12 +41,12 @@ exports = module.exports = FormView.extend({
 	},
 
 	cancel: function(){
-		this.router.navigate('recommend/index',{trigger: true, replace: true});
+		this.router.navigate('card/index',{trigger: true, replace: true});
 		return false;
 	},
 
 	done: function(response){
-		this.router.navigate('recommend/index',{trigger: true, replace: true});
+		this.router.navigate('card/index',{trigger: true, replace: true});
 	},
 
 	render: function(){

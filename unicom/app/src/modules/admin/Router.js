@@ -20,10 +20,14 @@ var ChannelCustomerIndexView = require('./views/_ChannelCustomerIndex');
 var ChannelCustomerAddView = require('./views/_ChannelCustomerAdd');
 var ChannelCustomerEditView = require('./views/_ChannelCustomerEdit');
 
-
 var PageRecommendIndexView = require('./views/_PageRecommendIndex');
 var PageRecommendAddView = require('./views/_PageRecommendAdd');
 var PageRecommendEditView = require('./views/_PageRecommendEdit');
+
+var ProductCardIndexView = require('./views/_ProductCardIndex');
+var ProductCardAddView = require('./views/_ProductCardAdd');
+var ProductCardEditView = require('./views/_ProductCardEdit');
+var ProductCardImportView = require('./views/_ProductCardImport');
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -49,6 +53,10 @@ exports = module.exports = Backbone.Router.extend({
 		'recommend/index': 'recommendIndex',
 		'recommend/add': 'recommendAdd',
 		'recommend/edit/:id': 'recommendEdit',
+		'card/index': 'cardIndex',
+		'card/add': 'cardAdd',
+		'card/edit/:id': 'cardEdit',
+		'card/import': 'cardImport',
 
 		'*path': 'index',
 	},
@@ -195,7 +203,7 @@ exports = module.exports = Backbone.Router.extend({
 		channelIndexView.trigger('load');
 	},	
 
-	channelAdd: function(id){
+	channelAdd: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
@@ -238,7 +246,7 @@ exports = module.exports = Backbone.Router.extend({
 		customerIndexView.trigger('load');
 	},	
 
-	customerAdd: function(id){
+	customerAdd: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
@@ -281,7 +289,7 @@ exports = module.exports = Backbone.Router.extend({
 		recommendIndexView.trigger('load');
 	},	
 
-	recommendAdd: function(id){
+	recommendAdd: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
@@ -308,5 +316,62 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(recommendEditView);
 		recommendEditView.trigger('load');
+	},		
+
+	cardIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','卡号管理');
+		var cardIndexView = new ProductCardIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(cardIndexView);
+		cardIndexView.trigger('load');
+	},	
+
+	cardAdd: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','新增卡号');
+		var cardAddView = new ProductCardAddView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(cardAddView);
+		cardAddView.trigger('load');
+	},	
+
+	cardImport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','卡号导入');
+		var cardImportView = new ProductCardImportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(cardImportView);
+		cardImportView.trigger('load');
+	},	
+
+	cardEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改卡号');
+		var cardEditView = new ProductCardEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(cardEditView);
+		cardEditView.trigger('load');
 	},		
 });
