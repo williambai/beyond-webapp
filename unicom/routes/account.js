@@ -5,6 +5,21 @@
 
  	var Account = models.Account;
 
+ 	var add = function(req, res) {
+ 		var doc = new models.Account(req.body);
+ 		doc.save(function(err) {
+ 			if (err) return res.send(err);
+ 			res.send({});
+ 		});
+ 	};
+	var remove = function(req,res){
+ 		var id = req.params.id;
+ 		models.Account.findByIdAndRemove(id,function(err,doc){
+ 			if(err) return res.send(err);
+ 			res.send(doc);
+ 		});
+ 	};
+
  	var update = function(req, res) {
  		var accountId = req.params.id == 'me' ? req.session.accountId : req.params.id;
  		var type = req.query.type || '';
@@ -118,6 +133,11 @@
  	 * router outline
  	 */
  	/**
+ 	 * add account
+ 	 *     
+ 	 */
+ 	app.post('/accounts', app.isLogined, add);
+ 	/**
  	 * update account
  	 * type:
  	 *     avatar
@@ -126,6 +146,11 @@
  	app.put('/accounts/:id', app.isLogined, update);
 
  	/**
+ 	 * delete account
+ 	 *     
+ 	 */
+ 	app.delete('/accounts/:id', remove);
+	/**
  	 * get account
  	 */
  	app.get('/accounts/:id', app.isLogined, getOne);

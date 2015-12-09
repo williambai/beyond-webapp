@@ -1,15 +1,15 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    acccountTpl = require('../templates/_entityAccount.tpl'),
+    channelTpl = require('../templates/_entityChannelEntity.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var Account = require('../models/Account');
-var SearchView = require('./_AccountSearch');
-var ListView = require('./_AccountList');
+var ChannelEntity = require('../models/ChannelEntity');
+var ListView = require('./_ChannelEntityList');
+var SearchView = require('./_ChannelEntitySearch');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -19,24 +19,24 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(acccountTpl);
+		var page = $(channelTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
-
 		this.on('load', this.load, this);
 	},
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addAccount',
-		'click .edit': 'editAccount',
-		'click .delete': 'removeAccount',
+		'click .add': 'addChannelEntity',
+		'click .edit': 'editChannelEntity',
+		'click .delete': 'removeChannelEntity',
 	},
 
 	load: function() {
 		var that = this;
 		this.loaded = true;
 		this.render();
+
 		this.searchView = new SearchView({
 			el: '#search',
 		});
@@ -52,27 +52,27 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addAccount: function(){
-		this.router.navigate('account/add',{trigger: true});
+	addChannelEntity: function(){
+		this.router.navigate('channel/add',{trigger: true});
 		return false;
 	},
 
-	editAccount: function(evt){
+	editChannelEntity: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('account/edit/'+ id,{trigger: true});
+		this.router.navigate('channel/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeAccount: function(evt){
+	removeChannelEntity: function(evt){
 		if(window.confirm('您确信要删除吗？')){
 			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new Account({_id: id});
+			var model = new ChannelEntity({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh',model.urlRoot);
 		}
 		return false;
 	},
-	
+
 	render: function() {
 		if (!this.loaded) {
 			this.$el.html(this.loadingTemplate());

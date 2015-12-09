@@ -1,32 +1,16 @@
 <div>
 	<div id="indexTemplate">
-		<div id="search">
-		</div>
-		<hr/>
 		<div class="panel panel-default">
 			<div class="pull-right">
-				<button class="btn btn-primary">新增</button>
+				<button class="btn btn-primary add">新增</button>
 			</div>
 			<div class="panel-heading">
 				<h4 class="panel-title text-center">账号列表</h4>
 			</div>
 			<div class="panel-body">
+				<div id="search">
+				</div>
 				<div id="list">
-					<hr/>
-					<div class="media">
-						<div class="media-left">
-							<a href="#">
-								<img class="media-object" src="" alt="" height="50px" width="50px">
-							</a>
-						</div>
-						<div class="media-body">
-							<h4 class="media-heading">用户名</h4>
-							<p>用户账号，用户角色</p>
-						</div>
-						<div class="media-right">
-							<button class="btn btn-info">编辑</button>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -35,19 +19,22 @@
 		<form id="searchForm" class="form-inline">
 			<div class="form-group">
 				<label>搜索：</label>
-				<input type="text" name="searchStr" class="form-control" placeholder="用户名/用户账号">
+				<input type="text" name="searchStr" class="form-control" placeholder="用户名/用户账号">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
-				<input type="hidden" name="status[code]" value="0">
-				<input type="checkbox" name="status[code]" value="1">有效
+				<select class="form-control">
+					<option>全部</option>
+					<option>有效</option>
+					<option>无效</option>
+				</select>&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
-				<input type="submit" value="查询" class="btn btn-info">
+				<input type="submit" value="查询" class="btn btn-info btn-block">
 			</div>
 		</form>
+		<hr/>
 	</div>
 	<div id="itemTemplate">
-		<hr/>
 		<div class="media">
 			<div class="media-left">
 				<a href="#">
@@ -55,13 +42,15 @@
 				</a>
 			</div>
 			<div class="media-body">
-				<h5 class="media-heading">用户名</h5>
-				<p>用户账号，用户角色</p>
+				<h5 class="media-heading"><%= model.username %></h5>
+				<p><%= model.email %></p>
 			</div>
-			<div class="media-right">
-				<button class="btn btn-info">编辑</button>
+			<div class="media-right" id="<%= model._id %>">
+				<button class="btn btn-success edit">编辑</button>
+				<button class="btn btn-danger delete">删除</button>
 			</div>
 		</div>
+		<hr/>
 	</div>
 	<div id="loginTemplate">
 		<p></p>
@@ -160,6 +149,50 @@
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>
+	<div id="addTemplate">
+		<div class="form-group">
+			<% if(/\.png$/.test(model.avatar)){ %>
+			<!-- <img src="<%= model.avatar %>" width="120px" height="160px"> -->
+			<% }else{ %>
+			<img src="" width="120px" height="160px">
+			<% } %>
+			<br>
+			<input type="file" name="avatar"/>
+		</div>
+
+		<div id="accountForm">
+			<form>
+				<div class="form-group">
+					<label for="username">姓名：</label>
+					<input type="text" name="username" value="" class="form-control"></div>
+				<div class="form-group">
+					<label for="email">电子邮件：</label>
+					<input type="text" name="email" value="" class="form-control"></div>
+				<div class="form-group">
+					<label for="password">密码：</label>
+					<input type="password" name="password" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="password">密码(再次)：</label>
+					<input type="password" name="cpassword" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="biography">自传：</label>
+					<textarea name="biography" rows="3" class="form-control"></textarea>
+				</div>
+				<div class="form-group">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group">
+							<input type="submit" value="提交" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-primary back">取消</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 	<div id="editTemplate">
 		<div class="form-group">
 			<% if(/\.png$/.test(model.avatar)){ %>
@@ -192,7 +225,14 @@
 					<textarea name="biography" rows="3" class="form-control"><%= model.biography %></textarea>
 				</div>
 				<div class="form-group">
-					<input type="submit" class="btn btn-block btn-primary"/>
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group">
+							<input type="submit" value="提交" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-primary back">取消</button>
+						</div>
+					</div>
 				</div>
 			</form>
 		</div>

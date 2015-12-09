@@ -28,6 +28,9 @@ var models = {
 		ChannelCategory: require('./models/ChannelCategory')(mongoose),
 		ChannelDepartment: require('./models/ChannelDepartment')(mongoose),
 		ChannelGrid: require('./models/ChannelGrid')(mongoose),
+		ChannelEntity: require('./models/ChannelEntity')(mongoose),
+		ChannelCustomer: require('./models/ChannelCustomer')(mongoose),
+		PageRecommend: require('./models/PageRecommend')(mongoose),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

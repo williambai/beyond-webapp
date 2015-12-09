@@ -23,7 +23,7 @@ exports = module.exports = FormView.extend({
 	events: {
 		'submit form': 'submit',
 		'click .back': 'cancel',
-		'keyup input[name=parent_name]': 'getParentList',
+		'keyup input[name=parent]': 'getParentList',
 	},
 
 	load: function(){
@@ -49,7 +49,7 @@ exports = module.exports = FormView.extend({
 				data = data || [];
 				var departments = '';
 				data.forEach(function(item){
-					departments += '<input type="radio" name="parent" value="'+ item._id +'">&nbsp;'+ item.name +'&nbsp' + '<br/>';
+					departments += '<option label="'+ item.name +'" value="'+ item._id +'">';
 				});
 				that.$('#departments').html(departments);
 			});				

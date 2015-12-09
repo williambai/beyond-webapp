@@ -67,11 +67,11 @@
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
-							<input type="submit" value="提交" class="btn btn-danger">
-						</div>
-						<div class="btn-group">
-							<button class="btn btn-primary back">取消</button>
-						</div>
+								<input type="submit" value="提交" class="btn btn-danger">
+							</div>
+							<div class="btn-group">
+								<button class="btn btn-primary back">取消</button>
+							</div>
 						</div>
 					</div>
 				</form>

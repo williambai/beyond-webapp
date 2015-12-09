@@ -1,9 +1,9 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
-var Account = require('./Account');
+var ChannelEntity = require('./ChannelEntity');
 var config = require('../conf');
 
 exports = module.exports = Backbone.Collection.extend({
-	url: config.api.host + '/accounts',
-	model: Account,
+	url: config.api.host + '/channel/entities',
+	model: ChannelEntity,
 });

@@ -16,7 +16,7 @@
 					&nbsp;渠道管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#channel/customer/index">
+				<a class="list-group-item" href="#customer/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;客户管理
 					<i class="fa fa-chevron-right pull-right"></i>
@@ -24,6 +24,11 @@
 				<a class="list-group-item" href="#goods/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;物料管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#card/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;卡号管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#money/index">
@@ -48,7 +53,7 @@
 				</a>
 			</div>
 			<div class="list-group">
-				<a class="list-group-item" href="#user/index">
+				<a class="list-group-item" href="#account/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;账号管理
 					<i class="fa fa-chevron-right pull-right"></i>
@@ -63,9 +68,14 @@
 					&nbsp;增值产品配置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#page/recommand/index">
+				<a class="list-group-item" href="#recommend/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;推荐产品配置
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#activity/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;推荐活动配置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#goods/bonus/index">
