@@ -32,6 +32,7 @@ var models = {
 		ChannelCustomer: require('./models/ChannelCustomer')(mongoose),
 		PageRecommend: require('./models/PageRecommend')(mongoose),
 		ProductCard: require('./models/ProductCard')(mongoose),
+		OrderCard: require('./models/OrderCard')(mongoose),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

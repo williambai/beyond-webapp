@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery'),
-    cardTpl = require('../templates/_entityCard.tpl'),
+    cardTpl = require('../templates/_entityOrderCard.tpl'),
     SearchView = require('./__SearchView');
 var config = require('../conf');
 
@@ -20,8 +20,7 @@ exports = module.exports = SearchView.extend({
 	},
 
 	events: {
-		'submit form': 'search',
-		'reset form': 'reset',
+		'submit form': 'search'
 	},
 
 	load: function(){

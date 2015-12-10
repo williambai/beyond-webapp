@@ -12,6 +12,8 @@ var ProfileEditView = require('./views/_AccountEdit');
 var IndexView = require('./views/Index');
 
 var CardIndexView = require('./views/_CardIndex');
+var OrderCardAddView = require('./views/_OrderCardAdd');
+
 var PushIndexView = require('./views/_PushIndex');
 var DataIndexView = require('./views/_DataIndex');
 var SmsIndexView = require('./views/_SmsIndex');
@@ -35,6 +37,8 @@ exports = module.exports = Backbone.Router.extend({
 		'profile/me/edit': 'profileEdit',
 
 		'card/index': 'cardIndex',
+		'order/card/:id/add': 'orderCardAdd',
+
 		'push/index': 'pushIndex',
 		'data/index': 'dataIndex',
 		'sms/index': 'smsIndex',
@@ -174,12 +178,28 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '卡号');
+		this.appEvents.trigger('set:brand', '号卡');
 		var cardIndexView = new CardIndexView({
-			el: '#content'
+			router: this,
+			el: '#content',
 		});
 		this.changeView(cardIndexView);
 		cardIndexView.trigger('load');
+	},
+
+	orderCardAdd: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '卡号推荐');
+		var orderCardAddView = new OrderCardAddView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(orderCardAddView);
+		orderCardAddView.trigger('load');
 	},
 
 	pushIndex: function() {

@@ -29,6 +29,11 @@ var ProductCardAddView = require('./views/_ProductCardAdd');
 var ProductCardEditView = require('./views/_ProductCardEdit');
 var ProductCardImportView = require('./views/_ProductCardImport');
 
+var OrderCardIndexView = require('./views/_OrderCardIndex');
+var OrderCardAddView = require('./views/_OrderCardAdd');
+var OrderCardEditView = require('./views/_OrderCardEdit');
+var OrderCardViewView = require('./views/_OrderCardView');
+
 exports = module.exports = Backbone.Router.extend({
 
 	account: null,//login account
@@ -57,6 +62,10 @@ exports = module.exports = Backbone.Router.extend({
 		'card/add': 'cardAdd',
 		'card/edit/:id': 'cardEdit',
 		'card/import': 'cardImport',
+		'order/card/index': 'orderCardIndex',
+		'order/card/add': 'orderCardAdd',
+		'order/card/view/:id': 'orderCardView',
+		'order/card/edit/:id': 'orderCardEdit',
 
 		'*path': 'index',
 	},
@@ -373,5 +382,63 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(cardEditView);
 		cardEditView.trigger('load');
-	},		
+	},
+
+	orderCardIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','卡号订单管理');
+		var orderCardIndexView = new OrderCardIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(orderCardIndexView);
+		orderCardIndexView.trigger('load');
+	},	
+
+	orderCardAdd: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','新增卡号订单');
+		var orderCardAddView = new OrderCardAddView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(orderCardAddView);
+		orderCardAddView.trigger('load');
+	},	
+
+	orderCardEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改卡号订单');
+		var orderCardEditView = new OrderCardEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(orderCardEditView);
+		orderCardEditView.trigger('load');
+	},				
+
+	orderCardView: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','查看卡号订单');
+		var orderCardViewView = new OrderCardViewView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(orderCardViewView);
+		orderCardViewView.trigger('load');
+	},	
 });

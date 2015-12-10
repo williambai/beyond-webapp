@@ -1,149 +1,174 @@
 <div>
 	<div id="indexTemplate">
-		<button class="btn btn-primary pull-right search">过滤</button>
-		<p>&nbsp;</p>
-		<hr/>
-		<div class="container">
-			<div class="row bg-info">
-				<div class="col-xs-4">号码</div>
-				<div class="col-xs-4">预存</div>
-				<div class="col-xs-4"><a class="recommend">推荐</a></div>
+		<div class="panel panel-default">
+			<div class="pull-right">
+				<button class="btn btn-primary search">过滤</button>
 			</div>
-			<div id="list">
+			<div class="panel-heading">
+				<h4 class="panel-title text-center">推荐号卡</h4>
+			</div>
+			<div class="panel-body">
+				<div id="search">
+				</div>
+				<div id="list">
+				</div>
 			</div>
 		</div>
-	</div>
+	</div>	
 	<div id="itemTemplate">
-		<div class="row">
-			<div class="col-xs-4">号码</div>
-			<div class="col-xs-4">预存</div>
-			<div class="col-xs-4 recommend">推荐</div>
+		<div class="pull-right" id="<%= model._id %>">
+			<button class="btn btn-success recommend">推荐</button>
 		</div>
+		<h4>号码：<%= model.cardNo %></h4>
+		<p>预存：<%= model.price %>元</p>
+		<hr/>
 	</div>
 	<div id="searchTemplate">
-		<button class="btn btn-primary back">返回</button>
-		<hr/>
-		<form id="searchForm">
-			<div class="form-group">
-				<label>号段：</label>
-				<input type="text" name="range" class="form-control">
-				<span class="help-block"></span>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title text-center">号卡筛选</h4>
 			</div>
-			<div class="form-group">
-				<label>靓号类型：</label>
-				<input type="text" name="category" class="form-control">
-				<span class="help-block"></span>
-			</div>
-			<div class="form-group">
-				<label>预存话费：</label>
-				<input type="text" name="price" class="form-control">
-				<span class="help-block"></span>
-			</div>
-			<div class="form-group">
-				<input type="submit" value="确定" class="btn btn-primary btn-block">
-			</div>
-		</form>
-	</div>
-	<div id="recommendTemplate">
-		<button class="btn btn-primary back">返回</button>
-		<hr/>
-		<form>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h5 class="panel-title text-center">卡号信息</h5>
-				</div>
-				<div class="panel-body">
+			<div class="panel-body">
+				<form id="searchForm">
 					<div class="form-group">
-						<label>卡号：</label>
-						<input type="text" name="mobile" class="form-control" readonly>
+						<label>号段：</label>
+						<input type="checkbox" name="cardRange" value="186">&nbsp;186&nbsp;
+						<input type="checkbox" name="cardRange" value="185">&nbsp;185&nbsp;
+						<input type="checkbox" name="cardRange" value="156">&nbsp;156&nbsp;
+						<input type="checkbox" name="cardRange" value="131">&nbsp;131&nbsp;
+						<input type="checkbox" name="cardRange" value="132">&nbsp;132&nbsp;
+						<input type="checkbox" name="cardRange" value="155">&nbsp;155&nbsp;
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>套餐：<a id="selectPackage">选择套餐</a></label>
-						<input type="text" name="mobile" class="form-control" readonly>
+						<label>靓号类型：</label>
+						<input type="checkbox" name="category" value="AAAAA">&nbsp;五连号AAAAA&nbsp;
+						<input type="checkbox" name="category" value="AAAA">&nbsp;四连号AAAA&nbsp;
+						<input type="checkbox" name="category" value="ABCDE">&nbsp;ABCDE&nbsp;
+						<input type="checkbox" name="category" value="ABCD">&nbsp;ABCD&nbsp;
+						<input type="checkbox" name="category" value="AAA">&nbsp;AAA&nbsp;
+						<input type="checkbox" name="category" value="AABB">&nbsp;AABB&nbsp;
+						<input type="checkbox" name="category" value="ABAB">&nbsp;ABAB&nbsp;
+						<input type="checkbox" name="category" value="ABC">&nbsp;ABC&nbsp;
+						<input type="checkbox" name="category" value="AA">&nbsp;AA&nbsp;
 						<span class="help-block"></span>
 					</div>
-					<hr/>
 					<div class="form-group">
-						<label>总价：</label>
-						<input type="text" name="price" class="form-control" readonly>
+						<label>预存话费：</label>
+						<input type="radio" name="price" value="0">&nbsp;0~100&nbsp;
+						<input type="radio" name="price" value="1">&nbsp;101~200&nbsp;
+						<input type="radio" name="price" value="2">&nbsp;201~300&nbsp;
+						<input type="radio" name="price" value="3">&nbsp;301~400&nbsp;
+						<input type="radio" name="price" value="4">&nbsp;401~500&nbsp;
+						<input type="radio" name="price" value="5">&nbsp;501以上&nbsp;
 						<span class="help-block"></span>
 					</div>
-				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h5 class="panel-title text-center">客户信息</h5>
-				</div>
-				<div class="panel-body">
 					<div class="form-group">
-						<label>客户姓名：</label>
-							<input type="text" name="customer[name]" class="form-control">
-							<span class="help-block"></span>
+						<label><u>注：不选，表示此项不限制。</u></label>
 					</div>
 					<div class="form-group">
-						<label>证件类型：</label>
-							<input type="text" name="customer[cardtype]" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>证件号码：</label>
-							<input type="text" name="customer[cardno]" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>证件地址：</label>
-							<input type="text" name="customer[address]" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>联系电话：</label>
-							<input type="text" name="customer[contact][phone]" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>联系地址：</label>
-							<input type="text" name="customer[contact][address]" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>营业厅：</label>
-							<input type="text" name="" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<input type="submit" value="确定订购" class="btn btn-primary btn-block">
-					</div>
-				</div>
-			</div>
-		</form>
-	</div>
-	<div id="packageTemplate">
-		<button class="btn btn-primary back">返回</button>
-		<hr/>
-		<div class="tabs">
-			<div class="row">
-				<div class="col-xs-3">A套餐</div>
-				<div class="col-xs-3">B套餐</div>
-				<div class="col-xs-3">C套餐</div>
-				<div class="col-xs-3">自由组合</div>
-			</div>
-			<div class="tab">
-			</div>
-			<div class="tab">
-			</div>
-			<div class="tab">
-			</div>
-			<div class="tab">
-				<form>
-					<h4>全国流量包</h4>
-					<h4>全国语音包</h4>
-					<h4>短/彩信包</h4>
-					<h4>来电显示</h4>
-					<div class="form-group">
-						<input type="submit" value="确认" class="btn btn-primary btn-block">
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group">
+							<input type="submit" value="确定" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<input type="reset" value="重置" class="btn btn-primary">
+						</div>
+						</div>
 					</div>
 				</form>
+			</div>
+		</div>
+	</div>
+	<div id="packageTemplate">
+		<div class="panel panel-success">
+			<div class="panel-heading">
+				<h4 class="panel-title text-center">号卡套餐</h4>
+			</div>
+			<div class="panel-body">
+				<div class="btn-group btn-group-justified">
+					<div class="btn btn-success tabControl">A套餐</div>
+					<div class="btn btn-default tabControl">B套餐</div>
+					<div class="btn btn-default tabControl">C套餐</div>
+					<div class="btn btn-default tabControl">自由组合</div>
+				</div>
+				<hr/>
+				<div class="tabs">
+					<div class="tab">
+						<div class="form-group">
+							<input type="hidden" name="package" value="A">
+							<a class="bg-success selectItem"><input type="radio" name="item[]" value="46" class="hidden">&nbsp; 46元套餐</a>&nbsp;
+							<input type="radio" name="item[]" value="66">&nbsp;66元套餐&nbsp;
+							<input type="radio" name="item[]" value="96">&nbsp;96元套餐&nbsp;
+							<input type="radio" name="item[]" value="126">&nbsp;126元套餐&nbsp;
+							<input type="radio" name="item[]" value="156">&nbsp;156元套餐&nbsp;
+							<input type="radio" name="item[]" value="186">&nbsp;186元套餐&nbsp;
+							<input type="radio" name="item[]" value="226">&nbsp;226元套餐&nbsp;
+							<input type="radio" name="item[]" value="286">&nbsp;286元套餐&nbsp;
+							<input type="radio" name="item[]" value="386">&nbsp;386元套餐&nbsp;
+						</div>
+					</div>
+					<div class="tab">
+						<div class="form-group">
+							<input type="hidden" name="package" value="B">
+							<input type="radio" name="item[]" value="46">&nbsp;46元套餐&nbsp;
+							<input type="radio" name="item[]" value="66">&nbsp;66元套餐&nbsp;
+							<input type="radio" name="item[]" value="96">&nbsp;96元套餐&nbsp;
+							<input type="radio" name="item[]" value="126">&nbsp;126元套餐&nbsp;
+							<input type="radio" name="item[]" value="156">&nbsp;156元套餐&nbsp;
+							<input type="radio" name="item[]" value="186">&nbsp;186元套餐&nbsp;
+						</div>
+					</div>
+					<div class="tab">
+						<div class="form-group">
+							<input type="hidden" name="package" value="C">
+							<input type="radio" name="item[]" value="46">&nbsp;46元套餐&nbsp;
+							<input type="radio" name="item[]" value="66">&nbsp;66元套餐&nbsp;
+							<input type="radio" name="item[]" value="96">&nbsp;96元套餐&nbsp;
+						</div>
+					</div>
+					<div class="tab">
+							<h4>全国流量包</h4>
+							<input type="hidden" name="package" value="D">
+							<div class="form-group">
+								<input type="radio" name="chinaData" value="">8元包100MB&nbsp;
+								<input type="radio" name="chinaData" value="">&nbsp;16元包300MB&nbsp;
+								<input type="radio" name="chinaData" value="">&nbsp;24元包500MB&nbsp;
+								<input type="radio" name="chinaData" value="">&nbsp;48元包1GB&nbsp;
+								<input type="radio" name="chinaData" value="">&nbsp;72元包2GB&nbsp;
+								<input type="radio" name="chinaData" value="">&nbsp;96元包3GB&nbsp;
+								<input type="radio" name="chinaData" value="">&nbsp;120元包4GB&nbsp;
+								<input type="radio" name="chinaData" value="">&nbsp;152元包5GB&nbsp;
+								<input type="radio" name="chinaData" value="">&nbsp;232元包11GB&nbsp;
+							</div>
+							<hr/>
+							<h4>全国语音包</h4>
+							<div class="form-group">
+								<input type="radio" name="chinaVoice" value="">32元包200分钟&nbsp;
+								<input type="radio" name="chinaVoice" value="">&nbsp;40元包300分钟&nbsp;
+								<input type="radio" name="chinaVoice" value="">&nbsp;56元包500分钟&nbsp;
+								<input type="radio" name="chinaVoice" value="">&nbsp;112元包1000分钟&nbsp;
+								<input type="radio" name="chinaVoice" value="">&nbsp;160元包3000分钟&nbsp;
+								<input type="radio" name="chinaVoice" value="">&nbsp;暂不需要&nbsp;
+							</div>
+							<hr/>
+							<h4>短/彩信包</h4>
+							<div class="form-group">
+								<input type="radio" name="sms" value="">&nbsp;10元包200条&nbsp;
+								<input type="radio" name="sms" value="">&nbsp;20元包400条&nbsp;
+								<input type="radio" name="sms" value="">&nbsp;30元包600条&nbsp;
+								<input type="radio" name="sms" value="">&nbsp;暂不需要&nbsp;
+							</div>
+							<h4>来电显示</h4>
+							<div class="form-group">
+								<input type="radio" name="displayNo" value="">&nbsp;6元/月来电显示&nbsp;
+								<input type="radio" name="displayNo" value="">&nbsp;暂不需要&nbsp;
+							</div>
+					</div>
+					<div class="form-group">
+							<button class="btn btn-primary btn-block" id="packageSelected">确认</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
