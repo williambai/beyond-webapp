@@ -26,14 +26,14 @@
 					&nbsp;物料管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
+				<!-- <a class="list-group-item" href="#revenue/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;金币管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
 				<a class="list-group-item" href="#card/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;卡号管理
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
-				<a class="list-group-item" href="#money/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;金币管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#order/card/index">
@@ -50,17 +50,22 @@
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;商品兑换订单
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
+				</a> -->
 			</div>
 			<div class="list-group">
 				<a class="list-group-item" href="#account/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;账号管理
+					&nbsp;用户管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#page/banner/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;首页轮播配置
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#page/data/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;流量产品配置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#page/av/index">

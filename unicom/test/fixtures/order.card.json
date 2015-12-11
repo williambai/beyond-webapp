@@ -1,57 +1,71 @@
 [{
-	"name": "号卡订单",
-	"customer": {
-		"name": "张三",
-		"mobile": "18610001234"
-	},
+	"name": "18600001234",
+	"description": "号卡订单",
 	"items": [
 		{
 			"name": "46元套餐",
 			"price": 46,
 			"quantity": 1,
-			"category": "套餐A",
+			"category": "套餐A"
 		}
 	],
 	"total": 46,
-	"status": {
-		"code": 0,
-		"message": "新建",
-	}
-},{
-	"name": "号卡订单",
+	"place": {
+		"name": "营业厅名称"
+	},
+	"dispatch": "物流",
 	"customer": {
 		"name": "张三",
+		"idNo": "12345678901234",
+		"idType": "身份证",
+		"idAddress": "身份证地址",
+		"address": "寄送地址",
 		"mobile": "18610001234"
 	},
+	"status": {
+		"code": 0,
+		"message": "新建"
+	}
+},{
+	"name": "18600001235",
+	"description": "号卡订单",
 	"items": [
 		{
 			"name": "24元包500MB",
 			"price": 24,
 			"quantity": 1,
-			"category": "全国流量包",
+			"category": "全国流量包"
 		},
 		{
 			"name": "32元包200分钟",
 			"price": 32,
 			"quantity": 1,
-			"category": "全国语音包",
+			"category": "全国语音包"
 		},
 		{
 			"name": "10元包200条",
 			"price": 10,
 			"quantity": 1,
-			"category": "短/彩信包",
+			"category": "短/彩信包"
 		},
 		{
 			"name": "6月来电显示",
 			"price": 6,
 			"quantity": 1,
-			"category": "来电显示",
-		},
+			"category": "来电显示"
+		}
 	],
 	"total": 72,
+	"place": {
+		"name": "营业厅名称"
+	},
+	"dispatch": "自提",
+	"customer": {
+		"name": "张三",
+		"mobile": "18610001234"
+	},
 	"status": {
 		"code": 1,
-		"message": "已确认",
+		"message": "已确认"
 	}
 }]

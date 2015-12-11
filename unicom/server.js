@@ -31,8 +31,11 @@ var models = {
 		ChannelEntity: require('./models/ChannelEntity')(mongoose),
 		ChannelCustomer: require('./models/ChannelCustomer')(mongoose),
 		PageRecommend: require('./models/PageRecommend')(mongoose),
+		PageData: require('./models/PageData')(mongoose),
 		ProductCard: require('./models/ProductCard')(mongoose),
 		OrderCard: require('./models/OrderCard')(mongoose),
+		WoRevenue: require('./models/WoRevenue')(mongoose),
+		GoodsEntity: require('./models/GoodsEntity')(mongoose),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

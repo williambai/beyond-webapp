@@ -20,9 +20,17 @@ var ChannelCustomerIndexView = require('./views/_ChannelCustomerIndex');
 var ChannelCustomerAddView = require('./views/_ChannelCustomerAdd');
 var ChannelCustomerEditView = require('./views/_ChannelCustomerEdit');
 
+var GoodsEntityIndexView = require('./views/_GoodsEntityIndex');
+var GoodsEntityAddView = require('./views/_GoodsEntityAdd');
+var GoodsEntityEditView = require('./views/_GoodsEntityEdit');
+
 var PageRecommendIndexView = require('./views/_PageRecommendIndex');
 var PageRecommendAddView = require('./views/_PageRecommendAdd');
 var PageRecommendEditView = require('./views/_PageRecommendEdit');
+
+var PageDataIndexView = require('./views/_PageDataIndex');
+var PageDataAddView = require('./views/_PageDataAdd');
+var PageDataEditView = require('./views/_PageDataEdit');
 
 var ProductCardIndexView = require('./views/_ProductCardIndex');
 var ProductCardAddView = require('./views/_ProductCardAdd');
@@ -33,6 +41,9 @@ var OrderCardIndexView = require('./views/_OrderCardIndex');
 var OrderCardAddView = require('./views/_OrderCardAdd');
 var OrderCardEditView = require('./views/_OrderCardEdit');
 var OrderCardViewView = require('./views/_OrderCardView');
+
+var RevenueIndexView = require('./views/_WoRevenueIndex');
+var RevenueAddView = require('./views/_WoRevenueAdd');
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -55,9 +66,15 @@ exports = module.exports = Backbone.Router.extend({
 		'customer/index': 'customerIndex',
 		'customer/add': 'customerAdd',
 		'customer/edit/:id': 'customerEdit',
+		'goods/index': 'goodsIndex',
+		'goods/add': 'goodsAdd',
+		'goods/edit/:id': 'goodsEdit',
 		'recommend/index': 'recommendIndex',
 		'recommend/add': 'recommendAdd',
 		'recommend/edit/:id': 'recommendEdit',
+		'page/data/index': 'pageDataIndex',
+		'page/data/add': 'pageDataAdd',
+		'page/data/edit/:id': 'pageDataEdit',
 		'card/index': 'cardIndex',
 		'card/add': 'cardAdd',
 		'card/edit/:id': 'cardEdit',
@@ -66,6 +83,11 @@ exports = module.exports = Backbone.Router.extend({
 		'order/card/add': 'orderCardAdd',
 		'order/card/view/:id': 'orderCardView',
 		'order/card/edit/:id': 'orderCardEdit',
+
+		'revenue/index': 'revenueIndex',
+		'revenue/add': 'revenueAdd',
+		'revenue/view/:id': 'revenueView',
+		'revenue/edit/:id': 'revenueEdit',
 
 		'*path': 'index',
 	},
@@ -284,6 +306,50 @@ exports = module.exports = Backbone.Router.extend({
 		customerEditView.trigger('load');
 	},	
 
+
+	goodsIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','物料管理');
+		var goodsIndexView = new GoodsEntityIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(goodsIndexView);
+		goodsIndexView.trigger('load');
+	},	
+
+	goodsAdd: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','新增物料');
+		var goodsAddView = new GoodsEntityAddView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(goodsAddView);
+		goodsAddView.trigger('load');
+	},	
+
+	goodsEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改物料');
+		var goodsEditView = new GoodsEntityEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(goodsEditView);
+		goodsEditView.trigger('load');
+	},	
+
 	recommendIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
@@ -325,6 +391,49 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(recommendEditView);
 		recommendEditView.trigger('load');
+	},		
+
+	pageDataIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','流量产品管理');
+		var pageDataIndexView = new PageDataIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(pageDataIndexView);
+		pageDataIndexView.trigger('load');
+	},	
+
+	pageDataAdd: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','新增流量产品');
+		var pageDataAddView = new PageDataAddView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(pageDataAddView);
+		pageDataAddView.trigger('load');
+	},	
+
+	pageDataEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改流量产品');
+		var pageDataEditView = new PageDataEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(pageDataEditView);
+		pageDataEditView.trigger('load');
 	},		
 
 	cardIndex: function(){
@@ -441,4 +550,62 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(orderCardViewView);
 		orderCardViewView.trigger('load');
 	},	
+
+	revenueIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','金币管理');
+		var revenueIndexView = new RevenueIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(revenueIndexView);
+		revenueIndexView.trigger('load');
+	},	
+
+	revenueAdd: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','新增金币');
+		var revenueAddView = new RevenueAddView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(revenueAddView);
+		revenueAddView.trigger('load');
+	},	
+
+	revenueEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改金币');
+		var revenueEditView = new RevenueEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(revenueEditView);
+		revenueEditView.trigger('load');
+	},				
+
+	revenueView: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','查看金币');
+		var revenueViewView = new RevenueViewView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(revenueViewView);
+		revenueViewView.trigger('load');
+	},		
 });

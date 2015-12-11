@@ -14,6 +14,9 @@ var models = {
 		ChannelCategory: require('../models/ChannelCategory')(mongoose),
 		ChannelDepartment: require('../models/ChannelDepartment')(mongoose),
 		ChannelGrid: require('../models/ChannelGrid')(mongoose),
+		ProductCard: require('../models/ProductCard')(mongoose),
+		OrderCard: require('../models/OrderCard')(mongoose),
+		WoRevenue: require('../models/WoRevenue')(mongoose),
 	};
 
 mongoose.connect(config.db.URI,function onMongooseError(err){
@@ -47,7 +50,18 @@ var dropCollections = function(done) {
 			function(callback) {
 				models.ChannelGrid.remove(callback);
 			},
-
+			function(callback) {
+				models.ChannelGrid.remove(callback);
+			},
+			function(callback) {
+				models.ProductCard.remove(callback);
+			},
+			function(callback) {
+				models.OrderCard.remove(callback);
+			},
+			function(callback) {
+				models.WoRevenue.remove(callback);
+			},
 		],
 		function(err, result) {
 			if (err) return done(err);
@@ -130,7 +144,50 @@ var upsertChannelGrids = function(done) {
 		});
 	}, done);
 };
+/**
+ * 
+ * create ProductCards
+ * 
+ */
+var upsertProductCards = function(done) {
+	var cards = require('./fixtures/product.card');
+	async.eachSeries(cards, function(card, callback) {
+		models.ProductCard.create(card, function(err) {
+			if (err) return callback(err);
+			callback(null);
+		});
+	}, done);
+};
 
+/**
+ * 
+ * create OrderCards
+ * 
+ */
+var upsertOrderCards = function(done) {
+	var orders = require('./fixtures/order.card');
+	async.eachSeries(orders, function(order, callback) {
+		models.OrderCard.create(order, function(err) {
+			if (err) return callback(err);
+			callback(null);
+		});
+	}, done);
+};
+
+/**
+ * 
+ * create WoRevenues
+ * 
+ */
+var upsertWoRevenues = function(done) {
+	var revenues = require('./fixtures/wo.revenue');
+	async.eachSeries(revenues, function(revenue, callback) {
+		models.WoRevenue.create(revenue, function(err) {
+			if (err) return callback(err);
+			callback(null);
+		});
+	}, done);
+};
 
 /**
  * process workflow
@@ -145,6 +202,9 @@ async.series(
 		upsertChannelCategories,
 		upsertChannelDepartments,
 		upsertChannelGrids,
+		upsertProductCards,
+		upsertOrderCards,
+		upsertWoRevenues,
 	],
 	function(err, result) {
 		if (err) console.log(err);

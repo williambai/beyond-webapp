@@ -1,0 +1,45 @@
+[{
+	"cardNo": "18600001234",
+	"goodsId": "物料Id",
+	"goodsName": "物料名称",
+	"cardRange": "186",
+	"category": "ABCD",
+	"price": 90,
+	"status": {
+		"code": 0,
+		"message": "未用"
+	}
+},{
+	"cardNo": "18600001235",
+	"goodsId": "物料Id",
+	"goodsName": "物料名称",
+	"cardRange": "186",
+	"category": "ABC",
+	"price": 80,
+	"status": {
+		"code": 0,
+		"message": "未用"
+	}
+},{
+	"cardNo": "18600001236",
+	"goodsId": "物料Id",
+	"goodsName": "物料名称",
+	"cardRange": "186",
+	"category": "ABC",
+	"price": 80,
+	"status": {
+		"code": 0,
+		"message": "未用"
+	}
+},{
+	"cardNo": "18600001237",
+	"goodsId": "物料Id",
+	"goodsName": "物料名称",
+	"cardRange": "186",
+	"category": "ABC",
+	"price": 80,
+	"status": {
+		"code": 0,
+		"message": "未用"
+	}
+}]

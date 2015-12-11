@@ -21,7 +21,9 @@ exports = module.exports = FormView.extend({
 	},
 
 	events: {
-		'click #selectPackage': 'selectPackage',
+		'keyup input[name=mobile]': 'getMobiles',
+		'click li.list-group-item': 'selectMobile',
+		'click #openPackages': 'openPackages',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -29,19 +31,51 @@ exports = module.exports = FormView.extend({
 	load: function(){
 		var that = this;
 		this.render();
-		this.$('#package').hide();
+		this.$('#packages').hide();
 		this.cardPackageView = new CardPackageView({
-			el: '#package',
+			el: '#packages',
 		});
 		this.cardPackageView.done = function(result){
-			console.log(result);
-			that.$('#package').hide();
+			// console.log(result);
+			that.$('input[name=packageStr]').val(result);
+			that.$('#packages').hide();
 		};
 		this.cardPackageView.trigger('load');
 	},
 
-	selectPackage: function(){
-		this.$('#package').show();
+	getMobiles: function(evt){
+		this.$('#mobiles').empty();
+		var that = this;
+		var searchStr = this.$('input[name=mobile]').val() || '';
+		if(searchStr.length > 1){
+			$.ajax({
+				url: config.api.host + '/product/cards?type=search&per=10&searchStr=' + searchStr,
+				type: 'GET',
+				fields: {
+					withCredentials: true
+				}
+			}).done(function(data){
+				data = data || [];
+				var mobiles = '<ul class="list-group">';
+				data.forEach(function(item){
+					mobiles += '<li class="list-group-item">'+ item.cardNo +'</li>';
+				});
+				mobiles += '</ul>';
+				that.$('#mobiles').html(mobiles);
+			});
+		}
+		return false;
+	},
+
+	selectMobile: function(evt){
+		var cardNo = $(evt.currentTarget).text();
+		this.$('input[name=mobile]').val(cardNo);
+		this.$('#mobiles').empty();
+		return false;
+	},
+
+	openPackages: function(){
+		this.$('#packages').show();
 		return false;
 	},
 
@@ -49,12 +83,12 @@ exports = module.exports = FormView.extend({
 		var that = this;
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		// console.log(this.model.attributes);
-		this.model.save(null, {
-			xhrFields: {
-				withCredentials: true
-			},
-		});
+		console.log(this.model.attributes);
+		// this.model.save(null, {
+		// 	xhrFields: {
+		// 		withCredentials: true
+		// 	},
+		// });
 		return false;
 	},
 

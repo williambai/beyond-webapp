@@ -62,6 +62,20 @@ exports = module.exports = FormView.extend({
 		if(status.code == 1){
 			this.$('input[name="status[code]"]').attr('checked',true);
 		}
+		var itemsView = '<table class="table table-striped">';
+		itemsView += '<thead><tr><td>名称</td><td>单价</td><td>数量</td><td>小计</td></tr></thead>';
+		itemsView += '<tbody>';
+		var items = this.model.get('items') || [];
+		items.forEach(function(item){
+			itemsView +='<tr>'+
+						'<td>' + item.name + '</td>' +
+						'<td>' + Number(item.price).toFixed(2) + '</td>' +
+						'<td>' + item.quantity + '</td>' +
+						'<td>' + Number(item.price * item.quantity).toFixed(2) + '</td>' +
+						'</tr>';
+		});
+		itemsView += '</tbody></table>';
+		this.$('#items').html(itemsView);
 		return this;
 	},
 });

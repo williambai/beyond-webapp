@@ -1,26 +1,15 @@
  exports = module.exports = function(app, models) {
 
- 	var products = require('../models/ProductCardPackage');
- 	
  	var add = function(req, res) {
- 		var model = req.body;
- 		var product = model.product;
- 		model.items = [];
- 		for(var i in product){
- 			var item = products[product[i]];
- 			item.quantity = 1,
- 			model.items.push(item);
- 		}
- 		res.send(model);
- 		// var doc = new models.OrderCard(model);
- 		// doc.save(function(err) {
- 		// 	if (err) return res.send(err);
- 		// 	res.send({});
- 		// });
+ 		var doc = new models.PageData(req.body);
+ 		doc.save(function(err) {
+ 			if (err) return res.send(err);
+ 			res.send({});
+ 		});
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.OrderCard.findByIdAndRemove(id,function(err,doc){
+ 		models.PageData.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -28,7 +17,7 @@
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.OrderCard.findByIdAndUpdate(id, {
+ 		models.PageData.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -42,7 +31,7 @@
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.OrderCard
+ 		models.PageData
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -54,7 +43,7 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.OrderCard
+ 		models.PageData
  			.find({})
  			.skip(per * page)
  			.limit(per)
@@ -67,32 +56,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add order/cards
+ 	 * add page/data
  	 * type:
  	 *     
  	 */
- 	app.post('/order/cards', add);
+ 	app.post('/page/data', add);
  	/**
- 	 * update order/cards
+ 	 * update page/data
  	 * type:
  	 *     
  	 */
- 	app.put('/order/cards/:id', update);
+ 	app.put('/page/data/:id', update);
 
  	/**
- 	 * delete order/cards
+ 	 * delete page/data
  	 * type:
  	 *     
  	 */
- 	app.delete('/order/cards/:id', remove);
+ 	app.delete('/page/data/:id', remove);
  	/**
- 	 * get order/cards
+ 	 * get page/data
  	 */
- 	app.get('/order/cards/:id', getOne);
+ 	app.get('/page/data/:id', getOne);
 
  	/**
- 	 * get order/cards
+ 	 * get page/data
  	 * type:
  	 */
- 	app.get('/order/cards', getMore);
+ 	app.get('/page/data', getMore);
  };

@@ -93,6 +93,7 @@ module.exports = exports = function(app, models) {
 	};
 
 	var login = function(req, res) {
+		console.log(req.body);
 		var email = req.body.email;
 		var password = req.body.password;
 		if (null == email || !(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(email)))

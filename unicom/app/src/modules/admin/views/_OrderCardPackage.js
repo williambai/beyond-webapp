@@ -9,7 +9,7 @@ var SearchModel = Backbone.Model.extend({
 
 });
 exports = module.exports = SearchView.extend({
-	el: '#package',
+	el: '#packages',
 
 	initialize: function(options){
 		this.model = new SearchModel();
@@ -22,20 +22,33 @@ exports = module.exports = SearchView.extend({
 	events: {
 		'click .tabControl': 'tabControl',
 		'click .selectItem': 'selectItem',
-		'click #packageSelected': 'close',
+		'click #closePackages': 'close',
 	},
 
 	load: function(){
+		var that = this;
 		this.render();
+		// $.ajax({
+		// 	url: config.api.host + '/product/card/packages',
+		// 	type: 'GET',
+		// 	xhrFields: {
+		// 		withCredentials: true
+		// 	}
+		// }).done(function(data){
+		// 	var packageA = _.
+
+		// });
 		//show first tab
-		this.$('div.tabControl').first().removeClass('btn-default').addClass('btn-success');
-		this.$('div.tab').hide();
-		this.$('div.tab').first().show();
+		that.$('div.tabControl').first().removeClass('btn-default').addClass('btn-success');
+		that.$('div.tab').hide();
+		that.$('div.tab').first().show();
 	},
 
 	tabControl: function(evt){
 		var target = evt.currentTarget;
 		var index = $(target).index();
+		//reset
+		this.$('input[type=radio]').removeAttr('checked');
 		//toggle tabs
 		$(target).siblings('div.btn-success').removeClass('btn-success').addClass('btn-default');
 		$(target).removeClass('btn-default').addClass('btn-success');
@@ -59,7 +72,12 @@ exports = module.exports = SearchView.extend({
 	},
 
 	close: function(){
-		this.done();
+		var packageStr = '';
+		this.$('input[type=radio]:checked')
+			.each(function(){
+				packageStr += $(this).val() + ';';
+			});
+		this.done(packageStr.slice(0,-1));
 		return false;
 	},
 
