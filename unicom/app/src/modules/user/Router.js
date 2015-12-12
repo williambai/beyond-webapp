@@ -16,6 +16,7 @@ var OrderCardAddView = require('./views/_OrderCardAdd');
 
 var PushIndexView = require('./views/_PushIndex');
 var DataIndexView = require('./views/_DataIndex');
+var DataViewView = require('./views/_DataView');
 var SmsIndexView = require('./views/_SmsIndex');
 
 var config = require('./conf');
@@ -41,6 +42,7 @@ exports = module.exports = Backbone.Router.extend({
 
 		'push/index': 'pushIndex',
 		'data/index': 'dataIndex',
+		'data/view/:id': 'dataView',
 		'sms/index': 'smsIndex',
 
 		'*path': 'index',
@@ -222,10 +224,26 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand', '流量推荐');
 		var dataIndexView = new DataIndexView({
-			el: '#content'
+			router: this,
+			el: '#content',
 		});
 		this.changeView(dataIndexView);
 		dataIndexView.trigger('load');
+	},
+
+	dataView: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '流量推荐');
+		var dataViewView = new DataViewView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(dataViewView);
+		dataViewView.trigger('load');
 	},
 
 	smsIndex: function() {

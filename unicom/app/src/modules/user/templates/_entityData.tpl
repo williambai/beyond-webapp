@@ -1,55 +1,39 @@
 <div>
 	<div id="indexTemplate">
-		<div class="btn-group btn-group-justified">
-			<div class="btn btn-success">2G用户</div>
-			<div class="btn btn-default">3G用户</div>
-		</div>
-		<div id="list">
-			<hr/>
-			<div class="media">
-				<div class="media-left">
-					<a href="#">
-						<img class="media-object" src="" alt="" height="50px" width="50px">
-					</a>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">流量产品</h5>
+			</div>
+			<div class="panel-body">
+				<div class="btn-group btn-group-justified">
+					<div class="btn btn-success" id="g2">2G用户</div>
+					<div class="btn btn-default" id="g3">3G用户</div>
 				</div>
-				<div class="media-body">
-					<h5 class="media-heading">100M流量</h5>
-					<p>999次下载 1.32M</p>
-				</div>
-				<div class="media-right recommend">
-					<button class="btn btn-info">推荐</button>
+				<hr/>
+				<div id="list">
 				</div>
 			</div>
 		</div>
 	</div>
-	<div id="itemAppTemplate">
-		<hr/>
-		<div class="media">
-			<div class="media-left">
-				<a href="#">
-					<img class="media-object" src="" alt="" height="50px" width="50px">
-				</a>
-			</div>
-			<div class="media-body">
-				<h5 class="media-heading">100M流量</h5>
-				<p>999次下载 1.32M</p>
-			</div>
-			<div class="media-right">
-				<button class="btn btn-info">推荐</button>
-			</div>
+	<div id="itemTemplate">
+		<div class="pull-right" id="<%= model._id %>">
+			<button class="btn btn-info view">推荐</button>
 		</div>
+		<h4><%= model.subject %></h4>
+		<p><%= model.description %></p>
+		<hr/>
 	</div>
 	<div id="itemActivityTemplate">
 	</div>
-	<div id="recommendTemplate">
+	<div id="viewTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h5 class="panel-title text-center">推荐业务</h5>
 			</div>
 			<div class="panel-body">
-				<div class="pull-right">5元/月</div>
-				<h5>100M流量业务</h5>
-				<p>业务描述</p>
+				<div class="pull-right"><%= model.price %>元/月</div>
+				<h5><%= model.subject %></h5>
+				<p><%= model.description %></p>
 			</div>
 		</div>
 		<div class="panel panel-default">
@@ -58,7 +42,7 @@
 				<h5 class="panel-title text-center">推荐给客户</h5>
 			</div>
 			<div class="panel-body">
-				<form>
+				<form id="orderForm">
 					<div class="form-group">
 						<label></label>
 						<input name="customer" class="form-control" placeholder="手机号码">

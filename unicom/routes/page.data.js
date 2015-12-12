@@ -39,19 +39,35 @@
  			});
  	};
  	var getMore = function(req, res) {
- 		var per = 20;
+ 		var type = req.query.type || '';
+ 		var per = req.query.per || 20;
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
-
- 		models.PageData
- 			.find({})
- 			.skip(per * page)
- 			.limit(per)
- 			.exec(function(err, docs) {
- 				if (err) return res.send(err);
- 				res.send(docs);
- 			});
- 	};
+ 		switch(type){
+ 			case 'category':
+ 				models.PageData
+ 					.find({
+ 						category: req.query.category,
+ 						status: '有效',
+ 					})
+		 			.skip(per * page)
+		 			.limit(per)
+		 			.exec(function(err, docs) {
+		 				if (err) return res.send(err);
+		 				res.send(docs);
+		 			});
+ 				break;
+ 			default:
+		 		models.PageData
+		 			.find({})
+		 			.skip(per * page)
+		 			.limit(per)
+		 			.exec(function(err, docs) {
+		 				if (err) return res.send(err);
+		 				res.send(docs);
+		 			});
+ 		}
+  	};
  	/**
  	 * router outline
  	 */
@@ -82,6 +98,7 @@
  	/**
  	 * get page/data
  	 * type:
+ 	 *      type=category&category=xxx
  	 */
  	app.get('/page/data', getMore);
  };

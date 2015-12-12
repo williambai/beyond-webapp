@@ -6,6 +6,7 @@ module.exports = exports = function(mongoose){
 			nickname: String,
 			sourceId: String,
 		},
+		category: String,
 		subject: String,
 		description: String,
 		price: String,

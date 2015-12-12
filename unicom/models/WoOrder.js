@@ -10,20 +10,17 @@ module.exports = exports = function(mongoose){
 			name: String,
 			category: String,
 		},
+		goods: {
+			id: mongoose.Schema.Types.ObjectId,
+			name: String,
+			nickname: String,
+			sourceId: String,
+		},
 		status: {
-			code: {
-				type: Number,
-				enum: {
-					values: '0|1'.split('|'), //1: 有效，0：无效
-					message: 'enum validator failed for path {PATH} with value {VALUE}',
-				}
-			},
-			message: {
-				type: String,
-				enum: {
-					values: '有效|无效'.split('|'),
-					message: 'enum validator failed for path {PATH} with value {VALUE}',
-				}
+			type: String,
+			enum: {
+				values: '新建|已确认|已配送|完成|用户取消|系统取消|其他原因'.split('|'),
+				message: 'enum validator failed for path {PATH} with value {VALUE}',
 			}
 		},
 		createBy: {

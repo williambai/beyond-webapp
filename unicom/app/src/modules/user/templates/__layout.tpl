@@ -26,7 +26,7 @@
 					&nbsp;内容推荐
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#">
+<!-- 				<a class="list-group-item" href="#">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;终端
 					<i class="fa fa-chevron-right pull-right"></i>
@@ -35,7 +35,7 @@
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;卡号
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
+				</a> -->
 				<a class="list-group-item" href="#">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;Wo 成绩

@@ -1,14 +1,14 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    dataTpl = require('../templates/_entityData.tpl'),
+    cardTpl = require('../templates/_entityData.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
-var ListView = require('./_CardList');
 
 Backbone.$ = $;
 
-var RecommendView = require('./_PushRecommend');
+var SearchView = require('./_DataSearch');
+var ListView = require('./_DataList');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -17,30 +17,39 @@ exports = module.exports = Backbone.View.extend({
 	loadingTemplate: _.template(loadingTpl),
 
 	initialize: function(options) {
-		var page = $(dataTpl);
+		this.router = options.router;
+		var page = $(cardTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
-
-		this.recommendView = new RecommendView({
-			el: '#content',
-		});
 
 		this.on('load', this.load, this);
 	},
 
 	events: {
+		'click #g2': 'listG2',
+		'click #g3': 'listG3',
 		'scroll': 'scroll',
 		'click .search': 'search',
-		'click .recommend': 'recommend',
+		'click .view': 'dataView',
 	},
 
 	load: function() {
 		var that = this;
 		this.loaded = true;
 		this.render();
+		this.$('#search').hide();
+		this.searchView = new SearchView({
+			el: '#search',
+		});
 		this.listView = new ListView({
 			el: '#list',
 		});
+		this.searchView.trigger('load');
+		this.searchView.done = function(search){
+			console.log(search);
+			that.$('#search').hide();
+		};
+		this.listView.collection.url = config.api.host + '/page/data?type=category&category=2G流量';
 		this.listView.trigger('load');
 	},
 
@@ -49,12 +58,30 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
-	// search: function(){
-	// 	this.searchView.trigger('load');
-	// },
+	listG2: function(){
+		this.$('#g3').removeClass('btn-success').addClass('btn-default');
+		this.$('#g2').removeClass('btn-default').addClass('btn-success');
+		var url = config.api.host + '/page/data?type=category&category=2G流量';
+		this.listView.refresh(url);
+		return false;
+	},
 
-	recommend: function(){
-		this.recommendView.trigger('load');
+	listG3: function(){
+		this.$('#g2').removeClass('btn-success').addClass('btn-default');
+		this.$('#g3').removeClass('btn-default').addClass('btn-success');
+		var url = config.api.host + '/page/data?type=category&category=3G流量';
+		this.listView.refresh(url);
+		return false;
+	},
+
+	search: function(){
+		this.$('#search').show();
+		return false;
+	},
+
+	dataView: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('data/view/'+ id,{trigger: true});
 		return false;
 	},
 	
