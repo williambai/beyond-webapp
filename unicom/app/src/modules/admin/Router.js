@@ -28,9 +28,13 @@ var PageRecommendIndexView = require('./views/_PageRecommendIndex');
 var PageRecommendAddView = require('./views/_PageRecommendAdd');
 var PageRecommendEditView = require('./views/_PageRecommendEdit');
 
-var PageDataIndexView = require('./views/_PageDataIndex');
-var PageDataAddView = require('./views/_PageDataAdd');
-var PageDataEditView = require('./views/_PageDataEdit');
+var PromoteProductIndexView = require('./views/_PromoteProductIndex');
+var PromoteProductAddView = require('./views/_PromoteProductAdd');
+var PromoteProductEditView = require('./views/_PromoteProductEdit');
+
+var PromoteMediaIndexView = require('./views/_PromoteMediaIndex');
+var PromoteMediaAddView = require('./views/_PromoteMediaAdd');
+var PromoteMediaEditView = require('./views/_PromoteMediaEdit');
 
 var ProductCardIndexView = require('./views/_ProductCardIndex');
 var ProductCardAddView = require('./views/_ProductCardAdd');
@@ -72,9 +76,12 @@ exports = module.exports = Backbone.Router.extend({
 		'recommend/index': 'recommendIndex',
 		'recommend/add': 'recommendAdd',
 		'recommend/edit/:id': 'recommendEdit',
-		'page/data/index': 'pageDataIndex',
-		'page/data/add': 'pageDataAdd',
-		'page/data/edit/:id': 'pageDataEdit',
+		'promote/product/index': 'promoteProductIndex',
+		'promote/product/add': 'promoteProductAdd',
+		'promote/product/edit/:id': 'promoteProductEdit',
+		'promote/media/index': 'promoteMediaIndex',
+		'promote/media/add': 'promoteMediaAdd',
+		'promote/media/edit/:id': 'promoteMediaEdit',
 		'card/index': 'cardIndex',
 		'card/add': 'cardAdd',
 		'card/edit/:id': 'cardEdit',
@@ -393,48 +400,92 @@ exports = module.exports = Backbone.Router.extend({
 		recommendEditView.trigger('load');
 	},		
 
-	pageDataIndex: function(){
+	promoteProductIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','流量产品管理');
-		var pageDataIndexView = new PageDataIndexView({
+		this.appEvents.trigger('set:brand','产品配置');
+		var promoteProductIndexView = new PromoteProductIndexView({
 			router: this,
 			el: '#content',
 		});
-		this.changeView(pageDataIndexView);
-		pageDataIndexView.trigger('load');
+		this.changeView(promoteProductIndexView);
+		promoteProductIndexView.trigger('load');
 	},	
 
-	pageDataAdd: function(){
+	promoteProductAdd: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','新增流量产品');
-		var pageDataAddView = new PageDataAddView({
+		this.appEvents.trigger('set:brand','产品配置');
+		var promoteProductAddView = new PromoteProductAddView({
 			router: this,
 			el: '#content',
 		});
-		this.changeView(pageDataAddView);
-		pageDataAddView.trigger('load');
+		this.changeView(promoteProductAddView);
+		promoteProductAddView.trigger('load');
 	},	
 
-	pageDataEdit: function(id){
+	promoteProductEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','修改流量产品');
-		var pageDataEditView = new PageDataEditView({
+		this.appEvents.trigger('set:brand','产品配置');
+		var promoteProductEditView = new PromoteProductEditView({
 			router: this,
 			el: '#content',
 			id: id,
 		});
-		this.changeView(pageDataEditView);
-		pageDataEditView.trigger('load');
+		this.changeView(promoteProductEditView);
+		promoteProductEditView.trigger('load');
 	},		
+
+
+	promoteMediaIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','媒体管理');
+		var promoteMediaIndexView = new PromoteMediaIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(promoteMediaIndexView);
+		promoteMediaIndexView.trigger('load');
+	},	
+
+	promoteMediaAdd: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','媒体管理');
+		var promoteMediaAddView = new PromoteMediaAddView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(promoteMediaAddView);
+		promoteMediaAddView.trigger('load');
+	},	
+
+	promoteMediaEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','媒体管理');
+		var promoteMediaEditView = new PromoteMediaEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(promoteMediaEditView);
+		promoteMediaEditView.trigger('load');
+	},	
 
 	cardIndex: function(){
 		if(!this.logined){

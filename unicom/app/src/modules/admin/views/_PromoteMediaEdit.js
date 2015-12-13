@@ -1,11 +1,9 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    dataTpl = require('../templates/_entityData.tpl'),
-	PromoteProduct = require('../models/PromoteProduct');
+    dataTpl = require('../templates/_entityPromoteMedia.tpl'),
+	PromoteMedia = require('../models/PromoteMedia');
 var config = require('../conf');
-
-var OrderData = require('../models/OrderData');
 
 exports = module.exports = FormView.extend({
 
@@ -15,9 +13,9 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new PromoteProduct({_id: options.id});
+		this.model = new PromoteMedia({_id: options.id});
 		var page = $(dataTpl);
-		var editTemplate = $('#viewTemplate', page).html();
+		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
@@ -38,10 +36,9 @@ exports = module.exports = FormView.extend({
 	submit: function() {
 		var that = this;
 		var object = this.$('form').serializeJSON();
-		var order = new OrderData();
-		order.set(object);
+		this.model.set(object);
 		// console.log(this.model.attributes);
-		order.save(null, {
+		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true
 			},
@@ -51,7 +48,7 @@ exports = module.exports = FormView.extend({
 	
 
 	cancel: function(){
-		this.router.navigate('data/index',{trigger: true, replace: true});
+		this.router.navigate('promote/media/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -63,16 +60,13 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			this.router.navigate('data/index',{trigger: true, replace: true});
+			this.router.navigate('promote/media/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		var category = this.model.get('category');
-		this.$('input[name=category][value='+ category +']').attr('checked',true);
-		var status = this.model.get('status');
-		this.$('input[name=status][value='+ status +']').attr('checked',true);
+		this.$('img').attr('src', this.model.get('url'));
 		return this;
 	},
 });

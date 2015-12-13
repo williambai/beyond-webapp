@@ -49,7 +49,7 @@ exports = module.exports = Backbone.View.extend({
 			console.log(search);
 			that.$('#search').hide();
 		};
-		this.listView.collection.url = config.api.host + '/page/data?type=category&category=2G流量';
+		this.listView.collection.url = config.api.host + '/promote/products?type=category&category=2G';
 		this.listView.trigger('load');
 	},
 
@@ -61,7 +61,7 @@ exports = module.exports = Backbone.View.extend({
 	listG2: function(){
 		this.$('#g3').removeClass('btn-success').addClass('btn-default');
 		this.$('#g2').removeClass('btn-default').addClass('btn-success');
-		var url = config.api.host + '/page/data?type=category&category=2G流量';
+		var url = config.api.host + '/promote/products?type=category&category=2G';
 		this.listView.refresh(url);
 		return false;
 	},
@@ -69,7 +69,7 @@ exports = module.exports = Backbone.View.extend({
 	listG3: function(){
 		this.$('#g2').removeClass('btn-success').addClass('btn-default');
 		this.$('#g3').removeClass('btn-default').addClass('btn-success');
-		var url = config.api.host + '/page/data?type=category&category=3G流量';
+		var url = config.api.host + '/promote/products?type=category&category=3G';
 		this.listView.refresh(url);
 		return false;
 	},

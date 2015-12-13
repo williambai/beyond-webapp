@@ -63,24 +63,19 @@
 					&nbsp;首页轮播配置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#page/data/index">
+				<a class="list-group-item" href="#promote/product/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;流量产品配置
+					&nbsp;产品配置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#page/av/index">
+				<a class="list-group-item" href="#promote/event/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;增值产品配置
+					&nbsp;活动配置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#recommend/index">
+				<a class="list-group-item" href="#promote/media/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;推荐产品配置
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
-				<a class="list-group-item" href="#activity/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;推荐活动配置
+					&nbsp;图片管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#goods/bonus/index">

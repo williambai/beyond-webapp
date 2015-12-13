@@ -22,6 +22,15 @@
 				<input type="text" name="searchStr" class="form-control" placeholder="物料ID或物料名称">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
+				<label>&nbsp;产品分类：&nbsp;</label>
+				<select class="form-control">
+					<option>全部</option>
+					<option value="2G">2G流量</option>
+					<option value="3G">3G流量</option>
+					<option value="recommend">产品推荐</option>
+				</select>&nbsp;&nbsp;
+			</div>
+			<div class="form-group">
 				<select class="form-control">
 					<option>全部</option>
 					<option>有效</option>
@@ -51,9 +60,11 @@
 			<div class="panel-body">
 				<form id="customerForm">
 					<div class="form-group">
-						<label>产品类型：</label>
-						<input type="radio" name="category" value="2G流量">&nbsp;&nbsp;2G流量
-						<input type="radio" name="category" value="3G流量" checked>&nbsp;&nbsp;3G流量
+						<label>产品分类：</label>
+						<input type="radio" name="category" value="2G">&nbsp;&nbsp;2G流量
+						<input type="radio" name="category" value="3G">&nbsp;&nbsp;3G流量
+						<input type="radio" name="category" value="av">&nbsp;&nbsp;增值服务
+						<input type="radio" name="category" value="recommend">&nbsp;&nbsp;产品推荐
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -122,9 +133,11 @@
 			<div class="panel-body">
 				<form id="customerForm">
 					<div class="form-group">
-						<label>产品类型：</label>
-						<input type="radio" name="category" value="2G流量">&nbsp;&nbsp;2G流量
-						<input type="radio" name="category" value="3G流量">&nbsp;&nbsp;3G流量
+						<label>产品分类：</label>
+						<input type="radio" name="category" value="2G">&nbsp;&nbsp;2G流量
+						<input type="radio" name="category" value="3G">&nbsp;&nbsp;3G流量
+						<input type="radio" name="category" value="av">&nbsp;&nbsp;增值服务
+						<input type="radio" name="category" value="recommend">&nbsp;&nbsp;产品推荐
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

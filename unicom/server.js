@@ -1,3 +1,4 @@
+var log4js = require('log4js');
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
@@ -9,8 +10,15 @@ var multer = require('multer');
 var app = express();
 var nodemailer = require('nodemailer');
 
+log4js.configure(path.join(__dirname,'config/log4js.json'));
+var logger = log4js.getLogger('server');
+logger.setLevel('DEBUG');
+
 //create an http server
 app.server = http.createServer(app);
+app.randomHex = function(){
+	return new Date().getTime();
+};
 
 //import the data layer
 var mongoose = require('mongoose');
@@ -31,7 +39,9 @@ var models = {
 		ChannelEntity: require('./models/ChannelEntity')(mongoose),
 		ChannelCustomer: require('./models/ChannelCustomer')(mongoose),
 		PageRecommend: require('./models/PageRecommend')(mongoose),
-		PageData: require('./models/PageData')(mongoose),
+		PromoteProduct: require('./models/PromoteProduct')(mongoose),
+		PromoteEvent: require('./models/PromoteEvent')(mongoose),
+		PromoteMedia: require('./models/PromoteMedia')(mongoose),
 		ProductCard: require('./models/ProductCard')(mongoose),
 		OrderCard: require('./models/OrderCard')(mongoose),
 		WoRevenue: require('./models/WoRevenue')(mongoose),
@@ -40,7 +50,7 @@ var models = {
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){
 	if(err) {
-		console.error('Error: can not open Mongodb.');
+		logger.error('Error: can not open Mongodb.');
 		throw err;
 	}
 });
@@ -51,7 +61,7 @@ app.set('views', __dirname +'/views');
 
 //show origin cookie
 // app.use(function(req,res,next){
-// 	console.log('req.cookies:' + JSON.stringify(req.headers.cookie));
+// 	logger.info('req.cookies:' + JSON.stringify(req.headers.cookie));
 // 	next();
 // });
 
@@ -117,5 +127,5 @@ fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file){
 });
 
 app.server.listen(config.server.PORT,function(){
-	console.log(config.server.NAME + ' App is running at '+ config.server.PORT + ' now.');
+	logger.info(config.server.NAME + ' App is running at '+ config.server.PORT + ' now.');
 });

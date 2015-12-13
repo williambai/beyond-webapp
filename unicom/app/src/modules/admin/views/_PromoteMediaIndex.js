@@ -1,15 +1,15 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    dataTpl = require('../templates/_entityPageData.tpl'),
+    dataTpl = require('../templates/_entityPromoteMedia.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var PageData = require('../models/PageData');
-var ListView = require('./_PageDataList');
-var SearchView = require('./_PageDataSearch');
+var PromoteMedia = require('../models/PromoteMedia');
+var ListView = require('./_PromoteMediaList');
+var SearchView = require('./_PromoteMediaSearch');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -27,9 +27,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addPageData',
-		'click .edit': 'editPageData',
-		'click .delete': 'removePageData',
+		'click .add': 'addPromoteMedia',
+		'click .edit': 'editPromoteMedia',
+		'click .delete': 'removePromoteMedia',
 	},
 
 	load: function() {
@@ -52,21 +52,21 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addPageData: function(){
-		this.router.navigate('page/data/add',{trigger: true});
+	addPromoteMedia: function(){
+		this.router.navigate('promote/media/add',{trigger: true});
 		return false;
 	},
 
-	editPageData: function(evt){
+	editPromoteMedia: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('page/data/edit/'+ id,{trigger: true});
+		this.router.navigate('promote/media/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removePageData: function(evt){
+	removePromoteMedia: function(evt){
 		if(window.confirm('您确信要删除吗？')){
 			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new PageData({_id: id});
+			var model = new PromoteMedia({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh',model.urlRoot);
 		}
