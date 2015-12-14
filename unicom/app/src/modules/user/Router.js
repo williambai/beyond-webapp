@@ -292,7 +292,7 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		//this.appEvents.trigger('set:brand', '流量推荐');
-		var smsViewView = new DataViewView({
+		var smsViewView = new SmsViewView({
 			router: this,
 			el: '#content',
 			id: id,

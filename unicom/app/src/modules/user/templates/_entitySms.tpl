@@ -18,7 +18,7 @@
 		<p><%= model.description %></p>
 		<hr/>
 	</div>
-	<div id="itemAppTemplate">
+<!-- 	<div id="itemAppTemplate">
 		<hr/>
 		<div class="media">
 			<div class="media-left">
@@ -34,7 +34,7 @@
 				<button class="btn btn-info">推荐</button>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<div id="viewTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -46,30 +46,6 @@
 				<p>业务描述</p>
 			</div>
 		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<button class="pull-right">添加</button>
-				<h5 class="panel-title text-center">推荐给客户</h5>
-			</div>
-			<div class="panel-body">
-				<form>
-					<div class="form-group">
-						<label></label>
-						<input name="customer" class="form-control" placeholder="手机号码">
-					</div>
-					<div class="form-group">
-						<label></label>
-						<input name="customer" class="form-control" placeholder="手机号码">
-					</div>
-					<div class="form-group">
-						<label></label>
-						<input name="customer" class="form-control" placeholder="手机号码">
-					</div>
-					<div class="form-group">
-						<input type="submit" value="确认推荐" class="btn btn-primary btn-block">
-					</div>
-				</form>
-			</div>
-		</div>
+		<div id="recommendAddTemplate"></div>
 	</div>
 </div>

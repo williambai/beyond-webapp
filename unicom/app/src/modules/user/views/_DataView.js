@@ -1,31 +1,30 @@
 var _ = require('underscore');
-var FormView = require('./__FormView'),
+var Backbone = require('backbone'),
 	$ = require('jquery'),
     dataTpl = require('../templates/_entityData.tpl'),
 	PromoteProduct = require('../models/PromoteProduct');
 var config = require('../conf');
 
-var Recommend = require('../models/Recommend');
+Backbone.$ = $;
 
-exports = module.exports = FormView.extend({
+var RecommendAddView = require('./_RecommendAdd');
 
-	el: '#recommendForm',
+exports = module.exports = Backbone.View.extend({
 
-	modelFilled: false,
+	el: '#dataView',
 
 	initialize: function(options) {
 		this.router = options.router;
 		this.model = new PromoteProduct({_id: options.id});
 		var page = $(dataTpl);
-		var editTemplate = $('#viewTemplate', page).html();
-		this.template = _.template(_.unescape(editTemplate || ''));
-		FormView.prototype.initialize.apply(this, options);
+		var viewTemplate = $('#viewTemplate', page).html();
+		this.template = _.template(_.unescape(viewTemplate || ''));
+		this.model.on('change', this.change ,this);
+		this.on('load', this.load, this);
 	},
 
 	events: {
-		'submit form': 'submit',
-		'click .add': 'addItem',
-		'click .back': 'cancel',
+		'click .back': 'back',
 	},
 
 	load: function(){
@@ -36,43 +35,30 @@ exports = module.exports = FormView.extend({
 		});
 	},
 
-	addItem: function(){
-		this.$('#insertItemBefore').prepend('<div class="form-group"><label></label><input name="mobile[]" class="form-control" placeholder="手机号码"></div>');
-		return false;
-	},
-
-	submit: function() {
-		var that = this;
-		var object = this.$('form').serializeJSON();
-		var recommend = new Recommend();
-		recommend.set(object);
-		recommend.on('sync', this.done,this);
-		// console.log(this.model.attributes);
-		recommend.save(null, {
-			xhrFields: {
-				withCredentials: true
-			},
+	change: function(){
+		this.render();
+		this.recommendAddView = new RecommendAddView({
+			router: this.router,
+			el: '#recommendAddTemplate',
 		});
-		return false;
-	},
-	
-
-	cancel: function(){
-		this.router.navigate('data/index',{trigger: true, replace: true});
-		return false;
+		this.recommendAddView.render();
+		this.renderHiddenInput();
 	},
 
-	//fetch event: done
-	done: function(response){
-		console.log('++++')
-		if(!this.modelFilled){
-			//first fetch: get model
-			this.modelFilled = true;
-			this.render();
-		}else{
-			//second fetch: submit
-			this.router.navigate('data/index',{trigger: true, replace: true});
-		}
+	renderHiddenInput: function(){
+		var goods = this.model.get('goods');
+		this.$('form').prepend('<input type="hidden" name="product[id]" value="'+ this.model.get('_id') + '">');
+		this.$('form').prepend('<input type="hidden" name="product[name]" value="'+ this.model.get('subject') + '">');
+		this.$('form').prepend('<input type="hidden" name="product[category]" value="'+ this.model.get('category') + '">');
+		this.$('form').prepend('<input type="hidden" name="goods[name]" value="'+ goods.name + '">');
+		this.$('form').prepend('<input type="hidden" name="goods[nickname]" value="'+ goods.nickname + '">');
+		this.$('form').prepend('<input type="hidden" name="goods[sourceId]" value="'+ goods.sourceId + '">');
+	},
+
+	back: function(){
+		window.history.back();
+		// this.router.navigate('data/index',{trigger: true, replace: true});
+		return false;
 	},
 
 	render: function(){

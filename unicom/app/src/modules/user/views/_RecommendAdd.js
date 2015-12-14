@@ -15,16 +15,25 @@ exports = module.exports = FormView.extend({
 		var page = $(recommendTpl);
 		var addTemplate = $('#addTemplate', page).html();
 		this.template = _.template(_.unescape(addTemplate || ''));
+		var successTpl = $('#successTemplate', page).html();
+		this.successTemplate = _.template(_.unescape(successTpl || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
 		'submit form': 'submit',
+		'click .addItem': 'addItem',
+		'click .cancel': 'cancel',
 		'click .back': 'cancel',
 	},
 
 	load: function(){
 		this.render();
+	},
+
+	addItem: function(){
+		this.$('#insertItemBefore').prepend('<div class="form-group"><label></label><input name="mobile[]" class="form-control" placeholder="手机号码"></div>');
+		return false;
 	},
 
 	submit: function() {
@@ -47,8 +56,7 @@ exports = module.exports = FormView.extend({
 	},
 
 	done: function(response){
-		window.history.back();
-		// this.router.navigate('promote/product/index',{trigger: true, replace: true});
+		this.$el.html(this.successTemplate());
 	},
 
 	render: function(){
