@@ -5,11 +5,11 @@ var FormView = require('./__FormView'),
 	PromoteProduct = require('../models/PromoteProduct');
 var config = require('../conf');
 
-var OrderData = require('../models/OrderData');
+var Recommend = require('../models/Recommend');
 
 exports = module.exports = FormView.extend({
 
-	el: '#dataForm',
+	el: '#recommendForm',
 
 	modelFilled: false,
 
@@ -24,6 +24,7 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'submit form': 'submit',
+		'click .add': 'addItem',
 		'click .back': 'cancel',
 	},
 
@@ -35,13 +36,19 @@ exports = module.exports = FormView.extend({
 		});
 	},
 
+	addItem: function(){
+		this.$('#insertItemBefore').prepend('<div class="form-group"><label></label><input name="mobile[]" class="form-control" placeholder="手机号码"></div>');
+		return false;
+	},
+
 	submit: function() {
 		var that = this;
 		var object = this.$('form').serializeJSON();
-		var order = new OrderData();
-		order.set(object);
+		var recommend = new Recommend();
+		recommend.set(object);
+		recommend.on('sync', this.done,this);
 		// console.log(this.model.attributes);
-		order.save(null, {
+		recommend.save(null, {
 			xhrFields: {
 				withCredentials: true
 			},
@@ -57,6 +64,7 @@ exports = module.exports = FormView.extend({
 
 	//fetch event: done
 	done: function(response){
+		console.log('++++')
 		if(!this.modelFilled){
 			//first fetch: get model
 			this.modelFilled = true;
@@ -69,10 +77,6 @@ exports = module.exports = FormView.extend({
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		var category = this.model.get('category');
-		this.$('input[name=category][value='+ category +']').attr('checked',true);
-		var status = this.model.get('status');
-		this.$('input[name=status][value='+ status +']').attr('checked',true);
 		return this;
 	},
 });

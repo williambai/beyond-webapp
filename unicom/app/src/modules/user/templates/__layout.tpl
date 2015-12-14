@@ -1,7 +1,7 @@
 <div class="sidebar sidebar-left">
 	<div class="scrollable" style="padding-top:70px;">
 		<div class="scrollable-header app-name">
-			<a href="#" onclick="window.location.reload();return false;">{产品名称}</a>
+			<a href="#" onclick="window.location.reload();return false;">贵州联通创富计划</a>
 		</div>
 		<div class="scrollable-content">
 			<div class="list-group">
@@ -36,7 +36,7 @@
 					&nbsp;卡号
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a> -->
-				<a class="list-group-item" href="#">
+				<a class="list-group-item" href="#order/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;Wo 成绩
 					<i class="fa fa-chevron-right pull-right"></i>
@@ -77,7 +77,7 @@
 </div>
 <div class="app">
 	<div class="navbar navbar-app navbar-absolute-top">
-		<div class="navbar-brand navbar-brand-center">{产品名称}</div>
+		<div class="navbar-brand navbar-brand-center">贵州联通创富计划</div>
 		<div class="btn-group pull-left">
 			<div class="btn sidebar-toggle" id="left-sidebar-toggle">
 				<i class="fa fa-bars fa-lg"></i>

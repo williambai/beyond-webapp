@@ -31,6 +31,7 @@ var config = {
 //import the models
 var models = {
 		Account: require('./models/Account')(mongoose),
+		AccountActivity: require('./models/AccountActivity')(mongoose),
 		PlatformFeature: require('./models/PlatformFeature')(mongoose),
 		PlatformRole: require('./models/PlatformRole')(mongoose),
 		ChannelCategory: require('./models/ChannelCategory')(mongoose),
@@ -44,6 +45,7 @@ var models = {
 		PromoteMedia: require('./models/PromoteMedia')(mongoose),
 		ProductCard: require('./models/ProductCard')(mongoose),
 		OrderCard: require('./models/OrderCard')(mongoose),
+		WoOrder: require('./models/WoOrder')(mongoose),
 		WoRevenue: require('./models/WoRevenue')(mongoose),
 		GoodsEntity: require('./models/GoodsEntity')(mongoose),
 	};

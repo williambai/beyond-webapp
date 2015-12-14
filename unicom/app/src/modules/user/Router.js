@@ -20,6 +20,9 @@ var DataIndexView = require('./views/_DataIndex');
 var DataViewView = require('./views/_DataView');
 var SmsIndexView = require('./views/_SmsIndex');
 var SmsViewView = require('./views/_SmsView');
+var OrderIndexView = require('./views/_OrderIndex');
+var ActivityIndexView = require('./views/_ActivityIndex');
+
 
 var config = require('./conf');
 
@@ -31,7 +34,7 @@ exports = module.exports = Backbone.Router.extend({
 	appEvents: _.extend({}, Backbone.Events), //app events
 
 	routes: {
-		'index': 'index',
+		'index': 'activityIndex',
 		'login': 'login',
 		'logout': 'logout',
 		'register': 'register',
@@ -48,6 +51,9 @@ exports = module.exports = Backbone.Router.extend({
 		'data/view/:id': 'dataView',
 		'sms/index': 'smsIndex',
 		'sms/view/:id': 'smsView',
+		'order/index': 'orderIndex',
+		'activity/index': 'activityIndex',
+
 
 		'*path': 'index',
 	},
@@ -88,7 +94,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '首页');
+		this.appEvents.trigger('set:brand', '贵州联通创富计划');
 		var indexView = new IndexView({});
 		this.changeView(indexView);
 		indexView.trigger('load');
@@ -99,7 +105,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'index';
 			return;
 		}
-		this.appEvents.trigger('set:brand','注册');
+		//this.appEvents.trigger('set:brand','注册');
 		var registerView = new RegisterView({
 			el: '#content'
 		});
@@ -112,7 +118,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'index';
 			return;
 		}
-		this.appEvents.trigger('set:brand','找回密码');
+		//this.appEvents.trigger('set:brand','找回密码');
 		var forgotPassword = new ForgotPasswordView({
 			el: '#content'
 		});
@@ -125,7 +131,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'index';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '登录');
+		//this.appEvents.trigger('set:brand', '登录');
 		var loginView = new LoginView({
 			el: '#content',
 			appEvents: this.appEvents,
@@ -152,7 +158,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '个人资料');
+		//this.appEvents.trigger('set:brand', '个人资料');
 		if (id == this.account.id) {
 			id = 'me';
 		}
@@ -171,7 +177,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '编辑个人资料');
+		//this.appEvents.trigger('set:brand', '编辑个人资料');
 		var profileEditView = new ProfileEditView({
 			el: '#content'
 		});
@@ -184,7 +190,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '号卡');
+		//this.appEvents.trigger('set:brand', '号卡');
 		var cardIndexView = new CardIndexView({
 			router: this,
 			el: '#content',
@@ -198,7 +204,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '卡号推荐');
+		//this.appEvents.trigger('set:brand', '卡号推荐');
 		var orderCardAddView = new OrderCardAddView({
 			router: this,
 			el: '#content',
@@ -213,7 +219,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '内容推荐');
+		//this.appEvents.trigger('set:brand', '内容推荐');
 		var pushIndexView = new PushIndexView({
 			router: this,
 			el: '#content'
@@ -227,7 +233,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '内容推荐');
+		//this.appEvents.trigger('set:brand', '内容推荐');
 		var pushViewView = new PushViewView({
 			router: this,
 			el: '#content',
@@ -242,7 +248,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '流量推荐');
+		//this.appEvents.trigger('set:brand', '流量推荐');
 		var dataIndexView = new DataIndexView({
 			router: this,
 			el: '#content',
@@ -256,7 +262,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '流量推荐');
+		//this.appEvents.trigger('set:brand', '流量推荐');
 		var dataViewView = new DataViewView({
 			router: this,
 			el: '#content',
@@ -271,7 +277,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '流量推荐');
+		//this.appEvents.trigger('set:brand', '流量推荐');
 		var smsIndexView = new SmsIndexView({
 			router: this,
 			el: '#content'
@@ -285,7 +291,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '流量推荐');
+		//this.appEvents.trigger('set:brand', '流量推荐');
 		var smsViewView = new DataViewView({
 			router: this,
 			el: '#content',
@@ -294,4 +300,32 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(smsViewView);
 		smsViewView.trigger('load');
 	},
+
+	orderIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '我的成绩');
+		var orderIndexView = new OrderIndexView({
+			router: this,
+			el: '#content'
+		});
+		this.changeView(orderIndexView);
+		orderIndexView.trigger('load');
+	},	
+
+	activityIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '同事圈');
+		var activityIndexView = new ActivityIndexView({
+			router: this,
+			el: '#content'
+		});
+		this.changeView(activityIndexView);
+		activityIndexView.trigger('load');
+	},	
 });
