@@ -4,11 +4,10 @@ var $ = require('jquery'),
     pushTpl = require('../templates/_entityPush.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
-var ListView = require('./_CardList');
 
 Backbone.$ = $;
 
-var RecommendView = require('./_PushRecommend');
+var ListView = require('./_PushList');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -17,30 +16,30 @@ exports = module.exports = Backbone.View.extend({
 	loadingTemplate: _.template(loadingTpl),
 
 	initialize: function(options) {
+		this.router = options.router;
 		var page = $(pushTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
-
-		this.recommendView = new RecommendView({
-			el: '#content',
-		});
 
 		this.on('load', this.load, this);
 	},
 
 	events: {
+		'click #app': 'listApp',
+		'click #activity': 'listEvent',
 		'scroll': 'scroll',
-		'click .search': 'search',
-		'click .recommend': 'recommend',
+		'click .view': 'pushView',
 	},
 
 	load: function() {
 		var that = this;
 		this.loaded = true;
 		this.render();
+
 		this.listView = new ListView({
 			el: '#list',
 		});
+		this.listView.collection.url = config.api.host + '/promote/products?type=category&category=APP';
 		this.listView.trigger('load');
 	},
 
@@ -49,12 +48,25 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
-	// search: function(){
-	// 	this.searchView.trigger('load');
-	// },
+	listApp: function(){
+		this.$('#g3').removeClass('btn-success').addClass('btn-default');
+		this.$('#g2').removeClass('btn-default').addClass('btn-success');
+		var url = config.api.host + '/promote/products?type=category&category=APP';
+		this.listView.refresh(url);
+		return false;
+	},
 
-	recommend: function(){
-		this.recommendView.trigger('load');
+	listEvent: function(){
+		this.$('#g2').removeClass('btn-success').addClass('btn-default');
+		this.$('#g3').removeClass('btn-default').addClass('btn-success');
+		var url = config.api.host + '/promote/products?type=category&category=EVENT';
+		this.listView.refresh(url);
+		return false;
+	},
+
+	pushView: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('push/view/'+ id,{trigger: true});
 		return false;
 	},
 	

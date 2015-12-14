@@ -65,7 +65,7 @@
 				</a>
 				<a class="list-group-item" href="#promote/product/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;产品配置
+					&nbsp;页面数据配置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#promote/event/index">

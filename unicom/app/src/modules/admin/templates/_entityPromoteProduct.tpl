@@ -27,7 +27,9 @@
 					<option>全部</option>
 					<option value="2G">2G流量</option>
 					<option value="3G">3G流量</option>
-					<option value="recommend">产品推荐</option>
+					<option value="SMS">增值服务</option>
+					<option value="APP">应用推荐</option>
+					<option value="EVENT">活动推荐</option>
 				</select>&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
@@ -63,8 +65,9 @@
 						<label>产品分类：</label>
 						<input type="radio" name="category" value="2G">&nbsp;&nbsp;2G流量
 						<input type="radio" name="category" value="3G">&nbsp;&nbsp;3G流量
-						<input type="radio" name="category" value="av">&nbsp;&nbsp;增值服务
-						<input type="radio" name="category" value="recommend">&nbsp;&nbsp;产品推荐
+						<input type="radio" name="category" value="SMS">&nbsp;&nbsp;增值服务
+						<input type="radio" name="category" value="APP">&nbsp;&nbsp;应用推荐
+						<input type="radio" name="category" value="EVENT">&nbsp;&nbsp;活动推荐
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -87,6 +90,27 @@
 					<div class="form-group">
 						<label>产品描述：</label>
 						<input type="text" name="description" value="" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>产品图标：</label>
+						<input type="text" name="thumbnail_url" value="" class="form-control">
+						<div id="images"></div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>链接地址：</label>
+						<input type="text" name="url" value="" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>活动开始时间：</label>
+						<input type="date" name="starttime" value="" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>活动结束时间：</label>
+						<input type="date" name="endtime" value="" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -136,8 +160,9 @@
 						<label>产品分类：</label>
 						<input type="radio" name="category" value="2G">&nbsp;&nbsp;2G流量
 						<input type="radio" name="category" value="3G">&nbsp;&nbsp;3G流量
-						<input type="radio" name="category" value="av">&nbsp;&nbsp;增值服务
-						<input type="radio" name="category" value="recommend">&nbsp;&nbsp;产品推荐
+						<input type="radio" name="category" value="SMS">&nbsp;&nbsp;增值服务
+						<input type="radio" name="category" value="APP">&nbsp;&nbsp;应用推荐
+						<input type="radio" name="category" value="EVENT">&nbsp;&nbsp;活动推荐
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -160,6 +185,27 @@
 					<div class="form-group">
 						<label>产品描述：</label>
 						<input type="text" name="description" value="<%= model.description %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>产品图标：</label>
+						<input type="text" name="thumbnail_url" value="<%= model.thumbnail_url %>" class="form-control">
+						<div id="images"></div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>链接地址：</label>
+						<input type="text" name="url" value="<%= model.url %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>活动开始时间：</label>
+						<input type="date" name="starttime" value="<%= model.starttime %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>活动结束时间：</label>
+						<input type="date" name="endtime" value="<%= model.endtime %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

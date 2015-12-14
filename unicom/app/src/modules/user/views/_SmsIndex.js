@@ -4,11 +4,9 @@ var $ = require('jquery'),
     smsTpl = require('../templates/_entitySms.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
-var ListView = require('./_CardList');
+var ListView = require('./_SmsList');
 
 Backbone.$ = $;
-
-var RecommendView = require('./_PushRecommend');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -17,21 +15,17 @@ exports = module.exports = Backbone.View.extend({
 	loadingTemplate: _.template(loadingTpl),
 
 	initialize: function(options) {
+		this.router = options.router;
 		var page = $(smsTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
-
-		this.recommendView = new RecommendView({
-			el: '#content',
-		});
-
 		this.on('load', this.load, this);
 	},
 
 	events: {
 		'scroll': 'scroll',
 		'click .search': 'search',
-		'click .recommend': 'recommend',
+		'click .view': 'smsView',
 	},
 
 	load: function() {
@@ -41,6 +35,7 @@ exports = module.exports = Backbone.View.extend({
 		this.listView = new ListView({
 			el: '#list',
 		});
+		this.listView.collection.url = config.api.host + '/promote/products?type=category&category=SMS';
 		this.listView.trigger('load');
 	},
 
@@ -53,8 +48,9 @@ exports = module.exports = Backbone.View.extend({
 	// 	this.searchView.trigger('load');
 	// },
 
-	recommend: function(){
-		this.recommendView.trigger('load');
+	smsView: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('sms/view/'+ id,{trigger: true});
 		return false;
 	},
 	

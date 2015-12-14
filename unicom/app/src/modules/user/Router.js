@@ -15,9 +15,11 @@ var CardIndexView = require('./views/_CardIndex');
 var OrderCardAddView = require('./views/_OrderCardAdd');
 
 var PushIndexView = require('./views/_PushIndex');
+var PushViewView = require('./views/_PushView');
 var DataIndexView = require('./views/_DataIndex');
 var DataViewView = require('./views/_DataView');
 var SmsIndexView = require('./views/_SmsIndex');
+var SmsViewView = require('./views/_SmsView');
 
 var config = require('./conf');
 
@@ -41,9 +43,11 @@ exports = module.exports = Backbone.Router.extend({
 		'order/card/:id/add': 'orderCardAdd',
 
 		'push/index': 'pushIndex',
+		'push/view/:id': 'pushView',
 		'data/index': 'dataIndex',
 		'data/view/:id': 'dataView',
 		'sms/index': 'smsIndex',
+		'sms/view/:id': 'smsView',
 
 		'*path': 'index',
 	},
@@ -211,10 +215,26 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand', '内容推荐');
 		var pushIndexView = new PushIndexView({
+			router: this,
 			el: '#content'
 		});
 		this.changeView(pushIndexView);
 		pushIndexView.trigger('load');
+	},
+
+	pushView: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '内容推荐');
+		var pushViewView = new PushViewView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(pushViewView);
+		pushViewView.trigger('load');
 	},
 
 	dataIndex: function() {
@@ -253,9 +273,25 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand', '流量推荐');
 		var smsIndexView = new SmsIndexView({
+			router: this,
 			el: '#content'
 		});
 		this.changeView(smsIndexView);
 		smsIndexView.trigger('load');
 	},	
+
+	smsView: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '流量推荐');
+		var smsViewView = new DataViewView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(smsViewView);
+		smsViewView.trigger('load');
+	},
 });
