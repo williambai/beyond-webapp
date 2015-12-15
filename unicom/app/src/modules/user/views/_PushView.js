@@ -1,30 +1,30 @@
 var _ = require('underscore');
-var FormView = require('./__FormView'),
+var Backbone = require('backbone'),
 	$ = require('jquery'),
-    dataTpl = require('../templates/_entityPush.tpl'),
+    pushTpl = require('../templates/_entityPush.tpl'),
 	PromoteProduct = require('../models/PromoteProduct');
 var config = require('../conf');
 
-var OrderData = require('../models/OrderData');
+Backbone.$ = $;
 
-exports = module.exports = FormView.extend({
+var RecommendAddView = require('./_RecommendAdd');
 
-	el: '#dataForm',
+exports = module.exports = Backbone.View.extend({
 
-	modelFilled: false,
+	el: '#pushView',
 
 	initialize: function(options) {
 		this.router = options.router;
 		this.model = new PromoteProduct({_id: options.id});
-		var page = $(dataTpl);
-		var editTemplate = $('#viewTemplate', page).html();
-		this.template = _.template(_.unescape(editTemplate || ''));
-		FormView.prototype.initialize.apply(this, options);
+		var page = $(pushTpl);
+		var viewTemplate = $('#viewTemplate', page).html();
+		this.template = _.template(_.unescape(viewTemplate || ''));
+		this.model.on('change', this.change ,this);
+		this.on('load', this.load, this);
 	},
 
 	events: {
-		'submit form': 'submit',
-		'click .back': 'cancel',
+		'click .back': 'back',
 	},
 
 	load: function(){
@@ -35,44 +35,34 @@ exports = module.exports = FormView.extend({
 		});
 	},
 
-	submit: function() {
-		var that = this;
-		var object = this.$('form').serializeJSON();
-		var order = new OrderData();
-		order.set(object);
-		// console.log(this.model.attributes);
-		order.save(null, {
-			xhrFields: {
-				withCredentials: true
-			},
+	change: function(){
+		this.render();
+		this.recommendAddView = new RecommendAddView({
+			router: this.router,
+			el: '#recommendAddTemplate',
 		});
-		return false;
-	},
-	
-
-	cancel: function(){
-		this.router.navigate('data/index',{trigger: true, replace: true});
-		return false;
+		this.recommendAddView.on('ready',this.recommendAddViewReady,this);
+		this.recommendAddView.trigger('load');
 	},
 
-	//fetch event: done
-	done: function(response){
-		if(!this.modelFilled){
-			//first fetch: get model
-			this.modelFilled = true;
-			this.render();
-		}else{
-			//second fetch: submit
-			this.router.navigate('data/index',{trigger: true, replace: true});
-		}
+	recommendAddViewReady: function(){
+		var goods = this.model.get('goods');
+		this.$('form').prepend('<input type="hidden" name="product[id]" value="'+ this.model.get('_id') + '">');
+		this.$('form').prepend('<input type="hidden" name="product[name]" value="'+ this.model.get('subject') + '">');
+		this.$('form').prepend('<input type="hidden" name="product[category]" value="'+ this.model.get('category') + '">');
+		this.$('form').prepend('<input type="hidden" name="goods[name]" value="'+ goods.name + '">');
+		this.$('form').prepend('<input type="hidden" name="goods[nickname]" value="'+ goods.nickname + '">');
+		this.$('form').prepend('<input type="hidden" name="goods[sourceId]" value="'+ goods.sourceId + '">');
+	},
+
+	back: function(){
+		window.history.back();
+		// this.router.navigate('push/index',{trigger: true, replace: true});
+		return false;
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		var category = this.model.get('category');
-		this.$('input[name=category][value='+ category +']').attr('checked',true);
-		var status = this.model.get('status');
-		this.$('input[name=status][value='+ status +']').attr('checked',true);
 		return this;
 	},
 });

@@ -4,6 +4,7 @@ var $ = require('jquery'),
     cardTpl = require('../templates/_entityCard.tpl'),
     SearchView = require('./__SearchView');
 var config = require('../conf');
+var cardPackge = require('../models/ProductCardPackage');
 
 var SearchModel = Backbone.Model.extend({
 
@@ -22,7 +23,7 @@ exports = module.exports = SearchView.extend({
 	events: {
 		'click .tabControl': 'tabControl',
 		'click .selectItem': 'selectItem',
-		'click #packageSelected': 'close',
+		'submit form': 'submit',
 	},
 
 	load: function(){
@@ -31,6 +32,7 @@ exports = module.exports = SearchView.extend({
 		this.$('div.tabControl').first().removeClass('btn-default').addClass('btn-success');
 		this.$('div.tab').hide();
 		this.$('div.tab').first().show();
+		this.trigger('ready');
 	},
 
 	tabControl: function(evt){
@@ -58,8 +60,19 @@ exports = module.exports = SearchView.extend({
 		return false;
 	},
 
-	close: function(){
-		this.done();
+	submit: function(){
+		var products = [];
+		var object = this.$('form').serializeJSON() || {};
+		if(_.isEmpty(object.product)) return false;
+		var values = _.values(object.product)
+		// console.log(cardPackge)
+		// console.log(values);
+		_.each(values,function(value){
+			if(_.has(cardPackge,value))
+				return products.push(cardPackge[value]);
+		});
+		// console.log(products);
+		this.done(products);
 		return false;
 	},
 

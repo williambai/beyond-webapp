@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    recommendTpl = require('../templates/_entityRecommend.tpl'),
-	Recommend = require('../models/Recommend');
+    cardTpl = require('../templates/_entityCard.tpl'),
+	ProductCardRecommend = require('../models/ProductCardRecommend');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
@@ -11,37 +11,41 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Recommend();
-		var page = $(recommendTpl);
-		var addTemplate = $('#addTemplate', page).html();
-		this.template = _.template(_.unescape(addTemplate || ''));
+		this.model = new ProductCardRecommend();
+		var page = $(cardTpl);
+		var recommendTemplate = $('#recommendTemplate', page).html();
+		this.template = _.template(_.unescape(recommendTemplate || ''));
 		var successTpl = $('#successTemplate', page).html();
 		this.successTemplate = _.template(_.unescape(successTpl || ''));
+		this.on('change:product', this.packageChanged, this);
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
 		'submit form': 'submit',
-		'click .addItem': 'addItem',
-		'click .cancel': 'cancel',
 		'click .back': 'cancel',
 	},
 
 	load: function(){
+		var that = this;
 		this.render();
 		this.trigger('ready');
 	},
 
-	addItem: function(){
-		this.$('#insertItemBefore').prepend('<div class="form-group"><label></label><input name="mobile[]" class="form-control" placeholder="手机号码"></div>');
-		return false;
+	packageChanged: function(products){
+		this.$('#hiddenFields').empty();
+		var html = '';
+		_.each(products,function(product){
+			html += '<input type="hidden" name="package[]" value="' + product.id +'">';
+		});
+		this.$('#hiddenFields').html(html);
 	},
 
 	submit: function() {
 		var that = this;
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		// console.log(this.model.attributes);
+		console.log(this.model.attributes);
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true
@@ -51,8 +55,7 @@ exports = module.exports = FormView.extend({
 	},
 
 	cancel: function(){
-		window.history.back();
-		// this.router.navigate('promote/product/index',{trigger: true, replace: true});
+		this.router.navigate('card/index',{trigger: true, replace: true});
 		return false;
 	},
 

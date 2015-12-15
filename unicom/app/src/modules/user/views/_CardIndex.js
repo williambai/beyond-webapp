@@ -28,6 +28,7 @@ exports = module.exports = Backbone.View.extend({
 	events: {
 		'scroll': 'scroll',
 		'click .search': 'search',
+		'click .view': 'cardView',
 		'click .recommend': 'addCardOrder',
 	},
 
@@ -57,6 +58,12 @@ exports = module.exports = Backbone.View.extend({
 
 	search: function(){
 		this.$('#search').show();
+		return false;
+	},
+
+	cardView: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('card/view/'+ id,{trigger: true});
 		return false;
 	},
 

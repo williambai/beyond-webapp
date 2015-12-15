@@ -24,7 +24,6 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .search': 'search',
 		'click .view': 'smsView',
 	},
 
@@ -43,10 +42,6 @@ exports = module.exports = Backbone.View.extend({
 		this.listView.scroll();
 		return false;
 	},
-
-	// search: function(){
-	// 	this.searchView.trigger('load');
-	// },
 
 	smsView: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');

@@ -26,11 +26,12 @@ exports = module.exports = SearchView.extend({
 
 	load: function(){
 		this.render();
+		this.trigger('ready');
 	},
 
 	search: function(){
-		var url = 'from=' + $('input[name=from]').val() + '&to=' + $('input[name=to]').val() + '&searchStr=' + $('input[name=searchStr]').val();
-		this.done(url);
+		var object = this.$('form').serializeJSON();
+		this.done(object);
 		return false;
 	},
 

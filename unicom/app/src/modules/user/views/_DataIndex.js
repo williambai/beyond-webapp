@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    cardTpl = require('../templates/_entityData.tpl'),
+    dataTpl = require('../templates/_entityData.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
@@ -18,7 +18,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(cardTpl);
+		var page = $(dataTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 

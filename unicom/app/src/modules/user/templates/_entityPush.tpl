@@ -15,42 +15,29 @@
 			</div>
 		</div>
 	</div>
-<!-- 	<div id="itemAppTemplate">
-		<hr/>
-		<div class="media">
-			<div class="media-left">
-				<a href="#">
-					<img class="media-object" src="" alt="" height="50px" width="50px">
-				</a>
-			</div>
-			<div class="media-body">
-				<h5 class="media-heading">100M流量</h5>
-				<p>999次下载 1.32M</p>
-			</div>
-			<div class="media-right">
-				<button class="btn btn-info">推荐</button>
-			</div>
-		</div>
-	</div>
- -->
- 	<div id="itemTemplate">
+	<div id="itemTemplate">
 		<div>
 			<div class="media">
 				<div class="media-left">
-					<img class="media-object" src="" width="50px" height="50px" style="max-width:50px;">
+					<img class="media-object" src="" width="80px" height="80px" style="max-width:100px;">
 				</div>
 				<div class="media-body">
 					<div class="pull-right" id="<%= model._id %>">
 						<button class="btn btn-success view">推荐</button>
 					</div>
 					<h4><%= model.subject %></h4>
-					<p><%= model.description %></p>
+					<p>
+						<span><%= model.description %></span>
+					</p>
+					<p>
+						<% if(model.starttime){ %>
+						<span>时间：<%= model.starttime %>到<%= model.endtime %></span>
+						<% } %>
+					</p>
 				</div>
 			</div>
 			<hr/>
 		</div>
-	</div>
-	<div id="itemActivityTemplate">
 	</div>
 	<div id="viewTemplate">
 		<div class="panel panel-default">
@@ -58,9 +45,14 @@
 				<h5 class="panel-title text-center">推荐业务</h5>
 			</div>
 			<div class="panel-body">
-				<div class="pull-right"><%= model.price %>元/月</div>
-				<h5><%= model.subject %></h5>
+				<div class="pull-right"></div>
+				<h4><%= model.subject %></h4>
 				<p><%= model.description %></p>
+				<p>
+					<% if(model.starttime){ %>
+					<span>时间：<%= model.starttime %>到<%= model.endtime %></span>
+					<% } %>
+				</p>
 			</div>
 		</div>
 		<div id="recommendAddTemplate"></div>

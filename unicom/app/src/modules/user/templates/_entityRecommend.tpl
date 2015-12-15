@@ -1,8 +1,8 @@
 <div>
 	<div id="addTemplate">
-		<div class="panel panel-default">
+		<div class="panel panel-primary">
 			<div class="panel-heading">
-				<button class="pull-right addItem">添加</button>
+				<button class="btn btn-success pull-right addItem">添加</button>
 				<h5 class="panel-title text-center">推荐给客户</h5>
 			</div>
 			<div class="panel-body">

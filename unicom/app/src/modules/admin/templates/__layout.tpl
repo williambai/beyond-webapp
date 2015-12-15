@@ -26,11 +26,6 @@
 					&nbsp;物料管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<!-- <a class="list-group-item" href="#revenue/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;金币管理
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
 				<a class="list-group-item" href="#card/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;卡号管理
@@ -39,6 +34,11 @@
 				<a class="list-group-item" href="#order/card/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;卡号订单
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<!-- <a class="list-group-item" href="#revenue/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;金币管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#order/phone/index">
@@ -65,7 +65,7 @@
 				</a>
 				<a class="list-group-item" href="#promote/product/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;页面数据配置
+					&nbsp;分类数据配置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#promote/event/index">

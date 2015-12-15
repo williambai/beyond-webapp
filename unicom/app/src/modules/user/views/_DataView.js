@@ -41,11 +41,11 @@ exports = module.exports = Backbone.View.extend({
 			router: this.router,
 			el: '#recommendAddTemplate',
 		});
-		this.recommendAddView.render();
-		this.renderHiddenInput();
+		this.recommendAddView.on('ready',this.recommendAddViewReady,this);
+		this.recommendAddView.trigger('load');
 	},
 
-	renderHiddenInput: function(){
+	recommendAddViewReady: function(){
 		var goods = this.model.get('goods');
 		this.$('form').prepend('<input type="hidden" name="product[id]" value="'+ this.model.get('_id') + '">');
 		this.$('form').prepend('<input type="hidden" name="product[name]" value="'+ this.model.get('subject') + '">');

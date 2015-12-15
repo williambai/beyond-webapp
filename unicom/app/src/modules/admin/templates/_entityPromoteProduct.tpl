@@ -50,8 +50,12 @@
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4><%= model.subject %></h4>
+		<h4><%= model.subject %>&nbsp;<span class="bg-success"><%= model.status %></span></h4>
+		<p>产品分类：<%= model.category %></p>
 		<p><%= model.description %></p>
+		<%if(model.starttime){ %>
+		<p>活动时间：<%= model.starttime %> ~ <%= model.endtime %></p>
+		<% } %>
 		<hr/>
 	</div>
 	<div id="addTemplate">

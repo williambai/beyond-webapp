@@ -26,16 +26,18 @@
 					&nbsp;内容推荐
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-<!-- 				<a class="list-group-item" href="#">
+				<a class="list-group-item" href="#card/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;号卡产品
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a> 
+<!--
+				<a class="list-group-item" href="#">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;终端
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#card/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;卡号
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a> -->
+-->
 				<a class="list-group-item" href="#order/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;Wo 成绩
