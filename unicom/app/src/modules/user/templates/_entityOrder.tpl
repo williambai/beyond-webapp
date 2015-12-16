@@ -16,8 +16,8 @@
 		</div>
  -->
  		<h4>客户：<%= model.customer.mobile %></h4>
-		<p>物料名称：<%= model.goods.name %>, 当前状态：<%= model.status %></p>
-		<p>发布于：<%= model.deltatime %></p>
+		<p>产品名称：<%= model.product.name %>&nbsp;[<%= model.product.category %>]</p>
+		<p>发布于：<%= model.deltatime %>&nbsp;&nbsp;&nbsp;当前状态：<%= model.status %></p>
 		<hr/>
 	</div>
 </div>

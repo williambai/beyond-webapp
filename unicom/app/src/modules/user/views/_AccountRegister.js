@@ -28,12 +28,29 @@ exports = module.exports = FormView.extend({
 	},
 
 	events: {
-		'keyup input[type=text]': 'renderInputInvalid',
-		'blur input[type=text]': 'renderInputInvalid',
-		'keyup input[type=password]': 'renderInputInvalid',
+		'keyup input[type=text]': 'inputText',
+		'blur input[type=text]': 'inputText',
+		'keyup input[type=password]': 'inputText',
 		'click #selectChannel': 'selectChannel',
 		'submit form': 'register',
 		'swipeleft': 'swipeToLoginForm',
+	},
+
+	inputText: function(evt){
+		var that = this;
+		//clear error
+		this.$(evt.currentTarget).parent().removeClass('has-error');
+		this.$(evt.currentTarget).parent().find('span.help-block').empty();
+		var arr = this.$(evt.currentTarget).serializeArray();
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(error){
+				//set error
+				this.$(evt.currentTarget).parent().addClass('has-error');
+				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
+			}
+		})
+		return false;
 	},
 
 	selectChannel: function(){
@@ -45,11 +62,33 @@ exports = module.exports = FormView.extend({
 
 	register: function() {
 		var that = this;
+		//clear errors
+		this.$('.form-group').removeClass('has-error');
+		this.$('.form-group').find('span.help-block').empty();
 		var arr = this.$('form').serializeArray();
-		arr.forEach(function(item) {
-			that.model.set(item.name, item.value);
+		var errors = [];
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(error){
+				errors.push(error);
+				that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
+				that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
+			}
 		});
-		// console.log(this.model.attributes);
+		if(!_.isEmpty(errors)) return false;
+		//validate finished.
+
+		var object = this.$('form').serializeJSON();
+		this.model.set(object);
+		console.log(this.model.toJSON());
+		var password = this.model.get('password');
+		var cpasword = this.model.get('cpasword');
+		if(password != cpasword){
+			var error = '两次输入不同';
+			that.$('[name="cpassword"]').parent().addClass('has-error');
+			that.$('[name="cpassword"]').parent().find('span.help-block').text(error);			
+			return false;
+		}
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true
@@ -61,48 +100,6 @@ exports = module.exports = FormView.extend({
 	swipeToLoginForm: function() {
 		window.location.hash = 'login';
 		return false;
-	},
-
-	validate: function(name, val) {
-		var error;
-		switch (name) {
-			case 'username':
-				if (!/^([a-zA-Z0-9_-])+$/.test(val)) {
-					error = {
-						name: 'username',
-						message: '用户名不合法'
-					};
-				}
-				break;
-			case 'email':
-				if (!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(val))) {
-					error = {
-						name: 'email',
-						message: '不是有效的电子邮件',
-					};
-				}
-				break;
-			case 'password':
-				if (val.length < 5) {
-					error = {
-						name: 'password',
-						message: '密码长度不正确',
-					};
-				}
-				break;
-			case 'cpassword':
-				var password = this.$('input[name=password]').val();
-				if (val != password) {
-					error = {
-						name: 'cpassword',
-						message: '两次输入不一致',
-					};
-				}
-				break;
-			default:
-				break;
-		}
-		if (!_.isEmpty(error)) return error;
 	},
 
 	done: function() {

@@ -7,7 +7,7 @@ exports = module.exports = Backbone.Model.extend({
 	urlRoot: config.api.host + '/wo/orders',	
 	defaults: {
 		customer: {},
-		products: {},
+		product: {},
 		goods: {}
 	}
 });

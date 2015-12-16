@@ -1,5 +1,16 @@
 <div>
 	<div id="indexTemplate">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">同事圈</h5>
+			</div>
+			<div class="panel-body">
+				<div id="list">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="carouselTemplate">
 		<div id="app-carousel" class="carousel slide" data-ride="carousel">
 		  <!-- Indicators -->
 		  <ol class="carousel-indicators">
@@ -37,15 +48,6 @@
 		    <span class="sr-only">Next</span>
 		  </a>
 		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h5 class="panel-title text-center">同事圈</h5>
-			</div>
-			<div class="panel-body">
-				<div id="list">
-				</div>
-			</div>
-		</div>
 	</div>
 	<div id="itemTemplate">
 		<div class="media">
@@ -61,9 +63,10 @@
 						<%= model.username %></a>
 				</h4>
 				<%= model.content %>
-<!--
  				<p>
 					<%= model.deltatime %>
+				</p>
+<!--
 					<span class="pull-right">
 							<a class="good"> <i class="fa fa-heart-o"></i>
 								&nbsp;点赞

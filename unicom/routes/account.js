@@ -34,8 +34,8 @@
  				var file = req.files.files;
  				var filename = app.randomHex() + '.' + file.extension; //file.name;
  				var tmp_path = file.path;
- 				var new_path = path.join(__dirname, '../public/upload/', filename);
- 				var avatar = '/upload/' + filename;
+ 				var new_path = path.join(__dirname, '../public/_tmp/', filename);
+ 				var avatar = '/_tmp/' + filename;
  				fs.rename(tmp_path, new_path, function(err) {
  					if (err) {
  						console.log(err);
@@ -79,7 +79,8 @@
  		var accountId = req.params.id == 'me' ? req.session.accountId : req.params.id;
  		Account.findById(accountId)
  			.select({
- 				password: 0
+ 				password: 0,
+ 				histories: 0,
  			})
  			.exec(function(err, doc) {
  				if (err) return res.send(err);

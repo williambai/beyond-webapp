@@ -225,12 +225,12 @@
 					</div>
 					<div class="form-group">
 						<label>联系电话：</label>
-							<input type="text" name="customer[contact][phone]" class="form-control">
+							<input type="text" name="customer[phone]" class="form-control">
 							<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>联系地址：</label>
-							<input type="text" name="customer[contact][address]" class="form-control">
+							<input type="text" name="customer[address]" class="form-control">
 							<span class="help-block"></span>
 					</div>
 					<div class="form-group">

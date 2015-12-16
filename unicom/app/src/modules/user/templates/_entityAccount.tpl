@@ -11,7 +11,7 @@
 						<div class="panel-body">
 							<div id="error"></div>
 							<form>
-								<div class="form-group" id="username">
+								<div class="form-group">
 									<label for="username">姓名：</label>
 									<input type="text" name="username" value="<%= model.username %>" class="form-control input-sm" placeholder="姓名"/>
 									<span class="help-block"></span>
@@ -119,12 +119,12 @@
 		                <div class="panel-body">
 		                    <div id="error"></div>
 		                    <form role="form">
-		                        <div class="form-group" id="email">
+		                        <div class="form-group">
 		                            <input type="text" name="email" class="form-control input-sm" placeholder="邮件/用户名">
 		                            <span class="help-block"></span>
 		                        </div>
 
-		                        <div class="form-group" id="password">
+		                        <div class="form-group">
 		                            <input type="password" name="password" class="form-control input-sm" placeholder="密码">
 		                            <span class="help-block"></span>
 		                        </div>
@@ -229,21 +229,28 @@
 			<form>
 				<div class="form-group">
 					<label for="username">姓名：</label>
-					<input type="text" name="username" value="<%= model.username %>" class="form-control"/></div>
+					<input type="text" name="username" value="<%= model.username %>" class="form-control">
+					<span class="help-block"></span>
+				</div>
 				<div class="form-group">
 					<label for="email">电子邮件：</label>
-					<input type="text" name="email" value="<%= model.email %>" class="form-control" disabled/></div>
+					<input type="text" name="email" value="<%= model.email %>" class="form-control" readonly>
+					<span class="help-block"></span>
+				</div>
 				<div class="form-group">
 					<label for="password">密码：</label>
 					<input type="password" name="password" class="form-control"/>
+					<span class="help-block"></span>
 				</div>
 				<div class="form-group">
 					<label for="password">密码(再次)：</label>
 					<input type="password" name="cpassword" class="form-control"/>
+					<span class="help-block"></span>
 				</div>
 				<div class="form-group">
 					<label for="biography">自传：</label>
 					<textarea name="biography" rows="3" class="form-control"><%= model.biography %></textarea>
+					<span class="help-block"></span>
 				</div>
 				<div class="form-group">
 					<input type="submit" class="btn btn-block btn-primary"/>
@@ -252,9 +259,9 @@
 		</div>
 	</div>
 	<div id="viewTemplate">
-		<% if(me){ %>
+		<% if(model.me){ %>
 		<div class="editor-layer">
-			<a class="btn btn-primary pull-right editor-control" href="#profile/me/edit">编辑</a>
+			<a class="btn btn-primary pull-right editor-control" href="#profile/edit/me">编辑</a>
 			<p>&nbsp;</p>
 		</div>
 		<% } %>
@@ -262,24 +269,23 @@
 
 		<div class="media">
 			<div class="pull-left">
-				<img class="media-object" src="" width="120px" height="160px">
+				<img name="avatar" class="media-object" src="" width="120px" height="160px">
 			</div>
 			<div class="media-body">
-				<h2 class="media-heading"><%= account.username %></h2>
-				<h4>&lt;<%= account.email %>&gt;</h4>
+				<h2 class="media-heading"><%= model.username %></h2>
+				<h4>&lt;<%= model.email %>&gt;</h4>
 			</div>
 		</div>
 		<p class="clearfix"></p>
-		<input type="file" name="avatar"/>
 		<hr>
 		<h2>我的自传</h2>
-		<%if(account.biography && account.biography.length > 0){ %>
-			<p><%= account.biography %></p>
+		<%if(model.biography && model.biography.length > 0){ %>
+			<p><%= model.biography %></p>
 		<%}else{ %>
 			<p class="small">比较懒，没写自我介绍</p>
 		<% } %>
 
-		<% if(me){ %>
+		<% if(model.me){ %>
 		<hr>
 		<div class="button-layer">
 			<a href="#" class="btn btn-block btn-danger logout">退出</a>

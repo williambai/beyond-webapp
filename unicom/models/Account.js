@@ -13,7 +13,7 @@ module.exports = exports = function(mongoose){
 			biography: String,
 			registerCode: String, //注册验证码
 
-			histroies: [],
+			histories: [],
 			status: {
 				code: {
 					type: Number,

@@ -16,6 +16,7 @@ module.exports = exports = function(app, models) {
 		user.password = crypto.createHash('sha256').update(password).digest('hex');
 		user.registerCode = crypto.createHash('sha256').update(user.email + "beyond" + password).digest('hex');
 
+		user.avatar = '/images/avatar.jpg';
 		user.status = {
 			code: -1,
 			message: '注册但未验证'

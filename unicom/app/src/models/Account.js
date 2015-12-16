@@ -8,11 +8,6 @@ exports = module.exports = Backbone.Model.extend({
 	urlRoot: config.api.host + '/accounts',
 
 	defaults: {
-		email: '',
-		password:'',
-		username: '',
-		avatar: '',
-		biography: '',
 		status: {},
 	},
 

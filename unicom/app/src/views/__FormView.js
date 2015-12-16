@@ -5,11 +5,13 @@ var $ = require('jquery'),
 Backbone.$ = $;
 
 var serializeJSON = require('jquery-serializejson');
+var validation = require('backbone-validation');
+_.extend(Backbone.Model.prototype,validation.mixin);
 
 exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options){
-		this.model.on('invalid', this.renderModelInvalid, this);
+		// this.model.on('invalid', this.renderModelInvalid, this);
 		this.model.on('error', this.renderServerError, this);
 		this.model.on('sync', this.renderServerInvalid, this);
 		this.on('done', this.done, this);
@@ -20,39 +22,20 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 	},
 
-	renderInputInvalid: function(evt) {
-		var that = this;
-		var parent = $(evt.currentTarget).parent('.form-group');
-		var name_value = $(evt.currentTarget).serializeArray();
-		// console.log(name_value)
-		name_value.forEach(function(item){
-			//invalid
-			var error = that.validate(item.name,item.value);
-			if(error){
-				//display error
-				parent.addClass('has-error');
-				$(parent).find('span.help-block').text(error.message);
-				return;
-			}
-			//clean error
-			parent.removeClass('has-error');
-			$(parent).find('span.help-block').empty();
-		});
-	},
-
-	renderModelInvalid: function(model,errors,options){
-		var that = this;
-		//clean errors
-		that.$('.form-group').removeClass('has-error');
-		that.$('.form-group span.help-block').empty();
-		//set errors
-		_.each(errors,function(error){
-			var parent = that.$('input[name="' + error.name + '"]').parent('.form-group');
-			parent.addClass('has-error');
-			$(parent).find('span.help-block').text(error.message);
-		});
-		return false;
-	},
+	// renderModelInvalid: function(model,errors,options){
+	// 	var that = this;
+	// 	//clean errors
+	// 	that.$('.form-group').removeClass('has-error');
+	// 	that.$('.form-group span.help-block').empty();
+	// 	//set errors
+	// 	var keys = _.keys(errors);
+	// 	_.each(keys,function(name){
+	// 		var parent = that.$('[name="' + name + '"]').parent('.form-group');
+	// 		parent.addClass('has-error');
+	// 		$(parent).find('span.help-block').text(errors[name]);
+	// 	});
+	// 	return false;
+	// },
 
 	renderServerInvalid: function(model,response,options){
 		//clean error
@@ -70,13 +53,6 @@ exports = module.exports = Backbone.View.extend({
 		//set error
 		this.$('form').prepend('<div class="error"><div class="alert alert-danger">' + response.status + ': ' + response.responseText + '</div></div>');
 		this.$('.error').slideDown();
-	},
-
-	/**
-	 * need inherit
-	 */
-	validate: function(data){
-		console.log('form validate is called....please implement validate() in view.');
 	},
 
 	/**

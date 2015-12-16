@@ -40,7 +40,7 @@ exports = module.exports = Backbone.Router.extend({
 		'register': 'register',
 		'forgotpassword': 'forgotPassword',
 		'profile/:id': 'profileView',
-		'profile/me/edit': 'profileEdit',
+		'profile/edit/me': 'profileEdit',
 
 		'card/index': 'cardIndex',
 		'card/view/:id': 'cardView',
@@ -179,6 +179,7 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		//this.appEvents.trigger('set:brand', '编辑个人资料');
 		var profileEditView = new ProfileEditView({
+			id: 'me',
 			el: '#content'
 		});
 		this.changeView(profileEditView);

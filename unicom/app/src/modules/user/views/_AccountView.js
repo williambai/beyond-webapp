@@ -17,13 +17,12 @@ exports = module.exports = FormView.extend({
 		var viewTemplate = $('#viewTemplate', page).html();
 		this.template = _.template(_.unescape(viewTemplate || ''));
 		this.appEvents = options.appEvents;
+		this.model = new Account({_id: options.id});
 		if (options.id == 'me') {
-			this.me = true;
+			this.model.set('me',true);
 		} else {
-			this.me = false;
+			this.model.set('me',false);
 		}
-		this.model = new Account();
-		this.model.url = this.model.url + '/' + options.id;
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -84,10 +83,8 @@ exports = module.exports = FormView.extend({
 	},
 
 	render: function() {
-		this.$el.html(this.template({
-			me: this.me,
-			account: this.model.toJSON()
-		}));
+		this.$el.html(this.template({model: this.model.toJSON()}));
+		this.$('img[name=avatar]').attr('src', this.model.get('avatar'));
 		return this;
 	}
 });

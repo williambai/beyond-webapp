@@ -10,6 +10,7 @@ exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
  		var mobiles = req.body.mobile || [];
+ 		mobiles = _.without(mobiles,'');
  		var docs = [];
  		_.each(mobiles, function(mobile){
  			docs.push({
@@ -33,12 +34,12 @@ exports = module.exports = function(app, models) {
  				},
  				function(docs,callback){
  					var activity = {
- 						uid: 'uid',
- 						username: 'username',
+ 						uid: req.session.accountId,
+ 						username: req.session.username,
  						avatar: '/_tmp/1450013522516.jpg',
  						type: 'text',
  						content: {
- 							body: 'content',
+ 							body: '向朋友推荐了<u>' + req.body.product.name + '</u>产品',
  						}
  					};
  					models.AccountActivity.create(activity,callback);

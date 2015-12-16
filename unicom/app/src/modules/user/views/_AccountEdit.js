@@ -18,12 +18,18 @@ exports = module.exports = FormView.extend({
 		var page = $(accountTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
-		this.model = new Account();
+		this.model = new Account({_id: options.id});
 		FormView.prototype.initialize.apply(this, options);
 	},
 
+	events: {
+		'keyup input[type=text]': 'inputText',
+		'keyup textarea': 'inputText',		
+		'change input[name=avatar]': 'uploadAvatar',
+		'submit form': 'submit',
+	},
+
 	load: function() {
-		this.model.url = this.model.url +'/me';
 		this.model.fetch({
 			xhrFields: {
 				withCredentials: true
@@ -31,9 +37,21 @@ exports = module.exports = FormView.extend({
 		});
 	},
 
-	events: {
-		'change input[name=avatar]': 'uploadAvatar',
-		'submit form': 'submit',
+	inputText: function(evt){
+		var that = this;
+		//clear error
+		this.$(evt.currentTarget).parent().removeClass('has-error');
+		this.$(evt.currentTarget).parent().find('span.help-block').empty();
+		var arr = this.$(evt.currentTarget).serializeArray();
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(error){
+				//set error
+				this.$(evt.currentTarget).parent().addClass('has-error');
+				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
+			}
+		})
+		return false;
 	},
 
 	uploadAvatar: function(evt) {
@@ -59,10 +77,47 @@ exports = module.exports = FormView.extend({
 	},
 
 	submit: function() {
+		var that = this;
+		//clear errors
+		this.$('.form-group').removeClass('has-error');
+		this.$('.form-group').find('span.help-block').empty();
+		var arr = this.$('form').serializeArray();
+		var errors = [];
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(error){
+				errors.push(error);
+				that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
+				that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
+			}
+		});
+		if(!_.isEmpty(errors)) return false;
+		//validate finished.
+
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		// console.log(this.model.attributes);
-		this.model.save(null, {
+		var password = this.model.get('password');
+		var cpassword = this.model.get('cpassword');
+		if(!_.isEmpty(password)){
+			if(password.length < 5){
+				console.log(password.length)
+				var error = '密码长度至少五位';
+				that.$('[name="password"]').parent().addClass('has-error');
+				that.$('[name="password"]').parent().find('span.help-block').text(error);
+				return false;
+			}
+			if(password != cpassword){
+				var error = '两次输入不一致';
+				that.$('[name="cpassword"]').parent().addClass('has-error');
+				that.$('[name="cpassword"]').parent().find('span.help-block').text(error);
+				return false;			
+			}
+		}else{
+			this.model.unset('password',{silent: true});
+			this.model.unset('cpassword',{silent: true});			
+		}
+		// console.log(this.model.toJSON());
+		this.model.save(this.model.changedAttributes(), {
 			xhrFields: {
 				withCredentials: true
 			},
@@ -84,6 +139,7 @@ exports = module.exports = FormView.extend({
 
 	render: function() {
 		this.$el.html(this.template({model:this.model.toJSON()}));
+		this.$('img[name=avatar]').attr('src', this.model.get('avatar'));
 		return this;
 	}
 });

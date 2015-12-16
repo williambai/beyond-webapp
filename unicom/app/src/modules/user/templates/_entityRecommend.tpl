@@ -2,22 +2,25 @@
 	<div id="addTemplate">
 		<div class="panel panel-primary">
 			<div class="panel-heading">
-				<button class="btn btn-success pull-right addItem">添加</button>
+				<button class="btn btn-success pull-right addItem"><i class="fa fa-plus-circle"></i>添加</button>
 				<h5 class="panel-title text-center">推荐给客户</h5>
 			</div>
 			<div class="panel-body">
 				<form>
 					<div class="form-group">
 						<label></label>
-						<input name="mobile[]" class="form-control" placeholder="手机号码">
+						<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
+						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label></label>
-						<input name="mobile[]" class="form-control" placeholder="手机号码">
+						<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
+						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label></label>
-						<input name="mobile[]" class="form-control" placeholder="手机号码">
+						<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
+						<span class="help-block"></span>
 					</div>
 					<div id="insertItemBefore"></div>
 					<div class="form-group">
