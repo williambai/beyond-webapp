@@ -1,26 +1,26 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var config = require('../conf');
+var _ = require('underscore');
+var Backbone = require('backbone');
+var config = require('../conf');
+var validation = require('backbone-validation');
+_.extend(Backbone.Model.prototype,validation.mixin);
 
 exports = module.exports = Backbone.Model.extend({
 	
 	url: config.api.host + '/admin/login',
 
-	validate: function(attrs, options){
-		var errors = [];
-		if(!( /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(attrs.email))){
-			errors.push({
-				name: 'email',
-				message: '不是有效的电子邮件',
-			});
-		}
-		if(attrs.password.length < 5){
-			errors.push({
-				name: 'password',
-				message: '密码长度不正确',
-			});
-		}
-
-		if(!_.isEmpty(errors)) return errors;
+	validation: {
+		'email': {
+	      required: true,
+	      pattern: 'email',
+	      msg: '请输入有效的电子邮件'
+	    },
+	    'password': {
+			required: true,
+	    	minLength: 5,
+	    	msg:'密码长度至少五位'
+	    }
 	},
 });

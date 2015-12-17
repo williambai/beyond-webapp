@@ -21,6 +21,7 @@ exports = module.exports = FormView.extend({
 	},
 
 	events: {
+		'keyup input[type=text]': 'inputText',
 		'keyup input[name="goods[nickname]"]': 'getGoods',
 		'click li.list-group-item': 'selectGood',
 		'submit form': 'submit',
@@ -33,6 +34,23 @@ exports = module.exports = FormView.extend({
 				withCredentials: true
 			},
 		});
+	},
+
+	inputText: function(evt){
+		var that = this;
+		//clear error
+		this.$(evt.currentTarget).parent().removeClass('has-error');
+		this.$(evt.currentTarget).parent().find('span.help-block').empty();
+		var arr = this.$(evt.currentTarget).serializeArray();
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(error){
+				//set error
+				this.$(evt.currentTarget).parent().addClass('has-error');
+				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
+			}
+		})
+		return false;
 	},
 	
 	getGoods: function(evt){
@@ -73,6 +91,24 @@ exports = module.exports = FormView.extend({
 
 	submit: function() {
 		var that = this;
+		//clear errors
+		this.$('form-group').removeClass('has-error');
+		this.$('form-group').find('span.help-block').empty();
+		var arr = this.$('form').serializeArray();
+		var errors = [];
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(!_.isEmpty(error)){
+				errors.push(error);
+				//set serrors
+				that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
+				that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
+				return false;
+			}
+		});
+		if(!_.isEmpty(errors)) return false;
+		//validate finished.
+
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
 		// console.log(this.model.attributes);
@@ -104,6 +140,10 @@ exports = module.exports = FormView.extend({
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		var starttime = this.model.get('starttime');
+		this.$('input[name=starttime]').val(starttime);
+		var endtime = this.model.get('endtime');
+		this.$('input[name=endtime]').val(endtime);
 		var category = this.model.get('category');
 		this.$('input[name=category][value='+ category +']').attr('checked',true);
 		var status = this.model.get('status');

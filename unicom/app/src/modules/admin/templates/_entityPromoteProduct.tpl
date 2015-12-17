@@ -17,13 +17,14 @@
 	</div>	
 	<div id="searchTemplate">
 		<form id="searchForm" class="form-inline">
+			<input type="hidden" name="type" value="search">
 			<div class="form-group">
 				<label>&nbsp;&nbsp;</label>
 				<input type="text" name="searchStr" class="form-control" placeholder="物料ID或物料名称">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
 				<label>&nbsp;产品分类：&nbsp;</label>
-				<select class="form-control">
+				<select name="category" class="form-control">
 					<option>全部</option>
 					<option value="2G">2G流量</option>
 					<option value="3G">3G流量</option>
@@ -33,10 +34,10 @@
 				</select>&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
-				<select class="form-control">
-					<option>全部</option>
-					<option>有效</option>
-					<option>无效</option>
+				<select name="status" class="form-control">
+					<option value="">全部</option>
+					<option value="有效">有效</option>
+					<option value="无效">无效</option>
 				</select>&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
@@ -162,7 +163,7 @@
 				<form id="customerForm">
 					<div class="form-group">
 						<label>产品分类：</label>
-						<input type="radio" name="category" value="2G">&nbsp;&nbsp;2G流量
+						<input type="radio" name="category" value="2G" checked>&nbsp;&nbsp;2G流量
 						<input type="radio" name="category" value="3G">&nbsp;&nbsp;3G流量
 						<input type="radio" name="category" value="SMS">&nbsp;&nbsp;增值服务
 						<input type="radio" name="category" value="APP">&nbsp;&nbsp;应用推荐
@@ -204,12 +205,12 @@
 					</div>
 					<div class="form-group">
 						<label>活动开始时间：</label>
-						<input type="date" name="starttime" value="<%= model.starttime %>" class="form-control">
+						<input type="date" name="starttime" value="" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>活动结束时间：</label>
-						<input type="date" name="endtime" value="<%= model.endtime %>" class="form-control">
+						<input type="date" name="endtime" value="" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

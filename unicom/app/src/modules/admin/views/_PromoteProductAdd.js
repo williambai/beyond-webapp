@@ -67,6 +67,24 @@ exports = module.exports = FormView.extend({
 
 	submit: function() {
 		var that = this;
+		//clear errors
+		this.$('form-group').removeClass('has-error');
+		this.$('form-group').find('span.help-block').empty();
+		var arr = this.$('form').serializeArray();
+		var errors = [];
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(!_.isEmpty(error)){
+				errors.push(error);
+				//set serrors
+				that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
+				that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
+				return false;
+			}
+		});
+		if(!_.isEmpty(errors)) return false;
+		//validate finished.
+
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
 		// console.log(this.model.attributes);

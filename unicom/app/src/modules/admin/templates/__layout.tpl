@@ -68,11 +68,6 @@
 					&nbsp;分类数据配置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#promote/event/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;活动配置
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
 				<a class="list-group-item" href="#promote/media/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;图片管理

@@ -17,7 +17,7 @@ exports = module.exports = Backbone.View.extend({
 	collectionUrl: '',
 
 	initialize: function(options) {
-		// this.collectionUrl = this.collection.url;
+		this.collectionUrl = this.collection.url;
 		this.collection.on('reset', this.onCollectonAppend, this);
 		this.collection.on('update', this.onCollectonAppend, this);
 		this.on('append', this.onModelAppend, this);

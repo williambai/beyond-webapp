@@ -7,5 +7,12 @@ exports = module.exports = Backbone.Model.extend({
 	urlRoot: config.api.host + '/promote/products',	
 	defaults: {
 		goods: {}
-	}
+	},
+	validation: {
+	    'subject': {
+			required: true,
+	    	minLength: 5,
+	    	msg:'长度至少五位'
+	    },
+	},
 });
