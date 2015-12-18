@@ -2,11 +2,15 @@ module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
 		name: String,
-		description: String,
 		nickname: {
 			type: String,
-			unique: true,
 		},
+		description: String,
+		department: {
+			id: String,//mongoose.Schema.Types.ObjectId,
+			name: String,
+			path: String,
+		}
 	});
 
 	schema.set('collection','channel.grids');

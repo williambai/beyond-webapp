@@ -1,15 +1,15 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    deparmentTpl = require('../templates/_entityDepartment.tpl'),
+    deparmentTpl = require('../templates/_entityPlatformApp.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var Department = require('../models/department');
-var ListView = require('./_DepartmentList');
-var SearchView = require('./_DepartmentSearch');
+var PlatformApp = require('../models/PlatformApp');
+var ListView = require('./_PlatformAppList');
+var SearchView = require('./_PlatformAppSearch');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -27,9 +27,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addDepartment',
-		'click .edit': 'editDepartment',
-		'click .delete': 'removeDepartment',
+		'click .add': 'addPlatformApp',
+		'click .edit': 'editPlatformApp',
+		'click .delete': 'removePlatformApp',
 	},
 
 	load: function() {
@@ -54,21 +54,21 @@ exports = module.exports = Backbone.View.extend({
 		this.listView.scroll();
 		return false;
 	},
-	addDepartment: function(){
-		this.router.navigate('department/add',{trigger: true});
+	addPlatformApp: function(){
+		this.router.navigate('platform/app/add',{trigger: true});
 		return false;
 	},
 
-	editDepartment: function(evt){
+	editPlatformApp: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('department/edit/'+ id,{trigger: true});
+		this.router.navigate('platform/app/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeDepartment: function(evt){
+	removePlatformApp: function(evt){
 		if(window.confirm('您确信要删除吗？')){
 			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new Department({_id: id});
+			var model = new PlatformApp({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh',model.urlRoot);
 		}

@@ -40,43 +40,7 @@
 			<button class="btn btn-danger delete">删除</button>
 		</div>
 		<h4><%= model.name %></h4>
-		<p></p>
-	</div>
-	<div id="addTemplate">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4 class="panel-title text-center">新增网格</h4>
-			</div>
-			<div class="panel-body">
-				<form id="roleForm">
-					<div class="form-group">
-						<label>网格名称：</label>
-						<input type="text" name="name" value="" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>网格描述：</label>
-						<input type="text" name="description" value="" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>网格编码：</label>
-						<input type="text" name="nickname" value="" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<div class="btn-group btn-group-justified">
-							<div class="btn-group">
-								<input type="submit" value="提交" class="btn btn-danger">
-							</div>
-							<div class="btn-group">
-								<button class="btn btn-primary back">取消</button>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
+		<p>所属组织：<%= model.department.name %></p>
 	</div>
 	<div id="editTemplate">
 		<div class="panel panel-default">
@@ -84,7 +48,7 @@
 				<h4 class="panel-title text-center">新增网格</h4>
 			</div>
 			<div class="panel-body">
-				<form id="roleForm">
+				<form id="gridForm">
 					<div class="form-group">
 						<label>网格名称：</label>
 						<input type="text" name="name" value="<%= model.name %>" class="form-control">
@@ -98,6 +62,14 @@
 					<div class="form-group">
 						<label>网格编码：</label>
 						<input type="text" name="nickname" value="<%= model.nickname %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>归属组织：</label>
+						<input type="hidden" name="department[id]" value="<%= model.department.id %>">
+						<input type="hidden" name="department[path]" value="<%= model.department.path %>">
+						<input type="text" name="department[name]" value="<%= model.department.name %>" class="form-control" placeholder="请输入组织名称">
+						<div id="departments"></div>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

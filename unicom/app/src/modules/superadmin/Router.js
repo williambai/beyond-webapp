@@ -7,24 +7,23 @@ var LayoutView = require('./views/__Layout');
 var LoginView = require('./views/_AccountLogin');
 var IndexView = require('./views/Index');
 
+var PlatformAppIndexView = require('./views/_PlatformAppIndex');
+var PlatformAppEditView = require('./views/_PlatformAppEdit');
+
 var FeatureIndexView = require('./views/_FeatureIndex');
 var FeatureEditView = require('./views/_FeatureEdit');
-var FeatureAddView = require('./views/_FeatureAdd');
 
 var RoleIndexView = require('./views/_RoleIndex');
 var RoleEditView = require('./views/_RoleEdit');
-var RoleAddView = require('./views/_RoleAdd');
 
 var ChannelCategoryIndexView = require('./views/_ChannelCategoryIndex');
 var ChannelCategoryAddView = require('./views/_ChannelCategoryAdd');
 var ChannelCategoryEditView = require('./views/_ChannelCategoryEdit');
 
 var DepartmentIndexView = require('./views/_DepartmentIndex');
-var DepartmentAddView = require('./views/_DepartmentAdd');
 var DepartmentEditView = require('./views/_DepartmentEdit');
 
 var GridIndexView = require('./views/_GridIndex');
-var GridAddView = require('./views/_GridAdd');
 var GridEditView = require('./views/_GridEdit');
 
 exports = module.exports = Backbone.Router.extend({
@@ -38,20 +37,23 @@ exports = module.exports = Backbone.Router.extend({
 		'index': 'index',
 		'login': 'login',
 		'logout': 'logout',
+		'platform/app/index': 'platformAppIndex',
+		'platform/app/add': 'platformAppEdit',	
+		'platform/app/edit/:id': 'platformAppEdit',
 		'feature/index': 'featureIndex',
-		'feature/add': 'featureAdd',	
+		'feature/add': 'featureEdit',	
 		'feature/edit/:id': 'featureEdit',
 		'role/index': 'roleIndex',
-		'role/add': 'roleAdd',
+		'role/add': 'roleEdit',
 		'role/edit/:id': 'roleEdit',
 		'channel/category/index': 'channelCategoryIndex',
 		'channel/category/add': 'channelCategoryAdd',
 		'channel/category/edit/:id': 'channelCategoryEdit',
 		'grid/index': 'gridIndex',
-		'grid/add': 'gridAdd',
+		'grid/add': 'gridEdit',
 		'grid/edit/:id': 'gridEdit',		
 		'department/index': 'departmentIndex',
-		'department/add': 'departmentAdd',
+		'department/add': 'departmentEdit',
 		'department/edit/:id': 'departmentEdit',
 		'*path': 'index',
 	},
@@ -92,7 +94,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','首页');
+		//this.appEvents.trigger('set:brand','首页');
 		var indexView = new IndexView({
 		});
 		this.changeView(indexView);
@@ -103,7 +105,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'index';
 			return;
 		}
-		this.appEvents.trigger('set:brand','登录');
+		//this.appEvents.trigger('set:brand','登录');
 		var loginView = new LoginView({
 			el: '#content',
 			appEvents: this.appEvents,
@@ -124,12 +126,39 @@ exports = module.exports = Backbone.Router.extend({
 		});
 	},
 
+	platformAppIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		var platformAppIndexView = new PlatformAppIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(platformAppIndexView);
+		platformAppIndexView.trigger('load');
+	},
+
+	platformAppEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		var platformAppEditView = new PlatformAppEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(platformAppEditView);
+		platformAppEditView.trigger('load');
+	},
+	
 	featureIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','功能设置');
+		//this.appEvents.trigger('set:brand','功能设置');
 		var featureIndexView = new FeatureIndexView({
 			router: this,
 			el: '#content',
@@ -138,26 +167,12 @@ exports = module.exports = Backbone.Router.extend({
 		featureIndexView.trigger('load');
 	},
 
-	featureAdd: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','新增功能');
-		var featureAddView = new FeatureAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(featureAddView);
-		featureAddView.trigger('load');
-	},
-
 	featureEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','修改功能');
+		//this.appEvents.trigger('set:brand','修改功能');
 		var featureEditView = new FeatureEditView({
 			router: this,
 			el: '#content',
@@ -172,7 +187,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','角色设置');
+		//this.appEvents.trigger('set:brand','角色设置');
 		var roleIndexView = new RoleIndexView({
 			router: this,
 			el: '#content',
@@ -180,25 +195,13 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(roleIndexView);
 		roleIndexView.trigger('load');
 	},
-	roleAdd: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','新增角色');
-		var roleAddView = new RoleAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(roleAddView);
-		roleAddView.trigger('load');
-	},
+
 	roleEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','修改角色');
+		//this.appEvents.trigger('set:brand','修改角色');
 		var roleEditView = new RoleEditView({
 			router: this,
 			el: '#content',
@@ -213,7 +216,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','渠道类型设置');
+		//this.appEvents.trigger('set:brand','渠道类型设置');
 		var channelCategoryIndexView = new ChannelCategoryIndexView({
 			router: this,
 			el: '#content',
@@ -227,7 +230,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','新增渠道类型');
+		//this.appEvents.trigger('set:brand','新增渠道类型');
 		var channelCategoryAddView = new ChannelCategoryAddView({
 			router: this,
 			el: '#content',
@@ -241,7 +244,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','修改渠道类型');
+		//this.appEvents.trigger('set:brand','修改渠道类型');
 		var channelCategoryEditView = new ChannelCategoryEditView({
 			router: this,
 			el: '#content',
@@ -256,7 +259,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','网格设置');
+		//this.appEvents.trigger('set:brand','网格设置');
 		var gridIndexView = new GridIndexView({
 			router: this,
 			el: '#content',
@@ -265,26 +268,12 @@ exports = module.exports = Backbone.Router.extend({
 		gridIndexView.trigger('load');
 	},
 
-	gridAdd: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','新增网格');
-		var gridAddView = new GridAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(gridAddView);
-		gridAddView.trigger('load');
-	},
-
 	gridEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','修改网格');
+		//this.appEvents.trigger('set:brand','修改网格');
 		var gridEditView = new GridEditView({
 			router: this,
 			el: '#content',
@@ -299,7 +288,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','组织设置');
+		//this.appEvents.trigger('set:brand','组织设置');
 		var departmentIndexView = new DepartmentIndexView({
 			router: this,
 			el: '#content',
@@ -308,26 +297,12 @@ exports = module.exports = Backbone.Router.extend({
 		departmentIndexView.trigger('load');
 	},
 
-	departmentAdd: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','新增组织');
-		var departmentAddView = new DepartmentAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(departmentAddView);
-		departmentAddView.trigger('load');
-	},
-
 	departmentEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','修改组织');
+		//this.appEvents.trigger('set:brand','修改组织');
 		var departmentEditView = new DepartmentEditView({
 			router: this,
 			el: '#content',

@@ -215,15 +215,13 @@
 		</div>
 	</div>
 	<div id="editTemplate">
-		<div class="form-group">
-			<% if(/\.png$/.test(model.avatar)){ %>
-			<!-- <img src="<%= model.avatar %>" width="120px" height="160px"> -->
-			<% }else{ %>
-			<img src="" width="120px" height="160px">
-			<% } %>
-			<br>
-			<input type="file" name="avatar"/>
-		</div>
+		<input type="file" class="hidden">
+		<a id="send-file">
+			<div class="form-group">
+				<img id="avatar" src="/images/avatar.jpg" width="120px" height="160px">
+				<br/>更换头像
+			</div>
+		</a>
 
 		<div id="accountForm">
 			<form>
@@ -269,7 +267,7 @@
 
 		<div class="media">
 			<div class="pull-left">
-				<img name="avatar" class="media-object" src="" width="120px" height="160px">
+				<img id="avatar" class="media-object" src="" width="120px" height="160px">
 			</div>
 			<div class="media-body">
 				<h2 class="media-heading"><%= model.username %></h2>

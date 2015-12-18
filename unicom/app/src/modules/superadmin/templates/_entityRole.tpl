@@ -19,10 +19,10 @@
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4><%= model.name %></h4>
-		<p><%= model.status.message %></p>
+		<h4><%= model.name %>[<span><%= model.status %></span>]</h4>
+		<p>应用：<%= model.app %></p>
 	</div>
-	<div id="addTemplate">
+<!-- 	<div id="addTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h4 class="panel-title text-center">新增角色</h4>
@@ -64,7 +64,7 @@
 				</form>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<div id="editTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -83,6 +83,11 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
+						<label>角色归属的应用：</label>
+						<div style="padding-left:30px;" id="apps">
+						</div>
+					</div>
+					<div class="form-group">
 						<label>角色权限：</label>
 						<div style="padding-left:30px;" id="features">
 						</div>
@@ -90,8 +95,8 @@
 					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
-							<input type="hidden" name="status[code]" value="0">
-							<input type="checkbox" name="status[code]" value="1">有效
+							<input type="radio" name="status" value="无效">&nbsp;无效
+							<input type="radio" name="status" value="有效">&nbsp;有效
 						</div>
 					</div>
 					<div class="form-group">

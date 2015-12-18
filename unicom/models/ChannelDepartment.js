@@ -4,12 +4,13 @@ module.exports = exports = function(mongoose){
 		name: String,
 		nickname: {
 			type: String,
-			unique: true
 		},
+		description: String,
 		parent: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'ChannelDepartment',
-		}
+		},
+		path: String,
 	});
 
 	schema.set('collection','channel.departments');

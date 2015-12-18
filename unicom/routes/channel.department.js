@@ -1,8 +1,16 @@
  exports = module.exports = function(app, models) {
+ 	var _ = require('underscore');
 
  	var add = function(req, res) {
- 		var doc = new models.ChannelDepartment(req.body);
- 		doc.save(function(err) {
+ 		var doc = req.body;
+ 		//transform doc
+ 		if(_.isEmpty(doc.parent)) doc = _.omit(doc,'parent');
+ 		if(_.isEmpty(doc.path)){
+ 			doc.path += doc.name;
+ 		}else{
+ 	 		doc.path += ' >> '+ doc.name;
+ 		}
+ 		models.ChannelDepartment.create(doc, function(err) {
  			if (err) return res.send(err);
  			res.send({});
  		});
@@ -16,9 +24,18 @@
  	};
  	var update = function(req, res) {
  		var id = req.params.id;
- 		var set = req.body;
+ 		var doc = req.body;
+ 		//transform doc
+ 		if(_.isEmpty(doc.parent)) doc = _.omit(doc,'parent');
+ 		var regex = new RegExp(doc.name,'i');
+ 		if(_.isEmpty(doc.path)){
+ 			doc.path += doc.name;
+ 		}else{
+	 		if(!regex.test(doc.path)) doc.path += ' >> '+ doc.name;
+ 		}
+
  		models.ChannelDepartment.findByIdAndUpdate(id, {
- 				$set: set
+ 				$set: doc
  			}, {
  				'upsert': false,
  				'new': true,
@@ -45,6 +62,7 @@
 
  		models.ChannelDepartment
  			.find({})
+ 			.sort({ _id: -1})
  			.skip(per * page)
  			.limit(per)
  			.exec(function(err, docs) {

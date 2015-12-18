@@ -24,8 +24,9 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'keyup input[type=text]': 'inputText',
-		'keyup textarea': 'inputText',		
-		'change input[name=avatar]': 'uploadAvatar',
+		'keyup textarea': 'inputText',
+		'click #send-file': 'showFileExplorer',
+		'change input[type=file]': 'uploadAvatar',
 		'submit form': 'submit',
 	},
 
@@ -35,6 +36,11 @@ exports = module.exports = FormView.extend({
 				withCredentials: true
 			},
 		});
+	},
+
+	showFileExplorer: function(evt){
+		this.$('input[type=file]').click();
+		return false;
 	},
 
 	inputText: function(evt){
@@ -69,7 +75,10 @@ exports = module.exports = FormView.extend({
 			processData: false, //MUST be false
 			contentType: false, //MUST be false
 		}).done(function(data) {
-			that.model.set('avatar', data);
+			var src = data.src;
+			that.model.set('avatar', src);
+			// console.log(data)
+			that.$('img#avatar').attr('src', src);
 		}).fail(function(err) {
 			console.log(err);
 		});
@@ -139,7 +148,7 @@ exports = module.exports = FormView.extend({
 
 	render: function() {
 		this.$el.html(this.template({model:this.model.toJSON()}));
-		this.$('img[name=avatar]').attr('src', this.model.get('avatar'));
+		this.$('img#avatar').attr('src', this.model.get('avatar'));
 		return this;
 	}
 });

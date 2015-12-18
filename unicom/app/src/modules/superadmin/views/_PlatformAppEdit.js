@@ -1,21 +1,20 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    roleTpl = require('../templates/_entityFeature.tpl'),
-	Feature = require('../models/Feature');
-
-var PlatformAppCollection = require('../models/PlatformAppCollection');
+    appTpl = require('../templates/_entityPlatformApp.tpl'),
+	PlatformApp = require('../models/PlatformApp');
+var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
-	el: '#featureForm',
+	el: '#platformAppForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Feature({_id: options.id});
-		var page = $(roleTpl);
+		this.model = new PlatformApp({_id: options.id});
+		var page = $(appTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -29,8 +28,6 @@ exports = module.exports = FormView.extend({
 
 	load: function(){
 		if(this.model.isNew()){
-			//get apps
-			this.loadApps();
 			this.modelFilled = true;
 			return;
 		}
@@ -38,26 +35,6 @@ exports = module.exports = FormView.extend({
 			xhrFields: {
 				withCredentials: true
 			},
-		});
-
-	},
-
-	loadApps: function(callback){
-		var that = this;
-		var platformAppCollection = new PlatformAppCollection();
-		platformAppCollection.fetch({
-			xhrFields: {
-				withCredentials: true
-			},
-			success: function(collection){
-				collection = collection || [];
-				var appsView = '';
-				collection.each(function(model){
-					appsView += '<input type="checkbox" name="app[]" value="'+ model.get('nickname') +'">&nbsp;'+ model.get('name') +'&nbsp;&nbsp;&nbsp;';
-				});
-				that.$('#apps').html(appsView);
-				callback && callback();
-			}
 		});
 	},
 
@@ -106,9 +83,9 @@ exports = module.exports = FormView.extend({
 		});
 		return false;
 	},
-
+	
 	cancel: function(){
-		this.router.navigate('feature/index',{trigger: true, replace: true});
+		this.router.navigate('platform/app/index',{trigger: true, replace: true});
 		return false;
 	},
 	
@@ -119,26 +96,16 @@ exports = module.exports = FormView.extend({
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
-			//get apps
-			this.loadApps(function(){
-				//set apps
-				var apps = that.model.get('app');
-				_.each(apps, function(app){
-					that.$('input[name="app[]"][value="'+ app +'"]').attr('checked', true);
-				});
-			});
+
 		}else{
 			//second fetch: submit
-			this.router.navigate('feature/index',{trigger: true, replace: true});
+			this.router.navigate('platform/app/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
-		var that = this;
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		var status = this.model.get('status');
-		that.$('input[name="status"][value="'+ status +'"]').attr('checked',true);
-		if(this.model.isNew()) this.$('.panel-title').text('新增功能');
+		if(this.model.isNew()) this.$('.panel-title').text('新增应用');
 		return this;
 	},
 });

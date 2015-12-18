@@ -32,6 +32,7 @@ var config = {
 var models = {
 		Account: require('./models/Account')(mongoose),
 		AccountActivity: require('./models/AccountActivity')(mongoose),
+		PlatformApp: require('./models/PlatformApp')(mongoose),
 		PlatformFeature: require('./models/PlatformFeature')(mongoose),
 		PlatformRole: require('./models/PlatformRole')(mongoose),
 		ChannelCategory: require('./models/ChannelCategory')(mongoose),

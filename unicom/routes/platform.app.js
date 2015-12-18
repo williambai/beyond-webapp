@@ -1,21 +1,15 @@
  exports = module.exports = function(app, models) {
- 	var _ = require('underscore');
 
  	var add = function(req, res) {
- 		var doc = req.body;
- 		var department = doc.department;
- 		if(_.isEmpty(department.id)){
- 			doc = _.omit(doc,'department');
- 		}
- 		console.log(doc)
- 		models.ChannelGrid.create(doc, function(err) {
+ 		var doc = new models.PlatformApp(req.body);
+ 		doc.save(function(err) {
  			if (err) return res.send(err);
  			res.send({});
  		});
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.ChannelGrid.findByIdAndRemove(id,function(err,doc){
+ 		models.PlatformApp.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -23,11 +17,7 @@
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		var department = set.department;
- 		if(_.isEmpty(department.id)){
- 			set = _.omit(set,'department');
- 		}
- 		models.ChannelGrid.findByIdAndUpdate(id, {
+ 		models.PlatformApp.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -41,7 +31,7 @@
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.ChannelGrid
+ 		models.PlatformApp
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -53,7 +43,7 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.ChannelGrid
+ 		models.PlatformApp
  			.find({})
  			.skip(per * page)
  			.limit(per)
@@ -66,32 +56,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add channel/grids
+ 	 * add platform/apps
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/grids', add);
+ 	app.post('/platform/apps', add);
  	/**
- 	 * update channel/grids
+ 	 * update platform/apps
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/grids/:id', update);
+ 	app.put('/platform/apps/:id', update);
 
  	/**
- 	 * delete channel/grids
+ 	 * delete platform/apps
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/grids/:id', remove);
+ 	app.delete('/platform/apps/:id', remove);
  	/**
- 	 * get channel/grids
+ 	 * get platform/apps
  	 */
- 	app.get('/channel/grids/:id', getOne);
+ 	app.get('/platform/apps/:id', getOne);
 
  	/**
- 	 * get channel/grids
+ 	 * get platform/apps
  	 * type:
  	 */
- 	app.get('/channel/grids', getMore);
+ 	app.get('/platform/apps', getMore);
  };

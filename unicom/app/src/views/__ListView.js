@@ -39,10 +39,9 @@ exports = module.exports = Backbone.View.extend({
 		});
 	},
 
-	refresh: function(url) {
+	refresh: function(query){
 		this.$el.empty();
-		this.collection.url = url;
-		// this.collectionUrl = this.collection.url;
+		this.collection.url = this.collectionUrl + '?' + query;
 		this.collection.fetch({
 			reset: true,
 			xhrFields: {

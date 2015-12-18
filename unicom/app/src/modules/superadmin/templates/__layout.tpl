@@ -1,7 +1,7 @@
 <div class="sidebar sidebar-left">
 	<div class="scrollable" style="padding-top:70px;">
 		<div class="scrollable-header app-name">
-			<a href="#" onclick="window.location.reload();return false;">{产品名称}--超级管理</a>
+			<a href="#" onclick="window.location.reload();return false;">创富计划--系统管理员</a>
 			&nbsp;
 		</div>
 		<div class="scrollable-content">
@@ -11,6 +11,11 @@
 					<span class="pull-right">
 						<i class="fa fa-chevron-right"></i>
 					</span>
+				</a>
+				<a class="list-group-item" href="#platform/app/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;应用设置
+					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#feature/index">
 					<i class="fa fa-meh-o fa-fw"></i>
@@ -77,7 +82,7 @@
 </div>
 <div class="app">
 	<div class="navbar navbar-app navbar-absolute-top">
-		<div class="navbar-brand navbar-brand-center">{产品名称}--管理</div>
+		<div class="navbar-brand navbar-brand-center">系统管理员</div>
 		<div class="btn-group pull-left">
 			<div class="btn sidebar-toggle" id="left-sidebar-toggle">
 				<i class="fa fa-bars fa-lg"></i>

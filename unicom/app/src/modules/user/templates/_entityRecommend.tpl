@@ -12,7 +12,7 @@
 						<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
 						<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+<!-- 					<div class="form-group">
 						<label></label>
 						<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
 						<span class="help-block"></span>
@@ -21,7 +21,7 @@
 						<label></label>
 						<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
 						<span class="help-block"></span>
-					</div>
+					</div> -->
 					<div id="insertItemBefore"></div>
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">

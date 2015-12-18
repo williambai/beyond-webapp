@@ -36,7 +36,7 @@ exports = module.exports = function(app, models) {
  					var activity = {
  						uid: req.session.accountId,
  						username: req.session.username,
- 						avatar: '/_tmp/1450013522516.jpg',
+ 						avatar: req.session.avatar || '/images/avatar.jpg',
  						type: 'text',
  						content: {
  							body: '向朋友推荐了<u>' + req.body.product.name + '</u>产品',
