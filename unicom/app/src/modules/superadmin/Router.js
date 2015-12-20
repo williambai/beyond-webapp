@@ -10,8 +10,8 @@ var IndexView = require('./views/Index');
 var PlatformAppIndexView = require('./views/_PlatformAppIndex');
 var PlatformAppEditView = require('./views/_PlatformAppEdit');
 
-var FeatureIndexView = require('./views/_FeatureIndex');
-var FeatureEditView = require('./views/_FeatureEdit');
+var FeatureIndexView = require('./views/_PlatformFeatureIndex');
+var FeatureEditView = require('./views/_PlatformFeatureEdit');
 
 var RoleIndexView = require('./views/_RoleIndex');
 var RoleEditView = require('./views/_RoleEdit');

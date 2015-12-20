@@ -60,28 +60,28 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/platform/apps', app.grant, add);
+ 	app.post('/platform/apps', add);
  	/**
  	 * update platform/apps
  	 * type:
  	 *     
  	 */
- 	app.put('/platform/apps/:id', app.grant, update);
+ 	app.put('/platform/apps/:id', update);
 
  	/**
  	 * delete platform/apps
  	 * type:
  	 *     
  	 */
- 	app.delete('/platform/apps/:id', app.grant, remove);
+ 	app.delete('/platform/apps/:id', remove);
  	/**
  	 * get platform/apps
  	 */
- 	app.get('/platform/apps/:id', app.grant, getOne);
+ 	app.get('/platform/apps/:id', getOne);
 
  	/**
  	 * get platform/apps
  	 * type:
  	 */
- 	app.get('/platform/apps', app.grant, getMore);
+ 	app.get('/platform/apps', getMore);
  };

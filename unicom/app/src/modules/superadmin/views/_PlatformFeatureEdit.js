@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    roleTpl = require('../templates/_entityFeature.tpl'),
-	Feature = require('../models/Feature');
+    roleTpl = require('../templates/_entityPlatformFeature.tpl'),
+	Feature = require('../models/PlatformFeature');
 
 var PlatformAppCollection = require('../models/PlatformAppCollection');
 

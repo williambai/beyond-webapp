@@ -12,14 +12,14 @@
 						<i class="fa fa-chevron-right"></i>
 					</span>
 				</a>
-				<a class="list-group-item" href="#platform/app/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;应用设置
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
 				<a class="list-group-item" href="#feature/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;功能设置
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#platform/app/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;应用设置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#role/index">

@@ -1,15 +1,15 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    featureTpl = require('../templates/_entityFeature.tpl'),
+    featureTpl = require('../templates/_entityPlatformFeature.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
-var Feature = require('../models/Feature');
+var Feature = require('../models/PlatformFeature');
 
 Backbone.$ = $;
 
-var ListView = require('./_FeatureList');
+var ListView = require('./_PlatformFeatureList');
 
 exports = module.exports = Backbone.View.extend({
 

@@ -2,8 +2,8 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     ListView = require('./__ListView'),
-    featureTpl = require('../templates/_entityFeature.tpl'),
-    FeatureCollection = require('../models/FeatureCollection');
+    featureTpl = require('../templates/_entityPlatformFeature.tpl'),
+    FeatureCollection = require('../models/PlatformFeatureCollection');
 
 Backbone.$ = $;
 	

@@ -61,16 +61,14 @@ exports = module.exports = Backbone.View.extend({
 	listG2: function(){
 		this.$('#g3').removeClass('btn-success').addClass('btn-default');
 		this.$('#g2').removeClass('btn-default').addClass('btn-success');
-		var url = config.api.host + '/promote/products?type=category&category=2G';
-		this.listView.refresh(url);
+		this.listView.trigger('refresh', 'type=category&category=2G');
 		return false;
 	},
 
 	listG3: function(){
 		this.$('#g2').removeClass('btn-success').addClass('btn-default');
 		this.$('#g3').removeClass('btn-default').addClass('btn-success');
-		var url = config.api.host + '/promote/products?type=category&category=3G';
-		this.listView.refresh(url);
+		this.listView.trigger('refresh','type=category&category=3G');
 		return false;
 	},
 

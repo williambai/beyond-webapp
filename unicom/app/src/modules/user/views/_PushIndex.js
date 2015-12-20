@@ -51,16 +51,14 @@ exports = module.exports = Backbone.View.extend({
 	listApp: function(){
 		this.$('#g3').removeClass('btn-success').addClass('btn-default');
 		this.$('#g2').removeClass('btn-default').addClass('btn-success');
-		var url = config.api.host + '/promote/products?type=category&category=APP';
-		this.listView.refresh(url);
+		this.listView.trigger('refresh','type=category&category=APP');
 		return false;
 	},
 
 	listEvent: function(){
 		this.$('#g2').removeClass('btn-success').addClass('btn-default');
 		this.$('#g3').removeClass('btn-default').addClass('btn-success');
-		var url = config.api.host + '/promote/products?type=category&category=EVENT';
-		this.listView.refresh(url);
+		this.listView.trigger('refresh','type=category&category=EVENT');
 		return false;
 	},
 
