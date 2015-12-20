@@ -6,7 +6,7 @@ _.extend(Backbone.Model.prototype,validation.mixin);
 
 exports = module.exports = Backbone.Model.extend({
 	
-	url: config.api.host + 'super/login',
+	url: config.api.host + '/super/login',
 
 	validation: {
 		'email': {

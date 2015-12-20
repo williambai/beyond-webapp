@@ -35,17 +35,9 @@
  		res.send({});
  	};
 
- 	var authenticated = function(req, res) {
+ 	//登录判断
+ 	var checkLogin = function(req, res) {
  		if (req.session.isAdmin) return res.send({});
- 		res.send({
- 			code: 40100,
- 			errmsg: '401 Unauthorized.'
- 		});
- 	};
-
- 	//登录判断中间件
- 	app.isAdmin = function(req, res, next) {
- 		if (req.session.isAdmin) return next();
  		res.send({
  			code: 40100,
  			errmsg: '401 Unauthorized.'
@@ -61,7 +53,7 @@
  	//logout
  	app.get('/admin/logout', logout);
  	//authenticate
- 	app.get('/admin/authenticated', authenticated);
+ 	app.get('/admin/login/check', checkLogin);
 
  	//
 

@@ -6,8 +6,13 @@
  	var Account = models.Account;
 
  	var add = function(req, res) {
- 		var doc = new models.Account(req.body);
- 		doc.save(function(err) {
+ 		var account = req.body;
+ 		// role
+ 		var roles = account.role || [];
+ 		roles = _.omit(roles, '');
+ 		if(_.isEmpty(roles)) account = _.omit(account, 'role');
+
+ 		models.Account.create(account, function(err) {
  			if (err) return res.send(err);
  			res.send({});
  		});
@@ -137,14 +142,14 @@
  	 * add account
  	 *     
  	 */
- 	app.post('/accounts', app.isLogined, add);
+ 	app.post('/accounts', add);
  	/**
  	 * update account
  	 * type:
  	 *     avatar
  	 *     
  	 */
- 	app.put('/accounts/:id', app.isLogined, update);
+ 	app.put('/accounts/:id', update);
 
  	/**
  	 * delete account
@@ -154,12 +159,12 @@
 	/**
  	 * get account
  	 */
- 	app.get('/accounts/:id', app.isLogined, getOne);
+ 	app.get('/accounts/:id', getOne);
 
  	/**
  	 * get accounts
  	 * type:
  	 *    search
  	 */
- 	app.get('/accounts', app.isLogined, getMore);
+ 	app.get('/accounts', getMore);
  }

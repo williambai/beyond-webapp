@@ -1,4 +1,5 @@
 var log4js = require('log4js');
+var util = require('util');
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
@@ -12,7 +13,7 @@ var nodemailer = require('nodemailer');
 
 log4js.configure(path.join(__dirname,'config/log4js.json'));
 var logger = log4js.getLogger('server');
-logger.setLevel('DEBUG');
+logger.setLevel('INFO');
 
 //create an http server
 app.server = http.createServer(app);
@@ -102,13 +103,24 @@ app.get('/', function(req,res){
 // 	res.download(file);
 // });
 
-//登录判断中间件
-app.isLogined = function(req,res,next){
-	if(req.session.loggedIn){
-		next();
-	}else{
-		res.sendStatus(401);
+//授权判断中间件
+app.grant = function(req,res,next){
+	logger.debug('req.path: ' + util.inspect(req.path));
+	logger.debug('req.params.id: ' + util.inspect(req.params.id));
+	logger.debug('req.method: ' + req.method);
+	var path = req.path;
+	if((req.method == 'PUT' || 
+		req.method == 'DELETE' ||
+		req.method == 'GET') && req.params.id){		
+		var id = path.lastIndexOf('/');
+		logger.debug(id);
+		if(id != -1) path = path.slice(0, id);
+		logger.debug(path);
 	}
+	var regexp_path = new RegExp(path,'i');
+	logger.debug(regexp_path);
+	if(regexp_path.test(req.session.grant)) return next();
+	return res.status(401).end();
 };
 
 //设置跨域访问

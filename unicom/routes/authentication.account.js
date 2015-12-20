@@ -1,5 +1,12 @@
+var log4js = require('log4js');
+var path = require('path');
+log4js.configure(path.join(__dirname,'../config/log4js.json'));
+var logger = log4js.getLogger('server');
+logger.setLevel('DEBUG');
+
 module.exports = exports = function(app, models) {
 	var _ = require('underscore');
+	var async = require('async');
 	var crypto = require('crypto');
 	var nodemailer = require('nodemailer');
 	var smtpTransport = require('nodemailer-smtp-transport');
@@ -39,7 +46,7 @@ module.exports = exports = function(app, models) {
 				if (name == '{code}') return user.registerCode;
 			});
 
-			console.log('register confirm email text: ' + text);
+			logger.info('register confirm email text: ' + text);
 			smtpTransporter.sendMail({
 					from: config.mail.from,
 					to: user.email,
@@ -47,8 +54,8 @@ module.exports = exports = function(app, models) {
 					text: text,
 				},
 				function(err,info) {
-					if(err) return console.error(err);
-					console.log(info);
+					if(err) return logger.error(err);
+					logger.info(info);
 				}
 			);
 		});
@@ -94,7 +101,7 @@ module.exports = exports = function(app, models) {
 	};
 
 	var login = function(req, res) {
-		console.log(req.body);
+		// logger.info(req.body);
 		var email = req.body.email;
 		var password = req.body.password;
 		if (null == email || !(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(email)))
@@ -109,48 +116,64 @@ module.exports = exports = function(app, models) {
 				errmsg: '忘记输入密码'
 			});
 
-		Account
-			.findOne({
-				email: email
-			})
-			.exec(function(err, account) {
-				if (err)
-					return res.send(err);
-				if (!account)
-					return res.send({
-						code: 40401,
-						errmsg: '用户不存在。'
-					});
-				if (account.status.code == -1)
-					return res.send({
-						code: 40402,
-						errmsg: '还未通过验证，请查看邮件，并尽快验证。'
-					});
-				if (account.password != crypto.createHash('sha256').update(password).digest('hex'))
-					return res.send({
-						code: 40403,
-						errmsg: '密码不正确。'
-					});
-				console.log(email + ': login successfully.');
+		async.waterfall([
+				function(callback){
+					Account
+						.findOne({
+							email: email
+						})
+						.exec(function(err, account) {
+							if (err) return callback(err);
+							if (!account)
+								return callback({
+									code: 40401,
+									errmsg: '用户不存在。'
+								});
+							if (account.status.code == -1)
+								return callback({
+									code: 40402,
+									errmsg: '还未通过验证，请查看邮件，并尽快验证。'
+								});
+							if (account.password != crypto.createHash('sha256').update(password).digest('hex'))
+								return callback({
+									code: 40403,
+									errmsg: '密码不正确。'
+								});
+							callback(null,account);
+						});
+				},
+				function role(account,callback){
+					logger.debug('role:');
+					account.grant = '';
+					callback(null,account);
+				}
+			],
+			function(err,account){
+				if(err) return res.send(err);
+				logger.info(email + ' login.');
 				req.session.loggedIn = true;
 				req.session.accountId = account._id;
 				req.session.email = account.email;
 				req.session.username = account.username;
 				req.session.avatar = account.avatar || '';
+				req.session.grant = account.grant || [];
+				logger.debug('login session: ' + JSON.stringify(req.session));
 				res.send({
 					id: req.session.accountId,
 					email: req.session.email,
 					username: req.session.username,
 					avatar: req.session.avatar
 				});
+
 			});
+
 
 	};
 
 	var logout = function(req, res) {
 		req.session.loggedIn = false;
-		console.log(req.session.email + ' user logout.');
-		// console.log(req.session);
+		logger.info(req.session.email + ' logout.');
+		// logger.info(req.session);
 		res.sendStatus(200);
 	};
 
@@ -180,7 +203,7 @@ module.exports = exports = function(app, models) {
 					if (name == '{host}') return req.header('host');
 					if (name == '{token}') return doc._id
 				});
-				console.log('forgot password email content: ' + text);
+				logger.info('forgot password email content: ' + text);
 				smtpTransporter.sendMail({
 						from: config.mail.from,
 						to: email,
@@ -188,8 +211,8 @@ module.exports = exports = function(app, models) {
 						text: text,
 					},
 					function(err,info) {
-						if(err) return console.error(err);
-						console.log(info);
+						if(err) return logger.error(err);
+						logger.info(info);
 					}
 				);
 			}
@@ -246,7 +269,7 @@ module.exports = exports = function(app, models) {
 			if (name == '{email}') return req.session.email;
 		});
 
-		console.log('invite email text: ' + text);
+		logger.info('invite email text: ' + text);
 		emails.forEach(function(email) {
 			smtpTransporter.sendMail({
 				from: config.mail.from,
@@ -254,14 +277,17 @@ module.exports = exports = function(app, models) {
 				subject: config.mail.invite_subject,
 				text: text,
 			}, function(err,info) {
-				if(err) return console.error(err);
-				console.log(info);
+				if(err) return logger.error(err);
+				logger.info(info);
 			});
 		});
 	};
 
-	var authenticated = function(req, res) {
+	var checkLogin = function(req, res) {
+		logger.info(req.session.email + ' access.');
+		logger.debug('session:' + JSON.stringify(req.session));
 		if (req.session.loggedIn) {
+			logger.info(req.session.email + '(authenticated) is pass.');
 			res.send({
 				id: req.session.accountId,
 				email: req.session.email,
@@ -269,6 +295,7 @@ module.exports = exports = function(app, models) {
 				avatar: req.session.avatar
 			});
 		} else {
+			logger.info(req.session.email + '(authenticated) is fail.');
 	 		res.send({code: 40100, errmsg: '401 Unauthorized.'});
 		}
 	};
@@ -285,12 +312,12 @@ module.exports = exports = function(app, models) {
 	app.post('/login', login);
 	//logout
 	app.get('/logout', logout);
+	//check login
+	app.get('/login/check', checkLogin);
 	//forgot password
 	app.post('/forgotPassword', forgotPassword);
 	// reset password
 	app.post('/resetPassword', resetPassword);
-	//authenticated
-	app.get('/authenticated', authenticated);
 	//invite
-	app.post('/invite/friend', app.isLogined, inviteFriend);
+	app.post('/invite/friend', app.grant, inviteFriend);
 };
