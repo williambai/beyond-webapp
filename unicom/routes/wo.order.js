@@ -7,10 +7,10 @@
  			res.send({});
  		});
  	};
- 	var remove = function(req,res){
+ 	var remove = function(req, res) {
  		var id = req.params.id;
- 		models.WoOrder.findByIdAndRemove(id,function(err,doc){
- 			if(err) return res.send(err);
+ 		models.WoOrder.findByIdAndRemove(id, function(err, doc) {
+ 			if (err) return res.send(err);
  			res.send(doc);
  		});
  	};
@@ -39,19 +39,47 @@
  			});
  	};
  	var getMore = function(req, res) {
+ 		var type = req.query.type || '';
  		var per = 20;
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
-
- 		models.WoOrder
- 			.find({})
- 			.sort({_id: -1})
- 			.skip(per * page)
- 			.limit(per)
- 			.exec(function(err, docs) {
- 				if (err) return res.send(err);
- 				res.send(docs);
- 			});
+ 		switch (type) {
+ 			case 'search':
+ 				var searchStr = req.query.searchStr || '';
+ 				var searchRegex = new RegExp(searchStr, 'i');
+ 				Account.find({
+ 						$or: [{
+ 							'customer.name': {
+ 								$regex: searchRegex
+ 							}
+ 						}, {
+ 							'customer.mobile': {
+ 								$regex: searchRegex
+ 							}
+ 						}]
+ 					})
+ 					.skip(per * page)
+ 					.limit(per)
+ 					.exec(function(err, docs) {
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 				break;
+ 			case 'stat':
+ 				break;
+ 			default:
+ 				models.WoOrder
+ 					.find({})
+ 					.sort({
+ 						_id: -1
+ 					})
+ 					.skip(per * page)
+ 					.limit(per)
+ 					.exec(function(err, docs) {
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 		}
  	};
  	/**
  	 * router outline
@@ -83,6 +111,8 @@
  	/**
  	 * get wo/orders
  	 * type:
+ 	 * 	    type=search&searchStr=
+ 	 *      type=stat
  	 */
  	app.get('/wo/orders', getMore);
  };
