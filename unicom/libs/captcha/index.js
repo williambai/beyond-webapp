@@ -10,31 +10,6 @@ var _ = require('underscore');
 var async = require('async');
 var opencv = require('opencv');
 
-var Color = function(colorInt) {
-	var hex = colorInt.toString(16);
-	this.red = hex.slice(2, 4);
-	this.green = hex.slice(4, 6);
-	this.blue = hex.slice(6, 8);
-};
-
-Color.prototype.getRed = function() {
-	return parseInt(this.red, 16);
-};
-
-Color.prototype.getGreen = function() {
-	return parseInt(this.green, 16);
-};
-
-Color.prototype.getBlue = function() {
-	return parseInt(this.blue, 16);
-};
-
-/**
- * [Color description]
- * @type {[type]}
- */
-parser.Color = Color;
-
 /**
  * 判断像素是否是白色
  * @param  {[type]}  colorInt [description]
@@ -64,19 +39,21 @@ parser.isBlack = isBlack;
  * @param  {[type]} pic [description]
  * @return {[type]}     [description]
  */
-var removeBackground = function(matrix) {
-	var width = matrix.getWidth();
-	var height = maxtrix.getHeight();
+var removeBackground = function(mat) {
+	var width = mat.width();
+	var height = mat.height();
 	for (var x = 0; x < width; x++) {
 		for (var y = 0; y < height; y++) {
-			if (isWhite(matrix[x][y]) == 1) {
-				matrix[x][y] = Color.WHITE;
-			} else {
-				matrix[x][y] = Color.BLACK;
-			}
+			// console.log(mat.pixel(x,y))
+			// if (mat.pixel(x,y) > 200) {
+			// 	mat.set(x,y,255);
+			// } else {
+			// 	// mat.set(x,y,300);
+			// }
+			// console.log(mat.pixel(x,y))
 		}
 	}
-	return matrix;
+	return mat;
 };
 /**
  * 将输入的验证码图片切分成4个不同字母的图片
@@ -124,15 +101,18 @@ parser.loadTrainData = function() {
  */
 
 var getSingleCharOcr = function(img, map) {
+	// img.convertGrayscale();
 	var result = '';
 	var width = img.width();
 	var height = img.height();
 	var min = width * height;
 	async.each(map, function(img_matrix) {
 		opencv.readImage(img_matrix.path,function(err,img_train){
+			// img_train.convertGrayscale();
 			var count = 0;
 			Label1: for (var x = 0; x < width; x++) {
 				for (var y = 0; y < height; y++) {
+					// if(img.pixel(x,y) != img_train.pixel(x,y)){
 					if (isWhite(img.pixel(x, y)) != isWhite(img_train.pixel(x, y))) {
 						count++;
 						if (count >= min) break Label1;
@@ -148,34 +128,6 @@ var getSingleCharOcr = function(img, map) {
 	return result;
 };
 parser.getSingleCharOcr = getSingleCharOcr;
-
-parser.getSingleCharOcr1 = function(img, map) {
-	var result = '';
-	var width = img.width();
-	var height = img.height();
-	var min = width * height;
-	for (var cha in map) {
-		for (var img_train in cha) {
-			opencv.readImage(img_train, function(err, mat) {
-
-			});
-			Label1: for (var x = 0; x < width; x++) {
-				for (var y = 0; y < height; y++) {
-					if (isWhite(parseInt(img.get(x, y), 16)) != isWhite(parseInt(img_train.get(x, y), 16))) {
-						count++;
-						if (count >= min) break Label1;
-					}
-				}
-			}
-			if (count < min) {
-				min = count;
-				result = char;
-			}
-		}
-	}
-	return result;
-
-};
 
 /**
  * 获取下载的验证码图片并识别出验证码

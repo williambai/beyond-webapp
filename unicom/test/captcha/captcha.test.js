@@ -39,6 +39,18 @@ describe('captcha parser lib', function() {
 });
 
 describe('captcha testing:', function() {
+	xit('opencv.Matrix functions', function(done) {
+		opencv.readImage(path.join(__dirname, 'input/test1.jpeg'), function(err, img) {
+			expect(err).to.be(null);
+			console.log(util.inspect(opencv.Matrix.prototype))
+			console.log(img.width())
+			console.log(img.height());
+			console.log(img.pixel(0,0));
+			console.log(img.pixelRow(10));
+			console.log(img.crop(0, 0, 10, 10))
+			done();
+		});
+	});
 	it('test file exist.', function(done) {
 		var input = path.join(__dirname, 'input/test1.jpeg');
 		fs.readFile(input, function(err, content) {
@@ -47,36 +59,18 @@ describe('captcha testing:', function() {
 			done();
 		});
 	});
-	it('Color Class', function() {
-		var Color = captchaParser.Color;
-		var color = new Color(0xff123456);
-		// console.log(util.inspect(color))
-		var red = color.getRed();
-		var green = color.getGreen();
-		var blue = color.getBlue();
-		expect(red).to.be.equal(0x12);
-		expect(green).to.be(0x34);
-		expect(blue).to.be(0x56);
-
-	});
 	it('isWhite()', function() {
 		var white = captchaParser.isWhite([255, 255, 255]);
 		expect(white).to.be(1);
 		var black = captchaParser.isWhite([0, 0, 0]);
 		expect(black).to.be(0);
 	});
+	xit('removeBackground()', function() {
+		
+	});
 	it('splitImage()', function(done) {
 		opencv.readImage(path.join(__dirname, 'input/test1.jpeg'), function(err, img) {
 			expect(err).to.be(null);
-			// console.log(util.inspect(opencv.Matrix.prototype))
-			// console.log(img.width())
-			// console.log(img.height());
-			// var mat = img.crop(0,0,10,10);
-			// mat.draw(img,1);
-			// var point = mat.pixel(0,0);
-			// console.log(point);
-			// console.log(img.row(10));
-			// console.log(img.crop(0, 0, 10, 10))
 			var imgCopy = img.clone();
 			var imgs = captchaParser.splitImage(imgCopy);
 			expect(imgs[0]).to.be.a(opencv.Matrix);
@@ -98,7 +92,7 @@ describe('captcha testing:', function() {
 	});
 	it('getAllOcr()', function(done) {
 		var map = captchaParser.loadTrainData();
-		captchaParser.getAllOcr(path.join(__dirname, 'input/test2.jpeg'),map, function(err, result) {
+		captchaParser.getAllOcr(path.join(__dirname, 'input/test1.jpeg'),map, function(err, result) {
 			console.log(result);
 			done();
 		});
