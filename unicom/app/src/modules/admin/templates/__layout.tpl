@@ -1,9 +1,9 @@
 <div class="sidebar sidebar-left">
 	<div class="scrollable" style="padding-top:70px;">
 		<div class="scrollable-header app-name">
-			<a href="#" onclick="window.location.reload();return false;">{产品名称}--后台管理</a>
+			<a href="#" onclick="window.location.reload();return false;">创富计划--后台管理</a>
 		</div>
-		<div class="scrollable-content">
+		<div class="scrollable-content" id="menu">
 			<div class="list-group">
 				<a class="list-group-item active" href="#index"> <i class="fa fa-users fa-fw"></i>
 					&nbsp;首页
@@ -143,7 +143,7 @@
 </div>
 <div class="app">
 	<div class="navbar navbar-app navbar-absolute-top">
-		<div class="navbar-brand navbar-brand-center">{产品名称}</div>
+		<div class="navbar-brand navbar-brand-center">贵州联通创富计划</div>
 		<div class="btn-group pull-left">
 			<div class="btn sidebar-toggle" id="left-sidebar-toggle">
 				<i class="fa fa-bars fa-lg"></i>

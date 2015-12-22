@@ -65,6 +65,7 @@ var GridEditView = require('./views/_GridEdit');
 exports = module.exports = Backbone.Router.extend({
 
 	account: null,//login account
+	features: [],
 	logined: false,
 	currentView : null,
 	appEvents: _.extend({},Backbone.Events),//app events

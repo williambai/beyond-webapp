@@ -3,8 +3,15 @@
 		<div class="scrollable-header app-name">
 			<a href="#" onclick="window.location.reload();return false;">贵州联通创富计划</a>
 		</div>
-		<div class="scrollable-content">
+		<div class="scrollable-content" id="menu">
 			<div class="list-group">
+				<a class="list-group-item active" href="#login">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;登录
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+			</div>
+<!-- 			<div class="list-group">
 				<a class="list-group-item active" href="#index"> <i class="fa fa-users fa-fw"></i>
 					&nbsp;首页
 					<span class="pull-right">
@@ -31,13 +38,13 @@
 					&nbsp;号卡产品
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a> 
-<!--
+
 				<a class="list-group-item" href="#">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;终端
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
--->
+
 				<a class="list-group-item" href="#order/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;Wo 成绩
@@ -54,7 +61,7 @@
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 
-			</div>
+			</div> -->
 			<div id="projectlist"></div>
 			<br/>
 			<br/>

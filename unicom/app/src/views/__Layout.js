@@ -23,6 +23,7 @@ exports = module.exports = Backbone.View.extend({
 			.addClass('has-navbar-top');
 		this.appEvents.on('set:brand', this.updateBrand,this);
 		this.on('load', this.load,this);
+		this.on('update:menu', this.updateMenu,this);
 	},
 
 	events: {
@@ -40,6 +41,22 @@ exports = module.exports = Backbone.View.extend({
 		this.$('.list-group-item').removeClass('active');
 		var hash = window.location.hash || '#index';
 		this.$('a[href="' + hash + '"]').addClass('active');
+	},
+
+	updateMenu: function(features){
+		var menuView = '<div class="list-group">';
+			menuView += '<a class="list-group-item active" href="#index">' +
+			                '<i class="fa fa-meh-o fa-fw"></i>&nbsp;首页' +
+			                '<i class="fa fa-chevron-right pull-right"></i>' +
+			            '</a>';
+		_.each(features,function(feature){
+			menuView += '<a class="list-group-item" href="#'+ feature.hash +'">' +
+			                '<i class="fa fa-meh-o fa-fw"></i>&nbsp;' +  feature.name +
+			                '<i class="fa fa-chevron-right pull-right"></i>' +
+			            '</a>';
+		});
+		menuView += '</div>';
+		this.$('#menu').html(menuView);
 	},
 
 	activeItem: function(evt){

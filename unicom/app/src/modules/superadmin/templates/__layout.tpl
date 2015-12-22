@@ -14,12 +14,22 @@
 				</a>
 				<a class="list-group-item" href="#feature/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;功能设置
+					&nbsp;功能管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#platform/app/index">
+				<a class="list-group-item" href="#app/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;应用设置
+					&nbsp;应用管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#role/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;角色管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#account/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;用户管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#monitor/index">

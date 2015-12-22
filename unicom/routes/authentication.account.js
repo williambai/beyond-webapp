@@ -162,7 +162,7 @@ module.exports = exports = function(app, models) {
 					id: req.session.accountId,
 					email: req.session.email,
 					username: req.session.username,
-					avatar: req.session.avatar
+					avatar: req.session.avatar,
 				});
 
 			});

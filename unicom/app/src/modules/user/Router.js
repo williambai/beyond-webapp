@@ -61,10 +61,10 @@ exports = module.exports = Backbone.Router.extend({
 	initialize: function() {
 		this.appEvents.on('logined', this.onLogined, this);
 		this.appEvents.on('logout', this.onLogout, this);
-		var layoutView = new LayoutView({
+		this.layoutView = new LayoutView({
 			appEvents: this.appEvents,
 		});
-		layoutView.trigger('load');
+		this.layoutView.trigger('load');
 	},
 
 	onLogined: function(account) {
@@ -72,6 +72,31 @@ exports = module.exports = Backbone.Router.extend({
 		// console.log(account);
 		this.account = account;
 		this.logined = true;
+		this.layoutView.trigger('update:menu', [{
+			name: '流量产品',
+			nickname: 'data',
+			hash: 'data/index',
+		}, {
+			name: '传统增值',
+			nickname: 'sms',
+			hash: 'sms/index',
+		}, {
+			name: '内容推荐',
+			nickname: 'push',
+			hash: 'push/index',
+		}, {
+			name: '号卡产品',
+			nickname: 'card',
+			hash: 'card/index',
+		}, {
+			name: 'Wo 成绩',
+			nickname: 'order',
+			hash: 'order/index',
+		}, {
+			name: '我的资料',
+			nickname: 'profile',
+			hash: 'profile/me',
+		}]);
 	},
 
 	onLogout: function() {
@@ -100,8 +125,8 @@ exports = module.exports = Backbone.Router.extend({
 		indexView.trigger('load');
 	},
 
-	register: function(){
-		if(this.logined){
+	register: function() {
+		if (this.logined) {
 			window.location.hash = 'index';
 			return;
 		}
@@ -113,8 +138,8 @@ exports = module.exports = Backbone.Router.extend({
 		registerView.trigger('load');
 	},
 
-	forgotPassword: function(){
-		if(this.logined){
+	forgotPassword: function() {
+		if (this.logined) {
 			window.location.hash = 'index';
 			return;
 		}
@@ -286,7 +311,7 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(smsIndexView);
 		smsIndexView.trigger('load');
-	},	
+	},
 
 	smsView: function(id) {
 		if (!this.logined) {
@@ -315,7 +340,7 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(orderIndexView);
 		orderIndexView.trigger('load');
-	},	
+	},
 
 	activityIndex: function() {
 		if (!this.logined) {
@@ -329,5 +354,5 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(activityIndexView);
 		activityIndexView.trigger('load');
-	},	
+	},
 });

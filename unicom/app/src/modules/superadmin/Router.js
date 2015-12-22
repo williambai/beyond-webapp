@@ -4,7 +4,7 @@ var Backbone = require('backbone');
 var config = require('./conf');
 
 var LayoutView = require('./views/__Layout');
-var LoginView = require('./views/_AccountLogin');
+var LoginView = require('./views/_MyAccountLogin');
 var IndexView = require('./views/Index');
 
 var PlatformAppIndexView = require('./views/_PlatformAppIndex');
@@ -12,6 +12,12 @@ var PlatformAppEditView = require('./views/_PlatformAppEdit');
 
 var FeatureIndexView = require('./views/_PlatformFeatureIndex');
 var FeatureEditView = require('./views/_PlatformFeatureEdit');
+
+var AccountIndexView = require('./views/_AccountIndex');
+var AccountEditView = require('./views/_AccountEdit');
+
+var RoleIndexView = require('./views/_RoleIndex');
+var RoleEditView = require('./views/_RoleEdit');
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -24,12 +30,18 @@ exports = module.exports = Backbone.Router.extend({
 		'index': 'index',
 		'login': 'login',
 		'logout': 'logout',
-		'platform/app/index': 'platformAppIndex',
-		'platform/app/add': 'platformAppEdit',	
-		'platform/app/edit/:id': 'platformAppEdit',
+		'app/index': 'appIndex',
+		'app/add': 'appEdit',	
+		'app/edit/:id': 'appEdit',
 		'feature/index': 'featureIndex',
 		'feature/add': 'featureEdit',	
 		'feature/edit/:id': 'featureEdit',
+		'account/index': 'accountIndex',
+		'account/add': 'accountEdit',
+		'account/edit/:id': 'accountEdit',
+		'role/index': 'roleIndex',
+		'role/add': 'roleEdit',
+		'role/edit/:id': 'roleEdit',
 		'*path': 'index',
 	},
 
@@ -101,31 +113,31 @@ exports = module.exports = Backbone.Router.extend({
 		});
 	},
 
-	platformAppIndex: function(){
+	appIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		var platformAppIndexView = new PlatformAppIndexView({
+		var appIndexView = new PlatformAppIndexView({
 			router: this,
 			el: '#content',
 		});
-		this.changeView(platformAppIndexView);
-		platformAppIndexView.trigger('load');
+		this.changeView(appIndexView);
+		appIndexView.trigger('load');
 	},
 
-	platformAppEdit: function(id){
+	appEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		var platformAppEditView = new PlatformAppEditView({
+		var appEditView = new PlatformAppEditView({
 			router: this,
 			el: '#content',
 			id: id,
 		});
-		this.changeView(platformAppEditView);
-		platformAppEditView.trigger('load');
+		this.changeView(appEditView);
+		appEditView.trigger('load');
 	},
 	
 	featureIndex: function(){
@@ -155,5 +167,63 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(featureEditView);
 		featureEditView.trigger('load');
+	},
+
+	accountIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','功能设置');
+		var accountIndexView = new AccountIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(accountIndexView);
+		accountIndexView.trigger('load');
+	},
+
+	accountEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','修改功能');
+		var accountEditView = new AccountEditView({
+			router: this,
+			el: '#content',
+			id: id
+		});
+		this.changeView(accountEditView);
+		accountEditView.trigger('load');
+	},
+
+	roleIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','功能设置');
+		var roleIndexView = new RoleIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(roleIndexView);
+		roleIndexView.trigger('load');
+	},
+
+	roleEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','修改功能');
+		var roleEditView = new RoleEditView({
+			router: this,
+			el: '#content',
+			id: id
+		});
+		this.changeView(roleEditView);
+		roleEditView.trigger('load');
 	},
 });

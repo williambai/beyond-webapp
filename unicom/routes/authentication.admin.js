@@ -24,7 +24,8 @@
  			});
  		req.session.isAdmin = true;
  		res.send({
- 			email: email
+ 			email: email,
+ 			features: ['promote/product/index','promote/media/index']
  		});
  	};
 

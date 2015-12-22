@@ -1,34 +1,38 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    appTpl = require('../templates/_entityPlatformApp.tpl'),
-	PlatformApp = require('../models/PlatformApp');
+    roleTpl = require('../templates/_entityRole.tpl'),
+	Role = require('../models/Role');
 var config = require('../conf');
-var PlatformFeatureCollection  = require('../models/PlatformFeatureCollection');
+
+var PlatformAppCollection = require('../models/PlatformAppCollection');
 
 exports = module.exports = FormView.extend({
 
-	el: '#platformAppForm',
+	el: '#roleForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new PlatformApp({_id: options.id});
-		var page = $(appTpl);
+		this.model = new Role({_id: options.id});
+		var page = $(roleTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
-		'keyup input[type=text]': 'inputText',
+		'click input[type=text]': 'inputText',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
 
 	load: function(){
 		if(this.model.isNew()){
+			//get apps
+			this.loadApps();
+			//get features
 			this.loadFeatures();
 			this.modelFilled = true;
 			return;
@@ -38,27 +42,46 @@ exports = module.exports = FormView.extend({
 				withCredentials: true
 			},
 		});
+
 	},
 
-	loadFeatures: function(callback){
+	loadApps: function(callback){
 		var that = this;
-		var platformFeatureCollection = new PlatformFeatureCollection();
-		platformFeatureCollection.fetch({
+		var platformAppCollection = new PlatformAppCollection();
+		platformAppCollection.fetch({
 			xhrFields: {
 				withCredentials: true
 			},
 			success: function(collection){
 				collection = collection || [];
-				var featuresView = '';
+				var appsView = '';
 				collection.each(function(model){
-					featuresView += '<input type="checkbox" name="features[]" value="'+ model.get('nickname') +'">&nbsp;'+ model.get('name') +'&nbsp;&nbsp;&nbsp;';
+					appsView += '<input type="radio" name="app" value="'+ model.get('nickname') +'">&nbsp;'+ model.get('name') +'&nbsp;&nbsp;&nbsp;';
 				});
-				that.$('#features').html(featuresView);
+				that.$('#apps').html(appsView);
 				callback && callback();
 			}
 		});
 	},
 
+	loadFeatures: function(callback){
+		var that = this;
+		$.ajax({
+			url: config.api.host + '/platform/features',
+			type: 'GET',
+			xhrFields: {
+				withCredentials: true
+			},
+		}).done(function(data){
+			data = data || [];
+			var checkboxs = '';
+			data.forEach(function(item){
+				checkboxs += '<input type="checkbox" name="features[]" value="'+ item.nickname +'">&nbsp;'+ item.name +'&nbsp';
+			});
+			that.$('#features').html(checkboxs);
+			callback && callback();
+		});
+	},
 
 	inputText: function(evt){
 		var that = this;
@@ -105,9 +128,9 @@ exports = module.exports = FormView.extend({
 		});
 		return false;
 	},
-	
+
 	cancel: function(){
-		this.router.navigate('app/index',{trigger: true, replace: true});
+		this.router.navigate('role/index',{trigger: true, replace: true});
 		return false;
 	},
 	
@@ -118,24 +141,31 @@ exports = module.exports = FormView.extend({
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
+			//get apps
+			this.loadApps(function(){
+				//set apps
+				var app = that.model.get('app');
+				that.$('input[name="app"][value="'+ app +'"]').attr('checked', true);
+			});
 			//get features
 			this.loadFeatures(function(){
 				//set features
 				var features = that.model.get('features');
-				_.each(features, function(feature){
-					that.$('input[name="features[]"][value="'+ feature +'"]').attr('checked', true);
+				features.forEach(function(item){
+					that.$('input[name="features[]"][value='+ item + ']').attr('checked', true);
 				});
 			});
-
 		}else{
 			//second fetch: submit
-			this.router.navigate('app/index',{trigger: true, replace: true});
+			this.router.navigate('role/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		if(this.model.isNew()) this.$('.panel-title').text('新增应用');
+		var status = this.model.get('status');
+		this.$('input[name="status"][value="'+ status +'"]').attr('checked',true);
+		if(this.model.isNew()) this.$('.panel-title').text('新增角色');
 		return this;
 	},
 });
