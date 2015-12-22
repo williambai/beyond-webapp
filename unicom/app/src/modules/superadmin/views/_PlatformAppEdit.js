@@ -59,7 +59,6 @@ exports = module.exports = FormView.extend({
 		});
 	},
 
-
 	inputText: function(evt){
 		var that = this;
 		//clear error

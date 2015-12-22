@@ -146,50 +146,6 @@
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>
-	<div id="addTemplate">
-		<div class="form-group">
-			<% if(/\.png$/.test(model.avatar)){ %>
-			<!-- <img src="<%= model.avatar %>" width="120px" height="160px"> -->
-			<% }else{ %>
-			<img src="" width="120px" height="160px">
-			<% } %>
-			<br>
-			<input type="file" name="avatar"/>
-		</div>
-
-		<div id="accountForm">
-			<form>
-				<div class="form-group">
-					<label for="username">姓名：</label>
-					<input type="text" name="username" value="" class="form-control"></div>
-				<div class="form-group">
-					<label for="email">电子邮件：</label>
-					<input type="text" name="email" value="" class="form-control"></div>
-				<div class="form-group">
-					<label for="password">密码：</label>
-					<input type="password" name="password" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="password">密码(再次)：</label>
-					<input type="password" name="cpassword" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="biography">自传：</label>
-					<textarea name="biography" rows="3" class="form-control"></textarea>
-				</div>
-				<div class="form-group">
-					<div class="btn-group btn-group-justified">
-						<div class="btn-group">
-							<input type="submit" value="提交" class="btn btn-danger">
-						</div>
-						<div class="btn-group">
-							<button class="btn btn-primary back">取消</button>
-						</div>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
 	<div id="editTemplate">
 		<div class="form-group">
 			<% if(/\.png$/.test(model.avatar)){ %>
@@ -205,21 +161,33 @@
 			<form>
 				<div class="form-group">
 					<label for="username">姓名：</label>
-					<input type="text" name="username" value="<%= model.username %>" class="form-control"/></div>
+					<input type="text" name="username" value="<%= model.username %>" class="form-control">
+					<span class="help-block"></span>
+				</div>
 				<div class="form-group">
 					<label for="email">电子邮件：</label>
-					<input type="text" name="email" value="<%= model.email %>" class="form-control" disabled/></div>
+					<input type="text" name="email" value="<%= model.email %>" class="form-control">
+					<span class="help-block"></span>
+				</div>
+					<div class="form-group">
+						<label>功能角色：</label>
+						<div style="padding-left:30px;" id="roles">
+						</div>
+					</div>
 				<div class="form-group">
 					<label for="password">密码：</label>
-					<input type="password" name="password" class="form-control"/>
+					<input type="password" name="password" class="form-control">
+					<span class="help-block"></span>
 				</div>
 				<div class="form-group">
 					<label for="password">密码(再次)：</label>
-					<input type="password" name="cpassword" class="form-control"/>
+					<input type="password" name="cpassword" class="form-control">
+					<span class="help-block"></span>
 				</div>
 				<div class="form-group">
 					<label for="biography">自传：</label>
 					<textarea name="biography" rows="3" class="form-control"><%= model.biography %></textarea>
+					<span class="help-block"></span>
 				</div>
 				<div class="form-group">
 					<div class="btn-group btn-group-justified">

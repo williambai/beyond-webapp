@@ -2,15 +2,17 @@ module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
 		name: String,
-		features: [],
-		app: String,
-		status: {
-			type: String,
-			enum: {
-				values: '有效|无效'.split('|'),
-				message: 'enum validator failed for path {PATH} with value {VALUE}',
-			}
-		}
+		nickname: String,
+		description: String,
+		grant: {},
+		// app: String,
+		// status: {
+		// 	type: String,
+		// 	enum: {
+		// 		values: '有效|无效'.split('|'),
+		// 		message: 'enum validator failed for path {PATH} with value {VALUE}',
+		// 	}
+		// }
 	});
 
 	schema.set('collection','platform.roles');

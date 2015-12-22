@@ -1,0 +1,19 @@
+[{
+	"name": "功能管理",
+	"nickname": "feature",
+	"description": "平台功能管理",
+	"route": "/platform/features",
+	"status": "有效"
+},{
+	"name": "角色管理",
+	"nickname": "role",
+	"description": "角色管理",
+	"route": "/platform/roles",
+	"status": "有效"
+},{
+	"name": "用户管理",
+	"nickname": "account",
+	"description": "用户账户管理",
+	"route": "/accounts",
+	"status": "有效"
+}]

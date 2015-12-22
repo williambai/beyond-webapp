@@ -4,11 +4,10 @@ module.exports = exports = function(mongoose) {
 		name: String,
 		nickname: {
 			type: String,
-			required: true,
 		},
 		description: String,
 		route: String,
-		app: [],
+		// app: [],
 		status: {
 			type: String,
 			enum: {
