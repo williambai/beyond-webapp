@@ -119,6 +119,45 @@ exports = module.exports = Backbone.View.extend({
 				.attr("class", "line")
 				.attr("d", line);
 
+			svg.selectAll('.bar')
+				.data(data)
+				.enter()
+				.append('rect')
+				.attr('class',function(d){return d.direction =='买入' ? 'bar buy' : 'bar sale'})
+				.attr('x',function(d){return x(d.date)-2;})
+				.attr('y',function(d){return d.direction =='买入' ? y(d.price) : (y(d.price) - 20)})
+				.attr('height', 20)
+				.attr('width',5);
+
+			svg.append('g')
+				.append('text')
+				.attr('transform','translate(80,5)')
+				.attr('y',4)
+				.attr('dy','.71em')
+				.style('text-anchor','end')
+				.text('买入');
+			svg.append('g')
+				.append('rect')
+				.attr('class', 'bar buy')
+				.attr('x', 30)
+				.attr('y', 10)
+				.attr('height', 5)
+				.attr('width', 20);
+			svg.append('g')
+				.append('text')
+				.attr('transform','translate(80,25)')
+				.attr('y',4)
+				.attr('dy','.71em')
+				.style('text-anchor','end')
+				.text('卖出');
+			svg.append('g')
+				.append('rect')
+				.attr('class', 'bar sale')
+				.attr('x', 30)
+				.attr('y', 30)
+				.attr('height', 5)
+				.attr('width', 20);
+
 			svg.append("g")
 				.append("text")
 				.attr("transform","translate(" + (width-20) + ",20)")
