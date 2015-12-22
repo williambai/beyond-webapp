@@ -7,6 +7,7 @@ module.exports = exports = function(mongoose) {
 			required: true,
 		},
 		description: String,
+		route: String,
 		app: [],
 		status: {
 			type: String,

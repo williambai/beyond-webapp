@@ -45,6 +45,11 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
+						<label>包含功能：</label>
+						<div style="padding-left:30px;" id="features">
+						</div>
+					</div>
+					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
 							<input type="submit" value="提交" class="btn btn-danger">

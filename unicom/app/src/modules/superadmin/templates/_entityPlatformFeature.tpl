@@ -40,20 +40,27 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
+						<label>功能路径：</label>
+						<input type="text" name="route" value="<%= model.route %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
 						<label>功能描述：</label>
 						<input type="text" name="description" value="<%= model.description %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+<!--
+ 					<div class="form-group">
 						<label>功能归属的应用：</label>
 						<div style="padding-left:30px;" id="apps">
 						</div>
 					</div>
-					<div class="form-group">
+ -->
+ 					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
 							<input type="radio" name="status" value="无效">&nbsp;无效
-							<input type="radio" name="status" value="有效">&nbsp;有效
+							<input type="radio" name="status" value="有效" checked>&nbsp;有效
 						</div>
 					</div>
 					<div class="form-group">

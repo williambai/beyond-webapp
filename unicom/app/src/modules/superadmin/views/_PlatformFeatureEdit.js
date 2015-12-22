@@ -43,6 +43,9 @@ exports = module.exports = FormView.extend({
 	},
 
 	loadApps: function(callback){
+		callback && callback();
+		return;
+		
 		var that = this;
 		var platformAppCollection = new PlatformAppCollection();
 		platformAppCollection.fetch({

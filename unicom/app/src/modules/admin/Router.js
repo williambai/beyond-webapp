@@ -49,6 +49,19 @@ var OrderCardViewView = require('./views/_OrderCardView');
 var RevenueIndexView = require('./views/_WoRevenueIndex');
 var RevenueAddView = require('./views/_WoRevenueAdd');
 
+var RoleIndexView = require('./views/_RoleIndex');
+var RoleEditView = require('./views/_RoleEdit');
+
+var ChannelCategoryIndexView = require('./views/_ChannelCategoryIndex');
+var ChannelCategoryAddView = require('./views/_ChannelCategoryAdd');
+var ChannelCategoryEditView = require('./views/_ChannelCategoryEdit');
+
+var DepartmentIndexView = require('./views/_DepartmentIndex');
+var DepartmentEditView = require('./views/_DepartmentEdit');
+
+var GridIndexView = require('./views/_GridIndex');
+var GridEditView = require('./views/_GridEdit');
+
 exports = module.exports = Backbone.Router.extend({
 
 	account: null,//login account
@@ -90,6 +103,18 @@ exports = module.exports = Backbone.Router.extend({
 		'order/card/add': 'orderCardAdd',
 		'order/card/view/:id': 'orderCardView',
 		'order/card/edit/:id': 'orderCardEdit',
+		'role/index': 'roleIndex',
+		'role/add': 'roleEdit',
+		'role/edit/:id': 'roleEdit',
+		'channel/category/index': 'channelCategoryIndex',
+		'channel/category/add': 'channelCategoryAdd',
+		'channel/category/edit/:id': 'channelCategoryEdit',
+		'grid/index': 'gridIndex',
+		'grid/add': 'gridEdit',
+		'grid/edit/:id': 'gridEdit',		
+		'department/index': 'departmentIndex',
+		'department/add': 'departmentEdit',
+		'department/edit/:id': 'departmentEdit',
 
 		'revenue/index': 'revenueIndex',
 		'revenue/add': 'revenueAdd',
@@ -659,4 +684,134 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(revenueViewView);
 		revenueViewView.trigger('load');
 	},		
+
+	roleIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','角色设置');
+		var roleIndexView = new RoleIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(roleIndexView);
+		roleIndexView.trigger('load');
+	},
+
+	roleEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','修改角色');
+		var roleEditView = new RoleEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(roleEditView);
+		roleEditView.trigger('load');
+	},
+
+	channelCategoryIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','渠道类型设置');
+		var channelCategoryIndexView = new ChannelCategoryIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(channelCategoryIndexView);
+		channelCategoryIndexView.trigger('load');
+	},
+
+	channelCategoryAdd: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','新增渠道类型');
+		var channelCategoryAddView = new ChannelCategoryAddView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(channelCategoryAddView);
+		channelCategoryAddView.trigger('load');
+	},
+
+	channelCategoryEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','修改渠道类型');
+		var channelCategoryEditView = new ChannelCategoryEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(channelCategoryEditView);
+		channelCategoryEditView.trigger('load');
+	},
+
+	gridIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','网格设置');
+		var gridIndexView = new GridIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(gridIndexView);
+		gridIndexView.trigger('load');
+	},
+
+	gridEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','修改网格');
+		var gridEditView = new GridEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(gridEditView);
+		gridEditView.trigger('load');
+	},
+
+	departmentIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','组织设置');
+		var departmentIndexView = new DepartmentIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(departmentIndexView);
+		departmentIndexView.trigger('load');
+	},
+
+	departmentEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand','修改组织');
+		var departmentEditView = new DepartmentEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(departmentEditView);
+		departmentEditView.trigger('load');
+	},	
 });

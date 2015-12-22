@@ -73,6 +73,26 @@
 					&nbsp;图片管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
+				<a class="list-group-item" href="#role/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;角色设置
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#department/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;组织设置
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#grid/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;网格设置
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#channel/category/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;渠道类型设置
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
 				<a class="list-group-item" href="#goods/bonus/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;产品奖励配置

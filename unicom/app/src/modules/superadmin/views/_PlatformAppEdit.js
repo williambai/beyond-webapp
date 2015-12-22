@@ -4,6 +4,7 @@ var FormView = require('./__FormView'),
     appTpl = require('../templates/_entityPlatformApp.tpl'),
 	PlatformApp = require('../models/PlatformApp');
 var config = require('../conf');
+var PlatformFeatureCollection  = require('../models/PlatformFeatureCollection');
 
 exports = module.exports = FormView.extend({
 
@@ -28,6 +29,7 @@ exports = module.exports = FormView.extend({
 
 	load: function(){
 		if(this.model.isNew()){
+			this.loadFeatures();
 			this.modelFilled = true;
 			return;
 		}
@@ -37,6 +39,26 @@ exports = module.exports = FormView.extend({
 			},
 		});
 	},
+
+	loadFeatures: function(callback){
+		var that = this;
+		var platformFeatureCollection = new PlatformFeatureCollection();
+		platformFeatureCollection.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
+			success: function(collection){
+				collection = collection || [];
+				var featuresView = '';
+				collection.each(function(model){
+					featuresView += '<input type="checkbox" name="features[]" value="'+ model.get('nickname') +'">&nbsp;'+ model.get('name') +'&nbsp;&nbsp;&nbsp;';
+				});
+				that.$('#features').html(featuresView);
+				callback && callback();
+			}
+		});
+	},
+
 
 	inputText: function(evt){
 		var that = this;
@@ -96,6 +118,14 @@ exports = module.exports = FormView.extend({
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
+			//get features
+			this.loadFeatures(function(){
+				//set features
+				var features = that.model.get('features');
+				_.each(features, function(feature){
+					that.$('input[name="features[]"][value="'+ feature +'"]').attr('checked', true);
+				});
+			});
 
 		}else{
 			//second fetch: submit
