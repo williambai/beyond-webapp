@@ -23,8 +23,8 @@ var SmsViewView = require('./views/_SmsView');
 var OrderIndexView = require('./views/_OrderIndex');
 var ActivityIndexView = require('./views/_ActivityIndex');
 
-
 var config = require('./conf');
+var MENU_DEFAULT = require('./conf/menu');
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -68,35 +68,29 @@ exports = module.exports = Backbone.Router.extend({
 	},
 
 	onLogined: function(account) {
-		// console.log('++')
-		// console.log(account);
+		var that = this;
 		this.account = account;
 		this.logined = true;
-		this.layoutView.trigger('update:menu', [{
-			name: '流量产品',
-			nickname: 'data',
-			hash: 'data/index',
-		}, {
-			name: '传统增值',
-			nickname: 'sms',
-			hash: 'sms/index',
-		}, {
-			name: '内容推荐',
-			nickname: 'push',
-			hash: 'push/index',
-		}, {
-			name: '号卡产品',
-			nickname: 'card',
-			hash: 'card/index',
-		}, {
-			name: 'Wo 成绩',
-			nickname: 'order',
-			hash: 'order/index',
-		}, {
-			name: '我的资料',
-			nickname: 'profile',
-			hash: 'profile/me',
-		}]);
+		/** default menu */
+		// this.layoutView.trigger('update:menu', _.sortBy(_.flatten(_.values(MENU_DEFAULT)), 'id'));
+		/** -OR- customize menu */
+		$.ajax({
+			url: config.api.host + '/platform/apps/channel',
+			type: 'GET',
+			xhrFields: {
+				withCredentials: true
+			},
+		}).done(function(data) {
+			var features = data.features || [];
+			var grant = that.account.grant || {};
+			var features_grant = _.keys(grant);
+			// console.log(features_grant);
+			var menuCustomized = _.pick(_.pick(MENU_DEFAULT, features), features_grant);
+			var grantMenuCustomized = _.sortBy(_.flatten(_.values(menuCustomized)), 'id');
+			// console.log(grantMenuCustomized);
+			that.layoutView.trigger('update:menu', grantMenuCustomized);
+		});
+
 	},
 
 	onLogout: function() {

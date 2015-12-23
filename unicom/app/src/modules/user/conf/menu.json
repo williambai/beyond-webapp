@@ -1,0 +1,42 @@
+{
+	"channel_account_activity": [{
+		"id": 1,
+		"name": "首页",
+		"nickname": "index",
+		"hash": "index"
+	}],
+	"channel_product_goods": [{
+		"id": 2,
+		"name": "流量产品",
+		"nickname": "data",
+		"hash": "data/index"
+	}, {
+		"id": 3,
+		"name": "传统增值",
+		"nickname": "sms",
+		"hash": "sms/index"
+	}, {
+		"id": 4,
+		"name": "内容推荐",
+		"nickname": "push",
+		"hash": "push/index"
+	}],
+	"channel_product_card": [{
+		"id": 5,
+		"name": "号卡产品",
+		"nickname": "card",
+		"hash": "card/index"
+	}],
+	"channel_order": [{
+		"id": 6,
+		"name": "Wo 成绩",
+		"nickname": "order",
+		"hash": "order/index"
+	}],
+	"channel_account": [{
+		"id": 7,
+		"name": "我的资料",
+		"nickname": "profile",
+		"hash": "profile/me"
+	}]
+}

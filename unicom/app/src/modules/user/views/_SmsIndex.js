@@ -34,7 +34,7 @@ exports = module.exports = Backbone.View.extend({
 		this.listView = new ListView({
 			el: '#list',
 		});
-		this.listView.collection.url = config.api.host + '/promote/products?type=category&category=SMS';
+		this.listView.collection.url = config.api.host + '/channel/product/goods?type=category&category=SMS';
 		this.listView.trigger('load');
 	},
 

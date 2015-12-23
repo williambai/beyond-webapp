@@ -1,9 +1,9 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var config = require('../conf');
-var PromoteProduct = require('./PromoteProduct');
+var ProductGoods = require('./ProductGoods');
 
 exports = module.exports = Backbone.Collection.extend({
-	model: PromoteProduct,
-	url: config.api.host + '/promote/products',
+	model: ProductGoods,
+	url: config.api.host + '/channel/product/goods',
 });

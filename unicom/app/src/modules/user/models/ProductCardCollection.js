@@ -5,5 +5,5 @@ var ProductCard = require('./ProductCard');
 
 exports = module.exports = Backbone.Collection.extend({
 	model: ProductCard,
-	url: config.api.host + '/product/cards',
+	url: config.api.host + '/channel/product/cards',
 });

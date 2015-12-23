@@ -2,19 +2,19 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
     cardTpl = require('../templates/_entityCard.tpl'),
-	ProductCardRecommend = require('../models/ProductCardRecommend');
+	ProductCard = require('../models/ProductCard');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
-	el: '#recommendForm',
+	el: '#addForm',
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new ProductCardRecommend();
+		this.model = new ProductCard();
 		var page = $(cardTpl);
-		var recommendTemplate = $('#recommendTemplate', page).html();
-		this.template = _.template(_.unescape(recommendTemplate || ''));
+		var addTemplate = $('#addTemplate', page).html();
+		this.template = _.template(_.unescape(addTemplate || ''));
 		var successTpl = $('#successTemplate', page).html();
 		this.successTemplate = _.template(_.unescape(successTpl || ''));
 		this.on('change:product', this.packageChanged, this);

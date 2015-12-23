@@ -45,10 +45,10 @@ exports = module.exports = Backbone.View.extend({
 
 	updateMenu: function(features){
 		var menuView = '<div class="list-group">';
-			menuView += '<a class="list-group-item active" href="#index">' +
-			                '<i class="fa fa-meh-o fa-fw"></i>&nbsp;首页' +
-			                '<i class="fa fa-chevron-right pull-right"></i>' +
-			            '</a>';
+			// menuView += '<a class="list-group-item active" href="#index">' +
+			//                 '<i class="fa fa-meh-o fa-fw"></i>&nbsp;首页' +
+			//                 '<i class="fa fa-chevron-right pull-right"></i>' +
+			//             '</a>';
 		_.each(features,function(feature){
 			menuView += '<a class="list-group-item" href="#'+ feature.hash +'">' +
 			                '<i class="fa fa-meh-o fa-fw"></i>&nbsp;' +  feature.name +
@@ -57,6 +57,7 @@ exports = module.exports = Backbone.View.extend({
 		});
 		menuView += '</div>';
 		this.$('#menu').html(menuView);
+		this.$('.list-group-item').first().addClass('active');
 	},
 
 	activeItem: function(evt){

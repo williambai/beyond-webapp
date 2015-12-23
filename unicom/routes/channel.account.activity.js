@@ -1,7 +1,7 @@
  exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
- 		var doc = new models.ProductCard(req.body);
+ 		var doc = new models.AccountActivity(req.body);
  		doc.save(function(err) {
  			if (err) return res.send(err);
  			res.send({});
@@ -9,7 +9,7 @@
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.ProductCard.findByIdAndRemove(id,function(err,doc){
+ 		models.AccountActivity.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -17,7 +17,7 @@
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.ProductCard.findByIdAndUpdate(id, {
+ 		models.AccountActivity.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -31,7 +31,7 @@
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.ProductCard
+ 		models.AccountActivity
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -43,8 +43,9 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.ProductCard
+ 		models.AccountActivity
  			.find({})
+ 			.sort({_id: -1})
  			.skip(per * page)
  			.limit(per)
  			.exec(function(err, docs) {
@@ -56,32 +57,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add product/cards
+ 	 * add channel/account/activities
  	 * type:
  	 *     
  	 */
- 	app.post('/product/cards', add);
+ 	app.post('/channel/account/activities', add);
  	/**
- 	 * update product/cards
+ 	 * update channel/account/activities
  	 * type:
  	 *     
  	 */
- 	app.put('/product/cards/:id', update);
+ 	app.put('/channel/account/activities/:id', update);
 
  	/**
- 	 * delete product/cards
+ 	 * delete channel/account/activities
  	 * type:
  	 *     
  	 */
- 	app.delete('/product/cards/:id', remove);
+ 	app.delete('/channel/account/activities/:id', remove);
  	/**
- 	 * get product/cards
+ 	 * get channel/account/activities
  	 */
- 	app.get('/product/cards/:id', getOne);
+ 	app.get('/channel/account/activities/:id', getOne);
 
  	/**
- 	 * get product/cards
+ 	 * get channel/account/activities
  	 * type:
  	 */
- 	app.get('/product/cards', getMore);
+ 	app.get('/channel/account/activities', app.grant, getMore);
  };

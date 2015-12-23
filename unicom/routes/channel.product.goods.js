@@ -5,14 +5,57 @@ var logger = log4js.getLogger('server');
 logger.setLevel('DEBUG');
 
  exports = module.exports = function(app, models) {
+	var _ = require('underscore');
+ 	var async = require('async');
 
  	var add = function(req, res) {
- 		var doc = new models.PromoteProduct(req.body);
- 		doc.save(function(err) {
+ 		var mobiles = req.body.mobile || [];
+ 		mobiles = _.without(mobiles,'');
+ 		var docs = [];
+ 		_.each(mobiles, function(mobile){
+ 			docs.push({
+ 				customer: {
+ 					mobile: mobile,
+ 				},
+ 				product: req.body.product || {},
+ 				goods: req.body.goods || {},
+ 				status: '新建',
+ 				createBy: {
+ 					id: req.session.accountId,
+ 					name: req.session.username,
+ 					mobile: req.session.email,
+ 				}
+ 			});
+ 		});
+ 		async.waterfall(
+ 			[
+ 				function(callback){
+					models.WoOrder.create(docs,callback);
+ 				},
+ 				function(docs,callback){
+ 					var activity = {
+ 						uid: req.session.accountId,
+ 						username: req.session.username,
+ 						avatar: req.session.avatar || '/images/avatar.jpg',
+ 						type: 'text',
+ 						content: {
+ 							body: '向朋友推荐了<u>' + req.body.product.name + '</u>产品',
+ 						}
+ 					};
+ 					models.AccountActivity.create(activity,callback);
+ 				}
+ 			],function(err,result) {
  			if (err) return res.send(err);
  			res.send({});
  		});
  	};
+  	// var add = function(req, res) {
+ 	// 	var doc = new models.PromoteProduct(req.body);
+ 	// 	doc.save(function(err) {
+ 	// 		if (err) return res.send(err);
+ 	// 		res.send({});
+ 	// 	});
+ 	// };
  	var remove = function(req,res){
  		var id = req.params.id;
  		models.PromoteProduct.findByIdAndRemove(id,function(err,doc){
@@ -78,33 +121,33 @@ logger.setLevel('DEBUG');
  	 * router outline
  	 */
  	/**
- 	 * add promote/products
+ 	 * add channel/product/goods
  	 * type:
  	 *     
  	 */
- 	app.post('/promote/products', add);
+ 	app.post('/channel/product/goods', add);
  	/**
- 	 * update promote/products
+ 	 * update channel/product/goods
  	 * type:
  	 *     
  	 */
- 	app.put('/promote/products/:id', update);
+ 	app.put('/channel/product/goods/:id', update);
 
  	/**
- 	 * delete promote/products
+ 	 * delete channel/product/goods
  	 * type:
  	 *     
  	 */
- 	app.delete('/promote/products/:id', remove);
+ 	app.delete('/channel/product/goods/:id', remove);
  	/**
- 	 * get promote/products
+ 	 * get channel/product/goods
  	 */
- 	app.get('/promote/products/:id', app.grant, getOne);
+ 	app.get('/channel/product/goods/:id', app.grant, getOne);
 
  	/**
- 	 * get promote/products
+ 	 * get channel/product/goods
  	 * type:
  	 *      type=category&category=xxx
  	 */
- 	app.get('/promote/products', app.grant, getMore);
+ 	app.get('/channel/product/goods', app.grant, getMore);
  };

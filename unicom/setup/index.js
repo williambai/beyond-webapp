@@ -39,6 +39,9 @@ var dropCollections = function(done) {
 				models.PlatformRole.remove(callback);
 			},
 			function(callback){
+				models.PlatformApp.remove(callback);
+			},
+			function(callback){
 				models.Account.remove(callback);
 			},
 		],
@@ -58,6 +61,20 @@ var upsertFeatures = function(done) {
 	var features = require('./features');
 	async.eachSeries(features, function(feature, callback) {
 		models.PlatformFeature.create(feature, function(err) {
+			if (err) return callback(err);
+			callback(null);
+		});
+	}, done);
+};
+/**
+ * 
+ * create Feature
+ * 
+ */
+var upsertApps = function(done) {
+	var apps = require('./apps');
+	async.eachSeries(apps, function(app, callback) {
+		models.PlatformApp.create(app, function(err) {
 			if (err) return callback(err);
 			callback(null);
 		});
@@ -98,6 +115,7 @@ async.series(
 		dropCollections,
 		upsertFeatures,
 		upsertRoles,
+		upsertApps,
 		upsertAccounts,
 	],
 	function(err, result) {

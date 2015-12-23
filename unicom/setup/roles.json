@@ -35,17 +35,106 @@
 		}
 	}
 }, {
-	"name": "管理员",
-	"nickname": "admin",
-	"description": "管理员角色",
+	"name": "用户管理员",
+	"nickname": "admin_1",
+	"description": "管理用户，配置角色等",
 	"grant": {
-
+		"account": {
+			"route": "/accounts",
+			"nickname": "account",
+			"name": "用户管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"role": {
+			"route": "/platform/roles",
+			"nickname": "role",
+			"name": "角色管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		}
+	}
+}, {
+	"name": "页面配置管理员",
+	"nickname": "admin_page",
+	"description": "页面管理员角色",
+	"grant": {
+		"promote_product": {
+			"route": "/promote/products",
+			"nickname": "promote_product",
+			"name": "分类数据配置",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		}
 	}
 }, {
 	"name": "注册用户",
 	"nickname": "register",
 	"description": "注册用户角色",
 	"grant": {
-
+		"page_data": {
+			"route": "/page/data",
+			"nickname": "page_data",
+			"name": "流量产品",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		}
+	}
+}, {
+	"name": "渠道用户",
+	"nickname": "channel",
+	"description": "渠道用户角色",
+	"grant": {
+		"channel_account": {
+			"route": "/channel/accounts",
+			"nickname": "channel_account",
+			"name": "渠道用户账号",
+			"update": "true",
+			"add": "true",
+			"getOne": "true"
+		},
+		"channel_account_activity": {
+			"route": "/channel/account/activities",
+			"nickname": "channel_account_activity",
+			"name": "渠道用户动态",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"channel_order": {
+			"route": "/channel/orders",
+			"nickname": "channel_order",
+			"name": "渠道用户订单",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"channel_product_card": {
+			"route": "/channel/product/cards",
+			"nickname": "channel_product_card",
+			"name": "渠道可销售号卡产品",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"channel_product_goods": {
+			"route": "/channel/product/goods",
+			"nickname": "channel_product_goods",
+			"name": "渠道可推广产品",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		}
 	}
 }]

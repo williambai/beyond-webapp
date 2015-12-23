@@ -7,10 +7,10 @@
  			res.send({});
  		});
  	};
- 	var remove = function(req,res){
+ 	var remove = function(req, res) {
  		var id = req.params.id;
- 		models.PlatformApp.findByIdAndRemove(id,function(err,doc){
- 			if(err) return res.send(err);
+ 		models.PlatformApp.findByIdAndRemove(id, function(err, doc) {
+ 			if (err) return res.send(err);
  			res.send(doc);
  		});
  	};
@@ -31,6 +31,17 @@
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
+ 		if (id.length != 24) {
+ 			models.PlatformApp
+ 				.findOne({
+ 					nickname: id,
+ 				})
+ 				.exec(function(err, doc) {
+ 					if (err) return res.send(err);
+ 					res.send(doc);
+ 				});
+ 			return;
+ 		}
  		models.PlatformApp
  			.findById(id)
  			.exec(function(err, doc) {

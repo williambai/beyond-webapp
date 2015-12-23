@@ -1,0 +1,16 @@
+[{
+	"name": "系统管理",
+	"nickname": "superadmin",
+	"description": "后台系统配置管理",
+	"features": ["feature", "app", "role", "account"]
+}, {
+	"name": "运营后台管理",
+	"nickname": "admin",
+	"description": "运营后台管理员使用",
+	"features": ["role", "account", "promote_product"]
+}, {
+	"name": "渠道创富前台",
+	"nickname": "channel",
+	"description": "渠道创富前台APP",
+	"features": [ "channel_product_goods" , "channel_product_card" , "channel_order" , "channel_activity" , "channel_account"]
+}]

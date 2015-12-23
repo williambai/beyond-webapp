@@ -29,6 +29,6 @@
 				<p><%= model.description %></p>
 			</div>
 		</div>
-		<div id="recommendAddTemplate"></div>
+		<div id="dataAddView"></div>
 	</div>
 </div>

@@ -1,18 +1,18 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    recommendTpl = require('../templates/_entityRecommend.tpl'),
-	Recommend = require('../models/Recommend');
+    orderTpl = require('../templates/_entityData.tpl'),
+	ProductGoods = require('../models/ProductGoods');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
-	el: '#recommendForm',
+	el: '#addForm',
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Recommend();
-		var page = $(recommendTpl);
+		this.model = new ProductGoods();
+		var page = $(orderTpl);
 		var addTemplate = $('#addTemplate', page).html();
 		this.template = _.template(_.unescape(addTemplate || ''));
 		var successTpl = $('#successTemplate', page).html();

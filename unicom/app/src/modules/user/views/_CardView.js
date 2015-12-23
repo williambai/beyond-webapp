@@ -7,7 +7,7 @@ var config = require('../conf');
 
 Backbone.$ = $;
 
-var CardRecommendView = require('./_CardRecommend');
+var CardAddView = require('./_CardAdd');
 var CardPackageView = require('./_CardPackage');
 
 exports = module.exports = Backbone.View.extend({
@@ -57,7 +57,7 @@ exports = module.exports = Backbone.View.extend({
 		});
 		this.cardPackageView.trigger('load');
 
-		this.recommendView = new CardRecommendView({
+		this.recommendView = new CardAddView({
 			router: this.router,
 			el: '#recommendView',
 		});

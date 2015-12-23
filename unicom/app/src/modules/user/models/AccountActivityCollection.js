@@ -5,5 +5,5 @@ var AccountActivity = require('./AccountActivity');
 
 exports = module.exports = Backbone.Collection.extend({
 	model: AccountActivity,
-	url: config.api.host + '/account/activities',
+	url: config.api.host + '/channel/account/activities',
 });

@@ -5,5 +5,5 @@ var Order = require('./Order');
 
 exports = module.exports = Backbone.Collection.extend({
 	model: Order,
-	url: config.api.host + '/wo/orders',
+	url: config.api.host + '/channel/orders',
 });

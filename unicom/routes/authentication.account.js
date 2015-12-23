@@ -1,8 +1,9 @@
 var log4js = require('log4js');
 var path = require('path');
-log4js.configure(path.join(__dirname,'../config/log4js.json'));
+log4js.configure(path.join(__dirname, '../config/log4js.json'));
 var logger = log4js.getLogger('server');
 logger.setLevel('DEBUG');
+var util = require('util');
 
 module.exports = exports = function(app, models) {
 	var _ = require('underscore');
@@ -32,8 +33,11 @@ module.exports = exports = function(app, models) {
 
 		Account.create(user, function(err, doc) {
 			if (err) {
-				if(err.code == 11000){
-					return res.send({code: 11000, errmsg: '该邮箱已注册'});
+				if (err.code == 11000) {
+					return res.send({
+						code: 11000,
+						errmsg: '该邮箱已注册'
+					});
 				}
 				return res.send(err);
 			}
@@ -53,8 +57,8 @@ module.exports = exports = function(app, models) {
 					subject: config.mail.register_subject,
 					text: text,
 				},
-				function(err,info) {
-					if(err) return logger.error(err);
+				function(err, info) {
+					if (err) return logger.error(err);
 					logger.info(info);
 				}
 			);
@@ -117,7 +121,7 @@ module.exports = exports = function(app, models) {
 			});
 
 		async.waterfall([
-				function(callback){
+				function(callback) {
 					Account
 						.findOne({
 							email: email
@@ -139,17 +143,34 @@ module.exports = exports = function(app, models) {
 									code: 40403,
 									errmsg: '密码不正确。'
 								});
-							callback(null,account);
+							callback(null, account);
 						});
 				},
-				function role(account,callback){
-					logger.debug('role:');
-					account.grant = '';
-					callback(null,account);
+				function role(account, callback) {
+					logger.debug('account:' + JSON.stringify(account));
+					var roles = account.roles || [];
+					logger.debug('roles:' + JSON.stringify(roles));
+
+					models.PlatformRole
+						.find({
+							'nickname': roles,
+						})
+						.exec(function(err, docs) {
+							if (err) return callback(err);
+							logger.debug('docs: ' + JSON.stringify(docs));
+							docs = docs || [];
+							var grant = {};
+							_.each(docs, function(doc) {
+								_.extend(grant, doc.grant);
+							});
+							logger.debug('grant: ' + JSON.stringify(grant));
+							account.grant = grant;
+							callback(null, account);
+						});
 				}
 			],
-			function(err,account){
-				if(err) return res.send(err);
+			function(err, account) {
+				if (err) return res.send(err);
 				logger.info(email + ' login.');
 				req.session.loggedIn = true;
 				req.session.accountId = account._id;
@@ -157,12 +178,13 @@ module.exports = exports = function(app, models) {
 				req.session.username = account.username;
 				req.session.avatar = account.avatar || '';
 				req.session.grant = account.grant || [];
-				logger.debug('login session: ' + JSON.stringify(req.session));
+				logger.debug(req.session.email + 'login(session): ' + req.session);
 				res.send({
 					id: req.session.accountId,
 					email: req.session.email,
 					username: req.session.username,
 					avatar: req.session.avatar,
+					grant: req.session.grant
 				});
 
 			});
@@ -172,8 +194,9 @@ module.exports = exports = function(app, models) {
 
 	var logout = function(req, res) {
 		req.session.loggedIn = false;
+		req.session.grant = {};
+		logger.debug(req.session.email + ' logout(session): ' + req.session);
 		logger.info(req.session.email + ' logout.');
-		// logger.info(req.session);
 		res.sendStatus(200);
 	};
 
@@ -210,8 +233,8 @@ module.exports = exports = function(app, models) {
 						subject: config.mail.reset_subject,
 						text: text,
 					},
-					function(err,info) {
-						if(err) return logger.error(err);
+					function(err, info) {
+						if (err) return logger.error(err);
 						logger.info(info);
 					}
 				);
@@ -276,8 +299,8 @@ module.exports = exports = function(app, models) {
 				to: email,
 				subject: config.mail.invite_subject,
 				text: text,
-			}, function(err,info) {
-				if(err) return logger.error(err);
+			}, function(err, info) {
+				if (err) return logger.error(err);
 				logger.info(info);
 			});
 		});
@@ -292,11 +315,15 @@ module.exports = exports = function(app, models) {
 				id: req.session.accountId,
 				email: req.session.email,
 				username: req.session.username,
-				avatar: req.session.avatar
+				avatar: req.session.avatar,
+				grant: req.session.grant
 			});
 		} else {
 			logger.info(req.session.email + '(authenticated) is fail.');
-	 		res.send({code: 40100, errmsg: '401 Unauthorized.'});
+			res.send({
+				code: 40100,
+				errmsg: '401 Unauthorized.'
+			});
 		}
 	};
 

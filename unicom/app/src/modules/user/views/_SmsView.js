@@ -2,12 +2,12 @@ var _ = require('underscore');
 var Backbone = require('backbone'),
 	$ = require('jquery'),
     smsTpl = require('../templates/_entitySms.tpl'),
-	PromoteProduct = require('../models/PromoteProduct');
+	ProductGoods = require('../models/ProductGoods');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var RecommendAddView = require('./_RecommendAdd');
+var DataAddView = require('./_DataAdd');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -15,7 +15,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new PromoteProduct({_id: options.id});
+		this.model = new ProductGoods({_id: options.id});
 		var page = $(smsTpl);
 		var viewTemplate = $('#viewTemplate', page).html();
 		this.template = _.template(_.unescape(viewTemplate || ''));
@@ -37,15 +37,15 @@ exports = module.exports = Backbone.View.extend({
 
 	change: function(){
 		this.render();
-		this.recommendAddView = new RecommendAddView({
+		this.dataAddView = new DataAddView({
 			router: this.router,
-			el: '#recommendAddTemplate',
+			el: '#dataAddView',
 		});
-		this.recommendAddView.on('ready',this.recommendAddViewReady,this);
-		this.recommendAddView.trigger('load');
+		this.dataAddView.on('ready',this.dataAddViewReady,this);
+		this.dataAddView.trigger('load');
 	},
 
-	recommendAddViewReady: function(){
+	dataAddViewReady: function(){
 		var goods = this.model.get('goods');
 		this.$('form').prepend('<input type="hidden" name="product[id]" value="'+ this.model.get('_id') + '">');
 		this.$('form').prepend('<input type="hidden" name="product[name]" value="'+ this.model.get('subject') + '">');

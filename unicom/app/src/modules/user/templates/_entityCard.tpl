@@ -194,7 +194,7 @@
 			</div>
 		</form>
 	</div>
-	<div id="recommendTemplate">
+	<div id="addTemplate">
 		<form id="recommendForm">
 			<div class="panel panel-default">
 				<div class="panel-heading">

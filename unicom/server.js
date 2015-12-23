@@ -1,4 +1,5 @@
 var log4js = require('log4js');
+var _ = require('underscore');
 var util = require('util');
 var fs = require('fs');
 var http = require('http');
@@ -23,6 +24,7 @@ app.randomHex = function(){
 
 //import the data layer
 var mongoose = require('mongoose');
+
 var config = {
 		server: require('./config/server'),
 		mail: require('./config/mail'),
@@ -105,21 +107,36 @@ app.get('/', function(req,res){
 
 //授权判断中间件
 app.grant = function(req,res,next){
-	logger.debug('req.path: ' + util.inspect(req.path));
-	logger.debug('req.params.id: ' + util.inspect(req.params.id));
-	logger.debug('req.method: ' + req.method);
+	logger.debug('session(grant):' + JSON.stringify(req.session));
+	logger.debug('req.path(grant): ' + util.inspect(req.path));
+	logger.debug('req.params.id(grant): ' + util.inspect(req.params.id));
+	logger.debug('req.method(grant): ' + req.method);
 	var path = req.path;
 	if((req.method == 'PUT' || 
 		req.method == 'DELETE' ||
 		req.method == 'GET') && req.params.id){		
 		var id = path.lastIndexOf('/');
-		logger.debug(id);
+		logger.debug('path.lastIndexOf "/"(grant): ' + id);
 		if(id != -1) path = path.slice(0, id);
-		logger.debug(path);
 	}
+	logger.debug('route(grant):' + path);
+
+	var grant = req.session.grant || {};
+	var features = _.values(grant);
+	logger.debug('features(grant): ' + JSON.stringify(features));
+	var feature = (_.where(features,{route: path}))[0];
+	if(_.isUndefined(feature)) return res.status(401).end();
+	logger.debug('current feature(grant):' + JSON.stringify(feature));
+
 	var regexp_path = new RegExp(path,'i');
-	logger.debug(regexp_path);
-	if(regexp_path.test(req.session.grant)) return next();
+	logger.debug('regexp_path(grant):' + regexp_path);
+	if(regexp_path.test(feature.route)){
+		if(req.method == 'POST' && feature.add) return next();
+		if(req.method == 'PUT' && feature.update) return next();
+		if(req.method == 'DELETE' && feature.remove) return next();
+		if(req.method == 'GET' && req.params.id && feature.getOne) return next();
+		if(req.method == 'GET' && !(req.parmas && req.params.id) && feature.getMore) return next();
+	}
 	return res.status(401).end();
 };
 

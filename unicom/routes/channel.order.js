@@ -1,5 +1,10 @@
- exports = module.exports = function(app, models) {
+var log4js = require('log4js'); 
+var path = require('path');
+log4js.configure(path.join(__dirname,'../config/log4js.json'));
+var logger = log4js.getLogger('server');
+logger.setLevel('DEBUG');
 
+exports = module.exports = function(app, models) {
  	var add = function(req, res) {
  		var doc = new models.WoOrder(req.body);
  		doc.save(function(err) {
@@ -85,34 +90,34 @@
  	 * router outline
  	 */
  	/**
- 	 * add wo/orders
+ 	 * add channel/orders
  	 * type:
  	 *     
  	 */
- 	app.post('/wo/orders', add);
+ 	app.post('/channel/orders', app.grant, add);
  	/**
- 	 * update wo/orders
+ 	 * update channel/orders
  	 * type:
  	 *     
  	 */
- 	app.put('/wo/orders/:id', update);
+ 	app.put('/channel/orders/:id', update);
 
  	/**
- 	 * delete wo/orders
+ 	 * delete channel/orders
  	 * type:
  	 *     
  	 */
- 	app.delete('/wo/orders/:id', remove);
+ 	app.delete('/channel/orders/:id', remove);
  	/**
- 	 * get wo/orders
+ 	 * get channel/orders
  	 */
- 	app.get('/wo/orders/:id', getOne);
+ 	app.get('/channel/orders/:id', getOne);
 
  	/**
- 	 * get wo/orders
+ 	 * get channel/orders
  	 * type:
  	 * 	    type=search&searchStr=
  	 *      type=stat
  	 */
- 	app.get('/wo/orders', getMore);
+ 	app.get('/channel/orders', app.grant, getMore);
  };
