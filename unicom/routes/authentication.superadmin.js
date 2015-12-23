@@ -1,9 +1,7 @@
-var log4js = require('log4js');
 var util = require('util');
-var path = require('path');
-log4js.configure(path.join(__dirname,'../config/log4js.json'));
-var logger = log4js.getLogger('server');
-logger.setLevel('DEBUG');
+var log4js = require('log4js');
+var logger = log4js.getLogger('route:authentication.superadmin');
+logger.setLevel('INFO');
 
 exports = module.exports = function(app, models) {
  	var _ = require('underscore');

@@ -1,3 +1,8 @@
+var util = require('util');
+var log4js = require('log4js');
+var logger = log4js.getLogger('route:authentication.admin');
+logger.setLevel('INFO');
+
  exports = module.exports = function(app, models) {
  	var _ = require('underscore');
  	var crypto = require('crypto');

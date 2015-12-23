@@ -1,8 +1,7 @@
+var util = require('util');
 var log4js = require('log4js');
-var path = require('path');
-log4js.configure(path.join(__dirname,'../config/log4js.json'));
-var logger = log4js.getLogger('server');
-logger.setLevel('DEBUG');
+var logger = log4js.getLogger('route:product.event');
+logger.setLevel('INFO');
 
  exports = module.exports = function(app, models) {
 

@@ -2,7 +2,7 @@ var log4js = require('log4js');
 var path = require('path');
 log4js.configure(path.join(__dirname, '../../config/log4js.json'));
 var logger = log4js.getLogger('captcha');
-logger.setLevel('DEBUG');
+
 
 var parser = {};
 var fs = require('fs');
