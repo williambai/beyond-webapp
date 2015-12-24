@@ -40,9 +40,9 @@ exports =module.exports = function(app,models){
  	/**
  	 * add an attachment
  	 */
- 	app.post('/attachments', app.grant, add);
+ 	app.post('/attachments', add);
  	/**
  	 * remove an attachment
  	 */
- 	app.delete('/attachments', app.grant, remove);
+ 	app.delete('/attachments', remove);
 };

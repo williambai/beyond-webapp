@@ -1,17 +1,5 @@
-var _ = require('underscore');
-var Backbone = require('backbone');
+var Role =  require('../../../models/Role');
 var config = require('../conf');
-
-exports = module.exports = Backbone.Model.extend({
-	idAttribute: '_id',
-	urlRoot: config.api.host + '/platform/roles',
-	defaults: {
-		status: {}
-	},
-	validation: {
-		name: {
-			required: true,
-			msg: '请输入名称'
-		}
-	},
+exports = module.exports = Role.extend({
+	urlRoot: config.api.host + '/admin/roles',
 });

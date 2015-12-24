@@ -1,31 +1,30 @@
 var _ = require('underscore');
-var FormView = require('./__FormView'),
-	$ = require('jquery'),
-	Login = require('../models/Login');
-var accountTpl = require('../templates/_entityAccount.tpl');
+var $ = require('jquery'),
+	FormView = require('./__FormView'),
+	ForgotPassword = require('../models/ForgotPassword');
+var accountTpl = require('../templates/_entityMyAccount.tpl');
+
+var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
-	el: '#loginForm',
+	el: '#forgotPasswordForm',
 
 	initialize: function(options) {
 		var page = $(accountTpl);
-		var loginTemplate = $('#loginTemplate', page).html();
-		this.template = _.template(_.unescape(loginTemplate || ''));
-		this.appEvents = options.appEvents;
-		this.model = new Login();
+		var forgotPasswordTemplate = $('#forgotPasswordTemplate', page).html();
+		this.template = _.template(_.unescape(forgotPasswordTemplate || ''));
+		var forgotPasswordSuccessTemplate = $('#forgotPasswordSuccessTemplate', page).html();
+		this.successTemplate = _.template(_.unescape(forgotPasswordSuccessTemplate || ''));
+		this.model = new ForgotPassword();
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
-		'keyup input[type=text]': 'inputText',
-		'blur input[type=text]': 'inputText',
-		'keyup input[type=password]': 'inputText',
-		'submit form': 'login',
-		'swiperight': 'toRegisterForm',
+		'keyup input[type=text]': 'inputText',		
+		'submit form': 'forgotPassword'
 	},
-
-
+	
 	inputText: function(evt){
 		var that = this;
 		//clear error
@@ -43,7 +42,7 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	login: function() {
+	forgotPassword: function() {
 		var that = this;
 		//clear errors
 		this.$('.form-group').removeClass('has-error');
@@ -63,7 +62,7 @@ exports = module.exports = FormView.extend({
 
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		// console.log(this.model.toJSON());
+		// console.log(this.model.attributes);
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true
@@ -72,20 +71,11 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	toRegisterForm: function() {
-		window.location.hash = 'register';
-		return false;
+	done: function(){
+		this.$el.html(this.successTemplate());
 	},
-
-	done: function(data) {
-		this.appEvents.trigger('logined',data);
-		window.location.hash = 'index';
-	},
-
-	render: function() {
-		this.$el.html(this.template({
-			model: this.model.toJSON()
-		}));
+	render: function(){
+		this.$el.html(this.template({model: this.model.toJSON()}));
 		return this;
 	},
 });

@@ -51,6 +51,7 @@ exports = module.exports = Backbone.View.extend({
 		//clean error
 		this.$('.error').empty();
 		//set error
+		console.log(response)
 		this.$('form').prepend('<div class="error"><div class="alert alert-danger">' + response.status + ': ' + response.responseText + '</div></div>');
 		this.$('.error').slideDown();
 	},

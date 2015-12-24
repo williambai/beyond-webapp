@@ -12,5 +12,5 @@
 	"name": "渠道创富前台",
 	"nickname": "channel",
 	"description": "渠道创富前台APP",
-	"features": [ "channel_product_goods" , "channel_product_card" , "channel_order" , "channel_activity" , "channel_account"]
+	"features": ["channel_product_goods", "channel_product_card", "channel_order", "channel_account_activity", "channel_account"]
 }]

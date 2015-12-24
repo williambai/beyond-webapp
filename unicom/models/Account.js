@@ -23,7 +23,11 @@ module.exports = exports = function(mongoose){
 				message: String,
 			},
 			createby: {
-				uid: String,
+				uid: String,//deprecated!
+				id: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: 'Account',
+				},
 				username: String,
 				avatar: String,
 			},

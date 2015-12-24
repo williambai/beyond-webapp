@@ -4,15 +4,13 @@ var Backbone = require('backbone');
 
 
 var LayoutView = require('./views/__Layout');
-var RegisterView = require('./views/_AccountRegister');
-var ForgotPasswordView = require('./views/_AccountForgotPassword');
-var LoginView = require('./views/_AccountLogin');
-var ProfileViewView = require('./views/_AccountView');
-var ProfileEditView = require('./views/_AccountEdit');
+var RegisterView = require('../../views/_MyAccountRegister');
+var ForgotPasswordView = require('../../views/_MyAccountForgotPassword');
+var LoginView = require('../../views/_MyAccountLogin');
+var MyAccountViewView = require('../../views/_MyAccountView');
+var MyAccountEditView = require('../../views/_MyAccountEdit');
 var IndexView = require('./views/Index');
-
-var CardIndexView = require('./views/_CardIndex');
-var CardViewView = require('./views/_CardView');
+var ActivityIndexView = require('./views/_ActivityIndex');
 
 var PushIndexView = require('./views/_PushIndex');
 var PushViewView = require('./views/_PushView');
@@ -20,8 +18,9 @@ var DataIndexView = require('./views/_DataIndex');
 var DataViewView = require('./views/_DataView');
 var SmsIndexView = require('./views/_SmsIndex');
 var SmsViewView = require('./views/_SmsView');
+var CardIndexView = require('./views/_CardIndex');
+var CardViewView = require('./views/_CardView');
 var OrderIndexView = require('./views/_OrderIndex');
-var ActivityIndexView = require('./views/_ActivityIndex');
 
 var config = require('./conf');
 var MENU_DEFAULT = require('./conf/menu');
@@ -42,18 +41,16 @@ exports = module.exports = Backbone.Router.extend({
 		'profile/:id': 'profileView',
 		'profile/edit/me': 'profileEdit',
 
-		'card/index': 'cardIndex',
-		'card/view/:id': 'cardView',
-
+		'activity/index': 'activityIndex',
 		'push/index': 'pushIndex',
 		'push/view/:id': 'pushView',
 		'data/index': 'dataIndex',
 		'data/view/:id': 'dataView',
 		'sms/index': 'smsIndex',
 		'sms/view/:id': 'smsView',
+		'card/index': 'cardIndex',
+		'card/view/:id': 'cardView',
 		'order/index': 'orderIndex',
-		'activity/index': 'activityIndex',
-
 
 		'*path': 'index',
 	},
@@ -181,11 +178,12 @@ exports = module.exports = Backbone.Router.extend({
 		if (id == this.account.id) {
 			id = 'me';
 		}
-		var profileViewView = new ProfileViewView({
+		var profileViewView = new MyAccountViewView({
+			prefix: '',
+			router: this,
 			el: '#content',
 			id: id,
 			appEvents: this.appEvents,
-			socketEvents: this.socketEvents
 		});
 		this.changeView(profileViewView);
 		profileViewView.trigger('load');
@@ -197,9 +195,10 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		//this.appEvents.trigger('set:brand', '编辑个人资料');
-		var profileEditView = new ProfileEditView({
+		var profileEditView = new MyAccountEditView({
+			router: this,
+			el: '#content',
 			id: 'me',
-			el: '#content'
 		});
 		this.changeView(profileEditView);
 		profileEditView.trigger('load');

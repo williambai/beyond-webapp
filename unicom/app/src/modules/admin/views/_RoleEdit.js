@@ -5,8 +5,6 @@ var FormView = require('./__FormView'),
 	Role = require('../models/Role');
 var config = require('../conf');
 
-var PlatformAppCollection = require('../models/PlatformAppCollection');
-
 exports = module.exports = FormView.extend({
 
 	el: '#roleForm',
@@ -30,8 +28,6 @@ exports = module.exports = FormView.extend({
 
 	load: function(){
 		if(this.model.isNew()){
-			//get apps
-			this.loadApps();
 			//get features
 			this.loadFeatures();
 			this.modelFilled = true;
@@ -45,29 +41,10 @@ exports = module.exports = FormView.extend({
 
 	},
 
-	loadApps: function(callback){
-		var that = this;
-		var platformAppCollection = new PlatformAppCollection();
-		platformAppCollection.fetch({
-			xhrFields: {
-				withCredentials: true
-			},
-			success: function(collection){
-				collection = collection || [];
-				var appsView = '';
-				collection.each(function(model){
-					appsView += '<input type="radio" name="app" value="'+ model.get('nickname') +'">&nbsp;'+ model.get('name') +'&nbsp;&nbsp;&nbsp;';
-				});
-				that.$('#apps').html(appsView);
-				callback && callback();
-			}
-		});
-	},
-
 	loadFeatures: function(callback){
 		var that = this;
 		$.ajax({
-			url: config.api.host + '/platform/features',
+			url: config.api.host + '/platform/features?app=admin',
 			type: 'GET',
 			xhrFields: {
 				withCredentials: true
@@ -76,8 +53,18 @@ exports = module.exports = FormView.extend({
 			data = data || [];
 			var checkboxs = '';
 			data.forEach(function(item){
-				checkboxs += '<input type="checkbox" name="features[]" value="'+ item.nickname +'">&nbsp;'+ item.name +'&nbsp';
-			});
+				checkboxs += '<input type="checkbox" id='+ item.nickname +'">&nbsp;'+ item.name +'&nbsp;';
+				checkboxs += '<div style="padding-left:30px;">'
+				checkboxs += '<input type="checkbox" name="grant['+ item.nickname +'][getOne]" value="true">&nbsp;&nbsp;查看单条&nbsp;&nbsp;';
+				checkboxs += '<input type="checkbox" name="grant['+ item.nickname +'][getMore]" value="true">&nbsp;&nbsp;查看多条&nbsp;&nbsp;';
+				checkboxs += '<input type="checkbox" name="grant['+ item.nickname +'][add]" value="true">&nbsp;&nbsp;新增&nbsp;&nbsp;';
+				checkboxs += '<input type="checkbox" name="grant['+ item.nickname +'][update]" value="true">&nbsp;&nbsp;修改&nbsp;&nbsp;';
+				checkboxs += '<input type="checkbox" name="grant['+ item.nickname +'][remove]" value="true">&nbsp;&nbsp;删除&nbsp;&nbsp;';
+				checkboxs += '</div>';
+				checkboxs += '<input type="hidden" name="grant[' + item.nickname + '][name]" value="' + item.name + '">' ;
+				checkboxs += '<input type="hidden" name="grant[' + item.nickname + '][nickname]" value="' + item.nickname + '">' ;
+				checkboxs += '<input type="hidden" name="grant[' + item.nickname + '][route]" value="' + item.route + '">' ;
+			}); 
 			that.$('#features').html(checkboxs);
 			callback && callback();
 		});
@@ -141,18 +128,26 @@ exports = module.exports = FormView.extend({
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
-			//get apps
-			this.loadApps(function(){
-				//set apps
-				var app = that.model.get('app');
-				that.$('input[name="app"][value="'+ app +'"]').attr('checked', true);
-			});
 			//get features
 			this.loadFeatures(function(){
 				//set features
-				var features = that.model.get('features');
-				features.forEach(function(item){
-					that.$('input[name="features[]"][value='+ item + ']').attr('checked', true);
+				var features = that.model.get('grant');
+				_.each(features,function(feature){
+					if(feature.getOne){
+						that.$('input[name="grant[' + feature.nickname + '][getOne]"]').attr('checked', true);
+					}
+					if(feature.getMore){
+						that.$('input[name="grant[' + feature.nickname + '][getMore]"]').attr('checked', true);
+					}
+					if(feature.add){
+						that.$('input[name="grant[' + feature.nickname + '][add]"]').attr('checked', true);
+					}
+					if(feature.remove){
+						that.$('input[name="grant[' + feature.nickname + '][remove]"]').attr('checked', true);
+					}
+					if(feature.update){
+						that.$('input[name="grant[' + feature.nickname + '][update]"]').attr('checked', true);
+					}
 				});
 			});
 		}else{

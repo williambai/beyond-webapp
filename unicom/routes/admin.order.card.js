@@ -12,7 +12,7 @@
  			model.items.push(item);
  		}
  		res.send(model);
- 		// var doc = new models.OrderCard(model);
+ 		// var doc = new models.Order(model);
  		// doc.save(function(err) {
  		// 	if (err) return res.send(err);
  		// 	res.send({});
@@ -20,7 +20,7 @@
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.OrderCard.findByIdAndRemove(id,function(err,doc){
+ 		models.Order.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -28,7 +28,7 @@
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.OrderCard.findByIdAndUpdate(id, {
+ 		models.Order.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -42,7 +42,7 @@
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.OrderCard
+ 		models.Order
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -54,8 +54,11 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.OrderCard
- 			.find({})
+ 		models.Order
+ 			.find({
+ 				'category': '号卡'
+ 			})
+ 			.sort({_id: -1})
  			.skip(per * page)
  			.limit(per)
  			.exec(function(err, docs) {
@@ -67,32 +70,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add order/cards
+ 	 * add admin/order/cards
  	 * type:
  	 *     
  	 */
- 	app.post('/order/cards', add);
+ 	app.post('/admin/order/cards', add);
  	/**
- 	 * update order/cards
+ 	 * update admin/order/cards
  	 * type:
  	 *     
  	 */
- 	app.put('/order/cards/:id', update);
+ 	app.put('/admin/order/cards/:id', update);
 
  	/**
- 	 * delete order/cards
+ 	 * delete admin/order/cards
  	 * type:
  	 *     
  	 */
- 	app.delete('/order/cards/:id', remove);
+ 	app.delete('/admin/order/cards/:id', remove);
  	/**
- 	 * get order/cards
+ 	 * get admin/order/cards
  	 */
- 	app.get('/order/cards/:id', getOne);
+ 	app.get('/admin/order/cards/:id', getOne);
 
  	/**
- 	 * get order/cards
+ 	 * get admin/order/cards
  	 * type:
  	 */
- 	app.get('/order/cards', getMore);
+ 	app.get('/admin/order/cards', getMore);
  };

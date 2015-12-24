@@ -10,17 +10,23 @@
  			res.send({});
  		});
  	};
- 	var remove = function(req,res){
+ 	var remove = function(req, res) {
  		var id = req.params.id;
- 		models.PlatformRole.findByIdAndRemove(id,function(err,doc){
- 			if(err) return res.send(err);
+ 		models.PlatformRole.findOneAndRemove({
+ 			_id: id,
+ 			'createBy.id': req.session.accountId
+ 		}, function(err, doc) {
+ 			if (err) return res.send(err);
  			res.send(doc);
  		});
  	};
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.PlatformRole.findByIdAndUpdate(id, {
+ 		models.PlatformRole.findOneAndUpdate({
+ 				_id: id,
+ 				'createBy.id': req.session.accountId
+ 			}, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -28,17 +34,26 @@
  			},
  			function(err, doc) {
  				if (err) return res.send(err);
- 				res.send(doc);
+ 				res.send(doc || {});
  			}
  		);
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
  		models.PlatformRole
- 			.findById(id)
+ 			.findOne({
+ 				_id: id,
+ 				$or: [{
+ 					'createBy.id': req.session.accountId,
+ 				}, {
+ 					'nickname': {
+ 						$regex: /^admin_*/i,
+ 					}
+ 				}]
+ 			})
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
- 				res.send(doc);
+ 				res.send(doc || {});
  			});
  	};
  	var getMore = function(req, res) {
@@ -47,7 +62,18 @@
  		page = (!page || page < 0) ? 0 : page;
 
  		models.PlatformRole
- 			.find({})
+ 			.find({
+ 				$or: [{
+ 					'createBy.id': req.session.accountId,
+ 				}, {
+ 					'nickname': {
+ 						$regex: /^admin_*/i,
+ 					}
+ 				}]
+ 			})
+ 			.sort({
+ 				_id: -1
+ 			})
  			.skip(per * page)
  			.limit(per)
  			.exec(function(err, docs) {
@@ -59,32 +85,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add platform/roles
+ 	 * add admin/roles
  	 * type:
  	 *     
  	 */
- 	app.post('/platform/roles', add);
+ 	app.post('/admin/roles', add);
  	/**
- 	 * update platform/roles
+ 	 * update admin/roles
  	 * type:
  	 *     
  	 */
- 	app.put('/platform/roles/:id', update);
+ 	app.put('/admin/roles/:id', update);
 
  	/**
- 	 * delete platform/roles
+ 	 * delete admin/roles
  	 * type:
  	 *     
  	 */
- 	app.delete('/platform/roles/:id', remove);
+ 	app.delete('/admin/roles/:id', remove);
  	/**
- 	 * get platform/roles
+ 	 * get admin/roles
  	 */
- 	app.get('/platform/roles/:id', getOne);
+ 	app.get('/admin/roles/:id', getOne);
 
  	/**
- 	 * get platform/roles
+ 	 * get admin/roles
  	 * type:
  	 */
- 	app.get('/platform/roles', getMore);
+ 	app.get('/admin/roles', getMore);
  };

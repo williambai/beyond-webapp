@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
 	FormView = require('./__FormView');
-var accountTpl = require('../templates/_entityAccount.tpl');
+var accountTpl = require('../templates/_entityMyAccount.tpl');
 
 var config = require('../conf');
 

@@ -42,11 +42,16 @@
 					&nbsp;数据维护
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#logout">
+				<a class="list-group-item" href="#profile/me">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;我的资料
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<!-- <a class="list-group-item" href="#logout">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;退出
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
+				</a> -->
 
 			</div>
 			<br/>

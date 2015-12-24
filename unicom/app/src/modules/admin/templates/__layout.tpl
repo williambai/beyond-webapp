@@ -11,7 +11,27 @@
 						<i class="fa fa-chevron-right"></i>
 					</span>
 				</a>
-				<a class="list-group-item" href="#channel/index">
+				<a class="list-group-item" href="#order/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;订单管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#order/card/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;卡号订单
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#role/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;角色设置
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#account/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;用户管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<!-- <a class="list-group-item" href="#channel/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;渠道管理
 					<i class="fa fa-chevron-right pull-right"></i>
@@ -30,12 +50,7 @@
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;卡号管理
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
-				<a class="list-group-item" href="#order/card/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;卡号订单
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
+				</a> -->
 				<!-- <a class="list-group-item" href="#revenue/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;金币管理
@@ -53,11 +68,7 @@
 				</a> -->
 			</div>
 			<div class="list-group">
-				<a class="list-group-item" href="#account/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;用户管理
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
+				<!-- 
 				<a class="list-group-item" href="#page/banner/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;首页轮播配置
@@ -71,11 +82,6 @@
 				<a class="list-group-item" href="#promote/media/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;图片管理
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
-				<a class="list-group-item" href="#role/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;角色设置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#department/index">
@@ -107,17 +113,17 @@
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;用户反馈
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
+				</a> -->
 				<a class="list-group-item" href="#profile/me">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;我的资料
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#logout">
+				<!-- <a class="list-group-item" href="#logout">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;退出
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
+				</a> -->
 			</div>
 			<div id="projectlist"></div>
 			<br/>

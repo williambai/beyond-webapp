@@ -175,7 +175,7 @@ module.exports = exports = function(app, models) {
 				req.session.email = account.email;
 				req.session.username = account.username;
 				req.session.avatar = account.avatar || '';
-				req.session.grant = account.grant || [];
+				req.session.grant = account.grant || {};
 				logger.debug(req.session.email + 'login(session): ' + req.session);
 				res.send({
 					id: req.session.accountId,
@@ -194,8 +194,8 @@ module.exports = exports = function(app, models) {
 		req.session.loggedIn = false;
 		req.session.grant = {};
 		logger.debug(req.session.email + ' logout(session): ' + req.session);
-		logger.info(req.session.email + ' logout.');
-		res.sendStatus(200);
+		logger.info('logout(admin): ' + req.session.email);
+		res.send({});
 	};
 
 	var forgotPassword = function(req, res) {

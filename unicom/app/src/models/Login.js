@@ -1,15 +1,16 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var config = require('../conf');
-var _ = require('underscore');
-var Backbone = require('backbone');
-var config = require('../conf');
 var validation = require('backbone-validation');
 _.extend(Backbone.Model.prototype,validation.mixin);
 
 exports = module.exports = Backbone.Model.extend({
+
+	initialize: function(options){
+		this.url = options.url || this.url;
+	},
 	
-	url: config.api.host + '/admin/login',
+	url: config.api.host + '/login',
 
 	validation: {
 		'email': {

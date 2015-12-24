@@ -2,8 +2,8 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
 	FormView = require('./__FormView'),
-	accountTpl = require('../templates/_entityAccount.tpl'),
-	Account = require('../models/Account');
+	accountTpl = require('../templates/_entityMyAccount.tpl'),
+	Account = require('../models/MyAccount');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -15,6 +15,7 @@ exports = module.exports = FormView.extend({
 	modelFilled: false,
 
 	initialize: function(options) {
+		this.router = options.router;
 		var page = $(accountTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
@@ -142,7 +143,7 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			window.location.hash = 'profile/me';
+			this.router.navigate('profile/me',{trigger: true, replace: true});
 		}
 	},
 

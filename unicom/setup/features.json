@@ -23,6 +23,18 @@
 	"route": "/accounts",
 	"status": "有效"
 },{
+	"name": "订单管理",
+	"nickname": "admin_order",
+	"description": "订单管理，修改客户信息，订单状态等",
+	"route": "/admin/orders",
+	"status": "有效"
+},{
+	"name": "号卡订单",
+	"nickname": "admin_order_card",
+	"description": "号卡订单的创建，删除和修改",
+	"route": "/admin/order/cards",
+	"status": "有效"
+},{
 	"name": "分类数据配置",
 	"nickname": "promote_product",
 	"description": "分类数据配置管理",

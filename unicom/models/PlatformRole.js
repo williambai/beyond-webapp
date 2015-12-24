@@ -1,10 +1,16 @@
-module.exports = exports = function(mongoose){
+module.exports = exports = function(mongoose) {
 
 	var schema = new mongoose.Schema({
 		name: String,
 		nickname: String,
 		description: String,
 		grant: {},
+		createBy: {
+			id: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Account',
+			}
+		}
 		// app: String,
 		// status: {
 		// 	type: String,
@@ -15,6 +21,6 @@ module.exports = exports = function(mongoose){
 		// }
 	});
 
-	schema.set('collection','platform.roles');
-	return mongoose.model('PlatformRole',schema);
+	schema.set('collection', 'platform.roles');
+	return mongoose.model('PlatformRole', schema);
 };

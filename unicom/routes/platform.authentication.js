@@ -1,7 +1,7 @@
 var util = require('util');
 var log4js = require('log4js');
 var logger = log4js.getLogger('route:authentication.superadmin');
-logger.setLevel('INFO');
+logger.setLevel('DEBUG');
 
 exports = module.exports = function(app, models) {
  	var _ = require('underscore');
@@ -28,15 +28,12 @@ exports = module.exports = function(app, models) {
  				errmsg: 'password is incorrect.'
  			});
  		logger.info(email + ' login.');
- 		//grant
- 		var grants = req.session.grant.split(';');
- 		grants = _.without(grants,'');
- 		var grant_superadmin = ['/platform/apps','/platform/features'];
- 		var grants_new = grants.concat(grant_superadmin);
- 		grants_new = _.uniq(grants_new);
+ 		logger.debug('session(superadmin):' + JSON.stringify(req.session));
  		req.session.isSuperAdmin = true;
- 		req.session.grant = grants_new.join(';');
- 		logger.debug(email + ' new grant: '+ util.inspect(req.session.grant));
+ 		//grant_super
+ 		var grant = {};
+ 		req.session.grant_super = grant;
+ 		logger.debug(email + ' new grant: '+ util.inspect(req.session.grant_super));
  		logger.info(email + ' is granted.');
  		res.send({
  			email: email
@@ -45,23 +42,9 @@ exports = module.exports = function(app, models) {
 
  	var logout = function(req, res) {
 		req.session.isSuperAdmin = false;
- 		var email = req.session.email || '';
- 		var grant = req.session.grant || '';
- 		if(_.isEmpty(email)) logger.error('email is lost.');
- 		if(_.isEmpty(grant)) logger.error('grant is lost.');
- 		// cancel grant
- 		req.session.grant = '';
- 		// var grants = grant.split(';');
- 		// grants = _.without(grants, '');
- 		// logger.debug(grants);
- 		// var grant_superadmin = ['/platform/apps','/platform/features'];
- 		// _.each(grant_superadmin,function(item){
- 		// 	grants = _.without(grants,item);
- 		// })
- 		// logger.debug(grants);
- 		// req.session.grant = grants.join(';') || '';
- 		// logger.debug(email + ' new grant: '+ req.session.grant);
- 		logger.info(email + ' super admin logout.');
+ 		req.session.grant_super = {};
+		logger.debug(req.session.email + ' logout(session): ' + req.session);
+ 		logger.info('logout(superadmin): ' + req.session.email);
  		res.send({});
  	};
 
@@ -71,7 +54,7 @@ exports = module.exports = function(app, models) {
  		if(_.isEmpty(email)) logger.error('email is lost.');
  		if(_.isUndefined(grant)) logger.error('grant is lost.');
  		logger.info(email + ' access.');
- 		logger.debug(email + ' grant: ' + grant);
+ 		logger.debug(email + ' grant: ' + JSON.stringify(grant));
  		if (req.session.isSuperAdmin) return res.send({});
  		res.send({
  			code: 40100,

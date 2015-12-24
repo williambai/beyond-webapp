@@ -6,6 +6,18 @@ exports = module.exports = Backbone.Model.extend({
 	
 	url: config.api.host + '/resetPassword',
 
+	validation: {
+	    password: {
+			required: true,
+	    	minLength: 5,
+	    	msg:'密码长度至少五位'
+	    },
+	    // cpassword: function(val,attr,complateState){
+	    // 	console.log(complateState)
+	    // 	var password = complateState.password;
+	    // 	if(val != password) return '两次输入不一致';
+	    // },
+	},
 	validate: function(attrs, options){
 		var errors = [];
 

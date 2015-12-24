@@ -6,23 +6,10 @@
  	var Account = models.Account;
 
  	var add = function(req, res) {
- 		var account = req.body;
- 		// role
- 		var roles = account.role || [];
- 		roles = _.omit(roles, '');
- 		if(_.isEmpty(roles)) account = _.omit(account, 'role');
-
- 		models.Account.create(account, function(err) {
- 			if (err) return res.send(err);
- 			res.send({});
- 		});
+		res.send({});
  	};
 	var remove = function(req,res){
- 		var id = req.params.id;
- 		models.Account.findByIdAndRemove(id,function(err,doc){
- 			if(err) return res.send(err);
- 			res.send(doc);
- 		});
+		res.send({});
  	};
 
  	var update = function(req, res) {
@@ -89,7 +76,7 @@
  			})
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
- 				res.send(doc);
+ 				res.send(doc || {});
  			});
  	};
 
@@ -142,29 +129,29 @@
  	 * add account
  	 *     
  	 */
- 	app.post('/accounts', add);
+ 	app.post('/channel/accounts', app.grant, add);
  	/**
  	 * update account
  	 * type:
  	 *     avatar
  	 *     
  	 */
- 	app.put('/accounts/:id', update);
+ 	app.put('/channel/accounts/:id', app.grant, update);
 
  	/**
  	 * delete account
  	 *     
  	 */
- 	app.delete('/accounts/:id', remove);
+ 	app.delete('/channel/accounts/:id', app.grant, remove);
 	/**
  	 * get account
  	 */
- 	app.get('/accounts/:id', getOne);
+ 	app.get('/channel/accounts/:id', getOne);
 
  	/**
  	 * get accounts
  	 * type:
  	 *    search
  	 */
- 	app.get('/accounts', getMore);
+ 	app.get('/channel/accounts', app.grant, getMore);
  }

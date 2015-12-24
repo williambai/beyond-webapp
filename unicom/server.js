@@ -50,8 +50,8 @@ var models = {
 		PromoteEvent: require('./models/PromoteEvent')(mongoose),
 		PromoteMedia: require('./models/PromoteMedia')(mongoose),
 		ProductCard: require('./models/ProductCard')(mongoose),
-		OrderCard: require('./models/OrderCard')(mongoose),
-		WoOrder: require('./models/WoOrder')(mongoose),
+		// OrderCard: require('./models/OrderCard')(mongoose),
+		// WoOrder: require('./models/WoOrder')(mongoose),
 		WoRevenue: require('./models/WoRevenue')(mongoose),
 		GoodsEntity: require('./models/GoodsEntity')(mongoose),
 	};

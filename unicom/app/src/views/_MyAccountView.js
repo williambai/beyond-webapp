@@ -2,8 +2,8 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
 	FormView = require('./__FormView'),
-	accountTpl = require('../templates/_entityAccount.tpl'),
-	Account = require('../models/Account');
+	accountTpl = require('../templates/_entityMyAccount.tpl'),
+	Account = require('../models/MyAccount');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -13,6 +13,7 @@ exports = module.exports = FormView.extend({
 	el: '#accountForm',
 
 	initialize: function(options) {
+		this.prefix = options.prefix;
 		var page = $(accountTpl);
 		var viewTemplate = $('#viewTemplate', page).html();
 		this.template = _.template(_.unescape(viewTemplate || ''));
@@ -39,9 +40,10 @@ exports = module.exports = FormView.extend({
 	},
 
 	logout: function() {
+		var that = this;
 		this.appEvents.trigger('logout');
 		$.ajax({
-			url: config.api.host + '/logout',
+			url: config.api.host + that.prefix +'/logout',
 			type: 'GET',
 			xhrFields: {
 				withCredentials: true

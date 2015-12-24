@@ -4,7 +4,9 @@ var Backbone = require('backbone');
 var config = require('./conf');
 
 var LayoutView = require('./views/__Layout');
-var LoginView = require('./views/_MyAccountLogin');
+var LoginView = require('../../views/_MyAccountLogin2');
+var MyAccountViewView = require('../../views/_MyAccountView');
+var MyAccountEditView = require('../../views/_MyAccountEdit');
 var IndexView = require('./views/Index');
 
 var PlatformAppIndexView = require('./views/_PlatformAppIndex');
@@ -20,7 +22,7 @@ var RoleIndexView = require('./views/_RoleIndex');
 var RoleEditView = require('./views/_RoleEdit');
 
 exports = module.exports = Backbone.Router.extend({
-
+	prefix: '/super',
 	account: null,//login account
 	logined: false,
 	currentView : null,
@@ -30,6 +32,9 @@ exports = module.exports = Backbone.Router.extend({
 		'index': 'index',
 		'login': 'login',
 		'logout': 'logout',
+		'profile/:id': 'profileView',
+		'profile/edit/me': 'profileEdit',
+
 		'app/index': 'appIndex',
 		'app/add': 'appEdit',	
 		'app/edit/:id': 'appEdit',
@@ -94,6 +99,8 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		//this.appEvents.trigger('set:brand','登录');
 		var loginView = new LoginView({
+			prefix: this.prefix,
+			router: this,
 			el: '#content',
 			appEvents: this.appEvents,
 		});
@@ -111,6 +118,42 @@ exports = module.exports = Backbone.Router.extend({
 			},
 			crossDomain: true,
 		});
+	},
+
+	profileView: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '个人资料');
+		if (id == this.account.id) {
+			id = 'me';
+		}
+		var profileViewView = new MyAccountViewView({
+			prefix: this.prefix,
+			router: this,
+			el: '#content',
+			id: id,
+			appEvents: this.appEvents,
+		});
+		this.changeView(profileViewView);
+		profileViewView.trigger('load');
+	},
+
+
+	profileEdit: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '编辑个人资料');
+		var profileEditView = new MyAccountEditView({
+			router: this,
+			el: '#content',
+			id: 'me',
+		});
+		this.changeView(profileEditView);
+		profileEditView.trigger('load');
 	},
 
 	appIndex: function(){

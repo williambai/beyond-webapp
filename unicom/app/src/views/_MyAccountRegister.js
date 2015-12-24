@@ -2,9 +2,9 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Register = require('../models/Register');
-var accountTpl = require('../templates/_entityAccount.tpl');
+var accountTpl = require('../templates/_entityMyAccount.tpl');
 
-var SelectChannelView = require('./_AccountSelectChannel');
+var SelectChannelView = require('./_MyAccountSelectChannel');
 
 exports = module.exports = FormView.extend({
 

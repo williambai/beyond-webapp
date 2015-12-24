@@ -4,8 +4,10 @@ var Backbone = require('backbone');
 var config = require('./conf');
 
 var LayoutView = require('./views/__Layout');
-var LoginView = require('./views/_AccountLogin');
-var ProfileViewView = require('./views/_AccountView');
+var LoginView = require('../../views/_MyAccountLogin2');
+var MyAccountViewView = require('../../views/_MyAccountView');
+var MyAccountEditView = require('../../views/_MyAccountEdit');
+
 var IndexView = require('./views/Index');
 
 var AccountIndexView = require('./views/_AccountIndex');
@@ -41,6 +43,10 @@ var ProductCardAddView = require('./views/_ProductCardAdd');
 var ProductCardEditView = require('./views/_ProductCardEdit');
 var ProductCardImportView = require('./views/_ProductCardImport');
 
+var OrderIndexView = require('./views/_OrderIndex');
+var OrderViewView = require('./views/_OrderView');
+var OrderEditView = require('./views/_OrderEdit');
+
 var OrderCardIndexView = require('./views/_OrderCardIndex');
 var OrderCardAddView = require('./views/_OrderCardAdd');
 var OrderCardEditView = require('./views/_OrderCardEdit');
@@ -63,7 +69,7 @@ var GridIndexView = require('./views/_GridIndex');
 var GridEditView = require('./views/_GridEdit');
 
 exports = module.exports = Backbone.Router.extend({
-
+	prefix: '/admin',
 	account: null,//login account
 	features: [],
 	logined: false,
@@ -75,6 +81,8 @@ exports = module.exports = Backbone.Router.extend({
 		'login': 'login',
 		'logout': 'logout',
 		'profile/:id': 'profileView',
+		'profile/edit/me': 'profileEdit',
+
 		'account/index': 'accountIndex',
 		'account/add': 'accountAdd',
 		'account/edit/:id': 'accountEdit',
@@ -100,6 +108,11 @@ exports = module.exports = Backbone.Router.extend({
 		'card/add': 'cardAdd',
 		'card/edit/:id': 'cardEdit',
 		'card/import': 'cardImport',
+
+		'order/index': 'orderIndex',
+		'order/view/:id': 'orderView',
+		'order/edit/:id': 'orderEdit',
+
 		'order/card/index': 'orderCardIndex',
 		'order/card/add': 'orderCardAdd',
 		'order/card/view/:id': 'orderCardView',
@@ -174,6 +187,8 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand','登录');
 		var loginView = new LoginView({
+			prefix: this.prefix,
+			router: this,
 			el: '#content',
 			appEvents: this.appEvents,
 		});
@@ -202,13 +217,31 @@ exports = module.exports = Backbone.Router.extend({
 		if (id == this.account.id) {
 			id = 'me';
 		}
-		var profileViewView = new ProfileViewView({
+		var profileViewView = new MyAccountViewView({
+			prefix: this.prefix,
+			router: this,
 			el: '#content',
 			id: id,
 			appEvents: this.appEvents,
 		});
 		this.changeView(profileViewView);
 		profileViewView.trigger('load');
+	},
+
+
+	profileEdit: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '编辑个人资料');
+		var profileEditView = new MyAccountEditView({
+			router: this,
+			el: '#content',
+			id: 'me',
+		});
+		this.changeView(profileEditView);
+		profileEditView.trigger('load');
 	},
 
 	accountIndex: function(){
@@ -569,6 +602,51 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(cardEditView);
 		cardEditView.trigger('load');
 	},
+
+
+	orderIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','订单管理');
+		var orderIndexView = new OrderIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(orderIndexView);
+		orderIndexView.trigger('load');
+	},	
+
+	orderEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改卡号订单');
+		var orderEditView = new OrderEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(orderEditView);
+		orderEditView.trigger('load');
+	},				
+
+	orderView: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','查看订单');
+		var orderViewView = new OrderViewView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(orderViewView);
+		orderViewView.trigger('load');
+	},	
 
 	orderCardIndex: function(){
 		if(!this.logined){

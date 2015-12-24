@@ -3,18 +3,22 @@ var Backbone = require('backbone');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Login = require('../models/Login');
-var accountTpl = require('../templates/_entityAccount.tpl');
+var accountTpl = require('../templates/_entityMyAccount.tpl');
+var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
 	el: '#loginForm',
 
 	initialize: function(options) {
+		this.prefix = options.prefix;
 		var page = $(accountTpl);
-		var loginTemplate = $('#loginTemplate', page).html();
+		var loginTemplate = $('#login2Template', page).html();
 		this.template = _.template(_.unescape(loginTemplate || ''));
 		this.appEvents = options.appEvents;
-		this.model = new Login();
+		this.model = new Login({
+			url: config.api.host + this.prefix + '/login',
+		});
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -63,7 +67,7 @@ exports = module.exports = FormView.extend({
 
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		console.log(this.model.toJSON());
+		// console.log(this.model.toJSON());
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true

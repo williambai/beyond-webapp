@@ -11,7 +11,7 @@ exports = module.exports = function() {
 
 	var checkLogin = function(callback) {
 		$.ajax({
-			url: config.api.host + '/admin/login/check',
+			url: config.api.host + router.prefix + '/login/check',
 			type: 'GET',
 			xhrFields: {
 				withCredentials: true
