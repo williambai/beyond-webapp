@@ -38,6 +38,8 @@ var models = {
 		PlatformApp: require('./models/PlatformApp')(mongoose),
 		PlatformFeature: require('./models/PlatformFeature')(mongoose),
 		PlatformRole: require('./models/PlatformRole')(mongoose),
+		Order: require('./models/Order')(mongoose),
+
 		ChannelCategory: require('./models/ChannelCategory')(mongoose),
 		ChannelDepartment: require('./models/ChannelDepartment')(mongoose),
 		ChannelGrid: require('./models/ChannelGrid')(mongoose),

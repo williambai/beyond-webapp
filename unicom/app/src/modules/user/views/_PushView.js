@@ -40,19 +40,20 @@ exports = module.exports = Backbone.View.extend({
 		this.dataAddView = new DataAddView({
 			router: this.router,
 			el: '#dataAddView',
+			product: this.model,
 		});
 		this.dataAddView.on('ready',this.dataAddViewReady,this);
 		this.dataAddView.trigger('load');
 	},
 
 	dataAddViewReady: function(){
-		var goods = this.model.get('goods');
-		this.$('form').prepend('<input type="hidden" name="product[id]" value="'+ this.model.get('_id') + '">');
-		this.$('form').prepend('<input type="hidden" name="product[name]" value="'+ this.model.get('subject') + '">');
-		this.$('form').prepend('<input type="hidden" name="product[category]" value="'+ this.model.get('category') + '">');
-		this.$('form').prepend('<input type="hidden" name="goods[name]" value="'+ goods.name + '">');
-		this.$('form').prepend('<input type="hidden" name="goods[nickname]" value="'+ goods.nickname + '">');
-		this.$('form').prepend('<input type="hidden" name="goods[sourceId]" value="'+ goods.sourceId + '">');
+		// var goods = this.model.get('goods');
+		// this.$('form').prepend('<input type="hidden" name="product[id]" value="'+ this.model.get('_id') + '">');
+		// this.$('form').prepend('<input type="hidden" name="product[name]" value="'+ this.model.get('subject') + '">');
+		// this.$('form').prepend('<input type="hidden" name="product[category]" value="'+ this.model.get('category') + '">');
+		// this.$('form').prepend('<input type="hidden" name="goods[name]" value="'+ goods.name + '">');
+		// this.$('form').prepend('<input type="hidden" name="goods[nickname]" value="'+ goods.nickname + '">');
+		// this.$('form').prepend('<input type="hidden" name="goods[sourceId]" value="'+ goods.sourceId + '">');
 	},
 
 	back: function(){

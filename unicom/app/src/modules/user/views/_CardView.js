@@ -60,6 +60,7 @@ exports = module.exports = Backbone.View.extend({
 		this.recommendView = new CardAddView({
 			router: this.router,
 			el: '#recommendView',
+			cardModel: this.model,
 		});
 		this.recommendView.on('ready', this.recommendViewReday,this);
 		this.recommendView.trigger('load');
@@ -80,7 +81,9 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	recommendViewReday: function(){
-		this.$('input[name=mobile]').val(this.model.get('cardNo'));
+		// this.$('input[name="product[card][name]').val(this.model.get('cardNo'));
+		// this.$('input[name="product[card][price]').val(this.model.get('price'));
+		// this.$('input[name="product[card][category]').val('号卡');
 	},
 
 	back: function(){

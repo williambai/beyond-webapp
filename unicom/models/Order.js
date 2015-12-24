@@ -10,6 +10,12 @@ module.exports = exports = function(mongoose){
 				message: 'enum validator failed for path {PATH} with value {VALUE}',
 			}
 		},
+		// goods: {
+		// 	id: mongoose.Schema.Types.ObjectId,
+		// 	name: String,
+		// 	nickname: String,
+		// 	sourceId: String,
+		// },
 		items: [
 			{
 				id: mongoose.Schema.Types.ObjectId,
@@ -18,6 +24,7 @@ module.exports = exports = function(mongoose){
 				price: Number,
 				quantity: Number,
 				category: String,
+				source: {},//goods
 			}
 		],
 		total: Number,
@@ -32,16 +39,23 @@ module.exports = exports = function(mongoose){
 			}
 		},
 		customer: {
+			id: String,
+			name: String,
+		},
+		customerInfo: {
 			name: String,
 			idNo: String,
 			idType: String,
 			idAddress: String,
 			address: String,
-			mobile: String,
+			phone: String,
 			location: String,
 		},
 		createBy: {
-			id: mongoose.Schema.Types.ObjectId,
+			id: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Account',
+			},
 			username: String,
 			mobile: String,
 			avatar: String,
@@ -53,12 +67,13 @@ module.exports = exports = function(mongoose){
 				message: 'enum validator failed for path {PATH} with value {VALUE}',
 			}
 		},
+		histories: [],
 		lastupdatetime: {
 			type: Date,
 			default: Date.now
 		},
 	});
 
-	schema.set('collection','order.cards');
-	return mongoose.model('OrderCard',schema);
+	schema.set('collection','orders');
+	return mongoose.model('Order',schema);
 };

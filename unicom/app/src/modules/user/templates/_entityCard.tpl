@@ -201,8 +201,7 @@
 					<h5 class="panel-title text-center">客户信息</h5>
 				</div>
 				<div class="panel-body">
-					<input type="hidden" name="mobile">
-					<div id="hiddenFields"></div>
+ 					<div id="hiddenFields"></div>
 					<div class="form-group">
 						<label>客户姓名：</label>
 							<input type="text" name="customer[name]" class="form-control">
@@ -210,17 +209,17 @@
 					</div>
 					<div class="form-group">
 						<label>证件类型：</label>
-							<input type="text" name="customer[cardtype]" class="form-control">
+							<input type="text" name="customer[idType]" class="form-control">
 							<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>证件号码：</label>
-							<input type="text" name="customer[cardno]" class="form-control">
+							<input type="text" name="customer[idNo]" class="form-control">
 							<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>证件地址：</label>
-							<input type="text" name="customer[address]" class="form-control">
+							<input type="text" name="customer[idAddress]" class="form-control">
 							<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -235,7 +234,7 @@
 					</div>
 					<div class="form-group">
 						<label>营业厅：</label>
-							<input type="text" name="" class="form-control">
+							<input type="text" name="place[name]" class="form-control">
 							<span class="help-block"></span>
 					</div>
 					<div class="form-group">

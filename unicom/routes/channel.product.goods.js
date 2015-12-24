@@ -8,28 +8,42 @@ logger.setLevel('INFO');
  	var async = require('async');
 
  	var add = function(req, res) {
+ 		var product = req.body.product || {};
  		var mobiles = req.body.mobile || [];
  		mobiles = _.without(mobiles,'');
  		var docs = [];
  		_.each(mobiles, function(mobile){
  			docs.push({
- 				customer: {
- 					mobile: mobile,
- 				},
- 				product: req.body.product || {},
- 				goods: req.body.goods || {},
- 				status: '新建',
+ 				name: product.subject || '',
+ 				description: product.description || '',
+ 				category: '数据订购',
+ 				items: [{
+ 					id: product._id,
+ 					model: 'ProductGoods',
+ 					name: product.subject,
+ 					price: product.price || 0,
+ 					quantity: 1,
+ 					category: product.category || '',
+ 					source: product.goods || {},
+ 				}],
+ 				total: product.price || 0,
+ 				dispatch: '自提',
+				customer: {
+					id: mobile,
+				},
+				status: '新建',
  				createBy: {
  					id: req.session.accountId,
- 					name: req.session.username,
+ 					username: req.session.username,
  					mobile: req.session.email,
+					avatar: req.session.avatar,
  				}
  			});
  		});
  		async.waterfall(
  			[
  				function(callback){
-					models.WoOrder.create(docs,callback);
+					models.Order.create(docs,callback);
  				},
  				function(docs,callback){
  					var activity = {
@@ -38,7 +52,7 @@ logger.setLevel('INFO');
  						avatar: req.session.avatar || '/images/avatar.jpg',
  						type: 'text',
  						content: {
- 							body: '向朋友推荐了<u>' + req.body.product.name + '</u>产品',
+ 							body: '向朋友推荐了<u>' + product.subject + '</u>产品',
  						}
  					};
  					models.AccountActivity.create(activity,callback);
@@ -48,34 +62,11 @@ logger.setLevel('INFO');
  			res.send({});
  		});
  	};
-  	// var add = function(req, res) {
- 	// 	var doc = new models.PromoteProduct(req.body);
- 	// 	doc.save(function(err) {
- 	// 		if (err) return res.send(err);
- 	// 		res.send({});
- 	// 	});
- 	// };
  	var remove = function(req,res){
- 		var id = req.params.id;
- 		models.PromoteProduct.findByIdAndRemove(id,function(err,doc){
- 			if(err) return res.send(err);
- 			res.send(doc);
- 		});
+		res.send({});
  	};
  	var update = function(req, res) {
- 		var id = req.params.id;
- 		var set = req.body;
- 		models.PromoteProduct.findByIdAndUpdate(id, {
- 				$set: set
- 			}, {
- 				'upsert': false,
- 				'new': true,
- 			},
- 			function(err, doc) {
- 				if (err) return res.send(err);
- 				res.send(doc);
- 			}
- 		);
+		res.send({});
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
@@ -124,7 +115,7 @@ logger.setLevel('INFO');
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/product/goods', add);
+ 	app.post('/channel/product/goods', app.grant, add);
  	/**
  	 * update channel/product/goods
  	 * type:

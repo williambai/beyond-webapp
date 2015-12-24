@@ -15,8 +15,11 @@
 			<button class="btn btn-info view"></button>
 		</div>
  -->
- 		<h4>客户：<%= model.customer.mobile %></h4>
-		<p>产品名称：<%= model.product.name %>&nbsp;[<%= model.product.category %>]</p>
+ 		<div class="pull-right">
+ 			<h4>￥<%= model.total.toFixed(2) %></h4>
+ 		</div>
+ 		<h4>客户：<%= model.customer.id %>&nbsp;&nbsp;<%= model.customer.name %></h4>
+		<p>产品名称：<%= model.name %>&nbsp;[<%= model.category %>]</p>
 		<p>发布于：<%= model.deltatime %>&nbsp;&nbsp;&nbsp;当前状态：<%= model.status %></p>
 		<hr/>
 	</div>

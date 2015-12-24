@@ -11,6 +11,7 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
+		this.cardModel = options.cardModel;
 		this.model = new ProductCard();
 		var page = $(cardTpl);
 		var addTemplate = $('#addTemplate', page).html();
@@ -51,12 +52,14 @@ exports = module.exports = FormView.extend({
 	},
 
 	packageChanged: function(products){
+		console.log(products)
+		this.products = products;
 		this.$('#hiddenFields').empty();
-		var html = '';
-		_.each(products,function(product){
-			html += '<input type="hidden" name="package[]" value="' + product.id +'">';
-		});
-		this.$('#hiddenFields').html(html);
+		// var html = '';
+		// _.each(products,function(product){
+		// 	html += '<input type="hidden" name="package[]" value="' + product.id +'">';
+		// });
+		// this.$('#hiddenFields').html(html);
 	},
 
 	submit: function() {
@@ -79,7 +82,11 @@ exports = module.exports = FormView.extend({
 		
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		// console.log(this.model.attributes);
+		//set card info
+		this.model.set('card', this.cardModel.toJSON());
+		//set package info
+		this.model.set('packages', this.products);
+		console.log(this.model.attributes);
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true

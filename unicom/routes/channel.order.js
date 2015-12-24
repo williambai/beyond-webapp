@@ -4,42 +4,16 @@ var logger = log4js.getLogger('route:channel.order');
 
 exports = module.exports = function(app, models) {
  	var add = function(req, res) {
- 		var doc = new models.WoOrder(req.body);
- 		doc.save(function(err) {
- 			if (err) return res.send(err);
- 			res.send({});
- 		});
+		res.send({});
  	};
  	var remove = function(req, res) {
- 		var id = req.params.id;
- 		models.WoOrder.findByIdAndRemove(id, function(err, doc) {
- 			if (err) return res.send(err);
- 			res.send(doc);
- 		});
+		res.send({});
  	};
  	var update = function(req, res) {
- 		var id = req.params.id;
- 		var set = req.body;
- 		models.WoOrder.findByIdAndUpdate(id, {
- 				$set: set
- 			}, {
- 				'upsert': false,
- 				'new': true,
- 			},
- 			function(err, doc) {
- 				if (err) return res.send(err);
- 				res.send(doc);
- 			}
- 		);
+		res.send({});
  	};
  	var getOne = function(req, res) {
- 		var id = req.params.id;
- 		models.WoOrder
- 			.findById(id)
- 			.exec(function(err, doc) {
- 				if (err) return res.send(err);
- 				res.send(doc);
- 			});
+		res.send({});
  	};
  	var getMore = function(req, res) {
  		var type = req.query.type || '';
@@ -47,32 +21,14 @@ exports = module.exports = function(app, models) {
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
  		switch (type) {
- 			case 'search':
- 				var searchStr = req.query.searchStr || '';
- 				var searchRegex = new RegExp(searchStr, 'i');
- 				Account.find({
- 						$or: [{
- 							'customer.name': {
- 								$regex: searchRegex
- 							}
- 						}, {
- 							'customer.mobile': {
- 								$regex: searchRegex
- 							}
- 						}]
- 					})
- 					.skip(per * page)
- 					.limit(per)
- 					.exec(function(err, docs) {
- 						if (err) return res.send(err);
- 						res.send(docs);
- 					});
- 				break;
  			case 'stat':
+ 				res.send({});
  				break;
  			default:
- 				models.WoOrder
- 					.find({})
+ 				models.Order
+ 					.find({
+ 						'createBy.id': req.session.accountId,
+ 					})
  					.sort({
  						_id: -1
  					})

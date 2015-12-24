@@ -11,6 +11,7 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
+		this.product = options.product;
 		this.model = new ProductGoods();
 		var page = $(orderTpl);
 		var addTemplate = $('#addTemplate', page).html();
@@ -76,6 +77,8 @@ exports = module.exports = FormView.extend({
 
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
+		//set product
+		this.model.set('product', this.product.toJSON());
 		// console.log(this.model.toJSON());
 		var mobiles = this.model.get('mobile');
 		mobiles = _.without(mobiles, '');

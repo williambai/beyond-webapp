@@ -7,28 +7,76 @@ exports = module.exports = function(app, models) {
  	var async = require('async');
 
  	var add = function(req, res) {
- 		var mobiles = req.body.mobile || [];
- 		mobiles = _.without(mobiles,'');
- 		var docs = [];
- 		_.each(mobiles, function(mobile){
- 			docs.push({
- 				customer: {
- 					mobile: mobile,
- 				},
- 				product: req.body.product || {},
- 				goods: req.body.goods || {},
- 				status: '新建',
- 				createBy: {
- 					id: req.session.accountId,
- 					name: req.session.username,
- 					mobile: req.session.email,
+ 		var card = req.body.card || {};
+ 		var packages = req.body.packages || [];
+ 		var customer = req.body.customer || {};
+ 		var place = req.body.place || {};
+
+ 		var total = card.price;
+ 		var items = [];
+ 		//add card product
+ 		items.push({
+ 			id: card._id,
+ 			model: 'ProductCard',
+ 			name: card.cardNo,
+ 			price: card.price,
+ 			quantity: 1,
+ 			category: '号卡',
+ 			source: {
+ 				id: card.goodsId || '',
+ 				name: card.goodsName || '',
+ 			}
+ 		});
+ 		//add packages 
+ 		_.each(packages, function(pkg){
+ 			total += pkg.price;
+ 			items.push({
+ 				id: pkg.id,
+ 				model: 'ProductCardPackage',
+ 				name: pkg.name,
+ 				price: pkg.price,
+ 				quantity: 1,
+ 				category: pkg.category,
+ 				source: {
+ 					id: pkg.goodsId || '',
+ 					name: pkg.goodsName || '',
  				}
  			});
  		});
+ 		var docs = {
+ 				name: card.cardNo,
+ 				description: card.cardNo + '号卡预订',
+ 				category: '号卡',
+ 				items: items,
+ 				total: total,
+ 				place: place,
+ 				dispatch: '自提',
+ 				customer: {
+ 					id: customer.phone,
+ 					name: customer.name,
+ 				},
+ 				customerInfo: customer,
+				// customer: {
+				// 	name: req.body.customer.name || '',
+				// 	idNo: req.body.customer.idNo || '',
+				// 	idType: req.body.customer.idType || '',
+				// 	idAddress: req.body.customer.idAddress || '',
+				// 	address: req.body.customer.address || '',
+				// 	mobile: mobile,
+				// 	location: req.body.customer.location || '',
+				// }, 				
+				status: '新建',
+ 				createBy: {
+ 					id: req.session.accountId,
+ 					username: req.session.username,
+ 					mobile: req.session.email,
+					avatar: req.session.avatar,
+ 				}
+ 			};
  		async.waterfall(
  			[
  				function(callback){
-					models.WoOrder.create(docs,callback);
+					models.Order.create(docs,callback);
  				},
  				function(docs,callback){
  					var activity = {
@@ -37,7 +85,7 @@ exports = module.exports = function(app, models) {
  						avatar: req.session.avatar || '/images/avatar.jpg',
  						type: 'text',
  						content: {
- 							body: '向朋友推荐了<u>' + req.body.product.name + '</u>产品',
+ 							body: '向朋友推荐了价值<u>' + total.toFixed(2) +'</u>元的号卡产品',
  						}
  					};
  					models.AccountActivity.create(activity,callback);
@@ -47,34 +95,11 @@ exports = module.exports = function(app, models) {
  			res.send({});
  		});
  	};
- 	// var add = function(req, res) {
- 	// 	var doc = new models.ProductCard(req.body);
- 	// 	doc.save(function(err) {
- 	// 		if (err) return res.send(err);
- 	// 		res.send({});
- 	// 	});
- 	// };
  	var remove = function(req,res){
- 		var id = req.params.id;
- 		models.ProductCard.findByIdAndRemove(id,function(err,doc){
- 			if(err) return res.send(err);
- 			res.send(doc);
- 		});
+		res.send({});
  	};
  	var update = function(req, res) {
- 		var id = req.params.id;
- 		var set = req.body;
- 		models.ProductCard.findByIdAndUpdate(id, {
- 				$set: set
- 			}, {
- 				'upsert': false,
- 				'new': true,
- 			},
- 			function(err, doc) {
- 				if (err) return res.send(err);
- 				res.send(doc);
- 			}
- 		);
+		res.send({});
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
@@ -125,11 +150,11 @@ exports = module.exports = function(app, models) {
  	/**
  	 * get channel/product/cards
  	 */
- 	app.get('/channel/product/cards/:id', getOne);
+ 	app.get('/channel/product/cards/:id', app.grant, getOne);
 
  	/**
  	 * get channel/product/cards
  	 * type:
  	 */
- 	app.get('/channel/product/cards', getMore);
+ 	app.get('/channel/product/cards', app.grant, getMore);
  };

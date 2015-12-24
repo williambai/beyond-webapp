@@ -9,11 +9,11 @@ exports = module.exports = Backbone.Model.extend({
 	validation: {
 		'customer[name]': {
 			minLength: 2,
-			msg: '用户名不合法'
+			msg: '请输入客户姓名'
 		},
-		'customer[cardno]': {
-			minLength: 10,
-			msg: '身份证号不正确'			
+		'customer[phone]': {
+			minLength: 6,
+			msg: '请输入客户正确的电话号码'			
 		}
 	},
 });
