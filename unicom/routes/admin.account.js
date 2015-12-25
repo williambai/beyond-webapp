@@ -12,7 +12,7 @@
  		roles = _.omit(roles, '');
  		if(_.isEmpty(roles)) account = _.omit(account, 'role');
  		//set createby
- 		account.createby = {
+ 		account.creator = {
  			id: req.session.accountId,
  			username: req.session.username,
  			avatar: req.session.avatar, 

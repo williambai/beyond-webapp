@@ -5,7 +5,7 @@ module.exports = exports = function(mongoose) {
 		nickname: String,
 		description: String,
 		grant: {},
-		createBy: {
+		creator: {
 			id: {
 				type: mongoose.Schema.Types.ObjectId,
 				ref: 'Account',

@@ -24,10 +24,7 @@ module.exports = exports = function(app, models) {
 		user.registerCode = crypto.createHash('sha256').update(user.email + "beyond" + password).digest('hex');
 
 		user.avatar = '/images/avatar.jpg';
-		user.status = {
-			code: -1,
-			message: '注册但未验证'
-		};
+		user.status = '未验证';
 		user.apps.push(app);
 		user.roles.push('channel');
 		user.lastupdatetime = new Date();
@@ -241,7 +238,12 @@ module.exports = exports = function(app, models) {
 									code: 40401,
 									errmsg: '用户不存在。'
 								});
-							if (account.status.code == -1)
+							if (account.status == '禁用')
+								return callback({
+									code: 40405,
+									errmsg: '对不起，您不能登录。'
+								});
+							if (account.status == '未验证')
 								return callback({
 									code: 40402,
 									errmsg: '还未通过验证，请查看邮件，并尽快验证。'
@@ -251,12 +253,12 @@ module.exports = exports = function(app, models) {
 									code: 40403,
 									errmsg: '密码不正确。'
 								});
-							callback(null, account);
 							if (_.indexOf(account.apps,app) == -1)
 								return callback({
 									code: 40404,
 									errmsg: '您没有访问该应用的权限。如需访问，请联系系统管理员。'
 								});
+							callback(null, account);
 						});
 				},
 				function role(account, callback) {

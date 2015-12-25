@@ -107,6 +107,13 @@ app.get('/', function(req,res){
 // 	res.download(file);
 // });
 
+//是否登录
+app.isLogin = function(req,res,next){
+	var grant = req.session.grant;
+	if(!_.isEmpty(grant)) return next();
+	res.status(401).end();
+};
+
 //授权判断中间件
 app.grant = function(req,res,next){
 	logger.debug('session(grant):' + JSON.stringify(req.session));

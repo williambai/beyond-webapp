@@ -106,26 +106,33 @@ exports = module.exports = FormView.extend({
 
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
+		
 		var password = this.model.get('password');
 		var cpassword = this.model.get('cpassword');
-		if(!_.isEmpty(password)){
-			if(password.length < 5){
-				console.log(password.length)
-				var error = '密码长度至少五位';
+		if(password != cpassword){
+			var error = '两次输入不一致';
+			that.$('[name="cpassword"]').parent().addClass('has-error');
+			that.$('[name="cpassword"]').parent().find('span.help-block').text(error);
+			return false;			
+		}
+		if(!_.isEmpty(password) && password.length < 5){
+			var error = '密码长度至少五位';
+			that.$('[name="password"]').parent().addClass('has-error');
+			that.$('[name="password"]').parent().find('span.help-block').text(error);
+			return false;
+		}
+		if(_.isEmpty(password)){
+			if(that.model.isNew()){
+				var error = '新用户必须设置密码';
 				that.$('[name="password"]').parent().addClass('has-error');
 				that.$('[name="password"]').parent().find('span.help-block').text(error);
 				return false;
+			}else {
+				this.model.unset('password',{silent: true});
+				this.model.unset('cpassword',{silent: true});			
 			}
-			if(password != cpassword){
-				var error = '两次输入不一致';
-				that.$('[name="cpassword"]').parent().addClass('has-error');
-				that.$('[name="cpassword"]').parent().find('span.help-block').text(error);
-				return false;			
-			}
-		}else{
-			this.model.unset('password',{silent: true});
-			this.model.unset('cpassword',{silent: true});			
 		}
+
 		// console.log(this.model.toJSON());
 		this.model.save(this.model.changedAttributes(), {
 			xhrFields: {

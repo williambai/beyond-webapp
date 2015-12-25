@@ -6,6 +6,7 @@ var FormView = require('./__FormView'),
 var config = require('../conf');
 
 var RoleCollection = require('../models/RoleCollection');
+var PlatformAppCollection = require('../models/PlatformAppCollection');
 
 exports = module.exports = FormView.extend({
 
@@ -26,12 +27,15 @@ exports = module.exports = FormView.extend({
 		'keyup input[type=text]': 'inputText',
 		'blur input[type=text]': 'inputText',
 		'keyup input[type=password]': 'inputText',
+		'click #send-file': 'showFileExplorer',
+		'change input[type=file]': 'uploadAvatar',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
 
 	load: function(){
 		if(this.model.isNew()){
+			this.loadApps();
 			this.loadRoles();
 			this.modelFilled = true;
 			return;
@@ -40,6 +44,25 @@ exports = module.exports = FormView.extend({
 			xhrFields: {
 				withCredentials: true
 			},
+		});
+	},
+
+	loadApps: function(callback){
+		var that = this;
+		var platformAppCollection = new PlatformAppCollection();
+		platformAppCollection.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
+			success: function(collection){
+				collection = collection || [];
+				var appsView = '';
+				collection.each(function(model){
+					appsView += '<input type="checkbox" name="apps[]" value="'+ model.get('nickname') +'">&nbsp;'+ model.get('name') +'&nbsp;&nbsp;&nbsp;';
+				});
+				that.$('#apps').html(appsView);
+				callback && callback();
+			}
 		});
 	},
 
@@ -62,6 +85,11 @@ exports = module.exports = FormView.extend({
 		});
 	},
 
+	showFileExplorer: function(evt){
+		this.$('input[type=file]').click();
+		return false;
+	},
+
 	inputText: function(evt){
 		var that = this;
 		//clear error
@@ -76,6 +104,31 @@ exports = module.exports = FormView.extend({
 				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
 			}
 		})
+		return false;
+	},
+
+	uploadAvatar: function(evt) {
+		var that = this;
+		var formData = new FormData();
+		formData.append('files', evt.currentTarget.files[0]);
+		$.ajax({
+			url: config.api.host + '/platform/accounts/'+ this.model.get('_id') +'?type=avatar',
+			type: 'PUT',
+			xhrFields: {
+				withCredentials: true
+			},
+			data: formData,
+			cache: false, //MUST be false
+			processData: false, //MUST be false
+			contentType: false, //MUST be false
+		}).done(function(data) {
+			var src = data.src;
+			that.model.set('avatar', src);
+			// console.log(data)
+			that.$('img#avatar').attr('src', src);
+		}).fail(function(err) {
+			console.log(err);
+		});
 		return false;
 	},
 
@@ -96,10 +149,37 @@ exports = module.exports = FormView.extend({
 		});
 		if(!_.isEmpty(errors)) return false;
 		//validate finished.
-
 		var that = this;
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
+
+		var password = this.model.get('password');
+		var cpassword = this.model.get('cpassword');
+
+		if(password != cpassword){
+			var error = '两次输入不一致';
+			that.$('[name="cpassword"]').parent().addClass('has-error');
+			that.$('[name="cpassword"]').parent().find('span.help-block').text(error);
+			return false;			
+		}
+		if(!_.isEmpty(password) && password.length < 5){
+			var error = '密码长度至少五位';
+			that.$('[name="password"]').parent().addClass('has-error');
+			that.$('[name="password"]').parent().find('span.help-block').text(error);
+			return false;
+		}
+		if(_.isEmpty(password)){
+			if(that.model.isNew()){
+				var error = '新用户必须设置密码';
+				that.$('[name="password"]').parent().addClass('has-error');
+				that.$('[name="password"]').parent().find('span.help-block').text(error);
+				return false;
+			}else {
+				this.model.unset('password',{silent: true});
+				this.model.unset('cpassword',{silent: true});			
+			}
+		}
+		
 		// console.log(this.model.attributes);
 		this.model.save(null, {
 			xhrFields: {
@@ -122,6 +202,14 @@ exports = module.exports = FormView.extend({
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
+			//get apps
+			this.loadApps(function(){
+				//set apps
+				var apps = that.model.get('apps');
+				_.each(apps, function(app){
+					that.$('input[name="apps[]"][value="'+ app +'"]').attr('checked', true);
+				});
+			});
 			//get roles
 			this.loadRoles(function(){
 				//set roles
@@ -137,10 +225,21 @@ exports = module.exports = FormView.extend({
 	},
 
 	render: function(){
+		var that = this;
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		var avatar = this.model.get('avatar');
+		this.$('img#avatar').attr('src',avatar);
 		var status = this.model.get('status');
 		this.$('input[name="status"][value="'+ status +'"]').attr('checked',true);
+		if(this.model.isNew()) this.$('input[name=email]').attr('readonly', false);
 		if(this.model.isNew()) this.$('.panel-title').text('新增用户');
+		var histories = this.model.get('histories');
+		histories = _.sortBy(histories,'time');
+		var historyView = '';
+		_.each(histories,function(history){
+			historyView += '<p>' + history.time + ': ' + history.message + '</p>';
+		});
+		that.$('#history').html(historyView);
 		return this;
 	},
 });
