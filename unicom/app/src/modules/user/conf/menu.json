@@ -33,8 +33,14 @@
 		"nickname": "order",
 		"hash": "order/index"
 	}],
-	"channel_account": [{
+	"channel_customer": [{
 		"id": 7,
+		"name": "我的客户",
+		"nickname": "customer",
+		"hash": "customer/index"
+	}],
+	"my_account": [{
+		"id": 8,
 		"name": "我的资料",
 		"nickname": "profile",
 		"hash": "profile/me"

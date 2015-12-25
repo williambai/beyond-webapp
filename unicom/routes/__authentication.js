@@ -1,7 +1,7 @@
 var log4js = require('log4js');
 var logger = log4js.getLogger('route:_authentication');
 var util = require('util');
-logger.setLevel('DEBUG');
+logger.setLevel('INFO');
 
 module.exports = exports = function(app, models) {
 	var _ = require('underscore');

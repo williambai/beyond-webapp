@@ -95,12 +95,14 @@
 	"nickname": "channel",
 	"description": "渠道用户角色",
 	"grant": {
-		"channel_account": {
-			"route": "/channel/accounts",
-			"nickname": "channel_account",
-			"name": "渠道用户账号",
+		"channel_customer": {
+			"route": "/channel/customers",
+			"nickname": "channel_customer",
+			"name": "渠道用户的客户",
+			"remove": "true",
 			"update": "true",
 			"add": "true",
+			"getMore": "true",
 			"getOne": "true"
 		},
 		"channel_account_activity": {
@@ -134,6 +136,13 @@
 			"update": "true",
 			"add": "true",
 			"getMore": "true",
+			"getOne": "true"
+		},
+		"my_account": {
+			"route": "/accounts",
+			"nickname": "my_account",
+			"name": "用户个人账号",
+			"update": "true",
 			"getOne": "true"
 		}
 	}

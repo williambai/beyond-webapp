@@ -73,7 +73,7 @@ exports = module.exports = Backbone.Router.extend({
 		// this.layoutView.trigger('update:menu', _.sortBy(_.flatten(_.values(MENU_DEFAULT)), 'id'));
 		/** -OR- customize menu */
 		$.ajax({
-			url: config.api.host + '/platform/apps/channel',
+			url: config.api.host + '/platform/apps/' + that.appCode,
 			type: 'GET',
 			xhrFields: {
 				withCredentials: true

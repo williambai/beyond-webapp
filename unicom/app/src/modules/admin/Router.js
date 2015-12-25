@@ -11,7 +11,6 @@ var MyAccountEditView = require('../../views/_MyAccountEdit');
 var IndexView = require('./views/Index');
 
 var AccountIndexView = require('./views/_AccountIndex');
-var AccountAddView = require('./views/_AccountAdd');
 var AccountEditView = require('./views/_AccountEdit');
 
 var ChannelEntityIndexView = require('./views/_ChannelEntityIndex');
@@ -85,8 +84,9 @@ exports = module.exports = Backbone.Router.extend({
 		'profile/edit/me': 'profileEdit',
 
 		'account/index': 'accountIndex',
-		'account/add': 'accountAdd',
+		'account/add': 'accountEdit',
 		'account/edit/:id': 'accountEdit',
+
 		'channel/index': 'channelIndex',
 		'channel/add': 'channelAdd',
 		'channel/edit/:id': 'channelEdit',
@@ -258,19 +258,6 @@ exports = module.exports = Backbone.Router.extend({
 		accountIndexView.trigger('load');
 	},	
 
-	accountAdd: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','新增账号');
-		var accountAddView = new AccountAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(accountAddView);
-		accountAddView.trigger('load');
-	},	
 	accountEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';

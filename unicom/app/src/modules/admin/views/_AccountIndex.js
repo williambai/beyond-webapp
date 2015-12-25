@@ -37,14 +37,17 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 		this.loaded = true;
 		this.render();
-		this.searchView = new SearchView({
-			el: '#search',
-		});
 		this.listView = new ListView({
 			el: '#list',
 		});
-		this.searchView.trigger('load');
 		this.listView.trigger('load');
+		this.searchView = new SearchView({
+			el: '#search',
+		});
+		this.searchView.done = function(query){
+			that.listView.trigger('refresh', query);
+		};
+		this.searchView.trigger('load');
 	},
 
 	scroll: function() {

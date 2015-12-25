@@ -1,25 +1,43 @@
 [{
-	"name": "功能管理",
-	"nickname": "feature",
-	"description": "平台功能管理",
+	"name": "平台功能管理",
+	"nickname": "platform_feature",
+	"description": "平台功能管理：系统管理员使用的维护系统的功能模块，配合grant使用。",
 	"route": "/platform/features",
 	"status": "有效"
 },{
-	"name": "应用管理",
-	"nickname": "app",
-	"description": "应用管理",
+	"name": "平台应用管理",
+	"nickname": "platform_app",
+	"description": "平台应用管理：系统管理员使用的维护应用包含的功能模块，配合app使用。",
 	"route": "/platform/apps",
 	"status": "有效"
 },{
-	"name": "角色管理",
-	"nickname": "role",
-	"description": "角色管理",
+	"name": "平台角色管理",
+	"nickname": "platfrom_role",
+	"description": "平台角色管理：系统管理员使用的维护平台的所有角色。",
 	"route": "/platform/roles",
 	"status": "有效"
 },{
+	"name": "平台用户管理",
+	"nickname": "platform_account",
+	"description": "平台用户账户管理：维护平台的所有用户，包括删除用户。",
+	"route": "/platform/accounts",
+	"status": "有效"
+},{
+	"name": "角色管理",
+	"nickname": "admin_role",
+	"description": "角色管理：业务员使用的受限的角色管理功能，不包括删除角色。",
+	"route": "/admin/roles",
+	"status": "有效"
+},{
 	"name": "用户管理",
-	"nickname": "account",
-	"description": "用户账户管理",
+	"nickname": "admin_account",
+	"description": "用户账户管理：业务员使用的受限的用户管理功能，不包括删除用户。",
+	"route": "/admin/accounts",
+	"status": "有效"
+},{
+	"name": "用户个人账号",
+	"nickname": "my_account",
+	"description": "登录用户维护个人账户信息，包括查看和修改自己的账号信息",
 	"route": "/accounts",
 	"status": "有效"
 },{
@@ -65,9 +83,9 @@
 	"route": "/channel/account/activities",
 	"status": "有效"
 },{
-	"name": "渠道用户账号",
-	"nickname": "channel_account",
-	"description": "渠道人员查看和修改自己的账号信息",
-	"route": "/channel/accounts",
+	"name": "渠道用户的客户",
+	"nickname": "channel_customer",
+	"description": "渠道人员查看、跟踪和关怀自己的客户",
+	"route": "/channel/customers",
 	"status": "有效"
 }]

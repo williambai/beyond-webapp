@@ -1,11 +1,21 @@
  exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
- 		var doc = new models.PlatformRole(req.body);
- 		doc.createBy = {
+		var doc = req.body;
+ 		var grant = req.body.grant;
+ 		var keys = _.keys(grant);
+ 		var grant_new = {};
+ 		_.each(keys,function(key){
+ 			var feature = grant[key];
+ 			if(feature.getOne || feature.getMore || feature.add || feature.remove || feature.update){
+ 				grant_new[key] = grant[key];
+ 			}
+ 		});
+ 		doc.grant = grant_new;
+ 		doc.creator = {
  			id: req.session.accountId,
  		};
- 		doc.save(function(err) {
+  		models.PlatformRole.create(doc,function(err) {
  			if (err) return res.send(err);
  			res.send({});
  		});
@@ -23,6 +33,16 @@
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
+ 		var grant = req.body.grant;
+ 		var keys = _.keys(grant);
+ 		var grant_new = {};
+ 		_.each(keys,function(key){
+ 			var feature = grant[key];
+ 			if(feature.getOne || feature.getMore || feature.add || feature.remove || feature.update){
+ 				grant_new[key] = grant[key];
+ 			}
+ 		});
+ 		set.grant = grant_new;
  		models.PlatformRole.findOneAndUpdate({
  				_id: id,
  				'createBy.id': req.session.accountId

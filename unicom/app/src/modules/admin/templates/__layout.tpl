@@ -31,19 +31,19 @@
 					&nbsp;用户管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<!-- <a class="list-group-item" href="#channel/index">
+				<a class="list-group-item" href="#channel/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;渠道管理
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
-				<a class="list-group-item" href="#customer/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;客户管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#goods/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;物料管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<!-- <a class="list-group-item" href="#customer/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;客户管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#card/index">
