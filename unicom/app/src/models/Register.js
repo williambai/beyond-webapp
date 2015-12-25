@@ -5,6 +5,11 @@ var config = require('../conf');
 exports = module.exports = Backbone.Model.extend({
 	url: config.api.host + '/register',
 
+	initialize: function(options){
+		if(options && options.appCode)
+			this.url = this.url +  '/' + options.appCode;
+	},
+
 	validation: {
 		username: {
 			required: true,

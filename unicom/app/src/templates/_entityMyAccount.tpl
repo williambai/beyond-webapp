@@ -47,7 +47,7 @@
 									<span class="help-block"></span>
 								</div>
 		                        <div class="form-group">
-		                        	<a href="#login" class="pull-right">已经有账号了，去登录！</a>
+		                        	<a href="#" class="pull-right" id="login">已经有账号了，去登录！</a>
 		                    	</div>
 		                    	<br>
 								<div class="form-group">
@@ -130,8 +130,8 @@
 		                        </div>
 
 		                        <div class="form-group">
-		                        	<a href="#register" class="pull-right">还没有注册，去注册吧！</a>
-		                       		<a href="#forgotpassword">忘记密码？</a>
+		                        	<a href="#" class="pull-right" id="register">还没有注册，去注册吧！</a>
+		                       		<a href="#" id="forgot">忘记密码？</a>
 		                    	</div>
 
 		                        <br>
@@ -166,7 +166,7 @@
 								<span class="help-block"></span>
 							</div>
 		                        <div class="form-group">
-		                        	<a href="#login" class="pull-right">换个账号，去登录！</a>
+		                        	<a href="#" class="pull-right" id="login">换个账号，去登录！</a>
 		                    	</div>
 		                    	<br>
 							<div class="form-group">

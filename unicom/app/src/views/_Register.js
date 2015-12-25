@@ -1,23 +1,33 @@
 var _ = require('underscore');
-var Backbone = require('backbone');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-	Login = require('../models/Login');
+	Register = require('../models/Register');
 var accountTpl = require('../templates/_entityMyAccount.tpl');
-var config = require('../conf');
+
+var SelectChannelView = require('./_RegisterSelectChannel');
 
 exports = module.exports = FormView.extend({
 
-	el: '#loginForm',
+	el: '#registerForm',
 
 	initialize: function(options) {
+		this.router = options.router;
+		this.appCode = options.appCode;
 		var page = $(accountTpl);
-		var loginTemplate = $('#loginTemplate', page).html();
-		this.template = _.template(_.unescape(loginTemplate || ''));
-		this.appEvents = options.appEvents;
-		this.model = new Login({
-			url: config.api.host + '/login',
+		var registerTemplate = $('#registerTemplate', page).html();
+		this.template = _.template(_.unescape(registerTemplate || ''));
+		var registerSuccessTemplate = $('#registerSuccessTemplate', page).html();
+		this.successTemplate = _.template(_.unescape(registerSuccessTemplate || ''));
+		this.model = new Register({
+			appCode: this.appCode,
 		});
+
+		this.selectChannelView = new SelectChannelView({
+			el: '#content',
+			parentView: this,
+		});
+		this.on('back', this.render,this);
+
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -25,8 +35,9 @@ exports = module.exports = FormView.extend({
 		'keyup input[type=text]': 'inputText',
 		'blur input[type=text]': 'inputText',
 		'keyup input[type=password]': 'inputText',
-		'submit form': 'login',
-		'swiperight': 'toRegisterForm',
+		'click #selectChannel': 'selectChannel',
+		'submit form': 'register',
+		'click #login': 'gotoLogin',
 	},
 
 	inputText: function(evt){
@@ -46,7 +57,14 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	login: function() {
+	selectChannel: function(){
+		var object = this.$('form').serializeJSON();
+		this.model.set(object);
+		this.selectChannelView.render();
+		return false;
+	},
+
+	register: function() {
 		var that = this;
 		//clear errors
 		this.$('.form-group').removeClass('has-error');
@@ -66,7 +84,15 @@ exports = module.exports = FormView.extend({
 
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		// console.log(this.model.toJSON());
+		console.log(this.model.toJSON());
+		var password = this.model.get('password');
+		var cpasword = this.model.get('cpasword');
+		if(password != cpasword){
+			var error = '两次输入不同';
+			that.$('[name="cpassword"]').parent().addClass('has-error');
+			that.$('[name="cpassword"]').parent().find('span.help-block').text(error);			
+			return false;
+		}
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true
@@ -75,14 +101,13 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	toRegisterForm: function() {
-		window.location.hash = 'register';
+	gotoLogin: function() {
+		this.router.navigate('login',{trigger: true,replace: true});
 		return false;
 	},
 
-	done: function(data) {
-		this.appEvents.trigger('logined',data);
-		window.location.hash = 'index';
+	done: function() {
+		this.$el.html(this.successTemplate());
 	},
 
 	render: function() {

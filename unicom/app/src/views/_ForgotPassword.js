@@ -11,6 +11,7 @@ exports = module.exports = FormView.extend({
 	el: '#forgotPasswordForm',
 
 	initialize: function(options) {
+		this.router = options.router;
 		var page = $(accountTpl);
 		var forgotPasswordTemplate = $('#forgotPasswordTemplate', page).html();
 		this.template = _.template(_.unescape(forgotPasswordTemplate || ''));
@@ -22,7 +23,8 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'keyup input[type=text]': 'inputText',		
-		'submit form': 'forgotPassword'
+		'submit form': 'forgotPassword',
+		'click #login': 'gotoLogin',
 	},
 	
 	inputText: function(evt){
@@ -68,6 +70,11 @@ exports = module.exports = FormView.extend({
 				withCredentials: true
 			},
 		});
+		return false;
+	},
+
+	gotoLogin: function() {
+		this.router.navigate('login',{trigger: true,replace: true});
 		return false;
 	},
 

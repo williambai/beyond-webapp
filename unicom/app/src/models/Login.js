@@ -5,12 +5,12 @@ var validation = require('backbone-validation');
 _.extend(Backbone.Model.prototype,validation.mixin);
 
 exports = module.exports = Backbone.Model.extend({
+	url: config.api.host + '/login',
 
 	initialize: function(options){
-		this.url = options.url || this.url;
+		if(options && options.appCode)
+			this.url = this.url +  '/' + options.appCode;
 	},
-	
-	url: config.api.host + '/login',
 
 	validation: {
 		'email': {

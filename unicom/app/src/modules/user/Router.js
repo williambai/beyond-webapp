@@ -4,9 +4,9 @@ var Backbone = require('backbone');
 
 
 var LayoutView = require('./views/__Layout');
-var RegisterView = require('../../views/_MyAccountRegister');
-var ForgotPasswordView = require('../../views/_MyAccountForgotPassword');
-var LoginView = require('../../views/_MyAccountLogin');
+var RegisterView = require('../../views/_Register');
+var ForgotPasswordView = require('../../views/_ForgotPassword');
+var LoginView = require('../../views/_Login');
 var MyAccountViewView = require('../../views/_MyAccountView');
 var MyAccountEditView = require('../../views/_MyAccountEdit');
 var IndexView = require('./views/Index');
@@ -27,6 +27,7 @@ var MENU_DEFAULT = require('./conf/menu');
 
 exports = module.exports = Backbone.Router.extend({
 
+	appCode: config.app.nickname,
 	account: null, //login account
 	logined: false,
 	currentView: null,
@@ -111,7 +112,9 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand', '贵州联通创富计划');
-		var indexView = new IndexView({});
+		var indexView = new IndexView({
+			router: this,			
+		});
 		this.changeView(indexView);
 		indexView.trigger('load');
 	},
@@ -123,6 +126,8 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		//this.appEvents.trigger('set:brand','注册');
 		var registerView = new RegisterView({
+			router: this,
+			appCode: this.appCode,
 			el: '#content'
 		});
 		this.changeView(registerView);
@@ -136,6 +141,7 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		//this.appEvents.trigger('set:brand','找回密码');
 		var forgotPassword = new ForgotPasswordView({
+			router: this,
 			el: '#content'
 		});
 		this.changeView(forgotPassword);
@@ -149,6 +155,8 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		//this.appEvents.trigger('set:brand', '登录');
 		var loginView = new LoginView({
+			router: this,
+			appCode: this.appCode,
 			el: '#content',
 			appEvents: this.appEvents,
 		});
@@ -179,7 +187,6 @@ exports = module.exports = Backbone.Router.extend({
 			id = 'me';
 		}
 		var profileViewView = new MyAccountViewView({
-			prefix: '',
 			router: this,
 			el: '#content',
 			id: id,

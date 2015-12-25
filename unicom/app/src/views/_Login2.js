@@ -11,13 +11,14 @@ exports = module.exports = FormView.extend({
 	el: '#loginForm',
 
 	initialize: function(options) {
-		this.prefix = options.prefix;
+		this.router = options.router;
+		this.appCode = options.appCode;
 		var page = $(accountTpl);
 		var loginTemplate = $('#login2Template', page).html();
 		this.template = _.template(_.unescape(loginTemplate || ''));
 		this.appEvents = options.appEvents;
 		this.model = new Login({
-			url: config.api.host + this.prefix + '/login',
+			appCode: this.appCode,
 		});
 		FormView.prototype.initialize.apply(this, options);
 	},
@@ -27,7 +28,6 @@ exports = module.exports = FormView.extend({
 		'blur input[type=text]': 'inputText',
 		'keyup input[type=password]': 'inputText',
 		'submit form': 'login',
-		'swiperight': 'toRegisterForm',
 	},
 
 	inputText: function(evt){
@@ -76,14 +76,9 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	toRegisterForm: function() {
-		window.location.hash = 'register';
-		return false;
-	},
-
 	done: function(data) {
 		this.appEvents.trigger('logined',data);
-		window.location.hash = 'index';
+		this.router.navigate('index',{trigger: true,replace: true});
 	},
 
 	render: function() {

@@ -7,7 +7,7 @@
 			<div class="list-group">
 				<a class="list-group-item active" href="#login">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;登录
+					&nbsp;未登录
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 			</div>

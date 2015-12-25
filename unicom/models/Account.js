@@ -4,6 +4,7 @@ module.exports = exports = function(mongoose){
 			email: {type: String, unique: true},
 			password: String,
 			username: String,
+			apps: [],
 			roles: [],
 			birthday: {
 				day: {type:Number,min:1,max:31, required: false},

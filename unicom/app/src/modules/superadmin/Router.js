@@ -4,7 +4,7 @@ var Backbone = require('backbone');
 var config = require('./conf');
 
 var LayoutView = require('./views/__Layout');
-var LoginView = require('../../views/_MyAccountLogin2');
+var LoginView = require('../../views/_Login2');
 var MyAccountViewView = require('../../views/_MyAccountView');
 var MyAccountEditView = require('../../views/_MyAccountEdit');
 var IndexView = require('./views/Index');
@@ -22,7 +22,7 @@ var RoleIndexView = require('./views/_RoleIndex');
 var RoleEditView = require('./views/_RoleEdit');
 
 exports = module.exports = Backbone.Router.extend({
-	prefix: '/super',
+	appCode: config.app.nickname,
 	account: null,//login account
 	logined: false,
 	currentView : null,
@@ -99,7 +99,7 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		//this.appEvents.trigger('set:brand','登录');
 		var loginView = new LoginView({
-			prefix: this.prefix,
+			appCode: this.appCode,
 			router: this,
 			el: '#content',
 			appEvents: this.appEvents,
@@ -130,7 +130,6 @@ exports = module.exports = Backbone.Router.extend({
 			id = 'me';
 		}
 		var profileViewView = new MyAccountViewView({
-			prefix: this.prefix,
 			router: this,
 			el: '#content',
 			id: id,

@@ -13,7 +13,7 @@ exports = module.exports = FormView.extend({
 	el: '#accountForm',
 
 	initialize: function(options) {
-		this.prefix = options.prefix;
+		this.router = options.router;
 		var page = $(accountTpl);
 		var viewTemplate = $('#viewTemplate', page).html();
 		this.template = _.template(_.unescape(viewTemplate || ''));
@@ -43,7 +43,7 @@ exports = module.exports = FormView.extend({
 		var that = this;
 		this.appEvents.trigger('logout');
 		$.ajax({
-			url: config.api.host + that.prefix +'/logout',
+			url: config.api.host +'/logout',
 			type: 'GET',
 			xhrFields: {
 				withCredentials: true
