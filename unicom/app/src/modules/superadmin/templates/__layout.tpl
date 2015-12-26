@@ -32,6 +32,11 @@
 					&nbsp;用户管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
+				<a class="list-group-item" href="#session/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;会话管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
 				<a class="list-group-item" href="#monitor/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;运营监控

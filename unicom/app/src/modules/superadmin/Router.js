@@ -11,6 +11,8 @@ var IndexView = require('./views/Index');
 
 var PlatformAppIndexView = require('./views/_PlatformAppIndex');
 var PlatformAppEditView = require('./views/_PlatformAppEdit');
+var PlatformSessionIndexView = require('./views/_PlatformSessionIndex');
+var PlatformSessionEditView = require('./views/_PlatformSessionEdit');
 
 var FeatureIndexView = require('./views/_PlatformFeatureIndex');
 var FeatureEditView = require('./views/_PlatformFeatureEdit');
@@ -35,6 +37,8 @@ exports = module.exports = Backbone.Router.extend({
 		'profile/:id': 'profileView',
 		'profile/edit/me': 'profileEdit',
 
+		'session/index': 'sessionIndex',
+		'session/edit/:id': 'sessionEdit',
 		'app/index': 'appIndex',
 		'app/add': 'appEdit',	
 		'app/edit/:id': 'appEdit',
@@ -181,7 +185,34 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(appEditView);
 		appEditView.trigger('load');
 	},
-	
+
+	sessionIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		var sessionIndexView = new PlatformSessionIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(sessionIndexView);
+		sessionIndexView.trigger('load');
+	},
+
+	sessionEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		var sessionEditView = new PlatformSessionEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(sessionEditView);
+		sessionEditView.trigger('load');
+	},
+		
 	featureIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
