@@ -1,22 +1,20 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    customerTpl = require('../templates/_entityChannelCustomer.tpl'),
-	ChannelCustomer = require('../models/ChannelCustomer');
+    customerTpl = require('../templates/_entityCustomer.tpl'),
+	Customer = require('../models/Customer');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
 	el: '#customerForm',
 
-	modelFilled: false,
-
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new ChannelCustomer({_id: options.id});
+		this.model = new Customer();
 		var page = $(customerTpl);
-		var editTemplate = $('#editTemplate', page).html();
-		this.template = _.template(_.unescape(editTemplate || ''));
+		var addTemplate = $('#addTemplate', page).html();
+		this.template = _.template(_.unescape(addTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -26,11 +24,7 @@ exports = module.exports = FormView.extend({
 	},
 
 	load: function(){
-		this.model.fetch({
-			xhrFields: {
-				withCredentials: true
-			},
-		});
+		this.render();
 	},
 
 	submit: function() {
@@ -45,23 +39,14 @@ exports = module.exports = FormView.extend({
 		});
 		return false;
 	},
-	
 
 	cancel: function(){
 		this.router.navigate('customer/index',{trigger: true, replace: true});
 		return false;
 	},
 
-	//fetch event: done
 	done: function(response){
-		if(!this.modelFilled){
-			//first fetch: get model
-			this.modelFilled = true;
-			this.render();
-		}else{
-			//second fetch: submit
-			this.router.navigate('customer/index',{trigger: true, replace: true});
-		}
+		this.router.navigate('customer/index',{trigger: true, replace: true});
 	},
 
 	render: function(){

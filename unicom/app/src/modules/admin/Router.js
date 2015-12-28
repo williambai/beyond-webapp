@@ -17,9 +17,10 @@ var ChannelEntityIndexView = require('./views/_ChannelEntityIndex');
 var ChannelEntityAddView = require('./views/_ChannelEntityAdd');
 var ChannelEntityEditView = require('./views/_ChannelEntityEdit');
 
-var ChannelCustomerIndexView = require('./views/_ChannelCustomerIndex');
-var ChannelCustomerAddView = require('./views/_ChannelCustomerAdd');
-var ChannelCustomerEditView = require('./views/_ChannelCustomerEdit');
+var CustomerIndexView = require('./views/_CustomerIndex');
+var CustomerEditView = require('./views/_CustomerEdit');
+var CustomerImportView = require('./views/_CustomerImport');
+var CustomerExportView = require('./views/_CustomerExport');
 
 var GoodsEntityIndexView = require('./views/_GoodsEntityIndex');
 var GoodsEntityAddView = require('./views/_GoodsEntityAdd');
@@ -87,12 +88,15 @@ exports = module.exports = Backbone.Router.extend({
 		'account/add': 'accountEdit',
 		'account/edit/:id': 'accountEdit',
 
+		'customer/index': 'customerIndex',
+		'customer/add': 'customerEdit',
+		'customer/edit/:id': 'customerEdit',
+		'customer/import': 'customerImport',
+		'customer/export': 'customerExport',
+
 		'channel/index': 'channelIndex',
 		'channel/add': 'channelAdd',
 		'channel/edit/:id': 'channelEdit',
-		'customer/index': 'customerIndex',
-		'customer/add': 'customerAdd',
-		'customer/edit/:id': 'customerEdit',
 		'goods/index': 'goodsIndex',
 		'goods/add': 'goodsAdd',
 		'goods/edit/:id': 'goodsEdit',
@@ -322,26 +326,12 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','客户管理');
-		var customerIndexView = new ChannelCustomerIndexView({
+		var customerIndexView = new CustomerIndexView({
 			router: this,
 			el: '#content',
 		});
 		this.changeView(customerIndexView);
 		customerIndexView.trigger('load');
-	},	
-
-	customerAdd: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','新增客户');
-		var customerAddView = new ChannelCustomerAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(customerAddView);
-		customerAddView.trigger('load');
 	},	
 
 	customerEdit: function(id){
@@ -350,7 +340,7 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','修改客户');
-		var customerEditView = new ChannelCustomerEditView({
+		var customerEditView = new CustomerEditView({
 			router: this,
 			el: '#content',
 			id: id,
@@ -359,6 +349,33 @@ exports = module.exports = Backbone.Router.extend({
 		customerEditView.trigger('load');
 	},	
 
+	customerImport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','客户导入');
+		var customerImportView = new CustomerImportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(customerImportView);
+		customerImportView.trigger('load');
+	},	
+
+	customerExport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','客户导出');
+		var customerExportView = new CustomerExportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(customerExportView);
+		customerExportView.trigger('load');
+	},	
 
 	goodsIndex: function(){
 		if(!this.logined){

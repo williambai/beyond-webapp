@@ -1,15 +1,15 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    customerTpl = require('../templates/_entityChannelCustomer.tpl'),
+    customerTpl = require('../templates/_entityCustomer.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var ChannelCustomer = require('../models/ChannelCustomer');
-var ListView = require('./_ChannelCustomerList');
-var SearchView = require('./_ChannelCustomerSearch');
+var Customer = require('../models/Customer');
+var ListView = require('./_CustomerList');
+var SearchView = require('./_CustomerSearch');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -27,9 +27,11 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addChannelCustomer',
-		'click .edit': 'editChannelCustomer',
-		'click .delete': 'removeChannelCustomer',
+		'click .add': 'addCustomer',
+		'click .edit': 'editCustomer',
+		'click .delete': 'removeCustomer',
+		'click .import': 'importCustomer',
+		'click .export': 'exportCustomer',
 	},
 
 	load: function() {
@@ -52,24 +54,34 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addChannelCustomer: function(){
+	addCustomer: function(){
 		this.router.navigate('customer/add',{trigger: true});
 		return false;
 	},
 
-	editChannelCustomer: function(evt){
+	editCustomer: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');
 		this.router.navigate('customer/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeChannelCustomer: function(evt){
+	removeCustomer: function(evt){
 		if(window.confirm('您确信要删除吗？')){
 			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new ChannelCustomer({_id: id});
+			var model = new Customer({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh',model.urlRoot);
 		}
+		return false;
+	},
+
+	importCustomer: function(){
+		this.router.navigate('customer/import',{trigger: true});
+		return false;
+	},
+
+	exportCustomer: function(){
+		this.router.navigate('customer/export',{trigger: true});
 		return false;
 	},
 

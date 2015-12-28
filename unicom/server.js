@@ -1,3 +1,4 @@
+require('newrelic');
 var log4js = require('log4js');
 var _ = require('underscore');
 var util = require('util');
@@ -39,13 +40,14 @@ var models = {
 		PlatformFeature: require('./models/PlatformFeature')(mongoose),
 		PlatformRole: require('./models/PlatformRole')(mongoose),
 
+		Customer: require('./models/CustomerEntity')(mongoose),
+		
 		AccountActivity: require('./models/AccountActivity')(mongoose),
 		Order: require('./models/Order')(mongoose),
 		ChannelCategory: require('./models/ChannelCategory')(mongoose),
 		ChannelDepartment: require('./models/ChannelDepartment')(mongoose),
 		ChannelGrid: require('./models/ChannelGrid')(mongoose),
 		ChannelEntity: require('./models/ChannelEntity')(mongoose),
-		ChannelCustomer: require('./models/ChannelCustomer')(mongoose),
 		PageRecommend: require('./models/PageRecommend')(mongoose),
 		PromoteProduct: require('./models/PromoteProduct')(mongoose),
 		PromoteEvent: require('./models/PromoteEvent')(mongoose),
