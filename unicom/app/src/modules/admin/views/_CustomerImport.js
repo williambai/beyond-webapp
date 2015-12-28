@@ -2,23 +2,23 @@ var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery'),
     customerTpl = require('../templates/_entityCustomer.tpl'),
-    SearchView = require('./__SearchView');
+    FormView = require('./__FormView');
 var config = require('../conf');
 
-var SearchModel = Backbone.Model.extend({
+var Customer = require('../models/Customer');
 
-});
+exports = module.exports = FormView.extend({
+	el: '#importForm',
 
-exports = module.exports = SearchView.extend({
-	el: '#import',
+	modelFilled: false,
 
 	initialize: function(options){
 		this.router = options.router;
+		this.model = new Customer();
 		var page = $(customerTpl);
 		var importTemplate = $('#importTemplate', page).html();
 		this.template = _.template(_.unescape(importTemplate || ''));
-		this.model = new SearchModel();
-		this.on('load', this.load,this);
+		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
@@ -29,8 +29,34 @@ exports = module.exports = SearchView.extend({
 		'click .back': 'cancel',
 	},
 
+
 	load: function(){
-		this.render();
+		if(this.model.isNew()){
+			this.modelFilled = true;
+			return;
+		}
+		this.model.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
+		});
+	},
+
+	inputText: function(evt){
+		var that = this;
+		//clear error
+		this.$(evt.currentTarget).parent().removeClass('has-error');
+		this.$(evt.currentTarget).parent().find('span.help-block').empty();
+		var arr = this.$(evt.currentTarget).serializeArray();
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(error){
+				//set error
+				this.$(evt.currentTarget).parent().addClass('has-error');
+				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
+			}
+		})
+		return false;
 	},
 
 	showFileExplorer: function() {
@@ -43,7 +69,7 @@ exports = module.exports = SearchView.extend({
 		var formData = new FormData();
 		formData.append('files', evt.currentTarget.files[0]);
 		$.ajax({
-			url: config.api.host + '/upload',
+			url: config.api.host + '/attachments',
 			type: 'POST',
 			data: formData,
 			xhrFields: {
@@ -53,11 +79,9 @@ exports = module.exports = SearchView.extend({
 			processData: false, //MUST be false
 			contentType: false, //MUST be false
 		}).done(function(data) {
-			if (data && data.type) {
-				// if(/jpg|png/.test(data.type)){
-				that.$('.attachments').append('<span class="attachment"><input type="hidden" name="attachment" value="' + data.filename + '"><img src="' + data.filename + '" width="80px" height="80px">&nbsp;</span>');
+			if (data) {
+				that.$('.attachments').append('<span class="attachment"><input type="hidden" name="attachment" value="' + data.url + '"><img src="' + data.url + '" width="80px" height="80px">&nbsp;</span>');
 				that.$('input[name=file]').val('');
-				// }
 			}
 		}).fail(function(err) {
 			console.log(err);
@@ -90,6 +114,23 @@ exports = module.exports = SearchView.extend({
 
 
 	submit: function() {
+		var that = this;
+		//clear errors
+		this.$('.form-group').removeClass('has-error');
+		this.$('.form-group').find('span.help-block').empty();
+		var arr = this.$('form').serializeArray();
+		var errors = [];
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(error){
+				errors.push(error);
+				that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
+				that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
+			}
+		});
+		if(!_.isEmpty(errors)) return false;
+		//validate finished.
+
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
 		// console.log(this.model.attributes);
@@ -106,11 +147,21 @@ exports = module.exports = SearchView.extend({
 		return false;
 	},
 
+	//fetch event: done
 	done: function(response){
-		//reset form
-		that.$('input[name=file]').val('');
-		that.$('.attachments').empty();
+		var that = this;
+		if(!this.modelFilled){
+			//first fetch: get model
+			this.modelFilled = true;
+			this.render();
 
+		}else{
+			//second fetch: submit
+			this.router.navigate('customer/index',{trigger: true, replace: true});
+			//reset form
+			// that.$('input[name=file]').val('');
+			// that.$('.attachments').empty();
+		}
 	},
 
 	render: function(){

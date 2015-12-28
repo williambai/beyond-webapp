@@ -105,6 +105,7 @@
 			<div class="panel-body">
 				<p>请点击<i class="fa fa-plus-circle"></i>选择要上传的文件，点击已上传的文件，可以取消上传。</p>
 				<form>
+					<input type="hidden" name="type" value="import">
 					<div class="form-group">
 						<span class="attachments"></span>
 						<span>
@@ -122,8 +123,8 @@
 						</div>
 						</div>
 					</div>
-				</form>
 				<input class="hidden" type="file" name="file"/>
+				</form>
 				<hr>
 				<p>导入数据列依次为：</p>
 			</div>
@@ -136,7 +137,7 @@
 			</div>
 			<div class="panel-body">
 				<form>
-					<input type="hidden" name="type" value="search">
+					<input type="hidden" name="type" value="export">
 					<div class="form-group">
 						<label>管理部门：</label>
 						<input type="text" name="department" value="<%= model.department %>" class="form-control" placeholder="请输入组织名称并从列表中选择">
