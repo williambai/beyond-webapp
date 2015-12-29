@@ -41,120 +41,120 @@
 		<hr/>
 	</div>
 	<div id="editTemplate">
-		<form class="form-horizontal">
+		<form>
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h5 class="panel-title text-center">编辑订单</h5>
 				</div>
 				<div class="panel-body">
 					<div class="form-group">
-						<label class="col-sm-2 control-label">订单号：</label>
+						<label class="col-sm-2">订单号：</label>
 						<div class="col-sm-10">
-							<p class="form-control-static"><%= model._id %></p>
+							<p><%= model._id %></p>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">订单名称：</label>
+						<label class="col-sm-2">订单名称：</label>
 						<div class="col-sm-10">
-							<p class="form-control-static"><%= model.name %></p>
+							<p><%= model.name %></p>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">订单描述：</label>
+						<label class="col-sm-2">订单描述：</label>
 						<div class="col-sm-10">
-							<p class="form-control-static"><%= model.description %></p>
+							<p><%= model.description %></p>
+						</div>
+					</div>
+					<p>&nbsp;</p>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title text-center">商品清单</h4>
+						</div>
+						<div class="panel-body">
+							<div id="items">
+							</div>
+							<div>
+								<h3 class="text-right">总价：<%= Number(model.total).toFixed(2) %>元</h3>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title text-center">客户信息</h4>
+						</div>
+						<div class="panel-body">
+							<div class="form-group">
+								<label>客户姓名：</label>
+									<input type="text" name="customer[name]" class="form-control">
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>证件类型：</label>
+									<input type="text" name="customer[idType]" class="form-control">
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>证件号码：</label>
+									<input type="text" name="customer[idNo]" class="form-control">
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>证件地址：</label>
+									<input type="text" name="customer[idAddress]" class="form-control">
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>联系电话：</label>
+									<input type="text" name="customer[phone]" class="form-control">
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>联系地址：</label>
+									<input type="text" name="customer[address]" class="form-control">
+									<span class="help-block"></span>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title text-center">配送信息</h4>
+						</div>
+						<div class="panel-body">
+							<div class="form-group">
+								<label>配送方式：</label>
+									<input type="text" name="dispatch" class="form-control">
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>联系电话：</label>
+									<input type="text" name="" value="<%= model.customer.mobile %>" class="form-control">
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>收货地址：</label>
+									<input type="text" name="" value="<%= model.customer.address %>" class="form-control">
+									<span class="help-block"></span>
+							</div>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">订单状态：</label>
-						<div class="col-sm-10">
-							<select name="status">
-								<option>新建</option>
-								<option>新建</option>
-								<option>新建</option>
-							</select>
+						<label>订单状态：</label>
+						<select name="status" class="form-control">
+							<option>新建</option>
+							<option>新建</option>
+							<option>新建</option>
+						</select>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group">
+								<input type="submit" value="更改客户信息" class="btn btn-danger">
+							</div>
+							<div class="btn-group">
+								<button class="btn btn-primary back">取消</button>
+							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title text-center">商品清单</h4>
-				</div>
-				<div class="panel-body">
-					<div id="items">
-					</div>
-					<div>
-						<h3 class="text-right">总价：<%= Number(model.total).toFixed(2) %>元</h3>
-					</div>
-				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title text-center">客户信息</h4>
-				</div>
-				<div class="panel-body">
-					<div class="form-group">
-						<label>客户姓名：</label>
-							<input type="text" name="customer[name]" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>证件类型：</label>
-							<input type="text" name="customer[idType]" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>证件号码：</label>
-							<input type="text" name="customer[idNo]" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>证件地址：</label>
-							<input type="text" name="customer[idAddress]" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>联系电话：</label>
-							<input type="text" name="customer[phone]" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>联系地址：</label>
-							<input type="text" name="customer[address]" class="form-control">
-							<span class="help-block"></span>
-					</div>
-				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4 class="panel-title text-center">配送信息</h4>
-				</div>
-				<div class="panel-body">
-					<div class="form-group">
-						<label>配送方式：</label>
-							<input type="text" name="dispatch" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>联系电话：</label>
-							<input type="text" name="" value="<%= model.customer.mobile %>" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>收货地址：</label>
-							<input type="text" name="" value="<%= model.customer.address %>" class="form-control">
-							<span class="help-block"></span>
-					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="btn-group btn-group-justified">
-					<div class="btn-group">
-						<input type="submit" value="更改客户信息" class="btn btn-danger">
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-primary back">取消</button>
 					</div>
 				</div>
 			</div>
@@ -171,39 +171,39 @@
 			<div class="panel-body">
 				<form class="form-horizontal">
 					<div class="form-group">
-						<label class="col-sm-2 control-label">订单号：</label>
+						<label class="col-sm-2">订单号：</label>
 						<div class="col-sm-10">
-							<p class="form-control-static"><%= model._id %></p>
+							<p><%= model._id %></p>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">订单名称：</label>
+						<label class="col-sm-2">订单名称：</label>
 						<div class="col-sm-10">
-							<p class="form-control-static"><%= model.name %></p>
+							<p><%= model.name %></p>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">订单描述：</label>
+						<label class="col-sm-2">订单描述：</label>
 						<div class="col-sm-10">
-							<p class="form-control-static"><%= model.description %></p>
+							<p><%= model.description %></p>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">订单状态：</label>
+						<label class="col-sm-2">订单状态：</label>
 						<div class="col-sm-10">
-							<p class="form-control-static"><%= model.status %></p>
+							<p><%= model.status %></p>
 						</div>
 					</div>
 <!-- 					<div class="form-group">
-						<label class="col-sm-2 control-label">物料名称：</label>
+						<label class="col-sm-2">物料名称：</label>
 						<div class="col-sm-10">
-							<p class="form-control-static"><%= model.goodId %></p>
+							<p><%= model.goodId %></p>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2 control-label">物料ID：</label>
+						<label class="col-sm-2">物料ID：</label>
 						<div class="col-sm-10">
-							<p class="form-control-static"><%= model.goodName %></p>
+							<p><%= model.goodName %></p>
 						</div>
 					</div>
  -->					<div class="panel panel-default">

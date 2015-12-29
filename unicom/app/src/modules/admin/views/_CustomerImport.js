@@ -17,7 +17,9 @@ exports = module.exports = FormView.extend({
 		this.model = new Customer();
 		var page = $(customerTpl);
 		var importTemplate = $('#importTemplate', page).html();
+		var reportTemplate = $('#importReportTemplate',page).html();
 		this.template = _.template(_.unescape(importTemplate || ''));
+		this.reportTemplate = _.template(_.unescape(reportTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -80,7 +82,7 @@ exports = module.exports = FormView.extend({
 			contentType: false, //MUST be false
 		}).done(function(data) {
 			if (data) {
-				that.$('.attachments').append('<span class="attachment"><input type="hidden" name="attachment" value="' + data.url + '"><img src="' + data.url + '" width="80px" height="80px">&nbsp;</span>');
+				that.$('.attachments').append('<span class="attachment"><input type="hidden" name="attachment" value="' + data.url + '"><img src="/images/excel.jpg" width="80px" height="80px">&nbsp;</span>');
 				that.$('input[name=file]').val('');
 			}
 		}).fail(function(err) {
@@ -94,7 +96,7 @@ exports = module.exports = FormView.extend({
 			var that = this;
 			var filename = $(evt.currentTarget).find('img').attr('src');
 			$.ajax({
-				url: config.api.host + '/upload',
+				url: config.api.host + '/attachments',
 				type: 'DELETE',
 				data: {
 					filename: filename
@@ -157,10 +159,11 @@ exports = module.exports = FormView.extend({
 
 		}else{
 			//second fetch: submit
-			this.router.navigate('customer/index',{trigger: true, replace: true});
+			// this.router.navigate('customer/index',{trigger: true, replace: true});
 			//reset form
 			// that.$('input[name=file]').val('');
 			// that.$('.attachments').empty();
+			that.$el.html(this.reportTemplate({}));
 		}
 	},
 

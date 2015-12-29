@@ -40,6 +40,9 @@ exports = module.exports = Backbone.View.extend({
 		this.searchView = new SearchView({
 			el: '#search',
 		});
+		this.searchView.done = function(query){
+			that.listView.trigger('refresh', query);
+		};
 		this.listView = new ListView({
 			el: '#list',
 		});

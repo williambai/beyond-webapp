@@ -1,4 +1,9 @@
- exports = module.exports = function(app, models) {
+ var util = require('util');
+var log4js = require('log4js');
+var logger = log4js.getLogger('route:entity.customer');
+logger.setLevel('DEBUG');
+
+exports = module.exports = function(app, models) {
  	var _ = require('underscore');
  	var async = require('async');
  	var xlsx = require('xlsx');
@@ -6,35 +11,38 @@
 
  	var importData = function(req, res) {
  		var attachments;
- 		if(_.isString(req.body.attachment)){
+ 		if(typeof req.body.attachment == 'string'){
  			attachments = [];
 			attachments.push(req.body.attachment);
  		}else{
  			attachments = req.body.attachment;
  		} 
  		attachments = attachments || [];
+ 		logger.debug('attachments:' + attachments);
  		var docs = [];
  		async.each(attachments, function(attachment, cb) {
  			var file = path.join(__dirname,'../public',attachment);
  			if(!require('fs').existsSync(file)){
  				return cb({code: 40440, msg: '文件不存在'});
  			}
+ 			logger.debug('file: ' + file);
  			var workBook = xlsx.readFile(file);
  			var sheetName = workBook.SheetNames[0];
- 			var workSheet = workBook[sheetName];
+ 			var workSheet = workBook.Sheets[sheetName];
  			var docs = xlsx.utils.sheet_to_json(workSheet);
+ 			logger.debug('docs: ' + JSON.stringify(docs));
  			async.each(docs, function(doc, callback) {
- 				models.Customer.findByOneAndUpdate({
+ 				models.Customer.findOneAndUpdate({
  						mobile: doc.mobile
  					}, {
  						$set: doc
  					}, {
- 						'upsert': false,
+ 						'upsert': true,
  						'new': true,
  					},
  					function(err, doc) {
  						if (err) return callback(err);
- 						callback(null, doc);
+ 						callback(null);
  					}
  				);
  			}, function(err, result) {
@@ -53,74 +61,74 @@
  		var sheetName = workBook.SheetNames[0];
  		var workSheet = workBook.Sheets[sheetName];
  		workSheet['!ref'] = 'A1:E' + docs.length;
- 		workSheet['A0'] = {
+ 		workSheet['A1'] = {
  			t: 's',
- 			v: '客户姓名',
- 			h: '客户姓名',
- 			w: '客户姓名',
+ 			v: 'name',
+ 			h: 'name',
+ 			w: 'name',
  		};
- 		workSheet['B0'] = {
+ 		workSheet['B1'] = {
  			t: 's',
- 			v: '客户手机',
- 			h: '客户手机',
- 			w: '客户手机',
+ 			v: 'mobile',
+ 			h: 'mobile',
+ 			w: 'mobile',
  		};
- 		workSheet['C0'] = {
+ 		workSheet['C1'] = {
  			t: 's',
- 			v: '管理部门',
- 			h: '管理部门',
- 			w: '管理部门',
+ 			v: 'department',
+ 			h: 'department',
+ 			w: 'department',
  		};
- 		workSheet['D0'] = {
+ 		workSheet['D1'] = {
  			t: 's',
- 			v: '渠道名称',
- 			h: '渠道名称',
- 			w: '渠道名称',
+ 			v: 'channel',
+ 			h: 'channel',
+ 			w: 'channel',
  		};
- 		workSheet['E0'] = {
+ 		workSheet['E1'] = {
  			t: 's',
- 			v: '网格名称',
- 			h: '网格名称',
- 			w: '网格名称',
+ 			v: 'grid',
+ 			h: 'grid',
+ 			w: 'grid',
  		};
  		_.each(docs, function(doc, i) {
- 			workSheet['A' + (1 + i)] = {
+ 			workSheet['A' + (2 + i)] = {
  				t: 's',
  				v: doc.name,
  				h: doc.name,
  				w: doc.name,
  			};
- 			workSheet['B' + (1 + i)] = {
+ 			workSheet['B' + (2 + i)] = {
  				t: 's',
  				v: doc.mobile,
  				h: doc.mobile,
  				w: doc.mobile,
  			};
- 			workSheet['C' + (1 + i)] = {
+ 			workSheet['C' + (2 + i)] = {
  				t: 's',
  				v: doc.department,
  				h: doc.department,
  				w: doc.department,
  			};
- 			workSheet['D' + (1 + i)] = {
+ 			workSheet['D' + (2 + i)] = {
  				t: 's',
  				v: doc.channel,
  				h: doc.channel,
  				w: doc.channel,
  			};
- 			workSheet['E' + (1 + i)] = {
+ 			workSheet['E' + (2 + i)] = {
  				t: 's',
  				v: doc.grid,
  				h: doc.grid,
  				w: doc.grid,
  			};
  		});
- 		// console.log(workSheet)
+ 		logger.debug('export workSheet: ' + JSON.stringify(workSheet));
  		xlsx.writeFile(workBook, path.join(__dirname, '../public/_tmp/customer.xlsx'));
  		process.nextTick(function() {
  			var filename = path.join(__dirname, '../public/_tmp/customer.xlsx');
  			if (require('fs').existsSync(filename)) {
- 				// console.log(filename);
+ 				logger.debug('export filename: ' + filename);
  				res.setHeader('Content-Type', 'application/vnd.openxmlformats');
  				res.setHeader("Content-Disposition", "attachment; filename=customer.xlsx");
  				// res.attachment(filename);
@@ -130,6 +138,7 @@
  	};
 
  	var add = function(req, res) {
+ 		logger.debug('req.body: ' + JSON.stringify(req.body));
  		var type = req.body.type || '';
  		switch (type) {
  			case 'import':
@@ -181,7 +190,57 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
  		switch (type) {
- 			case 'export':
+			case 'search':
+				var searchStr = req.query.searchStr || '';
+				var searchRegex = new RegExp(searchStr, 'i');
+				logger.debug('search status: ' + req.query.status);
+				var status = req.query.status;
+				if (_.isEmpty(status)) {
+					models.Customer.find({
+							$or: [{
+								'name': {
+									$regex: searchRegex
+								}
+							}, {
+								'mobile': {
+									$regex: searchRegex
+								}
+							}]
+						})
+						.sort({
+							_id: -1
+						})
+						.skip(per * page)
+						.limit(per)
+						.exec(function(err, docs) {
+							if (err) return res.send(err);
+							res.send(docs);
+						});
+				} else {
+					models.Customer.find({
+							status: status,
+							$or: [{
+								'name': {
+									$regex: searchRegex
+								}
+							}, {
+								'mobile': {
+									$regex: searchRegex
+								}
+							}]
+						})
+						.sort({
+							_id: -1
+						})
+						.skip(per * page)
+						.limit(per)
+						.exec(function(err, docs) {
+							if (err) return res.send(err);
+							res.send(docs);
+						});
+				}
+				break;
+			case 'export':
  				var department = req.query.department;
  				var grid = req.query.grid;
  				var channel = req.query.channel;
@@ -189,9 +248,6 @@
  					.find({})
  					.exec(function(err, docs) {
  						if (err) return res.send(err);
- 						// console.log(docs);
- 						// res.locals.docs = docs;
- 						// res.send(docs);
  						exportData(req, res, docs);
  					});
  				break;

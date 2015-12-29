@@ -21,13 +21,14 @@
 		<form id="searchForm" class="form-inline">
 			<div class="form-group">
 				<label>&nbsp;&nbsp;</label>
+				<input type="hidden" name="type" value="search">
 				<input type="text" name="searchStr" class="form-control" placeholder="客户姓名或手机号">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
-				<select class="form-control">
-					<option>全部</option>
-					<option>有效</option>
-					<option>无效</option>
+				<select class="form-control" name="status">
+					<option value="">全部</option>
+					<option value="有效">有效</option>
+					<option value="无效">无效</option>
 				</select>&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
@@ -104,6 +105,7 @@
 			</div>
 			<div class="panel-body">
 				<p>请点击<i class="fa fa-plus-circle"></i>选择要上传的文件，点击已上传的文件，可以取消上传。</p>
+				<p>友情提示：为保证导入效率，每次最好仅选择导入一个文件。</p>
 				<form>
 					<input type="hidden" name="type" value="import">
 					<div class="form-group">
@@ -126,10 +128,57 @@
 				<input class="hidden" type="file" name="file"/>
 				</form>
 				<hr>
-				<p>导入数据列依次为：</p>
+				<h4>导入excel数据表格列格式如下：</h4>
+				<p></p>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>列序号</th>
+							<th>列名称(即：excel第一行名称)</th>
+							<th>列含义</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td>name</td>
+							<td>客户姓名</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>mobile</td>
+							<td>客户手机</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>deparment</td>
+							<td>管理部门，用&gt;&gt;表示部门层级</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>channel</td>
+							<td>渠道编码</td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td>grid</td>
+							<td>网格编码</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>	
+	<div id="importReportTemplate">
+		<div class="panel panel-default" id="reportForm">
+			<div class="panel-heading">
+				<h3 class="panel-title text-center">导入报告</h3>
+			</div>
+			<div class="panel-body">
+				<button class="btn btn-primary btn-block back">返回</button>
+			</div>
+		</div>
+	</div>
 	<div id="exportTemplate">
 		<div class="panel panel-default" id="exportForm">
 			<div class="panel-heading">
@@ -167,8 +216,45 @@
 						</div>
 					</div>
 				</form>
-				<hr>
-				<p>导出数据列依次为：</p>
+				<hr>				
+				<h4>导出excel数据表格列格式如下：</h4>
+				<p></p>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>列序号</th>
+							<th>列名称(即：excel第一行名称)</th>
+							<th>列含义</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td>name</td>
+							<td>客户姓名</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>mobile</td>
+							<td>客户手机</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>deparment</td>
+							<td>管理部门，用&gt;&gt;表示部门层级</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>channel</td>
+							<td>渠道编码</td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td>grid</td>
+							<td>网格编码</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 
