@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery'),
-    cardTpl = require('../templates/_entityCard.tpl'),
+    customerTpl = require('../templates/_entityCustomer.tpl'),
     SearchView = require('./__SearchView');
 var config = require('../conf');
 
@@ -12,7 +12,7 @@ exports = module.exports = SearchView.extend({
 	el: '#search',
 
 	initialize: function(options){
-		var page = $(cardTpl);
+		var page = $(customerTpl);
 		var searchTemplate = $('#searchTemplate', page).html();
 		this.template = _.template(_.unescape(searchTemplate || ''));
 		this.model = new SearchModel();
@@ -26,7 +26,6 @@ exports = module.exports = SearchView.extend({
 
 	load: function(){
 		this.render();
-		this.trigger('ready');
 	},
 
 	search: function(){

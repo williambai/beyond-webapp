@@ -21,6 +21,7 @@ var SmsViewView = require('./views/_SmsView');
 var CardIndexView = require('./views/_CardIndex');
 var CardViewView = require('./views/_CardView');
 var OrderIndexView = require('./views/_OrderIndex');
+var CustomerIndexView = require('./views/_CustomerIndex');
 
 var config = require('./conf');
 var MENU_DEFAULT = require('./conf/menu');
@@ -52,6 +53,7 @@ exports = module.exports = Backbone.Router.extend({
 		'card/index': 'cardIndex',
 		'card/view/:id': 'cardView',
 		'order/index': 'orderIndex',
+		'customer/index': 'customerIndex',
 
 		'*path': 'index',
 	},
@@ -340,6 +342,20 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(orderIndexView);
 		orderIndexView.trigger('load');
+	},
+
+	customerIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '我的成绩');
+		var customerIndexView = new CustomerIndexView({
+			router: this,
+			el: '#content'
+		});
+		this.changeView(customerIndexView);
+		customerIndexView.trigger('load');
 	},
 
 	activityIndex: function() {

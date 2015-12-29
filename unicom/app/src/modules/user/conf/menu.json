@@ -29,7 +29,7 @@
 	}],
 	"channel_order": [{
 		"id": 6,
-		"name": "Wo 成绩",
+		"name": "我的成绩",
 		"nickname": "order",
 		"hash": "order/index"
 	}],

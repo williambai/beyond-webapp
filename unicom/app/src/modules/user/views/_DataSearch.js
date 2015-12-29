@@ -29,8 +29,8 @@ exports = module.exports = SearchView.extend({
 	},
 
 	search: function(){
-		var url = 'from=' + $('input[name=from]').val() + '&to=' + $('input[name=to]').val() + '&searchStr=' + $('input[name=searchStr]').val();
-		this.done(url);
+		var query = this.$('form').serialize();
+		this.done(query);
 		return false;
 	},
 

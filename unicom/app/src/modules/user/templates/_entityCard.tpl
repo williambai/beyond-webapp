@@ -3,7 +3,7 @@
 		<div class="panel panel-default">
 			<div class="pull-right">
 				<div>
-					<button class="btn btn-primary search">过滤</button>
+					<button class="btn btn-primary search"><i class="fa fa-filter fa-lg"></i></button>
 				</div>
 			</div>
 			<div class="panel-heading">
