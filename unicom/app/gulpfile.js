@@ -143,6 +143,7 @@ gulp.task('index.js',function(done){
 		'index.js',
 		'confirm.js',
 		'reset.js',
+		'wechat.js',
 	];
 	_bundleJS(entries,done);
 });
