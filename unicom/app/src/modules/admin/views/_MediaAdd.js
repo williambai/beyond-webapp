@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    dataTpl = require('../templates/_entityPromoteMedia.tpl'),
-	PromoteMedia = require('../models/PromoteMedia');
+    mediaTpl = require('../templates/_entityMedia.tpl'),
+	Media = require('../models/Media');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
@@ -11,8 +11,8 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new PromoteMedia();
-		var page = $(dataTpl);
+		this.model = new Media();
+		var page = $(mediaTpl);
 		var addTemplate = $('#addTemplate', page).html();
 		this.template = _.template(_.unescape(addTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -104,12 +104,12 @@ exports = module.exports = FormView.extend({
 	},
 
 	cancel: function(){
-		this.router.navigate('promote/media/index',{trigger: true, replace: true});
+		this.router.navigate('media/index',{trigger: true, replace: true});
 		return false;
 	},
 
 	done: function(response){
-		this.router.navigate('promote/media/index',{trigger: true, replace: true});
+		this.router.navigate('media/index',{trigger: true, replace: true});
 	},
 
 	render: function(){

@@ -1,4 +1,4 @@
-require('newrelic');
+// require('newrelic');
 var log4js = require('log4js');
 var _ = require('underscore');
 var util = require('util');
@@ -41,19 +41,23 @@ var models = {
 		PlatformRole: require('./models/PlatformRole')(mongoose),
 
 		Customer: require('./models/CustomerEntity')(mongoose),
+		ProductDirect: require('./models/ProductDirect')(mongoose),
+		ProductCard: require('./models/ProductCard')(mongoose),
+		ProductPhone: require('./models/ProductPhone')(mongoose),
+		Media: require('./models/Media')(mongoose),
+		Order: require('./models/Order')(mongoose),
+		// OrderCard: require('./models/OrderCard')(mongoose),
+		
+		DictPhonePackage: require('./models/DictPhonePackage')(mongoose),
+		DictCardPackage: require('./models/DictCardPackage')(mongoose),
 		
 		AccountActivity: require('./models/AccountActivity')(mongoose),
-		Order: require('./models/Order')(mongoose),
 		ChannelCategory: require('./models/ChannelCategory')(mongoose),
 		ChannelDepartment: require('./models/ChannelDepartment')(mongoose),
 		ChannelGrid: require('./models/ChannelGrid')(mongoose),
 		ChannelEntity: require('./models/ChannelEntity')(mongoose),
 		PageRecommend: require('./models/PageRecommend')(mongoose),
-		PromoteProduct: require('./models/PromoteProduct')(mongoose),
 		PromoteEvent: require('./models/PromoteEvent')(mongoose),
-		PromoteMedia: require('./models/PromoteMedia')(mongoose),
-		ProductCard: require('./models/ProductCard')(mongoose),
-		// OrderCard: require('./models/OrderCard')(mongoose),
 		// WoOrder: require('./models/WoOrder')(mongoose),
 		WoRevenue: require('./models/WoRevenue')(mongoose),
 		GoodsEntity: require('./models/GoodsEntity')(mongoose),

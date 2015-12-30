@@ -1,12 +1,12 @@
 var util = require('util');
 var log4js = require('log4js');
-var logger = log4js.getLogger('route:promote.media');
+var logger = log4js.getLogger('route:entity.media');
 logger.setLevel('INFO');
 
  exports = module.exports = function(app, models) {
 
 	var add = function(req, res) {
- 		var doc = new models.PromoteMedia(req.body);
+ 		var doc = new models.Media(req.body);
  		doc.save(function(err) {
  			if (err) return res.send(err);
 			res.send({});
@@ -14,7 +14,7 @@ logger.setLevel('INFO');
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.PromoteMedia.findByIdAndRemove(id,function(err,doc){
+ 		models.Media.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -22,7 +22,7 @@ logger.setLevel('INFO');
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.PromoteMedia.findByIdAndUpdate(id, {
+ 		models.Media.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -36,7 +36,7 @@ logger.setLevel('INFO');
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.PromoteMedia
+ 		models.Media
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -50,7 +50,7 @@ logger.setLevel('INFO');
  		page = (!page || page < 0) ? 0 : page;
  		switch(type){
  			case 'category':
- 				models.PromoteMedia
+ 				models.Media
  					.find({
  						category: req.query.category,
  						status: '有效',
@@ -63,7 +63,7 @@ logger.setLevel('INFO');
 		 			});
  				break;
  			default:
-		 		models.PromoteMedia
+		 		models.Media
 		 			.find({})
 		 			.skip(per * page)
 		 			.limit(per)
@@ -77,33 +77,33 @@ logger.setLevel('INFO');
  	 * router outline
  	 */
  	/**
- 	 * add promote/medias
+ 	 * add medias
  	 * type:
  	 *     
  	 */
- 	app.post('/promote/medias', add);
+ 	app.post('/medias', add);
  
  	/**
- 	 * update promote/medias
+ 	 * update medias
  	 * type:
  	 *     
  	 */
- 	app.put('/promote/medias/:id', update);
+ 	app.put('/medias/:id', update);
  	/**
- 	 * delete promote/medias
+ 	 * delete medias
  	 * type:
  	 *     
  	 */
- 	app.delete('/promote/medias/:id', remove);
+ 	app.delete('/medias/:id', remove);
  	/**
- 	 * get promote/medias
+ 	 * get medias
  	 */
- 	app.get('/promote/medias/:id', getOne);
+ 	app.get('/medias/:id', getOne);
 
  	/**
- 	 * get promote/medias
+ 	 * get medias
  	 * type:
  	 *      type=category&category=xxx
  	 */
- 	app.get('/promote/medias', getMore);
+ 	app.get('/medias', getMore);
  };

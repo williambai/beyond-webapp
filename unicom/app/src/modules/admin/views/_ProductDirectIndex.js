@@ -1,15 +1,15 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    dataTpl = require('../templates/_entityPromoteProduct.tpl'),
+    productTpl = require('../templates/_entityProductDirect.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var PromoteProduct = require('../models/PromoteProduct');
-var ListView = require('./_PromoteProductList');
-var SearchView = require('./_PromoteProductSearch');
+var ProductDirect = require('../models/ProductDirect');
+var ListView = require('./_ProductDirectList');
+var SearchView = require('./_ProductDirectSearch');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -19,7 +19,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(dataTpl);
+		var page = $(productTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -27,9 +27,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addPromoteProduct',
-		'click .edit': 'editPromoteProduct',
-		'click .delete': 'removePromoteProduct',
+		'click .add': 'addProductDirect',
+		'click .edit': 'editProductDirect',
+		'click .delete': 'removeProductDirect',
 	},
 
 	load: function() {
@@ -55,21 +55,21 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addPromoteProduct: function(){
-		this.router.navigate('promote/product/add',{trigger: true});
+	addProductDirect: function(){
+		this.router.navigate('product/direct/add',{trigger: true});
 		return false;
 	},
 
-	editPromoteProduct: function(evt){
+	editProductDirect: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('promote/product/edit/'+ id,{trigger: true});
+		this.router.navigate('product/direct/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removePromoteProduct: function(evt){
+	removeProductDirect: function(evt){
 		if(window.confirm('您确信要删除吗？')){
 			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new PromoteProduct({_id: id});
+			var model = new ProductDirect({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh',model.urlRoot);
 		}

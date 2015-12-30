@@ -1,6 +1,6 @@
 <div class="app">
 	<div class="navbar navbar-app navbar-absolute-top">
-		<div class="navbar-brand navbar-brand-center">贵州联通创富计划</div>
+		<div class="navbar-brand navbar-brand-center">贵州联通沃助手</div>
 	</div>
 	<div class="navbar navbar-app navbar-absolute-top" id="deviceready" style="display:none;">
 		<div class="navbar-brand-center">

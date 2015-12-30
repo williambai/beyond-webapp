@@ -41,12 +41,12 @@ exports = module.exports = FormView.extend({
 	},
 
 	cancel: function(){
-		this.router.navigate('card/index',{trigger: true, replace: true});
+		this.router.navigate('product/card/index',{trigger: true, replace: true});
 		return false;
 	},
 
 	done: function(response){
-		this.router.navigate('card/index',{trigger: true, replace: true});
+		this.router.navigate('product/card/index',{trigger: true, replace: true});
 	},
 
 	render: function(){

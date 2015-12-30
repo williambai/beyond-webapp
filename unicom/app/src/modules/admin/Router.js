@@ -13,6 +13,25 @@ var IndexView = require('./views/Index');
 var AccountIndexView = require('./views/_AccountIndex');
 var AccountEditView = require('./views/_AccountEdit');
 
+var MediaIndexView = require('./views/_MediaIndex');
+var MediaEditView = require('./views/_MediaEdit');
+var MediaAddView = require('./views/_MediaAdd');
+
+var ProductDirectIndexView = require('./views/_ProductDirectIndex');
+var ProductDirectEditView = require('./views/_ProductDirectEdit');
+
+var ProductPhonePackageIndexView = require('./views/_ProductPhonePackageIndex');
+var ProductPhonePackageEditView = require('./views/_ProductPhonePackageEdit');
+var ProductPhoneIndexView = require('./views/_ProductPhoneIndex');
+var ProductPhoneEditView = require('./views/_ProductPhoneEdit');
+
+var ProductCardPackageIndexView = require('./views/_ProductCardPackageIndex');
+var ProductCardPackageEditView = require('./views/_ProductCardPackageEdit');
+var ProductCardIndexView = require('./views/_ProductCardIndex');
+var ProductCardAddView = require('./views/_ProductCardAdd');
+var ProductCardEditView = require('./views/_ProductCardEdit');
+var ProductCardImportView = require('./views/_ProductCardImport');
+
 var ChannelEntityIndexView = require('./views/_ChannelEntityIndex');
 var ChannelEntityAddView = require('./views/_ChannelEntityAdd');
 var ChannelEntityEditView = require('./views/_ChannelEntityEdit');
@@ -30,18 +49,6 @@ var PageRecommendIndexView = require('./views/_PageRecommendIndex');
 var PageRecommendAddView = require('./views/_PageRecommendAdd');
 var PageRecommendEditView = require('./views/_PageRecommendEdit');
 
-var PromoteProductIndexView = require('./views/_PromoteProductIndex');
-var PromoteProductAddView = require('./views/_PromoteProductAdd');
-var PromoteProductEditView = require('./views/_PromoteProductEdit');
-
-var PromoteMediaIndexView = require('./views/_PromoteMediaIndex');
-var PromoteMediaAddView = require('./views/_PromoteMediaAdd');
-var PromoteMediaEditView = require('./views/_PromoteMediaEdit');
-
-var ProductCardIndexView = require('./views/_ProductCardIndex');
-var ProductCardAddView = require('./views/_ProductCardAdd');
-var ProductCardEditView = require('./views/_ProductCardEdit');
-var ProductCardImportView = require('./views/_ProductCardImport');
 
 var OrderIndexView = require('./views/_OrderIndex');
 var OrderViewView = require('./views/_OrderView');
@@ -94,6 +101,28 @@ exports = module.exports = Backbone.Router.extend({
 		'customer/import': 'customerImport',
 		'customer/export': 'customerExport',
 
+		'media/index': 'mediaIndex',
+		'media/add': 'mediaAdd',
+		'media/edit/:id': 'mediaEdit',
+		'product/direct/index': 'productDirectIndex',
+		'product/direct/add': 'productDirectEdit',
+		'product/direct/edit/:id': 'productDirectEdit',
+
+		'product/phone/package/index': 'productPhonePackageIndex',
+		'product/phone/package/add': 'productPhonePackageEdit',
+		'product/phone/package/edit/:id': 'productPhonePackageEdit',
+		'product/phone/index': 'productPhoneIndex',
+		'product/phone/add': 'productPhoneEdit',
+		'product/phone/edit/:id': 'productPhoneEdit',
+
+		'product/card/package/index': 'productCardPackageIndex',
+		'product/card/package/add': 'productCardPackageEdit',
+		'product/card/package/edit/:id': 'productCardPackageEdit',
+		'product/card/index': 'productCardIndex',
+		'product/card/add': 'productCardAdd',
+		'product/card/edit/:id': 'productCardEdit',
+		'product/card/import': 'productCardImport',
+
 		'channel/index': 'channelIndex',
 		'channel/add': 'channelAdd',
 		'channel/edit/:id': 'channelEdit',
@@ -103,16 +132,6 @@ exports = module.exports = Backbone.Router.extend({
 		'recommend/index': 'recommendIndex',
 		'recommend/add': 'recommendAdd',
 		'recommend/edit/:id': 'recommendEdit',
-		'promote/product/index': 'promoteProductIndex',
-		'promote/product/add': 'promoteProductAdd',
-		'promote/product/edit/:id': 'promoteProductEdit',
-		'promote/media/index': 'promoteMediaIndex',
-		'promote/media/add': 'promoteMediaAdd',
-		'promote/media/edit/:id': 'promoteMediaEdit',
-		'card/index': 'cardIndex',
-		'card/add': 'cardAdd',
-		'card/edit/:id': 'cardEdit',
-		'card/import': 'cardImport',
 
 		'order/index': 'orderIndex',
 		'order/view/:id': 'orderView',
@@ -463,94 +482,168 @@ exports = module.exports = Backbone.Router.extend({
 		recommendEditView.trigger('load');
 	},		
 
-	promoteProductIndex: function(){
+
+	mediaIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','产品配置');
-		var promoteProductIndexView = new PromoteProductIndexView({
+		this.appEvents.trigger('set:brand','媒体文件管理');
+		var mediaIndexView = new MediaIndexView({
 			router: this,
 			el: '#content',
 		});
-		this.changeView(promoteProductIndexView);
-		promoteProductIndexView.trigger('load');
+		this.changeView(mediaIndexView);
+		mediaIndexView.trigger('load');
 	},	
 
-	promoteProductAdd: function(){
+	mediaAdd: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','产品配置');
-		var promoteProductAddView = new PromoteProductAddView({
+		this.appEvents.trigger('set:brand','新增媒体文件');
+		var mediaAddView = new MediaAddView({
 			router: this,
 			el: '#content',
 		});
-		this.changeView(promoteProductAddView);
-		promoteProductAddView.trigger('load');
+		this.changeView(mediaAddView);
+		mediaAddView.trigger('load');
 	},	
 
-	promoteProductEdit: function(id){
+	mediaEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','产品配置');
-		var promoteProductEditView = new PromoteProductEditView({
+		this.appEvents.trigger('set:brand','修改媒体文件');
+		var mediaEditView = new MediaEditView({
 			router: this,
 			el: '#content',
 			id: id,
 		});
-		this.changeView(promoteProductEditView);
-		promoteProductEditView.trigger('load');
+		this.changeView(mediaEditView);
+		mediaEditView.trigger('load');
+	},	
+
+	productDirectIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','直通产品管理');
+		var productDirectIndexView = new ProductDirectIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(productDirectIndexView);
+		productDirectIndexView.trigger('load');
+	},	
+
+	productDirectEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改直通产品');
+		var productDirectEditView = new ProductDirectEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(productDirectEditView);
+		productDirectEditView.trigger('load');
+	},		
+
+	productPhonePackageIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','终端套餐设置');
+		var productPhonePackageIndexView = new ProductPhonePackageIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(productPhonePackageIndexView);
+		productPhonePackageIndexView.trigger('load');
+	},	
+
+	productPhonePackageEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改终端套餐');
+		var productPhonePackageEditView = new ProductPhonePackageEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(productPhonePackageEditView);
+		productPhonePackageEditView.trigger('load');
+	},		
+
+	productPhoneIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','终端产品管理');
+		var productPhoneIndexView = new ProductPhoneIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(productPhoneIndexView);
+		productPhoneIndexView.trigger('load');
+	},	
+
+	productPhoneEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改终端产品');
+		var productPhoneEditView = new ProductPhoneEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(productPhoneEditView);
+		productPhoneEditView.trigger('load');
 	},		
 
 
-	promoteMediaIndex: function(){
+	productCardPackageIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','媒体管理');
-		var promoteMediaIndexView = new PromoteMediaIndexView({
+		this.appEvents.trigger('set:brand','号卡套餐设置');
+		var productCardPackageIndexView = new ProductCardPackageIndexView({
 			router: this,
 			el: '#content',
 		});
-		this.changeView(promoteMediaIndexView);
-		promoteMediaIndexView.trigger('load');
+		this.changeView(productCardPackageIndexView);
+		productCardPackageIndexView.trigger('load');
 	},	
 
-	promoteMediaAdd: function(){
+	productCardPackageEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','媒体管理');
-		var promoteMediaAddView = new PromoteMediaAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(promoteMediaAddView);
-		promoteMediaAddView.trigger('load');
-	},	
-
-	promoteMediaEdit: function(id){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','媒体管理');
-		var promoteMediaEditView = new PromoteMediaEditView({
+		this.appEvents.trigger('set:brand','修改号卡套餐');
+		var productCardPackageEditView = new ProductCardPackageEditView({
 			router: this,
 			el: '#content',
 			id: id,
 		});
-		this.changeView(promoteMediaEditView);
-		promoteMediaEditView.trigger('load');
-	},	
+		this.changeView(productCardPackageEditView);
+		productCardPackageEditView.trigger('load');
+	},		
 
-	cardIndex: function(){
+	productCardIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
@@ -564,7 +657,7 @@ exports = module.exports = Backbone.Router.extend({
 		cardIndexView.trigger('load');
 	},	
 
-	cardAdd: function(){
+	productCardAdd: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
@@ -578,7 +671,7 @@ exports = module.exports = Backbone.Router.extend({
 		cardAddView.trigger('load');
 	},	
 
-	cardImport: function(){
+	productCardImport: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
@@ -592,7 +685,7 @@ exports = module.exports = Backbone.Router.extend({
 		cardImportView.trigger('load');
 	},	
 
-	cardEdit: function(id){
+	productCardEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;

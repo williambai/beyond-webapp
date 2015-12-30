@@ -1,12 +1,12 @@
 var util = require('util');
 var log4js = require('log4js');
-var logger = log4js.getLogger('route:promote.product');
+var logger = log4js.getLogger('route:entity.product.card');
 logger.setLevel('INFO');
 
  exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
- 		var doc = new models.PromoteProduct(req.body);
+ 		var doc = new models.ProductCard(req.body);
  		doc.save(function(err) {
  			if (err) return res.send(err);
  			res.send({});
@@ -14,7 +14,7 @@ logger.setLevel('INFO');
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.PromoteProduct.findByIdAndRemove(id,function(err,doc){
+ 		models.ProductCard.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -22,7 +22,7 @@ logger.setLevel('INFO');
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.PromoteProduct.findByIdAndUpdate(id, {
+ 		models.ProductCard.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -36,7 +36,7 @@ logger.setLevel('INFO');
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.PromoteProduct
+ 		models.ProductCard
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -50,7 +50,7 @@ logger.setLevel('INFO');
  		page = (!page || page < 0) ? 0 : page;
  		switch(type){
  			case 'category':
- 				models.PromoteProduct
+ 				models.ProductCard
  					.find({
  						category: req.query.category,
  						status: '有效',
@@ -63,7 +63,7 @@ logger.setLevel('INFO');
 		 			});
  				break;
  			default:
-		 		models.PromoteProduct
+		 		models.ProductCard
 		 			.find({})
 		 			.skip(per * page)
 		 			.limit(per)
@@ -77,33 +77,33 @@ logger.setLevel('INFO');
  	 * router outline
  	 */
  	/**
- 	 * add promote/products
+ 	 * add product/cards
  	 * type:
  	 *     
  	 */
- 	app.post('/promote/products', add);
+ 	app.post('/product/cards', add);
  	/**
- 	 * update promote/products
+ 	 * update product/cards
  	 * type:
  	 *     
  	 */
- 	app.put('/promote/products/:id', update);
+ 	app.put('/product/cards/:id', update);
 
  	/**
- 	 * delete promote/products
+ 	 * delete product/cards
  	 * type:
  	 *     
  	 */
- 	app.delete('/promote/products/:id', remove);
+ 	app.delete('/product/cards/:id', remove);
  	/**
- 	 * get promote/products
+ 	 * get product/cards
  	 */
- 	app.get('/promote/products/:id', app.grant, getOne);
+ 	app.get('/product/cards/:id', getOne);
 
  	/**
- 	 * get promote/products
+ 	 * get product/cards
  	 * type:
  	 *      type=category&category=xxx
  	 */
- 	app.get('/promote/products', app.grant, getMore);
+ 	app.get('/product/cards', getMore);
  };

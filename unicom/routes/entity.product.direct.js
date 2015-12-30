@@ -1,12 +1,12 @@
 var util = require('util');
 var log4js = require('log4js');
-var logger = log4js.getLogger('route:product.event');
+var logger = log4js.getLogger('route:product.direct');
 logger.setLevel('INFO');
 
  exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
- 		var doc = new models.PromoteEvent(req.body);
+ 		var doc = new models.ProductDirect(req.body);
  		doc.save(function(err) {
  			if (err) return res.send(err);
  			res.send({});
@@ -14,7 +14,7 @@ logger.setLevel('INFO');
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.PromoteEvent.findByIdAndRemove(id,function(err,doc){
+ 		models.ProductDirect.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -22,7 +22,7 @@ logger.setLevel('INFO');
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.PromoteEvent.findByIdAndUpdate(id, {
+ 		models.ProductDirect.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -36,7 +36,7 @@ logger.setLevel('INFO');
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.PromoteEvent
+ 		models.ProductDirect
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -50,7 +50,7 @@ logger.setLevel('INFO');
  		page = (!page || page < 0) ? 0 : page;
  		switch(type){
  			case 'category':
- 				models.PromoteEvent
+ 				models.ProductDirect
  					.find({
  						category: req.query.category,
  						status: '有效',
@@ -63,7 +63,7 @@ logger.setLevel('INFO');
 		 			});
  				break;
  			default:
-		 		models.PromoteEvent
+		 		models.ProductDirect
 		 			.find({})
 		 			.skip(per * page)
 		 			.limit(per)
@@ -77,33 +77,33 @@ logger.setLevel('INFO');
  	 * router outline
  	 */
  	/**
- 	 * add promote/events
+ 	 * add product/directs
  	 * type:
  	 *     
  	 */
- 	app.post('/promote/events', add);
+ 	app.post('/product/directs', add);
  	/**
- 	 * update promote/events
+ 	 * update product/directs
  	 * type:
  	 *     
  	 */
- 	app.put('/promote/events/:id', update);
+ 	app.put('/product/directs/:id', update);
 
  	/**
- 	 * delete promote/events
+ 	 * delete product/directs
  	 * type:
  	 *     
  	 */
- 	app.delete('/promote/events/:id', remove);
+ 	app.delete('/product/directs/:id', remove);
  	/**
- 	 * get promote/events
+ 	 * get product/directs
  	 */
- 	app.get('/promote/events/:id', getOne);
+ 	app.get('/product/directs/:id', getOne);
 
  	/**
- 	 * get promote/events
+ 	 * get product/directs
  	 * type:
  	 *      type=category&category=xxx
  	 */
- 	app.get('/promote/events', getMore);
+ 	app.get('/product/directs', getMore);
  };

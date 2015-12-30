@@ -2,8 +2,8 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     ListView = require('./__ListView'),
-    dataTpl = require('../templates/_entityPromoteMedia.tpl'),
-    PromoteMediaCollection = require('../models/PromoteMediaCollection');
+    mediaTpl = require('../templates/_entityMedia.tpl'),
+    MediaCollection = require('../models/MediaCollection');
 
 Backbone.$ = $;
 	
@@ -11,10 +11,10 @@ exports = module.exports = ListView.extend({
 	el: '#list',
 
 	initialize: function(options){
-		var page = $(dataTpl);
+		var page = $(mediaTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
 		this.template = _.template(_.unescape(itemTemplate || ''));
-		this.collection = new PromoteMediaCollection();
+		this.collection = new MediaCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){

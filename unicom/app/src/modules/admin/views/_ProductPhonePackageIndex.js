@@ -1,15 +1,15 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    cardTpl = require('../templates/_entityProductCard.tpl'),
+    productTpl = require('../templates/_entityProductPhonePackage.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var ProductCard = require('../models/ProductCard');
-var ListView = require('./_ProductCardList');
-var SearchView = require('./_ProductCardSearch');
+var ProductPhonePackage = require('../models/ProductPhonePackage');
+var ListView = require('./_ProductPhonePackageList');
+var SearchView = require('./_ProductPhonePackageSearch');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -19,7 +19,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(cardTpl);
+		var page = $(productTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -27,10 +27,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addProductCard',
-		'click .edit': 'editProductCard',
-		'click .delete': 'removeProductCard',
-		'click .import': 'importProductCard',
+		'click .add': 'addProductPhonePackage',
+		'click .edit': 'editProductPhonePackage',
+		'click .delete': 'removeProductPhonePackage',
 	},
 
 	load: function() {
@@ -41,6 +40,9 @@ exports = module.exports = Backbone.View.extend({
 		this.searchView = new SearchView({
 			el: '#search',
 		});
+		this.searchView.done = function(query){
+			that.listView.trigger('refresh', query);
+		};
 		this.listView = new ListView({
 			el: '#list',
 		});
@@ -53,29 +55,24 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addProductCard: function(){
-		this.router.navigate('product/card/add',{trigger: true});
+	addProductPhonePackage: function(){
+		this.router.navigate('product/phone/package/add',{trigger: true});
 		return false;
 	},
 
-	editProductCard: function(evt){
+	editProductPhonePackage: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('product/card/edit/'+ id,{trigger: true});
+		this.router.navigate('product/phone/package/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeProductCard: function(evt){
+	removeProductPhonePackage: function(evt){
 		if(window.confirm('您确信要删除吗？')){
 			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new ProductCard({_id: id});
+			var model = new ProductPhonePackage({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh',model.urlRoot);
 		}
-		return false;
-	},
-
-	importProductCard: function(){
-		this.router.navigate('product/card/import',{trigger: true});
 		return false;
 	},
 

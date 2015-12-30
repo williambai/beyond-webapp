@@ -76,6 +76,9 @@
 						<div style="padding-left:30px;">
 							<input type="radio" name="category" value="流量业务">&nbsp;&nbsp;流量业务
 							<input type="radio" name="category" value="增值业务">&nbsp;&nbsp;增值业务
+							<input type="radio" name="category" value="号卡业务">&nbsp;&nbsp;号卡业务
+							<input type="radio" name="category" value="终端业务">&nbsp;&nbsp;终端业务
+							<input type="radio" name="category" value="兑换业务">&nbsp;&nbsp;兑换业务
 						</div>
 					</div>
 					<div class="form-group">
@@ -131,6 +134,9 @@
 						<div style="padding-left:30px;">
 							<input type="radio" name="category" value="流量业务">&nbsp;&nbsp;流量业务
 							<input type="radio" name="category" value="增值业务">&nbsp;&nbsp;增值业务
+							<input type="radio" name="category" value="号卡业务">&nbsp;&nbsp;号卡业务
+							<input type="radio" name="category" value="终端业务">&nbsp;&nbsp;终端业务
+							<input type="radio" name="category" value="兑换业务">&nbsp;&nbsp;兑换业务
 						</div>
 					</div>
 					<div class="form-group">

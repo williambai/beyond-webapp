@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery'),
-    dataTpl = require('../templates/_entityPromoteMedia.tpl'),
+    productTpl = require('../templates/_entityProductPhone.tpl'),
     SearchView = require('./__SearchView');
 var config = require('../conf');
 
@@ -12,7 +12,7 @@ exports = module.exports = SearchView.extend({
 	el: '#search',
 
 	initialize: function(options){
-		var page = $(dataTpl);
+		var page = $(productTpl);
 		var searchTemplate = $('#searchTemplate', page).html();
 		this.template = _.template(_.unescape(searchTemplate || ''));
 		this.model = new SearchModel();
@@ -28,8 +28,9 @@ exports = module.exports = SearchView.extend({
 	},
 
 	search: function(){
-		var url = 'from=' + $('input[name=from]').val() + '&to=' + $('input[name=to]').val() + '&searchStr=' + $('input[name=searchStr]').val();
-		this.done(url);
+		var query = this.$('form').serialize();
+		// console.log(query);
+		this.done(query);
 		return false;
 	},
 

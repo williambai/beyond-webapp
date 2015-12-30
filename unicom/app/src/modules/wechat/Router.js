@@ -92,7 +92,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '贵州联通创富计划');
+		this.appEvents.trigger('set:brand', '贵州联通沃助手');
 		var indexView = new IndexView({
 			router: this,			
 		});

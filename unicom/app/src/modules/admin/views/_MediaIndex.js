@@ -1,15 +1,15 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    dataTpl = require('../templates/_entityPromoteMedia.tpl'),
+    mediaTpl = require('../templates/_entityMedia.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var PromoteMedia = require('../models/PromoteMedia');
-var ListView = require('./_PromoteMediaList');
-var SearchView = require('./_PromoteMediaSearch');
+var Media = require('../models/Media');
+var ListView = require('./_MediaList');
+var SearchView = require('./_MediaSearch');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -19,7 +19,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(dataTpl);
+		var page = $(mediaTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -27,9 +27,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addPromoteMedia',
-		'click .edit': 'editPromoteMedia',
-		'click .delete': 'removePromoteMedia',
+		'click .add': 'addMedia',
+		'click .edit': 'editMedia',
+		'click .delete': 'removeMedia',
 	},
 
 	load: function() {
@@ -52,21 +52,21 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addPromoteMedia: function(){
-		this.router.navigate('promote/media/add',{trigger: true});
+	addMedia: function(){
+		this.router.navigate('media/add',{trigger: true});
 		return false;
 	},
 
-	editPromoteMedia: function(evt){
+	editMedia: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('promote/media/edit/'+ id,{trigger: true});
+		this.router.navigate('media/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removePromoteMedia: function(evt){
+	removeMedia: function(evt){
 		if(window.confirm('您确信要删除吗？')){
 			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new PromoteMedia({_id: id});
+			var model = new Media({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh',model.urlRoot);
 		}

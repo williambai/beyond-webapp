@@ -1,9 +1,9 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
-var PromoteMedia = require('./PromoteMedia');
+var ProductDirect = require('./ProductDirect');
 var config = require('../conf');
 
 exports = module.exports = Backbone.Collection.extend({
-	url: config.api.host + '/promote/medias',
-	model: PromoteMedia,
+	url: config.api.host + '/product/directs',
+	model: ProductDirect,
 });

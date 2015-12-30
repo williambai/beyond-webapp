@@ -1,7 +1,7 @@
 <div class="sidebar sidebar-left">
 	<div class="scrollable" style="padding-top:70px;">
 		<div class="scrollable-header app-name">
-			<a href="#" onclick="window.location.reload();return false;">贵州联通创富计划</a>
+			<a href="#" onclick="window.location.reload();return false;">贵州联通沃助手</a>
 			&nbsp;
 			<!-- <a href="#project/add" class="pull-right"> <i class="fa fa-plus-square"></i>
 				项目

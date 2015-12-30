@@ -1,7 +1,7 @@
 <div class="sidebar sidebar-left">
 	<div class="scrollable" style="padding-top:70px;">
 		<div class="scrollable-header app-name">
-			<a href="#" onclick="window.location.reload();return false;">创富计划--系统管理员</a>
+			<a href="#" onclick="window.location.reload();return false;">沃助手--系统管理员</a>
 			&nbsp;
 		</div>
 		<div class="scrollable-content">

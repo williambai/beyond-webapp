@@ -1,15 +1,15 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    cardTpl = require('../templates/_entityProductCard.tpl'),
+    productTpl = require('../templates/_entityProductCardPackage.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var ProductCard = require('../models/ProductCard');
-var ListView = require('./_ProductCardList');
-var SearchView = require('./_ProductCardSearch');
+var ProductCardPackage = require('../models/ProductCardPackage');
+var ListView = require('./_ProductCardPackageList');
+var SearchView = require('./_ProductCardPackageSearch');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -19,7 +19,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(cardTpl);
+		var page = $(productTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -27,10 +27,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addProductCard',
-		'click .edit': 'editProductCard',
-		'click .delete': 'removeProductCard',
-		'click .import': 'importProductCard',
+		'click .add': 'addProductCardPackage',
+		'click .edit': 'editProductCardPackage',
+		'click .delete': 'removeProductCardPackage',
 	},
 
 	load: function() {
@@ -41,6 +40,9 @@ exports = module.exports = Backbone.View.extend({
 		this.searchView = new SearchView({
 			el: '#search',
 		});
+		this.searchView.done = function(query){
+			that.listView.trigger('refresh', query);
+		};
 		this.listView = new ListView({
 			el: '#list',
 		});
@@ -53,29 +55,24 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addProductCard: function(){
-		this.router.navigate('product/card/add',{trigger: true});
+	addProductCardPackage: function(){
+		this.router.navigate('product/card/package/add',{trigger: true});
 		return false;
 	},
 
-	editProductCard: function(evt){
+	editProductCardPackage: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('product/card/edit/'+ id,{trigger: true});
+		this.router.navigate('product/card/package/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeProductCard: function(evt){
+	removeProductCardPackage: function(evt){
 		if(window.confirm('您确信要删除吗？')){
 			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new ProductCard({_id: id});
+			var model = new ProductCardPackage({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh',model.urlRoot);
 		}
-		return false;
-	},
-
-	importProductCard: function(){
-		this.router.navigate('product/card/import',{trigger: true});
 		return false;
 	},
 

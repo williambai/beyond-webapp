@@ -56,7 +56,7 @@
 	<div id="addTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">新增媒体</h4>
+				<h4 class="panel-title text-center">新增媒体文件</h4>
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
@@ -130,7 +130,7 @@
 	<div id="editTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">修改媒体</h4>
+				<h4 class="panel-title text-center">修改媒体文件</h4>
 			</div>
 			<div class="panel-body">
 				<div class="form-group">

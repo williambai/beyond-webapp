@@ -1,24 +1,27 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    dataTpl = require('../templates/_entityPromoteProduct.tpl'),
-	PromoteProduct = require('../models/PromoteProduct');
+    productTpl = require('../templates/_entityProductDirect.tpl'),
+	ProductDirect = require('../models/ProductDirect');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
-	el: '#dataForm',
+	el: '#productForm',
+
+	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new PromoteProduct();
-		var page = $(dataTpl);
-		var addTemplate = $('#addTemplate', page).html();
-		this.template = _.template(_.unescape(addTemplate || ''));
+		this.model = new ProductDirect({_id: options.id});
+		var page = $(productTpl);
+		var editTemplate = $('#editTemplate', page).html();
+		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
+		'keyup input[type=text]': 'inputText',
 		'keyup input[name="goods[nickname]"]': 'getGoods',
 		'click li.list-group-item': 'selectGood',
 		'submit form': 'submit',
@@ -26,9 +29,30 @@ exports = module.exports = FormView.extend({
 	},
 
 	load: function(){
-		this.render();
+		this.model.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
+		});
 	},
 
+	inputText: function(evt){
+		var that = this;
+		//clear error
+		this.$(evt.currentTarget).parent().removeClass('has-error');
+		this.$(evt.currentTarget).parent().find('span.help-block').empty();
+		var arr = this.$(evt.currentTarget).serializeArray();
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(error){
+				//set error
+				this.$(evt.currentTarget).parent().addClass('has-error');
+				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
+			}
+		})
+		return false;
+	},
+	
 	getGoods: function(evt){
 		this.$('#goods').empty();
 		var that = this;
@@ -95,18 +119,36 @@ exports = module.exports = FormView.extend({
 		});
 		return false;
 	},
+	
 
 	cancel: function(){
-		this.router.navigate('promote/product/index',{trigger: true, replace: true});
+		this.router.navigate('product/direct/index',{trigger: true, replace: true});
 		return false;
 	},
 
+	//fetch event: done
 	done: function(response){
-		this.router.navigate('promote/product/index',{trigger: true, replace: true});
+		if(!this.modelFilled){
+			//first fetch: get model
+			this.modelFilled = true;
+			this.render();
+		}else{
+			//second fetch: submit
+			this.router.navigate('product/direct/index',{trigger: true, replace: true});
+		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		var starttime = this.model.get('starttime');
+		this.$('input[name=starttime]').val(starttime);
+		var endtime = this.model.get('endtime');
+		this.$('input[name=endtime]').val(endtime);
+		var category = this.model.get('category');
+		this.$('input[name=category][value='+ category +']').attr('checked',true);
+		var status = this.model.get('status');
+		this.$('input[name=status][value='+ status +']').attr('checked',true);
+		if(this.model.isNew()) this.$('.panel-title').text('新增产品');
 		return this;
 	},
 });

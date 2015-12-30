@@ -1,20 +1,20 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    dataTpl = require('../templates/_entityPromoteMedia.tpl'),
-	PromoteMedia = require('../models/PromoteMedia');
+    mediaTpl = require('../templates/_entityMedia.tpl'),
+	Media = require('../models/Media');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
-	el: '#dataForm',
+	el: '#mediaForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new PromoteMedia({_id: options.id});
-		var page = $(dataTpl);
+		this.model = new Media({_id: options.id});
+		var page = $(mediaTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -48,7 +48,7 @@ exports = module.exports = FormView.extend({
 	
 
 	cancel: function(){
-		this.router.navigate('promote/media/index',{trigger: true, replace: true});
+		this.router.navigate('media/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -60,13 +60,14 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			this.router.navigate('promote/media/index',{trigger: true, replace: true});
+			this.router.navigate('media/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
 		this.$('img').attr('src', this.model.get('url'));
+		if(this.model.isNew()) this.$('.panel-title').text('新增媒体文件');
 		return this;
 	},
 });
