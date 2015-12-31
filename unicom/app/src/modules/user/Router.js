@@ -20,6 +20,9 @@ var SmsIndexView = require('./views/_SmsIndex');
 var SmsViewView = require('./views/_SmsView');
 var CardIndexView = require('./views/_CardIndex');
 var CardViewView = require('./views/_CardView');
+var PhoneIndexView = require('./views/_PhoneIndex');
+var PhoneAddView = require('./views/_PhoneAdd');
+var PhoneViewView = require('./views/_PhoneView');
 var OrderIndexView = require('./views/_OrderIndex');
 var CustomerIndexView = require('./views/_CustomerIndex');
 
@@ -52,6 +55,9 @@ exports = module.exports = Backbone.Router.extend({
 		'sms/view/:id': 'smsView',
 		'card/index': 'cardIndex',
 		'card/view/:id': 'cardView',
+		'phone/index': 'phoneIndex',
+		'phone/add/:id': 'phoneAdd',
+		'phone/view/:id': 'phoneView',
 		'order/index': 'orderIndex',
 		'customer/index': 'customerIndex',
 
@@ -72,7 +78,8 @@ exports = module.exports = Backbone.Router.extend({
 		this.account = account;
 		this.logined = true;
 		/** default menu */
-		// this.layoutView.trigger('update:menu', _.sortBy(_.flatten(_.values(MENU_DEFAULT)), 'id'));
+		this.layoutView.trigger('update:menu', _.sortBy(_.flatten(_.values(MENU_DEFAULT)), 'id'));
+		return;
 		/** -OR- customize menu */
 		$.ajax({
 			url: config.api.host + '/platform/apps/' + that.appCode,
@@ -241,6 +248,52 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(cardViewView);
 		cardViewView.trigger('load');
+	},
+
+
+	phoneIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '号卡');
+		var phoneIndexView = new PhoneIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(phoneIndexView);
+		phoneIndexView.trigger('load');
+	},
+
+	phoneAdd: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '卡号推荐');
+		var phoneAddView = new PhoneAddView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(phoneAddView);
+		phoneAddView.trigger('load');
+	},
+
+
+	phoneView: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '卡号推荐');
+		var phoneViewView = new PhoneViewView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(phoneViewView);
+		phoneViewView.trigger('load');
 	},
 
 	pushIndex: function() {

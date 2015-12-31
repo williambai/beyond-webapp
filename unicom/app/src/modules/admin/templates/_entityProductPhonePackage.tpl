@@ -40,8 +40,8 @@
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4>类型：<%= model.name %>&nbsp;[<%= model.nickname %>]</h4>
-		<p>描述：<%= model.description %></p>
+		<h4>名称：<%= model.name %>&nbsp;[<%= model.nickname %>]</h4>
+		<p>类型：<%= model.category %></p>
 		<p>合约期：<%= model.months %>&nbsp;个月&nbsp;&nbsp;套餐价格：<%= model.price %></p>
 		<hr/>
 	</div>
@@ -53,31 +53,18 @@
 			<div class="panel-body">
 				<form id="packageForm">
 					<div class="form-group">
-						<label>套餐类型名称：</label>
-						<input type="text" name="name" value="<%= model.name %>" class="form-control" placeholder="存费送机、购机送费、机卡绑定、裸机销售等">
+						<label>名称：</label>
+						<input type="text" name="name" value="<%= model.name %>" class="form-control" placeholder="套餐名称，如，3G基本套餐A、iPhone套餐等">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>套餐类型编码：</label>
+						<label>编码：</label>
 						<input type="text" name="nickname" value="<%= model.nickname %>" class="form-control" placeholder="由字母、_或数字组成">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>套餐类型描述：</label>
+						<label>描述：</label>
 						<input type="text" name="description" value="<%= model.description %>" class="form-control" placeholder="简要描述">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>合约期：</label>
-						<div class="input-group">
-							<input type="text" name="months" value="<%= model.months %>" class="form-control">
-							<span class="input-group-addon">个月</span>
-						</div>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>套餐：</label>
-						<input type="text" name="suite_name" value="<%= model.suite_name %>" class="form-control" placeholder="套餐名称，如，3G基本套餐A、iPhone套餐等">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -93,17 +80,22 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>套餐月费：</label>
+						<label>合约类型：</label>
+						<input type="text" name="category" value="<%= model.category %>" class="form-control" placeholder="存费送机、购机送费、机卡绑定、裸机销售等">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>合约期：</label>
 						<div class="input-group">
-							<input type="text" name="suite_price" value="<%= model.suite_price %>" class="form-control">
-							<span class="input-group-addon">元</span>
+							<input type="text" name="months" value="<%= model.months %>" class="form-control">
+							<span class="input-group-addon">个月</span>
 						</div>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>总价：</label>
+						<label>月费：</label>
 						<div class="input-group">
-							<input type="text" name="total" value="<%= model.total %>" class="form-control">
+							<input type="text" name="price" value="<%= model.price %>" class="form-control">
 							<span class="input-group-addon">元</span>
 						</div>
 						<span class="help-block"></span>

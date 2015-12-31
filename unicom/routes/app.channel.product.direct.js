@@ -1,6 +1,6 @@
 var util = require('util');
 var log4js = require('log4js');
-var logger = log4js.getLogger('route:channel.product.goods');
+var logger = log4js.getLogger('route:channel.product.direct');
 logger.setLevel('INFO');
 
  exports = module.exports = function(app, models) {
@@ -70,7 +70,7 @@ logger.setLevel('INFO');
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.PromoteProduct
+ 		models.ProductDirect
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -84,7 +84,7 @@ logger.setLevel('INFO');
  		page = (!page || page < 0) ? 0 : page;
  		switch(type){
  			case 'category':
- 				models.PromoteProduct
+ 				models.ProductDirect
  					.find({
  						category: req.query.category,
  						status: '有效',
@@ -97,7 +97,7 @@ logger.setLevel('INFO');
 		 			});
  				break;
  			default:
-		 		models.PromoteProduct
+		 		models.ProductDirect
 		 			.find({})
 		 			.skip(per * page)
 		 			.limit(per)

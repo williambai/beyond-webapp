@@ -27,32 +27,38 @@
 		"nickname": "card",
 		"hash": "card/index"
 	}],
-	"channel_exchange": [{
+	"channel_product_phone": [{
 		"id": 6,
+		"name": "终端产品",
+		"nickname": "phone",
+		"hash": "phone/index"
+	}],
+	"channel_exchange": [{
+		"id": 7,
 		"name": "金币兑换",
 		"nickname": "exchange",
 		"hash": "exchange/index"
 	}],
 	"channel_customer": [{
-		"id": 7,
+		"id": 8,
 		"name": "我的客户",
 		"nickname": "customer",
 		"hash": "customer/index"
 	}],
 	"channel_order": [{
-		"id": 8,
+		"id": 9,
 		"name": "我的业绩",
 		"nickname": "order",
 		"hash": "order/index"
 	}],
 	"channel_reveue": [{
-		"id": 9,
+		"id": 10,
 		"name": "我的金币",
 		"nickname": "reveue",
 		"hash": "reveue/index"
 	}],
 	"my_account": [{
-		"id": 10,
+		"id": 11,
 		"name": "我的资料",
 		"nickname": "profile",
 		"hash": "profile/me"

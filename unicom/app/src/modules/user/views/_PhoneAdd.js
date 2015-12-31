@@ -1,13 +1,13 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    productTpl = require('../templates/_entityProductPhone.tpl'),
+    productTpl = require('../templates/_entityPhone.tpl'),
 	ProductPhone = require('../models/ProductPhone');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
-	el: '#packageForm',
+	el: '#orderForm',
 
 	modelFilled: false,
 
@@ -15,12 +15,13 @@ exports = module.exports = FormView.extend({
 		this.router = options.router;
 		this.model = new ProductPhone({_id: options.id});
 		var page = $(productTpl);
-		var editTemplate = $('#editTemplate', page).html();
+		var editTemplate = $('#addTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
+		'click .view': 'phoneView',
 		'keyup input[type=text]': 'inputText',
 		'change select[name="package[category]"]' : 'packageCategorySelected',
 		'change select[name="package[months]"]': 'packageMonthsSelected',
@@ -100,6 +101,12 @@ exports = module.exports = FormView.extend({
 				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
 			}
 		})
+		return false;
+	},
+
+	phoneView: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('phone/view/'+ id,{trigger: true});
 		return false;
 	},
 
@@ -234,6 +241,7 @@ exports = module.exports = FormView.extend({
 		if(window.confirm('您确信要删除吗？')){
 			var that = this;
 			var id = that.$(evt.currentTarget).parent().parent().attr('id');
+			console.log(id)
 			that.$('#' + id).remove();
 			that.packageAdded = _.omit(that.packageAdded,id);
 		}
@@ -279,7 +287,7 @@ exports = module.exports = FormView.extend({
 	},
 	
 	cancel: function(){
-		this.router.navigate('product/phone/index',{trigger: true, replace: true});
+		this.router.navigate('phone/index',{trigger: true, replace: true});
 		return false;
 	},
 	
@@ -309,14 +317,17 @@ exports = module.exports = FormView.extend({
 			});		
 		}else{
 			//second fetch: submit
-			this.router.navigate('product/phone/index',{trigger: true, replace: true});
+			this.router.navigate('phone/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		var that = this;
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		if(this.model.isNew()) this.$('#panel-title').text('新增终端');
+		if(this.model.isNew()) this.$('#panel-title').text('推荐终端');
+		//set image
+		var thumbnail_url = this.model.get('thumbnail_url');
+		if(thumbnail_url) that.$('img#thumbnail_url').attr('src',thumbnail_url);
 		return this;
 	},
 });

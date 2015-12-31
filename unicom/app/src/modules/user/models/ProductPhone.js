@@ -6,7 +6,9 @@ exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
 	urlRoot: config.api.host + '/product/phones',	
 	defaults: {
-		params: {},
-		goods:{}
-	}
+		params: {
+		},
+		packages: {},
+		goods: {}
+	},
 });

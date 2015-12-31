@@ -118,11 +118,11 @@
 					&nbsp;卡号套餐设置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#goods/bonus/index">
+				<!-- <a class="list-group-item" href="#goods/bonus/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;奖励配置
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
+				</a> -->
 				<a class="list-group-item" href="#wechat/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;微信设置
