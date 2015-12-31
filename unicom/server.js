@@ -13,6 +13,7 @@ var multer = require('multer');
 var app = express();
 var nodemailer = require('nodemailer');
 
+
 log4js.configure(path.join(__dirname,'config/log4js.json'));
 var logger = log4js.getLogger('server');
 logger.setLevel('INFO');
@@ -80,6 +81,7 @@ app.set('views', __dirname +'/views');
 // 	next();
 // });
 
+app.use(log4js.connectLogger(logger,{level:log4js.levels.INFO, format: ':remote-addr :response-time - [:date] ":method :url HTTP/:http-version" :status :content-length ":referrer" ":user-agent"'}));
 app.use(express.static(__dirname + '/public'));
 // app.use(express.limit('1mb'));
 app.use(bodyParser.json()); // for parsing application/json
