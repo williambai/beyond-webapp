@@ -1,9 +1,9 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
-var WoRevenue = require('./WoRevenue');
+var Revenue = require('./Revenue');
 var config = require('../conf');
 
 exports = module.exports = Backbone.Collection.extend({
-	url: config.api.host + '/wo/revenues',
-	model: WoRevenue,
+	url: config.api.host + '/revenues',
+	model: Revenue,
 });

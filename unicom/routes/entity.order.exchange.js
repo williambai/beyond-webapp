@@ -1,7 +1,12 @@
- exports = module.exports = function(app, models) {
+var util = require('util');
+var log4js = require('log4js');
+var logger = log4js.getLogger('route:order.exchange');
+logger.setLevel('INFO');
+
+exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
- 		var doc = new models.WoRevenue(req.body);
+ 		var doc = new models.OrderExchange(req.body);
  		doc.save(function(err) {
  			if (err) return res.send(err);
  			res.send({});
@@ -9,7 +14,7 @@
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.WoRevenue.findByIdAndRemove(id,function(err,doc){
+ 		models.OrderExchange.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -17,7 +22,7 @@
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.WoRevenue.findByIdAndUpdate(id, {
+ 		models.OrderExchange.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -31,7 +36,7 @@
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.WoRevenue
+ 		models.OrderExchange
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -43,7 +48,7 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.WoRevenue
+ 		models.OrderExchange
  			.find({})
  			.skip(per * page)
  			.limit(per)
@@ -56,32 +61,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add wo/revenues
+ 	 * add order/exchanges
  	 * type:
  	 *     
  	 */
- 	app.post('/wo/revenues', add);
+ 	app.post('/order/exchanges', add);
  	/**
- 	 * update wo/revenues
+ 	 * update order/exchanges
  	 * type:
  	 *     
  	 */
- 	app.put('/wo/revenues/:id', update);
+ 	app.put('/order/exchanges/:id', update);
 
  	/**
- 	 * delete wo/revenues
+ 	 * delete order/exchanges
  	 * type:
  	 *     
  	 */
- 	app.delete('/wo/revenues/:id', remove);
+ 	app.delete('/order/exchanges/:id', remove);
  	/**
- 	 * get wo/revenues
+ 	 * get order/exchanges
  	 */
- 	app.get('/wo/revenues/:id', getOne);
+ 	app.get('/order/exchanges/:id', getOne);
 
  	/**
- 	 * get wo/revenues
+ 	 * get order/exchanges
  	 * type:
  	 */
- 	app.get('/wo/revenues', getMore);
- };
+ 	app.get('/order/exchanges', getMore);
+};

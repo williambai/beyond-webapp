@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    productTpl = require('../templates/_entityProductDirect.tpl'),
-	ProductDirect = require('../models/ProductDirect');
+    productTpl = require('../templates/_entityProductExchange.tpl'),
+	ProductExchange = require('../models/ProductExchange');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
@@ -13,7 +13,7 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new ProductDirect({_id: options.id});
+		this.model = new ProductExchange({_id: options.id});
 		var page = $(productTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
@@ -126,7 +126,7 @@ exports = module.exports = FormView.extend({
 	
 
 	cancel: function(){
-		this.router.navigate('product/direct/index',{trigger: true, replace: true});
+		this.router.navigate('product/exchange/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -138,7 +138,7 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			this.router.navigate('product/direct/index',{trigger: true, replace: true});
+			this.router.navigate('product/exchange/index',{trigger: true, replace: true});
 		}
 	},
 
@@ -152,7 +152,7 @@ exports = module.exports = FormView.extend({
 		this.$('input[name=category][value='+ category +']').attr('checked',true);
 		var status = this.model.get('status');
 		this.$('input[name=status][value='+ status +']').attr('checked',true);
-		if(this.model.isNew()) this.$('.panel-title').text('新增产品');
+		if(this.model.isNew()) this.$('.panel-title').text('新增兑换商品');
 		return this;
 	},
 });

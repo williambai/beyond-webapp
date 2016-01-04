@@ -1,15 +1,12 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    cardTpl = require('../templates/_entityWoRevenue.tpl'),
+    exchangeTpl = require('../templates/_entityExchange.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
+var ListView = require('./_ExchangeList');
 
 Backbone.$ = $;
-
-var WoRevenue = require('../models/WoRevenue');
-var ListView = require('./_WoRevenueList');
-var SearchView = require('./_WoRevenueSearch');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -19,7 +16,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(cardTpl);
+		var page = $(exchangeTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -27,24 +24,17 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addWoRevenue',
-		'click .edit': 'editWoRevenue',
-		'click .delete': 'removeWoRevenue',
-		'click .import': 'importWoRevenue',
+		'click .orderIndex': 'exchangeOrderIndex',
+		'click .view': 'exchangeView',
 	},
 
 	load: function() {
 		var that = this;
 		this.loaded = true;
 		this.render();
-
-		this.searchView = new SearchView({
-			el: '#search',
-		});
 		this.listView = new ListView({
 			el: '#list',
 		});
-		this.searchView.trigger('load');
 		this.listView.trigger('load');
 	},
 
@@ -52,33 +42,19 @@ exports = module.exports = Backbone.View.extend({
 		this.listView.scroll();
 		return false;
 	},
-	
-	addWoRevenue: function(){
-		this.router.navigate('card/add',{trigger: true});
-		return false;
-	},
 
-	editWoRevenue: function(evt){
+	exchangeOrderIndex: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('card/edit/'+ id,{trigger: true});
+		this.router.navigate('/order/exchange/index',{trigger: true});
 		return false;
 	},
 
-	removeWoRevenue: function(evt){
-		if(window.confirm('您确信要删除吗？')){
-			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new WoRevenue({_id: id});
-			model.destroy({wait: true});
-			this.listView.trigger('refresh',model.urlRoot);
-		}
+	exchangeView: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('exchange/view/'+ id,{trigger: true});
 		return false;
 	},
-
-	importWoRevenue: function(){
-		this.router.navigate('card/import',{trigger: true});
-		return false;
-	},
-
+	
 	render: function() {
 		if (!this.loaded) {
 			this.$el.html(this.loadingTemplate());

@@ -4,9 +4,11 @@ var config = require('../conf');
 
 exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/wo/revenues',	
+	urlRoot: config.api.host + '/admin/order/exchanges',	
 	defaults: {
-		product: {},
-		status: {}
-	}
+		customer: {},
+		department: {}
+	},
+	validation: {
+	},
 });

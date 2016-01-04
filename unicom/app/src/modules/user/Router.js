@@ -25,6 +25,12 @@ var PhoneAddView = require('./views/_PhoneAdd');
 var PhoneViewView = require('./views/_PhoneView');
 var OrderIndexView = require('./views/_OrderIndex');
 var CustomerIndexView = require('./views/_CustomerIndex');
+var RevenueIndexView = require('./views/_RevenueIndex');
+var RevenueStatView = require('./views/_RevenueStat');
+
+var ExchangeIndexView = require('./views/_ExchangeIndex');
+var ExchangeViewView = require('./views/_ExchangeView');
+var OrderExchangeIndexView = require('./views/_OrderExchangeIndex');
 
 var config = require('./conf');
 var MENU_DEFAULT = require('./conf/menu');
@@ -60,6 +66,11 @@ exports = module.exports = Backbone.Router.extend({
 		'phone/view/:id': 'phoneView',
 		'order/index': 'orderIndex',
 		'customer/index': 'customerIndex',
+		'revenue/index': 'revenueIndex',
+		'revenue/stat': 'revenueStat',
+		'exchange/index': 'exchangeIndex',
+		'exchange/view/:id': 'exchangeView',
+		'order/exchange/index': 'orderExchangeIndex',
 
 		'*path': 'index',
 	},
@@ -409,6 +420,78 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(customerIndexView);
 		customerIndexView.trigger('load');
+	},
+
+	exchangeIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '我的成绩');
+		var exchangeIndexView = new ExchangeIndexView({
+			router: this,
+			el: '#content'
+		});
+		this.changeView(exchangeIndexView);
+		exchangeIndexView.trigger('load');
+	},
+
+	exchangeView: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '流量推荐');
+		var exchangeViewView = new ExchangeViewView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(exchangeViewView);
+		exchangeViewView.trigger('load');
+	},
+
+	orderExchangeIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '我的成绩');
+		var orderExchangeIndexView = new OrderExchangeIndexView({
+			router: this,
+			el: '#content'
+		});
+		this.changeView(orderExchangeIndexView);
+		orderExchangeIndexView.trigger('load');
+	},
+
+	revenueIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '我的金币');
+		var revenueIndexView = new RevenueIndexView({
+			router: this,
+			el: '#content'
+		});
+		this.changeView(revenueIndexView);
+		revenueIndexView.trigger('load');
+	},
+
+
+	revenueStat: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '我的金币');
+		var revenueStatView = new RevenueStatView({
+			router: this,
+			el: '#content'
+		});
+		this.changeView(revenueStatView);
+		revenueStatView.trigger('load');
 	},
 
 	activityIndex: function() {

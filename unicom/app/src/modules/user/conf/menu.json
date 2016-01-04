@@ -54,8 +54,8 @@
 	"channel_reveue": [{
 		"id": 10,
 		"name": "我的金币",
-		"nickname": "reveue",
-		"hash": "reveue/index"
+		"nickname": "revenue",
+		"hash": "revenue/stat"
 	}],
 	"my_account": [{
 		"id": 11,

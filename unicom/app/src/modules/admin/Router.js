@@ -20,6 +20,9 @@ var MediaAddView = require('./views/_MediaAdd');
 var ProductDirectIndexView = require('./views/_ProductDirectIndex');
 var ProductDirectEditView = require('./views/_ProductDirectEdit');
 
+var ProductExchangeIndexView = require('./views/_ProductExchangeIndex');
+var ProductExchangeEditView = require('./views/_ProductExchangeEdit');
+
 var ProductPhonePackageIndexView = require('./views/_ProductPhonePackageIndex');
 var ProductPhonePackageEditView = require('./views/_ProductPhonePackageEdit');
 var ProductPhoneIndexView = require('./views/_ProductPhoneIndex');
@@ -59,8 +62,8 @@ var OrderCardAddView = require('./views/_OrderCardAdd');
 var OrderCardEditView = require('./views/_OrderCardEdit');
 var OrderCardViewView = require('./views/_OrderCardView');
 
-var RevenueIndexView = require('./views/_WoRevenueIndex');
-var RevenueAddView = require('./views/_WoRevenueAdd');
+var RevenueIndexView = require('./views/_RevenueIndex');
+var RevenueEditView = require('./views/_RevenueEdit');
 
 var RoleIndexView = require('./views/_RoleIndex');
 var RoleEditView = require('./views/_RoleEdit');
@@ -107,6 +110,10 @@ exports = module.exports = Backbone.Router.extend({
 		'product/direct/index': 'productDirectIndex',
 		'product/direct/add': 'productDirectEdit',
 		'product/direct/edit/:id': 'productDirectEdit',
+
+		'product/exchange/index': 'productExchangeIndex',
+		'product/exchange/add': 'productExchangeEdit',
+		'product/exchange/edit/:id': 'productExchangeEdit',
 
 		'product/phone/package/index': 'productPhonePackageIndex',
 		'product/phone/package/add': 'productPhonePackageEdit',
@@ -155,7 +162,7 @@ exports = module.exports = Backbone.Router.extend({
 		'department/edit/:id': 'departmentEdit',
 
 		'revenue/index': 'revenueIndex',
-		'revenue/add': 'revenueAdd',
+		'revenue/add': 'revenueEdit',
 		'revenue/view/:id': 'revenueView',
 		'revenue/edit/:id': 'revenueEdit',
 
@@ -555,6 +562,36 @@ exports = module.exports = Backbone.Router.extend({
 		productDirectEditView.trigger('load');
 	},		
 
+
+	productExchangeIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','兑换商品管理');
+		var productExchangeIndexView = new ProductExchangeIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(productExchangeIndexView);
+		productExchangeIndexView.trigger('load');
+	},	
+
+	productExchangeEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改兑换商品');
+		var productExchangeEditView = new ProductExchangeEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(productExchangeEditView);
+		productExchangeEditView.trigger('load');
+	},		
+
 	productPhonePackageIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
@@ -817,20 +854,6 @@ exports = module.exports = Backbone.Router.extend({
 		revenueIndexView.trigger('load');
 	},	
 
-	revenueAdd: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','新增金币');
-		var revenueAddView = new RevenueAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(revenueAddView);
-		revenueAddView.trigger('load');
-	},	
-
 	revenueEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
@@ -845,21 +868,6 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(revenueEditView);
 		revenueEditView.trigger('load');
 	},				
-
-	revenueView: function(id){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','查看金币');
-		var revenueViewView = new RevenueViewView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(revenueViewView);
-		revenueViewView.trigger('load');
-	},		
 
 	roleIndex: function(){
 		if(!this.logined){

@@ -15,7 +15,7 @@ var nodemailer = require('nodemailer');
 
 
 log4js.configure(path.join(__dirname,'config/log4js.json'));
-var logger = log4js.getLogger('server');
+var logger = log4js.getLogger('nodejs:server');
 logger.setLevel('INFO');
 
 //create an http server
@@ -43,11 +43,14 @@ var models = {
 
 		Customer: require('./models/CustomerEntity')(mongoose),
 		ProductDirect: require('./models/ProductDirect')(mongoose),
+		ProductExchange: require('./models/ProductExchange')(mongoose),
 		ProductCard: require('./models/ProductCard')(mongoose),
 		ProductPhone: require('./models/ProductPhone')(mongoose),
 		Media: require('./models/Media')(mongoose),
 		Order: require('./models/Order')(mongoose),
 		// OrderCard: require('./models/OrderCard')(mongoose),
+		OrderExchange: require('./models/OrderExchange')(mongoose),
+		Revenue: require('./models/Revenue')(mongoose),
 		
 		DictPhonePackage: require('./models/DictPhonePackage')(mongoose),
 		DictCardPackage: require('./models/DictCardPackage')(mongoose),
@@ -60,7 +63,7 @@ var models = {
 		PageRecommend: require('./models/PageRecommend')(mongoose),
 		PromoteEvent: require('./models/PromoteEvent')(mongoose),
 		// WoOrder: require('./models/WoOrder')(mongoose),
-		WoRevenue: require('./models/WoRevenue')(mongoose),
+		// WoRevenue: require('./models/WoRevenue')(mongoose),
 		GoodsEntity: require('./models/GoodsEntity')(mongoose),
 	};
 	
@@ -81,7 +84,7 @@ app.set('views', __dirname +'/views');
 // 	next();
 // });
 
-app.use(log4js.connectLogger(logger,{level:log4js.levels.INFO, format: ':remote-addr :response-time - [:date] ":method :url HTTP/:http-version" :status :content-length ":referrer" ":user-agent"'}));
+app.use(log4js.connectLogger(log4js.getLogger('server'),{level:log4js.levels.INFO, format: ':remote-addr :response-time - [:date] ":method :url HTTP/:http-version" :status :content-length ":referrer" ":user-agent"'}));
 app.use(express.static(__dirname + '/public'));
 // app.use(express.limit('1mb'));
 app.use(bodyParser.json()); // for parsing application/json
