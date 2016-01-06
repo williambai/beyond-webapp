@@ -51,7 +51,7 @@
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4><%= model.subject %>&nbsp;<span class="bg-success"><%= model.status %></span></h4>
+		<h4><%= model.name %>&nbsp;<span class="bg-success"><%= model.status %></span></h4>
 		<p>产品分类：<%= model.category %></p>
 		<p><%= model.description %></p>
 		<%if(model.starttime){ %>
@@ -67,7 +67,7 @@
 			<div class="panel-body">
 				<form id="customerForm">
 					<div class="form-group">
-						<label>产品分类：</label>
+						<label>产品类别：</label>
 						<input type="radio" name="category" value="2G" checked>&nbsp;&nbsp;2G流量
 						<input type="radio" name="category" value="3G">&nbsp;&nbsp;3G流量
 						<input type="radio" name="category" value="SMS">&nbsp;&nbsp;增值服务
@@ -76,20 +76,8 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>物料编码：</label>
-						<input type="text" name="goods[nickname]" value="<%= model.goods.nickname %>" class="form-control">
-						<div id="goods"></div>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>物料名称：</label>
-						<input type="text" name="goods[name]" value="<%= model.goods.name %>" class="form-control" readonly>
-						<input type="hidden" name="goods[sourceId]" value="<%= model.goods.sourceId %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>产品标题：</label>
-						<input type="text" name="subject" value="<%= model.subject %>" class="form-control">
+						<label>产品名称：</label>
+						<input type="text" name="name" value="<%= model.name %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -129,7 +117,7 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>库存数量：</label>
+						<label>产品数量：</label>
 						<input type="text" name="quantity" value="0" class="form-control">
 						<span class="help-block"></span>
 					</div>
@@ -139,10 +127,21 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
+						<label>物料名称：</label>
+						<input type="text" name="goods[name]" value="<%= model.goods.name %>" placeholder="请输入物料名称，从列表中选择物料" class="form-control">
+						<div id="goods"></div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>物料编码：</label>
+						<input type="text" name="goods[id]" value="<%= model.goods.id %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
+							<input type="radio" name="status" value="有效" checked>&nbsp;&nbsp;有效
 							<input type="radio" name="status" value="无效">&nbsp;&nbsp;无效
-							<input type="radio" name="status" value="有效">&nbsp;&nbsp;有效
 						</div>
 					</div>
 					<div class="form-group">

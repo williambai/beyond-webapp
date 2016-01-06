@@ -37,74 +37,13 @@
 	</div>
 	<div id="itemTemplate">
 		<div class="pull-right" id="<%= model._id %>">
+			<button class="btn btn-primary edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4><%= model.cardNo %></h4>
-		<p>类型：<%= model.category %>, 预存<%= model.price %>元</p>
+		<h4><%= model.name %></h4>
+		<p>类型：<%= model.category %>&nbsp;&nbsp;预存：<%= model.price.toFixed(2) %>&nbsp;<%= model.unit %></p>
 		<hr/>
 	</div>
-	<div id="addTemplate">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4 class="panel-title text-center">新增卡号</h4>
-			</div>
-			<div class="panel-body">
-				<form id="customerForm">
-					<div class="form-group">
-						<label>卡号：</label>
-						<input type="text" name="cardNo" value="<%= model.cardNo %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>物料ID：</label>
-						<input type="text" name="goodsId" value="<%= model.goodsId %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>物料名称：</label>
-						<input type="text" name="goodsName" value="<%= model.goodsName %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>所属号段：</label>
-						<select name="cardRange" class="form-control">
-							<option>186</option><option>185</option><option>156</option><option>131</option><option>130</option><option>155</option><option>132</option>
-						</select>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>号码类型：</label>
-						<select name="category" class="form-control">
-							<option>AAAAA</option><option>AAAA</option><option>ABCDE</option><option>ABCD</option><option>AAA</option><option>AABB</option><option>ABAB</option><option>ABC</option><option>AA</option><option>普通号码</option>
-						</select>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>号码预存：</label>
-						<input type="text" name="price" value="<%= model.price %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>状态：</label>
-						<div style="padding-left:30px;">
-							<input type="hidden" name="status[code]" value="0">
-							<input type="checkbox" name="status[code]" value="1">有效
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="btn-group btn-group-justified">
-							<div class="btn-group">
-							<input type="submit" value="提交" class="btn btn-danger">
-						</div>
-						<div class="btn-group">
-							<button class="btn btn-primary back">取消</button>
-						</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>	
 	<div id="editTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -114,43 +53,52 @@
 				<form id="customerForm">
 					<div class="form-group">
 						<label>卡号：</label>
-						<input type="text" name="cardNo" value="<%= model.cardNo %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>物料ID：</label>
-						<input type="text" name="goodsId" value="<%= model.goodsId %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>物料名称：</label>
-						<input type="text" name="goodsName" value="<%= model.goodsName %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>所属号段：</label>
-						<select name="cardRange" class="form-control">
-							<option>186</option><option>185</option><option>156</option><option>131</option><option>130</option><option>155</option><option>132</option>
-						</select>
+						<input type="text" name="name" value="<%= model.name %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>号码类型：</label>
-						<select name="category" class="form-control">
-							<option>AAAAA</option><option>AAAA</option><option>ABCDE</option><option>ABCD</option><option>AAA</option><option>AABB</option><option>ABAB</option><option>ABC</option><option>AA</option><option>普通号码</option>
-						</select>
+						<div style="padding-left:30px;">
+							<input type="radio" name="category" value="普通号码" checked>&nbsp;普通号码&nbsp;
+							<input type="radio" name="category" value="AAAAA">&nbsp;AAAAA&nbsp;
+							<input type="radio" name="category" value="AAAA">&nbsp;AAAA&nbsp;
+							<input type="radio" name="category" value="ABCDE">&nbsp;ABCDE&nbsp;
+							<input type="radio" name="category" value="ABCD">&nbsp;ABCD&nbsp;
+							<input type="radio" name="category" value="AAA">&nbsp;AAA&nbsp;
+							<input type="radio" name="category" value="AABB">&nbsp;AABB&nbsp;
+							<input type="radio" name="category" value="ABAB">&nbsp;ABAB&nbsp;
+							<input type="radio" name="category" value="ABC">&nbsp;ABC&nbsp;
+							<input type="radio" name="category" value="AA">&nbsp;AA&nbsp;
+						</div>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>号码预存：</label>
+						<label>预存：</label>
 						<input type="text" name="price" value="<%= model.price %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>单位：</label>
+						<input type="text" name="unit" value="<%= model.unit %>" class="form-control" placeholder="如，元/月">
+						<span class="help-block"></span>
+					</div>
+					<input type="hidden" name="quantity" value="1">
+					<div class="form-group">
+						<label>物料名称：</label>
+						<input type="text" name="goods[name]" value="<%= model.goods.name %>" placeholder="请输入物料名称，从列表中选择物料" class="form-control">
+						<div id="goods"></div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>物料编码：</label>
+						<input type="text" name="goods[id]" value="<%= model.goods.id %>" class="form-control" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
-							<input type="hidden" name="status[code]" value="0">
-							<input type="checkbox" name="status[code]" value="1">已用
+							<input type="radio" name="status" value="有效" checked>&nbsp;&nbsp;有效
+							<input type="radio" name="status" value="无效">&nbsp;&nbsp;无效
 						</div>
 					</div>
 					<div class="form-group">

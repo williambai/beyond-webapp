@@ -4,6 +4,8 @@ var ProductPhonePackage = require('./ProductPhonePackage');
 var config = require('../conf');
 
 exports = module.exports = Backbone.Collection.extend({
-	url: config.api.host + '/dict/phone/packages',
+	url: function(){
+		return config.api.host + '/product/phone/'+ this.pid + '/packages';
+	},
 	model: ProductPhonePackage,
 });

@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery'),
-    goodsTpl = require('../templates/_entityGoodsEntity.tpl'),
+    goodsTpl = require('../templates/_entityGoods.tpl'),
     SearchView = require('./__SearchView');
 var config = require('../conf');
 
@@ -28,8 +28,8 @@ exports = module.exports = SearchView.extend({
 	},
 
 	search: function(){
-		var url = 'from=' + $('input[name=from]').val() + '&to=' + $('input[name=to]').val() + '&searchStr=' + $('input[name=searchStr]').val();
-		this.done(url);
+		var query = this.$('form').serialize();
+		this.done(query);
 		return false;
 	},
 

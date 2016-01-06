@@ -19,6 +19,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
+		this.pid = options.pid;
 		var page = $(productTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
@@ -30,6 +31,7 @@ exports = module.exports = Backbone.View.extend({
 		'click .add': 'addProductPhonePackage',
 		'click .edit': 'editProductPhonePackage',
 		'click .delete': 'removeProductPhonePackage',
+		'click .back': 'back',
 	},
 
 	load: function() {
@@ -45,6 +47,7 @@ exports = module.exports = Backbone.View.extend({
 		};
 		this.listView = new ListView({
 			el: '#list',
+			pid: this.pid,
 		});
 		this.searchView.trigger('load');
 		this.listView.trigger('load');
@@ -56,13 +59,13 @@ exports = module.exports = Backbone.View.extend({
 	},
 	
 	addProductPhonePackage: function(){
-		this.router.navigate('product/phone/package/add',{trigger: true});
+		this.router.navigate('product/phone/'+ this.pid +'/package/add',{trigger: true});
 		return false;
 	},
 
 	editProductPhonePackage: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('product/phone/package/edit/'+ id,{trigger: true});
+		this.router.navigate('product/phone/'+ this.pid +'/package/edit/'+ id,{trigger: true});
 		return false;
 	},
 
@@ -74,6 +77,11 @@ exports = module.exports = Backbone.View.extend({
 			this.listView.trigger('refresh',model.urlRoot);
 		}
 		return false;
+	},
+
+	back: function(){
+		window.history.back();
+		return;
 	},
 
 	render: function() {

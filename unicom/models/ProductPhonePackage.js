@@ -1,21 +1,22 @@
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
-		goods: {
-			name: String,
-			nickname: String,
-			sourceId: String,
-		},
 		name: String,
-		nickname: String,
 		description: String,
 		category: String,
-		months: Number,
 		price: Number,
+		unit: String,
+		quantity: Number,
+		months: Number,
 		pre_pay: Number,
 		online_return: Number,
+		month_fee: Number,
 		month_return: Number,
 		coupon: String,
+		goods: {
+			id: String,
+			name: String,
+		},
 		status: {
 			type: String,
 			enum: {
@@ -25,6 +26,6 @@ module.exports = exports = function(mongoose){
 		},
 	});
 
-	schema.set('collection','dict.phone.package');
-	return mongoose.model('DictPhonePackage',schema);
+	schema.set('collection','product.phone.packages');
+	return mongoose.model('ProductPhonePackage',schema);
 };

@@ -13,6 +13,9 @@ var IndexView = require('./views/Index');
 var AccountIndexView = require('./views/_AccountIndex');
 var AccountEditView = require('./views/_AccountEdit');
 
+var GoodsIndexView = require('./views/_GoodsIndex');
+var GoodsEditView = require('./views/_GoodsEdit');
+
 var MediaIndexView = require('./views/_MediaIndex');
 var MediaEditView = require('./views/_MediaEdit');
 var MediaAddView = require('./views/_MediaAdd');
@@ -23,15 +26,16 @@ var ProductDirectEditView = require('./views/_ProductDirectEdit');
 var ProductExchangeIndexView = require('./views/_ProductExchangeIndex');
 var ProductExchangeEditView = require('./views/_ProductExchangeEdit');
 
-var ProductPhonePackageIndexView = require('./views/_ProductPhonePackageIndex');
-var ProductPhonePackageEditView = require('./views/_ProductPhonePackageEdit');
+
 var ProductPhoneIndexView = require('./views/_ProductPhoneIndex');
 var ProductPhoneEditView = require('./views/_ProductPhoneEdit');
+// var ProductPhonePackageAddView = require('./views/_ProductPhonePackageAdd');
+var ProductPhonePackageIndexView = require('./views/_ProductPhonePackageIndex');
+var ProductPhonePackageEditView = require('./views/_ProductPhonePackageEdit');
 
 var ProductCardPackageIndexView = require('./views/_ProductCardPackageIndex');
 var ProductCardPackageEditView = require('./views/_ProductCardPackageEdit');
 var ProductCardIndexView = require('./views/_ProductCardIndex');
-var ProductCardAddView = require('./views/_ProductCardAdd');
 var ProductCardEditView = require('./views/_ProductCardEdit');
 var ProductCardImportView = require('./views/_ProductCardImport');
 
@@ -43,10 +47,6 @@ var CustomerIndexView = require('./views/_CustomerIndex');
 var CustomerEditView = require('./views/_CustomerEdit');
 var CustomerImportView = require('./views/_CustomerImport');
 var CustomerExportView = require('./views/_CustomerExport');
-
-var GoodsEntityIndexView = require('./views/_GoodsEntityIndex');
-var GoodsEntityAddView = require('./views/_GoodsEntityAdd');
-var GoodsEntityEditView = require('./views/_GoodsEntityEdit');
 
 var PageRecommendIndexView = require('./views/_PageRecommendIndex');
 var PageRecommendAddView = require('./views/_PageRecommendAdd');
@@ -104,6 +104,10 @@ exports = module.exports = Backbone.Router.extend({
 		'customer/import': 'customerImport',
 		'customer/export': 'customerExport',
 
+		'goods/index': 'goodsIndex',
+		'goods/add': 'goodsEdit',
+		'goods/edit/:id': 'goodsEdit',
+
 		'media/index': 'mediaIndex',
 		'media/add': 'mediaAdd',
 		'media/edit/:id': 'mediaEdit',
@@ -115,27 +119,26 @@ exports = module.exports = Backbone.Router.extend({
 		'product/exchange/add': 'productExchangeEdit',
 		'product/exchange/edit/:id': 'productExchangeEdit',
 
-		'product/phone/package/index': 'productPhonePackageIndex',
-		'product/phone/package/add': 'productPhonePackageEdit',
-		'product/phone/package/edit/:id': 'productPhonePackageEdit',
+
 		'product/phone/index': 'productPhoneIndex',
 		'product/phone/add': 'productPhoneEdit',
 		'product/phone/edit/:id': 'productPhoneEdit',
+		// 'product/phone/package/add/:id': 'productPhonePackageAdd',
+		'product/phone/:pid/package/index': 'productPhonePackageIndex',
+		'product/phone/:pid/package/add': 'productPhonePackageEdit',
+		'product/phone/:pid/package/edit/:id': 'productPhonePackageEdit',
 
 		'product/card/package/index': 'productCardPackageIndex',
 		'product/card/package/add': 'productCardPackageEdit',
 		'product/card/package/edit/:id': 'productCardPackageEdit',
 		'product/card/index': 'productCardIndex',
-		'product/card/add': 'productCardAdd',
+		'product/card/add': 'productCardEdit',
 		'product/card/edit/:id': 'productCardEdit',
 		'product/card/import': 'productCardImport',
 
 		'channel/index': 'channelIndex',
 		'channel/add': 'channelAdd',
 		'channel/edit/:id': 'channelEdit',
-		'goods/index': 'goodsIndex',
-		'goods/add': 'goodsAdd',
-		'goods/edit/:id': 'goodsEdit',
 		'recommend/index': 'recommendIndex',
 		'recommend/add': 'recommendAdd',
 		'recommend/edit/:id': 'recommendEdit',
@@ -409,26 +412,12 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','物料管理');
-		var goodsIndexView = new GoodsEntityIndexView({
+		var goodsIndexView = new GoodsIndexView({
 			router: this,
 			el: '#content',
 		});
 		this.changeView(goodsIndexView);
 		goodsIndexView.trigger('load');
-	},	
-
-	goodsAdd: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','新增物料');
-		var goodsAddView = new GoodsEntityAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(goodsAddView);
-		goodsAddView.trigger('load');
 	},	
 
 	goodsEdit: function(id){
@@ -437,7 +426,7 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','修改物料');
-		var goodsEditView = new GoodsEntityEditView({
+		var goodsEditView = new GoodsEditView({
 			router: this,
 			el: '#content',
 			id: id,
@@ -592,7 +581,7 @@ exports = module.exports = Backbone.Router.extend({
 		productExchangeEditView.trigger('load');
 	},		
 
-	productPhonePackageIndex: function(){
+	productPhonePackageIndex: function(pid){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
@@ -601,12 +590,13 @@ exports = module.exports = Backbone.Router.extend({
 		var productPhonePackageIndexView = new ProductPhonePackageIndexView({
 			router: this,
 			el: '#content',
+			pid: pid,
 		});
 		this.changeView(productPhonePackageIndexView);
 		productPhonePackageIndexView.trigger('load');
 	},	
 
-	productPhonePackageEdit: function(id){
+	productPhonePackageEdit: function(pid,id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
@@ -615,6 +605,7 @@ exports = module.exports = Backbone.Router.extend({
 		var productPhonePackageEditView = new ProductPhonePackageEditView({
 			router: this,
 			el: '#content',
+			pid: pid,
 			id: id,
 		});
 		this.changeView(productPhonePackageEditView);
@@ -649,6 +640,21 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(productPhoneEditView);
 		productPhoneEditView.trigger('load');
 	},		
+
+	// productPhonePackageAdd: function(id){
+	// 	if(!this.logined){
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand','新增终端套餐');
+	// 	var productPhonePackageAddView = new ProductPhonePackageAddView({
+	// 		router: this,
+	// 		el: '#content',
+	// 		id: id,
+	// 	});
+	// 	this.changeView(productPhonePackageAddView);
+	// 	productPhonePackageAddView.trigger('load');
+	// },		
 
 
 	productCardPackageIndex: function(){
@@ -694,34 +700,6 @@ exports = module.exports = Backbone.Router.extend({
 		cardIndexView.trigger('load');
 	},	
 
-	productCardAdd: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','新增卡号');
-		var cardAddView = new ProductCardAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(cardAddView);
-		cardAddView.trigger('load');
-	},	
-
-	productCardImport: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','卡号导入');
-		var cardImportView = new ProductCardImportView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(cardImportView);
-		cardImportView.trigger('load');
-	},	
-
 	productCardEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
@@ -737,6 +715,19 @@ exports = module.exports = Backbone.Router.extend({
 		cardEditView.trigger('load');
 	},
 
+	productCardImport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','卡号导入');
+		var cardImportView = new ProductCardImportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(cardImportView);
+		cardImportView.trigger('load');
+	},	
 
 	orderIndex: function(){
 		if(!this.logined){

@@ -21,8 +21,8 @@
 		<div class="pull-right" id="<%= model._id %>">
 			<button class="btn btn-success view">推荐</button>
 		</div>
-		<h4>号码：<%= model.cardNo %></h4>
-		<p>预存：<%= model.price %>元</p>
+		<h4>号码：<%= model.name %></h4>
+		<p>预存：<%= model.price.toFixed(2) %>&nbsp;<%= model.unit %></p>
 		<hr/>
 	</div>
 	<div id="searchTemplate">

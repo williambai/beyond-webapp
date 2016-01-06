@@ -22,8 +22,8 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'keyup input[type=text]': 'inputText',
-		'keyup input[name="goods[nickname]"]': 'getGoods',
-		'click li.list-group-item': 'selectGood',
+		'keyup input[name="goods[name]"]': 'getGoods',
+		'click li.list-group-item': 'selectGoods',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -60,10 +60,10 @@ exports = module.exports = FormView.extend({
 	getGoods: function(evt){
 		this.$('#goods').empty();
 		var that = this;
-		var searchStr = this.$('input[name="goods[nickname]"]').val() || '';
+		var searchStr = this.$('input[name="goods[name]"]').val() || '';
 		if(searchStr.length > 1){
 			$.ajax({
-				url: config.api.host + '/goods/entities?type=search&per=10&searchStr=' + searchStr,
+				url: config.api.host + '/goods?type=search&per=10&searchStr=' + searchStr,
 				type: 'GET',
 				fields: {
 					withCredentials: true
@@ -73,9 +73,11 @@ exports = module.exports = FormView.extend({
 				var goods = '<ul class="list-group">';
 				data.forEach(function(item){
 					goods += '<li class="list-group-item">'+ 
-							item.nickname  + '|' + 
-							item.name + '|' +
-							item.sourceId + '</li>';
+							item.foreigner + '|' + 
+							item.name  + '|' + 
+							item.category + '|' +
+							item.price + item.unit + '|' +
+							item.quantity + '</li>';
 				});
 				goods += '</ul>';
 				that.$('#goods').html(goods);
@@ -84,11 +86,10 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	selectGood: function(evt){
+	selectGoods: function(evt){
 		var goods = $(evt.currentTarget).text().split('|');
-		this.$('input[name="goods[nickname]"]').val(goods[0]);
+		this.$('input[name="goods[id]"]').val(goods[0]);
 		this.$('input[name="goods[name]"]').val(goods[1]);
-		this.$('input[name="goods[sourceId]"]').val(goods[2]);
 		this.$('#goods').empty();
 		return false;
 	},

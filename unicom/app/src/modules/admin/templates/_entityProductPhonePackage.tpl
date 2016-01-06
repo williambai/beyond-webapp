@@ -5,7 +5,7 @@
 				<button class="btn btn-primary add">新增</button>
 			</div>
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">终端套餐设置</h4>
+				<h4 class="panel-title text-center">终端套餐管理</h4>
 			</div>
 			<div class="panel-body">
 				<div id="search">
@@ -40,9 +40,9 @@
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4>名称：<%= model.name %>&nbsp;[<%= model.nickname %>]</h4>
+		<h4>名称：<%= model.name %></h4>
 		<p>类型：<%= model.category %></p>
-		<p>合约期：<%= model.months %>&nbsp;个月&nbsp;&nbsp;套餐价格：<%= model.price %></p>
+		<p>合约期：<%= model.months %>&nbsp;个月&nbsp;&nbsp;套餐价格：<%= model.price %>&nbsp;<%= model.unit %></p>
 		<hr/>
 	</div>
 	<div id="editTemplate">
@@ -58,30 +58,23 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>编码：</label>
-						<input type="text" name="nickname" value="<%= model.nickname %>" class="form-control" placeholder="由字母、_或数字组成">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
 						<label>描述：</label>
 						<input type="text" name="description" value="<%= model.description %>" class="form-control" placeholder="简要描述">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>物料编码：</label>
-						<input type="text" name="goods[nickname]" value="<%= model.goods.nickname %>" class="form-control">
-						<div id="goods"></div>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>物料名称：</label>
-						<input type="text" name="goods[name]" value="<%= model.goods.name %>" class="form-control" readonly>
-						<input type="hidden" name="goods[sourceId]" value="<%= model.goods.sourceId %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
 						<label>合约类型：</label>
 						<input type="text" name="category" value="<%= model.category %>" class="form-control" placeholder="存费送机、购机送费、机卡绑定、裸机销售等">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>合约价格：</label>
+						<input type="text" name="price" value="<%= model.price %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>价格单位：</label>
+						<input type="text" name="unit" value="<%= model.unit %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -93,17 +86,14 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>月费：</label>
-						<div class="input-group">
-							<input type="text" name="price" value="<%= model.price %>" class="form-control">
-							<span class="input-group-addon">元</span>
-						</div>
+						<label>预存费用：</label>
+						<input type="text" name="pre_pay" value="<%= model.price %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>预存：</label>
+						<label>月费：</label>
 						<div class="input-group">
-							<input type="text" name="pre_pay" value="<%= model.pre_pay %>" class="form-control">
+							<input type="text" name="month_fee" value="<%= model.month_fee %>" class="form-control">
 							<span class="input-group-addon">元</span>
 						</div>
 						<span class="help-block"></span>
@@ -130,10 +120,21 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
+						<label>物料名称：</label>
+						<input type="text" name="goods[name]" value="<%= model.goods.name %>" placeholder="请输入物料名称，从列表中选择物料" class="form-control">
+						<div id="goods"></div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>物料编码：</label>
+						<input type="text" name="goods[id]" value="<%= model.goods.id %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
+							<input type="radio" name="status" value="有效" checked>&nbsp;&nbsp;有效
 							<input type="radio" name="status" value="无效">&nbsp;&nbsp;无效
-							<input type="radio" name="status" value="有效">&nbsp;&nbsp;有效
 						</div>
 					</div>
 					<div class="form-group">

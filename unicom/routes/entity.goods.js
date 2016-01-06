@@ -1,7 +1,7 @@
  exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
- 		var doc = new models.GoodsEntity(req.body);
+ 		var doc = new models.Goods(req.body);
  		doc.save(function(err) {
  			if (err) return res.send(err);
  			res.send({});
@@ -9,7 +9,7 @@
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.GoodsEntity.findByIdAndRemove(id,function(err,doc){
+ 		models.Goods.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -17,7 +17,7 @@
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.GoodsEntity.findByIdAndUpdate(id, {
+ 		models.Goods.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -31,7 +31,7 @@
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.GoodsEntity
+ 		models.Goods
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -43,7 +43,7 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.GoodsEntity
+ 		models.Goods
  			.find({})
  			.skip(per * page)
  			.limit(per)
@@ -56,32 +56,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add goods/entities
+ 	 * add goods
  	 * type:
  	 *     
  	 */
- 	app.post('/goods/entities', add);
+ 	app.post('/goods', add);
  	/**
- 	 * update goods/entities
+ 	 * update goods
  	 * type:
  	 *     
  	 */
- 	app.put('/goods/entities/:id', update);
+ 	app.put('/goods/:id', update);
 
  	/**
- 	 * delete goods/entities
+ 	 * delete goods
  	 * type:
  	 *     
  	 */
- 	app.delete('/goods/entities/:id', remove);
+ 	app.delete('/goods/:id', remove);
  	/**
- 	 * get goods/entities
+ 	 * get goods
  	 */
- 	app.get('/goods/entities/:id', getOne);
+ 	app.get('/goods/:id', getOne);
 
  	/**
- 	 * get goods/entities
+ 	 * get goods
  	 * type:
  	 */
- 	app.get('/goods/entities', getMore);
+ 	app.get('/goods', getMore);
  };

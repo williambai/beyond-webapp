@@ -1,7 +1,7 @@
  exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
- 		var doc = new models.DictCardPackage(req.body);
+ 		var doc = new models.ProductCardPackage(req.body);
  		doc.save(function(err) {
  			if (err) return res.send(err);
  			res.send({});
@@ -9,7 +9,7 @@
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.DictCardPackage.findByIdAndRemove(id,function(err,doc){
+ 		models.ProductCardPackage.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -17,7 +17,7 @@
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.DictCardPackage.findByIdAndUpdate(id, {
+ 		models.ProductCardPackage.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -31,7 +31,7 @@
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.DictCardPackage
+ 		models.ProductCardPackage
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -43,7 +43,7 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.DictCardPackage
+ 		models.ProductCardPackage
  			.find({})
  			.skip(per * page)
  			.limit(per)
@@ -56,32 +56,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add dict/card/packages
+ 	 * add product/card/packages
  	 * type:
  	 *     
  	 */
- 	app.post('/dict/card/packages', add);
+ 	app.post('/product/card/packages', add);
  	/**
- 	 * update dict/card/packages
+ 	 * update product/card/packages
  	 * type:
  	 *     
  	 */
- 	app.put('/dict/card/packages/:id', update);
+ 	app.put('/product/card/packages/:id', update);
 
  	/**
- 	 * delete dict/card/packages
+ 	 * delete product/card/packages
  	 * type:
  	 *     
  	 */
- 	app.delete('/dict/card/packages/:id', remove);
+ 	app.delete('/product/card/packages/:id', remove);
  	/**
- 	 * get dict/card/packages
+ 	 * get product/card/packages
  	 */
- 	app.get('/dict/card/packages/:id', getOne);
+ 	app.get('/product/card/packages/:id', getOne);
 
  	/**
- 	 * get dict/card/packages
+ 	 * get product/card/packages
  	 * type:
  	 */
- 	app.get('/dict/card/packages', getMore);
+ 	app.get('/product/card/packages', getMore);
  };

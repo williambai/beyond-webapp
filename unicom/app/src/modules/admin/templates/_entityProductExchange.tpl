@@ -72,11 +72,6 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>商品编码：</label>
-						<input type="text" name="nickname" value="<%= model.nickname %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
 						<label>商品描述：</label>
 						<input type="text" name="description" value="<%= model.description %>" class="form-control">
 						<span class="help-block"></span>
@@ -87,18 +82,6 @@
 							<input type="radio" name="category" value="虚拟">&nbsp;&nbsp;虚拟
 							<input type="radio" name="category" value="实物" checked>&nbsp;&nbsp;实物
 						</div>
-					</div>
-					<div class="form-group">
-						<label>物料编码：</label>
-						<input type="text" name="goods[nickname]" value="<%= model.goods.nickname %>" class="form-control">
-						<div id="goods"></div>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>物料名称：</label>
-						<input type="text" name="goods[name]" value="<%= model.goods.name %>" class="form-control" readonly>
-						<input type="hidden" name="goods[sourceId]" value="<%= model.goods.sourceId %>" class="form-control">
-						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>图标：</label>
@@ -122,18 +105,29 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>显示序号（降序排列）：</label>
-						<input type="text" name="display_sort" value="<%= model.display_sort %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<lable>生效开始时间：</lable>
+						<lable>开放时间：</lable>
 						<input type="Date" name="starttime" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<lable>生效结束时间：</lable>
+						<lable>结束时间：</lable>
 						<input type="Date" name="endtime" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>物料名称：</label>
+						<input type="text" name="goods[name]" value="<%= model.goods.name %>" placeholder="请输入物料名称，从列表中选择物料" class="form-control">
+						<div id="goods"></div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>物料编码：</label>
+						<input type="text" name="goods[id]" value="<%= model.goods.id %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>显示序号（降序排列）：</label>
+						<input type="text" name="display_sort" value="<%= model.display_sort %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

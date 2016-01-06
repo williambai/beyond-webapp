@@ -41,9 +41,12 @@ var models = {
 		PlatformFeature: require('./models/PlatformFeature')(mongoose),
 		PlatformRole: require('./models/PlatformRole')(mongoose),
 
+		Goods: require('./models/Goods')(mongoose),
 		Customer: require('./models/CustomerEntity')(mongoose),
 		ProductDirect: require('./models/ProductDirect')(mongoose),
 		ProductExchange: require('./models/ProductExchange')(mongoose),
+		ProductPhonePackage: require('./models/ProductPhonePackage')(mongoose),
+		ProductCardPackage: require('./models/ProductCardPackage')(mongoose),
 		ProductCard: require('./models/ProductCard')(mongoose),
 		ProductPhone: require('./models/ProductPhone')(mongoose),
 		Media: require('./models/Media')(mongoose),
@@ -52,8 +55,6 @@ var models = {
 		OrderExchange: require('./models/OrderExchange')(mongoose),
 		Revenue: require('./models/Revenue')(mongoose),
 		
-		DictPhonePackage: require('./models/DictPhonePackage')(mongoose),
-		DictCardPackage: require('./models/DictCardPackage')(mongoose),
 		
 		AccountActivity: require('./models/AccountActivity')(mongoose),
 		ChannelCategory: require('./models/ChannelCategory')(mongoose),
@@ -64,7 +65,6 @@ var models = {
 		PromoteEvent: require('./models/PromoteEvent')(mongoose),
 		// WoOrder: require('./models/WoOrder')(mongoose),
 		// WoRevenue: require('./models/WoRevenue')(mongoose),
-		GoodsEntity: require('./models/GoodsEntity')(mongoose),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

@@ -2,14 +2,15 @@ module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
 		name: String,
-		nickname: {
-			type: String,
-			unique: true
-		},
 		description: String,
 		category: String,
-		sourceId: {
-			type: String,
+		classification: String,
+		price: Number,
+		unit: String,
+		quantity: Number,
+		goods: {
+			id: String,
+			name: String,
 		},
 		status: {
 			type: String,
@@ -20,6 +21,6 @@ module.exports = exports = function(mongoose){
 		},
 	});
 
-	schema.set('collection','goods.entities');
-	return mongoose.model('GoodsEntity',schema);
+	schema.set('collection','product.card.packages');
+	return mongoose.model('ProductCardPackage',schema);
 };

@@ -15,6 +15,7 @@ exports = module.exports = ListView.extend({
 		var itemTemplate = $('#itemTemplate', page).html();
 		this.template = _.template(_.unescape(itemTemplate || ''));
 		this.collection = new ProductPhonePackageCollection();
+		this.collection.pid = options.pid;
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){

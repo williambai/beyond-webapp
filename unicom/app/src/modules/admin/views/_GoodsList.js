@@ -2,8 +2,8 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     ListView = require('./__ListView'),
-    goodsTpl = require('../templates/_entityGoodsEntity.tpl'),
-    GoodsEntityCollection = require('../models/GoodsEntityCollection');
+    goodsTpl = require('../templates/_entityGoods.tpl'),
+    GoodsCollection = require('../models/GoodsCollection');
 
 Backbone.$ = $;
 	
@@ -14,7 +14,7 @@ exports = module.exports = ListView.extend({
 		var page = $(goodsTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
 		this.template = _.template(_.unescape(itemTemplate || ''));
-		this.collection = new GoodsEntityCollection();
+		this.collection = new GoodsCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){

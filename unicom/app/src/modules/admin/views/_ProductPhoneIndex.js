@@ -30,6 +30,7 @@ exports = module.exports = Backbone.View.extend({
 		'click .add': 'addProductPhone',
 		'click .edit': 'editProductPhone',
 		'click .delete': 'removeProductPhone',
+		'click .package': 'packageIndex',
 	},
 
 	load: function() {
@@ -73,6 +74,12 @@ exports = module.exports = Backbone.View.extend({
 			model.destroy({wait: true});
 			this.listView.trigger('refresh',model.urlRoot);
 		}
+		return false;
+	},
+
+	packageIndex: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('product/phone/'+ id +'/package/index' ,{trigger: true});
 		return false;
 	},
 

@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    goodsTpl = require('../templates/_entityGoodsEntity.tpl'),
-	GoodsEntity = require('../models/GoodsEntity');
+    goodsTpl = require('../templates/_entityGoods.tpl'),
+	Goods = require('../models/Goods');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
@@ -13,7 +13,7 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new GoodsEntity({_id: options.id});
+		this.model = new Goods({_id: options.id});
 		var page = $(goodsTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
@@ -21,11 +21,16 @@ exports = module.exports = FormView.extend({
 	},
 
 	events: {
+		'keyup input[type=text]': 'inputText',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
 
 	load: function(){
+		if(this.model.isNew()){
+			this.modelFilled = true;
+			return;
+		}
 		this.model.fetch({
 			xhrFields: {
 				withCredentials: true
@@ -33,8 +38,41 @@ exports = module.exports = FormView.extend({
 		});
 	},
 
+	inputText: function(evt){
+		var that = this;
+		//clear error
+		this.$(evt.currentTarget).parent().removeClass('has-error');
+		this.$(evt.currentTarget).parent().find('span.help-block').empty();
+		var arr = this.$(evt.currentTarget).serializeArray();
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(error){
+				//set error
+				this.$(evt.currentTarget).parent().addClass('has-error');
+				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
+			}
+		})
+		return false;
+	},
+
 	submit: function() {
 		var that = this;
+		//clear errors
+		this.$('.form-group').removeClass('has-error');
+		this.$('.form-group').find('span.help-block').empty();
+		var arr = this.$('form').serializeArray();
+		var errors = [];
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(error){
+				errors.push(error);
+				that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
+				that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
+			}
+		});
+		if(!_.isEmpty(errors)) return false;
+		//validate finished.
+
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
 		// console.log(this.model.attributes);
@@ -46,18 +84,19 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 	
-
 	cancel: function(){
 		this.router.navigate('goods/index',{trigger: true, replace: true});
 		return false;
 	},
-
+	
 	//fetch event: done
 	done: function(response){
+		var that = this;
 		if(!this.modelFilled){
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
+
 		}else{
 			//second fetch: submit
 			this.router.navigate('goods/index',{trigger: true, replace: true});
@@ -66,6 +105,9 @@ exports = module.exports = FormView.extend({
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		if(this.model.isNew()){
+			this.$('.panel-title').text('新增物料');
+		}
 		var category = this.model.get('category');
 		this.$(('input[name=category][value='+ category +']')).attr('checked',true)
 		var status = this.model.get('status');

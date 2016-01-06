@@ -1,15 +1,15 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    goodsTpl = require('../templates/_entityGoodsEntity.tpl'),
+    goodsTpl = require('../templates/_entityGoods.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var GoodsEntity = require('../models/GoodsEntity');
-var ListView = require('./_GoodsEntityList');
-var SearchView = require('./_GoodsEntitySearch');
+var Goods = require('../models/Goods');
+var ListView = require('./_GoodsList');
+var SearchView = require('./_GoodsSearch');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -27,9 +27,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addGoodsEntity',
-		'click .edit': 'editGoodsEntity',
-		'click .delete': 'removeGoodsEntity',
+		'click .add': 'addGoods',
+		'click .edit': 'editGoods',
+		'click .delete': 'removeGoods',
 	},
 
 	load: function() {
@@ -52,21 +52,21 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addGoodsEntity: function(){
+	addGoods: function(){
 		this.router.navigate('goods/add',{trigger: true});
 		return false;
 	},
 
-	editGoodsEntity: function(evt){
+	editGoods: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');
 		this.router.navigate('goods/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeGoodsEntity: function(evt){
+	removeGoods: function(evt){
 		if(window.confirm('您确信要删除吗？')){
 			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new GoodsEntity({_id: id});
+			var model = new Goods({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh',model.urlRoot);
 		}

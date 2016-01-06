@@ -1,17 +1,13 @@
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
-		goods: {
-			name: String,
-			nickname: String,
-			sourceId: String,
-		},
 		name: String,
-		nickname: String,
 		description: String,
-		classification: String,
 		category: String,
 		price: Number,
+		unit: String,
+		quantity: Number,
+		foreigner: String,//foreign key
 		status: {
 			type: String,
 			enum: {
@@ -21,6 +17,6 @@ module.exports = exports = function(mongoose){
 		},
 	});
 
-	schema.set('collection','dict.card.package');
-	return mongoose.model('DictCardPackage',schema);
+	schema.set('collection','goods');
+	return mongoose.model('Goods',schema);
 };

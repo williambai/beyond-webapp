@@ -22,6 +22,8 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'keyup input[type=text]': 'inputText',
+		'keyup input[name="goods[name]"]': 'getGoods',
+		'click li.list-group-item': 'selectGoods',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -52,6 +54,43 @@ exports = module.exports = FormView.extend({
 				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
 			}
 		})
+		return false;
+	},
+	
+	getGoods: function(evt){
+		this.$('#goods').empty();
+		var that = this;
+		var searchStr = this.$('input[name="goods[name]"]').val() || '';
+		if(searchStr.length > 1){
+			$.ajax({
+				url: config.api.host + '/goods?type=search&per=10&searchStr=' + searchStr,
+				type: 'GET',
+				fields: {
+					withCredentials: true
+				}
+			}).done(function(data){
+				data = data || [];
+				var goods = '<ul class="list-group">';
+				data.forEach(function(item){
+					goods += '<li class="list-group-item">'+ 
+							item.foreigner + '|' + 
+							item.name  + '|' + 
+							item.category + '|' +
+							item.price + item.unit + '|' +
+							item.quantity + '</li>';
+				});
+				goods += '</ul>';
+				that.$('#goods').html(goods);
+			});
+		}
+		return false;
+	},
+
+	selectGoods: function(evt){
+		var goods = $(evt.currentTarget).text().split('|');
+		this.$('input[name="goods[id]"]').val(goods[0]);
+		this.$('input[name="goods[name]"]').val(goods[1]);
+		this.$('#goods').empty();
 		return false;
 	},
 
@@ -106,6 +145,8 @@ exports = module.exports = FormView.extend({
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
 		if(this.model.isNew()) this.$('.panel-title').text('新增套餐');
+		var status = this.model.get('status');
+		this.$('input[name=status][value='+ status +']').attr('checked',true);
 		return this;
 	},
 });

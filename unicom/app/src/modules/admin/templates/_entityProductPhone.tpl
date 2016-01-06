@@ -48,6 +48,7 @@
 	</div>
 	<div id="itemTemplate">
 		<div class="pull-right" id="<%= model._id %>">
+			<button class="btn btn-success package"><i class="fa fa-plus"></i>套餐</button>
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
@@ -66,8 +67,59 @@
 			</div>
 			<div class="panel-body">
 				<form id="phoneForm">
+					<div class="form-group">
+						<label>名称：</label>
+						<input type="text" name="name" value="<%= model.name %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>描述：</label>
+						<input type="text" name="description" value="<%= model.description %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>图标：</label>
+						<input type="text" name="thumbnail_url" value="<%= model.thumbnail_url %>" class="form-control">
+						<div id="images"></div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>价格：</label>
+						<input type="text" name="price" value="<%= model.price %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>数量：</label>
+						<input type="text" name="quantity" value="<%= model.quantity %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>上市时间：</label>
+						<input type="text" name="uptime" value="<%= model.uptime %>" class="form-control" placeholder="如，2015-12-01">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>产品附件：</label>
+						<textarea name="addons" value="<%= model.addons %>" class="form-control" placeholder="文字描述随附产品"></textarea>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>显示序号（降序排列）：</label>
+						<input type="text" name="display_sort" value="<%= model.display_sort %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<lable>开放时间：</lable>
+						<input type="Date" name="starttime" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<lable>结束时间：</lable>
+						<input type="Date" name="endtime" class="form-control">
+						<span class="help-block"></span>
+					</div>
 					<div class="panel panel-default">
-						<div class="panel-heading">
+						<div class="panel-heading" id="phoneParams">
 							<h4 class="panel-title text-center">手机参数</h4>
 						</div>
 						<div class="panel-body">
@@ -163,94 +215,89 @@
 							</div>
 						</div>
 					</div>
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h4 class="panel-title text-center">产品设置</h4>
-						</div>
-						<div class="panel-body">
-							<div class="form-group">
-								<label>物料编码：</label>
-								<input type="text" name="goods[nickname]" value="<%= model.goods.nickname %>" class="form-control">
-								<div id="goods"></div>
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>物料名称：</label>
-								<input type="text" name="goods[name]" value="<%= model.goods.name %>" class="form-control" readonly>
-								<input type="hidden" name="goods[sourceId]" value="<%= model.goods.sourceId %>" class="form-control">
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>产品名称：</label>
-								<input type="text" name="name" value="<%= model.name %>" class="form-control">
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>产品编码：</label>
-								<input type="text" name="nickname" value="<%= model.nickname %>" class="form-control">
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>描述：</label>
-								<input type="text" name="description" value="<%= model.description %>" class="form-control">
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>图标：</label>
-								<input type="text" name="thumbnail_url" value="<%= model.thumbnail_url %>" class="form-control">
-								<div id="images"></div>
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>价格：</label>
-								<input type="text" name="price" value="<%= model.price %>" class="form-control">
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>库存数量：</label>
-								<input type="text" name="quantity" value="<%= model.quantity %>" class="form-control">
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>上市时间：</label>
-								<input type="text" name="uptime" value="<%= model.uptime %>" class="form-control" placeholder="如，2015-12-01">
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>产品附件：</label>
-								<textarea name="addons" value="<%= model.addons %>" class="form-control" placeholder="文字描述随附产品"></textarea>
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>显示序号（降序排列）：</label>
-								<input type="text" name="display_sort" value="<%= model.display_sort %>" class="form-control">
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<lable>生效开始时间：</lable>
-								<input type="Date" name="starttime" class="form-control">
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<lable>生效结束时间：</lable>
-								<input type="Date" name="endtime" class="form-control">
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>状态：</label>
-								<div style="padding-left:30px;">
-									<input type="radio" name="status" value="无效">&nbsp;&nbsp;无效
-									<input type="radio" name="status" value="有效" checked>&nbsp;&nbsp;有效
-								</div>
-							</div>
+					<div class="form-group">
+						<label>状态：</label>
+						<div style="padding-left:30px;">
+							<input type="radio" name="status" value="无效">&nbsp;&nbsp;无效
+							<input type="radio" name="status" value="有效" checked>&nbsp;&nbsp;有效
 						</div>
 					</div>
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h4 class="panel-title text-center">合约设置</h4>
+					<div class="form-group">
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group">
+							<input type="submit" value="提交" class="btn btn-danger">
 						</div>
-						<div class="panel-body">
-							<div class="form-inline">
+						<div class="btn-group">
+							<button class="btn btn-primary back">取消</button>
+						</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>	
+	<div id="packageAddTemplate">
+		<div class="panel panel-default">
+			<div class="pull-left">
+				<button class="btn btn-primary back">返回</button>
+			</div>
+			<div class="pull-right" id="addPackageToggle">
+				<button class="btn btn-primary"><i class="fa fa-plus fa-lg"></i></button>
+			</div>
+			<div class="panel-heading">
+				<h4 class="panel-title text-center">合约套餐</h4>
+			</div>
+			<div class="panel-body">
+				<form id="addPackageForm">
+					<div class="form-group">
+						<lable>合约名称：</lable>
+						<input type="text" name="package[name]" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<lable>合约类型：</lable>
+						<input type="text" name="package[category]" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<lable>合约描述：</lable>
+						<textarea name="package[description]" class="form-control"></textarea>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<lable>合约价格：</lable>
+						<input type="text" name="package[price]" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<lable>价格单位：</lable>
+						<input type="text" name="package[unit]" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>物料名称：</label>
+						<input type="text" name="package[goods][name]" placeholder="请输入物料名称，从列表中选择物料" class="form-control">
+						<div id="goods"></div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>物料编码：</label>
+						<input type="text" name="package[goods][id]" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<input type="submit" value="增加合约套餐" class="btn btn-success btn-block">
+					</div>
+					<hr/>
+				</form>
+				<div id="packages">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--
+ 							<div class="form-inline">
 								<div class="form-group">
 									<label>合约类型：</label>
 									<select name="package[category]" class="form-control">
@@ -278,24 +325,4 @@
 								<button class="btn btn-primary packageAdd"><i class="fa fa-plus fa-lg"></i></button>
 							</div>
 							<hr/>
-							<div id="packages">
-							</div>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<div class="btn-group btn-group-justified">
-							<div class="btn-group">
-							<input type="submit" value="提交" class="btn btn-danger">
-						</div>
-						<div class="btn-group">
-							<button class="btn btn-primary back">取消</button>
-						</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-
-	</div>	
-</div>
+-->

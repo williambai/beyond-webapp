@@ -40,9 +40,10 @@
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4>类型：<%= model.name %>&nbsp;[<%= model.nickname %>]</h4>
+		<h4><%= model.name %></h4>
 		<p>业务类型：<%= model.classification %></p>
-		<p>分类：<%= model.category %>&nbsp;&nbsp;价格：<%= model.price.toFixed(2) %>&nbsp;元</p>
+		<p>分类：<%= model.category %>&nbsp;&nbsp;价格：<%= model.price.toFixed(2) %>&nbsp;<%= model.unit %></p>
+		<p><%= model.description %></p>
 		<hr/>
 	</div>
 	<div id="editTemplate">
@@ -58,18 +59,8 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>套餐编码：</label>
-						<input type="text" name="nickname" value="<%= model.nickname %>" class="form-control" placeholder="由字母、_或数字组成">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
 						<label>套餐描述：</label>
 						<input type="text" name="description" value="<%= model.description %>" class="form-control" placeholder="简要描述">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>业务类型：</label>
-						<input type="text" name="classification" value="<%= model.classification %>" class="form-control" placeholder="如，全国流量包等">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -78,30 +69,37 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>物料编码：</label>
-						<input type="text" name="goods[nickname]" value="<%= model.goods.nickname %>" class="form-control">
-						<div id="goods"></div>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>物料名称：</label>
-						<input type="text" name="goods[name]" value="<%= model.goods.name %>" class="form-control" readonly>
-						<input type="hidden" name="goods[sourceId]" value="<%= model.goods.sourceId %>" class="form-control">
+						<label>业务类型：</label>
+						<input type="text" name="classification" value="<%= model.classification %>" class="form-control" placeholder="如，全国流量包等">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>套餐价格：</label>
-						<div class="input-group">
-							<input type="text" name="price" value="<%= model.price %>" class="form-control">
-							<span class="input-group-addon">元</span>
-						</div>
+						<input type="text" name="price" value="<%= model.price %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>价格单位：</label>
+						<input type="text" name="unit" value="<%= model.unit %>" class="form-control" placeholder="如，元/月">
+						<span class="help-block"></span>
+					</div>
+					<input type="hidden" name="quantity" value="1">
+					<div class="form-group">
+						<label>物料名称：</label>
+						<input type="text" name="goods[name]" value="<%= model.goods.name %>" placeholder="请输入物料名称，从列表中选择物料" class="form-control">
+						<div id="goods"></div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>物料编码：</label>
+						<input type="text" name="goods[id]" value="<%= model.goods.id %>" class="form-control" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
+							<input type="radio" name="status" value="有效" checked>&nbsp;&nbsp;有效
 							<input type="radio" name="status" value="无效">&nbsp;&nbsp;无效
-							<input type="radio" name="status" value="有效">&nbsp;&nbsp;有效
 						</div>
 					</div>
 					<div class="form-group">

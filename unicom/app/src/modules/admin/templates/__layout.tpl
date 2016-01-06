@@ -21,11 +21,21 @@
 					&nbsp;直通产品管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
+				<a class="list-group-item" href="#product/card/package/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;卡号套餐管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
 				<a class="list-group-item" href="#product/card/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;卡号产品管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
+				<!-- <a class="list-group-item" href="#product/phone/package/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;终端套餐管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a> -->
 				<a class="list-group-item" href="#product/phone/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;终端产品管理
@@ -106,16 +116,6 @@
 				<a class="list-group-item" href="#grid/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;网格设置
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
-				<a class="list-group-item" href="#product/phone/package/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;终端套餐设置
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
-				<a class="list-group-item" href="#product/card/package/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;卡号套餐设置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<!-- <a class="list-group-item" href="#goods/bonus/index">

@@ -4,7 +4,7 @@ var config = require('../conf');
 
 exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/dict/card/packages',	
+	urlRoot: config.api.host + '/product/card/packages',	
 	defaults: {
 		goods:{}
 	}

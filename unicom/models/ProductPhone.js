@@ -1,13 +1,7 @@
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
-		goods: {
-			name: String,
-			nickname: String,
-			sourceId: String,
-		},
 		name: String,
-		nickname: String,
 		description: String,
 		thumbnail_url: String,
 		price: Number,
@@ -19,19 +13,28 @@ module.exports = exports = function(mongoose){
 		endtime: Date,
 		display_sort: Number,
 		packages: [{
-			id: mongoose.Schema.Types.ObjectId,
 			name: String,
-			nickname: String,
 			description: String,
 			category: String,
-			months: Number,
 			price: Number,
-			pre_pay: Number,
-			online_return: Number,
-			month_return: Number,
-			coupon: String,
+			unit: String,
+			quantity: Number,
+			// months: Number,
+			// pre_pay: Number,
+			// online_return: Number,
+			// month_fee: Number,
+			// month_return: Number,
+			// coupon: String,
+			goods: {
+				id: String,
+				name: String,
+			},
 		}],//有效套餐
 		params: {},//手机参数
+		goods: {
+			id: String,
+			name: String,
+		},
 		status: {
 			type: String,
 			enum: {
@@ -41,6 +44,6 @@ module.exports = exports = function(mongoose){
 		},
 	});
 
-	schema.set('collection','product.phone.package');
-	return mongoose.model('ProductPhonePackage',schema);
+	schema.set('collection','product.phones');
+	return mongoose.model('ProductPhone',schema);
 };

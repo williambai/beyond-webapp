@@ -63,7 +63,7 @@ exports = module.exports = FormView.extend({
 		var searchStr = this.$('input[name="goods[nickname]"]').val() || '';
 		if(searchStr.length > 1){
 			$.ajax({
-				url: config.api.host + '/goods/entities?type=search&per=10&searchStr=' + searchStr,
+				url: config.api.host + '/goods?type=search&per=10&searchStr=' + searchStr,
 				type: 'GET',
 				fields: {
 					withCredentials: true

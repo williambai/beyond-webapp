@@ -9,10 +9,13 @@ exports = module.exports = Backbone.Model.extend({
 		goods: {}
 	},
 	validation: {
-	    'subject': {
-			required: true,
-	    	minLength: 5,
-	    	msg:'长度至少五位'
+	    'name': {
+	    	minLength: 2,
+	    	msg:'长度至少两位'
 	    },
+	    'goods[id]': {
+			required: true,
+			msg: '请选择一个物料'
+	    }
 	},
 });
