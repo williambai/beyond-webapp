@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://61.242.169.97/WebService_1/services/vmss" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://61.242.169.97/WebService_1/services/vmss" xmlns:intf="http://61.242.169.97/WebService_1/services/vmss" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns1="urn:com.scitel.vmss.dto" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema targetNamespace="urn:com.scitel.vmss.dto" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://61.242.169.97/WebService_1/services/vmss"/>
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="UserDto">
+    <sequence>
+     <element name="userName" nillable="true" type="xsd:string"/>
+     <element name="userPawd" nillable="true" type="xsd:string"/>
+     <element name="user_nickname" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="AgentBusDto">
+    <sequence>
+     <element name="net_addr" nillable="true" type="xsd:string"/>
+     <element name="pd_id" nillable="true" type="xsd:string"/>
+     <element name="proc_code" nillable="true" type="xsd:string"/>
+     <element name="proc_info" nillable="true" type="xsd:string"/>
+     <element name="proc_name" nillable="true" type="xsd:string"/>
+     <element name="user_name" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="SpUserDto">
+    <sequence>
+     <element name="agentBusDto" nillable="true" type="impl:ArrayOf_tns1_AgentBusDto"/>
+     <element name="respCode" nillable="true" type="xsd:string"/>
+     <element name="uservo" nillable="true" type="impl:ArrayOf_tns1_UserDto"/>
+    </sequence>
+   </complexType>
+   <complexType name="SeqNo">
+    <sequence>
+     <element name="btime" nillable="true" type="xsd:string"/>
+     <element name="etime" nillable="true" type="xsd:string"/>
+     <element name="operPawd" nillable="true" type="xsd:string"/>
+     <element name="operUser" nillable="true" type="xsd:string"/>
+     <element name="seq_no" nillable="true" type="xsd:string"/>
+     <element name="sessionId" nillable="true" type="xsd:string"/>
+     <element name="usernumber" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="PhoneDto">
+    <sequence>
+     <element name="phone" nillable="true" type="xsd:string"/>
+     <element name="reState" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="SeqNoResp">
+    <sequence>
+     <element name="phoneList" nillable="true" type="impl:ArrayOf_tns1_PhoneDto"/>
+     <element name="respCode" nillable="true" type="xsd:string"/>
+     <element name="seqNo_info" nillable="true" type="impl:ArrayOf_xsd_string"/>
+    </sequence>
+   </complexType>
+   <complexType name="SendPro">
+    <sequence>
+     <element name="code" nillable="true" type="xsd:string"/>
+     <element name="final_seq_no" nillable="true" type="xsd:string"/>
+     <element name="operPawd" nillable="true" type="xsd:string"/>
+     <element name="operUser" nillable="true" type="xsd:string"/>
+     <element name="phones" nillable="true" type="impl:ArrayOf_xsd_string"/>
+     <element name="seq_no" nillable="true" type="xsd:string"/>
+     <element name="tasteDate" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <complexType name="SendProResp">
+    <sequence>
+     <element name="fileName" nillable="true" type="xsd:string"/>
+     <element name="respCode" nillable="true" type="xsd:string"/>
+     <element name="sessionId" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="SendOrder">
+    <sequence>
+     <element name="code" nillable="true" type="xsd:string"/>
+     <element name="final_seq_no" nillable="true" type="xsd:string"/>
+     <element name="operPawd" nillable="true" type="xsd:string"/>
+     <element name="operUser" nillable="true" type="xsd:string"/>
+     <element name="phone" nillable="true" type="xsd:string"/>
+     <element name="seq_no" nillable="true" type="xsd:string"/>
+     <element name="tasteDate" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://61.242.169.97/WebService_1/services/vmss" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="urn:com.scitel.vmss.dto"/>
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="ArrayOf_tns1_AgentBusDto">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="tns1:AgentBusDto[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+   <complexType name="ArrayOf_tns1_UserDto">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="tns1:UserDto[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+   <complexType name="ArrayOf_tns1_PhoneDto">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="tns1:PhoneDto[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+   <complexType name="ArrayOf_xsd_string">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:string[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="queryResultRequest">
+
+      <wsdl:part name="seqNo" type="tns1:SeqNo"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="sendOrderResponse">
+
+      <wsdl:part name="sendOrderReturn" type="tns1:SendProResp"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="querySeqNoResponse">
+
+      <wsdl:part name="querySeqNoReturn" type="tns1:SeqNoResp"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="queryResultResponse">
+
+      <wsdl:part name="queryResultReturn" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="sendProductBagRequest">
+
+      <wsdl:part name="sendPro" type="tns1:SendPro"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="unBindRequest">
+
+      <wsdl:part name="userName" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="unBindResponse">
+
+      <wsdl:part name="unBindReturn" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="queryAgentBusRequest">
+
+      <wsdl:part name="userDto" type="tns1:UserDto"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="queryAgentBusResponse">
+
+      <wsdl:part name="queryAgentBusReturn" type="tns1:SpUserDto"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bindResponse">
+
+      <wsdl:part name="bindReturn" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="synUserResponse">
+
+      <wsdl:part name="synUserReturn" type="tns1:SpUserDto"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="bindRequest">
+
+      <wsdl:part name="userDto" type="tns1:UserDto"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="queryResultByXXDHRequest">
+
+      <wsdl:part name="seqNo" type="tns1:SeqNo"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="sendOrderRequest">
+
+      <wsdl:part name="sendOrder" type="tns1:SendOrder"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="sendProductBagResponse">
+
+      <wsdl:part name="sendProductBagReturn" type="tns1:SendProResp"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="queryResultByXXDHResponse">
+
+      <wsdl:part name="queryResultByXXDHReturn" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="synUserRequest">
+
+      <wsdl:part name="userDto" type="tns1:UserDto"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="querySeqNoRequest">
+
+      <wsdl:part name="seqNo" type="tns1:SeqNo"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="VmssManager">
+
+      <wsdl:operation name="bind" parameterOrder="userDto">
+
+         <wsdl:input message="impl:bindRequest" name="bindRequest"/>
+
+         <wsdl:output message="impl:bindResponse" name="bindResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="synUser" parameterOrder="userDto">
+
+         <wsdl:input message="impl:synUserRequest" name="synUserRequest"/>
+
+         <wsdl:output message="impl:synUserResponse" name="synUserResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="queryAgentBus" parameterOrder="userDto">
+
+         <wsdl:input message="impl:queryAgentBusRequest" name="queryAgentBusRequest"/>
+
+         <wsdl:output message="impl:queryAgentBusResponse" name="queryAgentBusResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="querySeqNo" parameterOrder="seqNo">
+
+         <wsdl:input message="impl:querySeqNoRequest" name="querySeqNoRequest"/>
+
+         <wsdl:output message="impl:querySeqNoResponse" name="querySeqNoResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="sendProductBag" parameterOrder="sendPro">
+
+         <wsdl:input message="impl:sendProductBagRequest" name="sendProductBagRequest"/>
+
+         <wsdl:output message="impl:sendProductBagResponse" name="sendProductBagResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="sendOrder" parameterOrder="sendOrder">
+
+         <wsdl:input message="impl:sendOrderRequest" name="sendOrderRequest"/>
+
+         <wsdl:output message="impl:sendOrderResponse" name="sendOrderResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="queryResultByXXDH" parameterOrder="seqNo">
+
+         <wsdl:input message="impl:queryResultByXXDHRequest" name="queryResultByXXDHRequest"/>
+
+         <wsdl:output message="impl:queryResultByXXDHResponse" name="queryResultByXXDHResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="queryResult" parameterOrder="seqNo">
+
+         <wsdl:input message="impl:queryResultRequest" name="queryResultRequest"/>
+
+         <wsdl:output message="impl:queryResultResponse" name="queryResultResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="unBind" parameterOrder="userName">
+
+         <wsdl:input message="impl:unBindRequest" name="unBindRequest"/>
+
+         <wsdl:output message="impl:unBindResponse" name="unBindResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="vmssSoapBinding" type="impl:VmssManager">
+
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="bind">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="bindRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.scitel.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="bindResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://61.242.169.97/WebService_1/services/vmss" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="synUser">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="synUserRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.scitel.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="synUserResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://61.242.169.97/WebService_1/services/vmss" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="queryAgentBus">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="queryAgentBusRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.scitel.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="queryAgentBusResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://61.242.169.97/WebService_1/services/vmss" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="querySeqNo">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="querySeqNoRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.scitel.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="querySeqNoResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://61.242.169.97/WebService_1/services/vmss" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="sendProductBag">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="sendProductBagRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.scitel.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="sendProductBagResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://61.242.169.97/WebService_1/services/vmss" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="sendOrder">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="sendOrderRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.scitel.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="sendOrderResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://61.242.169.97/WebService_1/services/vmss" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="queryResultByXXDH">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="queryResultByXXDHRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.scitel.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="queryResultByXXDHResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://61.242.169.97/WebService_1/services/vmss" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="queryResult">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="queryResultRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.scitel.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="queryResultResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://61.242.169.97/WebService_1/services/vmss" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="unBind">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="unBindRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://service.scitel.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="unBindResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://61.242.169.97/WebService_1/services/vmss" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="VmssManagerService">
+
+      <wsdl:port binding="impl:vmssSoapBinding" name="vmss">
+
+         <wsdlsoap:address location="http://61.242.169.97/WebService_1/services/vmss"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>
