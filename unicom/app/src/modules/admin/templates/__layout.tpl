@@ -138,6 +138,11 @@
 					&nbsp;用户反馈
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
+				<a class="list-group-item" href="#cbss/account/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;CBSS账户管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
 				<a class="list-group-item" href="#profile/me">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;我的资料

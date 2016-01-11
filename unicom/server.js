@@ -36,6 +36,7 @@ var config = {
 //import the models
 var models = {
 		Account: require('./models/Account')(mongoose),
+		CbssAccount: require('./models/CbssAccount')(mongoose),
 		PlatformApp: require('./models/PlatformApp')(mongoose),
 		PlatformSession: require('./models/PlatformSession')(mongoose),
 		PlatformFeature: require('./models/PlatformFeature')(mongoose),

@@ -13,6 +13,9 @@ var IndexView = require('./views/Index');
 var AccountIndexView = require('./views/_AccountIndex');
 var AccountEditView = require('./views/_AccountEdit');
 
+var CbssAccountIndexView = require('./views/_CbssAccountIndex');
+var CbssAccountEditView = require('./views/_CbssAccountEdit');
+
 var GoodsIndexView = require('./views/_GoodsIndex');
 var GoodsEditView = require('./views/_GoodsEdit');
 
@@ -97,6 +100,10 @@ exports = module.exports = Backbone.Router.extend({
 		'account/index': 'accountIndex',
 		'account/add': 'accountEdit',
 		'account/edit/:id': 'accountEdit',
+
+		'cbss/account/index': 'cbssAccountIndex',
+		'cbss/account/add': 'cbssAccountEdit',
+		'cbss/account/edit/:id': 'cbssAccountEdit',
 
 		'customer/index': 'customerIndex',
 		'customer/add': 'customerEdit',
@@ -304,6 +311,35 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(accountEditView);
 		accountEditView.trigger('load');
+	},	
+
+	cbssAccountIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','CBSS账户管理');
+		var cbssAccountIndexView = new CbssAccountIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(cbssAccountIndexView);
+		cbssAccountIndexView.trigger('load');
+	},	
+
+	cbssAccountEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改CBSS账户');
+		var cbssAccountEditView = new CbssAccountEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(cbssAccountEditView);
+		cbssAccountEditView.trigger('load');
 	},	
 
 	channelIndex: function(){
