@@ -102,13 +102,18 @@
  				//** (client)call from casperjs
  				//** update cookie
  				var id = req.body.id;
+ 				var cookies = [];
+ 				try{
+	 				cookies = JSON.parse(req.body.cookies);
+ 				}catch(e){
+ 				};
  				models.StockAccount
  					.findByIdAndUpdate(
  						id, {
  							$set: {
- 								'login': true,
- 								'cookieRaw': 'cookieRaw',
- 								'cookie': req.body.cookie,
+ 								'login': req.body.success,
+ 								'cookieRaw': req.body.cookies,
+ 								'cookies': cookies,
  							}
  						}, {
  							'upsert': false,

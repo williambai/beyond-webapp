@@ -24,7 +24,8 @@
 				<button class="btn btn-success edit">编辑</button>
 				<button class="btn btn-danger delete">删除</button>
 			</div>
-			<h4>[<%= model.company.name %>]&nbsp;&nbsp;<%= model.username %></h4>
+			<h4>[<%= model.company.name %>]&nbsp;&nbsp;<%= model.user.name %></h4>
+			<p>账户：<%= model.username %>
 			<p>登录状态：<%= model.login %>&nbsp;&nbsp;账户状态：<%= model.status %></p>
 		</div>
 		<hr/>

@@ -10,7 +10,7 @@ module.exports = exports = function(mongoose){
 			name: String,
 			website: String,
 		},
-		cookie: {},
+		cookies: [],
 		cookieRaw: String,
 		login: {
 			type: Boolean,

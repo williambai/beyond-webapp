@@ -76,7 +76,7 @@ server.listen(serverPort, {
 					// casper.then(function(){
 					// 	casper.click('#bz');
 					// });
-					//** do login
+					//** fill login FORM
 					casper.evaluate(function(username,password,captcha){
 						document.querySelector('select[name="inputtype"]').setAttribute('value','Z');
 						document.querySelector('input[name="inputid"]').setAttribute('value', username);
@@ -84,18 +84,30 @@ server.listen(serverPort, {
 						document.querySelector('input[name="vcode"]').setAttribute('value', captcha);
 					},username,password,captcha);
 					casper.capture(loginFile);
-
+					//** submit login
+					casper.then(function(){
+						casper.click('input#submit_btn');
+					});
+					casper.waitFor(function(){
+						return casper.exists('#menuTD');
+					});
 					//** verify if login?
-					var success = true;
-					if(success){
-						casper.evaluate(function(url,accountId){
+					// casper.open('https://etrade.cs.ecitic.com/ymtrade/professional.jsp');
+					casper.then(function(){
+						casper.capture(loginFile)
+						var success = false;
+						if(casper.exists('#menuTD')){
+							success = true;
+						}
+						casper.evaluate(function(url,accountId, cookies, success){
 							__utils__.sendAJAX(url,'POST', {
 								action: 'updateCookie',
 								id: accountId,
-								cookie: 'sid=xxxxxxxx',//phantom.cookies,
+								cookies: cookies,
+								success: success
 							},true);
-						},callbackUrl,accountId);					
-					}
+						},callbackUrl,accountId,JSON.stringify(phantom.cookies),success);					
+					});
 				}
 			});
 		}else if(action == 'cookie_received'){
