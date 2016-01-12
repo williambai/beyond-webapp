@@ -149,3 +149,14 @@ app.server.listen(config.server.PORT, function() {
 		res.send({});
 	});
 });
+
+//** schedule
+var schedule = require('node-schedule');
+var refreshCiticCookie = require('./commands/refreshCiticCookie');
+schedule.scheduleJob('*/5 * * * *', function(){
+	refreshCiticCookie(models,function(err) {
+		if (err) return console.log(err);
+		console.log('refresh CITIC Accounts Cookie successfully.');
+	});
+});
+console.log('scheduleJob is started.');

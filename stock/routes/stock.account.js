@@ -28,11 +28,11 @@
  				console.log('casperjs started.');
  				res.send({});
  				break;
- 			case 'started': 
- 				console.log('casperjs was started.');
- 				var id = req.body.id;
- 				res.send({});
- 				break;	
+ 			// case 'started': 
+ 			// 	console.log('casperjs was started.');
+ 			// 	var id = req.body.id;
+ 			// 	res.send({});
+ 			// 	break;	
  			case 'uploadImage': 
  				//** (client)call from casperjs
  				//** (step 2)casperjs uploadImage 
@@ -114,6 +114,7 @@
  								'login': req.body.success,
  								'cookieRaw': req.body.cookies,
  								'cookies': cookies,
+ 								'lastupdatetime': Date.now(),
  							}
  						}, {
  							'upsert': false,
@@ -122,28 +123,28 @@
  						function(err, doc) {
  							if (err) return res.send(err);
 			 				//** (step 6)tell casperjs(as webServer) that cookie is received.
-			 				var http = require('http');
-			 				var querystring = require('querystring');
-			 				postData = querystring.stringify({
-			 					action: 'cookie_received',
-			 				});
-			 				var request = http.request({
-			 					hostname: 'localhost',
-			 					port: 8084,
-			 					path: '/',
-			 					method: 'POST',
-			 					headers: {
-			 						'Content-Type': 'application/x-www-form-urlencoded',
-			 						'Content-Length': postData.length
-			 					},
-			 				}, function(response) {
-	 							console.log('response from casper(action:cookie_received): ' + response.statusCode);
-			 				});
-			 				request.on('error', function(err) {
-			 					console.error('problem with request: ' + err.message);
-			 				});
-			 				request.write(postData);
-			 				request.end();
+			 				// var http = require('http');
+			 				// var querystring = require('querystring');
+			 				// postData = querystring.stringify({
+			 				// 	action: 'cookie_received',
+			 				// });
+			 				// var request = http.request({
+			 				// 	hostname: 'localhost',
+			 				// 	port: 8084,
+			 				// 	path: '/',
+			 				// 	method: 'POST',
+			 				// 	headers: {
+			 				// 		'Content-Type': 'application/x-www-form-urlencoded',
+			 				// 		'Content-Length': postData.length
+			 				// 	},
+			 				// }, function(response) {
+	 						// 	console.log('response from casper(action:cookie_received): ' + response.statusCode);
+			 				// });
+			 				// request.on('error', function(err) {
+			 				// 	console.error('problem with request: ' + err.message);
+			 				// });
+			 				// request.write(postData);
+			 				// request.end();
 							res.send({});
  						}); 
  				break;

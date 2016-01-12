@@ -1,6 +1,7 @@
 /**
+ * http://docs.casperjs.org/en/latest/modules/clientutils.html#sendajax
  * http://stackoverflow.com/questions/26555777/how-to-stop-casperjs-execution-and-let-the-user-input-some-value-and-then-contin/26556151#26556151
- * @type {[type]}
+ * http://stackoverflow.com/questions/28271522/sendajax-data-parameter-in-casperjs
  */
 var fs = require('fs');
 var system = require('system');
@@ -21,26 +22,42 @@ var casper = require('casper').create({
 console.log(JSON.stringify(casper.cli.options));
 var accountId = casper.cli.options['id'] || '';
 var cookie = casper.cli.options['cookie'] || '';
+var refresh_url = casper.cli.options['refresh_url'] || '';
 
+var cookies = [];
+try {
+	cookies = JSON.parse(cookie);
+} catch (e) {
+
+}
+// console.log(cookie);
+// console.log('+++')
+// console.log(JSON.stringify(cookies));
 phantom.cookiesEnabled = true;
-phantom.cookies = cookie;
+phantom.cookies = cookies;
 
 casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
-// casper.then(function openprofessionalPage(){
-// 	casper.open('https://etrade.cs.ecitic.com/ymtrade/professional.jsp');
-// });
-
-// casper.then(function(){
-// 	// this.echo(this.getHTML());
-// 	this.capture('../_tmp/professional3.png');
-// });
 
 casper.start('https://etrade.cs.ecitic.com/ymtrade/professional.jsp');
+
 casper.then(function(){
-	if(this.exists('#menuTD')){
-		this.echo('status=200;id='+ accountId + ';cookie=' + phantom.cookies).exit();
-	}else{
-		this.echo('status=401;id='+ accountId + ';errmsg="did not login."').exit();
-	}
+	casper.wait(2000);
 });
+
+casper.then(function() {
+	//** login?
+	var success = false;
+	if (casper.exists('#menuTD')) {
+		success = true;
+	}
+	casper.evaluate(function(url, accountId, cookies, success) {
+		__utils__.sendAJAX(url, 'POST', {
+			action: 'updateCookie',
+			id: accountId,
+			cookies: cookies,
+			success: success
+		}, false);
+	}, refresh_url, accountId, JSON.stringify(phantom.cookies || []), success);
+});
+
 casper.run();

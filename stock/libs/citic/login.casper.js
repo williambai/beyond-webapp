@@ -94,7 +94,6 @@ server.listen(serverPort, {
 					//** verify if login?
 					// casper.open('https://etrade.cs.ecitic.com/ymtrade/professional.jsp');
 					casper.then(function(){
-						casper.capture(loginFile)
 						var success = false;
 						if(casper.exists('#menuTD')){
 							success = true;
@@ -105,25 +104,29 @@ server.listen(serverPort, {
 								id: accountId,
 								cookies: cookies,
 								success: success
-							},true);
+							},false);
 						},callbackUrl,accountId,JSON.stringify(phantom.cookies),success);					
+					});
+					//** close
+					casper.then(function(){
+						server.close();
+						continues = true; // abort the neverendingWait
 					});
 				}
 			});
-		}else if(action == 'cookie_received'){
-			casper.then(function(){
-				console.log('cookie has been devlivered ok.');
-				response.statusCode = 200;
-				response.headers = {
-					'Cache': 'no-cache',
-					'Content-Type': 'text/plain;charset=utf-8'
-				};
-				response.write('');
-				response.close();
-				server.close();
-				continues = true; // abort the neverendingWait
-			});
 		}
+		// else if(action == 'cookie_received'){
+		// 	casper.then(function(){
+		// 		console.log('cookie has been devlivered ok.');
+		// 		response.statusCode = 200;
+		// 		response.headers = {
+		// 			'Cache': 'no-cache',
+		// 			'Content-Type': 'text/plain;charset=utf-8'
+		// 		};
+		// 		response.write('');
+		// 		response.close();
+		// 	});
+		// }
 
 	} else {
 		response.statusCode = 404;
@@ -174,16 +177,16 @@ casper.checkCaptcha = function() {
 casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 casper.start('https://etrade.cs.ecitic.com/ymtrade/login/login.jsp?ssl=false&ftype=pro');
 
-casper.then(function(){
-	//** send request to the secondary program from the page context
-	//** tell secondary program 'I started.'
-	this.evaluate(function(url,accountId) {
-		__utils__.sendAJAX(url, 'POST', {
-			action: 'started',
-			id: accountId,
-		}, true);
-	},callbackUrl,accountId);
-});
+// casper.then(function(){
+// 	//** send request to the secondary program from the page context
+// 	//** tell secondary program 'I started.'
+// 	this.evaluate(function(url,accountId) {
+// 		__utils__.sendAJAX(url, 'POST', {
+// 			action: 'started',
+// 			id: accountId,
+// 		}, false);
+// 	},callbackUrl,accountId);
+// });
 
 casper.then(function() {
 	this.checkCaptcha();
