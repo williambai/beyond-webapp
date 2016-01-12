@@ -17,6 +17,11 @@
 					&nbsp;平台控制
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
+				<a class="list-group-item" href="#stock/account/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;股票账户管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
 				<a class="list-group-item" href="#captcha">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;验证码处理

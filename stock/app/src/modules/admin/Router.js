@@ -2,12 +2,19 @@ var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
 var config = require('./conf');
+var validation = require('backbone-validation');
+_.extend(Backbone.Model.prototype,validation.mixin);
 
 var LayoutView = require('./views/__Layout');
 var LoginView = require('./views/_AccountLogin');
 var IndexView = require('./views/Index');
 
 var PlatformView = require('./views/_PlatformControl');
+var StockAccountIndexView = require('./views/_StockAccountIndex');
+var StockAccountEditView = require('./views/_StockAccountEdit');
+
+
+
 var CaptchaView = require('./views/_PlatformCaptcha');
 
 exports = module.exports = Backbone.Router.extend({
@@ -22,6 +29,11 @@ exports = module.exports = Backbone.Router.extend({
 		'login': 'login',
 		'logout': 'logout',
 		'platform': 'platformControl',
+
+		'stock/account/index': 'stockAccountIndex',
+		'stock/account/add': 'stockAccountEdit',
+		'stock/account/edit/:id': 'stockAccountEdit',
+
 		'captcha': 'captcha',
 		'*path': 'index',
 	},
@@ -104,6 +116,38 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(platformView);
 		platformView.trigger('load');
 	},
+
+
+	stockAccountIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','CBSS账户管理');
+		var stockAccountIndexView = new StockAccountIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(stockAccountIndexView);
+		stockAccountIndexView.trigger('load');
+	},	
+
+	stockAccountEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改CBSS账户');
+		var stockAccountEditView = new StockAccountEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(stockAccountEditView);
+		stockAccountEditView.trigger('load');
+	},	
+
+
 	captcha: function(){
 		if(!this.logined){
 			window.location.hash = 'login';

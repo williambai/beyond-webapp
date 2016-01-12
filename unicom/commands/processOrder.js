@@ -19,7 +19,7 @@ var processOrder = function(callback) {
 			'new': true,
 		}, function(err, doc) {
 			if (err) return callback(err);
-			if (!doc) return callback(null);
+			if (!doc) return callback();
 			//** find order
 			models.Order
 				.findOneAndUpdate({
@@ -33,9 +33,28 @@ var processOrder = function(callback) {
 					'new': true,
 				}, function(err, order) {
 					if (err) return callback(err);
-					if (!order) return callback(null);
+					if (!order) return callback();
 					//** process 2G/3G order
+
+
+
 					//** process 4G order
+					var path = require('path');
+					cbss_cwd = path.join(__dirname, '../libs/cbss');
+					var worker = require('child_process').execFile(
+						'casperjs', [
+							'order.casper.js',
+							'--id=' + id,
+							'--cookie=' + doc.cookieRaw,
+						], {
+							cwd: cbss_cwd,
+						},
+						function(err, stdout, stderr) {
+							if (err) console.error(err);
+							var success = /status=200/.test(stdout);
+							if(!success) console.error('update 4G error id:' + doc._id);
+							callback();
+						});
 				});
 		});
 };

@@ -34,6 +34,7 @@ var config = {
 //import the models
 var models = {
 	Account: require('./models/Account')(mongoose),
+	StockAccount: require('./models/StockAccount')(mongoose),
 	Trading: require('./models/Trading')(mongoose),
 	Strategy: require('./models/Strategy')(mongoose),
 };
@@ -92,11 +93,11 @@ app.all('*', function(req, res, next) {
 });
 
 //import the routes
-fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file) {
-	var routeName = file.substr(0, file.indexOf('.'));
-	require('./routes/' + routeName)(app, models);
+fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file){
+	// var routeName = file.substr(0,file.indexOf('.'));
+	var routeName = file.substr(0,file.length-3);
+	require('./routes/' + routeName)(app,models);
 });
-
 
 app.server.listen(config.server.PORT, function() {
 	logger.info(config.server.NAME + ' App is running at ' + config.server.PORT + ' now.');
