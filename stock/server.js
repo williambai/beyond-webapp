@@ -94,9 +94,10 @@ app.all('*', function(req, res, next) {
 
 //import the routes
 fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file){
-	// var routeName = file.substr(0,file.indexOf('.'));
-	var routeName = file.substr(0,file.length-3);
-	require('./routes/' + routeName)(app,models);
+	if(/\.js$/.test(file)){
+		var routeName = file.substr(0,file.length-3);
+		require('./routes/' + routeName)(app,models);
+	}
 });
 
 app.server.listen(config.server.PORT, function() {

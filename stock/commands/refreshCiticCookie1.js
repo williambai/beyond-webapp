@@ -9,11 +9,12 @@ var refreshCookie = function(callback) {
 		callback(err, body);
 	});
 };
+
 exports = module.exports = refreshCookie;
 
 if (process.argv[1] === __filename) {
 	refreshCookie(function(err, result) {
 		if (err) console.error(err);
-		console.log(body);
+		console.log(result);
 	});
 }

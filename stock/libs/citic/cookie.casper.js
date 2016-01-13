@@ -21,7 +21,7 @@ var casper = require('casper').create({
 //** setup params
 console.log(JSON.stringify(casper.cli.options));
 var accountId = casper.cli.options['id'] || '';
-var cookie = casper.cli.options['cookie'] || '';
+var cookie = casper.cli.options['cookie'] || '[]';
 var refresh_url = casper.cli.options['refresh_url'] || '';
 
 var cookies = [];
