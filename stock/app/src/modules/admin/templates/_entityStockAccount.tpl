@@ -27,6 +27,7 @@
 			<h4>[<%= model.company.name %>]&nbsp;&nbsp;<%= model.user.name %></h4>
 			<p>账户：<%= model.username %>
 			<p>登录状态：<%= model.login %>&nbsp;&nbsp;账户状态：<%= model.status %></p>
+			<p>更新时间: &nbsp;<%= (new Date(model.lastupdatetime)).toLocaleString() %></p>
 		</div>
 		<hr/>
 	</div>

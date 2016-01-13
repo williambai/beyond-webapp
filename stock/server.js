@@ -150,13 +150,13 @@ app.server.listen(config.server.PORT, function() {
 	});
 });
 
-//** schedule
+//** schedule Jobs
 var schedule = require('node-schedule');
-var refreshCiticCookie = require('./commands/refreshCiticCookie');
+var refreshCiticCookie = require('./commands/refreshCiticCookie1');
 schedule.scheduleJob('*/5 * * * *', function(){
-	refreshCiticCookie(models,function(err) {
+	refreshCiticCookie(function(err) {
 		if (err) return console.log(err);
 		console.log('refresh CITIC Accounts Cookie successfully.');
 	});
 });
-console.log('scheduleJob is started.');
+console.log('scheduleJobs is started.');

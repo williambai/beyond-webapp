@@ -1,19 +1,13 @@
-var refreshCiticCookie = function(models,callback) {
+var processCiticTrading = function(models,callback) {
 
-	models.StockAccount
+	models.Trading
 		.find({
-			'company.name': '中信证券',
-			'login': true,
-			'status': '有效',
-			'lastupdatetime': {
-				$lte: (Date.now() - 300000)
-			}
 		})
 		.limit(5)
 		.exec(function(err, docs) {
 			if (err) return callback(err);
 			if (!docs) return callback();
-			var _refreshCiticCookie = function(docs) {
+			var _processCiticTrading = function(docs) {
 				//** process one
 				var doc = docs.pop();
 				if (!doc) return callback();
@@ -22,29 +16,29 @@ var refreshCiticCookie = function(models,callback) {
 				cbss_cwd = path.join(__dirname, '../libs/citic');
 				var worker = require('child_process').execFile(
 					'casperjs', [
-						'cookie.casper.js',
+						'order.buy.casper.js',
 						'--id=' + id,
 						'--cookie=' + JSON.stringify(doc.cookies),
-						'--refresh_url=' + 'http://localhost:8091/stock/accounts'
+						'--callback_url=' + 'http://localhost:8091/stock/tradings'
 					], {
 						cwd: cbss_cwd,
 					},
 					function(err, stdout, stderr) {
 						if (err) console.error(err);
-						console.log('-----refresh citic cookie--------');
+						console.log('-----citic buy trading --------');
 						console.log(stdout);
 						setTimeout(function() {
-							_refreshCiticCookie(docs);
+							_processCiticTrading(docs);
 						}, 1000);
 					});
 			};
-			_refreshCiticCookie(docs);
+			_processCiticTrading(docs);
 		});
 };
-exports = module.exports = refreshCiticCookie;
+exports = module.exports = processCiticTrading;
 
 if (process.argv[1] === __filename) {
-	console.log('refresh cookie start...');
+	console.log('process buy trading start...');
 	var _ = require('underscore');
 	var mongoose = require('mongoose');
 
@@ -62,12 +56,11 @@ if (process.argv[1] === __filename) {
 	});
 	//** import the models
 	var models = {
-		StockAccount: require('../models/StockAccount')(mongoose),
+		Trading: require('../models/Trading')(mongoose),
 	};
 
-	refreshCiticCookie(models,function(err) {
+	processCiticTrading(models,function(err) {
 		if (err) return console.log(err);
-		console.log('refresh CITIC Accounts Cookie successfully.');
-		// process.exit();
+		console.log('process CITIC buy trading successfully.');
 	});
 }

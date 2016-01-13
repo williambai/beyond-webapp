@@ -2,153 +2,210 @@
 
  	var captchaImage = {};
 
+ 	var autoLogin = function(req,res){
+ 		var id = req.body.id;
+ 		var path = require('path');
+ 		cbss_cwd = path.join(__dirname, '../libs/citic');
+ 		console.log(cbss_cwd);
+ 		var worker = require('child_process').execFile(
+ 			'casperjs', [
+ 				'login.casper.js',
+ 				'--id=' + id,
+ 				'--captcha_file=' + path.join(__dirname, '../public/_tmp/captcha_' + id + '.png'),
+ 				'--login_file=' + path.join(__dirname, '../public/_tmp/login_' + id + '.png'),
+
+ 			], {
+ 				cwd: cbss_cwd,
+ 			},
+ 			function(err, stdout, stderr) {
+ 				if (err) return console.log(err);
+ 			});
+ 		console.log('casperjs started.');
+ 		res.send({});
+ 	};
+
+ 	var processCaptchaText = function(req,res){
+ 		var id = req.body.id;
+ 		models.StockAccount
+ 			.findById(id)
+ 			.exec(function(err, doc) {
+ 				var captchaText = req.body.plain;
+ 				//** casperjs server(localhost:8084) is waiting for feedback on step 1 forever.
+ 				//** so feeback casperjs server when captcha has been parsed.(step 2)
+ 				//** (step 5)transfer username/password/captcha to casperjs(as webServer)
+ 				var http = require('http');
+ 				var querystring = require('querystring');
+ 				postData = querystring.stringify({
+ 					action: 'login',
+ 					username: doc.username,
+ 					password: doc.password,
+ 					captcha: captchaText,
+ 				});
+ 				console.log(postData)
+ 				var request = http.request({
+ 					hostname: 'localhost',
+ 					port: 8084,
+ 					path: '/',
+ 					method: 'POST',
+ 					headers: {
+ 						'Content-Type': 'application/x-www-form-urlencoded',
+ 						'Content-Length': postData.length
+ 					},
+ 				}, function(response) {
+ 					console.log('response from casper(action:login): ' + response.statusCode);
+ 				});
+ 				request.on('error', function(err) {
+ 					console.error('problem with request: ' + err.message);
+ 				});
+ 				request.write(postData);
+ 				request.end();
+ 				res.send({});
+ 			});
+ 	};
+
+ 	var refreshCookie = function(req,res){
+ 		models.StockAccount
+ 			.find({
+ 				'company.name': '中信证券',
+ 				'login': true,
+ 				'status': '有效',
+ 				'lastupdatetime': {
+ 					$lte: (Date.now() - 300000)
+ 				}
+ 			})
+ 			.limit(5)
+ 			.exec(function(err, docs) {
+ 				if (err) return res.send(err);
+ 				if (!docs) return res.send({});
+ 				var _refreshCiticCookie = function(docs) {
+ 					//** process one
+ 					var doc = docs.pop();
+ 					if (!doc) return res.send({});
+ 					var id = doc._id;
+ 					var path = require('path');
+ 					cbss_cwd = path.join(__dirname, '../libs/citic');
+ 					var worker = require('child_process').execFile(
+ 						'casperjs', [
+ 							'cookie.casper.js',
+ 							'--id=' + id,
+ 							'--cookie=' + JSON.stringify(doc.cookies),
+ 							'--refresh_url=' + 'http://localhost:8091/stock/accounts'
+ 						], {
+ 							cwd: cbss_cwd,
+ 						},
+ 						function(err, stdout, stderr) {
+ 							if (err) console.error(err);
+ 							console.log('-----refresh citic cookie--------');
+ 							console.log(stdout);
+ 							setTimeout(function() {
+ 								_refreshCiticCookie(docs);
+ 							}, 1000);
+ 						});
+ 				};
+ 				_refreshCiticCookie(docs);
+ 			});
+ 	};
+
+ 	var updateCookie = function(req,res){
+ 		var id = req.body.id;
+ 		var cookies = [];
+ 		try {
+ 			cookies = JSON.parse(req.body.cookies);
+ 		} catch (e) {};
+ 		models.StockAccount
+ 			.findByIdAndUpdate(
+ 				id, {
+ 					$set: {
+ 						'login': req.body.success,
+ 						'cookieRaw': req.body.cookies,
+ 						'cookies': cookies,
+ 						'lastupdatetime': Date.now(),
+ 					}
+ 				}, {
+ 					'upsert': false,
+ 					'new': true,
+ 				},
+ 				function(err, doc) {
+ 					if (err) return res.send(err);
+ 					//** (step 6)tell casperjs(as webServer) that cookie is received.
+ 					// var http = require('http');
+ 					// var querystring = require('querystring');
+ 					// postData = querystring.stringify({
+ 					// 	action: 'cookie_received',
+ 					// });
+ 					// var request = http.request({
+ 					// 	hostname: 'localhost',
+ 					// 	port: 8084,
+ 					// 	path: '/',
+ 					// 	method: 'POST',
+ 					// 	headers: {
+ 					// 		'Content-Type': 'application/x-www-form-urlencoded',
+ 					// 		'Content-Length': postData.length
+ 					// 	},
+ 					// }, function(response) {
+ 					// 	console.log('response from casper(action:cookie_received): ' + response.statusCode);
+ 					// });
+ 					// request.on('error', function(err) {
+ 					// 	console.error('problem with request: ' + err.message);
+ 					// });
+ 					// request.write(postData);
+ 					// request.end();
+ 					res.send({});
+ 				}); 		
+	};
+
  	var add = function(req, res) {
  		var action = req.body.action || '';
  		switch (action) {
  			case 'login':
- 				//** (client)call from browser
- 				//** (step 1)start casperjs to login, transfer id
- 				var id = req.body.id;
- 				var path = require('path');
- 				cbss_cwd = path.join(__dirname, '../libs/citic');
- 				console.log(cbss_cwd);
- 				var worker = require('child_process').execFile(
- 					'casperjs', [
- 						'login.casper.js',
- 						'--id=' + id,
- 						'--captcha_file=' + path.join(__dirname,'../public/_tmp/captcha_' + id + '.png'),
- 						'--login_file=' + path.join(__dirname,'../public/_tmp/login_' + id + '.png'),
-
- 					], {
- 						cwd: cbss_cwd,
- 					},
- 					function(err, stdout, stderr) {
- 						if (err) return console.log(err);
- 					});
- 				console.log('casperjs started.');
- 				res.send({});
+	 			//** (client)call from browser
+	 			//** (step 1)start casperjs to login, transfer id
+ 				autoLogin(req,res);
  				break;
- 			// case 'started': 
- 			// 	console.log('casperjs was started.');
- 			// 	var id = req.body.id;
- 			// 	res.send({});
- 			// 	break;	
- 			case 'uploadImage': 
+			// case 'started': 
+			// 	console.log('casperjs was started.');
+			// 	var id = req.body.id;
+			// 	res.send({});
+			// 	break;	
+ 			case 'uploadImage':
  				//** (client)call from casperjs
  				//** (step 2)casperjs uploadImage 
  				//** casperjs save captcha image into /_tmp/captcha.png
  				//** after that, casperjs server is listening to HOST:PORT(localhost:8084) forever.
  				console.log(req.body);
- 				if(req.body.id && req.body.file){
+ 				if (req.body.id && req.body.file) {
  					captchaImage[req.body.id] = req.body.file;
  				}
  				break;
- 			case 'getImage': 
+ 			case 'getImage':
  				//** (client)call from browser
  				//** (step 3)browser getImage which is ready on step 2
  				var id = req.body.id;
- 				if(id && captchaImage[id]){
+ 				if (id && captchaImage[id]) {
  					var file = captchaImage[id];
-		 			res.send({
-		 				src: file.slice(file.indexOf('/_tmp')),//'./_tmp/captcha.png'
-		 			});
-		 			captchaImage[id] = false;
- 				}else{
+ 					res.send({
+ 						src: file.slice(file.indexOf('/_tmp')), //'./_tmp/captcha.png'
+ 					});
+ 					captchaImage[id] = false;
+ 				} else {
  					res.send({});
  				}
  				break;
  			case 'captchaText':
  				//** (client)call from browser
  				//** (step 4) recieve browser's feedback captcha text
- 				var id = req.body.id;
- 				models.StockAccount
- 					.findById(id)
- 					.exec(function(err, doc) {
- 						var captchaText = req.body.plain;
- 						//** casperjs server(localhost:8084) is waiting for feedback on step 1 forever.
- 						//** so feeback casperjs server when captcha has been parsed.(step 2)
- 						//** (step 5)transfer username/password/captcha to casperjs(as webServer)
- 						var http = require('http');
- 						var querystring = require('querystring');
- 						postData = querystring.stringify({
- 							action: 'login',
- 							username: doc.username,
- 							password: doc.password,
- 							captcha: captchaText,
- 						});
- 						console.log(postData)
- 						var request = http.request({
- 							hostname: 'localhost',
- 							port: 8084,
- 							path: '/',
- 							method: 'POST',
- 							headers: {
- 								'Content-Type': 'application/x-www-form-urlencoded',
- 								'Content-Length': postData.length
- 							},
- 						}, function(response) {
- 							console.log('response from casper(action:login): ' + response.statusCode);
- 						});
- 						request.on('error', function(err) {
- 							console.error('problem with request: ' + err.message);
- 						});
- 						request.write(postData);
- 						request.end();
-						res.send({});
- 					});
+ 				processCaptchaText(req,res);
  				break;
  			case 'updateCookie':
  				console.log('updateCookie: ' + JSON.stringify(req.body));
  				//** (client)call from casperjs
  				//** update cookie
- 				var id = req.body.id;
- 				var cookies = [];
- 				try{
-	 				cookies = JSON.parse(req.body.cookies);
- 				}catch(e){
- 				};
- 				models.StockAccount
- 					.findByIdAndUpdate(
- 						id, {
- 							$set: {
- 								'login': req.body.success,
- 								'cookieRaw': req.body.cookies,
- 								'cookies': cookies,
- 								'lastupdatetime': Date.now(),
- 							}
- 						}, {
- 							'upsert': false,
- 							'new': true,
- 						},
- 						function(err, doc) {
- 							if (err) return res.send(err);
-			 				//** (step 6)tell casperjs(as webServer) that cookie is received.
-			 				// var http = require('http');
-			 				// var querystring = require('querystring');
-			 				// postData = querystring.stringify({
-			 				// 	action: 'cookie_received',
-			 				// });
-			 				// var request = http.request({
-			 				// 	hostname: 'localhost',
-			 				// 	port: 8084,
-			 				// 	path: '/',
-			 				// 	method: 'POST',
-			 				// 	headers: {
-			 				// 		'Content-Type': 'application/x-www-form-urlencoded',
-			 				// 		'Content-Length': postData.length
-			 				// 	},
-			 				// }, function(response) {
-	 						// 	console.log('response from casper(action:cookie_received): ' + response.statusCode);
-			 				// });
-			 				// request.on('error', function(err) {
-			 				// 	console.error('problem with request: ' + err.message);
-			 				// });
-			 				// request.write(postData);
-			 				// request.end();
-							res.send({});
- 						}); 
+ 				updateCookie(req,res);
  				break;
-  			default:
+ 			case 'refreshCookie':
+ 				refreshCookie(req,res);
+ 				break;
+ 			default:
  				var doc = new models.StockAccount(req.body);
  				doc.save(function(err) {
  					if (err) return res.send(err);
@@ -168,33 +225,40 @@
 
  	var update = function(req, res) {
  		var id = req.params.id;
-		var set = req.body;
-		models.StockAccount.findByIdAndUpdate(id, {
-				$set: set
-			}, {
-				'upsert': false,
-				'new': true,
-			},
-			function(err, doc) {
-				if (err) return res.send(err);
-				res.send(doc);
-			}
-		);
+ 		var action = req.body.action || '';
+ 		switch (action) {
+ 			default:
+ 				var set = req.body;
+ 				models.StockAccount.findByIdAndUpdate(id, {
+ 						$set: set
+ 					}, {
+ 						'upsert': false,
+ 						'new': true,
+ 					},
+ 					function(err, doc) {
+ 						if (err) return res.send(err);
+ 						res.send(doc);
+ 					}
+ 				);
+ 				break;
+ 		}
+
  	};
 
  	var getOne = function(req, res) {
  		var id = req.params.id;
  		var action = req.query.action || '';
  		switch (action) {
- 			default:
- 				models.StockAccount
- 					.findById(id)
- 					.select({password:0})
- 					.exec(function(err, doc) {
- 						if (err) return res.send(err);
- 						res.send(doc);
- 					});
- 				break;
+ 			default: models.StockAccount
+ 				.findById(id)
+ 				.select({
+ 					password: 0
+ 				})
+ 				.exec(function(err, doc) {
+ 					if (err) return res.send(err);
+ 					res.send(doc);
+ 				});
+ 			break;
  		}
  	};
  	var getMore = function(req, res) {
@@ -204,7 +268,9 @@
 
  		models.StockAccount
  			.find({})
- 			.select({password: 0})
+ 			.select({
+ 				password: 0
+ 			})
  			.skip(per * page)
  			.limit(per)
  			.exec(function(err, docs) {
@@ -212,6 +278,8 @@
  				res.send(docs);
  			});
  	};
+
+
  	/**
  	 * router outline
  	 */
