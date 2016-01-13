@@ -16,6 +16,9 @@ var AccountEditView = require('./views/_AccountEdit');
 var CbssAccountIndexView = require('./views/_CbssAccountIndex');
 var CbssAccountEditView = require('./views/_CbssAccountEdit');
 
+var SmsIndexView = require('./views/_SmsIndex');
+var SmsEditView = require('./views/_SmsEdit');
+
 var GoodsIndexView = require('./views/_GoodsIndex');
 var GoodsEditView = require('./views/_GoodsEdit');
 
@@ -104,6 +107,10 @@ exports = module.exports = Backbone.Router.extend({
 		'cbss/account/index': 'cbssAccountIndex',
 		'cbss/account/add': 'cbssAccountEdit',
 		'cbss/account/edit/:id': 'cbssAccountEdit',
+
+		'sms/index': 'smsIndex',
+		'sms/add': 'smsEdit',
+		'sms/edit/:id': 'smsEdit',
 
 		'customer/index': 'customerIndex',
 		'customer/add': 'customerEdit',
@@ -340,6 +347,35 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(cbssAccountEditView);
 		cbssAccountEditView.trigger('load');
+	},	
+
+	smsIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','SMS管理');
+		var smsIndexView = new SmsIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(smsIndexView);
+		smsIndexView.trigger('load');
+	},	
+
+	smsEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改SMS');
+		var smsEditView = new SmsEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(smsEditView);
+		smsEditView.trigger('load');
 	},	
 
 	channelIndex: function(){

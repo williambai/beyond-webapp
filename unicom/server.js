@@ -41,6 +41,7 @@ var models = {
 		PlatformSession: require('./models/PlatformSession')(mongoose),
 		PlatformFeature: require('./models/PlatformFeature')(mongoose),
 		PlatformRole: require('./models/PlatformRole')(mongoose),
+		PlatformSms: require('./models/PlatformSms')(mongoose),
 
 		Goods: require('./models/Goods')(mongoose),
 		Customer: require('./models/CustomerEntity')(mongoose),
@@ -175,11 +176,24 @@ app.all('*', function(req, res, next) {
 
 //import the routes
 fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file){
-	// var routeName = file.substr(0,file.indexOf('.'));
-	var routeName = file.substr(0,file.length-3);
-	require('./routes/' + routeName)(app,models);
+	if(/\.js$/.test(file)){
+		var routeName = file.substr(0,file.length-3);	
+		require('./routes/' + routeName)(app,models);		
+	}
 });
 
 app.server.listen(config.server.PORT,function(){
 	logger.info(config.server.NAME + ' App is running at '+ config.server.PORT + ' now.');
 });
+
+
+//** schedule Jobs
+var schedule = require('node-schedule');
+// var refreshCiticCookie = require('./commands/refreshCbssCookie');
+// schedule.scheduleJob('*/5 * * * *', function(){
+// 	refreshCiticCookie(function(err) {
+// 		if (err) return console.log(err);
+// 		console.log('refresh CBSS Accounts Cookie successfully.');
+// 	});
+// });
+// console.log('scheduleJobs is started.');

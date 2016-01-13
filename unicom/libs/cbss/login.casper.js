@@ -78,36 +78,37 @@ server.listen(serverPort, {
 						document.querySelector('input[name="password"]').setAttribute('value',password);
 						document.querySelector('input[name="jcaptcha"]').setAttribute('value',captcha);
 					},username,password,captcha);
-					casper.capture(loginFile);
 
-					//** verify if login?
-					var success = true;
-					if(success){
-						casper.evaluate(function(url,accountId){
+					casper.capture(loginFile);
+					//** submit login
+					casper.then(function(){
+						casper.click('input#submit_btn');
+					});
+					
+					casper.wait(2000);
+
+					casper.then(function(){
+						var success = false;
+						if(casper.exists('#menuTD')){
+							success = true;
+						}
+						casper.evaluate(function(url,accountId, cookies, success){
 							__utils__.sendAJAX(url,'POST', {
 								action: 'updateCookie',
 								id: accountId,
-								cookie: 'sid=xxxxxxxx',//phantom.cookies,
-							},true);
-						},callbackUrl,accountId);					
-					}
+								cookies: cookies,
+								success: success
+							},false);
+						},callbackUrl,accountId,JSON.stringify(phantom.cookies),success);					
+					});
+					//** close
+					casper.then(function(){
+						server.close();
+						continues = true; // abort the neverendingWait
+					});
 				}
 			});
-		}else if(action == 'cookie_received'){
-			casper.then(function(){
-				console.log('cookie has been devlivered ok.');
-				response.statusCode = 200;
-				response.headers = {
-					'Cache': 'no-cache',
-					'Content-Type': 'text/plain;charset=utf-8'
-				};
-				response.write('');
-				response.close();
-				server.close();
-				continues = true; // abort the neverendingWait
-			});
 		}
-
 	} else {
 		response.statusCode = 404;
 		response.headers = {
@@ -148,7 +149,7 @@ casper.checkCaptcha = function() {
 			action: 'uploadImage',
 			file: file,
 			id: accountId,
-		}, true);
+		}, false);
 	}, callbackUrl, captchaFile, accountId);
 	return this;
 };
@@ -157,25 +158,10 @@ casper.checkCaptcha = function() {
 casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 casper.start('https://portal.chinanetcenter.com/cas/login?service=https%3A%2F%2Fportal.chinanetcenter.com%2Fuuc%2Fr_sec_login');
 
-casper.then(function(){
-	//** send request to the secondary program from the page context
-	//** tell secondary program 'I started.'
-	this.evaluate(function(url,accountId) {
-		__utils__.sendAJAX(url, 'POST', {
-			action: 'started',
-			id: accountId,
-		}, true);
-	},callbackUrl,accountId);
-});
-
 casper.then(function() {
 	this.checkCaptcha();
 });
 
 casper.then(neverendingWait);
-
-// casper.then(function(){
-//     // Do something here when the captcha is successful
-// });
 
 casper.run();

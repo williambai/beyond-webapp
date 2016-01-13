@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    accountTpl = require('../templates/_entityCbssAccount.tpl'),
-	CbssAccount = require('../models/CbssAccount');
+    smsTpl = require('../templates/_entitySms.tpl'),
+	Sms = require('../models/PlatformSms');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
@@ -13,8 +13,8 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new CbssAccount({_id: options.id});
-		var page = $(accountTpl);
+		this.model = new Sms({_id: options.id});
+		var page = $(smsTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -77,33 +77,6 @@ exports = module.exports = FormView.extend({
 		this.model.set(object);
 		// console.log(this.model.attributes);
 
-		var password = this.model.get('password');
-		var cpassword = this.model.get('cpassword');
-
-		if(password != cpassword){
-			var error = '两次输入不一致';
-			that.$('[name="cpassword"]').parent().addClass('has-error');
-			that.$('[name="cpassword"]').parent().find('span.help-block').text(error);
-			return false;			
-		}
-		if(!_.isEmpty(password) && password.length < 2){
-			var error = '请输入账户密码';
-			that.$('[name="password"]').parent().addClass('has-error');
-			that.$('[name="password"]').parent().find('span.help-block').text(error);
-			return false;
-		}
-		if(_.isEmpty(password)){
-			if(that.model.isNew()){
-				var error = '新账户必须设置密码';
-				that.$('[name="password"]').parent().addClass('has-error');
-				that.$('[name="password"]').parent().find('span.help-block').text(error);
-				return false;
-			}else {
-				this.model.unset('password',{silent: true});
-				this.model.unset('cpassword',{silent: true});			
-			}
-		}
-
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true
@@ -114,7 +87,7 @@ exports = module.exports = FormView.extend({
 	
 
 	cancel: function(){
-		this.router.navigate('cbss/account/index',{trigger: true, replace: true});
+		this.router.navigate('sms/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -126,13 +99,15 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			this.router.navigate('cbss/account/index',{trigger: true, replace: true});
+			this.router.navigate('sms/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		if(this.model.isNew()) this.$('.panel-title').text('新增账户');
+		if(this.model.isNew()) this.$('.panel-title').text('新增用户');
+		var status = this.model.get('status');
+		this.$('input[name="status"][value="'+ status +'"]').attr('checked',true);
 		return this;
 	},
 });

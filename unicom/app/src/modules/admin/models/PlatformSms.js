@@ -4,12 +4,6 @@ var config = require('../conf');
 
 exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/cbss/accounts',	
+	urlRoot: config.api.host + '/platform/smses',	
 
-	validation: {
-		'username': {
-			required: true,
-			msg: '请输入用户名'
-		},
-	},
 });
