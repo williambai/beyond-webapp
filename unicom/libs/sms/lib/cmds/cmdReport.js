@@ -15,6 +15,10 @@ function Report(srcNodeID, cmdTime, cmdSeq, ReportType, UserNumber, State, ErrCo
 Report.code = 0x5;
 Report.PDUAttrSeq = [A.srcNodeID, A.cmdTime, A.cmdSeq, A.ReportType, A.UserNumber, A.State, A.ErrCode];
 
+Report.Resp = function(){};
+Report.Resp.code = 0x80000005;
+Report.Resp.PDUAttrSeq = [A.Result];
+
 exports = module.exports = Report;
 
 //unit test

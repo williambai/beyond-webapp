@@ -4,25 +4,7 @@ var util = require('../util.js'),
 	override2 = util.override2,
 	cannedOptions = {};
 
-var defOptions = {
-	SPNumber: '106550224004',
-	ChargeNumber: '000000000000000000000',
-	CorpId: '91287', // 0-99999 no particular CorpId assigned
-	ServiceType: 'QHT1', // no specific ServerType
-	FeeType: 1, // free of charge
-	FeeValue: '0', // free of charge
-	GivenValue: '0', // no Given
-	AgentFlag: 0,
-	MorelatetoMTFlag: 2, // SP initiated submit, not related with any MO requirement
-	Priority: 0, // the lowest priority
-	ExpireTime: '', // use SMC's default expiration setting, normally 2 days
-	ScheduleTime: '', // send immediately
-	ReportFlag: 2, //  status report not required
-	TP_pid: 0,
-	TP_udhi: 0,
-	MessageCoding: 8, // 15 GBK, 8 UCS2
-	MessageType: 0 // SMS
-};
+var defOptions = require('../../../../config/sms').options;
 
 // convert defOptions to a instance object of a class
 function CDefOptions() {
@@ -173,5 +155,13 @@ if (process.argv[1] === __filename) {
 		console.log(PDU.slice(0, 20));
 		console.log(PDU.slice(20));
 		console.log(submitEcho);
+		// var	contentLong = '1234567890123456789012345678901234567890123456789012345678901234567890 password:4644 @http://unidialbook.com/tjuc/register_b.a?rc=4644';
+		// var submit = new Submit(['15620001781', '15620009233'], 8, contentLong);
+		// console.log(submit);
+		// var PDU = submit.makePDU();
+		// var submitEcho = submit.parse(PDU);
+		// console.log(PDU.slice(0, 20));
+		// console.log(PDU.slice(20));
+		// console.log(submitEcho);
 	});
 }

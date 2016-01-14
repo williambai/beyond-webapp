@@ -6,7 +6,16 @@ var Submit = CommandFactory.create('Submit');
 
 var handler = require('./lib/handler');
 
+// var factory = function(Command){
+// 	return function(docs,callback){
+
+// 	};
+// };
+
 var sp = {
+	// send1: factory(Submit),
+	// checkReport1: factory(Report),
+	// checkReply1: factory(Reply),
 };
 
 sp.send = function(docs, callback) {

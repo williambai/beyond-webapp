@@ -46,7 +46,7 @@ CommandFactory.create = function(commandType) {
 		var attrs = Command.PDUAttrSeq;
 		var count = false;
 		var	j, loopPos;
-		// that.beforeSend(); // Warning: must execute after setting PDU time in unique 3 4UIntBE sequence
+		that.beforeSend && that.beforeSend(); // Warning: must execute after setting PDU time in unique 3 4UIntBE sequence
 		for (var i = 0, aLen = attrs.length; i < aLen; i++) {
 			var attr = attrs[i];
 			if (!attr) {
