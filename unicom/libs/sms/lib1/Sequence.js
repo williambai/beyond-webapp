@@ -37,7 +37,6 @@ exports = module.exports = {
 	readSeq: readSeq,
 };
 
-//unit test
 if (process.argv[1] === __filename) {
 	for (var i = 0; i < 2; i++) {
 		var buf = new Buffer(20);

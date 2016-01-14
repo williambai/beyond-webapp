@@ -1,6 +1,6 @@
-var A = require('../attributes');
+var A = require('../Attributes');
 var util = require('../util.js'),
-	CmdSeq = require('../sequence.js'),
+	CmdSeq = require('../Sequence.js'),
 	override2 = util.override2,
 	cannedOptions = {};
 
@@ -115,17 +115,6 @@ function Submit(UserNumber, MessageCoding, MessageContent, options) {
 		this.lackAckCnt = 1;
 	}
 }
-Submit.code = 0x3;
-
-Submit.PDUAttrSeq = [A.SPNumber, A.ChargeNumber, A.UserCount, A.UserNumber, null, A.CorpId, A.ServiceType, A.FeeType, A.FeeValue, A.GivenValue, A.AgentFlag, A.MorelatetoMTFlag, A.Priority, A.ExpireTime, A.ScheduleTime, A.ReportFlag, A.TP_pid, A.TP_udhi, A.MessageCoding, A.MessageType, A.MessageLength, A.MessageContent];
-
-Submit.Resp = function(){};
-Submit.Resp.code = 0x80000003;
-Submit.Resp.PDUAttrSeq = [A.Result];
-
-Submit.prototype.getPDULength = function() {
-	return Submit.fixedPartLength + (this.UserNumber.length - 1) * A.UserNumber.len + this.MessageLength;
-};
 
 Submit.prototype.followParts = function(PDU) {
 	var splits = this.splits,
@@ -154,22 +143,29 @@ Submit.addCunnedOptions = function(name, options) {
 	cannedOptions[name] = options;
 };
 
+Submit.PDUAttrSeq = [A.SPNumber, A.ChargeNumber, A.UserCount, A.UserNumber, null, A.CorpId, A.ServiceType, A.FeeType, A.FeeValue, A.GivenValue, A.AgentFlag, A.MorelatetoMTFlag, A.Priority, A.ExpireTime, A.ScheduleTime, A.ReportFlag, A.TP_pid, A.TP_udhi, A.MessageCoding, A.MessageType, A.MessageLength, A.MessageContent];
+
+Submit.prototype.getPDULength = function() {
+	return Submit.fixedPartLength + (this.UserNumber.length - 1) * A.UserNumber.len + this.MessageLength;
+};
+
 Submit.prototype.beforeSend = function() {
 	if (this.MessageLength > 140 || this.splits)
 		this.options.ScheduleTime = util.afterNow(1);
 };
 
-exports = module.exports = Submit;
+exports.Class = Submit;
+
 
 //unit test
 if (process.argv[1] === __filename) {
 	process.nextTick(function() {
-		var CommandFactory = require('../commands.js');
-		var Submit = CommandFactory.create('Submit');
+		var Msg = require('../Commands.js').Msg;
+		console.log(Msg);
 		var submit = new Submit(['15620001781', '15620009233'], 8, 'some content');
 		console.log(submit);
 		var PDU = submit.makePDU();
-		var submitEcho = submit.parse(PDU);
+		var submitEcho = Msg.parse(PDU);
 		console.log(PDU.slice(0, 20));
 		console.log(PDU.slice(20));
 		console.log(submitEcho);

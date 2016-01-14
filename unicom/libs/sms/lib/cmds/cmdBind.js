@@ -1,27 +1,36 @@
-var A = require('../Attributes');
-var util = require('util');
+var A = require('../attributes');
 
-function Bind(LoginType, LoginName, LoginPassword){
-  this.LoginType = LoginType;
-  this.LoginName = LoginName;
-  this.LoginPassword = LoginPassword;
+function Bind(LoginType, LoginName, LoginPassword) {
+	this.LoginType = LoginType;
+	this.LoginName = LoginName;
+	this.LoginPassword = LoginPassword;
 }
+Bind.code = 0x1;
 Bind.PDUAttrSeq = [A.LoginType, A.LoginName, A.LoginPassword];
 
-exports.Class = Bind;
+Bind.Resp = function(){
+
+};
+Bind.Resp.code = 0x80000001;
+Bind.Resp.PDUAttrSeq = [A.Result];
+
+exports = module.exports = Bind;
 
 //unit test
 if (process.argv[1] === __filename) {
-  process.nextTick(function(){
-    // console.log(util.inspect(Bind));
-    var Msg = require('../Commands').Msg;
-    var msg = new Bind(1, 'kaven', 'psp');
-    // console.log(util.inspect(Bind));
-    var PDU = msg.makePDU();
-    var msgEcho = Msg.parse(PDU);
-    console.log(msg);
-    console.log(PDU.slice(0, 20));
-    console.log(PDU.slice(20));
-    console.log(msgEcho);
-  });
+	var util = require('util');
+	process.nextTick(function() {
+		var CommandFactory = require('../commands');
+		var BindMessage = CommandFactory.create('Bind');
+		console.log(util.inspect(BindMessage));
+		console.log(util.inspect(BindMessage.prototype));
+		var msg = new BindMessage(1, 'william', 'pass');
+		console.log(msg);
+		var PDU = msg.makePDU();		
+		console.log(PDU.slice(0, 20));
+		console.log(PDU.slice(20));
+		var msgEcho = CommandFactory.parse(PDU);
+		console.log(msgEcho);
+		console.log(msgEcho instanceof Bind);
+	});
 }
