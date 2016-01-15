@@ -6,7 +6,7 @@ module.exports = exports = function(mongoose){
 		category: {
 			type: String,
 			enum: {
-				values: '数据订购|传统增值|内容推荐|活动推荐|号卡|终端'.split('|'),
+				values: '数据订购|传统增值|内容推荐|活动推荐|号卡|终端|金币兑换'.split('|'),
 				message: 'enum validator failed for path {PATH} with value {VALUE}',
 			}
 		},
@@ -21,9 +21,9 @@ module.exports = exports = function(mongoose){
 				id: mongoose.Schema.Types.ObjectId,
 				model: String,
 				name: String,
+				category: String,
 				price: Number,
 				quantity: Number,
-				category: String,
 				source: {},//goods
 			}
 		],

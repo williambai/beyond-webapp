@@ -4,6 +4,7 @@ var logger = log4js.getLogger('route:entity.media');
 logger.setLevel('INFO');
 
  exports = module.exports = function(app, models) {
+ 	var _ = require('underscore');
 
 	var add = function(req, res) {
  		var doc = new models.Media(req.body);
@@ -44,12 +45,42 @@ logger.setLevel('INFO');
  			});
  	};
  	var getMore = function(req, res) {
- 		var type = req.query.type || '';
+ 		var action = req.query.action || '';
  		var per = req.query.per || 20;
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
- 		switch(type){
- 			case 'category':
+ 		switch(action){
+ 			case 'search':
+ 				var searchStr = req.query.searchStr || '';
+ 				var searchRegex = new RegExp(searchStr, 'i');
+ 				var status = req.query.status;
+ 				var query = models.Media.find({
+ 					$or: [{
+ 						'name': {
+ 							$regex: searchRegex
+ 						}
+ 					}, {
+ 						'url': {
+ 							$regex: searchRegex
+ 						}
+ 					}]
+ 				});
+ 				if (!_.isEmpty(status)) {
+ 					query.where({
+ 						status: status
+ 					});
+ 				}
+ 				query.sort({
+ 						_id: -1
+ 					})
+ 					.skip(per * page)
+ 					.limit(per)
+ 					.exec(function(err, docs) {
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 				break;
+  			case 'category':
  				models.Media
  					.find({
  						category: req.query.category,
@@ -78,20 +109,20 @@ logger.setLevel('INFO');
  	 */
  	/**
  	 * add medias
- 	 * type:
+ 	 * action:
  	 *     
  	 */
  	app.post('/medias', add);
  
  	/**
  	 * update medias
- 	 * type:
+ 	 * action:
  	 *     
  	 */
  	app.put('/medias/:id', update);
  	/**
  	 * delete medias
- 	 * type:
+ 	 * action:
  	 *     
  	 */
  	app.delete('/medias/:id', remove);
@@ -102,8 +133,8 @@ logger.setLevel('INFO');
 
  	/**
  	 * get medias
- 	 * type:
- 	 *      type=category&category=xxx
+ 	 * action:
+ 	 *      action=category&category=xxx
  	 */
  	app.get('/medias', getMore);
  };

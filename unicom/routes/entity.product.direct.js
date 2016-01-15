@@ -4,6 +4,7 @@ var logger = log4js.getLogger('route:product.direct');
 logger.setLevel('INFO');
 
  exports = module.exports = function(app, models) {
+ 	var _ = require('underscore');
 
  	var add = function(req, res) {
  		var doc = new models.ProductDirect(req.body);
@@ -44,11 +45,43 @@ logger.setLevel('INFO');
  			});
  	};
  	var getMore = function(req, res) {
- 		var type = req.query.type || '';
+ 		var action = req.query.action || '';
  		var per = req.query.per || 20;
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
- 		switch(type){
+ 		switch(action){
+ 			case 'search':
+	 			var searchStr = req.query.searchStr || '';
+	 			var searchRegex = new RegExp(searchStr, 'i');
+	 			var status = req.query.status;
+	 			var category = req.query.category;
+	 			var query = models.ProductDirect.find({
+ 						$or: [{
+ 							'name': {
+ 								$regex: searchRegex
+ 							}
+ 						}, {
+ 							'goods.name': {
+ 								$regex: searchRegex
+ 							}
+ 						}]
+ 					});
+	 			if (!_.isEmpty(status)) {
+	 				query.where({status: status});
+	 			}
+	 			if(!_.isEmpty(category)){
+	 				query.where({category: category});
+	 			};
+				query.sort({
+ 						_id: -1
+ 					})
+ 					.skip(per * page)
+ 					.limit(per)
+ 					.exec(function(err, docs) {
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 	 			break; 			
  			case 'category':
  				models.ProductDirect
  					.find({
@@ -78,20 +111,20 @@ logger.setLevel('INFO');
  	 */
  	/**
  	 * add product/directs
- 	 * type:
+ 	 * action:
  	 *     
  	 */
  	app.post('/product/directs', add);
  	/**
  	 * update product/directs
- 	 * type:
+ 	 * action:
  	 *     
  	 */
  	app.put('/product/directs/:id', update);
 
  	/**
  	 * delete product/directs
- 	 * type:
+ 	 * action:
  	 *     
  	 */
  	app.delete('/product/directs/:id', remove);
@@ -102,8 +135,8 @@ logger.setLevel('INFO');
 
  	/**
  	 * get product/directs
- 	 * type:
- 	 *      type=category&category=xxx
+ 	 * action:
+ 	 *      action=category&category=xxx
  	 */
  	app.get('/product/directs', getMore);
  };

@@ -1,10 +1,10 @@
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
-		originalname: String,
 		name: String,
-		nickname: String,
+		category: String,
 		description: String,
+		originalname: String,
 		mimetype: String,
 		size: Number,
 		extension: String,

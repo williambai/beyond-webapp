@@ -84,11 +84,43 @@ exports = module.exports = function(app, models) {
 			});
 	};
 	var getMore = function(req, res) {
-		var type = req.query.type || '';
+		var action = req.query.action || '';
 		var per = req.query.per || 20;
 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
 		page = (!page || page < 0) ? 0 : page;
-		switch (type) {
+		switch (action) {
+ 			case 'search':
+	 			var searchStr = req.query.searchStr || '';
+	 			var searchRegex = new RegExp(searchStr, 'i');
+	 			var status = req.query.status;
+	 			var category = req.query.category;
+	 			var query = models.ProductPhone.find({
+ 						$or: [{
+ 							'name': {
+ 								$regex: searchRegex
+ 							}
+ 						}, {
+ 							'goods.name': {
+ 								$regex: searchRegex
+ 							}
+ 						}]
+ 					});
+	 			if (!_.isEmpty(status)) {
+	 				query.where({status: status});
+	 			}
+	 			if(!_.isEmpty(category)){
+	 				query.where({category: category});
+	 			};
+				query.sort({
+ 						_id: -1
+ 					})
+ 					.skip(per * page)
+ 					.limit(per)
+ 					.exec(function(err, docs) {
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 	 			break; 			
 			case 'category':
 				models.ProductPhone
 					.find({
@@ -118,20 +150,20 @@ exports = module.exports = function(app, models) {
 	 */
 	/**
 	 * add product/phones
-	 * type:
+	 * action:
 	 *     
 	 */
 	app.post('/product/phones', add);
 	/**
 	 * update product/phones
-	 * type:
+	 * action:
 	 *     
 	 */
 	app.put('/product/phones/:id', update);
 
 	/**
 	 * delete product/phones
-	 * type:
+	 * action:
 	 *     
 	 */
 	app.delete('/product/phones/:id', remove);
@@ -142,8 +174,8 @@ exports = module.exports = function(app, models) {
 
 	/**
 	 * get product/phones
-	 * type:
-	 *      type=category&category=xxx
+	 * action:
+	 *      action=category&category=xxx
 	 */
 	app.get('/product/phones', getMore);
 };

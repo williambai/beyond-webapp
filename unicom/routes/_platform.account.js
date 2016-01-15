@@ -132,50 +132,30 @@ exports = module.exports = function(app, models) {
 				var searchRegex = new RegExp(searchStr, 'i');
 				logger.debug('search status: ' + req.query.status);
 				var status = req.query.status;
-				if (_.isEmpty(status)) {
-					Account.find({
-							$or: [{
-								'username': {
-									$regex: searchRegex
-								}
-							}, {
-								'email': {
-									$regex: searchRegex
-								}
-							}]
-						})
-						.sort({
-							_id: -1
-						})
-						.skip(per * page)
-						.limit(per)
-						.exec(function(err, docs) {
-							if (err) return res.send(err);
-							res.send(docs);
-						});
-				} else {
-					Account.find({
-							status: status,
-							$or: [{
-								'username': {
-									$regex: searchRegex
-								}
-							}, {
-								'email': {
-									$regex: searchRegex
-								}
-							}]
-						})
-						.sort({
-							_id: -1
-						})
-						.skip(per * page)
-						.limit(per)
-						.exec(function(err, docs) {
-							if (err) return res.send(err);
-							res.send(docs);
-						});
+				var query = Account.find({
+					$or: [{
+						'username': {
+							$regex: searchRegex
+						}
+					}, {
+						'email': {
+							$regex: searchRegex
+						}
+					}]
+				});
+				if (!_.isEmpty(status)) {
+					query.where({status:status});
 				}
+				query
+					.sort({
+						_id: -1
+					})
+					.skip(per * page)
+					.limit(per)
+					.exec(function(err, docs) {
+						if (err) return res.send(err);
+						res.send(docs);
+					});
 				break;
 			default:
 				Account
@@ -191,7 +171,7 @@ exports = module.exports = function(app, models) {
 					});
 				break;
 		}
-	}
+	};
 
 	/**
 	 * router outline

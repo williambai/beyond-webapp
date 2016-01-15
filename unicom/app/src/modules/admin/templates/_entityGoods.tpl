@@ -17,21 +17,16 @@
 	</div>	
 	<div id="searchTemplate">
 		<form id="searchForm" class="form-inline">
+			<input type="hidden" name="action" value="search">
 			<div class="form-group">
 				<label>&nbsp;&nbsp;</label>
-				<input type="text" name="searchStr" class="form-control" placeholder="物料名称或物料代码">&nbsp;&nbsp;
+				<input type="text" name="searchStr" class="form-control" placeholder="物料名称或物料类型">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
-				<label>物料类型：</label>
-				<select class="form-control category">
-					<option>全部</option>
-				</select>&nbsp;&nbsp;
-			</div>
-			<div class="form-group">
-				<select class="form-control">
-					<option>全部</option>
-					<option>有效</option>
-					<option>无效</option>
+				<select class="form-control" name="status">
+					<option value="">全部</option>
+					<option value="有效">有效</option>
+					<option value="无效">无效</option>
 				</select>&nbsp;&nbsp;
 			</div>
 			<div class="form-group">

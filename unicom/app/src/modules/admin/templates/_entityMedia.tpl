@@ -17,16 +17,15 @@
 	</div>	
 	<div id="searchTemplate">
 		<form id="searchForm" class="form-inline">
+			<input type="hidden" name="action" value="search">
 			<div class="form-group">
 				<label>&nbsp;&nbsp;</label>
-				<input type="text" name="searchStr" class="form-control" placeholder="媒体编码或媒体名称">&nbsp;&nbsp;
+				<input type="text" name="searchStr" class="form-control" placeholder="媒体名称或文件名">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
-				<select class="form-control">
-					<option>全部</option>
-					<option value="image">图片</option>
-					<option value="video">视频</option>
-					<option value="other">其他</option>
+				<label>&nbsp;&nbsp;媒体类型&nbsp;&nbsp;</label>
+				<select class="form-control" name="mimetype">
+					<option value="">图片</option>
 				</select>&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
@@ -46,8 +45,9 @@
 						<button class="btn btn-success edit">编辑</button>
 						<button class="btn btn-danger delete">删除</button>
 					</div>
-					<h4><%= model.nickname %>(<%= model.name %>)</h4>
-					<p><%= model.originalname %></p>
+					<h4><%= model.name %></h4>
+					<p><%= model.url %></p>
+					<p><%= model.description %></p>
 				</div>
 			</div>
 			<hr/>
@@ -75,17 +75,17 @@
 					</div>
 					<div class="form-group">
 						<label>媒体新名称：</label>
-						<input type="text" name="name" value="<%= model.name %>" class="form-control" readonly>
+						<input type="text" name="name" value="<%= model.name %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>媒体编码：</label>
-						<input type="text" name="nickname" value="<%= model.name %>" class="form-control" placeholder="仅接受数字、_或字母组合">
-						<span class="help-block">帮助快速检索</span>
+						<label>媒体描述：</label>
+						<textarea name="description" class="form-control"><%= model.description %></textarea>
+						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>媒体描述：</label>
-						<input type="text" name="description" value="<%= model.description %>" class="form-control">
+						<label>媒体分类：</label>
+						<input type="text" name="category" value="<%= model.category %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -145,17 +145,17 @@
 					</div>
 					<div class="form-group">
 						<label>媒体新名称：</label>
-						<input type="text" name="name" value="<%= model.name %>" class="form-control" readonly>
+						<input type="text" name="name" value="<%= model.name %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>媒体编码：</label>
-						<input type="text" name="nickname" value="<%= model.nickname %>" class="form-control" placeholder="仅接受数字、_或字母组合">
-						<span class="help-block">帮助快速检索</span>
+						<label>媒体描述：</label>
+						<textarea name="description" class="form-control"><%= model.description %></textarea>
+						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>媒体描述：</label>
-						<input type="text" name="description" value="<%= model.description %>" class="form-control">
+						<label>媒体分类：</label>
+						<input type="text" name="category" value="<%= model.category %>" class="form-control" placeholder="">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

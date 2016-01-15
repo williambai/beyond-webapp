@@ -23,12 +23,12 @@
 				</a>
 				<a class="list-group-item" href="#product/card/package/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;卡号套餐管理
+					&nbsp;号卡套餐管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#product/card/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;卡号产品管理
+					&nbsp;号卡产品管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<!-- <a class="list-group-item" href="#product/phone/package/index">
@@ -58,10 +58,10 @@
 				</a>
 				<a class="list-group-item" href="#order/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;直通订单
+					&nbsp;订单管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#order/card/index">
+				<!-- <a class="list-group-item" href="#order/card/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;卡号订单
 					<i class="fa fa-chevron-right pull-right"></i>
@@ -75,7 +75,7 @@
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;兑换订单
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
+				</a> -->
 				<a class="list-group-item" href="#account/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;用户管理

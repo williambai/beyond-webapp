@@ -17,10 +17,10 @@
 	</div>	
 	<div id="searchTemplate">
 		<form id="searchForm" class="form-inline">
-			<input type="hidden" name="type" value="search">
+			<input type="hidden" name="action" value="search">
 			<div class="form-group">
 				<label>&nbsp;&nbsp;</label>
-				<input type="text" name="searchStr" class="form-control" placeholder="套餐类型名称">&nbsp;&nbsp;
+				<input type="text" name="searchStr" class="form-control" placeholder="套餐名称或分类名称">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
 				<select name="status" class="form-control">

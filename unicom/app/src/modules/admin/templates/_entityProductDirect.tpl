@@ -17,15 +17,15 @@
 	</div>	
 	<div id="searchTemplate">
 		<form id="searchForm" class="form-inline">
-			<input type="hidden" name="type" value="search">
+			<input type="hidden" name="action" value="search">
 			<div class="form-group">
 				<label>&nbsp;&nbsp;</label>
-				<input type="text" name="searchStr" class="form-control" placeholder="物料ID或物料名称">&nbsp;&nbsp;
+				<input type="text" name="searchStr" class="form-control" placeholder="产品名称或物料名称">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
 				<label>&nbsp;产品分类：&nbsp;</label>
 				<select name="category" class="form-control">
-					<option>全部</option>
+					<option value="">全部</option>
 					<option value="2G">2G流量</option>
 					<option value="3G">3G流量</option>
 					<option value="SMS">增值服务</option>

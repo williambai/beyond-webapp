@@ -1,5 +1,6 @@
  exports = module.exports = function(app, models) {
-
+ 	var _ = require('underscore');
+ 	
  	var add = function(req, res) {
  		var doc = new models.ProductExchange(req.body);
  		doc.save(function(err) {
@@ -39,18 +40,56 @@
  			});
  	};
  	var getMore = function(req, res) {
- 		var per = 20;
+ 		var action = req.query.action || '';
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
+ 		var per = 20;
 
- 		models.ProductExchange
- 			.find({})
- 			.skip(per * page)
- 			.limit(per)
- 			.exec(function(err, docs) {
- 				if (err) return res.send(err);
- 				res.send(docs);
- 			});
+ 		switch (action) {
+ 			case 'search':
+ 				var searchStr = req.query.searchStr || '';
+ 				var searchRegex = new RegExp(searchStr, 'i');
+ 				var status = req.query.status;
+ 				var query = models.ProductExchange.find({
+ 					$or: [{
+ 						'name': {
+ 							$regex: searchRegex
+ 						}
+ 					}, {
+ 						'goods.name': {
+ 							$regex: searchRegex
+ 						}
+ 					}]
+ 				});
+ 				if (!_.isEmpty(status)) {
+ 					query.where({
+ 						status: status
+ 					});
+ 				}
+ 				query.sort({
+ 						_id: -1
+ 					})
+ 					.skip(per * page)
+ 					.limit(per)
+ 					.exec(function(err, docs) {
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 				break;
+ 			default:
+ 				models.ProductExchange
+ 					.find({})
+ 					.sort({
+ 						_id: -1
+ 					})
+ 					.skip(per * page)
+ 					.limit(per)
+ 					.exec(function(err, docs) {
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 				break;
+ 		}
  	};
  	/**
  	 * router outline

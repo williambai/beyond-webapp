@@ -5,5 +5,5 @@ var ProductPhone = require('./ProductPhone');
 
 exports = module.exports = Backbone.Collection.extend({
 	model: ProductPhone,
-	url: config.api.host + '/product/phones',
+	url: config.api.host + '/channel/product/phones',
 });

@@ -21,21 +21,16 @@ exports = module.exports = FormView.extend({
 	},
 
 	events: {
-		'click .view': 'phoneView',
 		'keyup input[type=text]': 'inputText',
-		'change select[name="package[category]"]' : 'packageCategorySelected',
-		'change select[name="package[months]"]': 'packageMonthsSelected',
-		'change select[name="package[price]"]': 'packagePriceSelected',
-		'click .packageAdd': 'packageAdd',
-		'click .packageRemove': 'packageRemove',
 		'submit form': 'submit',
 		'click .back': 'cancel',
+		'click .view': 'phoneView',
+		'click .packageSelect': 'packageSelect',
 	},
 
 	load: function(){
 		if(this.model.isNew()){
 			this.modelFilled = true;
-			this.loadPhonePackage();
 			return;
 		}
 		this.model.fetch({
@@ -43,48 +38,6 @@ exports = module.exports = FormView.extend({
 				withCredentials: true
 			},
 		});
-	},
-
-	loadPhonePackage: function(cb){
-		var that = this;
-		$.ajax({
-			url: config.api.host + '/dict/phone/packages?type=all',
-			type: 'GET',
-			xhrFields: {
-				withCredentials: true
-			},
-		}).done(function(data){
-			data = data || [];
-			that.packages = data;
-			//1. initial category select
-			var categoriesView = '';
-			var categories = _.uniq(_.pluck(data, 'category'));
-			_.each(categories,function(category){
-				categoriesView += '<option value='+ category +'>' + category + '</option>';
-			});
-			that.$('select[name="package[category]"]').html(categoriesView);
-			//2. initial months select
-			var monthsView = '';
-			var months = _.uniq(_.pluck(_.where(data,{category: categories[0]}),'months'));
-			_.each(months,function(item){
-				monthsView += '<option value='+ item +'>' + item + '</option>';
-			});
-			that.$('select[name="package[months]"]').html(monthsView);
-			//3. initial price select
-			var priceView = '';
-			var prices = _.uniq(_.pluck(_.where(data,{category: categories[0], months: months[0]}),'price'));
-			_.each(prices,function(item,i){
-				priceView += '<option value='+ item +'>' + item + '</option>';
-			});
-			that.$('select[name="package[price]"]').html(priceView);
-			//4. initial name select
-			var nameView = '';
-			var names = _.uniq(_.pluck(_.where(data,{category: categories[0], months: months[0], price: prices[0]}),'name'));
-			_.each(names,function(item){
-				nameView += '<option value='+ item +'>' + item + '</option>';
-			});
-			that.$('select[name="package[name]"]').html(nameView);
-		});				
 	},
 
 	inputText: function(evt){
@@ -110,141 +63,12 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	packageCategorySelected: function(evt){
-		var that = this;
-		var data = this.packages;
-		var category = this.$(evt.currentTarget).val();
-		//1. initial category select
-		// var categoriesView = '';
-		// var categories = _.uniq(_.pluck(data, 'category'));
-		// _.each(categories,function(category){
-		// 	categoriesView += '<option value='+ category +'>' + category + '</option>';
-		// });
-		// that.$('select[name="package[category]"]').html(categoriesView);
-		//2. initial months select
-		var monthsView = '';
-		var months = _.uniq(_.pluck(_.where(data,{category: category}),'months'));
-		_.each(months,function(item){
-			monthsView += '<option value='+ item +'>' + item + '</option>';
-		});
-		that.$('select[name="package[months]"]').html(monthsView);
-		//3. initial price select
-		var priceView = '';
-		var prices = _.uniq(_.pluck(_.where(data,{category: category, months: months[0]}),'price'));
-		_.each(prices,function(item,i){
-			priceView += '<option value='+ item +'>' + item + '</option>';
-		});
-		that.$('select[name="package[price]"]').html(priceView);
-		//4. initial name select
-		var nameView = '';
-		var names = _.uniq(_.pluck(_.where(data,{category: category, months: months[0], price: prices[0]}),'name'));
-		_.each(names,function(item){
-			nameView += '<option value='+ item +'>' + item + '</option>';
-		});
-		that.$('select[name="package[name]"]').html(nameView);
-		return false;
-	},
-
-	packageMonthsSelected: function(evt){
-		var that = this;
-		var data = this.packages;
-		var category = this.$('select[name="package[category]"]').val();
-		var months = this.$(evt.currentTarget).val();
-		//1. initial category select
-		// var categoriesView = '';
-		// var categories = _.uniq(_.pluck(data, 'category'));
-		// _.each(categories,function(category){
-		// 	categoriesView += '<option value='+ category +'>' + category + '</option>';
-		// });
-		// that.$('select[name="package[category]"]').html(categoriesView);
-		//2. initial months select
-		// var monthsView = '';
-		// var months = _.uniq(_.pluck(_.where(data,{category: category}),'months'));
-		// _.each(months,function(item){
-		// 	monthsView += '<option value='+ item +'>' + item + '</option>';
-		// });
-		// that.$('select[name="package[months]"]').html(monthsView);
-		//3. initial price and name select
-		var priceView = '';
-		var prices = _.uniq(_.pluck(_.where(data,{category: category, months: months}),'price'));
-		_.each(prices,function(item,i){
-			priceView += '<option value='+ item +'>' + item + '</option>';
-		});
-		that.$('select[name="package[price]"]').html(priceView);
-		//4. initial name select
-		var nameView = '';
-		var names = _.uniq(_.pluck(_.where(data,{category: category, months: months, price: prices[0]}),'name'));
-		_.each(names,function(item){
-			nameView += '<option value='+ item +'>' + item + '</option>';
-		});
-		that.$('select[name="package[name]"]').html(nameView);
-		return false;
-	},
-
-	packagePriceSelected: function(evt){
-		var that = this;
-		var data = this.packages;
-		var category = this.$('select[name="package[category]"]').val();
-		var months = this.$('select[name="package[months]"]').val();
-		var price = this.$(evt.currentTarget).val();
-		//1. initial category select
-		// var categoriesView = '';
-		// var categories = _.uniq(_.pluck(data, 'category'));
-		// _.each(categories,function(category){
-		// 	categoriesView += '<option value='+ category +'>' + category + '</option>';
-		// });
-		// that.$('select[name="package[category]"]').html(categoriesView);
-		//2. initial months select
-		// var monthsView = '';
-		// var months = _.uniq(_.pluck(_.where(data,{category: category}),'months'));
-		// _.each(months,function(item){
-		// 	monthsView += '<option value='+ item +'>' + item + '</option>';
-		// });
-		// that.$('select[name="package[months]"]').html(monthsView);
-		//3. initial price and name select
-		var priceView = '';
-		var prices = _.uniq(_.pluck(_.where(data,{category: category, months: months}),'price'));
-		_.each(prices,function(item,i){
-			priceView += '<option value='+ item +'>' + item + '</option>';
-		});
-		that.$('select[name="package[price]"]').html(priceView);
-		//4. initial name select
-		var nameView = '';
-		var names = _.uniq(_.pluck(_.where(data,{category: category, months: months, price: price}),'name'));
-		_.each(names,function(item){
-			nameView += '<option value='+ item +'>' + item + '</option>';
-		});
-		that.$('select[name="package[name]"]').html(nameView);
-		return false;
-	},
-
-	packageAdded: {},
-	packageAdd: function(){
-		var that = this;
-		var packageName = that.$('select[name="package[name]"]').val();
-		var pkg = _.findWhere(that.packages,{name: packageName});
-		var newPackageView = '';
-		var id= pkg._id;
-		newPackageView += '<div id="'+ id +'"><input type="hidden" name="packages[]" value="'+ id +'"><div class="pull-left">';
-		newPackageView += '<button class="btn btn-danger packageRemove"><i class="fa fa-minus fa-lg"></i></button>';
-		newPackageView += '</div>';
-		newPackageView += '<div style="padding-left:60px;">';
-		newPackageView += '<h4>'+ pkg.name +'</h4>';
-		newPackageView += '<p>'+ pkg.price.toFixed(2) +'元</p>';
-		newPackageView += '</div><hr/></div>';
-		that.$('#packages').append(newPackageView);
-		that.packageAdded[id] = pkg;
-		return false;
-	},
-
-	packageRemove: function(evt){
-		if(window.confirm('您确信要删除吗？')){
-			var that = this;
-			var id = that.$(evt.currentTarget).parent().parent().attr('id');
-			console.log(id)
-			that.$('#' + id).remove();
-			that.packageAdded = _.omit(that.packageAdded,id);
-		}
+	packageSelect: function(evt){
+		this.$('.packageSelect').find('i').removeClass('fa-dot-circle-o');
+		this.$('.packageSelect').find('i').addClass('fa-circle-o');
+		var id = this.$(evt.currentTarget).attr('id');
+		this.$(evt.currentTarget).find('i').removeClass('fa-circle-o').addClass('fa-dot-circle-o');
+		this.$('input[name="package[id]"]').val(id);
 		return false;
 	},
 
@@ -268,15 +92,6 @@ exports = module.exports = FormView.extend({
 
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		var packageIds = _.uniq(this.model.get('packages'));
-		var packages = [];
-		_.each(packageIds,function(id){
-			var pkg = _.findWhere(that.packages,{_id:id});
-			if(pkg){
-				packages.push(pkg);
-			}
-		});
-		this.model.set('packages', packages);
 		// console.log(this.model.attributes);
 		this.model.save(null, {
 			xhrFields: {
@@ -298,23 +113,22 @@ exports = module.exports = FormView.extend({
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
-			//load phonePackage select
-			this.loadPhonePackage();
 			//set phonePackage
 			var pkgs = this.model.get('packages') || [];
+			var newPackageView = '';
+			newPackageView += '<input type="hidden" name="package[id]">';
+			newPackageView += '<span class="help-block"></span>';
 			_.each(pkgs, function(pkg){
-				var newPackageView = '';
-				var id= pkg._id;
-				newPackageView += '<div id="'+ id +'"><input type="hidden" name="packages[]" value="'+ id +'"><div class="pull-left">';
-				newPackageView += '<button class="btn btn-danger packageRemove"><i class="fa fa-minus fa-lg"></i></button>';
+				newPackageView += '<div><div class="pull-left">';
+				newPackageView += '<button class="btn btn-danger packageSelect" id="'+ pkg._id +'"><i class="fa fa-circle-o fa-lg"></i></button>';
 				newPackageView += '</div>';
 				newPackageView += '<div style="padding-left:60px;">';
 				newPackageView += '<h4>'+ pkg.name +'</h4>';
+				newPackageView += '<p>'+ pkg.description +'</p>';
 				newPackageView += '<p>'+ pkg.price.toFixed(2) +'元</p>';
 				newPackageView += '</div><hr/></div>';
-				that.$('#packages').append(newPackageView);
-				that.packageAdded[id] = pkg;
 			});		
+			that.$('#packages').append(newPackageView);
 		}else{
 			//second fetch: submit
 			this.router.navigate('phone/index',{trigger: true, replace: true});
