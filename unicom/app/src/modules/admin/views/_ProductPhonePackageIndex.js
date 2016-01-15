@@ -72,9 +72,9 @@ exports = module.exports = Backbone.View.extend({
 	removeProductPhonePackage: function(evt){
 		if(window.confirm('您确信要删除吗？')){
 			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new ProductPhonePackage({_id: id});
+			var model = new ProductPhonePackage({_id: id,pid: this.pid});
 			model.destroy({wait: true});
-			this.listView.trigger('refresh',model.urlRoot);
+			this.listView.trigger('refresh');
 		}
 		return false;
 	},

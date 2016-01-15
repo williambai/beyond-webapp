@@ -143,7 +143,7 @@ exports = module.exports = Backbone.View.extend({
 		if(window.confirm('您确信要删除吗？')){
 			var model = new Account({_id: id});
 			model.destroy({wait: true});
-			this.listView.trigger('refresh',model.urlRoot);
+			this.listView.trigger('refresh');
 		}
 		return false;
 	},

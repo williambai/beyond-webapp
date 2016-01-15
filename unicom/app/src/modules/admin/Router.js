@@ -35,7 +35,6 @@ var ProductExchangeEditView = require('./views/_ProductExchangeEdit');
 
 var ProductPhoneIndexView = require('./views/_ProductPhoneIndex');
 var ProductPhoneEditView = require('./views/_ProductPhoneEdit');
-// var ProductPhonePackageAddView = require('./views/_ProductPhonePackageAdd');
 var ProductPhonePackageIndexView = require('./views/_ProductPhonePackageIndex');
 var ProductPhonePackageEditView = require('./views/_ProductPhonePackageEdit');
 
@@ -712,22 +711,6 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(productPhoneEditView);
 		productPhoneEditView.trigger('load');
 	},		
-
-	// productPhonePackageAdd: function(id){
-	// 	if(!this.logined){
-	// 		window.location.hash = 'login';
-	// 		return;
-	// 	}
-	// 	this.appEvents.trigger('set:brand','新增终端套餐');
-	// 	var productPhonePackageAddView = new ProductPhonePackageAddView({
-	// 		router: this,
-	// 		el: '#content',
-	// 		id: id,
-	// 	});
-	// 	this.changeView(productPhonePackageAddView);
-	// 	productPhonePackageAddView.trigger('load');
-	// },		
-
 
 	productCardPackageIndex: function(){
 		if(!this.logined){

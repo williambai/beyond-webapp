@@ -101,7 +101,7 @@ Submit.code = 0x3;
 
 Submit.PDUAttrSeq = [A.SPNumber, A.ChargeNumber, A.UserCount, A.UserNumber, null, A.CorpId, A.ServiceType, A.FeeType, A.FeeValue, A.GivenValue, A.AgentFlag, A.MorelatetoMTFlag, A.Priority, A.ExpireTime, A.ScheduleTime, A.ReportFlag, A.TP_pid, A.TP_udhi, A.MessageCoding, A.MessageType, A.MessageLength, A.MessageContent];
 
-Submit.Resp = function(){};
+Submit.Resp = function() {};
 Submit.Resp.code = 0x80000003;
 Submit.Resp.PDUAttrSeq = [A.Result];
 
@@ -165,3 +165,31 @@ if (process.argv[1] === __filename) {
 		// console.log(submitEcho);
 	});
 }
+
+/**
+ * 
+tp_udhiHead[0] = 0x05;// 表示剩余协议头的长度 
+tp_udhiHead[1] = 0x00;// 包头类型标识，固定填写0x00，表示长短信 
+tp_udhiHead[2] = 0x03;// 子包长度，固定填写0x03，表示后面三个字节的长度； 
+//tp_udhiHead[3] = 0x0A;// ：长消息参考号，每个SP给每个用户发送的每条参考号都应该不同，可以从0开始，每次加1，最大255，便于同一个终端对同一个SP的消息的不同的长短信进行识别 
+tp_udhiHead[4] = (byte) messageUCS2Count;// 本条长消息的的总消息数，从1到255，一般取值应该大于2 
+tp_udhiHead[5] = (byte) number;// 本条消息在长消息中的位置或序号，从1到255，第一条为1，第二条为2，最后一条等于第五字节的值。 
+根据网上的资料也将tp_udhi = 1;messageCoding = 8; 
+电信SMGP长短信
+一、设置tlv字段TP_udhi为0x01，表示消息内容里面包含消息头(也就是说含长短信头) 
+二、内容前面需要增加6个字段 
+  1、  字节一：包头长度，固定填写0x05； 
+  2、  字节二：包头类型标识，固定填写0x00，表示长短信； 
+  3、  字节三：子包长度，固定填写0x03，表示后面三个字节的长度； 
+  4、  字节四到字节六：包内容： 
+  a）  字节四：长消息参考号，每个SP给每个用户发送的每条参考号都应该不同，可以从0开始，每次加1，最大255，便于同一个终端对同一个SP的消息的不同的长短信进行识别； 
+  b）  字节五：本条长消息的的总消息数，从1到255，一般取值应该大于2； 
+  c）  字节六：本条消息在长消息中的位置或序号，从1到255，第一条为1，第二条为2，最后一条等于第四字节的值。 例子： 
+
+05 00 03 00 02 01 
+05 00 03 00 02 02 
+三、你还需要设置PkTotal和PkNumber 
+这个字段如果不设置并不影响用户手机对短信的拼装，但是会影响ismp的健权和计费，一组pktotal pknumber里面的数据ismp是当一条短信健权和计费。 
+特别说明：如果网关方式长短信一定要ucs-2编码，gbk如果发送的短信内容全是全角字符没问题，如果有半角的，很容易乱码。
+因为gbk，英文当1个字节；usc-2 中英文都2字节，所以拆分的时候不会出现汉字被截半个的问题
+*/

@@ -1,47 +1,13 @@
  exports = module.exports = function(app, models) {
+ 	var _ = require('underscore');
 
  	var add = function(req, res) {
  		var pid = req.params.pid;
-		models.ProductPhone.findByIdAndUpdate(pid, {
-				$push: {
-					'packages': req.body
-				}
-			}, {
-				'upsert': false,
-				'new': true,
-			},
-			function(err, doc) {
-				if (err) return res.send(err);
-				res.send(doc);
-			}
-		);
- 	};
- 	var remove = function(req,res){
- 		var pid = req.params.pid;
- 		var id = req.params.id;
-		models.ProductPhone.findByIdAndUpdate(pid, {
-				$pull: {
-					'packages': {
-						_id: id
-					},
-				}
-			}, {
-				'upsert': false,
-				'new': true,
-			},
-			function(err, doc) {
-				if (err) return res.send(err);
-				res.send(doc);
-			}
-		);
- 	};
- 	var update = function(req, res) {
- 		var pid = req.params.pid;
- 		var id = req.params.id;
- 		var set = req.body;
+ 		var phonePackage = _.omit(req.body, '_id');
+
  		models.ProductPhone.findByIdAndUpdate(pid, {
- 				$set: {
- 					// 'packages['+ 'id]': set
+ 				$push: {
+ 					'packages': phonePackage
  				}
  			}, {
  				'upsert': false,
@@ -53,13 +19,76 @@
  			}
  		);
  	};
- 	var getOne = function(req, res) {
+ 	var remove = function(req, res) {
+ 		var pid = req.params.pid;
  		var id = req.params.id;
- 		models.ProductPhonePackage
- 			.findById(id)
+ 		models.ProductPhone.findByIdAndUpdate(pid, {
+ 				$pull: {
+ 					'packages': {
+ 						_id: id
+ 					},
+ 				}
+ 			}, {
+ 				'upsert': false,
+ 				'new': true,
+ 			},
+ 			function(err, doc) {
+ 				if (err) return res.send(err);
+ 				res.send({});
+ 			}
+ 		);
+ 	};
+ 	var update = function(req, res) {
+ 		var pid = req.params.pid;
+ 		var id = req.params.id;
+ 		//** pull out
+ 		models.ProductPhone.findByIdAndUpdate(pid, {
+ 				$pull: {
+ 					'packages': {
+ 						_id: id
+ 					},
+ 				}
+ 			}, {
+ 				'upsert': false,
+ 				'new': true,
+ 			},
+ 			function(err, doc) {
+ 				if (err) return res.send(err);
+ 				//** push into
+ 				var phonePackage = req.body;
+ 				phonePackage._id = id;
+ 				models.ProductPhone.findByIdAndUpdate(pid, {
+ 						$push: {
+ 							'packages': phonePackage
+ 						}
+ 					}, {
+ 						'upsert': false,
+ 						'new': true,
+ 					},
+ 					function(err, doc) {
+ 						if (err) return res.send(err);
+ 						res.send({});
+ 					}
+ 				);
+ 			}
+ 		);
+ 	};
+ 	var getOne = function(req, res) {
+ 		var pid = req.params.pid;
+ 		var id = req.params.id;
+ 		models.ProductPhone
+ 			.findOne({
+ 				'packages._id': id
+ 			})
+ 			.select({
+ 				packages: 1
+ 			})
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
- 				res.send(doc);
+ 				var pkg = doc.packages || [];
+ 				res.send(_.findWhere(pkg, {
+ 					id: id
+ 				}));
  			});
  	};
  	var getMore = function(req, res) {
@@ -69,11 +98,15 @@
  		page = (!page || page < 0) ? 0 : page;
 
  		models.ProductPhone
- 			.findOne({_id: pid})
- 			.select({packages: 1})
+ 			.findOne({
+ 				_id: pid
+ 			})
+ 			.select({
+ 				packages: 1
+ 			})
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
- 				res.send(doc.packages.slice(per*page,per));
+ 				res.send(doc.packages.slice(per * page, per));
  			});
  	};
  	/**

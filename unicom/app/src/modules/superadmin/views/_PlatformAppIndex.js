@@ -70,7 +70,7 @@ exports = module.exports = Backbone.View.extend({
 			var id = this.$(evt.currentTarget).parent().attr('id');
 			var model = new PlatformApp({_id: id});
 			model.destroy({wait: true});
-			this.listView.trigger('refresh',model.urlRoot);
+			this.listView.trigger('refresh');
 		}
 		return false;
 	},
