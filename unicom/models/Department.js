@@ -13,6 +13,6 @@ module.exports = exports = function(mongoose){
 		path: String,
 	});
 
-	schema.set('collection','channel.departments');
-	return mongoose.model('ChannelDepartment',schema);
+	schema.set('collection','departments');
+	return mongoose.model('Department',schema);
 };

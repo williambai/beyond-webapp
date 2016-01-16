@@ -1,6 +1,6 @@
 var util = require('util');
 var log4js = require('log4js');
-var logger = log4js.getLogger('route:promote.product');
+var logger = log4js.getLogger('route:platform.order');
 logger.setLevel('INFO');
 
 exports = module.exports = function(app, models) {
@@ -209,32 +209,32 @@ exports = module.exports = function(app, models) {
 	 * router outline
 	 */
 	/**
-	 * add admin/orders
+	 * add platform/orders
 	 * type:
 	 *     
 	 */
-	app.post('/admin/orders', add);
+	app.post('/platform/orders', add);
 	/**
-	 * update admin/orders
+	 * update platform/orders
 	 * type:
 	 *     
 	 */
-	app.put('/admin/orders/:id', update);
+	app.put('/platform/orders/:id', update);
 
 	/**
-	 * delete admin/orders
+	 * delete platform/orders
 	 * type:
 	 *     
 	 */
-	app.delete('/admin/orders/:id', remove);
+	app.delete('/platform/orders/:id', remove);
 	/**
-	 * get admin/orders
+	 * get platform/orders
 	 */
-	app.get('/admin/orders/:id', getOne);
+	app.get('/platform/orders/:id', getOne);
 
 	/**
-	 * get admin/orders
+	 * get platform/orders
 	 * type:
 	 */
-	app.get('/admin/orders', getMore);
+	app.get('/platform/orders', getMore);
 };

@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery'),
-    channelTpl = require('../templates/_entityChannelEntity.tpl'),
+    channelTpl = require('../templates/_entityChannel.tpl'),
     SearchView = require('./__SearchView');
 var config = require('../conf');
 

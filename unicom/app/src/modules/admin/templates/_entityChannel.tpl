@@ -49,53 +49,10 @@
 		<p></p>
 		<hr/>
 	</div>
-	<div id="addTemplate">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4 class="panel-title text-center">新增渠道</h4>
-			</div>
-			<div class="panel-body">
-				<form id="roleForm">
-					<div class="form-group">
-						<label>管理部门：</label>
-						<input type="text" name="parent" list="departments" value="" class="form-control" placeholder="请输入组织名称">
-						<datalist id="departments">
-						</datalist>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>渠道类型：</label>
-						<select class="form-control category">
-						</select>&nbsp;&nbsp;
-					</div>
-					<div class="form-group">
-						<label>渠道名称：</label>
-						<input type="text" name="name" value="" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>渠道编码：</label>
-						<input type="text" name="nickname" value="" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<div class="btn-group btn-group-justified">
-							<div class="btn-group">
-								<input type="submit" value="提交" class="btn btn-danger">
-							</div>
-							<div class="btn-group">
-								<button class="btn btn-primary back">取消</button>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
 	<div id="editTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">新增渠道</h4>
+				<h4 class="panel-title text-center">编辑渠道</h4>
 			</div>
 			<div class="panel-body">
 				<form id="roleForm">

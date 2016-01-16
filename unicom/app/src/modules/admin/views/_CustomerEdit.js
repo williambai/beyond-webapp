@@ -208,6 +208,8 @@ exports = module.exports = FormView.extend({
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
 		if(this.model.isNew()) this.$('.panel-title').text('新增客户');
+		var status = this.model.get('status');
+		this.$('input[name=status][value='+ status +']').attr('checked',true);
 		return this;
 	},
 });

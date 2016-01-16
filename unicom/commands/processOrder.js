@@ -1,7 +1,7 @@
 var request = require('request');
 
 var processOrder = function(callback) {
-	request.post('http://localhost:8092/orders', {
+	request.post('http://localhost:8092/platform/orders', {
 		form: {
 			action: 'processOrder',
 		}
@@ -11,7 +11,7 @@ var processOrder = function(callback) {
 };
 
 var confirmOrder = function(callback) {
-	request.post('http://localhost:8092/orders', {
+	request.post('http://localhost:8092/platform/orders', {
 		form: {
 			action: 'confirmOrder',
 		}

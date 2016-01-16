@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    channelTpl = require('../templates/_entityChannelEntity.tpl'),
-	ChannelEntity = require('../models/ChannelEntity');
+    channelTpl = require('../templates/_entityChannel.tpl'),
+	Channel = require('../models/Channel');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
@@ -13,7 +13,7 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new ChannelEntity({_id: options.id});
+		this.model = new Channel({_id: options.id});
 		var page = $(channelTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));

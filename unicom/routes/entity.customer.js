@@ -195,8 +195,7 @@ exports = module.exports = function(app, models) {
 				var searchRegex = new RegExp(searchStr, 'i');
 				logger.debug('search status: ' + req.query.status);
 				var status = req.query.status;
-				if (_.isEmpty(status)) {
-					models.Customer.find({
+				var query = models.Customer.find({
 							$or: [{
 								'name': {
 									$regex: searchRegex
@@ -206,39 +205,19 @@ exports = module.exports = function(app, models) {
 									$regex: searchRegex
 								}
 							}]
-						})
-						.sort({
-							_id: -1
-						})
-						.skip(per * page)
-						.limit(per)
-						.exec(function(err, docs) {
-							if (err) return res.send(err);
-							res.send(docs);
 						});
-				} else {
-					models.Customer.find({
-							status: status,
-							$or: [{
-								'name': {
-									$regex: searchRegex
-								}
-							}, {
-								'mobile': {
-									$regex: searchRegex
-								}
-							}]
-						})
-						.sort({
-							_id: -1
-						})
-						.skip(per * page)
-						.limit(per)
-						.exec(function(err, docs) {
-							if (err) return res.send(err);
-							res.send(docs);
-						});
+				if (!_.isEmpty(status)) {
+					query.where({status: status});
 				}
+				query.sort({
+					_id: -1
+				})
+				.skip(per * page)
+				.limit(per)
+				.exec(function(err, docs) {
+					if (err) return res.send(err);
+					res.send(docs);
+				});
 				break;
 			case 'export':
  				var department = req.query.department;

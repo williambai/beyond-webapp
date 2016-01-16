@@ -13,6 +13,6 @@ module.exports = exports = function(mongoose){
 		}
 	});
 
-	schema.set('collection','channel.grids');
-	return mongoose.model('ChannelGrid',schema);
+	schema.set('collection','grids');
+	return mongoose.model('Grid',schema);
 };

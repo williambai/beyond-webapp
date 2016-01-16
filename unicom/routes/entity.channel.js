@@ -1,7 +1,7 @@
  exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
- 		var doc = new models.ChannelEntity(req.body);
+ 		var doc = new models.Channel(req.body);
  		doc.save(function(err) {
  			if (err) return res.send(err);
  			res.send({});
@@ -9,7 +9,7 @@
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.ChannelEntity.findByIdAndRemove(id,function(err,doc){
+ 		models.Channel.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -17,7 +17,7 @@
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.ChannelEntity.findByIdAndUpdate(id, {
+ 		models.Channel.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -31,7 +31,7 @@
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.ChannelEntity
+ 		models.Channel
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -43,7 +43,7 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.ChannelEntity
+ 		models.Channel
  			.find({})
  			.skip(per * page)
  			.limit(per)
@@ -56,32 +56,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add channel/entities
+ 	 * add channels
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/entities', add);
+ 	app.post('/channels', add);
  	/**
- 	 * update channel/entities
+ 	 * update channels
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/entities/:id', update);
+ 	app.put('/channels/:id', update);
 
  	/**
- 	 * delete channel/entities
+ 	 * delete channels
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/entities/:id', remove);
+ 	app.delete('/channels/:id', remove);
  	/**
- 	 * get channel/entities
+ 	 * get channels
  	 */
- 	app.get('/channel/entities/:id', getOne);
+ 	app.get('/channels/:id', getOne);
 
  	/**
- 	 * get channel/entities
+ 	 * get channels
  	 * type:
  	 */
- 	app.get('/channel/entities', getMore);
+ 	app.get('/channels', getMore);
  };

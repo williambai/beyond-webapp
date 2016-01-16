@@ -14,6 +14,6 @@ module.exports = exports = function(mongoose){
 		target_url: String,
 	});
 
-	schema.set('collection','promote.media');
-	return mongoose.model('PromoteMedia',schema);
+	schema.set('collection','medias');
+	return mongoose.model('Media',schema);
 };

@@ -1,15 +1,15 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    channelTpl = require('../templates/_entityChannelEntity.tpl'),
+    channelTpl = require('../templates/_entityChannel.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var ChannelEntity = require('../models/ChannelEntity');
-var ListView = require('./_ChannelEntityList');
-var SearchView = require('./_ChannelEntitySearch');
+var Channel = require('../models/Channel');
+var ListView = require('./_ChannelList');
+var SearchView = require('./_ChannelSearch');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -27,9 +27,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addChannelEntity',
-		'click .edit': 'editChannelEntity',
-		'click .delete': 'removeChannelEntity',
+		'click .add': 'addChannel',
+		'click .edit': 'editChannel',
+		'click .delete': 'removeChannel',
 	},
 
 	load: function() {
@@ -55,21 +55,21 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addChannelEntity: function(){
+	addChannel: function(){
 		this.router.navigate('channel/add',{trigger: true});
 		return false;
 	},
 
-	editChannelEntity: function(evt){
+	editChannel: function(evt){
 		var id = this.$(evt.currentTarget).parent().attr('id');
 		this.router.navigate('channel/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeChannelEntity: function(evt){
+	removeChannel: function(evt){
 		if(window.confirm('您确信要删除吗？')){
 			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new ChannelEntity({_id: id});
+			var model = new Channel({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}

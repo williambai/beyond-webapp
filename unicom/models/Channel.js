@@ -14,6 +14,6 @@ module.exports = exports = function(mongoose){
 		},
 	});
 
-	schema.set('collection','channel.entities');
-	return mongoose.model('ChannelEntity',schema);
+	schema.set('collection','channels');
+	return mongoose.model('Channel',schema);
 };

@@ -10,14 +10,14 @@
  		}else{
  	 		doc.path += ' >> '+ doc.name;
  		}
- 		models.ChannelDepartment.create(doc, function(err) {
+ 		models.Department.create(doc, function(err) {
  			if (err) return res.send(err);
  			res.send({});
  		});
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.ChannelDepartment.findByIdAndRemove(id,function(err,doc){
+ 		models.Department.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -34,7 +34,7 @@
 	 		if(!regex.test(doc.path)) doc.path += ' >> '+ doc.name;
  		}
 
- 		models.ChannelDepartment.findByIdAndUpdate(id, {
+ 		models.Department.findByIdAndUpdate(id, {
  				$set: doc
  			}, {
  				'upsert': false,
@@ -48,7 +48,7 @@
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.ChannelDepartment
+ 		models.Department
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -60,7 +60,7 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.ChannelDepartment
+ 		models.Department
  			.find({})
  			.sort({ _id: -1})
  			.skip(per * page)
@@ -74,32 +74,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add channel/departments
+ 	 * add departments
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/departments', add);
+ 	app.post('/departments', add);
  	/**
- 	 * update channel/departments
+ 	 * update departments
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/departments/:id', update);
+ 	app.put('/departments/:id', update);
 
  	/**
- 	 * delete channel/departments
+ 	 * delete departments
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/departments/:id', remove);
+ 	app.delete('/departments/:id', remove);
  	/**
- 	 * get channel/departments
+ 	 * get departments
  	 */
- 	app.get('/channel/departments/:id', getOne);
+ 	app.get('/departments/:id', getOne);
 
  	/**
- 	 * get channel/departments
+ 	 * get departments
  	 * type:
  	 */
- 	app.get('/channel/departments', getMore);
+ 	app.get('/departments', getMore);
  };

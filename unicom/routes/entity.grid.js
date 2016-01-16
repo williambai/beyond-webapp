@@ -8,14 +8,14 @@
  			doc = _.omit(doc,'department');
  		}
  		console.log(doc)
- 		models.ChannelGrid.create(doc, function(err) {
+ 		models.Grid.create(doc, function(err) {
  			if (err) return res.send(err);
  			res.send({});
  		});
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.ChannelGrid.findByIdAndRemove(id,function(err,doc){
+ 		models.Grid.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -27,7 +27,7 @@
  		if(_.isEmpty(department.id)){
  			set = _.omit(set,'department');
  		}
- 		models.ChannelGrid.findByIdAndUpdate(id, {
+ 		models.Grid.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -41,7 +41,7 @@
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.ChannelGrid
+ 		models.Grid
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -53,7 +53,7 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.ChannelGrid
+ 		models.Grid
  			.find({})
  			.skip(per * page)
  			.limit(per)
@@ -66,32 +66,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add channel/grids
+ 	 * add grids
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/grids', add);
+ 	app.post('/grids', add);
  	/**
- 	 * update channel/grids
+ 	 * update grids
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/grids/:id', update);
+ 	app.put('/grids/:id', update);
 
  	/**
- 	 * delete channel/grids
+ 	 * delete grids
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/grids/:id', remove);
+ 	app.delete('/grids/:id', remove);
  	/**
- 	 * get channel/grids
+ 	 * get grids
  	 */
- 	app.get('/channel/grids/:id', getOne);
+ 	app.get('/grids/:id', getOne);
 
  	/**
- 	 * get channel/grids
+ 	 * get grids
  	 * type:
  	 */
- 	app.get('/channel/grids', getMore);
+ 	app.get('/grids', getMore);
  };

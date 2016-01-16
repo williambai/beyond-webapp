@@ -36,7 +36,9 @@ var config = {
 //import the models
 var models = {
 		Account: require('./models/Account')(mongoose),
+		AccountActivity: require('./models/AccountActivity')(mongoose),
 		CbssAccount: require('./models/CbssAccount')(mongoose),
+
 		PlatformApp: require('./models/PlatformApp')(mongoose),
 		PlatformSession: require('./models/PlatformSession')(mongoose),
 		PlatformFeature: require('./models/PlatformFeature')(mongoose),
@@ -44,29 +46,22 @@ var models = {
 		PlatformSms: require('./models/PlatformSms')(mongoose),
 
 		Goods: require('./models/Goods')(mongoose),
-		Customer: require('./models/CustomerEntity')(mongoose),
+		Customer: require('./models/Customer')(mongoose),
 		ProductDirect: require('./models/ProductDirect')(mongoose),
 		ProductExchange: require('./models/ProductExchange')(mongoose),
-		ProductPhonePackage: require('./models/ProductPhonePackage')(mongoose),
+		ProductPhone: require('./models/ProductPhone')(mongoose),
 		ProductCardPackage: require('./models/ProductCardPackage')(mongoose),
 		ProductCard: require('./models/ProductCard')(mongoose),
-		ProductPhone: require('./models/ProductPhone')(mongoose),
 		Media: require('./models/Media')(mongoose),
 		Order: require('./models/Order')(mongoose),
-		// OrderCard: require('./models/OrderCard')(mongoose),
-		OrderExchange: require('./models/OrderExchange')(mongoose),
 		Revenue: require('./models/Revenue')(mongoose),
+		// OrderCard: require('./models/OrderCard')(mongoose),
+		// OrderExchange: require('./models/OrderExchange')(mongoose),		
 		
-		
-		AccountActivity: require('./models/AccountActivity')(mongoose),
 		ChannelCategory: require('./models/ChannelCategory')(mongoose),
-		ChannelDepartment: require('./models/ChannelDepartment')(mongoose),
-		ChannelGrid: require('./models/ChannelGrid')(mongoose),
-		ChannelEntity: require('./models/ChannelEntity')(mongoose),
-		PageRecommend: require('./models/PageRecommend')(mongoose),
-		PromoteEvent: require('./models/PromoteEvent')(mongoose),
-		// WoOrder: require('./models/WoOrder')(mongoose),
-		// WoRevenue: require('./models/WoRevenue')(mongoose),
+		Channel: require('./models/Channel')(mongoose),
+		Department: require('./models/Department')(mongoose),
+		Grid: require('./models/Grid')(mongoose),
 	};
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){

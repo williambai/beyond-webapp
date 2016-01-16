@@ -37,6 +37,21 @@
 					&nbsp;会话管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
+				<a class="list-group-item" href="#cbss/account/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;CBSS账户管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#sms/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;SMS管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#wechat/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;微信设置
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
 				<a class="list-group-item" href="#monitor/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;运营监控

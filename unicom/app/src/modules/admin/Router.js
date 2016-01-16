@@ -13,12 +13,6 @@ var IndexView = require('./views/Index');
 var AccountIndexView = require('./views/_AccountIndex');
 var AccountEditView = require('./views/_AccountEdit');
 
-var CbssAccountIndexView = require('./views/_CbssAccountIndex');
-var CbssAccountEditView = require('./views/_CbssAccountEdit');
-
-var SmsIndexView = require('./views/_SmsIndex');
-var SmsEditView = require('./views/_SmsEdit');
-
 var GoodsIndexView = require('./views/_GoodsIndex');
 var GoodsEditView = require('./views/_GoodsEdit');
 
@@ -44,19 +38,13 @@ var ProductCardIndexView = require('./views/_ProductCardIndex');
 var ProductCardEditView = require('./views/_ProductCardEdit');
 var ProductCardImportView = require('./views/_ProductCardImport');
 
-var ChannelEntityIndexView = require('./views/_ChannelEntityIndex');
-var ChannelEntityAddView = require('./views/_ChannelEntityAdd');
-var ChannelEntityEditView = require('./views/_ChannelEntityEdit');
+var ChannelIndexView = require('./views/_ChannelIndex');
+var ChannelEditView = require('./views/_ChannelEdit');
 
 var CustomerIndexView = require('./views/_CustomerIndex');
 var CustomerEditView = require('./views/_CustomerEdit');
 var CustomerImportView = require('./views/_CustomerImport');
 var CustomerExportView = require('./views/_CustomerExport');
-
-var PageRecommendIndexView = require('./views/_PageRecommendIndex');
-var PageRecommendAddView = require('./views/_PageRecommendAdd');
-var PageRecommendEditView = require('./views/_PageRecommendEdit');
-
 
 var OrderIndexView = require('./views/_OrderIndex');
 var OrderViewView = require('./views/_OrderView');
@@ -103,14 +91,6 @@ exports = module.exports = Backbone.Router.extend({
 		'account/add': 'accountEdit',
 		'account/edit/:id': 'accountEdit',
 
-		'cbss/account/index': 'cbssAccountIndex',
-		'cbss/account/add': 'cbssAccountEdit',
-		'cbss/account/edit/:id': 'cbssAccountEdit',
-
-		'sms/index': 'smsIndex',
-		'sms/add': 'smsEdit',
-		'sms/edit/:id': 'smsEdit',
-
 		'customer/index': 'customerIndex',
 		'customer/add': 'customerEdit',
 		'customer/edit/:id': 'customerEdit',
@@ -136,40 +116,38 @@ exports = module.exports = Backbone.Router.extend({
 		'product/phone/index': 'productPhoneIndex',
 		'product/phone/add': 'productPhoneEdit',
 		'product/phone/edit/:id': 'productPhoneEdit',
-		// 'product/phone/package/add/:id': 'productPhonePackageAdd',
 		'product/phone/:pid/package/index': 'productPhonePackageIndex',
 		'product/phone/:pid/package/add': 'productPhonePackageEdit',
 		'product/phone/:pid/package/edit/:id': 'productPhonePackageEdit',
 
-		'product/card/package/index': 'productCardPackageIndex',
-		'product/card/package/add': 'productCardPackageEdit',
-		'product/card/package/edit/:id': 'productCardPackageEdit',
 		'product/card/index': 'productCardIndex',
 		'product/card/add': 'productCardEdit',
 		'product/card/edit/:id': 'productCardEdit',
 		'product/card/import': 'productCardImport',
-
-		'channel/index': 'channelIndex',
-		'channel/add': 'channelAdd',
-		'channel/edit/:id': 'channelEdit',
-		'recommend/index': 'recommendIndex',
-		'recommend/add': 'recommendAdd',
-		'recommend/edit/:id': 'recommendEdit',
+		'product/card/package/index': 'productCardPackageIndex',
+		'product/card/package/add': 'productCardPackageEdit',
+		'product/card/package/edit/:id': 'productCardPackageEdit',
 
 		'order/index': 'orderIndex',
 		'order/view/:id': 'orderView',
 		'order/edit/:id': 'orderEdit',
-
 		'order/card/index': 'orderCardIndex',
 		'order/card/add': 'orderCardAdd',
 		'order/card/view/:id': 'orderCardView',
 		'order/card/edit/:id': 'orderCardEdit',
+
 		'role/index': 'roleIndex',
 		'role/add': 'roleEdit',
 		'role/edit/:id': 'roleEdit',
+
+		'channel/index': 'channelIndex',
+		'channel/add': 'channelEdit',
+		'channel/edit/:id': 'channelEdit',
+
 		'channel/category/index': 'channelCategoryIndex',
-		'channel/category/add': 'channelCategoryAdd',
+		'channel/category/add': 'channelCategoryEdit',
 		'channel/category/edit/:id': 'channelCategoryEdit',
+
 		'grid/index': 'gridIndex',
 		'grid/add': 'gridEdit',
 		'grid/edit/:id': 'gridEdit',		
@@ -319,90 +297,18 @@ exports = module.exports = Backbone.Router.extend({
 		accountEditView.trigger('load');
 	},	
 
-	cbssAccountIndex: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','CBSS账户管理');
-		var cbssAccountIndexView = new CbssAccountIndexView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(cbssAccountIndexView);
-		cbssAccountIndexView.trigger('load');
-	},	
-
-	cbssAccountEdit: function(id){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','修改CBSS账户');
-		var cbssAccountEditView = new CbssAccountEditView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(cbssAccountEditView);
-		cbssAccountEditView.trigger('load');
-	},	
-
-	smsIndex: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','SMS管理');
-		var smsIndexView = new SmsIndexView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(smsIndexView);
-		smsIndexView.trigger('load');
-	},	
-
-	smsEdit: function(id){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','修改SMS');
-		var smsEditView = new SmsEditView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(smsEditView);
-		smsEditView.trigger('load');
-	},	
-
 	channelIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','渠道管理');
-		var channelIndexView = new ChannelEntityIndexView({
+		var channelIndexView = new ChannelIndexView({
 			router: this,
 			el: '#content',
 		});
 		this.changeView(channelIndexView);
 		channelIndexView.trigger('load');
-	},	
-
-	channelAdd: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','新增渠道');
-		var channelAddView = new ChannelEntityAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(channelAddView);
-		channelAddView.trigger('load');
 	},	
 
 	channelEdit: function(id){
@@ -411,7 +317,7 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','修改渠道');
-		var channelEditView = new ChannelEntityEditView({
+		var channelEditView = new ChannelEditView({
 			router: this,
 			el: '#content',
 			id: id,
@@ -505,50 +411,6 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(goodsEditView);
 		goodsEditView.trigger('load');
 	},	
-
-	recommendIndex: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','推荐管理');
-		var recommendIndexView = new PageRecommendIndexView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(recommendIndexView);
-		recommendIndexView.trigger('load');
-	},	
-
-	recommendAdd: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','新增推荐');
-		var recommendAddView = new PageRecommendAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(recommendAddView);
-		recommendAddView.trigger('load');
-	},	
-
-	recommendEdit: function(id){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','修改推荐');
-		var recommendEditView = new PageRecommendEditView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(recommendEditView);
-		recommendEditView.trigger('load');
-	},		
-
 
 	mediaIndex: function(){
 		if(!this.logined){
