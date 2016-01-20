@@ -44,6 +44,7 @@ var models = {
 		PlatformFeature: require('./models/PlatformFeature')(mongoose),
 		PlatformRole: require('./models/PlatformRole')(mongoose),
 		PlatformSms: require('./models/PlatformSms')(mongoose),
+		PlatformWeChat: require('./models/PlatformWeChat')(mongoose),
 
 		Goods: require('./models/Goods')(mongoose),
 		Customer: require('./models/Customer')(mongoose),

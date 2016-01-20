@@ -1,20 +1,20 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    departmentTpl = require('../templates/_entityDepartment.tpl'),
-	Department = require('../models/Department');
+    wechatTpl = require('../templates/_entityWeChat.tpl'),
+	WeChat = require('../models/WeChat');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
-	el: '#departmentForm',
+	el: '#accountForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Department({_id: options.id});
-		var page = $(departmentTpl);
+		this.model = new WeChat({_id: options.id});
+		var page = $(wechatTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -22,8 +22,6 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'keyup input[type=text]': 'inputText',
-		'keyup input[name=path]': 'getDepartments',
-		'click .department': 'selectDepartment',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -57,39 +55,6 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	getDepartments: function(evt){
-		this.$('#departments').empty();
-		var that = this;
-		var searchStr = this.$(evt.currentTarget).val() || '';
-		if(searchStr.length >1){
-			$.ajax({
-				url: config.api.host + '/departments?type=search&searchStr=' + searchStr,
-				type: 'GET',
-				xhrFields: {
-					withCredentials: true
-				},
-			}).done(function(data){
-				data = data || [];
-				var departmentsView = '<ul>';
-				data.forEach(function(item){
-					departmentsView += '<li class="department" id="'+ item._id +'">' + item.path + '</li>';
-				});
-				departmentsView += '</ul>';
-				that.$('#departments').html(departmentsView);
-			});				
-		}
-		return false;
-	},
-
-	selectDepartment: function(evt){
-		var id = this.$(evt.currentTarget).attr('id');
-		var path = this.$(evt.currentTarget).text();
-		this.$('input[name=parent]').val(id);
-		this.$('input[name=path]').val(path);
-		this.$('#departments').empty();
-		return false;
-	},
-
 	submit: function() {
 		var that = this;
 		//clear errors
@@ -111,6 +76,7 @@ exports = module.exports = FormView.extend({
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
 		// console.log(this.model.attributes);
+
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true
@@ -119,28 +85,29 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 	
+
 	cancel: function(){
-		this.router.navigate('department/index',{trigger: true, replace: true});
+		this.router.navigate('wechat/index',{trigger: true, replace: true});
 		return false;
 	},
-	
+
 	//fetch event: done
 	done: function(response){
-		var that = this;
 		if(!this.modelFilled){
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
-
 		}else{
 			//second fetch: submit
-			this.router.navigate('department/index',{trigger: true, replace: true});
+			this.router.navigate('wechat/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		if(this.model.isNew()) this.$('.panel-title').text('新增组织');
+		if(this.model.isNew()) this.$('.panel-title').text('新增微信公众号');
+		var status = this.model.get('status');
+		this.$('input[name="status"][value="'+ status +'"]').attr('checked',true);
 		return this;
 	},
 });

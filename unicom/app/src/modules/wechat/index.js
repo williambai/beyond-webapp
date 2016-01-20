@@ -11,37 +11,21 @@ exports = module.exports = function() {
 
 	var checkLogin = function(callback) {
 		$.ajax({
-			url: config.api.host + '/login/check/' + router.appCode,
+			url: config.api.host + '/login/check/' + router.appCode + '?appid=' + config.wechat.appid,
 			type: 'GET',
 			xhrFields: {
 				withCredentials: true
 			},
 			crossDomain: true,
 		}).done(function(data) {
-			if (!!data.code) return callback(false);
+			if (data.code) return callback(false);
 			router.appEvents.trigger('logined', data);
 			return callback(true);
-		}).fail(function() {
+		}).fail(function(xhr) {
+			console.log(xhr);
+			if(xhr.status == 302) return window.location.href = xhr.responseText;
 			return callback(false);
 		});
-		// var Model = Backbone.Model.extend({
-		// 	url: config.api.host + '/authenticated'
-		// });
-		// var model = new Model();
-		// model.fetch({
-		// 	xhrFields: {
-		// 		withCredentials: true
-		// 	},
-		// 	crossDomain: true,
-		// 	success: function(data) {
-		// 		if (!!data.code) return callback(false);
-		// 		router.appEvents.trigger('logined', data);
-		// 		return callback(true);
-		// 	},
-		// 	error: function() {
-		// 		return callback(false);
-		// 	}
-		// });
 	};
 
 	checkLogin(function(authenticated) {

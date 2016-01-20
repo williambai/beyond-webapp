@@ -1,16 +1,18 @@
 var log4js = require('log4js');
 var logger = log4js.getLogger('route:_authentication');
 var util = require('util');
-logger.setLevel('INFO');
+logger.setLevel('DEBUG');
 
 module.exports = exports = function(app, models) {
 	var _ = require('underscore');
 	var async = require('async');
+	var request = require('request');
 	var crypto = require('crypto');
 	var nodemailer = require('nodemailer');
 	var smtpTransport = require('nodemailer-smtp-transport');
 	var config = {
-		mail: require('../config/mail')
+		mail: require('../config/mail'),
+		server: require('../config/server')
 	};
 	var Account = models.Account;
 
@@ -253,13 +255,27 @@ module.exports = exports = function(app, models) {
 									code: 40403,
 									errmsg: '密码不正确。'
 								});
-							if (_.indexOf(account.apps,app) == -1)
+							if (_.indexOf(account.apps, app) == -1)
 								return callback({
 									code: 40404,
 									errmsg: '您没有访问该应用的权限。如需访问，请联系系统管理员。'
 								});
 							callback(null, account);
 						});
+				},
+				function bindWechat(account, callback) {
+					if (!req.session.openid) return callback(null, account);
+					//** if wechat, bind openid to account
+					Account
+						.findByIdAndUpdate(
+							account._id, {
+								$set: {
+									'openid': req.session.openid,
+								}
+							}, {
+								'upsert': false,
+								'new': true,
+							}, callback);
 				},
 				function role(account, callback) {
 					logger.debug('account:' + JSON.stringify(account));
@@ -321,22 +337,117 @@ module.exports = exports = function(app, models) {
 		logger.debug('checkLogin from(app):' + app);
 		logger.info('checkLogin: ' + req.session.email);
 		logger.debug('checkLogin(session):' + JSON.stringify(req.session));
-		if (_.indexOf(req.session.apps,app) != -1) {
-			res.send({
-				id: req.session.accountId,
-				email: req.session.email,
-				username: req.session.username,
-				avatar: req.session.avatar,
-				grant: req.session.grant
-			});
-			logger.info('checkLogin(pass): ' + req.session.email);
+		logger.debug('user-agent:' + JSON.stringify(req.headers['user-agent']));
+		//** come from wechat
+		if (/MicroMessenger/.test(req.headers['user-agent'])) {
+			//** step 1: request wechat openid
+			if (!req.session.openid) {
+				var appid = (!_.isEmpty(req.query.appid)) ? req.query.appid : 'wx0179baae6973c5e6';
+				var redirect_uri = 'http://wo.pdbang.cn/wechat/oauth2/authorized/' + appid;
+				var state = Date.now();
+				return res.status(302).send('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect');
+			}
+			logger.debug('req.session.openid: ' + req.session.openid);
+			//** step 3: get user info by using openid
+			models
+				.Account
+				.findOne({
+					'openid': req.session.openid,
+				})
+				.exec(function(err, account) {
+					if (err) return res.send(err);
+					if (!account) return res.send({
+						code: 40101,
+						errmsg: 'wechat unbind'
+					});
+					var roles = account.roles || [];
+					models.PlatformRole
+						.find({
+							'nickname': {
+								$in: roles,
+							}
+						})
+						.exec(function(err, docs) {
+							logger.debug('Role model error: ' + err);
+							if (err) return res.send(err);
+							logger.debug('docs: ' + JSON.stringify(docs));
+							docs = docs || [];
+							var grant = {};
+							_.each(docs, function(doc) {
+								_.extend(grant, doc.grant);
+							});
+							logger.debug('grant: ' + JSON.stringify(grant));
+							account.grant = grant;
+							req.session.accountId = account._id;
+							req.session.email = account.email;
+							req.session.username = account.username;
+							req.session.avatar = account.avatar || '';
+							req.session.apps = account.apps || [];
+							req.session.grant = account.grant || {};
+							logger.debug(req.session.email + ' login(session): ' + JSON.stringify(req.session));
+							if (_.indexOf(req.session.apps, app) != -1) {
+								res.send({
+									id: req.session.accountId,
+									email: req.session.email,
+									username: req.session.username,
+									avatar: req.session.avatar,
+									grant: req.session.grant
+								});
+								logger.info('checkLogin(pass): ' + req.session.email);
+							} else {
+								res.send({
+									code: 40100,
+									errmsg: '401 Unauthorized.'
+								});
+								logger.warn('checkLogin(fail): ' + req.session.email);
+							}
+						});
+				});
 		} else {
-			res.send({
-				code: 40100,
-				errmsg: '401 Unauthorized.'
-			});
-			logger.warn('checkLogin(fail): ' + req.session.email);
+			if (_.indexOf(req.session.apps, app) != -1) {
+				res.send({
+					id: req.session.accountId,
+					email: req.session.email,
+					username: req.session.username,
+					avatar: req.session.avatar,
+					grant: req.session.grant
+				});
+				logger.info('checkLogin(pass): ' + req.session.email);
+			} else {
+				res.send({
+					code: 40100,
+					errmsg: '401 Unauthorized.'
+				});
+				logger.warn('checkLogin(fail): ' + req.session.email);
+			}
 		}
+
+	};
+
+	var wechatAuthorized = function(req, res) {
+		//** step 2: response openid from wechat
+		var code = req.query.code;
+		var appid = req.params.appid || 'wx0179baae6973c5e6';
+		models
+			.PlatformWeChat
+			.findOne({
+				appid: appid
+			}).exec(function(err, wechat) {
+				if(err || !wechat) return res.redirect('http://wo.pdbang.cn/wechat_error.html');
+				var appsecret = wechat.appsecret || 'd4624c36b6795d1d99dcf0547af5443d';
+				request.get('https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + appid + '&secret=' + appsecret + '&code=' + code + '&grant_type=authorization_code', function(err, response, body) {
+					// console.log(body);
+					var body_json = {};
+					try {
+						body_json = JSON.parse(body);
+					} catch (e) {
+
+					}
+					var openid = body_json.openid || '';
+					req.session.openid = openid;
+					res.redirect('http://wo.pdbang.cn/wechat.html#index');
+				});
+			});
 	};
 
 	/**
@@ -359,4 +470,6 @@ module.exports = exports = function(app, models) {
 	app.post('/resetPassword', resetPassword);
 	//invite
 	app.post('/invite/friend', app.grant, inviteFriend);
+	//wechat authorized
+	app.get('/wechat/oauth2/authorized/:appid', wechatAuthorized);
 };

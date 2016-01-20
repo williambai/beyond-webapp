@@ -5,6 +5,7 @@ module.exports = exports = function(mongoose) {
 			type: String,
 			unique: true
 		},
+		openid: String, //wechat openid
 		password: String,
 		username: String,
 		apps: [],

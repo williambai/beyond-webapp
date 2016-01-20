@@ -26,6 +26,12 @@ var CbssAccountEditView = require('./views/_CbssAccountEdit');
 var SmsIndexView = require('./views/_SmsIndex');
 var SmsEditView = require('./views/_SmsEdit');
 
+var WeChatIndexView = require('./views/_WeChatIndex');
+var WeChatEditView = require('./views/_WeChatEdit');
+var WeChatMenuIndexView = require('./views/_WeChatMenuIndex');
+var WeChatMenuEditView = require('./views/_WeChatMenuEdit');
+var WeChatMenuExportView = require('./views/_WeChatMenuExport');
+
 var RoleIndexView = require('./views/_RoleIndex');
 var RoleEditView = require('./views/_RoleEdit');
 
@@ -65,6 +71,15 @@ exports = module.exports = Backbone.Router.extend({
 		'sms/index': 'smsIndex',
 		'sms/add': 'smsEdit',
 		'sms/edit/:id': 'smsEdit',
+
+		'wechat/index': 'wechatIndex',
+		'wechat/add': 'wechatEdit',
+		'wechat/edit/:id': 'wechatEdit',
+
+		'wechat/:wid/menu/index': 'wechatMenuIndex',
+		'wechat/:wid/menu/add': 'wechatMenuEdit',
+		'wechat/:wid/menu/edit/:id': 'wechatMenuEdit',
+		'wechat/:wid/menu/export': 'wechatMenuExport',
 
 		'*path': 'index',
 	},
@@ -371,6 +386,82 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(smsEditView);
 		smsEditView.trigger('load');
+	},	
+
+	wechatIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','微信公众号管理');
+		var wechatIndexView = new WeChatIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(wechatIndexView);
+		wechatIndexView.trigger('load');
+	},	
+
+	wechatEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改微信公众号');
+		var wechatEditView = new WeChatEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(wechatEditView);
+		wechatEditView.trigger('load');
+	},	
+
+
+	wechatMenuIndex: function(wid){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','微信菜单管理');
+		var wechatMenuIndexView = new WeChatMenuIndexView({
+			router: this,
+			el: '#content',
+			wid: wid,
+		});
+		this.changeView(wechatMenuIndexView);
+		wechatMenuIndexView.trigger('load');
+	},	
+
+	wechatMenuEdit: function(wid,id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','微信修改菜单');
+		var wechatMenuEditView = new WeChatMenuEditView({
+			router: this,
+			el: '#content',
+			wid: wid,
+			id: id,
+		});
+		this.changeView(wechatMenuEditView);
+		wechatMenuEditView.trigger('load');
+	},	
+
+	wechatMenuExport: function(wid){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','更新菜单');
+		var wechatMenuExportView = new WeChatMenuExportView({
+			router: this,
+			el: '#content',
+			wid: wid,
+		});
+		this.changeView(wechatMenuExportView);
+		wechatMenuExportView.trigger('load');
 	},	
 
 });
