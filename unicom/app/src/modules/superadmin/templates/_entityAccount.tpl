@@ -95,6 +95,8 @@
 						<textarea name="biography" rows="3" class="form-control"><%= model.biography %></textarea>
 						<span class="help-block"></span>
 					</div>
+					<div class="form-group" id="wechat">
+					</div>
 					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">

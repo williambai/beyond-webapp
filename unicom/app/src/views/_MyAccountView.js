@@ -58,7 +58,46 @@ exports = module.exports = FormView.extend({
 
 	//fetch event: done
 	done: function(response) {
+		var that = this;
 		this.render();
+		var openid = this.model.get('openid');
+		if(!openid){
+			$.ajax({
+				url: config.api.host + '/platform/wechat/qrcode/100001',
+				type: 'POST',
+				xhrFields: {
+					withCredentials: true
+				},
+				crossDomain: true,
+			}).done(function(data) {
+				that.$('#wechat').html('<p class="text-center"><img src="'+ data.src +'"></p><h4 class="text-center">请打开微信，扫一扫</h4>');
+				var ticket = data.ticket;
+				var refresh = function(ticket){
+					if(that.$('#wechat').length > 0){
+						$.ajax({
+							url: config.api.host + '/platform/wechat/qrcode/'+ ticket,
+							type: 'GET',
+							xhrFields: {
+								withCredentials: true
+							},
+							crossDomain: true,
+						}).done(function(data) {
+							var success = data.success;
+							if(success){
+								that.$('#wechat').html('<p>微信已绑定</p>');
+							}else{
+								setTimeout(function(){
+									refresh(ticket);
+								},2000);
+							}
+						});
+					}
+				};
+				refresh(ticket);
+			});
+		}else{
+			that.$('#wechat').html('<p>微信已绑定</p>');
+		}
 	},
 
 	render: function() {

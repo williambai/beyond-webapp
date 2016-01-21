@@ -58,6 +58,12 @@
 		"hash": "revenue/stat"
 	}],
 	"my_account": [{
+		"id": 12,
+		"name": "微信绑定",
+		"nickname": "profile",
+		"hash": "wechat/index"
+	}],
+	"my_account": [{
 		"id": 11,
 		"name": "我的资料",
 		"nickname": "profile",

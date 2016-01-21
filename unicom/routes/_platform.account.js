@@ -87,6 +87,26 @@ exports = module.exports = function(app, models) {
 					);
 				});
 				break;
+			case 'unbind': 
+				Account.findByIdAndUpdate(id, {
+						$unset: {
+							'openid': 1
+						},
+						$push: {
+							'histories': {
+								time: Date.now(),
+								message: req.session.username + ' 解除了用户微信绑定.',
+							}
+						}
+					}, {
+						'new': true,
+						'upsert': false,
+					},
+					function(err, doc) {
+						if (err) return res.send(err);
+						res.send(doc || {});
+					});
+				break;
 			default:
 				Account.findByIdAndUpdate(id, {
 						$set: account,

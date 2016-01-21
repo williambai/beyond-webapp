@@ -507,4 +507,5 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(activityIndexView);
 		activityIndexView.trigger('load');
 	},
+
 });

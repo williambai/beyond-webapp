@@ -284,6 +284,9 @@
 		<% } %>
 
 		<% if(model.me){ %>
+		<hr/>
+		<h4>微信绑定</h4>
+		<div id="wechat"></div>
 		<hr>
 		<div class="button-layer">
 			<a href="#" class="btn btn-block btn-danger logout">退出</a>

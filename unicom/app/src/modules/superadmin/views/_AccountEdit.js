@@ -29,6 +29,7 @@ exports = module.exports = FormView.extend({
 		'keyup input[type=password]': 'inputText',
 		'click #send-file': 'showFileExplorer',
 		'change input[type=file]': 'uploadAvatar',
+		'click .unbind': 'unbind',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -132,6 +133,20 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	unbind: function(){
+		var that = this;
+		$.ajax({
+			url: config.api.host + '/platform/accounts/'+ this.model.get('_id') +'?type=unbind',
+			type: 'PUT',
+			xhrFields: {
+				withCredentials: true
+			},
+		}).done(function(data) {
+			that.$('#wechat').html('<label for="openid">微信绑定：</label><span>未绑定</span>');
+		});
+		return false;
+	},
+
 	submit: function() {
 		var that = this;
 		//clear errors
@@ -227,6 +242,12 @@ exports = module.exports = FormView.extend({
 	render: function(){
 		var that = this;
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		var openid = this.model.get('openid');
+		if(openid){
+			this.$('#wechat').html('<label for="openid">微信绑定：</label><button class="btn btn-danger unbind">解除绑定</button>');
+		}else{
+			this.$('#wechat').html('<label for="openid">微信绑定：</label><span>未绑定</span>');
+		}
 		var avatar = this.model.get('avatar');
 		this.$('img#avatar').attr('src',avatar);
 		var status = this.model.get('status');
