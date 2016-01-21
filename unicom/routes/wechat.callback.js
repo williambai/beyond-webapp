@@ -42,7 +42,10 @@ exports = module.exports = function(app, models) {
 								'upsert': false,
 								'new': true,
 							},function(err,doc){
-								if(err) logger.error('qrcode SCAN update error.');
+								if(err || !doc){
+									logger.error('qrcode SCAN update error.');
+									return res.reply();
+								} 
 								logger.debug('set openid: ' + doc.openid);
 								var eventKey = message.EventKey || '';
 								return res.reply();

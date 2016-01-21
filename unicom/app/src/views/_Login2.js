@@ -28,6 +28,7 @@ exports = module.exports = FormView.extend({
 		'blur input[type=text]': 'inputText',
 		'keyup input[type=password]': 'inputText',
 		'submit form': 'login',
+		'click #wechatLogin': 'wechatLogin',
 	},
 
 	inputText: function(evt){
@@ -73,6 +74,11 @@ exports = module.exports = FormView.extend({
 				withCredentials: true
 			},
 		});
+		return false;
+	},
+
+	wechatLogin: function(){
+		this.router.navigate('wechat/login',{trigger: true,replace: true});
 		return false;
 	},
 

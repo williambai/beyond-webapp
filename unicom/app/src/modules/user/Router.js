@@ -7,6 +7,7 @@ var LayoutView = require('./views/__Layout');
 var RegisterView = require('../../views/_Register');
 var ForgotPasswordView = require('../../views/_ForgotPassword');
 var LoginView = require('../../views/_Login');
+var WeChatLoginView = require('../../views/_WeChatLogin');
 var MyAccountViewView = require('../../views/_MyAccountView');
 var MyAccountEditView = require('../../views/_MyAccountEdit');
 var IndexView = require('./views/Index');
@@ -46,6 +47,7 @@ exports = module.exports = Backbone.Router.extend({
 	routes: {
 		'index': 'activityIndex',
 		'login': 'login',
+		'wechat/login': 'wechatLogin',
 		'logout': 'logout',
 		'register': 'register',
 		'forgotpassword': 'forgotPassword',
@@ -175,6 +177,22 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		//this.appEvents.trigger('set:brand', '登录');
 		var loginView = new LoginView({
+			router: this,
+			appCode: this.appCode,
+			el: '#content',
+			appEvents: this.appEvents,
+		});
+		this.changeView(loginView);
+		loginView.trigger('load');
+	},
+
+	wechatLogin: function() {
+		if (this.logined) {
+			window.location.hash = 'index';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '登录');
+		var loginView = new WeChatLoginView({
 			router: this,
 			appCode: this.appCode,
 			el: '#content',

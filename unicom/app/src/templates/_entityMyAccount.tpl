@@ -131,6 +131,7 @@
 
 		                        <div class="form-group">
 		                        	<a href="#" class="pull-right" id="register">还没有注册，去注册吧！</a>
+		                        	<a href="#" id="wechatLogin" style="color:red;">微信登录</a>&nbsp;&nbsp;
 		                       		<a href="#" id="forgot">忘记密码？</a>
 		                    	</div>
 
@@ -319,6 +320,10 @@
 		                            <span class="help-block"></span>
 		                        </div>
 
+	                            <div class="form-group">
+	                            	<a href="#" id="wechatLogin" style="color:red;">已经绑定微信，使用微信快捷登录</a>
+	                        	</div>
+
 		                        <br>
 		                        <input type="submit" value="登&nbsp;&nbsp;录" class="btn btn-primary btn-block">
 		                    </form>
@@ -335,4 +340,18 @@
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>	
+	<div id="wechatLoginTemplate">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title text-center">微信登录</h3>
+		</div>
+		<div class="panel-body">
+			<p class="text-center">如果您还没有绑定微信账号，请登录后，在“个人资料”中绑定。</p>
+			<div id="wechat"></div>
+		</div>
+		<button class="btn btn-primary btn-block back">返回</button>
+	</div>
+	</div>
+	<div id="wechatSuccessTemplate">
+	</div>
 </div>
