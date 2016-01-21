@@ -325,6 +325,7 @@ module.exports = exports = function(app, models) {
 	};
 
 	var logout = function(req, res) {
+		req.session.openid = undefined;
 		req.session.apps = [];
 		req.session.grant = {};
 		logger.debug(req.session.email + ' logout(session): ' + JSON.stringify(req.session));
@@ -333,20 +334,28 @@ module.exports = exports = function(app, models) {
 	};
 
 	var checkLogin = function(req, res) {
+		//** no req.session
+		if(!req.session){
+			return res.send({
+				code: 40100,
+				errmsg: '401 Unauthorized.'
+			});
+		}
 		var app = req.params.app;
 		logger.debug('checkLogin from(app):' + app);
-		logger.info('checkLogin: ' + req.session.email);
 		logger.debug('checkLogin(session):' + JSON.stringify(req.session));
-		logger.debug('user-agent:' + JSON.stringify(req.headers['user-agent']));
-		//** come from wechat
-		if (/MicroMessenger/.test(req.headers['user-agent'])) {
-			//** step 1: request wechat openid
-			if (!req.session.openid) {
-				var appid = (!_.isEmpty(req.query.appid)) ? req.query.appid : 'wx0179baae6973c5e6';
-				var redirect_uri = 'http://wo.pdbang.cn/wechat/oauth2/authorized/' + appid;
-				var state = Date.now();
-				return res.status(302).send('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect');
-			}
+		if (_.indexOf(req.session.apps, app) != -1) {
+			res.send({
+				id: req.session.accountId,
+				email: req.session.email,
+				username: req.session.username,
+				avatar: req.session.avatar,
+				grant: req.session.grant
+			});
+			logger.info('checkLogin(pass): ' + req.session.email);
+			return;
+		}
+		if(req.session.openid){
 			logger.debug('req.session.openid: ' + req.session.openid);
 			//** step 3: get user info by using openid
 			models
@@ -402,26 +411,27 @@ module.exports = exports = function(app, models) {
 								logger.warn('checkLogin(fail): ' + req.session.email);
 							}
 						});
-				});
-		} else {
-			if (_.indexOf(req.session.apps, app) != -1) {
-				res.send({
-					id: req.session.accountId,
-					email: req.session.email,
-					username: req.session.username,
-					avatar: req.session.avatar,
-					grant: req.session.grant
-				});
-				logger.info('checkLogin(pass): ' + req.session.email);
-			} else {
-				res.send({
-					code: 40100,
-					errmsg: '401 Unauthorized.'
-				});
-				logger.warn('checkLogin(fail): ' + req.session.email);
+				});	
+			return;		
+		}
+		//** come from wechat
+		if (/MicroMessenger/.test(req.headers['user-agent'])) {
+			logger.debug('user-agent:' + JSON.stringify(req.headers['user-agent']));
+			//** step 1: request wechat openid
+			if(!req.session.openid){
+				var appid = (!_.isEmpty(req.query.appid)) ? req.query.appid : 'wx0179baae6973c5e6';
+				var redirect_uri = 'http://wo.pdbang.cn/wechat/oauth2/authorized/' + appid;
+				var state = Date.now();
+				return res.status(302).send('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect');
 			}
 		}
-
+		if(req.session.email){
+			logger.warn('checkLogin(fail): ' + req.session.email);
+		}
+		res.send({
+			code: 40100,
+			errmsg: '401 Unauthorized.'
+		});
 	};
 
 	var wechatAuthorized = function(req, res) {
