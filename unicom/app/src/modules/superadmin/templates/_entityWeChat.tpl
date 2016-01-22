@@ -45,6 +45,11 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
+						<label for="appid">微信号：</label>
+						<input type="text" name="appname" value="<%= model.appname %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
 						<label for="appid">APP_ID：</label>
 						<input type="text" name="appid" value="<%= model.appid %>" class="form-control">
 						<span class="help-block"></span>

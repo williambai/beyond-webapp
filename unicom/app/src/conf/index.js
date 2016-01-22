@@ -7,5 +7,8 @@ exports = module.exports = {
 		name: '移动应用',
 		nickname: '',
 		description: '',
+	},
+	wechat: {
+		appid: 'wx0179baae6973c5e6'
 	}
 };

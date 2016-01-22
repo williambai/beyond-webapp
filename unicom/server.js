@@ -186,11 +186,23 @@ app.server.listen(config.server.PORT,function(){
 
 //** schedule Jobs
 var schedule = require('node-schedule');
-// var refreshCiticCookie = require('./commands/refreshCbssCookie');
-// schedule.scheduleJob('*/5 * * * *', function(){
-// 	refreshCiticCookie(function(err) {
+var updateWechatAccessToken = require('./commands/updateWechatAccessToken');
+var refreshWechatAccessToken = function(){
+	updateWechatAccessToken(function(err){
+		if(err) return logger.error(err);
+		logger.info('updateWechatAccessToken successfully.');
+	});
+};
+refreshWechatAccessToken();//** execute right now!
+schedule.scheduleJob('*/59 * * * *',refreshWechatAccessToken);
+
+// var updateCiticCookie = require('./commands/updateCbssCookie');
+// var refreshCiticCookie = function(){
+// 	updateCiticCookie(function(err) {
 // 		if (err) return console.log(err);
-// 		console.log('refresh CBSS Accounts Cookie successfully.');
+// 		console.log('update CBSS Accounts Cookie successfully.');
 // 	});
-// });
+// };
+// refreshCiticCookie();
+// schedule.scheduleJob('*/5 * * * *', refreshCiticCookie);
 // console.log('scheduleJobs is started.');

@@ -28,7 +28,7 @@ exports = module.exports = Backbone.View.extend({
 	load: function(){
 		var that = this;
 		$.ajax({
-			url: config.api.host + '/platform/wechat/qrcode/100002',
+			url: config.api.host + '/platform/wechat/'+ config.wechat.appid +'/qrcode/100002',
 			type: 'POST',
 			xhrFields: {
 				withCredentials: true
@@ -40,7 +40,7 @@ exports = module.exports = Backbone.View.extend({
 			var refresh = function(ticket){
 				if(that.$('#wechat').length > 0){
 					$.ajax({
-						url: config.api.host + '/platform/wechat/qrcode/'+ ticket,
+						url: config.api.host + '/platform/wechat/'+ config.wechat.appid +'/qrcode/'+ ticket,
 						type: 'GET',
 						xhrFields: {
 							withCredentials: true

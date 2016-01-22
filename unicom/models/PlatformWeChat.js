@@ -3,8 +3,13 @@ module.exports = exports = function(mongoose) {
 	var schema = new mongoose.Schema({
 		name: String,
 		description: String,
+		appname: String,//微信号
 		appid: String,
 		appsecret: String,
+		token: {
+			access_token: String,
+			expired: Date
+		},
 		menus: [{
 			name: String,
 			description: String,

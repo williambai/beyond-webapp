@@ -11,50 +11,48 @@ exports = module.exports = function(app, models) {
 
 	var add = function(req, res) {
 		var scene_id = req.params.sceneid;
-		var appid = 'wx0179baae6973c5e6';
-		var appsecret = 'd4624c36b6795d1d99dcf0547af5443d';
-		request({
-			url: 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' + appid + '&secret=' + appsecret,
-			method: 'GET',
-			json: true,
-		}, function(err, response, body) {
-			if (err || !body) return res.send(err);
-			logger.debug('access_token: ' + body.access_token);
-			request({
-				url: 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=' + body.access_token,
-				method: 'POST',
-				json: true,
-				body: {
-					expire_seconds: 7200,
-					action_name: 'QR_SCENE',
-					action_info: {
-						scene: {
-							scene_id: scene_id
+		var appid = req.params.appid || 'wx0179baae6973c5e6';
+		models
+			.PlatformWeChat
+			.findOne({appid: appid})
+			.exec(function(err,doc){
+				if(err || !doc) return res.send(err);
+				var access_token = (doc.token instanceof Object) ? doc.token.access_token : undefined;
+				if(!access_token) return res.send({code: 404100, errmsg: 'access_token is not ready.'});
+				request({
+					url: 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=' + access_token,
+					method: 'POST',
+					json: true,
+					body: {
+						expire_seconds: 7200,
+						action_name: 'QR_SCENE',
+						action_info: {
+							scene: {
+								scene_id: scene_id
+							}
 						}
 					}
-				}
-			}, function(err, response, body) {
-				if (err || !body) return res.send(err);
-				logger.debug(body);
-				logger.debug('ticket: ' + body.ticket);
-				models
-					.PlatformWeChatQrcode
-					.create({
-						ticket: body.ticket,
-						sceneid: scene_id,
-						userid: req.session.accountId || '',
-					}, function(err, doc) {
-						if (err) return res.send(err);
-						res.send({
+				}, function(err, response, body) {
+					if (err || !body) return res.send(err);
+					// logger.debug(body);
+					logger.debug('ticket: ' + body.ticket);
+					if(!body.ticket) return res.send({code: 40420, errmsg: 'ticket is not ready.'});
+					models
+						.PlatformWeChatQrcode
+						.create({
 							ticket: body.ticket,
-							src: 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + encodeURIComponent(body.ticket)
+							sceneid: scene_id,
+							userid: req.session.accountId || '',
+						}, function(err, doc) {
+							if (err) return res.send(err);
+							res.send({
+								ticket: body.ticket,
+								src: 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + encodeURIComponent(body.ticket)
+							});
+							// res.redirect('https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + encodeURIComponent(body.ticket));
 						});
-						// res.redirect('https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + encodeURIComponent(body.ticket));
-					});
+				});
 			});
-
-		});
-
 	};
 
 	var getOne = function(req, res) {
@@ -114,10 +112,10 @@ exports = module.exports = function(app, models) {
 	 * action:
 	 *     
 	 */
-	app.post('/platform/wechat/qrcode/:sceneid', add);
+	app.post('/platform/wechat/:appid/qrcode/:sceneid', add);
 	/**
 	 * get platform/wechat/qrcode
 	 */
-	app.get('/platform/wechat/qrcode/:ticket', getOne);
+	app.get('/platform/wechat/:appid/qrcode/:ticket', getOne);
 
 };

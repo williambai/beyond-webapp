@@ -63,19 +63,20 @@ exports = module.exports = FormView.extend({
 		var openid = this.model.get('openid');
 		if(!openid){
 			$.ajax({
-				url: config.api.host + '/platform/wechat/qrcode/100001',
+				url: config.api.host + '/platform/wechat/'+ config.wechat.appid +'/qrcode/100001',
 				type: 'POST',
 				xhrFields: {
 					withCredentials: true
 				},
 				crossDomain: true,
 			}).done(function(data) {
+				if(data.code) return that.$('#wechat').html(data.errmsg);
 				that.$('#wechat').html('<p class="text-center"><img src="'+ data.src +'"></p><h4 class="text-center">请打开微信，扫一扫</h4>');
 				var ticket = data.ticket;
 				var refresh = function(ticket){
 					if(that.$('#wechat').length > 0){
 						$.ajax({
-							url: config.api.host + '/platform/wechat/qrcode/'+ ticket,
+							url: config.api.host + '/platform/wechat/'+ config.wechat.appid +'/qrcode/'+ ticket,
 							type: 'GET',
 							xhrFields: {
 								withCredentials: true
