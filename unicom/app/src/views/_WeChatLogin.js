@@ -35,6 +35,7 @@ exports = module.exports = Backbone.View.extend({
 			},
 			crossDomain: true,
 		}).done(function(data) {
+			if(data.code) return that.$('#wechat').html(data.errmsg);
 			that.$('#wechat').html('<p class="text-center"><img src="'+ data.src +'"></p><h4 class="text-center">请打开微信，扫一扫</h4>');
 			var ticket = data.ticket;
 			var refresh = function(ticket){

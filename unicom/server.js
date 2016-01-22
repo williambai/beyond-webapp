@@ -185,16 +185,16 @@ app.server.listen(config.server.PORT,function(){
 
 
 //** schedule Jobs
-var schedule = require('node-schedule');
-var updateWechatAccessToken = require('./commands/updateWechatAccessToken');
-var refreshWechatAccessToken = function(){
-	updateWechatAccessToken(function(err){
-		if(err) return logger.error(err);
-		logger.info('updateWechatAccessToken successfully.');
-	});
-};
-refreshWechatAccessToken();//** execute right now!
-schedule.scheduleJob('*/59 * * * *',refreshWechatAccessToken);
+// var schedule = require('node-schedule');
+// var updateWechatAccessToken = require('./commands/updateWechatAccessToken');
+// var refreshWechatAccessToken = function(){
+// 	updateWechatAccessToken(function(err){
+// 		if(err) return logger.error(err);
+// 		logger.info('updateWechatAccessToken successfully.');
+// 	});
+// };
+// refreshWechatAccessToken();//** execute right now!
+// schedule.scheduleJob('*/59 * * * *',refreshWechatAccessToken);
 
 // var updateCiticCookie = require('./commands/updateCbssCookie');
 // var refreshCiticCookie = function(){

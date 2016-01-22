@@ -1,0 +1,20 @@
+html(lang="zh-CN")
+	head
+		//- include include/head
+		title 沃助手
+		meta(charset="UTF-8")
+		meta(http-equiv="X-UA-Compatible" content="IE=edge,chrome=1")
+		meta(name="apple-mobile-web-app-capable" content="yes")
+		meta(name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-ui")
+		meta(name="apple-mobile-web-app-status-bar-style" content="yes")
+		link(rel="stylesheet" href="/css/app.css")
+		script(src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js")
+	body
+		div.app-body
+			div.app-content
+				form#addSaleLead(method="POST" action="http://localhost:8092/sale/lead")
+				div.panel.panel-default
+					div.panel-heading
+						h4.panel-title.text-center 数据产品订购成功
+					div.panel-body
+						p 您的订购已收到，请耐心等待业务员与您联系，谢谢！
