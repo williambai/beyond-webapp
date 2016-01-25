@@ -23,10 +23,14 @@
 	</div>
 	<div id="itemTemplate">
 		<div class="pull-right" id="<%= model._id %>">
-			<button class="btn btn-danger view">订购</button>
+			<% if(/MicroMessenger/.test(navigator.userAgent)){ %>
+			<p><button class="btn btn-danger promote">推广</button></p>
+			<% } %>
+			<p><button class="btn btn-success view">订购</button></p>
 		</div>
-		<h4><%= model.subject %></h4>
-		<p><%= model.price %>&nbsp;<%= model.unit %></p>
+		<h4><%= model.name %></h4>
+		<p><%= model.description %></p>
+		<p>价格：<%= model.price %>&nbsp;<%= model.unit %></p>
 		<hr/>
 	</div>
 	<div id="searchTemplate">

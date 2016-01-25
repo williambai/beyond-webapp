@@ -46,6 +46,7 @@ var models = {
 		PlatformSms: require('./models/PlatformSms')(mongoose),
 		PlatformWeChat: require('./models/PlatformWeChat')(mongoose),
 		PlatformWeChatQrcode: require('./models/PlatformWeChatQrcode')(mongoose),
+		PlatformWeChatCustomer: require('./models/PlatformWeChatCustomer')(mongoose),
 
 		Goods: require('./models/Goods')(mongoose),
 		Customer: require('./models/Customer')(mongoose),

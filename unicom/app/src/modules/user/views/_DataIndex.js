@@ -31,6 +31,7 @@ exports = module.exports = Backbone.View.extend({
 		'scroll': 'scroll',
 		'click .search': 'search',
 		'click .view': 'dataView',
+		'click .promote': 'promote',
 	},
 
 	load: function() {
@@ -78,8 +79,15 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	dataView: function(evt){
-		var id = this.$(evt.currentTarget).parent().attr('id');
+		var id = this.$(evt.currentTarget).parent().parent().attr('id');
 		this.router.navigate('data/view/'+ id,{trigger: true});
+		return false;
+	},
+
+	promote: function(evt){
+		var id = this.$(evt.currentTarget).parent().parent().attr('id');
+		alert('id=' + id);
+		window.location.href = config.api.host + '/sale/page/data/' + config.wechat.appid + '/' + id + '/' + this.router.account.id;
 		return false;
 	},
 	

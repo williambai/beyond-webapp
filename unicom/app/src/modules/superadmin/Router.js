@@ -27,6 +27,9 @@ var CbssAccountEditView = require('./views/_CbssAccountEdit');
 var SmsIndexView = require('./views/_SmsIndex');
 var SmsEditView = require('./views/_SmsEdit');
 
+var PlatformWeChatCustomerIndexView = require('./views/_PlatformWeChatCustomerIndex');
+var PlatformWeChatCustomerEditView = require('./views/_PlatformWeChatCustomerEdit');
+
 var WeChatIndexView = require('./views/_WeChatIndex');
 var WeChatEditView = require('./views/_WeChatEdit');
 var WeChatMenuIndexView = require('./views/_WeChatMenuIndex');
@@ -73,6 +76,10 @@ exports = module.exports = Backbone.Router.extend({
 		'sms/index': 'smsIndex',
 		'sms/add': 'smsEdit',
 		'sms/edit/:id': 'smsEdit',
+
+		'wechat/customer/index': 'wechatCustomerIndex',
+		'wechat/customer/add': 'wechatCustomerEdit',
+		'wechat/customer/edit/:id': 'wechatCustomerEdit',
 
 		'wechat/index': 'wechatIndex',
 		'wechat/add': 'wechatEdit',
@@ -406,6 +413,36 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(smsEditView);
 		smsEditView.trigger('load');
 	},	
+
+	wechatCustomerIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','微信公众号管理');
+		var wechatCustomerIndexView = new PlatformWeChatCustomerIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(wechatCustomerIndexView);
+		wechatCustomerIndexView.trigger('load');
+	},	
+
+	wechatCustomerEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改微信公众号');
+		var wechatCustomerEditView = new PlatformWeChatCustomerEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(wechatCustomerEditView);
+		wechatCustomerEditView.trigger('load');
+	},	
+
 
 	wechatIndex: function(){
 		if(!this.logined){

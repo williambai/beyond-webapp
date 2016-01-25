@@ -47,6 +47,11 @@
 					&nbsp;SMS管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
+				<a class="list-group-item" href="#wechat/customer/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;微信客户管理
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
 				<a class="list-group-item" href="#wechat/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;微信设置
