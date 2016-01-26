@@ -29,6 +29,9 @@ var CustomerIndexView = require('./views/_CustomerIndex');
 var RevenueIndexView = require('./views/_RevenueIndex');
 var RevenueStatView = require('./views/_RevenueStat');
 
+var SaleLeadIndexView = require('./views/_SaleLeadIndex');
+var SaleLeadEditView = require('./views/_SaleLeadEdit');
+
 var ExchangeIndexView = require('./views/_ExchangeIndex');
 var ExchangeViewView = require('./views/_ExchangeView');
 var OrderExchangeIndexView = require('./views/_OrderExchangeIndex');
@@ -70,6 +73,10 @@ exports = module.exports = Backbone.Router.extend({
 		'customer/index': 'customerIndex',
 		'revenue/index': 'revenueIndex',
 		'revenue/stat': 'revenueStat',
+
+		'sale/lead/index': 'saleLeadIndex',
+		'sale/lead/edit/:id': 'saleLeadEdit',
+
 		'exchange/index': 'exchangeIndex',
 		'exchange/view/:id': 'exchangeView',
 		'order/exchange/index': 'orderExchangeIndex',
@@ -439,6 +446,36 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(customerIndexView);
 		customerIndexView.trigger('load');
 	},
+
+	saleLeadIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '我的成绩');
+		var saleLeadIndexView = new SaleLeadIndexView({
+			router: this,
+			el: '#content'
+		});
+		this.changeView(saleLeadIndexView);
+		saleLeadIndexView.trigger('load');
+	},
+
+	saleLeadEdit: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '流量推荐');
+		var saleLeadEditView = new SaleLeadEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(saleLeadEditView);
+		saleLeadEditView.trigger('load');
+	},
+
 
 	exchangeIndex: function() {
 		if (!this.logined) {

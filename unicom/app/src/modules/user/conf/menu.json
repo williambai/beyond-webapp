@@ -39,6 +39,12 @@
 		"nickname": "exchange",
 		"hash": "exchange/index"
 	}],
+	"channel_exchange": [{
+		"id": 7,
+		"name": "销售线索",
+		"nickname": "exchange",
+		"hash": "sale/lead/index"
+	}],
 	"channel_customer": [{
 		"id": 8,
 		"name": "我的客户",
@@ -56,12 +62,6 @@
 		"name": "我的金币",
 		"nickname": "revenue",
 		"hash": "revenue/stat"
-	}],
-	"my_account": [{
-		"id": 12,
-		"name": "微信绑定",
-		"nickname": "profile",
-		"hash": "wechat/index"
 	}],
 	"my_account": [{
 		"id": 11,

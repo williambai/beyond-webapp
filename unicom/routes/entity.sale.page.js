@@ -4,6 +4,7 @@ var logger = log4js.getLogger('route:sale.page');
 logger.setLevel('DEBUG');
 
 exports = module.exports = function(app, models) {
+	var _ = require('underscore');
 	var async = require('async');
 	var sign = require('../libs/wechat/sign');
 	var request = require('request');
@@ -80,9 +81,9 @@ exports = module.exports = function(app, models) {
 		});
 	};
 
-	var pageData = function(req, res) {
-		var productid = req.params.pid;
-		var saleid = req.params.uid;
+	var _prepareWeChatJsTicket = function(req, res, next) {
+		// var productid = req.params.pid;
+		// var saleid = req.params.uid;
 		var appid = req.params.appid || 'wx0179baae6973c5e6';
 		models
 			.PlatformWeChat
@@ -109,28 +110,123 @@ exports = module.exports = function(app, models) {
 						errmsg: 'ticket is not ready.'
 					});
 					var url = req.protocol + '://' + req.headers['host'] + req.originalUrl;
-					var link = req.protocol + '://' + req.headers['host'] + req.path;
-					var imgUrl = req.protocol + '://' + req.headers['host'] + '/images/avatar.jpg';
 					logger.debug(url);
 					var config = sign(body.ticket, url);
 					config.appid = appid;
-					var shareMessage = {
-						title: '数据业务推荐', // 分享标题
-						desc: '选择数据业务', // 分享描述
-						link: link, // 分享链接
-						imgUrl: imgUrl, // 分享图标
-						type: 'link', // 分享类型,music、video或link，不填默认为link
-						dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-					};
 					logger.debug(config);
-					res.set('Content-Type', 'text/html');
-					res.render('data', {
-						config: config,
-						shareMessage: shareMessage
-					});
+					res.locals.ticket = body.ticket;
+					res.locals.config = config;
+					next();
+					// var url = req.protocol + '://' + req.headers['host'] + req.originalUrl;
+					// var link = req.protocol + '://' + req.headers['host'] + req.path;
+					// var imgUrl = req.protocol + '://' + req.headers['host'] + '/images/avatar.jpg';
+					// logger.debug(url);
+					// var config = sign(body.ticket, url);
+					// config.appid = appid;
+					// var shareMessage = {
+					// 	title: '数据业务推荐', // 分享标题
+					// 	desc: '选择数据业务', // 分享描述
+					// 	link: link, // 分享链接
+					// 	imgUrl: imgUrl, // 分享图标
+					// 	type: 'link', // 分享类型,music、video或link，不填默认为link
+					// 	dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+					// };
+					// logger.debug(config);
+					// res.set('Content-Type', 'text/html');
+					// res.render('data', {
+					// 	params: {
+					// 		appid: appid,
+					// 		pid: productid,
+					// 		uid: saleid,
+					// 	},
+					// 	config: config,
+					// 	shareMessage: shareMessage
+					// });
 				});
 			});
 	};
 
-	app.get('/sale/page/data/:appid/:pid/:uid', _updateWeChatCustomer, pageData);
+	var dataPage = function(req,res){
+		var appid = req.params.appid;
+		var pid = req.params.pid;
+		var uid = req.params.uid;
+		models
+			.ProductDirect
+			.findById(pid)
+			.exec(function(err,doc){
+				if (err || !doc) return res.send(err);
+				var link = req.protocol + '://' + req.headers['host'] + req.path;
+				var imgUrl = req.protocol + '://' + req.headers['host'] + '/images/avatar.jpg';
+				var shareMessage = {
+					title: doc.name, // 分享标题
+					desc: doc.description, // 分享描述
+					link: link, // 分享链接
+					imgUrl: imgUrl, // 分享图标
+					type: 'link', // 分享类型,music、video或link，不填默认为link
+					dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+				};
+				res.set('Content-Type', 'text/html');
+				res.render('data', {
+					params: {
+						appid: appid,
+						pid: pid,
+						uid: uid,
+					},
+					product: {
+						name: doc.name,
+						description: doc.description,
+						category: doc.category,
+						price: doc.price,
+						unit: doc.unit,
+					},
+					config: res.locals.config || {},
+					shareMessage: shareMessage || {}
+				});
+			});
+	};
+
+	var dev = function(req,res){
+		res.set('Content-Type', 'text/html');
+		res.render('data', {
+			params: {
+				appid: 'appid',
+				pid: '566e17d72ad3a36d0c5b614a',
+				uid: 'saleid',
+			},
+			product: {
+				name: 'product.name',
+				description: 'product.description',
+				category: 'product.category',
+				price: '10.00',
+				unit: '元',
+			},
+			config: {},
+			shareMessage: {}
+		});
+	};
+
+	var addDataSaleLead = function(req,res){
+		var pid = req.params.pid;
+		models
+			.ProductDirect
+			.findById(pid)
+			.exec(function(err,product){
+				if(err || !product) return res.send(err);
+				var doc = req.body;
+				doc.name = product.name;
+				doc.description = product.description;
+				models
+					.SaleLead
+					.create(doc, function(err,result){
+						if(err) return res.send(err);
+						res.set('Content-Type', 'text/html');
+						res.render('data_success');
+					});
+			});
+
+	};
+
+	app.get('/sale/page/data/:appid/:pid/:uid', _updateWeChatCustomer, _prepareWeChatJsTicket, dataPage);
+	app.post('/sale/page/data/:appid/:pid/:uid', addDataSaleLead);
+	app.get('/sale/page/data/dev',dev);
 };

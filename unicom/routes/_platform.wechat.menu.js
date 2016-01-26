@@ -27,8 +27,8 @@
 	 									url: 'http://wo.pdbang.cn/wechat.html#index'
 	 								}, {
 	 									type: 'view',
-	 									name: '金币兑换',
-	 									url: 'http://wo.pdbang.cn/wechat.html#exchange/index'
+	 									name: '销售线索',
+	 									url: 'http://wo.pdbang.cn/wechat.html#sale/lead/index'
 	 								}]
 	 							}, {
 	 								name: 'Wo产品',

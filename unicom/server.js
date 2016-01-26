@@ -24,7 +24,7 @@ app.randomHex = function(){
 	return new Date().getTime();
 };
 
-//import the data layer
+//** import the data layer
 var mongoose = require('mongoose');
 
 var config = {
@@ -34,38 +34,13 @@ var config = {
 	};		
 
 //import the models
-var models = {
-		Account: require('./models/Account')(mongoose),
-		AccountActivity: require('./models/AccountActivity')(mongoose),
-		CbssAccount: require('./models/CbssAccount')(mongoose),
-
-		PlatformApp: require('./models/PlatformApp')(mongoose),
-		PlatformSession: require('./models/PlatformSession')(mongoose),
-		PlatformFeature: require('./models/PlatformFeature')(mongoose),
-		PlatformRole: require('./models/PlatformRole')(mongoose),
-		PlatformSms: require('./models/PlatformSms')(mongoose),
-		PlatformWeChat: require('./models/PlatformWeChat')(mongoose),
-		PlatformWeChatQrcode: require('./models/PlatformWeChatQrcode')(mongoose),
-		PlatformWeChatCustomer: require('./models/PlatformWeChatCustomer')(mongoose),
-
-		Goods: require('./models/Goods')(mongoose),
-		Customer: require('./models/Customer')(mongoose),
-		ProductDirect: require('./models/ProductDirect')(mongoose),
-		ProductExchange: require('./models/ProductExchange')(mongoose),
-		ProductPhone: require('./models/ProductPhone')(mongoose),
-		ProductCardPackage: require('./models/ProductCardPackage')(mongoose),
-		ProductCard: require('./models/ProductCard')(mongoose),
-		Media: require('./models/Media')(mongoose),
-		Order: require('./models/Order')(mongoose),
-		Revenue: require('./models/Revenue')(mongoose),
-		// OrderCard: require('./models/OrderCard')(mongoose),
-		// OrderExchange: require('./models/OrderExchange')(mongoose),		
-		
-		ChannelCategory: require('./models/ChannelCategory')(mongoose),
-		Channel: require('./models/Channel')(mongoose),
-		Department: require('./models/Department')(mongoose),
-		Grid: require('./models/Grid')(mongoose),
-	};
+var models = {};
+fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file){
+	if(/\.js$/.test(file)){
+		var modelName = file.substr(0,file.length-3);	
+		models[modelName] = require('./models/' + modelName)(mongoose);
+	}
+});
 	
 mongoose.connect(config.db.URI,function onMongooseError(err){
 	if(err) {

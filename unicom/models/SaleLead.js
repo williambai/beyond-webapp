@@ -1,37 +1,45 @@
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
-		sale: {
-			id: String,
-			name: String,
-		},
 		name: String,
-		phone: String,
-		email: String,
-		age: Number,
-		sex: {
-			type: String,
-			enum: {
-				values: '保密|男|女'.split('|'),
-				message: 'enum validator failed for path {PATH} with value {VALUE}',
-			}
+		description: String,
+		category: String,
+		price: Number,
+		quantity: {
+			type: Number,
+			default: 1
 		},
-		zipcode: String,
-		address: String,
-		product: {
-			name: String,
-			category: String,
-			quantity: String,
+		goods:{
 			id: String,
 			model: String,
 		},
-		info: String,//留言
+		customer: {
+			name: String,
+			phone: String,
+			email: String,
+			age: Number,
+			sex: {
+				type: String,
+				enum: {
+					values: '保密|男|女'.split('|'),
+					message: 'enum validator failed for path {PATH} with value {VALUE}',
+				}
+			},
+			zipcode: String,
+			address: String,
+			attach: String,//留言
+		},
+		sale: {//** 客户经理
+			id: String,
+			name: String,
+		},
 		status: {
 			type: String,
 			enum: {
-				values: '有效|无效'.split('|'),
+				values: '有效|无效|已处理'.split('|'),
 				message: 'enum validator failed for path {PATH} with value {VALUE}',
-			}
+			},
+			default: '有效',
 		},
 	});
 
