@@ -4,8 +4,14 @@
 			<a href="#" onclick="window.location.reload();return false;">沃助手--系统管理员</a>
 			&nbsp;
 		</div>
-		<div class="scrollable-content">
+		<div class="scrollable-content" id="menu">
 			<div class="list-group">
+				<a class="list-group-item active" href="#login">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;未登录
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+<!--
 				<a class="list-group-item active" href="#index"> <i class="fa fa-users fa-fw"></i>
 					&nbsp;首页
 					<span class="pull-right">
@@ -71,17 +77,8 @@
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;我的资料
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
-				<!-- <a class="list-group-item" href="#logout">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;退出
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a> -->
-
+				</a>--> 
 			</div>
-			<br/>
-			<br/>
-			<br/>
 		</div>
 	</div>
 </div>

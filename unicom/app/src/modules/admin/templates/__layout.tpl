@@ -5,17 +5,23 @@
 		</div>
 		<div class="scrollable-content" id="menu">
 			<div class="list-group">
-				<a class="list-group-item active" href="#index"> <i class="fa fa-users fa-fw"></i>
+				<a class="list-group-item active" href="#login">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;未登录
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+			</div>
+				<!-- <a class="list-group-item active" href="#index"> <i class="fa fa-users fa-fw"></i>
 					&nbsp;首页
 					<span class="pull-right">
 						<i class="fa fa-chevron-right"></i>
 					</span>
 				</a>
-				<!-- <a class="list-group-item" href="#page/banner/index">
+				<a class="list-group-item" href="#page/banner/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;首页推广管理
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a> -->
+				</a>
 				<a class="list-group-item" href="#product/direct/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;直通产品管理
@@ -56,7 +62,7 @@
 					&nbsp;订单管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<!-- <a class="list-group-item" href="#order/card/index">
+				<a class="list-group-item" href="#order/card/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;卡号订单
 					<i class="fa fa-chevron-right pull-right"></i>
@@ -70,7 +76,7 @@
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;兑换订单
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a> -->
+				</a>
 				<a class="list-group-item" href="#account/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;用户管理
@@ -103,7 +109,7 @@
 					&nbsp;客户端功能设置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<!--
+				
 				<a class="list-group-item" href="#channel/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;渠道管理
@@ -118,12 +124,12 @@
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;奖励配置
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a> -->
-				<!-- <a class="list-group-item" href="#">
+				</a> 
+				<a class="list-group-item" href="#">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;金币兑换配置
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a> -->
+				</a>
 				<a class="list-group-item" href="#user/feedback/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;用户反馈
@@ -133,17 +139,7 @@
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;我的资料
 					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
-				<!-- <a class="list-group-item" href="#logout">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;退出
-					<i class="fa fa-chevron-right pull-right"></i>
 				</a> -->
-			</div>
-			<div id="projectlist"></div>
-			<br/>
-			<br/>
-			<br/>
 		</div>
 	</div>
 </div>

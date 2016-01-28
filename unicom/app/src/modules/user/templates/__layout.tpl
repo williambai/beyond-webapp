@@ -60,12 +60,7 @@
 					&nbsp;我的资料
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-
 			</div> -->
-			<div id="projectlist"></div>
-			<br/>
-			<br/>
-			<br/>
 		</div>
 	</div>
 </div>

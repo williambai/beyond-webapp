@@ -2,6 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
 var config = require('./conf');
+var MENU_DEFAULT = require('./conf/menu');
 
 var LayoutView = require('./views/__Layout');
 var LoginView = require('../../views/_Login2');
@@ -168,17 +169,37 @@ exports = module.exports = Backbone.Router.extend({
 	initialize: function(){
 		this.appEvents.on('logined',this.onLogined,this);
 		this.appEvents.on('logout', this.onLogout,this);
-		var layoutView = new LayoutView({
+		this.layoutView = new LayoutView({
 			appEvents: this.appEvents,
 		});
-		layoutView.trigger('load');
+		this.layoutView.trigger('load');
 	},
 
-	onLogined: function(account){
-		// console.log('++')
-		// console.log(account);
+	onLogined: function(account) {
+		var that = this;
 		this.account = account;
 		this.logined = true;
+		/** default menu */
+		this.layoutView.trigger('update:menu', _.sortBy(_.flatten(_.values(MENU_DEFAULT)), 'id'));
+		return;
+		/** -OR- customize menu */
+		$.ajax({
+			url: config.api.host + '/platform/apps/' + that.appCode,
+			type: 'GET',
+			xhrFields: {
+				withCredentials: true
+			},
+		}).done(function(data) {
+			var features = data.features || [];
+			var grant = that.account.grant || {};
+			var features_grant = _.keys(grant);
+			// console.log(features_grant);
+			var menuCustomized = _.pick(_.pick(MENU_DEFAULT, features), features_grant);
+			var grantMenuCustomized = _.sortBy(_.flatten(_.values(menuCustomized)), 'id');
+			// console.log(grantMenuCustomized);
+			that.layoutView.trigger('update:menu', grantMenuCustomized);
+		});
+
 	},
 
 	onLogout: function(){

@@ -56,6 +56,7 @@ exports = module.exports = Backbone.View.extend({
 			            '</a>';
 		});
 		menuView += '</div>';
+		menuView += '<br/><br/><br/>';
 		this.$('#menu').html(menuView);
 		this.$('.list-group-item').first().addClass('active');
 	},
