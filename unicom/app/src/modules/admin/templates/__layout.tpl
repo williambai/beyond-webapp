@@ -76,11 +76,6 @@
 					&nbsp;用户管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#channel/index">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;渠道管理
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a>
 				<a class="list-group-item" href="#revenue/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;金币管理
@@ -100,12 +95,18 @@
 				</a>
 				<a class="list-group-item" href="#department/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;组织设置
+					&nbsp;组织及架构管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#channel/category/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;渠道类型设置
+					&nbsp;客户端功能设置
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<!--
+				<a class="list-group-item" href="#channel/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;渠道管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#grid/index">
@@ -113,7 +114,7 @@
 					&nbsp;网格设置
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<!-- <a class="list-group-item" href="#goods/bonus/index">
+				 <a class="list-group-item" href="#goods/bonus/index">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;奖励配置
 					<i class="fa fa-chevron-right pull-right"></i>

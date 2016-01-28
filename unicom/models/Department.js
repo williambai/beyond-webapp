@@ -6,6 +6,11 @@ module.exports = exports = function(mongoose){
 			type: String,
 		},
 		description: String,
+		address: String,
+		zipcode: String,
+		website: String,
+		manager: String,
+		phone: String,
 		parent: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'ChannelDepartment',

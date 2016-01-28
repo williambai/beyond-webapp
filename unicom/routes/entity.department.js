@@ -56,19 +56,50 @@
  			});
  	};
  	var getMore = function(req, res) {
+ 		var action = req.query.type;
  		var per = 20;
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.Department
- 			.find({})
- 			.sort({ _id: -1})
- 			.skip(per * page)
- 			.limit(per)
- 			.exec(function(err, docs) {
- 				if (err) return res.send(err);
- 				res.send(docs);
- 			});
+ 		switch (action) {
+ 			case 'search':
+ 				var searchStr = req.query.searchStr || '';
+ 				var searchRegex = new RegExp(searchStr, 'i');
+ 				var status = req.query.status;
+ 				var query = models.Department.find({
+					'name': {
+						$regex: searchRegex
+					}
+ 				});
+ 				if (!_.isEmpty(status)) {
+ 					query.where({
+ 						status: status
+ 					});
+ 				}
+ 				query.sort({
+ 						_id: -1
+ 					})
+ 					.skip(per * page)
+ 					.limit(per)
+ 					.exec(function(err, docs) {
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 				break;
+ 			default:
+ 				models.Department
+ 					.find({})
+ 					.sort({
+ 						_id: -1
+ 					})
+ 					.skip(per * page)
+ 					.limit(per)
+ 					.exec(function(err, docs) {
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 				break;
+ 		}
  	};
  	/**
  	 * router outline

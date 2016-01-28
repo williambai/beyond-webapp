@@ -55,7 +55,32 @@
 					</div>
 					<div class="form-group">
 						<label>组织描述：</label>
-						<input type="text" name="description" value="<%= model.description %>" class="form-control">
+						<textarea name="description" class="form-control"><%= model.description %></textarea>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>所在地址：</label>
+						<input type="text" name="address" value="<%= model.address %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>邮政编码：</label>
+						<input type="text" name="zipcode" value="<%= model.zipcode %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>负责人：</label>
+						<input type="text" name="manager" value="<%= model.manager %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>联系电话：</label>
+						<input type="text" name="phone" value="<%= model.phone %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>网站地址：</label>
+						<input type="text" name="website" value="<%= model.website %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
