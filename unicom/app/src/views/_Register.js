@@ -84,9 +84,9 @@ exports = module.exports = FormView.extend({
 
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		console.log(this.model.toJSON());
+		// console.log(this.model.toJSON());
 		var password = this.model.get('password');
-		var cpasword = this.model.get('cpasword');
+		var cpasword = this.model.get('cpassword');
 		if(password != cpasword){
 			var error = '两次输入不同';
 			that.$('[name="cpassword"]').parent().addClass('has-error');

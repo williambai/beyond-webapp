@@ -15,7 +15,7 @@
 	<div id="itemTemplate">
 		<div class="item" id="<%= model._id %>">
 	 		<div class="pull-right">
-				<button class="btn btn-success edit">编辑</button>
+				<button class="btn btn-success edit">详情</button>
 				<button class="btn btn-danger delete">删除</button>
 			</div>
 			<h4><%= model.name %>&nbsp;&nbsp;<span class="bg-success"><%= model.status %></span></h4>
@@ -51,7 +51,7 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label for="phone">电话号码：</label>
+						<label for="phone">电话号码：<a href="tel:<%= model.customer.phone %>" class="btn btn-danger">拨打电话</a></label>
 						<input type="text" name="customer[phone]" value="<%= model.customer.phone %>" class="form-control" disabled>
 						<span class="help-block"></span>
 					</div>

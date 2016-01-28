@@ -13,7 +13,7 @@ exports = module.exports = Backbone.Model.extend({
 	validation: {
 		username: {
 			required: true,
-	    	minLength: 5,
+	    	minLength: 2,
 	    	msg:'用户名不合法'
 		},
 		email: {

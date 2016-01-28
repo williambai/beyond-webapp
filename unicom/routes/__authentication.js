@@ -27,7 +27,9 @@ module.exports = exports = function(app, models) {
 
 		user.avatar = '/images/avatar.jpg';
 		user.status = '未验证';
+		user.apps = [];
 		user.apps.push(app);
+		user.roles = [];
 		user.roles.push('channel');
 		user.lastupdatetime = new Date();
 
@@ -422,7 +424,9 @@ module.exports = exports = function(app, models) {
 				var appid = (!_.isEmpty(req.query.appid)) ? req.query.appid : 'wx0179baae6973c5e6';
 				var redirect_uri = 'http://wo.pdbang.cn/wechat/oauth2/authorized/' + appid;
 				var state = Date.now();
-				return res.status(302).send('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect');
+				logger.debug('redirect to https://open.weixin.qq.com/connect/oauth2/authorize?appid=');
+				return res.send({code: 30200, redirect: 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect'});
+				// return res.status(302).send('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect');
 			}
 		}
 		if(req.session.email){
@@ -445,15 +449,14 @@ module.exports = exports = function(app, models) {
 			}).exec(function(err, wechat) {
 				if(err || !wechat) return res.redirect('http://wo.pdbang.cn/wechat_error.html');
 				var appsecret = wechat.appsecret || 'd4624c36b6795d1d99dcf0547af5443d';
-				request.get('https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + appid + '&secret=' + appsecret + '&code=' + code + '&grant_type=authorization_code', function(err, response, body) {
-					// console.log(body);
-					var body_json = {};
-					try {
-						body_json = JSON.parse(body);
-					} catch (e) {
-
-					}
-					var openid = body_json.openid || '';
+				request({
+					url: 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + appid + '&secret=' + appsecret + '&code=' + code + '&grant_type=authorization_code',
+					method: 'GET',
+					json: true,
+				}, function(err, response, body) {
+					if(err || !body) return res.send(err);
+					logger.debug('wechat authorized callback ' + JSON.stringify(body));
+					var openid = body.openid || '';
 					req.session.openid = openid;
 					res.redirect('http://wo.pdbang.cn/wechat.html#index');
 				});

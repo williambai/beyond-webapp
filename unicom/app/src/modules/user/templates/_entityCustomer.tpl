@@ -15,8 +15,9 @@
 	</div>
 	<div id="itemTemplate">
 		<div class="pull-right" id="<%= model._id %>">
-			<button class="btn btn-danger recommend">推荐产品</button>
-			<button class="btn btn-info view">了解客户</button>
+			<!-- <button class="btn btn-success recommend">推荐产品</button> -->
+			<a class="btn btn-danger" href="tel:<%= model.mobile %>">打电话</a>
+			<!-- <button class="btn btn-info view">了解客户</button> -->
 		</div>
 
  		<h4>客户：<%= model.name %>&nbsp;&nbsp;<%= model.mobile %></h4>

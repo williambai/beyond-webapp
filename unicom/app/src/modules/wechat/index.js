@@ -18,12 +18,15 @@ exports = module.exports = function() {
 			},
 			crossDomain: true,
 		}).done(function(data) {
-			if (data.code) return callback(false);
+			if (data.code) {
+				if( data.code == 30200) return window.location.href = data.redirect;
+				return callback(false);
+			}
 			router.appEvents.trigger('logined', data);
 			return callback(true);
 		}).fail(function(xhr) {
-			console.log(xhr);
-			if(xhr.status == 302) return window.location.href = xhr.responseText;
+			// console.log(xhr);
+			// if(xhr.status == 302) return window.location.href = xhr.responseText;
 			return callback(false);
 		});
 	};

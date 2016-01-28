@@ -14,6 +14,7 @@
 				<div class="btn-group btn-group-justified">
 					<div class="btn btn-success" id="g2">2G用户</div>
 					<div class="btn btn-default" id="g3">3G用户</div>
+					<div class="btn btn-default" id="g3">4G用户</div>
 				</div>
 				<hr/>
 				<div id="list">
