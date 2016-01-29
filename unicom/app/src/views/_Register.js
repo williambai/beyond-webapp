@@ -3,8 +3,7 @@ var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Register = require('../models/Register');
 var accountTpl = require('../templates/_entityMyAccount.tpl');
-
-var SelectChannelView = require('./_RegisterSelectChannel');
+var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
@@ -21,13 +20,6 @@ exports = module.exports = FormView.extend({
 		this.model = new Register({
 			appCode: this.appCode,
 		});
-
-		this.selectChannelView = new SelectChannelView({
-			el: '#content',
-			parentView: this,
-		});
-		this.on('back', this.render,this);
-
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -35,7 +27,9 @@ exports = module.exports = FormView.extend({
 		'keyup input[type=text]': 'inputText',
 		'blur input[type=text]': 'inputText',
 		'keyup input[type=password]': 'inputText',
-		'click #selectChannel': 'selectChannel',
+		'keyup input[name="department[name]"]': 'getDepartments',
+		'click .department': 'selectDepartment',
+		'click #refreshCaptcha': 'refreshCaptcha',
 		'submit form': 'register',
 		'click #login': 'gotoLogin',
 	},
@@ -43,24 +37,67 @@ exports = module.exports = FormView.extend({
 	inputText: function(evt){
 		var that = this;
 		//clear error
-		this.$(evt.currentTarget).parent().removeClass('has-error');
-		this.$(evt.currentTarget).parent().find('span.help-block').empty();
+		this.$(evt.currentTarget).closest('.form-group').removeClass('has-error');
+		this.$(evt.currentTarget).closest('.form-group').find('span.help-block').empty();
 		var arr = this.$(evt.currentTarget).serializeArray();
 		_.each(arr,function(obj){
 			var error = that.model.preValidate(obj.name,obj.value);
 			if(error){
 				//set error
-				this.$(evt.currentTarget).parent().addClass('has-error');
-				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
+				this.$(evt.currentTarget).closest('.form-group').addClass('has-error');
+				this.$(evt.currentTarget).closest('.form-group').find('span.help-block').text(error);				
 			}
 		})
 		return false;
 	},
 
-	selectChannel: function(){
-		var object = this.$('form').serializeJSON();
-		this.model.set(object);
-		this.selectChannelView.render();
+	refreshCaptcha: function(){
+		var that = this;
+		var func = function(i){
+			if(i < 0) return that.$('#captcha').html('<a href="#" id="refreshCaptcha">获取验证码</a>');
+			that.$('#captcha').html('<i class="fa fa-spinner fa-spin"></i>&nbsp;' + i + '&nbsp;秒');
+			setTimeout(function(){
+				func(--i);
+			},1000);
+		};
+		func(60);
+		return false;
+	},
+
+	getDepartments: function(evt){
+		this.$('#departments').empty();
+		this.$('input[name="department[address]"]').val('');
+		var that = this;
+		var searchStr = this.$(evt.currentTarget).val() || '';
+		if(searchStr.length >1){
+			$.ajax({
+				url: config.api.host + '/departments?type=search&searchStr=' + searchStr,
+				type: 'GET',
+				xhrFields: {
+					withCredentials: true
+				},
+			}).done(function(data){
+				data = data || [];
+				var departmentsView = '<ul>';
+				data.forEach(function(item){
+					departmentsView += '<li class="department" id="'+ item._id +'" addr="'+ item.address +'" name="'+ item.name +'">' + item.path + '</li>';
+				});
+				departmentsView += '</ul>';
+				that.$('#departments').html(departmentsView);
+			});				
+		}
+		return false;
+	},
+
+	selectDepartment: function(evt){
+		var id = this.$(evt.currentTarget).attr('id');
+		var path = this.$(evt.currentTarget).text();
+		var name = this.$(evt.currentTarget).attr('name');
+		var address = this.$(evt.currentTarget).attr('addr');
+		this.$('input[name="department[name]"]').val(name);
+		this.$('input[name="department[path]"]').val(path);
+		this.$('input[name="department[address]"]').val(address);
+		this.$('#departments').empty();
 		return false;
 	},
 
@@ -75,8 +112,8 @@ exports = module.exports = FormView.extend({
 			var error = that.model.preValidate(obj.name,obj.value);
 			if(error){
 				errors.push(error);
-				that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
-				that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
+				that.$('[name="' + obj.name + '"]').closest('.form-group').addClass('has-error');
+				that.$('[name="' + obj.name + '"]').closest('.form-group').find('span.help-block').text(error);
 			}
 		});
 		if(!_.isEmpty(errors)) return false;
@@ -89,8 +126,8 @@ exports = module.exports = FormView.extend({
 		var cpasword = this.model.get('cpassword');
 		if(password != cpasword){
 			var error = '两次输入不同';
-			that.$('[name="cpassword"]').parent().addClass('has-error');
-			that.$('[name="cpassword"]').parent().find('span.help-block').text(error);			
+			that.$('[name="cpassword"]').closest('.form-group').addClass('has-error');
+			that.$('[name="cpassword"]').closest('.form-group').find('span.help-block').text(error);			
 			return false;
 		}
 		this.model.save(null, {

@@ -10,6 +10,10 @@ module.exports = exports = function(mongoose) {
 		username: String,
 		apps: [],
 		roles: [],
+		department: {
+			name: String,
+			path: String,
+		},
 		birthday: {
 			day: {
 				type: Number,

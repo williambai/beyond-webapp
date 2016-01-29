@@ -7,7 +7,8 @@ exports = module.exports = Backbone.Model.extend({
 
 	defaults: {
 		apps: [],
-		roles: []
+		roles: [],
+		department: {},
 	},
 
 	validation: {
@@ -16,10 +17,14 @@ exports = module.exports = Backbone.Model.extend({
 			msg: '请输入用户名'
 		},
 		'email': {
-			required: true,
-			pattern: 'email',
-			msg: '请输入有效的电子邮件'
+			pattern: /^(1\d{10}|[a-zA-Z0-9_\.]+@[a-zA-Z0-9-]+[\.a-zA-Z]+)$/,
+			msg: '请输入有效的手机号码或电子邮件'
 		},
+		// 'email': {
+		// 	required: true,
+		// 	pattern: 'email',
+		// 	msg: '请输入有效的电子邮件'
+		// },
 	},
 	
 });

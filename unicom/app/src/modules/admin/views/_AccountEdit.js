@@ -29,6 +29,8 @@ exports = module.exports = FormView.extend({
 		'keyup input[type=password]': 'inputText',
 		'click #send-file': 'showFileExplorer',
 		'change input[type=file]': 'uploadAvatar',
+		'keyup input[name="department[name]"]': 'getDepartments',
+		'click .department': 'selectDepartment',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -129,6 +131,43 @@ exports = module.exports = FormView.extend({
 		}).fail(function(err) {
 			console.log(err);
 		});
+		return false;
+	},
+
+	getDepartments: function(evt){
+		this.$('#departments').empty();
+		this.$('input[name="department[address]"]').val('');
+		var that = this;
+		var searchStr = this.$(evt.currentTarget).val() || '';
+		if(searchStr.length >1){
+			$.ajax({
+				url: config.api.host + '/departments?type=search&searchStr=' + searchStr,
+				type: 'GET',
+				xhrFields: {
+					withCredentials: true
+				},
+			}).done(function(data){
+				data = data || [];
+				var departmentsView = '<ul>';
+				data.forEach(function(item){
+					departmentsView += '<li class="department" id="'+ item._id +'" addr="'+ item.address +'" name="'+ item.name +'">' + item.path + '</li>';
+				});
+				departmentsView += '</ul>';
+				that.$('#departments').html(departmentsView);
+			});				
+		}
+		return false;
+	},
+
+	selectDepartment: function(evt){
+		var id = this.$(evt.currentTarget).attr('id');
+		var path = this.$(evt.currentTarget).text();
+		var name = this.$(evt.currentTarget).attr('name');
+		var address = this.$(evt.currentTarget).attr('addr');
+		this.$('input[name="department[name]"]').val(name);
+		this.$('input[name="department[path]"]').val(path);
+		this.$('input[name="department[address]"]').val(address);
+		this.$('#departments').empty();
 		return false;
 	},
 

@@ -4,21 +4,21 @@
  	var add = function(req, res) {
  		var doc = req.body;
  		//transform doc
- 		if(_.isEmpty(doc.parent)) doc = _.omit(doc,'parent');
- 		if(_.isEmpty(doc.path)){
+ 		if (_.isEmpty(doc.parent)) doc = _.omit(doc, 'parent');
+ 		if (_.isEmpty(doc.path)) {
  			doc.path += doc.name;
- 		}else{
- 	 		doc.path += ' >> '+ doc.name;
+ 		} else {
+ 			doc.path += ' >> ' + doc.name;
  		}
  		models.Department.create(doc, function(err) {
  			if (err) return res.send(err);
  			res.send({});
  		});
  	};
- 	var remove = function(req,res){
+ 	var remove = function(req, res) {
  		var id = req.params.id;
- 		models.Department.findByIdAndRemove(id,function(err,doc){
- 			if(err) return res.send(err);
+ 		models.Department.findByIdAndRemove(id, function(err, doc) {
+ 			if (err) return res.send(err);
  			res.send(doc);
  		});
  	};
@@ -26,12 +26,12 @@
  		var id = req.params.id;
  		var doc = req.body;
  		//transform doc
- 		if(_.isEmpty(doc.parent)) doc = _.omit(doc,'parent');
- 		var regex = new RegExp(doc.name,'i');
- 		if(_.isEmpty(doc.path)){
+ 		if (_.isEmpty(doc.parent)) doc = _.omit(doc, 'parent');
+ 		var regex = new RegExp(doc.name, 'i');
+ 		if (_.isEmpty(doc.path)) {
  			doc.path += doc.name;
- 		}else{
-	 		if(!regex.test(doc.path)) doc.path += ' >> '+ doc.name;
+ 		} else {
+ 			if (!regex.test(doc.path)) doc.path += ' >> ' + doc.name;
  		}
 
  		models.Department.findByIdAndUpdate(id, {
@@ -67,9 +67,15 @@
  				var searchRegex = new RegExp(searchStr, 'i');
  				var status = req.query.status;
  				var query = models.Department.find({
-					'name': {
-						$regex: searchRegex
-					}
+ 					$or: [{
+ 						'name': {
+ 							$regex: searchRegex
+ 						}
+ 					}, {
+ 						'path': {
+ 							$regex: searchRegex
+ 						}
+ 					}]
  				});
  				if (!_.isEmpty(status)) {
  					query.where({

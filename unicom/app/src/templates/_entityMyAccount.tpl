@@ -13,17 +13,30 @@
 							<form>
 								<div class="form-group">
 									<label for="username">姓名：</label>
-									<input type="text" name="username" value="<%= model.username %>" class="form-control input-sm" placeholder="姓名"/>
+									<input type="text" name="username" value="<%= model.username %>" class="form-control input-sm" placeholder="英文字母或汉字"/>
 									<span class="help-block"></span>
 								</div>
 								<div class="form-group">
-									<label>邮件：</label>
-									<input type="text" name="email" value="<%= model.email %>" class="form-control input-sm" placeholder="邮件"/>
+									<label>手机号码：</label>
+									<div class="input-group">
+										<div class="input-group-addon">+&nbsp;86</div>
+										<input type="text" name="email" value="<%= model.email %>" class="form-control input-sm" placeholder="手机号码"/>
+										<div class="input-group-addon">
+											<span id="captcha">
+												<a href="#" id="refreshCaptcha">获取验证码</a>
+											</span>
+										</div>
+									</div>
+									<span class="help-block"></span>
+								</div>
+								<div class="form-group">
+									<label>验证码：</label>
+									<input type="text" name="captcha" class="form-control input-sm" placeholder="请输入手机验证码"/>
 									<span class="help-block"></span>
 								</div>
 								<div class="form-group">
 									<label>密码：</label>
-									<input type="password" name="password" value="<%= model.password %>" class="form-control input-sm" placeholder="数字或字母，不少于六位"/>
+									<input type="password" name="password" value="<%= model.password %>" class="form-control input-sm" placeholder="数字、_或英文字母"/>
 									<span class="help-block"></span>
 								</div>
 								<div class="form-group">
@@ -32,18 +45,15 @@
 									<span class="help-block"></span>
 								</div>
 								<div class="form-group">
-									<label>渠道名称：<a href="#" id="selectChannel">请选择渠道名称</a></label>
-									<input type="text" name="channel[name]" class="form-control input-sm" disabled>
-									<span class="help-block"></span>
-								</div>
-								<div class="form-group">
-									<label>渠道代码：</label>
-									<input type="text" name="channel[code]" class="form-control input-sm" disabled>
+									<label>渠道名称：</label>
+									<input type="hidden" name="department[path]">
+									<input type="text" name="department[name]" class="form-control input-sm" placeholder="请输入渠道名称，并在列表中选择">
+									<div id="departments"></div>
 									<span class="help-block"></span>
 								</div>
 								<div class="form-group">
 									<label>渠道地址：</label>
-									<input type="text" name="channel[address]" class="form-control input-sm" disabled>
+									<input type="text" name="department[address]" class="form-control input-sm" disabled>
 									<span class="help-block"></span>
 								</div>
 		                        <div class="form-group">
@@ -61,7 +71,7 @@
 		</div>
 		<div class="text-center">
 		    <hr>
-		    <p>版权所有@2014~2015&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>
@@ -77,7 +87,7 @@
 						</div>
 						<div class="panel-body">
 							<p>恭喜您，注册成功!</p>
-							<p>您还不能登录，请检查您的邮箱，点击邮件中的链接激活您的账号。</p>
+							<p>您还不能登录，请等待审核通过。</p>
 						</div>
 					</div>
 				</div>
@@ -91,7 +101,7 @@
 		<p>&nbsp;</p>
 		<hr>
 		<div class="text-center">
-		    <p>版权所有@2014~2015&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>		
 	</div>
@@ -120,7 +130,7 @@
 		                    <div id="error"></div>
 		                    <form role="form">
 		                        <div class="form-group">
-		                            <input type="text" name="email" class="form-control input-sm" placeholder="邮件/用户名">
+		                            <input type="text" name="email" class="form-control input-sm" placeholder="手机号码/邮件地址">
 		                            <span class="help-block"></span>
 		                        </div>
 
@@ -130,12 +140,20 @@
 		                        </div>
 
 		                        <div class="form-group">
-		                        	<a href="#" class="pull-right" id="register">还没有注册，去注册吧！</a>
-		                        	<a href="#" id="wechatLogin" style="color:red;">微信登录</a>&nbsp;&nbsp;
-		                       		<a href="#" id="forgot">忘记密码？</a>
+		                        	<div class="pull-right">
+			                        	<p><a href="#"  id="register">还没有账号，去注册吧！</a></p>
+			                        	<p><a href="#" id="forgot">忘记密码？</a></p>
+			                        </div>
+			                        <div>
+									<% if(!/MicroMessenger/.test(navigator.userAgent)){ %>
+										<p>
+											<a href="#" id="wechatLogin" style="color:red;">微信登录</a>
+										</p>		
+									<% } %>
+			                        </div>
 		                    	</div>
-
-		                        <br>
+								<br/>
+		                        <br/>
 		                        <input type="submit" value="登&nbsp;&nbsp;录" class="btn btn-primary btn-block">
 		                    </form>
 		                </div>
@@ -146,7 +164,7 @@
 
 		<div class="text-center">
 		    <hr>
-		    <p>版权所有@2014~2015&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>
@@ -163,7 +181,7 @@
 						<form role="form">
 							<div class="form-group" id="email">
 								<label for="email">您的邮件地址：</label>
-								<input type="text" name="email" class="form-control" placeholder="邮箱">
+								<input type="text" name="email" class="form-control" placeholder="邮件地址">
 								<span class="help-block"></span>
 							</div>
 		                        <div class="form-group">
@@ -181,7 +199,7 @@
 		</div>
 		<div class="text-center">
 		    <hr>
-		    <p>版权所有@2014~2015&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>
@@ -211,7 +229,7 @@
 
 		<div class="text-center">
 		    <hr>
-		    <p>版权所有@2014~2015&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>
@@ -311,7 +329,7 @@
 		                    <div id="error"></div>
 		                    <form role="form">
 		                        <div class="form-group" id="email">
-		                            <input type="text" name="email" class="form-control input-sm" placeholder="邮件/用户名">
+		                            <input type="text" name="email" class="form-control input-sm" placeholder="手机号码/邮件地址">
 		                            <span class="help-block"></span>
 		                        </div>
 
@@ -336,7 +354,7 @@
 
 		<div class="text-center">
 		    <hr>
-		    <p>版权所有@2014~2015&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>	

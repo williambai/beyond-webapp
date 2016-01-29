@@ -71,6 +71,17 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
+						<label for="department">所在部门名称：</label>
+						<input type="text" name="department[name]" value="<%= model.department.name %>" class="form-control" placeholder="请输入部门名称，并在列表中选择">
+						<div id="departments"></div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="department">所在部门路径：</label>
+						<input type="text" name="department[path]" value="<%= model.department.path %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
 						<label>应用：</label>
 						<div style="padding-left:30px;" id="apps">
 						</div>
