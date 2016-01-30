@@ -24,10 +24,10 @@ exports = module.exports = FormView.extend({
 		'keyup input[type=text]': 'inputText',
 		'keyup input[name="department"]': 'getDepartments',
 		'click .department': 'selectDepartment',
-		'keyup input[name="channel"]': 'getChannels',
-		'click .channel': 'selectChannel',
-		'keyup input[name="grid"]': 'getGrids',
-		'click .grid': 'selectGrid',
+		// 'keyup input[name="channel"]': 'getChannels',
+		// 'click .channel': 'selectChannel',
+		// 'keyup input[name="grid"]': 'getGrids',
+		// 'click .grid': 'selectGrid',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -67,7 +67,7 @@ exports = module.exports = FormView.extend({
 		var searchStr = this.$(evt.currentTarget).val() || '';
 		if(searchStr.length >1){
 			$.ajax({
-				url: config.api.host + '/channel/departments?type=search&searchStr=' + searchStr,
+				url: config.api.host + '/departments?type=search&searchStr=' + searchStr,
 				type: 'GET',
 				xhrFields: {
 					withCredentials: true
@@ -93,69 +93,69 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	getChannels: function(evt){
-		this.$('#channels').empty();
-		var that = this;
-		var searchStr = this.$(evt.currentTarget).val() || '';
-		if(searchStr.length >1){
-			$.ajax({
-				url: config.api.host + '/channel/entities?type=search&searchStr=' + searchStr,
-				type: 'GET',
-				xhrFields: {
-					withCredentials: true
-				},
-			}).done(function(data){
-				data = data || [];
-				var channelsView = '<ul>';
-				data.forEach(function(item){
-					channelsView += '<li class="channel" id="'+ item._id +'">' + item.name + '</li>';
-				});
-				channelsView += '</ul>';
-				that.$('#channels').html(channelsView);
-			});				
-		}
-		return false;
-	},
+	// getChannels: function(evt){
+	// 	this.$('#channels').empty();
+	// 	var that = this;
+	// 	var searchStr = this.$(evt.currentTarget).val() || '';
+	// 	if(searchStr.length >1){
+	// 		$.ajax({
+	// 			url: config.api.host + '/channel/entities?type=search&searchStr=' + searchStr,
+	// 			type: 'GET',
+	// 			xhrFields: {
+	// 				withCredentials: true
+	// 			},
+	// 		}).done(function(data){
+	// 			data = data || [];
+	// 			var channelsView = '<ul>';
+	// 			data.forEach(function(item){
+	// 				channelsView += '<li class="channel" id="'+ item._id +'">' + item.name + '</li>';
+	// 			});
+	// 			channelsView += '</ul>';
+	// 			that.$('#channels').html(channelsView);
+	// 		});				
+	// 	}
+	// 	return false;
+	// },
 
-	selectChannel: function(evt){
-		var id = this.$(evt.currentTarget).attr('id');
-		var name = this.$(evt.currentTarget).text();
-		this.$('input[name="channel"]').val(name);
-		this.$('#channels').empty();
-		return false;
-	},
+	// selectChannel: function(evt){
+	// 	var id = this.$(evt.currentTarget).attr('id');
+	// 	var name = this.$(evt.currentTarget).text();
+	// 	this.$('input[name="channel"]').val(name);
+	// 	this.$('#channels').empty();
+	// 	return false;
+	// },
 
-	getGrids: function(evt){
-		this.$('#grids').empty();
-		var that = this;
-		var searchStr = this.$(evt.currentTarget).val() || '';
-		if(searchStr.length >1){
-			$.ajax({
-				url: config.api.host + '/channel/grids?type=search&searchStr=' + searchStr,
-				type: 'GET',
-				xhrFields: {
-					withCredentials: true
-				},
-			}).done(function(data){
-				data = data || [];
-				var gridsView = '<ul>';
-				data.forEach(function(item){
-					gridsView += '<li class="grid" id="'+ item._id +'">' + item.name + '</li>';
-				});
-				gridsView += '</ul>';
-				that.$('#grids').html(gridsView);
-			});				
-		}
-		return false;
-	},
+	// getGrids: function(evt){
+	// 	this.$('#grids').empty();
+	// 	var that = this;
+	// 	var searchStr = this.$(evt.currentTarget).val() || '';
+	// 	if(searchStr.length >1){
+	// 		$.ajax({
+	// 			url: config.api.host + '/channel/grids?type=search&searchStr=' + searchStr,
+	// 			type: 'GET',
+	// 			xhrFields: {
+	// 				withCredentials: true
+	// 			},
+	// 		}).done(function(data){
+	// 			data = data || [];
+	// 			var gridsView = '<ul>';
+	// 			data.forEach(function(item){
+	// 				gridsView += '<li class="grid" id="'+ item._id +'">' + item.name + '</li>';
+	// 			});
+	// 			gridsView += '</ul>';
+	// 			that.$('#grids').html(gridsView);
+	// 		});				
+	// 	}
+	// 	return false;
+	// },
 
-	selectGrid: function(evt){
-		var id = this.$(evt.currentTarget).attr('id');
-		var name = this.$(evt.currentTarget).text();
-		this.$('input[name="grid"]').val(name);
-		this.$('#grids').empty();
-		return false;
-	},
+	// selectGrid: function(evt){
+	// 	var id = this.$(evt.currentTarget).attr('id');
+	// 	var name = this.$(evt.currentTarget).text();
+	// 	this.$('input[name="grid"]').val(name);
+	// 	this.$('#grids').empty();
+	// 	return false;
+	// },
 
 	submit: function() {
 		var that = this;

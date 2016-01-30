@@ -29,6 +29,10 @@
 	 									type: 'view',
 	 									name: '销售线索',
 	 									url: 'http://wo.pdbang.cn/wechat.html#sale/lead/index'
+	 								}, {
+	 									type: 'view',
+	 									name: '意见反馈',
+	 									url: 'http://wo.pdbang.cn/wechat.html#feedback/index'
 	 								}]
 	 							}, {
 	 								name: 'Wo产品',

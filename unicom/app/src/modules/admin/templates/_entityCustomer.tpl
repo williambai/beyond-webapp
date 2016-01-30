@@ -43,10 +43,7 @@
 			<button class="btn btn-danger delete">删除</button>
 		</div>
 		<h4><%= model.mobile %>&nbsp;&nbsp;<%= model.name %></h4>
-		<p>渠道：<%= model.channel%>&nbsp;
-			<br/>网格：<%= model.grid %>
-			<br/>管理部门：<%= model.department %>
-		</p>
+		<p>管理部门：<%= model.department %></p>
 		<hr/>
 	</div>
 	<div id="editTemplate">
@@ -72,7 +69,7 @@
 						<div id="departments"></div>
 						<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+<!-- 					<div class="form-group">
 						<label>渠道名称：</label>
 						<input type="text" name="channel" value="<%= model.channel %>" class="form-control" placeholder="请输入渠道名称并从列表中选择">
 						<div id="channels"></div>
@@ -83,7 +80,7 @@
 						<input type="text" name="grid" value="<%= model.grid %>" class="form-control" placeholder="请输入网格名称并从列表中选择">
 						<div id="grids"></div>
 						<span class="help-block"></span>
-					</div>
+					</div> -->
 					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
@@ -159,17 +156,7 @@
 						<tr>
 							<td>3</td>
 							<td>deparment</td>
-							<td>管理部门，用&gt;&gt;表示部门层级</td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>channel</td>
-							<td>渠道编码</td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>grid</td>
-							<td>网格编码</td>
+							<td>管理部门，用&gt;&gt;分隔部门层级</td>
 						</tr>
 					</tbody>
 				</table>
@@ -196,20 +183,8 @@
 					<input type="hidden" name="type" value="export">
 					<div class="form-group">
 						<label>管理部门：</label>
-						<input type="text" name="department" value="<%= model.department %>" class="form-control" placeholder="请输入组织名称并从列表中选择">
+						<input type="text" name="department" value="<%= model.department %>" class="form-control" placeholder="请输入组织名称，并从列表中选择">
 						<div id="departments"></div>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>渠道名称：</label>
-						<input type="text" name="channel" value="<%= model.channel %>" class="form-control" placeholder="请输入渠道名称并从列表中选择">
-						<div id="channels"></div>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>网格名称：</label>
-						<input type="text" name="grid" value="<%= model.grid %>" class="form-control" placeholder="请输入网格名称并从列表中选择">
-						<div id="grids"></div>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -248,17 +223,7 @@
 						<tr>
 							<td>3</td>
 							<td>deparment</td>
-							<td>管理部门，用&gt;&gt;表示部门层级</td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>channel</td>
-							<td>渠道编码</td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>grid</td>
-							<td>网格编码</td>
+							<td>管理部门，用&gt;&gt;分隔部门层级</td>
 						</tr>
 					</tbody>
 				</table>

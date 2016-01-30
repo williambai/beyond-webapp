@@ -78,7 +78,7 @@
 		"id": 2,
 		"name": "用户反馈",
 		"nickname": "",
-		"hash": "user/feedback/index"
+		"hash": "feedback/index"
 	}, {
 		"id": 2,
 		"name": "我的资料",

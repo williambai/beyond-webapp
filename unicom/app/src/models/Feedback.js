@@ -4,12 +4,15 @@ var config = require('../conf');
 
 exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/departments',
-
-	validation: {
-		name: {
-			required : true,
-			msg: '请输入组织名称'
-		},
+	urlRoot: config.api.host + '/platform/feedbacks',	
+	
+	defaults: {
 	},
+	
+	// validation: {
+	// 	'name': {
+	// 		required: true,
+	// 		msg: '请输入客户姓名'
+	// 	}
+	// },	
 });

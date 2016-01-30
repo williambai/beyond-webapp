@@ -9,6 +9,8 @@ var LoginView = require('../../views/_Login2');
 var WeChatLoginView = require('../../views/_WeChatLogin');
 var MyAccountViewView = require('../../views/_MyAccountView');
 var MyAccountEditView = require('../../views/_MyAccountEdit');
+var FeedbackIndexView = require('../../views/_FeedbackIndex');
+var FeedbackEditView = require('../../views/_FeedbackEdit');
 
 var IndexView = require('./views/Index');
 
@@ -89,6 +91,9 @@ exports = module.exports = Backbone.Router.extend({
 		'logout': 'logout',
 		'profile/:id': 'profileView',
 		'profile/edit/me': 'profileEdit',
+		'feedback/index': 'feedbackIndex',
+		'feedback/index': 'feedbackIndex',
+		'feedback/add': 'feedbackEdit',
 
 		'account/index': 'accountIndex',
 		'account/add': 'accountEdit',
@@ -307,6 +312,35 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(profileEditView);
 		profileEditView.trigger('load');
 	},
+
+	feedbackIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','意见反馈');
+		var feedbackIndexView = new FeedbackIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(feedbackIndexView);
+		feedbackIndexView.trigger('load');
+	},	
+
+	feedbackEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','意见反馈');
+		var feedbackEditView = new FeedbackEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(feedbackEditView);
+		feedbackEditView.trigger('load');
+	},	
 
 	accountIndex: function(){
 		if(!this.logined){

@@ -86,7 +86,6 @@ exports = module.exports = Backbone.View.extend({
 
 	promote: function(evt){
 		var id = this.$(evt.currentTarget).parent().parent().attr('id');
-		alert('id=' + id);
 		window.location.href = config.api.host + '/sale/page/data/' + config.wechat.appid + '/' + id + '/' + this.router.account.id;
 		return false;
 	},

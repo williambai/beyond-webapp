@@ -63,8 +63,14 @@
 		"nickname": "revenue",
 		"hash": "revenue/stat"
 	}],
-	"my_account": [{
+	"channel_reveue": [{
 		"id": 11,
+		"name": "意见反馈",
+		"nickname": "feedback",
+		"hash": "feedback/index"
+	}],
+	"my_account": [{
+		"id": 12,
 		"name": "我的资料",
 		"nickname": "profile",
 		"hash": "profile/me"
