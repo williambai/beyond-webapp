@@ -4,7 +4,7 @@ var util = require('../util.js'),
 	override2 = util.override2,
 	cannedOptions = {};
 
-var defOptions = require('../../../../config/sms').options;
+var defOptions = require('../../../../config/sp').SGIP12.options;
 
 // convert defOptions to a instance object of a class
 function CDefOptions() {

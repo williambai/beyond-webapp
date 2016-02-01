@@ -159,6 +159,8 @@ app.server.listen(config.server.PORT,function(){
 	logger.info(config.server.NAME + ' App is running at '+ config.server.PORT + ' now.');
 });
 
+//** start SGIP Service
+require('child_process').fork('./sgipService');
 
 //** schedule Jobs
 // var schedule = require('node-schedule');

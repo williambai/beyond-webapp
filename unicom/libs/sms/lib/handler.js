@@ -8,12 +8,14 @@ var handler = function(socket){
 			try {
 				dueLen = Buffer.prototype.readUInt32BE.call(data, 0);
 			} catch (e) {
-				socket.emit('error', e);
+				// socket.emit('error', e);
+				socket.end();
 				socket.removeListener('data', _handler);
 				return;
 			}
 			if (dueLen === 0) {
-				socket.emit('end', null);
+				// socket.emit('end', null);
+				socket.end();
 				socket.removeListener('data', _handler);
 				return;
 			}

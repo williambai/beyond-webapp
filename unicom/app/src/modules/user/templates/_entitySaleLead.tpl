@@ -16,10 +16,12 @@
 		<div class="item" id="<%= model._id %>">
 	 		<div class="pull-right">
 				<button class="btn btn-success edit">详情</button>
-				<button class="btn btn-danger delete">删除</button>
+				<!-- <button class="btn btn-danger delete">删除</button> -->
 			</div>
-			<h4><%= model.name %>&nbsp;&nbsp;<span class="bg-success"><%= model.status %></span></h4>
-			<p><%= model.description %></p>
+			<div>
+				<h4><%= model.name %>&nbsp;&nbsp;<span class="bg-success"><%= model.status %></span></h4>
+				<p><%= model.description %></p>
+			</div>
 		</div>
 		<hr/>
 	</div>

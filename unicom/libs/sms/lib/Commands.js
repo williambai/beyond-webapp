@@ -65,6 +65,7 @@ CommandFactory.create = function(commandType) {
 
 			switch (attr.type) {
 				case 'text':
+					console.log(val);
 					(function(len) {
 						var bytesWriten;
 						if (len) {
@@ -75,7 +76,8 @@ CommandFactory.create = function(commandType) {
 						} else {
 							// for attr that length is determined by its instance length, not by its type's fixed length
 							// for example MessageContent attr in Submit PDU
-							bytesWriten = val.copy(PDU, sPtr);
+							// bytesWriten = val.copy(PDU, sPtr);
+							bytesWriten = PDU.write(val,sPtr,val.length,'utf8');
 							sPtr += val.length;
 						}
 					})(attr.len);
@@ -129,6 +131,9 @@ CommandFactory.parse = function(data) {
 			break;
 		case 0x3: 
 			commandType = 'Submit';
+			break;
+		case 0x4: 
+			commandType = 'Deliver';
 			break;
 		case 0x5: 
 			commandType = 'Report';

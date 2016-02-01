@@ -18,6 +18,9 @@ var sp = {
 	// checkReply1: factory(Reply),
 };
 
+sp.CommandFactory = CommandFactory;
+sp.handler = require('./lib/handler');
+
 sp.send = function(docs, callback) {
 	var docs = (docs instanceof Array) ? docs : [docs];
 	var _docs = docs.slice(0);

@@ -64,7 +64,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	back: function(){
-		this.router.navigate('back',{trigger: true,replace: true});
+		this.router.navigate('login',{trigger: true,replace: true});
 		return false;
 	},
 

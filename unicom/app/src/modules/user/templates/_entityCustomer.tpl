@@ -19,9 +19,10 @@
 			<a class="btn btn-danger" href="tel:<%= model.mobile %>">打电话</a>
 			<!-- <button class="btn btn-info view">了解客户</button> -->
 		</div>
-
- 		<h4>客户：<%= model.name %>&nbsp;&nbsp;<%= model.mobile %></h4>
-		<p>客户关怀：3天前&nbsp;&nbsp;&nbsp;当前状态：有效</p>
+		<div>
+	 		<h4><%= model.name %>&nbsp;&nbsp;<%= model.mobile %></h4>
+			<p>客户关怀：3天前&nbsp;&nbsp;&nbsp;当前状态：有效</p>
+		</div>
 		<hr/>
 	</div>
 	<div id="searchTemplate">
