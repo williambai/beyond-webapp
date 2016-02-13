@@ -48,24 +48,53 @@
 				</div>
 				<div class="panel-body">
 					<div class="form-group">
-						<label class="col-sm-2">订单号：</label>
-						<div class="col-sm-10">
-							<p><%= model._id %></p>
-						</div>
+						<label>订单号：</label>
+						<input type="text" class="form-control" value="<%= model._id %>" readonly>
+						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2">订单名称：</label>
-						<div class="col-sm-10">
-							<p><%= model.name %></p>
-						</div>
+						<label>订单名称：</label>
+						<input type="text" class="form-control" value="<%= model.name %>" readonly>
+						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-2">订单描述：</label>
-						<div class="col-sm-10">
-							<p><%= model.description %></p>
-						</div>
+						<label>订单描述：</label>
+						<textarea class="form-control" readonly><%= model.description %></textarea>
+						<span class="help-block"></span>
 					</div>
-					<p>&nbsp;</p>
+					<div class="form-group">
+						<label>订单状态：</label>
+						<div style="padding-left:30px;">
+							<input type="radio" name="status" checked>&nbsp;&nbsp;新建&nbsp;&nbsp;
+							<input type="radio" name="status">&nbsp;&nbsp;已确认&nbsp;&nbsp;
+							<input type="radio" name="status">&nbsp;&nbsp;已配送&nbsp;&nbsp;
+							<input type="radio" name="status">&nbsp;&nbsp;完成&nbsp;&nbsp;
+							<input type="radio" name="status">&nbsp;&nbsp;用户取消&nbsp;&nbsp;
+							<input type="radio" name="status">&nbsp;&nbsp;后台取消&nbsp;&nbsp;
+							<input type="radio" name="status">&nbsp;&nbsp;其他原因&nbsp;&nbsp;
+						</div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>佣金：</label>
+							<input type="text" name="bonus[income]" value="<%= model.bonus.income %>" class="form-control">
+							<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>返佣状态：</label>
+						<div style="padding-left:30px;">
+							<input type="radio" name="bonus[cashStatus]" checked>&nbsp;&nbsp;冻结&nbsp;&nbsp;
+							<input type="radio" name="bonus[cashStatus]">&nbsp;&nbsp;第一次解冻&nbsp;&nbsp;
+							<input type="radio" name="bonus[cashStatus]">&nbsp;&nbsp;第二次解冻&nbsp;&nbsp;
+							<input type="radio" name="bonus[cashStatus]">&nbsp;&nbsp;全部解冻&nbsp;&nbsp;
+						</div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>已兑现佣金：</label>
+							<input type="text" name="bonus[cash]" value="<%= model.bonus.cash %>" class="form-control">
+							<span class="help-block"></span>
+					</div>
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title text-center">商品清单</h4>
@@ -138,18 +167,9 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label>订单状态：</label>
-						<select name="status" class="form-control">
-							<option>新建</option>
-							<option>新建</option>
-							<option>新建</option>
-						</select>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
-								<input type="submit" value="更改客户信息" class="btn btn-danger">
+								<input type="submit" value="更改订单信息" class="btn btn-danger">
 							</div>
 							<div class="btn-group">
 								<button class="btn btn-primary back">取消</button>
@@ -192,6 +212,24 @@
 						<label class="col-sm-2">订单状态：</label>
 						<div class="col-sm-10">
 							<p><%= model.status %></p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2">佣金：</label>
+						<div class="col-sm-10">
+							<p><%= model.bonus.income %>&nbsp;&nbsp;元</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2">返佣状态：</label>
+						<div class="col-sm-10">
+							<p><%= model.bonus.cashStatus %></p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2">佣金兑现：</label>
+						<div class="col-sm-10">
+							<p><%= model.bonus.cash %>&nbsp;&nbsp;元</p>
 						</div>
 					</div>
 <!-- 					<div class="form-group">

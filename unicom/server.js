@@ -9,18 +9,18 @@ var express = require('express');
 var session = require('express-session');
 var mongoStore = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
-var multer = require('multer'); 
+var multer = require('multer');
 var app = express();
 var nodemailer = require('nodemailer');
 
 
-log4js.configure(path.join(__dirname,'config/log4js.json'));
+log4js.configure(path.join(__dirname, 'config/log4js.json'));
 var logger = log4js.getLogger('nodejs:server');
 logger.setLevel('INFO');
 
 //create an http server
 app.server = http.createServer(app);
-app.randomHex = function(){
+app.randomHex = function() {
 	return new Date().getTime();
 };
 
@@ -28,22 +28,22 @@ app.randomHex = function(){
 var mongoose = require('mongoose');
 
 var config = {
-		server: require('./config/server'),
-		mail: require('./config/mail'),
-		db: require('./config/db')
-	};		
+	server: require('./config/server'),
+	mail: require('./config/mail'),
+	db: require('./config/db')
+};
 
 //import the models
 var models = {};
-fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file){
-	if(/\.js$/.test(file)){
-		var modelName = file.substr(0,file.length-3);	
+fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
+	if (/\.js$/.test(file)) {
+		var modelName = file.substr(0, file.length - 3);
 		models[modelName] = require('./models/' + modelName)(mongoose);
 	}
 });
-	
-mongoose.connect(config.db.URI,function onMongooseError(err){
-	if(err) {
+
+mongoose.connect(config.db.URI, function onMongooseError(err) {
+	if (err) {
 		logger.error('Error: can not open Mongodb.');
 		throw err;
 	}
@@ -51,7 +51,7 @@ mongoose.connect(config.db.URI,function onMongooseError(err){
 
 //express configure
 app.set('view engine', 'jade');
-app.set('views', __dirname +'/views');
+app.set('views', __dirname + '/views');
 
 //show origin cookie
 // app.use(function(req,res,next){
@@ -59,29 +59,36 @@ app.set('views', __dirname +'/views');
 // 	next();
 // });
 
-app.use(log4js.connectLogger(log4js.getLogger('server'),{level:log4js.levels.INFO, format: ':remote-addr :response-time - [:date] ":method :url HTTP/:http-version" :status :content-length ":referrer" ":user-agent"'}));
+app.use(log4js.connectLogger(log4js.getLogger('server'), {
+	level: log4js.levels.INFO,
+	format: ':remote-addr :response-time - [:date] ":method :url HTTP/:http-version" :status :content-length ":referrer" ":user-agent"'
+}));
 app.use(express.static(__dirname + '/public'));
 // app.use(express.limit('1mb'));
 app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({
+	extended: true
+})); // for parsing application/x-www-form-urlencoded
 app.use(multer()); // for parsing multipart/form-data
 
 //app session
 app.sessionSecret = 'it is mime.';
 app.sessionStore = new mongoStore({
-			url: config.db.URI,
-			collection: 'sessions'
-		});
+	url: config.db.URI,
+	collection: 'sessions'
+});
 app.use(session({
-		secret: app.sessionSecret,
-		key: 'beyond.sid',
-		store: app.sessionStore,
-		saveUninitialized: false,
-        resave: true
-    }));
+	secret: app.sessionSecret,
+	key: 'beyond.sid',
+	store: app.sessionStore,
+	saveUninitialized: false,
+	resave: true
+}));
 
-app.get('/', function(req,res){
-	res.render('index.jade',{layout: false});
+app.get('/', function(req, res) {
+	res.render('index.jade', {
+		layout: false
+	});
 });
 
 // app.get('/download/:name', function(req,res){
@@ -95,84 +102,90 @@ app.get('/', function(req,res){
 // });
 
 //是否登录
-app.isLogin = function(req,res,next){
+app.isLogin = function(req, res, next) {
 	var grant = req.session.grant;
-	if(!_.isEmpty(grant)) return next();
+	if (!_.isEmpty(grant)) return next();
 	res.status(401).end();
 };
 
 //授权判断中间件
-app.grant = function(req,res,next){
+app.grant = function(req, res, next) {
 	logger.debug('session(grant):' + JSON.stringify(req.session));
 	logger.debug('req.path(grant): ' + util.inspect(req.path));
 	logger.debug('req.params.id(grant): ' + util.inspect(req.params.id));
 	logger.debug('req.method(grant): ' + req.method);
 	var path = req.path;
-	if((req.method == 'PUT' || 
-		req.method == 'DELETE' ||
-		req.method == 'GET') && req.params.id){		
+	if ((req.method == 'PUT' ||
+			req.method == 'DELETE' ||
+			req.method == 'GET') && req.params.id) {
 		var id = path.lastIndexOf('/');
 		logger.debug('path.lastIndexOf "/"(grant): ' + id);
-		if(id != -1) path = path.slice(0, id);
+		if (id != -1) path = path.slice(0, id);
 	}
 	logger.debug('route(grant):' + path);
 
 	var grant = req.session.grant || {};
 	var features = _.values(grant);
 	logger.debug('features(grant): ' + JSON.stringify(features));
-	var feature = (_.where(features,{route: path}))[0];
-	if(_.isUndefined(feature)) return res.status(401).end();
+	var feature = (_.where(features, {
+		route: path
+	}))[0];
+	if (_.isUndefined(feature)) return res.status(401).end();
 	logger.debug('current feature(grant):' + JSON.stringify(feature));
 
-	var regexp_path = new RegExp(path,'i');
+	var regexp_path = new RegExp(path, 'i');
 	logger.debug('regexp_path(grant):' + regexp_path);
-	if(regexp_path.test(feature.route)){
-		if(req.method == 'POST' && feature.add) return next();
-		if(req.method == 'PUT' && feature.update) return next();
-		if(req.method == 'DELETE' && feature.remove) return next();
-		if(req.method == 'GET' && req.params.id && feature.getOne) return next();
-		if(req.method == 'GET' && !(req.parmas && req.params.id) && feature.getMore) return next();
+	if (regexp_path.test(feature.route)) {
+		if (req.method == 'POST' && feature.add) return next();
+		if (req.method == 'PUT' && feature.update) return next();
+		if (req.method == 'DELETE' && feature.remove) return next();
+		if (req.method == 'GET' && req.params.id && feature.getOne) return next();
+		if (req.method == 'GET' && !(req.parmas && req.params.id) && feature.getMore) return next();
 	}
 	return res.status(401).end();
 };
 
 //设置跨域访问
 app.all('*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:8000");
-    res.header("Access-Control-Allow-Credentials","true");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type,Set-Cookie");
-    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-    res.header("X-Powered-By",' 3.2.1')
-    res.header("Content-Type", "application/json;charset=utf-8");
-    next();
+	res.header("Access-Control-Allow-Origin", "http://localhost:8000");
+	res.header("Access-Control-Allow-Credentials", "true");
+	res.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type,Set-Cookie");
+	res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+	res.header("X-Powered-By", ' 3.2.1')
+	res.header("Content-Type", "application/json;charset=utf-8");
+	next();
 });
 
 //import the routes
-fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file){
-	if(/\.js$/.test(file)){
-		var routeName = file.substr(0,file.length-3);	
-		require('./routes/' + routeName)(app,models);		
+fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file) {
+	if (/\.js$/.test(file)) {
+		var routeName = file.substr(0, file.length - 3);
+		require('./routes/' + routeName)(app, models);
 	}
 });
 
-app.server.listen(config.server.PORT,function(){
-	logger.info(config.server.NAME + ' App is running at '+ config.server.PORT + ' now.');
+app.server.listen(config.server.PORT, function() {
+	logger.info(config.server.NAME + ' App is running at ' + config.server.PORT + ' now.');
 });
 
 //** start SGIP Service
-require('child_process').fork('./sgipService');
+// require('child_process').fork('./sgipService');
 
 //** schedule Jobs
-// var schedule = require('node-schedule');
+// var CronJob = require('cron').CronJob;
 // var updateWechatAccessToken = require('./commands/updateWechatAccessToken');
-// var refreshWechatAccessToken = function(){
-// 	updateWechatAccessToken(function(err){
-// 		if(err) return logger.error(err);
+// var refreshWechatAccessToken = function() {
+// 	updateWechatAccessToken(function(err) {
+// 		if (err) return logger.error(err);
 // 		logger.info('updateWechatAccessToken successfully.');
 // 	});
 // };
-// refreshWechatAccessToken();//** execute right now!
-// schedule.scheduleJob('*/59 * * * *',refreshWechatAccessToken);
+// var refreshWechatAccessTokenJob = new CronJob({
+// 	cronTime: '00 */59 * * * *',
+// 	onTick: refreshWechatAccessToken,
+// 	start: true,
+// 	runOnInit: true,//** execute right now!
+// });
 
 // var updateCiticCookie = require('./commands/updateCbssCookie');
 // var refreshCiticCookie = function(){

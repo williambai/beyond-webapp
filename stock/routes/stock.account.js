@@ -1,5 +1,6 @@
  exports = module.exports = function(app, models) {
-
+ 	var crypto = require('crypto');
+ 	var CITIC = require('../config/citic');
  	var captchaImage = {};
 
  	var autoLogin = function(req,res){
@@ -35,10 +36,12 @@
  				//** (step 5)transfer username/password/captcha to casperjs(as webServer)
  				var http = require('http');
  				var querystring = require('querystring');
+				var password = crypto.privateDecrypt(CITIC.privateKey,new Buffer(doc.password,'base64')).toString();
+				// console.log(password);
  				postData = querystring.stringify({
  					action: 'login',
  					username: doc.username,
- 					password: doc.password,
+ 					password: password,
  					captcha: captchaText,
  				});
  				console.log(postData)
@@ -206,8 +209,14 @@
  				refreshCookie(req,res);
  				break;
  			default:
- 				var doc = new models.StockAccount(req.body);
- 				doc.save(function(err) {
+ 				var doc = req.body;
+ 				if(doc.password){
+ 					doc.password = crypto.publicEncrypt(CITIC.publicKey,doc.password);
+ 					doc.password = crypto.privateDecrypt(CITIC.privateKey,doc.password);
+ 					console.log(doc.password);
+ 				}
+ 				return;
+ 				models.StockAccount.create(doc,function(err) {
  					if (err) return res.send(err);
  					res.send({});
  				});
@@ -229,6 +238,10 @@
  		switch (action) {
  			default:
  				var set = req.body;
+ 				if(set.password){
+ 					set.password = crypto.publicEncrypt(CITIC.publicKey,new Buffer(set.password)).toString('base64');
+ 					// console.log(set.password);
+ 				}
  				models.StockAccount.findByIdAndUpdate(id, {
  						$set: set
  					}, {

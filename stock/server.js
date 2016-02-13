@@ -11,7 +11,7 @@ var multer = require('multer');
 var app = express();
 var nodemailer = require('nodemailer');
 
-log4js.configure(path.join(__dirname,'log4js.json'));
+log4js.configure(path.join(__dirname, 'log4js.json'));
 var logger = log4js.getLogger('server');
 logger.setLevel('DEBUG');
 
@@ -93,10 +93,10 @@ app.all('*', function(req, res, next) {
 });
 
 //import the routes
-fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file){
-	if(/\.js$/.test(file)){
-		var routeName = file.substr(0,file.length-3);
-		require('./routes/' + routeName)(app,models);
+fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file) {
+	if (/\.js$/.test(file)) {
+		var routeName = file.substr(0, file.length - 3);
+		require('./routes/' + routeName)(app, models);
 	}
 });
 
@@ -119,7 +119,7 @@ app.server.listen(config.server.PORT, function() {
 			command: 'start'
 		});
 	});
-	
+
 	worker.on('message', function(msg) {
 		logger.info(msg);
 		workerStatus = msg;
@@ -128,9 +128,12 @@ app.server.listen(config.server.PORT, function() {
 		command: 'start'
 	});
 
-	app.post('/captcha', function(req,res){
+	app.post('/captcha', function(req, res) {
 		var captcha = req.body.captcha;
-		worker.send({command: 'captcha', captcha: captcha});
+		worker.send({
+			command: 'captcha',
+			captcha: captcha
+		});
 		res.send({});
 	});
 
@@ -140,24 +143,35 @@ app.server.listen(config.server.PORT, function() {
 
 	app.post('/platform/start', function(req, res) {
 		logger.info('start platform');
-		worker.send({command: 'start'});
+		worker.send({
+			command: 'start'
+		});
 		res.send({});
 	});
 
 	app.post('/platform/stop', function(req, res) {
 		logger.info('stop platform');
-		worker.send({command: 'stop'});
+		worker.send({
+			command: 'stop'
+		});
 		res.send({});
 	});
 });
 
 //** schedule Jobs
-var schedule = require('node-schedule');
-var refreshCiticCookie = require('./commands/refreshCiticCookie1');
-schedule.scheduleJob('*/5 * * * *', function(){
-	refreshCiticCookie(function(err) {
+var CronJob = require('cron').CronJob;
+var updateCiticCookie = require('./commands/refreshCiticCookie1');
+var refreshCiticCookie = function() {
+	updateCiticCookie(function(err) {
 		if (err) return console.log(err);
 		console.log('refresh CITIC Accounts Cookie successfully.');
 	});
+};
+var refreshCiticCookieJob = new CronJob({
+	cronTime: '00 */5 * * * *',
+	onTick: refreshCiticCookie,
+	start: true,
+	runOnInit: true, //** execute right now!
 });
+
 console.log('scheduleJobs is started.');

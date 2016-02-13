@@ -138,6 +138,16 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
+						<label>佣金：</label>
+						<input type="text" name="bonus[income]" value="<%= model.bonus.income %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>返佣分批次数：</label>
+						<input type="text" name="bonus[times]" value="<%= model.bonus.times %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
 							<input type="radio" name="status" value="有效" checked>&nbsp;&nbsp;有效

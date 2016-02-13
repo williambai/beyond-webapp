@@ -6,7 +6,11 @@ exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
 	urlRoot: config.api.host + '/product/directs',	
 	defaults: {
-		goods: {}
+		goods: {},
+		bonus: {
+			income: 0,
+			times: 1
+		},
 	},
 	validation: {
 	    'name': {

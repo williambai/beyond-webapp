@@ -60,10 +60,21 @@ module.exports = exports = function(mongoose){
 			mobile: String,
 			avatar: String,
 		},
+		bonus: {
+			income: Number,
+			cash: Number,
+			cashStatus: {
+				type: String,
+				enum: {
+					values: '冻结|一次解冻|二次解冻|三次解冻|全部解冻'.split('|'),
+					message: 'enum validator failed for path {PATH} with value {VALUE}',
+				}
+			},			
+		},
 		status: {
 			type: String,
 			enum: {
-				values: '新建|已确认|已配送|完成|用户取消|系统取消|其他原因'.split('|'),
+				values: '新建|已确认|已配送|完成|用户取消|后台取消|其他原因'.split('|'),
 				message: 'enum validator failed for path {PATH} with value {VALUE}',
 			}
 		},
