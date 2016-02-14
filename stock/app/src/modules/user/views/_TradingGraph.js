@@ -77,6 +77,9 @@ exports = module.exports = Backbone.View.extend({
 					saleTimes++;
 					balance -= d.price * d.quantity;
 				}
+				d.balance = balance;
+				d.bonus = -balance + d.price * d.quantity * (buyTimes - saleTimes);
+				d.delta = saleTimes - buyTimes;
 			});
 			times = Math.min(buyTimes,saleTimes);
 			buyTimes = 0;
@@ -128,6 +131,15 @@ exports = module.exports = Backbone.View.extend({
 				.attr('y',function(d){return d.direction =='买入' ? y(d.price) : (y(d.price) - 20)})
 				.attr('height', 20)
 				.attr('width',5);
+
+			svg.selectAll('.bar-text')
+				.data(data)
+				.enter()
+				.append('text')
+				.attr('x',function(d){return x(d.date)+ 12;})
+				.attr('y',function(d){return d.direction =='买入' ? y(d.price) : (y(d.price) - 20)})
+				.style('text-anchor','end')
+				.text(function(d){return d.bonus + '(' + d.delta + ')';});
 
 			svg.append('g')
 				.append('text')

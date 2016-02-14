@@ -6,10 +6,28 @@ exports = module.exports = function(mongoose) {
 			unique: true,
 			required: true
 		},
+
 		stock: {
 			name: String,
 			code: String,
 		},
+
+		bid: {//记录回撤时的最高或最低出价
+			direction: {
+				type: String, 
+				enum: {
+					values: '买入|待定|卖出'.split('|'),
+					message: 'enum validator failed for path {PATH} with value {VALUE}',
+				},
+				default: '待定',
+			},
+			price: {// 最高卖出或最低买入的竞价
+				type: Number,
+				min: 0,
+				default: 0,
+			},
+		},
+
 		//strategy params
 		params: {
 			name: {
@@ -60,16 +78,28 @@ exports = module.exports = function(mongoose) {
 				max: 10000,
 			},
 			buy_lt: {
-				type: Number, //上涨%百分比(绝对值)，买入
+				type: Number, //上涨%百分比(绝对值)，可以买入
 				required: true,
 				// min: 1,
 				max: 10,
 			},
+			buy_drawdown: { //满足买入条件后，回撤%百分比(绝对值)，买入
+				type: Number,
+				min: 0,
+				max: 10,
+				default: 0,
+			},
 			sell_gt: {
-				type: Number, //下跌%百分比(绝对值)，卖出
+				type: Number, //下跌%百分比(绝对值)，可以卖出
 				required: true,
 				// min: 1,
 				max: 10,
+			},
+			sell_drawdown: {//满足卖出条件后，回撤%百分比(绝对值)，卖出
+				type: Number,
+				min: 0,
+				max: 10,
+				default: 0,
 			},
 			quantity: {
 				type: Number, //每次买入量（股）
@@ -109,17 +139,19 @@ exports = module.exports = function(mongoose) {
 				max: 100000,
 			},
 			direction: {
-				type: String, // 低价卖入：-1，高价买出：1
+				type: String, 
 				enum: {
 					values: '买入|卖出'.split('|'),
 					message: 'enum validator failed for path {PATH} with value {VALUE}',
 				},
 			},
 		}],
+
 		times: {
 			type: Number, //买卖总次数
 			default: 0,
 		},
+	
 		status: {
 			code: {
 				type: Number,

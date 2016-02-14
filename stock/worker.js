@@ -8,7 +8,7 @@ var cst = require('./config/constant');
 var trading = require('./libs/trading');
 var citic = require('./libs/citic');
 
-log4js.configure(path.join(__dirname,'log4js.json'));
+log4js.configure(path.join(__dirname, 'log4js.json'));
 var logger = log4js.getLogger('worker');
 logger.setLevel('INFO');
 
@@ -33,7 +33,7 @@ var models = {
 
 trading.on('quote', function(stock) {
 	logger.info('quote: ' + JSON.stringify(stock.symbol));
-	if(stock.price != '0.00'){
+	if (stock.price != '0.00') {
 		models.StockQuote
 			.findOneAndUpdate({
 					'symbol': stock.symbol,
@@ -47,8 +47,32 @@ trading.on('quote', function(stock) {
 				function(err, doc) {
 					if (err) return logger.error(err);
 				}
-			);		
+			);
 	}
+});
+
+trading.on('bid', function(trade) {
+	trade = trade || {};
+	var stock = trade.stock;
+	var transaction = trade.transaction;
+	logger.info('bid transaction: ' + JSON.stringify(transaction));
+	models.Strategy.findOneAndUpdate({
+			'symbol': stock.symbol
+		}, {
+			$set: {
+				bid: {
+					direction: transaction.direction,
+					refer_price: transaction.price,
+				}
+			}
+		}, {
+			upsert: false,
+		},
+		function(err, result) {
+			if (err) return callback(err);
+			callback(null);
+		});
+
 });
 
 trading.on('buy', function(trade) {
@@ -64,6 +88,10 @@ trading.on('buy', function(trade) {
 					.findOneAndUpdate({
 							'symbol': stock.symbol
 						}, {
+							$set: {
+								direction: '待定',
+								price: transaction.price
+							},
 							$push: {
 								'transactions': {
 									price: transaction.price,
@@ -85,19 +113,19 @@ trading.on('buy', function(trade) {
 			},
 			function saveTrading(callback) {
 				var newTrade = {
-						symbol: stock.symbol,
-						stock: stock.stock,
-						price: transaction.price,
-						quantity: transaction.quantity,
-						direction: transaction.direction,
-						status: {
-							code: -1,
-							message: '未成交',
-						},
-						tax: 0,
-						date: stock.date,
-						time: stock.time,
-					};
+					symbol: stock.symbol,
+					stock: stock.stock,
+					price: transaction.price,
+					quantity: transaction.quantity,
+					direction: transaction.direction,
+					status: {
+						code: -1,
+						message: '未成交',
+					},
+					tax: 0,
+					date: stock.date,
+					time: stock.time,
+				};
 				models.Trading.create(newTrade, function(err, doc) {
 					if (err) return callback(err);
 					callback(null);
@@ -123,6 +151,10 @@ trading.on('sell', function(trade) {
 					.findOneAndUpdate({
 							'symbol': stock.symbol
 						}, {
+							$set: {
+								direction: '待定',
+								price: transaction.price
+							},
 							$push: {
 								transactions: {
 									price: transaction.price,
@@ -144,19 +176,19 @@ trading.on('sell', function(trade) {
 			},
 			function saveTrading(callback) {
 				var newTrade = {
-						symbol: stock.symbol,
-						stock: stock.stock,
-						price: transaction.price,
-						quantity: transaction.quantity,
-						direction: transaction.direction,
-						status: {
-							code: -1,
-							message: '未成交',
-						},
-						tax: 0,
-						date: stock.date,
-						time: stock.time,
-					};
+					symbol: stock.symbol,
+					stock: stock.stock,
+					price: transaction.price,
+					quantity: transaction.quantity,
+					direction: transaction.direction,
+					status: {
+						code: -1,
+						message: '未成交',
+					},
+					tax: 0,
+					date: stock.date,
+					time: stock.time,
+				};
 				models.Trading.create(newTrade, function(err, doc) {
 					if (err) return callback(err);
 					callback(null);
@@ -169,13 +201,13 @@ trading.on('sell', function(trade) {
 	);
 });
 
-var getStatus = function(){
+var getStatus = function() {
 	logger.info('collect status.');
 	process.send && process.send(status);
 };
 
 var start = function() {
-	if(status.platform) return;
+	if (status.platform) return;
 	logger.info('worker start.');
 	mongoose.connect(config.db.URI, function onMongooseError(err) {
 		if (err) {
@@ -211,7 +243,7 @@ var start = function() {
 };
 
 var stop = function() {
-	if(!status.platform) return;
+	if (!status.platform) return;
 	logger.info('worker stop.');
 	intervalObject && clearInterval(intervalObject);
 	mongoose.disconnect();
@@ -219,15 +251,15 @@ var stop = function() {
 	process.send && process.send(status);
 };
 
-var startTrade = function(){
-	if(status.trade) return;
+var startTrade = function() {
+	if (status.trade) return;
 	logger.info('trade start.');
 	status.trade = true;
 	process.send && process.send(status);
 };
 
-var stopTrade = function(){
-	if(!status.trade) return;
+var stopTrade = function() {
+	if (!status.trade) return;
 	logger.info('trade stop.');
 	status.trade = false;
 	process.send && process.send(status);
@@ -239,7 +271,7 @@ var keepAlive = function() {
 	}, 5000);
 };
 
-var captcha = function(options){
+var captcha = function(options) {
 	logger.info(options);
 };
 /**
@@ -257,7 +289,7 @@ process.on('message', function(msg) {
 	msg = msg || {};
 	var command = msg.command || '';
 	switch (command) {
-		case 'status': 
+		case 'status':
 			getStatus();
 			break;
 		case 'start':
@@ -275,7 +307,7 @@ process.on('message', function(msg) {
 			break;
 		case 'captcha':
 			captcha(msg);
-			break;	
+			break;
 		default:
 			break;
 	}

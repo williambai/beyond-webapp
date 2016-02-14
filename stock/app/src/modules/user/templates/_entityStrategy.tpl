@@ -143,8 +143,18 @@
 										<span class="help-block"></span>
 									</div>
 									<div class="form-group">
+										<label>下跌买入回撤率(%)：</label>
+										<input type="text" name="params[buy_drawdown]" value="<%= model.params.buy_drawdown %>" class="form-control input-sm" placeholder="到达下跌买入价格不立即成交，而是在回撤点位实施买入交易">
+										<span class="help-block"></span>
+									</div>
+									<div class="form-group">
 										<label>上涨卖出(%)：</label>
 										<input type="text" name="params[sell_gt]" value="<%= model.params.sell_gt %>" class="form-control input-sm" placeholder="">
+										<span class="help-block"></span>
+									</div>
+									<div class="form-group">
+										<label>上涨卖出回撤率(%)：</label>
+										<input type="text" name="params[sell_drawdown]" value="<%= model.params.sell_drawdown %>" class="form-control input-sm" placeholder="到达上涨卖出价格不立即成交，而是在回撤点位实施卖出交易">
 										<span class="help-block"></span>
 									</div>
 									<div class="form-group">
@@ -252,8 +262,18 @@
 										<span class="help-block"></span>
 									</div>
 									<div class="form-group">
+										<label>下跌买入回撤率(%)：</label>
+										<input type="text" name="params[buy_drawdown]" value="<%= model.params.buy_drawdown %>" class="form-control input-sm" placeholder="到达下跌买入价格不立即成交，而是在回撤点位实施买入交易" readonly>
+										<span class="help-block"></span>
+									</div>
+									<div class="form-group">
 										<label>上涨卖出(%)：</label>
 										<input type="text" name="params[sell_gt]" value="<%= model.params.sell_gt %>" class="form-control input-sm" placeholder="" readonly>
+										<span class="help-block"></span>
+									</div>
+									<div class="form-group">
+										<label>上涨卖出回撤率(%)：</label>
+										<input type="text" name="params[sell_drawdown]" value="<%= model.params.sell_drawdown %>" class="form-control input-sm" placeholder="到达上涨卖出价格不立即成交，而是在回撤点位实施卖出交易" readonly>
 										<span class="help-block"></span>
 									</div>
 									<div class="form-group">
@@ -367,8 +387,18 @@
 										<span class="help-block"></span>
 									</div>
 									<div class="form-group">
+										<label>下跌买入回撤率(%)：</label>
+										<input type="text" name="params[buy_drawdown]" value="<%= model.params.buy_drawdown %>" class="form-control input-sm" placeholder="到达下跌买入价格不立即成交，而是在回撤点位实施买入交易">
+										<span class="help-block"></span>
+									</div>
+									<div class="form-group">
 										<label>上涨卖出(%)：</label>
 										<input type="text" name="params[sell_gt]" value="<%= model.params.sell_gt %>" class="form-control input-sm" placeholder="">
+										<span class="help-block"></span>
+									</div>
+									<div class="form-group">
+										<label>上涨卖出回撤率(%)：</label>
+										<input type="text" name="params[sell_drawdown]" value="<%= model.params.sell_drawdown %>" class="form-control input-sm" placeholder="到达上涨卖出价格不立即成交，而是在回撤点位实施卖出交易>
 										<span class="help-block"></span>
 									</div>
 									<div class="form-group">
