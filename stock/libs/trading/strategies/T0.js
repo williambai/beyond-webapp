@@ -3,7 +3,7 @@ var path = require('path');
 var _ = require('underscore');
 log4js.configure(path.join(__dirname,'../../..','log4js.json'));
 var logger = log4js.getLogger('trading');
-logger.setLevel('DEBUG');
+logger.setLevel('INFO');
 
 var T0 = function(options) {
 	this.options = options || {};

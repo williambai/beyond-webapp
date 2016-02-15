@@ -163,8 +163,8 @@ var CronJob = require('cron').CronJob;
 var updateCiticCookie = require('./commands/refreshCiticCookie1');
 var refreshCiticCookie = function() {
 	updateCiticCookie(function(err) {
-		if (err) return console.log(err);
-		console.log('refresh CITIC Accounts Cookie successfully.');
+		if (err) return logger.error(err);
+		logger.info('refresh CITIC Accounts Cookie successfully.');
 	});
 };
 var refreshCiticCookieJob = new CronJob({
@@ -174,4 +174,4 @@ var refreshCiticCookieJob = new CronJob({
 	runOnInit: true, //** execute right now!
 });
 
-console.log('scheduleJobs is started.');
+logger.info('scheduleJobs is started.');

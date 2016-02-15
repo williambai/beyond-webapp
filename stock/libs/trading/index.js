@@ -47,7 +47,13 @@ var executeStrategy = function(stocks) {
 		Trading.emit('quote', stocks[symbol]);
 		T0.judge(stocks[symbol], strategy, function(err, data) {
 			if (err || !data) return done(null);
-			if (data.action == 'buy') {
+			if(data.action == 'bid') {
+				Trading.emit('bid', {
+					stock: stocks[symbol],
+					strategy: strategy,
+					transaction: data,
+				});
+			}else if (data.action == 'buy') {
 				Trading.emit('buy', {
 					stock: stocks[symbol],
 					strategy: strategy,

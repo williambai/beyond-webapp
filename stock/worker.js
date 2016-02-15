@@ -32,7 +32,7 @@ var models = {
 };
 
 trading.on('quote', function(stock) {
-	logger.info('quote: ' + JSON.stringify(stock.symbol));
+	// logger.debug('quote: ' + JSON.stringify(stock.symbol));
 	if (stock.price != '0.00') {
 		models.StockQuote
 			.findOneAndUpdate({

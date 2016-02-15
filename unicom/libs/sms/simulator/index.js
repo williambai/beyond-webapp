@@ -15,20 +15,20 @@ smsServer.on('connection', function(socket){
 
 	socket.on('response', function(buf) {
 		// console.log(buf)
-		var request = CommandFactory.parse(buf);
+		var command = CommandFactory.parse(buf);
 		console.log('---- start -----');		
-		console.log(request);
+		console.log();
 		var resp = new Buffer(21);
 		resp.writeUInt32BE(21,0);
-		if(request instanceof Bind){
+		if( instanceof Bind){
 			console.log('>> Bind');
 			resp.writeUInt32BE(0x80000001,4);
 			console.log('<< Bind_Resp');
-		}else if(request instanceof Unbind){
+		}else if( instanceof Unbind){
 			console.log('>> Unbind');
 			resp.writeUInt32BE(0x80000002,4);
 			console.log('<< Unbind_Resp');
-		}else if(request instanceof Submit){
+		}else if( instanceof Submit){
 			console.log('>> Submit');
 			resp.writeUInt32BE(0x80000003,4);
 			console.log('<< Submit_Resp');
