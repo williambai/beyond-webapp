@@ -174,26 +174,53 @@ app.server.listen(config.server.PORT, function() {
 //** schedule Jobs
 // var CronJob = require('cron').CronJob;
 // var updateWechatAccessToken = require('./commands/updateWechatAccessToken');
-// var refreshWechatAccessToken = function() {
-// 	updateWechatAccessToken(function(err) {
-// 		if (err) return logger.error(err);
-// 		logger.info('updateWechatAccessToken successfully.');
-// 	});
-// };
 // var refreshWechatAccessTokenJob = new CronJob({
 // 	cronTime: '00 */59 * * * *',
-// 	onTick: refreshWechatAccessToken,
+// 	onTick: function() {
+// 		updateWechatAccessToken(function(err) {
+// 			if (err) return logger.error(err);
+// 			logger.info('update Wechat AccessToken successfully.');
+// 		});
+// 	},
 // 	start: true,
 // 	runOnInit: true,//** execute right now!
 // });
 
-// var updateCiticCookie = require('./commands/updateCbssCookie');
-// var refreshCiticCookie = function(){
-// 	updateCiticCookie(function(err) {
-// 		if (err) return console.log(err);
-// 		console.log('update CBSS Accounts Cookie successfully.');
-// 	});
-// };
-// refreshCiticCookie();
-// schedule.scheduleJob('*/5 * * * *', refreshCiticCookie);
+// var updateCbssCookie = require('./commands/updateCbssCookie');
+// var refreshCbssCookieJob = new CronJob({
+// 	cronTime: '00 */5 * * * *',
+// 	onTick: function(){
+// 		updateCbssCookie(function(err) {
+// 			if (err) return console.log(err);
+// 			console.log('update CBSS Accounts Cookie successfully.');
+// 		});
+// 	},
+// 	start: true,
+// 	runOnInit: true,//** execute right now!
+// });
+// 
+// var processSMS = require('./commands/processSMS');
+// var processSMSJob = new CronJob({
+// 	cronTime: '*/10 * * * * *',
+// 	onTick: function(){
+// 		processSMS.send(function(err) {
+// 			if (err) return console.log(err);
+// 			console.log('process SMS peroid successfully.');
+// 		});
+// 	},
+// 	start: true,
+// 	runOnInit: true,//** execute right now!
+// });
+// var processOrder = require('./commands/processOrder');
+// var processOrderJob = new CronJob({
+// 	cronTime: '10 */2 * * * *',
+// 	onTick: function(){
+// 		processOrder.processOrder(function(err) {
+// 			if (err) return console.log(err);
+// 			console.log('process Order peroid successfully.');
+// 		});
+// 	},
+// 	start: true,
+// 	runOnInit: true,//** execute right now!
+// });
 // console.log('scheduleJobs is started.');

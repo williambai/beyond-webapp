@@ -6,24 +6,26 @@ var send = function(callback) {
 			action: 'send',
 		}
 	}, function(err, response, body) {
-		callback(err, body);
+		callback && callback(err, body);
 	});
 };
 
-var report = function(callback) {
+var report = function(data, callback) {
 	request.post('http://localhost:8092/platform/smses', {
 		form: {
 			action: 'report',
+			data: data
 		}
 	}, function(err, response, body) {
 		callback(err, body);
 	});
 };
 
-var reply = function(callback) {
+var reply = function(data, callback) {
 	request.post('http://localhost:8092/platform/smses', {
 		form: {
 			action: 'reply',
+			data: data,
 		}
 	}, function(err, response, body) {
 		callback(err, body);
@@ -32,16 +34,18 @@ var reply = function(callback) {
 
 exports = module.exports = {
 	send: send,
+	report: report,
+	reply: reply,
 };
 
 if (process.argv[1] === __filename) {
 	send(function(err, result) {
 		if (err) console.error(err);
 		console.log(result);
-		report(function(err,report){
+		report({}, function(err,report){
 			if(err) console.error(err);
 			console.log(report);
-			reply(function(err,reply){
+			reply({}, function(err,reply){
 				if(err) console.error(err);
 				console.log(reply);
 			});

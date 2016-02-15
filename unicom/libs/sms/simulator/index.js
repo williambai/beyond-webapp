@@ -16,23 +16,28 @@ smsServer.on('connection', function(socket){
 	socket.on('response', function(buf) {
 		// console.log(buf)
 		var request = CommandFactory.parse(buf);
+		console.log('---- start -----');		
 		console.log(request);
 		var resp = new Buffer(21);
 		resp.writeUInt32BE(21,0);
 		if(request instanceof Bind){
 			console.log('>> Bind');
 			resp.writeUInt32BE(0x80000001,4);
+			console.log('<< Bind_Resp');
 		}else if(request instanceof Unbind){
 			console.log('>> Unbind');
 			resp.writeUInt32BE(0x80000002,4);
+			console.log('<< Unbind_Resp');
 		}else if(request instanceof Submit){
 			console.log('>> Submit');
 			resp.writeUInt32BE(0x80000003,4);
+			console.log('<< Submit_Resp');
 		}
 		buf.copy(resp,8,8,20);
 		resp.writeUInt8(0,20);
 		console.log(resp);
 		socket.write(resp);
+		console.log('---- end -----\n\n\n');		
 	});
 	// socket.on('data', function(data){
 	// 	console.log(data);

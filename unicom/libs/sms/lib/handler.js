@@ -8,14 +8,14 @@ var handler = function(socket){
 			try {
 				dueLen = Buffer.prototype.readUInt32BE.call(data, 0);
 			} catch (e) {
-				// socket.emit('error', e);
 				socket.end();
+				console.log('服务端因解析错误而被迫断开客户端的连接。');
 				socket.removeListener('data', _handler);
 				return;
 			}
 			if (dueLen === 0) {
-				// socket.emit('end', null);
 				socket.end();
+				console.log('服务端因协议错误(消息长度为0)而被迫断开客户端的连接。');
 				socket.removeListener('data', _handler);
 				return;
 			}

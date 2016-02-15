@@ -76,8 +76,8 @@ CommandFactory.create = function(commandType) {
 						} else {
 							// for attr that length is determined by its instance length, not by its type's fixed length
 							// for example MessageContent attr in Submit PDU
-							// bytesWriten = val.copy(PDU, sPtr);
-							bytesWriten = PDU.write(val,sPtr,val.length,'utf8');
+							bytesWriten = val.copy(PDU, sPtr);
+							// bytesWriten = PDU.write(val,sPtr,val.length,'utf8');
 							sPtr += val.length;
 						}
 					})(attr.len);

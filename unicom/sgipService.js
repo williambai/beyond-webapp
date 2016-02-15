@@ -1,4 +1,6 @@
 var net = require('net');
+var request = require('request');
+var processSMS = require('./commands/processSMS');
 var CommandFactory = require('./libs/sms').CommandFactory;
 var Bind = CommandFactory.create('Bind');
 var Unbind = CommandFactory.create('Unbind');
@@ -66,6 +68,32 @@ sgipSerice.on('connection', function(socket) {
 			socket.end();
 		} else if (command instanceof Report) {
 			console.log('>> Report');
+			var srcNodeID = command.srcNodeID;
+			var cmdTime = command.cmdTime;
+			var cmdSeq = command.cmdSeq;
+			var ReportType = command.ReportType;
+			var UserNumber = command.UserNumber;
+			var State = command.State;
+			var ErrorCode = command.ErrorCode;
+			switch(State){
+				case 0: //** 发送成功
+				case 1: //** 等待发送
+					if(ReportType == 0){
+						//** submit report
+						processSMS.report(command,function(err){
+							if(err) console.error(err);
+						});
+					}else if(ReportType == 1){
+						//** deliever report
+						
+					}		
+					break;
+				case 2: //** 发送失败
+					console.log('Report ErrorCode: ' + ErrorCode);
+					break;
+				default:
+					break;
+			}
 			var resp = new Buffer(21);
 			resp.writeUInt32BE(21, 0);
 			resp.writeUInt32BE(0x80000003, 4);
@@ -75,6 +103,19 @@ sgipSerice.on('connection', function(socket) {
 			socket.write(resp);
 		} else if (command instanceof Deliver) {
 			console.log('>> Deliver');
+			var UserNumber = command.UserNumber;
+			var MessageCoding = command.MessageCoding;
+			var MessageLength = command.MessageContent;
+			var MessageContent = command.MessageContent;
+			switch(MessageContent){
+				case 1: 
+					processSMS.reply(command,function(err){
+						if(err) console.error(err);
+					});
+					break;
+				default:
+					break;	
+			}
 			var resp = new Buffer(21);
 			resp.writeUInt32BE(21, 0);
 			resp.writeUInt32BE(0x80000003, 4);
