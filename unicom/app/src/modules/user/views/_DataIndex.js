@@ -28,6 +28,7 @@ exports = module.exports = Backbone.View.extend({
 	events: {
 		'click #g2': 'listG2',
 		'click #g3': 'listG3',
+		'click #g4': 'listG4',
 		'scroll': 'scroll',
 		'click .search': 'search',
 		'click .view': 'dataView',
@@ -60,8 +61,9 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	listG2: function(){
-		this.$('#g3').removeClass('btn-success').addClass('btn-default');
 		this.$('#g2').removeClass('btn-default').addClass('btn-success');
+		this.$('#g3').removeClass('btn-success').addClass('btn-default');
+		this.$('#g4').removeClass('btn-success').addClass('btn-default');
 		this.listView.trigger('refresh', 'type=category&category=2G');
 		return false;
 	},
@@ -69,7 +71,16 @@ exports = module.exports = Backbone.View.extend({
 	listG3: function(){
 		this.$('#g2').removeClass('btn-success').addClass('btn-default');
 		this.$('#g3').removeClass('btn-default').addClass('btn-success');
+		this.$('#g4').removeClass('btn-success').addClass('btn-default');
 		this.listView.trigger('refresh','type=category&category=3G');
+		return false;
+	},
+
+	listG4: function(){
+		this.$('#g2').removeClass('btn-success').addClass('btn-default');
+		this.$('#g3').removeClass('btn-success').addClass('btn-default');
+		this.$('#g4').removeClass('btn-default').addClass('btn-success');
+		this.listView.trigger('refresh','type=category&category=4G');
 		return false;
 	},
 
@@ -79,13 +90,13 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	dataView: function(evt){
-		var id = this.$(evt.currentTarget).parent().parent().attr('id');
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
 		this.router.navigate('data/view/'+ id,{trigger: true});
 		return false;
 	},
 
 	promote: function(evt){
-		var id = this.$(evt.currentTarget).parent().parent().attr('id');
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
 		window.location.href = config.api.host + '/sale/page/data/' + config.wechat.appid + '/' + id + '/' + this.router.account.id;
 		return false;
 	},

@@ -14,7 +14,7 @@
 				<div class="btn-group btn-group-justified">
 					<div class="btn btn-success" id="g2">2G用户</div>
 					<div class="btn btn-default" id="g3">3G用户</div>
-					<div class="btn btn-default" id="g3">4G用户</div>
+					<div class="btn btn-default" id="g4">4G用户</div>
 				</div>
 				<hr/>
 				<div id="list">
@@ -23,16 +23,18 @@
 		</div>
 	</div>
 	<div id="itemTemplate">
-		<div class="pull-right" id="<%= model._id %>">
-			<% if(/MicroMessenger/.test(navigator.userAgent)){ %>
-			<p><button class="btn btn-danger promote">推广</button></p>
-			<% } %>
-			<p><button class="btn btn-success view">订购</button></p>
+		<div class="item" id="<%= model._id %>">
+			<div class="pull-right">
+				<% if(/MicroMessenger/.test(navigator.userAgent)){ %>
+				<p><button class="btn btn-danger promote">推广</button></p>
+				<% } %>
+				<p><button class="btn btn-success view">订购</button></p>
+			</div>
+			<h4><%= model.name %></h4>
+			<p><%= model.description %></p>
+			<p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：<%= model.bonus.income %>&nbsp;元&nbsp;&nbsp;积分：<%= model.bonus.points %></p>
+			<hr/>
 		</div>
-		<h4><%= model.name %></h4>
-		<p><%= model.description %></p>
-		<p>价格：<%= model.price %>&nbsp;<%= model.unit %></p>
-		<hr/>
 	</div>
 	<div id="searchTemplate">
 		<div class="panel panel-default">
@@ -61,9 +63,11 @@
 				<h5 class="panel-title text-center">订购业务</h5>
 			</div>
 			<div class="panel-body">
-				<div class="pull-right"><%= model.price %>&nbsp;<%= model.unit %></div>
-				<h5><%= model.subject %></h5>
+				<div class="pull-right"><h4><%= model.price %>&nbsp;<%= model.unit %></h4></div>
+				<h4><%= model.name %></h4>
 				<p><%= model.description %></p>
+				<p>佣金：<%= model.bonus.income %>&nbsp;元（用户订购成功后，分&nbsp;<%= model.bonus.times %>&nbsp;批返佣）</p>
+				<p>积分：<%= model.bonus.points %></p>
 			</div>
 		</div>
 		<div id="addView"></div>

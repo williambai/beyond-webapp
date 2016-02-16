@@ -2,7 +2,7 @@ module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
 		name: String,
-		description: String,
+		// description: String,
 		category: {
 			type: String,
 			enum: {
@@ -12,11 +12,11 @@ module.exports = exports = function(mongoose){
 		},
 		price: Number,
 		unit: String,
-		quantity: Number,
-		goods:{
-			id: String,
-			name: String,
-		},
+		// quantity: Number,
+		// goods:{
+		// 	id: String,
+		// 	name: String,
+		// },
 		status: {
 			type: String,
 			enum: {

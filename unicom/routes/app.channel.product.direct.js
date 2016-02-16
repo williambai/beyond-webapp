@@ -14,13 +14,13 @@ logger.setLevel('INFO');
  		var docs = [];
  		_.each(mobiles, function(mobile){
  			docs.push({
- 				name: product.subject || '',
+ 				name: product.name || '',
  				description: product.description || '',
  				category: '数据订购',
  				items: [{
  					id: product._id,
  					model: 'ProductGoods',
- 					name: product.subject,
+ 					name: product.name || '',
  					price: product.price || 0,
  					quantity: 1,
  					category: product.category || '',
@@ -37,7 +37,8 @@ logger.setLevel('INFO');
  					username: req.session.username,
  					mobile: req.session.email,
 					avatar: req.session.avatar,
- 				}
+ 				},
+ 				bonus: product.bonus,
  			});
  		});
  		async.waterfall(
@@ -52,7 +53,7 @@ logger.setLevel('INFO');
  						avatar: req.session.avatar || '/images/avatar.jpg',
  						type: 'text',
  						content: {
- 							body: '向朋友推荐了<u>' + product.subject + '</u>产品',
+ 							body: '向朋友推荐了<u>' + product.name + '</u>产品',
  						}
  					};
  					models.AccountActivity.create(activity,callback);

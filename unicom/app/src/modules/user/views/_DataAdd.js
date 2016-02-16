@@ -2,7 +2,7 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
     orderTpl = require('../templates/_entityData.tpl'),
-	ProductGoods = require('../models/ProductGoods');
+	ProductDirect = require('../models/ProductDirect');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
@@ -12,7 +12,7 @@ exports = module.exports = FormView.extend({
 	initialize: function(options) {
 		this.router = options.router;
 		this.product = options.product;
-		this.model = new ProductGoods();
+		this.model = new ProductDirect();
 		var page = $(orderTpl);
 		var addTemplate = $('#addTemplate', page).html();
 		this.template = _.template(_.unescape(addTemplate || ''));

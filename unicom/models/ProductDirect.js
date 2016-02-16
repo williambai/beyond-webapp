@@ -19,6 +19,7 @@ module.exports = exports = function(mongoose){
 		bonus: {
 			income: Number,//** 佣金收入
 			times: Number, //** 佣金分几次兑现
+			points: Number,//** 积分
 		},
 		status: {
 			type: String,

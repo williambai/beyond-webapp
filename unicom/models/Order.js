@@ -1,6 +1,10 @@
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
+		customer: {
+			name: String,
+			id: String,
+		},
 		name: String,
 		description: String,
 		category: {
@@ -32,15 +36,15 @@ module.exports = exports = function(mongoose){
 			name: String,
 		},
 		dispatch: {
-			type: String,
-			enum: {
-				values: '自提|物流'.split('|'),
-				message: 'enum validator failed for path {PATH} with value {VALUE}',
-			}
-		},
-		customer: {
-			id: String,
-			name: String,
+			method: {
+				type: String,
+				enum: {
+					values: '自提|物流'.split('|'),
+					message: 'enum validator failed for path {PATH} with value {VALUE}',
+				}
+			},
+			phone: String,
+			address: String,
 		},
 		customerInfo: {
 			name: String,
@@ -62,13 +66,22 @@ module.exports = exports = function(mongoose){
 		},
 		bonus: {
 			income: Number,
-			cash: Number,
+			times: Number,
+			points: {
+				type: Number,
+				default: 0
+			},
+			cash: {
+				type: Number,
+				default: 0
+			},
 			cashStatus: {
 				type: String,
 				enum: {
 					values: '冻结|一次解冻|二次解冻|三次解冻|全部解冻'.split('|'),
 					message: 'enum validator failed for path {PATH} with value {VALUE}',
-				}
+				},
+				default: '冻结',
 			},			
 		},
 		status: {

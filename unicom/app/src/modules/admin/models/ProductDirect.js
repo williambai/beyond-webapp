@@ -9,7 +9,8 @@ exports = module.exports = Backbone.Model.extend({
 		goods: {},
 		bonus: {
 			income: 0,
-			times: 1
+			times: 1,
+			points: 0,
 		},
 	},
 	validation: {

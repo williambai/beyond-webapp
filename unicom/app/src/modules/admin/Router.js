@@ -653,7 +653,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','号卡套餐设置');
+		this.appEvents.trigger('set:brand','号卡产品管理');
 		var productCardPackageIndexView = new ProductCardPackageIndexView({
 			router: this,
 			el: '#content',
@@ -667,7 +667,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','修改号卡套餐');
+		this.appEvents.trigger('set:brand','修改号卡产品');
 		var productCardPackageEditView = new ProductCardPackageEditView({
 			router: this,
 			el: '#content',

@@ -2,7 +2,7 @@ var _ = require('underscore');
 var Backbone = require('backbone'),
 	$ = require('jquery'),
     pushTpl = require('../templates/_entityPush.tpl'),
-	ProductGoods = require('../models/ProductGoods');
+	ProductDirect = require('../models/ProductDirect');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -15,7 +15,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new ProductGoods({_id: options.id});
+		this.model = new ProductDirect({_id: options.id});
 		var page = $(pushTpl);
 		var viewTemplate = $('#viewTemplate', page).html();
 		this.template = _.template(_.unescape(viewTemplate || ''));

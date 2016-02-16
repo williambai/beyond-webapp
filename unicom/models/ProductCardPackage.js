@@ -5,6 +5,17 @@ module.exports = exports = function(mongoose){
 		description: String,
 		category: String,
 		classification: String,
+		cardType: [{
+			type: String,
+			enum: {
+				values: 'AAAAA|AAAA|ABCDE|ABCD|AAA|AABB|ABAB|ABC|AA|普通号码'.split('|'),
+				message: 'enum validator failed for path {PATH} with value {VALUE}',
+			}
+		}],
+		cardPrice: {
+			type: Number,
+			default: 0
+		},
 		price: Number,
 		unit: String,
 		quantity: Number,

@@ -44,7 +44,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	smsView: function(evt){
-		var id = this.$(evt.currentTarget).parent().attr('id');
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
 		this.router.navigate('sms/view/'+ id,{trigger: true});
 		return false;
 	},

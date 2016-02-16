@@ -6,6 +6,8 @@ var $ = require('jquery'),
     OrderCollection = require('../models/OrderCollection');
 
 Backbone.$ = $;
+
+var Utils = require('./__Util');
 	
 exports = module.exports = ListView.extend({
 	el: '#list',
@@ -18,6 +20,13 @@ exports = module.exports = ListView.extend({
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){
+		this._transformTime(model);
 		return this.template({model: model.toJSON()});
+	},
+
+	_transformTime: function(model){
+		var createtime = model.get('lastupdatetime');
+		var deltatime = Utils.transformTime(createtime);
+		model.set('deltatime', deltatime);
 	},
 });

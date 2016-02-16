@@ -64,7 +64,7 @@
 				</h4>
 				<%= model.content %>
  				<p>
-					<%= model.deltatime %>
+					<i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %>
 				</p>
 <!--
 					<span class="pull-right">

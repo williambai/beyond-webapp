@@ -28,6 +28,7 @@
 					<option value="">全部</option>
 					<option value="2G">2G流量</option>
 					<option value="3G">3G流量</option>
+					<option value="4G">4G流量</option>
 					<option value="SMS">增值服务</option>
 					<option value="APP">应用推荐</option>
 					<option value="EVENT">活动推荐</option>
@@ -68,11 +69,14 @@
 				<form id="customerForm">
 					<div class="form-group">
 						<label>产品类别：</label>
-						<input type="radio" name="category" value="2G" checked>&nbsp;&nbsp;2G流量
-						<input type="radio" name="category" value="3G">&nbsp;&nbsp;3G流量
-						<input type="radio" name="category" value="SMS">&nbsp;&nbsp;增值服务
-						<input type="radio" name="category" value="APP">&nbsp;&nbsp;应用推荐
-						<input type="radio" name="category" value="EVENT">&nbsp;&nbsp;活动推荐
+						<div style="padding-left:30px;">
+							<input type="radio" name="category" value="2G" checked>&nbsp;&nbsp;2G流量
+							<input type="radio" name="category" value="3G">&nbsp;&nbsp;3G流量
+							<input type="radio" name="category" value="4G">&nbsp;&nbsp;4G流量
+							<input type="radio" name="category" value="SMS">&nbsp;&nbsp;增值服务
+							<input type="radio" name="category" value="APP">&nbsp;&nbsp;应用推荐
+							<input type="radio" name="category" value="EVENT">&nbsp;&nbsp;活动推荐
+						</div>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -145,6 +149,11 @@
 					<div class="form-group">
 						<label>返佣分批次数：</label>
 						<input type="text" name="bonus[times]" value="<%= model.bonus.times %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>积分：</label>
+						<input type="text" name="bonus[points]" value="<%= model.bonus.points %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

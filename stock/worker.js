@@ -55,6 +55,7 @@ trading.on('bid', function(trade) {
 	trade = trade || {};
 	var stock = trade.stock;
 	var transaction = trade.transaction;
+	transaction.symbol = stock.symbol;
 	logger.info('bid transaction: ' + JSON.stringify(transaction));
 	models.Strategy.findOneAndUpdate({
 			'symbol': stock.symbol
@@ -62,15 +63,14 @@ trading.on('bid', function(trade) {
 			$set: {
 				bid: {
 					direction: transaction.direction,
-					refer_price: transaction.price,
+					price: transaction.price,
 				}
 			}
 		}, {
 			upsert: false,
 		},
 		function(err, result) {
-			if (err) return callback(err);
-			callback(null);
+			if (err) return logger.error(err);
 		});
 
 });
@@ -79,6 +79,7 @@ trading.on('buy', function(trade) {
 	trade = trade || {};
 	var stock = trade.stock;
 	var transaction = trade.transaction;
+	transaction.symbol = stock.symbol;
 	logger.info('buy transaction: ' + JSON.stringify(transaction));
 
 	async.waterfall(
@@ -89,8 +90,10 @@ trading.on('buy', function(trade) {
 							'symbol': stock.symbol
 						}, {
 							$set: {
-								direction: '待定',
-								price: transaction.price
+								bid: {
+									direction: '待定',
+									price: transaction.price
+								}
 							},
 							$push: {
 								'transactions': {
@@ -143,6 +146,7 @@ trading.on('sell', function(trade) {
 	trade = trade || {};
 	var stock = trade.stock;
 	var transaction = trade.transaction;
+	transaction.symbol = stock.symbol;
 	logger.info('sell transaction: ' + JSON.stringify(transaction));
 	async.waterfall(
 		[
@@ -152,8 +156,10 @@ trading.on('sell', function(trade) {
 							'symbol': stock.symbol
 						}, {
 							$set: {
-								direction: '待定',
-								price: transaction.price
+								bid: {
+									direction: '待定',
+									price: transaction.price
+								}
 							},
 							$push: {
 								transactions: {

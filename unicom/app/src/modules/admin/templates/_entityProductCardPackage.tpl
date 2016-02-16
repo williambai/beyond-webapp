@@ -5,7 +5,7 @@
 				<button class="btn btn-primary add">新增</button>
 			</div>
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">号卡套餐设置</h4>
+				<h4 class="panel-title text-center">号卡产品管理</h4>
 			</div>
 			<div class="panel-body">
 				<div id="search">
@@ -41,9 +41,8 @@
 			<button class="btn btn-danger delete">删除</button>
 		</div>
 		<h4><%= model.name %></h4>
-		<p>业务类型：<%= model.classification %></p>
-		<p>分类：<%= model.category %>&nbsp;&nbsp;价格：<%= model.price.toFixed(2) %>&nbsp;<%= model.unit %></p>
 		<p><%= model.description %></p>
+		<p>分类：<%= model.category %>&nbsp;&nbsp;<%= model.classification %></p>
 		<hr/>
 	</div>
 	<div id="editTemplate">
@@ -65,12 +64,33 @@
 					</div>
 					<div class="form-group">
 						<label>套餐分类：</label>
-						<input type="text" name="category" value="<%= model.category %>" class="form-control" placeholder="如，套餐A等">
+						<input type="text" name="category" value="<%= model.category %>" class="form-control" placeholder="如，套餐A，自由套餐等">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>业务类型：</label>
+						<label>业务类型(自由套餐有效)：</label>
 						<input type="text" name="classification" value="<%= model.classification %>" class="form-control" placeholder="如，全国流量包等">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>号码类型：</label>
+						<div style="padding-left:30px;">
+							<input type="checkbox" name="cardType[]" value="普通号码">&nbsp;普通号码&nbsp;
+							<input type="checkbox" name="cardType[]" value="AAAAA">&nbsp;AAAAA&nbsp;
+							<input type="checkbox" name="cardType[]" value="AAAA">&nbsp;AAAA&nbsp;
+							<input type="checkbox" name="cardType[]" value="ABCDE">&nbsp;ABCDE&nbsp;
+							<input type="checkbox" name="cardType[]" value="ABCD">&nbsp;ABCD&nbsp;
+							<input type="checkbox" name="cardType[]" value="AAA">&nbsp;AAA&nbsp;
+							<input type="checkbox" name="cardType[]" value="AABB">&nbsp;AABB&nbsp;
+							<input type="checkbox" name="cardType[]" value="ABAB">&nbsp;ABAB&nbsp;
+							<input type="checkbox" name="cardType[]" value="ABC">&nbsp;ABC&nbsp;
+							<input type="checkbox" name="cardType[]" value="AA">&nbsp;AA&nbsp;
+						</div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>号码预存：</label>
+						<input type="text" name="cardPrice" value="<%= model.cardPrice %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

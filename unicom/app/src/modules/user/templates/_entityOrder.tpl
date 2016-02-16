@@ -11,16 +11,16 @@
 		</div>
 	</div>
 	<div id="itemTemplate">
-<!-- 		<div class="pull-right" id="<%= model._id %>">
-			<button class="btn btn-info view"></button>
+		<div class="item" id="<%= model._id %>">
+	 		<div class="pull-right">
+	 			<h4>￥<%= model.total.toFixed(2) %></h4>
+	 			<h4><i class="fa fa-gift"></i>&nbsp;&nbsp;+<%= model.bonus.income %></h4>
+	 			<h4><i class="fa fa-thumbs-o-up"></i>&nbsp;&nbsp;+<%= model.bonus.points %></h4>
+	 		</div>
+	 		<h4><i class="fa fa-user"></i>&nbsp;<%= model.customer.id %>&nbsp;&nbsp;<%= model.customer.name %></h4>
+			<p><i class="fa fa-cart-arrow-down"></i>&nbsp;<%= model.name %>&nbsp;[<%= model.category %>]</p>
+			<p><i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %>&nbsp;<i class="fa fa-flag"></i>&nbsp;<%= model.status %></p>
+			<hr/>
 		</div>
- -->
- 		<div class="pull-right">
- 			<h4>￥<%= model.total.toFixed(2) %></h4>
- 		</div>
- 		<h4>客户：<%= model.customer.id %>&nbsp;&nbsp;<%= model.customer.name %></h4>
-		<p>产品名称：<%= model.name %>&nbsp;[<%= model.category %>]</p>
-		<p>发布于：<%= model.deltatime %>&nbsp;&nbsp;&nbsp;当前状态：<%= model.status %></p>
-		<hr/>
 	</div>
 </div>

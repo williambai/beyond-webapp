@@ -112,7 +112,7 @@ exports = module.exports = FormView.extend({
 
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		console.log(this.model.attributes);
+		// console.log(this.model.attributes);
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true

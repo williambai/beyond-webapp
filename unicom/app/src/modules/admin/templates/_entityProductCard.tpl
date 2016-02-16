@@ -53,11 +53,11 @@
 			<div class="panel-body">
 				<form id="customerForm">
 					<div class="form-group">
-						<label>卡号：</label>
+						<label>号卡：</label>
 						<input type="text" name="name" value="<%= model.name %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+ 					<div class="form-group">
 						<label>号码类型：</label>
 						<div style="padding-left:30px;">
 							<input type="radio" name="category" value="普通号码" checked>&nbsp;普通号码&nbsp;
@@ -83,7 +83,7 @@
 						<input type="text" name="unit" value="<%= model.unit %>" class="form-control" placeholder="如，元/月">
 						<span class="help-block"></span>
 					</div>
-					<input type="hidden" name="quantity" value="1">
+<!--					<input type="hidden" name="quantity" value="1">
 					<div class="form-group">
 						<label>物料名称：</label>
 						<input type="text" name="goods[name]" value="<%= model.goods.name %>" placeholder="请输入物料名称，从列表中选择物料" class="form-control">
@@ -94,7 +94,7 @@
 						<label>物料编码：</label>
 						<input type="text" name="goods[id]" value="<%= model.goods.id %>" class="form-control" readonly>
 						<span class="help-block"></span>
-					</div>
+					</div> -->
 					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">

@@ -17,26 +17,30 @@
 	</div>
 	<div id="itemTemplate">
 		<div>
-			<div class="media">
-				<div class="media-left">
-					<img class="media-object" src="" width="80px" height="80px" style="max-width:100px;">
-				</div>
-				<div class="media-body">
-					<div class="pull-right" id="<%= model._id %>">
-						<button class="btn btn-success view">推荐</button>
+			<div class="item" id="<%= model._id %>">
+				<div class="media">
+					<div class="media-left">
+						<img class="media-object" src="" width="80px" height="80px" style="max-width:100px;">
 					</div>
-					<h4><%= model.subject %></h4>
-					<p>
-						<span><%= model.description %></span>
-					</p>
-					<p>
-						<% if(model.starttime){ %>
-						<span>时间：<%= model.starttime %>到<%= model.endtime %></span>
-						<% } %>
-					</p>
+					<div class="media-body">
+						<div class="pull-right">
+							<% if(/MicroMessenger/.test(navigator.userAgent)){ %>
+							<p><button class="btn btn-danger promote">推广</button></p>
+							<% } %>
+							<p><button class="btn btn-success view">推荐</button></p>
+						</div>
+						<h4><%= model.name %></h4>
+						<p><%= model.description %></p>
+						<p>
+							<% if(model.starttime){ %>
+							<span>时间：<%= model.starttime %>到<%= model.endtime %></span>
+							<% } %>
+						</p>
+						<p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：<%= model.bonus.income %>&nbsp;元&nbsp;&nbsp;积分：<%= model.bonus.points %></p>
+					</div>
 				</div>
+				<hr/>
 			</div>
-			<hr/>
 		</div>
 	</div>
 	<div id="viewTemplate">
@@ -45,14 +49,16 @@
 				<h5 class="panel-title text-center">推荐业务</h5>
 			</div>
 			<div class="panel-body">
-				<div class="pull-right"></div>
-				<h4><%= model.subject %></h4>
+				<div class="pull-right"><%= model.price %>&nbsp;<%= model.unit %></div>
+				<h5><%= model.name %></h5>
 				<p><%= model.description %></p>
 				<p>
 					<% if(model.starttime){ %>
 					<span>时间：<%= model.starttime %>到<%= model.endtime %></span>
 					<% } %>
 				</p>
+				<p>佣金：<%= model.bonus.income %>&nbsp;元（用户订购成功后，分&nbsp;<%= model.bonus.times %>&nbsp;批返佣）</p>
+				<p>积分：<%= model.bonus.points %></p>
 			</div>
 		</div>
 		<div id="dataAddView"></div>

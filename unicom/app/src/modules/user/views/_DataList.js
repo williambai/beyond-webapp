@@ -3,7 +3,7 @@ var $ = require('jquery'),
     Backbone = require('backbone'),
     ListView = require('./__ListView'),
     cardTpl = require('../templates/_entityData.tpl'),
-    ProductGoodsCollection = require('../models/ProductGoodsCollection');
+    ProductDirectCollection = require('../models/ProductDirectCollection');
 
 Backbone.$ = $;
 	
@@ -14,7 +14,7 @@ exports = module.exports = ListView.extend({
 		var page = $(cardTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
 		this.template = _.template(_.unescape(itemTemplate || ''));
-		this.collection = new ProductGoodsCollection();
+		this.collection = new ProductDirectCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){

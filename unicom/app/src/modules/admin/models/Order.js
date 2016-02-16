@@ -7,11 +7,12 @@ exports = module.exports = Backbone.Model.extend({
 	urlRoot: config.api.host + '/admin/orders',	
 	defaults: {
 		customer: {},
-		department: {},
+		customerInfo: {},
 		bonus: {
 			income: 0,
 			cash: 0,
-		}
+		},
+		dispatch: {},
 	},
 	validation: {
 	},

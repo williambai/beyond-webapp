@@ -143,8 +143,17 @@ exports = module.exports = FormView.extend({
 	},
 
 	render: function(){
+		var that = this;
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		if(this.model.isNew()) this.$('.panel-title').text('新增套餐');
+		if(this.model.isNew()){
+			this.$('.panel-title').text('新增套餐');
+			this.$('input[name="cardType[]"]').attr('checked',true);
+		}else{
+			var cardTypes = this.model.get('cardType') || [];
+			_.each(cardTypes, function(cardType){
+				that.$('input[name="cardType[]"][value='+ cardType +']').attr('checked',true);
+			});
+		}
 		var status = this.model.get('status');
 		this.$('input[name=status][value='+ status +']').attr('checked',true);
 		return this;

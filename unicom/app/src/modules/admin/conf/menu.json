@@ -11,14 +11,9 @@
 		"hash": "product/direct/index"
 	}, {
 		"id": 2,
-		"name": "号卡套餐管理",
-		"nickname": "",
-		"hash": "product/card/package/index"
-	}, {
-		"id": 2,
 		"name": "号卡产品管理",
 		"nickname": "",
-		"hash": "product/card/index"
+		"hash": "product/card/package/index"
 	}, {
 		"id": 2,
 		"name": "终端产品管理",
@@ -26,14 +21,14 @@
 		"hash": "product/phone/index"
 	}, {
 		"id": 2,
-		"name": "兑换商品管理",
-		"nickname": "",
-		"hash": "product/exchange/index"
-	}, {
-		"id": 2,
 		"name": "媒体文件管理",
 		"nickname": "",
 		"hash": "media/index"
+	}, {
+		"id": 2,
+		"name": "号卡管理",
+		"nickname": "",
+		"hash": "product/card/index"
 	}, {
 		"id": 2,
 		"name": "客户管理",
