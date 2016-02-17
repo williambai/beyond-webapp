@@ -61,6 +61,6 @@
 				<p>积分：<%= model.bonus.points %></p>
 			</div>
 		</div>
-		<div id="dataAddView"></div>
+		<div id="orderView"></div>
 	</div>
 </div>

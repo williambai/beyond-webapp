@@ -11,14 +11,19 @@ exports = module.exports = function(app, models) {
  		var packages = req.body.packages || [];
  		var customer = req.body.customer || {};
  		var place = req.body.place || {};
-
+ 		//** use max bonus
+ 		var bonus = {
+ 			income: 0,
+ 			times: 0,
+ 			points: 0,	
+ 		};
  		var total = card.price;
  		var items = [];
  		//add card product
  		items.push({
  			id: card._id,
  			model: 'ProductCard',
- 			name: card.cardNo,
+ 			name: card.name,
  			price: card.price,
  			quantity: 1,
  			category: '号卡',
@@ -29,6 +34,7 @@ exports = module.exports = function(app, models) {
  		});
  		//add packages 
  		_.each(packages, function(pkg){
+ 			//** sum price into total
  			total += pkg.price;
  			items.push({
  				id: pkg.id,
@@ -42,36 +48,35 @@ exports = module.exports = function(app, models) {
  					name: pkg.goodsName || '',
  				}
  			});
+ 			//find max bonus
+ 			if(pkg.bonus && (pkg.bonus.income > bonus.income)) bonus.income = pkg.bonus.income;
+ 			if(pkg.bonus && (pkg.bonus.times > bonus.times)) bonus.times = pkg.bonus.times;
+ 			if(pkg.bonus && (pkg.bonus.points > bonus.points)) bonus.points = pkg.bonus.points;
  		});
+
  		var docs = {
- 				name: card.cardNo,
- 				description: card.cardNo + '号卡预订',
+ 				name: card.name + '号卡预订',
+ 				description: '购买手机号码及套餐',
  				category: '号卡',
  				items: items,
  				total: total,
  				place: place,
- 				dispatch: '自提',
+ 				dispatch: {
+ 					method: '自提',
+ 				},
  				customer: {
- 					id: customer.phone,
+ 					id: card.name,
  					name: customer.name,
  				},
  				customerInfo: customer,
-				// customer: {
-				// 	name: req.body.customer.name || '',
-				// 	idNo: req.body.customer.idNo || '',
-				// 	idType: req.body.customer.idType || '',
-				// 	idAddress: req.body.customer.idAddress || '',
-				// 	address: req.body.customer.address || '',
-				// 	mobile: mobile,
-				// 	location: req.body.customer.location || '',
-				// }, 				
 				status: '新建',
  				createBy: {
  					id: req.session.accountId,
  					username: req.session.username,
  					mobile: req.session.email,
 					avatar: req.session.avatar,
- 				}
+ 				},
+ 				bonus: bonus,
  			};
  		async.waterfall(
  			[
@@ -116,7 +121,9 @@ exports = module.exports = function(app, models) {
  		page = (!page || page < 0) ? 0 : page;
 
  		models.ProductCard
- 			.find({})
+ 			.find({
+ 				status: '有效'
+ 			})
  			.sort({_id: -1})
  			.skip(per * page)
  			.limit(per)

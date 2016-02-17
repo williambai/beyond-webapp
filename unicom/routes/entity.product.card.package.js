@@ -76,6 +76,21 @@
  						res.send(docs);
  					});
  				break;
+ 			case 'cardType':
+ 				var cardType = req.query.cardType || '';
+ 				models.ProductCardPackage
+ 					.find({
+ 						cardType: {
+ 							$in: [cardType]
+ 						},
+ 						status: '有效',
+ 					})
+ 					.select({cardType:0})
+ 					.exec(function(err,docs){
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 				break;	
  			default:
  				models.ProductCardPackage
  					.find({})
@@ -96,20 +111,20 @@
  	 */
  	/**
  	 * add product/card/packages
- 	 * type:
+ 	 * action:
  	 *     
  	 */
  	app.post('/product/card/packages', add);
  	/**
  	 * update product/card/packages
- 	 * type:
+ 	 * action:
  	 *     
  	 */
  	app.put('/product/card/packages/:id', update);
 
  	/**
  	 * delete product/card/packages
- 	 * type:
+ 	 * action:
  	 *     
  	 */
  	app.delete('/product/card/packages/:id', remove);
@@ -120,7 +135,9 @@
 
  	/**
  	 * get product/card/packages
- 	 * type:
+ 	 * action:
+ 	 *       action=search&searchStr=
+ 	 *       action=cardType&cardType=
  	 */
  	app.get('/product/card/packages', getMore);
  };

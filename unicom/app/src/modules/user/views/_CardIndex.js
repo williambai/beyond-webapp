@@ -29,7 +29,7 @@ exports = module.exports = Backbone.View.extend({
 		'scroll': 'scroll',
 		'click .search': 'search',
 		'click .view': 'cardView',
-		'click .recommend': 'addCardOrder',
+		'click .promote': 'promote',
 	},
 
 	load: function() {
@@ -62,14 +62,14 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	cardView: function(evt){
-		var id = this.$(evt.currentTarget).parent().attr('id');
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
 		this.router.navigate('card/view/'+ id,{trigger: true});
 		return false;
 	},
 
-	addCardOrder: function(evt){
-		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('order/card/'+ id + '/add',{trigger: true});
+	promote: function(evt){
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
+		window.location.href = config.api.host + '/sale/page/card/' + config.wechat.appid + '/' + id + '/' + this.router.account.id;
 		return false;
 	},
 	

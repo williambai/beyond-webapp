@@ -7,7 +7,7 @@ var config = require('../conf');
 
 Backbone.$ = $;
 
-var DataAddView = require('./_DataAdd');
+var OrderView = require('./_DataOrder');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -37,16 +37,16 @@ exports = module.exports = Backbone.View.extend({
 
 	change: function(){
 		this.render();
-		this.dataAddView = new DataAddView({
+		this.orderView = new OrderView({
 			router: this.router,
-			el: '#dataAddView',
+			el: '#orderView',
 			product: this.model,
 		});
-		this.dataAddView.on('ready',this.dataAddViewReady,this);
-		this.dataAddView.trigger('load');
+		this.orderView.on('ready',this.orderViewReady,this);
+		this.orderView.trigger('load');
 	},
 
-	dataAddViewReady: function(){
+	orderViewReady: function(){
 		// var goods = this.model.get('goods');
 		// this.$('form').prepend('<input type="hidden" name="product[id]" value="'+ this.model.get('_id') + '">');
 		// this.$('form').prepend('<input type="hidden" name="product[name]" value="'+ this.model.get('subject') + '">');

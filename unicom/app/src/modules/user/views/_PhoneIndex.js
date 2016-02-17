@@ -28,8 +28,8 @@ exports = module.exports = Backbone.View.extend({
 	events: {
 		'scroll': 'scroll',
 		'click .search': 'search',
-		'click .add': 'phoneAdd',
 		'click .view': 'phoneView',
+		'click .promote': 'promote',
 	},
 
 	load: function() {
@@ -62,14 +62,14 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	phoneView: function(evt){
-		var id = this.$(evt.currentTarget).parent().attr('id');
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
 		this.router.navigate('phone/view/'+ id,{trigger: true});
 		return false;
 	},
 
-	phoneAdd: function(evt){
-		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('phone/add/'+ id ,{trigger: true});
+	promote: function(evt){
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
+		window.location.href = config.api.host + '/sale/page/phone/' + config.wechat.appid + '/' + id + '/' + this.router.account.id;
 		return false;
 	},
 	

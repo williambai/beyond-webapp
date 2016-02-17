@@ -88,14 +88,20 @@ gulp.task('server:js', function(done){
               '!gulpfile.js',
               '!public/_tmp/**/**',
               '!public/upload/**/*',
+              '!libs/**/*'
             ])
             .pipe(uglify())
             .pipe(gulp.dest('_dest/server'));
-    //特殊情况        
+    //** 特殊情况        
     gulp.src([
               'commands/**/*.js',
             ])
             .pipe(gulp.dest('_dest/server/commands'));
+    gulp.src([
+              'libs/**/*.js',
+            ])
+            // .pipe(uglify()) //** TODO why?
+            .pipe(gulp.dest('_dest/server/libs'));
     done();
 });
 
@@ -120,6 +126,7 @@ gulp.task('server:copy', function(done){
               '!config/**/*',
               '!public/_*/**/*',
               '!public/upload/**/*',
+              '!logs/**/*',
             ])
             .pipe(gulp.dest(path.join(__dirname,'_dest','server')));
    done();         

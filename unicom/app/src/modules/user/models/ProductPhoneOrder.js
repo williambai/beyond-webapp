@@ -4,5 +4,9 @@ var config = require('../conf');
 
 exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/channel/product/cards',	
+	urlRoot: config.api.host + '/channel/product/phones',	
+	defaults: {
+	},
+	validation: {
+	},
 });

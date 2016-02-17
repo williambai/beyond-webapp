@@ -25,6 +25,7 @@ exports = module.exports = Backbone.View.extend({
 	events: {
 		'scroll': 'scroll',
 		'click .view': 'smsView',
+		'click .promote': 'promote',
 	},
 
 	load: function() {
@@ -49,6 +50,12 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
+	promote: function(evt){
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
+		window.location.href = config.api.host + '/sale/page/data/' + config.wechat.appid + '/' + id + '/' + this.router.account.id;
+		return false;
+	},
+
 	render: function() {
 		if (!this.loaded) {
 			this.$el.html(this.loadingTemplate());

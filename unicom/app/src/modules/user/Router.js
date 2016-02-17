@@ -24,8 +24,8 @@ var SmsViewView = require('./views/_SmsView');
 var CardIndexView = require('./views/_CardIndex');
 var CardViewView = require('./views/_CardView');
 var PhoneIndexView = require('./views/_PhoneIndex');
-var PhoneAddView = require('./views/_PhoneAdd');
 var PhoneViewView = require('./views/_PhoneView');
+var PhoneDetailView = require('./views/_PhoneDetail');
 var OrderIndexView = require('./views/_OrderIndex');
 var CustomerIndexView = require('./views/_CustomerIndex');
 var RevenueIndexView = require('./views/_RevenueIndex');
@@ -71,8 +71,8 @@ exports = module.exports = Backbone.Router.extend({
 		'card/index': 'cardIndex',
 		'card/view/:id': 'cardView',
 		'phone/index': 'phoneIndex',
-		'phone/add/:id': 'phoneAdd',
 		'phone/view/:id': 'phoneView',
+		'phone/detail/:id': 'phoneDetail',
 		'order/index': 'orderIndex',
 		'customer/index': 'customerIndex',
 		'revenue/index': 'revenueIndex',
@@ -335,22 +335,6 @@ exports = module.exports = Backbone.Router.extend({
 		phoneIndexView.trigger('load');
 	},
 
-	phoneAdd: function(id) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '卡号推荐');
-		var phoneAddView = new PhoneAddView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(phoneAddView);
-		phoneAddView.trigger('load');
-	},
-
-
 	phoneView: function(id) {
 		if (!this.logined) {
 			window.location.hash = 'login';
@@ -364,6 +348,22 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(phoneViewView);
 		phoneViewView.trigger('load');
+	},
+
+
+	phoneDetail: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '卡号推荐');
+		var phoneDetailView = new PhoneDetailView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(phoneDetailView);
+		phoneDetailView.trigger('load');
 	},
 
 	pushIndex: function() {

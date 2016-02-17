@@ -1,37 +1,33 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    orderTpl = require('../templates/_entityData.tpl'),
-	ProductDirect = require('../models/ProductDirect');
+    cardTpl = require('../templates/_entityCard.tpl'),
+	ProductCardOrder = require('../models/ProductCardOrder');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
-	el: '#addForm',
+	el: '#orderForm',
+
+	packages: [],
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.product = options.product;
-		this.model = new ProductDirect();
-		var page = $(orderTpl);
-		var addTemplate = $('#addTemplate', page).html();
-		this.template = _.template(_.unescape(addTemplate || ''));
+		this.cardModel = options.cardModel;
+		this.model = new ProductCardOrder();
+		var page = $(cardTpl);
+		var orderTemplate = $('#orderTemplate', page).html();
+		this.template = _.template(_.unescape(orderTemplate || ''));
 		var successTpl = $('#successTemplate', page).html();
 		this.successTemplate = _.template(_.unescape(successTpl || ''));
+		this.on('change:product', this.packageChanged, this);
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
 		'keyup input[type=text]': 'inputText',
 		'submit form': 'submit',
-		'click .addItem': 'addItem',
-		'click .cancel': 'cancel',
 		'click .back': 'cancel',
-	},
-
-	load: function(){
-		this.render();
-		this.trigger('ready');
 	},
 
 	inputText: function(evt){
@@ -51,10 +47,21 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	load: function(){
+		var that = this;
+		this.render();
+		this.trigger('ready');
+	},
 
-	addItem: function(){
-		this.$('#insertItemBefore').prepend('<div class="form-group"><label></label><input name="mobile[]" class="form-control" placeholder="手机号码"></div>');
-		return false;
+	packageChanged: function(packages){
+		console.log(packages)
+		this.packages = packages;
+		this.$('#hiddenFields').empty();
+		// var html = '';
+		// _.each(packages,function(product){
+		// 	html += '<input type="hidden" name="package[]" value="' + product.id +'">';
+		// });
+		// this.$('#hiddenFields').html(html);
 	},
 
 	submit: function() {
@@ -74,32 +81,25 @@ exports = module.exports = FormView.extend({
 		});
 		if(!_.isEmpty(errors)) return false;
 		//validate finished.
-
+		
+		//** set order form
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		//set product
-		this.model.set('product', this.product.toJSON());
+		//** set card model
+		this.model.set('card', this.cardModel.toJSON());
+		//** set packages model
+		this.model.set('packages', this.packages);
 		// console.log(this.model.toJSON());
-		var mobiles = this.model.get('mobile');
-		mobiles = _.without(mobiles, '');
-		if(_.isEmpty(mobiles)){
-			var error = '至少需要一个手机';
-			that.$('[name="mobile[]"]').parent().addClass('has-error');
-			that.$('[name="mobile[]"]').parent().find('span.help-block').text(error);
-			return false;
-		};
-		this.model.set('mobile', mobiles);
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true
 			},
-		});			
+		});
 		return false;
 	},
 
 	cancel: function(){
-		window.history.back();
-		// this.router.navigate('promote/product/index',{trigger: true, replace: true});
+		this.router.navigate('card/index',{trigger: true, replace: true});
 		return false;
 	},
 

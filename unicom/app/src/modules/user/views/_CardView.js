@@ -7,7 +7,7 @@ var config = require('../conf');
 
 Backbone.$ = $;
 
-var CardAddView = require('./_CardAdd');
+var CardOrderView = require('./_CardOrder');
 var CardPackageView = require('./_CardPackage');
 
 exports = module.exports = Backbone.View.extend({
@@ -38,7 +38,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	togglePackageView: function(){
-		this.$('#packageView').show();
+		this.$('#packageView').toggle();
 		return false;
 	},
 
@@ -48,6 +48,7 @@ exports = module.exports = Backbone.View.extend({
 		this.$('#packageView').hide();
 		this.cardPackageView = new CardPackageView({
 			el: '#packageView',
+			cardModel: this.model,
 		});
 		this.cardPackageView.done = function(products){
 			that.$('#packageView').hide();
@@ -57,30 +58,30 @@ exports = module.exports = Backbone.View.extend({
 		});
 		this.cardPackageView.trigger('load');
 
-		this.recommendView = new CardAddView({
+		this.orderView = new CardOrderView({
 			router: this.router,
-			el: '#recommendView',
+			el: '#orderView',
 			cardModel: this.model,
 		});
-		this.recommendView.on('ready', this.recommendViewReday,this);
-		this.recommendView.trigger('load');
+		this.orderView.on('ready', this.orderViewReday,this);
+		this.orderView.trigger('load');
 	},
 
 	packageSelected: function(products){
 		var that = this;
 		// console.log(products);
 		var packageSelected = '';
-		var total = 0;
+		var total = this.model.get('price');
 		_.each(products, function(product){
 			packageSelected += product.name + '; ';
 			total += product.price;
 		});
 		this.$('#packageSelected').html(packageSelected);
 		this.$('#total').text(total.toFixed(2));
-		this.recommendView.trigger('change:product',products);
+		this.orderView.trigger('change:product',products);
 	},
 
-	recommendViewReday: function(){
+	orderViewReday: function(){
 		// this.$('input[name="product[card][name]').val(this.model.get('cardNo'));
 		// this.$('input[name="product[card][price]').val(this.model.get('price'));
 		// this.$('input[name="product[card][category]').val('号卡');

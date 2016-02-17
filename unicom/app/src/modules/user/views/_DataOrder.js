@@ -1,31 +1,37 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    cardTpl = require('../templates/_entityCard.tpl'),
-	ProductCard = require('../models/ProductCard');
+    orderTpl = require('../templates/_entityData.tpl'),
+	ProductDirectOrder = require('../models/ProductDirectOrder');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
 
-	el: '#addForm',
+	el: '#orderForm',
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.cardModel = options.cardModel;
-		this.model = new ProductCard();
-		var page = $(cardTpl);
-		var addTemplate = $('#addTemplate', page).html();
-		this.template = _.template(_.unescape(addTemplate || ''));
+		this.product = options.product;
+		this.model = new ProductDirectOrder();
+		var page = $(orderTpl);
+		var orderTemplate = $('#orderTemplate', page).html();
+		this.template = _.template(_.unescape(orderTemplate || ''));
 		var successTpl = $('#successTemplate', page).html();
 		this.successTemplate = _.template(_.unescape(successTpl || ''));
-		this.on('change:product', this.packageChanged, this);
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
 		'keyup input[type=text]': 'inputText',
 		'submit form': 'submit',
+		'click .addItem': 'addItem',
+		'click .cancel': 'cancel',
 		'click .back': 'cancel',
+	},
+
+	load: function(){
+		this.render();
+		this.trigger('ready');
 	},
 
 	inputText: function(evt){
@@ -45,21 +51,10 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	load: function(){
-		var that = this;
-		this.render();
-		this.trigger('ready');
-	},
 
-	packageChanged: function(products){
-		console.log(products)
-		this.products = products;
-		this.$('#hiddenFields').empty();
-		// var html = '';
-		// _.each(products,function(product){
-		// 	html += '<input type="hidden" name="package[]" value="' + product.id +'">';
-		// });
-		// this.$('#hiddenFields').html(html);
+	addItem: function(){
+		this.$('#insertItemBefore').prepend('<div class="form-group"><label></label><input name="mobile[]" class="form-control" placeholder="手机号码"></div>');
+		return false;
 	},
 
 	submit: function() {
@@ -79,24 +74,33 @@ exports = module.exports = FormView.extend({
 		});
 		if(!_.isEmpty(errors)) return false;
 		//validate finished.
-		
+
+		//** set order form
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		//set card info
-		this.model.set('card', this.cardModel.toJSON());
-		//set package info
-		this.model.set('packages', this.products);
-		console.log(this.model.attributes);
+		//** set product model
+		this.model.set('product', this.product.toJSON());
+		// console.log(this.model.toJSON());
+		var mobiles = this.model.get('mobile');
+		mobiles = _.without(mobiles, '');
+		if(_.isEmpty(mobiles)){
+			var error = '至少需要一个手机';
+			that.$('[name="mobile[]"]').parent().addClass('has-error');
+			that.$('[name="mobile[]"]').parent().find('span.help-block').text(error);
+			return false;
+		};
+		this.model.set('mobile', mobiles);
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true
 			},
-		});
+		});			
 		return false;
 	},
 
 	cancel: function(){
-		this.router.navigate('card/index',{trigger: true, replace: true});
+		window.history.back();
+		// this.router.navigate('promote/product/index',{trigger: true, replace: true});
 		return false;
 	},
 

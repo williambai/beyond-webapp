@@ -7,7 +7,7 @@
 				</div>
 			</div>
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">推荐号卡</h4>
+				<h4 class="panel-title text-center">号卡产品</h4>
 			</div>
 			<div class="panel-body">
 				<div id="search">
@@ -18,12 +18,17 @@
 		</div>
 	</div>	
 	<div id="itemTemplate">
-		<div class="pull-right" id="<%= model._id %>">
-			<button class="btn btn-success view">推荐</button>
+		<div class="item" id="<%= model._id %>">
+			<div class="pull-right">
+				<% if(/MicroMessenger/.test(navigator.userAgent)){ %>
+				<p><button class="btn btn-danger promote">推广</button></p>
+				<% } %>
+				<button class="btn btn-success view">订购</button>
+			</div>
+			<h4>号码：<%= model.name %></h4>
+			<p>预存：<%= model.price.toFixed(2) %>&nbsp;<%= model.unit %></p>
+			<hr/>
 		</div>
-		<h4>号码：<%= model.name %></h4>
-		<p>预存：<%= model.price.toFixed(2) %>&nbsp;<%= model.unit %></p>
-		<hr/>
 	</div>
 	<div id="searchTemplate">
 		<div class="panel panel-default">
@@ -86,22 +91,25 @@
 		<div>
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h4 class="panel-title text-center">号卡套餐推荐</h4>
+					<h4 class="panel-title text-center">号卡订购</h4>
 				</div>
 				<div class="panel-body">
 					<div>
-						<h4>手机号码：<%= model.cardNo %></h4>
+						<div class="pull-right">
+							<h4><%= model.price %>&nbsp;<%= model.unit %></h4>
+						</div>
+						<h4>手机号码：<%= model.name %></h4>
 						<p><a id="togglePackageView">请选择套餐</a></p>
 						<p>当前套餐为：<span id="packageSelected">无</span></p>
 						<div id="packageView"></div>
 					</div>
 					<hr/>
 					<div>
-						<h4 class="text-right">总价：<span id="total"></span>&nbsp;元</h4>
+						<h4 class="text-right">总价：<span id="total"><%= model.price %></span>&nbsp;元</h4>
 					</div>
 				</div>
 			</div>
-			<div id="recommendView"></div>
+			<div id="orderView"></div>
 		</div>
 	</div>
 	<div id="packageTemplate">
@@ -119,7 +127,7 @@
 					</div>
 					<hr/>
 					<div class="tabs">
-						<div class="tab">
+						<!-- <div class="tab">
 							<div class="form-group">
 								<a class="bg-success selectItem"><input type="radio" name="product[0]" value="A046" class="hidden">&nbsp;46元套餐</a>&nbsp;
 								<input type="radio" name="product[0]" value="A066">&nbsp;66元套餐&nbsp;
@@ -185,6 +193,22 @@
 									<input type="radio" name="product[3]" value="DD006">&nbsp;6元/月来电显示&nbsp;
 									<input type="radio" name="product[3]" value="DD000">&nbsp;暂不需要&nbsp;
 								</div>
+						</div> -->
+						<div id="tab1" class="tab"></div>
+						<div id="tab2" class="tab"></div>
+						<div id="tab3" class="tab"></div>
+						<div id="tab4" class="tab">
+							<h4>全国流量包</h4>
+							<div id="tab4_1"></div>
+							<hr/>
+							<h4>全国语音包</h4>
+							<div id="tab4_2"></div>
+							<hr/>
+							<h4>短/彩信包</h4>
+							<div id="tab4_3"></div>
+							<hr/>
+							<h4>来电显示</h4>
+							<div id="tab4_4"></div>
 						</div>
 						<div class="form-group">
 								<input type="submit" value="确认" class="btn btn-primary btn-block">
@@ -194,8 +218,8 @@
 			</div>
 		</form>
 	</div>
-	<div id="addTemplate">
-		<form id="recommendForm">
+	<div id="orderTemplate">
+		<form id="orderForm">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h5 class="panel-title text-center">客户信息</h5>
@@ -254,10 +278,10 @@
 	<div id="successTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h5 class="panel-title text-center">推荐成功</h5>
+				<h5 class="panel-title text-center">预订成功</h5>
 			</div>
 			<div class="panel-body">
-				<p>恭喜你，推荐成功！</p>
+				<p>恭喜你，预订成功！</p>
 				<button class="btn btn-primary btn-block back">返回</button>
 			</div>
 		</div>

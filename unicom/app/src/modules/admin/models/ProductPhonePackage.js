@@ -8,7 +8,12 @@ exports = module.exports = Backbone.Model.extend({
 		return config.api.host + '/product/phone/'+ this.get('pid') + '/packages';
 	},	
 	defaults: {
-		goods: {}
+		goods: {},
+		bonus: {
+			income: 0,
+			times: 1,
+			points: 0,
+		},
 	},
 	validation: {
 	    'name': {

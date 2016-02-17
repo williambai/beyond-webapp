@@ -23,6 +23,11 @@ module.exports = exports = function(mongoose){
 			id: String,
 			name: String,
 		},
+		bonus: {
+			income: Number,//** 佣金收入
+			times: Number, //** 佣金分几次兑现
+			points: Number,//** 积分
+		},
 		status: {
 			type: String,
 			enum: {

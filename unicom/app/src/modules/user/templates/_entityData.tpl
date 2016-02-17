@@ -70,16 +70,16 @@
 				<p>积分：<%= model.bonus.points %></p>
 			</div>
 		</div>
-		<div id="addView"></div>
+		<div id="orderView"></div>
 	</div>
-	<div id="addTemplate">
+	<div id="orderTemplate">
 		<div class="panel panel-primary">
 			<div class="panel-heading">
 				<button class="btn btn-success pull-right addItem"><i class="fa fa-plus-circle"></i>添加</button>
 				<h5 class="panel-title text-center">推荐给客户</h5>
 			</div>
 			<div class="panel-body">
-				<form>
+				<form id="orderForm">
 					<div class="form-group">
 						<label></label>
 						<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">

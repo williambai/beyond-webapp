@@ -5,7 +5,7 @@
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-exports = module.export = function(category, type, revenue, callback) {
+var bonus = function(category, type, revenue, callback) {
 	var category = category || '';
 	var bonus = 0;
 	switch (category) {
@@ -46,3 +46,4 @@ exports = module.export = function(category, type, revenue, callback) {
 	callback && callback(null,bonus);
 	return bonus;
 };
+exports = module.exports =bonus;

@@ -3,42 +3,78 @@
  	var _ = require('underscore');
 
  	var add = function(req, res) {
- 		var id = req.params.id;
- 		res.send({})
-  	};
- 	var remove = function(req,res){
- 		var id = req.params.id;
- 		res.send({})
- 	};
- 	var update = function(req, res) {
- 		var packageId = req.body.package.id;
- 		if(!packageId) return res.send({code: 40400,errmsg: 'package[id] is null'});
+		var phone = req.body.phone || {};
+		var customer = req.body.customer || {};
+		var place = req.body.place || {};
  		var packages = req.body.packages || [];
- 		var product = _.findWhere(packages, {_id: packageId});
- 		if(!product) return res.send({code: 40401, errmsg: 'package[id] is not included in packages[]'});
+ 		if(packages.length == 0) return res.send({code: 40401, errmsg: 'packages is not selected.'});
+
+ 		//** use max bonus
+ 		var bonus = {
+ 			income: 0,
+ 			times: 0,
+ 			points: 0,	
+ 		};
+ 		var total = 0;
+ 		var items = [];
+ 		//add phone product
+ 		items.push({
+ 			id: phone._id,
+ 			model: 'ProductPhone',
+ 			name: phone.name,
+ 			price: phone.price,
+ 			quantity: 1,
+ 			category: '终端',
+ 			source: {
+ 				id: phone.goodsId || '',
+ 				name: phone.goodsName || '',
+ 			}
+ 		});
+ 		//add packages 
+ 		_.each(packages, function(pkg){
+ 			//** sum price into total
+ 			total += pkg.price;
+ 			items.push({
+ 				id: pkg.id,
+ 				model: 'ProductPhonePackage',
+ 				name: pkg.name,
+ 				price: pkg.price,
+ 				quantity: 1,
+ 				category: pkg.category,
+ 				source: {
+ 					id: pkg.goodsId || '',
+ 					name: pkg.goodsName || '',
+ 				}
+ 			});
+ 			//find max bonus
+ 			if(pkg.bonus && (pkg.bonus.income > bonus.income)) bonus.income = pkg.bonus.income;
+ 			if(pkg.bonus && (pkg.bonus.times > bonus.times)) bonus.times = pkg.bonus.times;
+ 			if(pkg.bonus && (pkg.bonus.points > bonus.points)) bonus.points = pkg.bonus.points;
+ 		});
+
  		var docs = [{
- 				name: product.name || '',
- 				description: product.description || '',
+ 				name: phone.name + '终端预订',
+ 				description: '购买终端产品及套餐',
  				category: '终端',
- 				items: [{
- 					id: product._id,
- 					model: 'ProductPhonePackage',
- 					name: product.name,
- 					price: product.price || 0,
- 					quantity: 1,
- 					category: product.category || '',
- 					source: product.goods || {},
- 				}],
- 				total: product.price || 0,
- 				dispatch: '自提',
-				customer: req.body.customer,
+ 				items: items,
+ 				total: total,
+ 				place: place,
+ 				dispatch: {
+ 					method: '自提',
+ 				},
+ 				customer: {
+ 					id: '',
+ 					name: customer.name,
+ 				},
+ 				customerInfo: customer,
 				status: '新建',
  				createBy: {
  					id: req.session.accountId,
  					username: req.session.username,
  					mobile: req.session.email,
 					avatar: req.session.avatar,
- 				}
+ 				},
+ 				bonus: bonus,
  			}
  		];
  		async.waterfall(
@@ -53,7 +89,7 @@
  						avatar: req.session.avatar || '/images/avatar.jpg',
  						type: 'text',
  						content: {
- 							body: '向朋友推荐了<u>' + product.name + '</u>产品',
+ 							body: '向朋友推荐了价值<u>' + total.toFixed(2) +'</u>元的终端产品',
  						}
  					};
  					models.AccountActivity.create(activity,callback);
@@ -62,6 +98,12 @@
  			if (err) return res.send(err);
  			res.send({});
  		});
+   	};
+ 	var remove = function(req,res){
+ 		res.send({});
+ 	};
+ 	var update = function(req, res) {
+ 		res.send({});
   	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
@@ -78,7 +120,9 @@
  		page = (!page || page < 0) ? 0 : page;
 
  		models.ProductPhone
- 			.find({})
+ 			.find({
+ 				status: '有效',
+ 			})
  			.skip(per * page)
  			.limit(per)
  			.exec(function(err, docs) {

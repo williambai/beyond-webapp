@@ -147,8 +147,15 @@ exports = module.exports = FormView.extend({
 		this.$el.html(this.template({model: this.model.toJSON()}));
 		if(this.model.isNew()){
 			this.$('.panel-title').text('新增套餐');
+			this.$('input[name="category"][value="套餐A"]').attr('checked',true);
 			this.$('input[name="cardType[]"]').attr('checked',true);
 		}else{
+			var category = this.model.get('category');
+			that.$('input[name="category"][value='+ category +']').attr('checked',true);
+			var classification = this.model.get('classification');
+			if(classification){
+				that.$('input[name="classification"][value='+ classification +']').attr('checked',true);
+			}
 			var cardTypes = this.model.get('cardType') || [];
 			_.each(cardTypes, function(cardType){
 				that.$('input[name="cardType[]"][value='+ cardType +']').attr('checked',true);

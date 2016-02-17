@@ -77,6 +77,7 @@ Trading.run = function(strategies, done) {
 	var symbols = _.pluck(strategies, 'symbol');
 	quote.getQuotes(symbols, function(err, stocks) {
 		if (err) return done(err);
+		console.log('----  '+ (new Date()).toLocaleString() +'  ----');
 		async.eachSeries(strategies, executeStrategy(stocks), done);
 	}, done);
 };

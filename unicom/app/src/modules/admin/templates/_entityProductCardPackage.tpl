@@ -53,6 +53,26 @@
 			<div class="panel-body">
 				<form id="packageForm">
 					<div class="form-group">
+						<label>套餐分类：</label>
+						<div style="padding-left:30px;">
+							<input type="radio" name="category" value="套餐A">&nbsp;套餐A&nbsp;
+							<input type="radio" name="category" value="套餐B">&nbsp;套餐B&nbsp;
+							<input type="radio" name="category" value="套餐C">&nbsp;套餐C&nbsp;
+							<input type="radio" name="category" value="自由组合">&nbsp;自由组合&nbsp;
+						</div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>业务类型<span style="color:red;">(仅自由套餐有效)</span>：</label>
+						<div style="padding-left:30px;">
+							<input type="radio" name="classification" value="全国流量包">&nbsp;全国流量包&nbsp;
+							<input type="radio" name="classification" value="全国语音包">&nbsp;全国语音包&nbsp;
+							<input type="radio" name="classification" value="短/彩信包">&nbsp;短/彩信包&nbsp;
+							<input type="radio" name="classification" value="来电显示">&nbsp;来电显示&nbsp;
+						</div>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
 						<label>套餐名称：</label>
 						<input type="text" name="name" value="<%= model.name %>" class="form-control" placeholder="如，46元套餐">
 						<span class="help-block"></span>
@@ -60,16 +80,6 @@
 					<div class="form-group">
 						<label>套餐描述：</label>
 						<input type="text" name="description" value="<%= model.description %>" class="form-control" placeholder="简要描述">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>套餐分类：</label>
-						<input type="text" name="category" value="<%= model.category %>" class="form-control" placeholder="如，套餐A，自由套餐等">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>业务类型(自由套餐有效)：</label>
-						<input type="text" name="classification" value="<%= model.classification %>" class="form-control" placeholder="如，全国流量包等">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -113,6 +123,21 @@
 					<div class="form-group">
 						<label>物料编码：</label>
 						<input type="text" name="goods[id]" value="<%= model.goods.id %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>佣金：</label>
+						<input type="text" name="bonus[income]" value="<%= model.bonus.income %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>返佣分批次数：</label>
+						<input type="text" name="bonus[times]" value="<%= model.bonus.times %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>积分：</label>
+						<input type="text" name="bonus[points]" value="<%= model.bonus.points %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

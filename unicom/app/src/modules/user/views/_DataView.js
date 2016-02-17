@@ -7,7 +7,7 @@ var config = require('../conf');
 
 Backbone.$ = $;
 
-var DataAddView = require('./_DataAdd');
+var DataOrderView = require('./_DataOrder');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -37,9 +37,9 @@ exports = module.exports = Backbone.View.extend({
 
 	change: function(){
 		this.render();
-		this.dataAddView = new DataAddView({
+		this.dataAddView = new DataOrderView({
 			router: this.router,
-			el: '#addView',
+			el: '#orderView',
 			product: this.model,
 		});
 		this.dataAddView.on('ready',this.dataAddViewReady,this);
