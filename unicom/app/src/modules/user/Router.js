@@ -4,6 +4,7 @@ var Backbone = require('backbone');
 
 
 var LayoutView = require('./views/__Layout');
+var IndexView = require('./views/Index');
 var RegisterView = require('../../views/_Register');
 var ForgotPasswordView = require('../../views/_ForgotPassword');
 var LoginView = require('../../views/_Login');
@@ -50,7 +51,7 @@ exports = module.exports = Backbone.Router.extend({
 	appEvents: _.extend({}, Backbone.Events), //app events
 
 	routes: {
-		'index': 'activityIndex',
+		'index': 'index',
 		'login': 'login',
 		'wechat/login': 'wechatLogin',
 		'logout': 'logout',
@@ -146,7 +147,7 @@ exports = module.exports = Backbone.Router.extend({
 		}
 		this.appEvents.trigger('set:brand', '贵州联通沃助手');
 		var indexView = new IndexView({
-			router: this,			
+			router: this,
 		});
 		this.changeView(indexView);
 		indexView.trigger('load');

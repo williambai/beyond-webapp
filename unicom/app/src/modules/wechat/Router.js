@@ -14,6 +14,7 @@ var ActivityIndexView = require('../user/views/_ActivityIndex');
 var FeedbackIndexView = require('../../views/_FeedbackIndex');
 var FeedbackEditView = require('../../views/_FeedbackEdit');
 
+var IndexView = require('../user/views/Index');
 var PushIndexView = require('../user/views/_PushIndex');
 var PushViewView = require('../user/views/_PushView');
 var DataIndexView = require('../user/views/_DataIndex');
@@ -49,7 +50,7 @@ exports = module.exports = Backbone.Router.extend({
 	routes: {
 		'authorized': 'authorized',
 
-		'index': 'activityIndex',
+		'index': 'index',
 		'login': 'login',
 		'logout': 'logout',
 		'register': 'register',

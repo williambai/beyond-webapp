@@ -1,5 +1,5 @@
 {
-	"channel_account_activity": [{
+	"index": [{
 		"id": 1,
 		"name": "首页",
 		"nickname": "index",
@@ -69,8 +69,14 @@
 		"nickname": "feedback",
 		"hash": "feedback/index"
 	}],
-	"my_account": [{
+	"channel_account_activity": [{
 		"id": 12,
+		"name": "同事圈",
+		"nickname": "activity",
+		"hash": "activity/index"
+	}],
+	"my_account": [{
+		"id": 13,
 		"name": "我的资料",
 		"nickname": "profile",
 		"hash": "profile/me"

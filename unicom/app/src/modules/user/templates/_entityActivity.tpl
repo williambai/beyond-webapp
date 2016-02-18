@@ -1,11 +1,14 @@
 <div>
 	<div id="indexTemplate">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h5 class="panel-title text-center">同事圈</h5>
-			</div>
-			<div class="panel-body">
-				<div id="list">
+		<div>
+			<div id="carouselView"></div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h5 class="panel-title text-center">同事圈</h5>
+				</div>
+				<div class="panel-body">
+					<div id="list">
+					</div>
 				</div>
 			</div>
 		</div>

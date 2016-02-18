@@ -32,15 +32,15 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 		this.loaded = true;
 		this.render();
-		var carousel =	setInterval(function(){
-			var current = that.$('.carousel-inner .item.active');
-			if(current.length == 0) return clearInterval(carousel);
-			var next = that.$('.carousel-inner .item.active').next();
-			if(next.length == 0) next = that.$('.carousel-inner .item')[0];
-			$(next).addClass('active');
-			$(current).removeClass('active');
-			console.log('carousel running.');
-		},5000);
+		// var carousel =	setInterval(function(){
+		// 	var current = that.$('.carousel-inner .item.active');
+		// 	if(current.length == 0) return clearInterval(carousel);
+		// 	var next = that.$('.carousel-inner .item.active').next();
+		// 	if(next.length == 0) next = that.$('.carousel-inner .item')[0];
+		// 	$(next).addClass('active');
+		// 	$(current).removeClass('active');
+		// 	console.log('carousel running.');
+		// },10000);
 		this.listView = new ListView({
 			el: '#list',
 		});
