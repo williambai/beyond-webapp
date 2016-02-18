@@ -47,7 +47,7 @@ exports = module.exports = Backbone.View.extend({
 		newPackageView += '<span class="help-block"></span>';
 		_.each(pkgs, function(pkg){
 			newPackageView += '<div><div class="pull-left">';
-			newPackageView += '<button class="btn btn-danger packageSelect" id="'+ pkg._id +'"><i class="fa fa-circle-o fa-lg"></i></button>';
+			newPackageView += '<button class="btn btn-primary packageSelect" id="'+ pkg._id +'"><i class="fa fa-circle-o fa-lg"></i></button>';
 			newPackageView += '</div>';
 			newPackageView += '<div style="padding-left:60px;">';
 			newPackageView += '<h4>'+ pkg.name +'</h4>';
@@ -76,9 +76,11 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	packageSelect: function(evt){
+		this.$('.packageSelect').removeClass('btn-danger').addClass('btn-primary');
 		this.$('.packageSelect').find('i').removeClass('fa-dot-circle-o');
 		this.$('.packageSelect').find('i').addClass('fa-circle-o');
 		var id = this.$(evt.currentTarget).attr('id');
+		this.$(evt.currentTarget).removeClass('btn-primary').addClass('btn-danger');
 		this.$(evt.currentTarget).find('i').removeClass('fa-circle-o').addClass('fa-dot-circle-o');
 		this.$('input[name="package[id]"]').val(id);
 		var pkgs = [];

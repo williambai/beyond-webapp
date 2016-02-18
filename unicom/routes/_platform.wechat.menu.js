@@ -24,7 +24,7 @@
 	 								sub_button: [{
 	 									type: 'view',
 	 									name: '同事圈',
-	 									url: 'http://wo.pdbang.cn/wechat.html#index'
+	 									url: 'http://wo.pdbang.cn/wechat.html#activity/index'
 	 								}, {
 	 									type: 'view',
 	 									name: '销售线索',
