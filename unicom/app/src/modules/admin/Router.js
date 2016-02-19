@@ -24,6 +24,12 @@ var MediaIndexView = require('./views/_MediaIndex');
 var MediaEditView = require('./views/_MediaEdit');
 var MediaAddView = require('./views/_MediaAdd');
 
+var PageIndexView = require('./views/_PageIndex');
+var PageEditView = require('./views/_PageEdit');
+
+var CarouselIndexView = require('./views/_CarouselIndex');
+var CarouselEditView = require('./views/_CarouselEdit');
+
 var ProductDirectIndexView = require('./views/_ProductDirectIndex');
 var ProductDirectEditView = require('./views/_ProductDirectEdit');
 
@@ -54,11 +60,6 @@ var OrderIndexView = require('./views/_OrderIndex');
 var OrderViewView = require('./views/_OrderView');
 var OrderEditView = require('./views/_OrderEdit');
 
-var OrderCardIndexView = require('./views/_OrderCardIndex');
-var OrderCardAddView = require('./views/_OrderCardAdd');
-var OrderCardEditView = require('./views/_OrderCardEdit');
-var OrderCardViewView = require('./views/_OrderCardView');
-
 var RevenueIndexView = require('./views/_RevenueIndex');
 var RevenueEditView = require('./views/_RevenueEdit');
 
@@ -72,8 +73,14 @@ var ChannelCategoryEditView = require('./views/_ChannelCategoryEdit');
 var DepartmentIndexView = require('./views/_DepartmentIndex');
 var DepartmentEditView = require('./views/_DepartmentEdit');
 
-var GridIndexView = require('./views/_GridIndex');
-var GridEditView = require('./views/_GridEdit');
+//** Deprecated
+// var GridIndexView = require('./views/_GridIndex');
+// var GridEditView = require('./views/_GridEdit');
+
+// var OrderCardIndexView = require('./views/_OrderCardIndex');
+// var OrderCardAddView = require('./views/_OrderCardAdd');
+// var OrderCardEditView = require('./views/_OrderCardEdit');
+// var OrderCardViewView = require('./views/_OrderCardView');
 
 exports = module.exports = Backbone.Router.extend({
 	appCode: config.app.nickname,
@@ -112,6 +119,13 @@ exports = module.exports = Backbone.Router.extend({
 		'media/index': 'mediaIndex',
 		'media/add': 'mediaAdd',
 		'media/edit/:id': 'mediaEdit',
+		'page/index': 'pageIndex',
+		'page/add': 'pageEdit',
+		'page/edit/:id': 'pageEdit',
+		'carousel/index': 'carouselIndex',
+		'carousel/add': 'carouselEdit',
+		'carousel/edit/:id': 'carouselEdit',
+
 		'product/direct/index': 'productDirectIndex',
 		'product/direct/add': 'productDirectEdit',
 		'product/direct/edit/:id': 'productDirectEdit',
@@ -139,10 +153,6 @@ exports = module.exports = Backbone.Router.extend({
 		'order/index': 'orderIndex',
 		'order/view/:id': 'orderView',
 		'order/edit/:id': 'orderEdit',
-		'order/card/index': 'orderCardIndex',
-		'order/card/add': 'orderCardAdd',
-		'order/card/view/:id': 'orderCardView',
-		'order/card/edit/:id': 'orderCardEdit',
 
 		'role/index': 'roleIndex',
 		'role/add': 'roleEdit',
@@ -156,9 +166,6 @@ exports = module.exports = Backbone.Router.extend({
 		'channel/category/add': 'channelCategoryEdit',
 		'channel/category/edit/:id': 'channelCategoryEdit',
 
-		'grid/index': 'gridIndex',
-		'grid/add': 'gridEdit',
-		'grid/edit/:id': 'gridEdit',		
 		'department/index': 'departmentIndex',
 		'department/add': 'departmentEdit',
 		'department/edit/:id': 'departmentEdit',
@@ -167,6 +174,14 @@ exports = module.exports = Backbone.Router.extend({
 		'revenue/add': 'revenueEdit',
 		'revenue/view/:id': 'revenueView',
 		'revenue/edit/:id': 'revenueEdit',
+
+		// 'grid/index': 'gridIndex',
+		// 'grid/add': 'gridEdit',
+		// 'grid/edit/:id': 'gridEdit',		
+		// 'order/card/index': 'orderCardIndex',
+		// 'order/card/add': 'orderCardAdd',
+		// 'order/card/view/:id': 'orderCardView',
+		// 'order/card/edit/:id': 'orderCardEdit',
 
 		'*path': 'index',
 	},
@@ -529,6 +544,64 @@ exports = module.exports = Backbone.Router.extend({
 		mediaEditView.trigger('load');
 	},	
 
+	pageIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','网页管理');
+		var pageIndexView = new PageIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(pageIndexView);
+		pageIndexView.trigger('load');
+	},	
+
+	pageEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改网页');
+		var pageEditView = new PageEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(pageEditView);
+		pageEditView.trigger('load');
+	},	
+
+	carouselIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','轮播管理');
+		var carouselIndexView = new CarouselIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(carouselIndexView);
+		carouselIndexView.trigger('load');
+	},	
+
+	carouselEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改轮播');
+		var carouselEditView = new CarouselEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(carouselEditView);
+		carouselEditView.trigger('load');
+	},	
+
 	productDirectIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
@@ -764,64 +837,6 @@ exports = module.exports = Backbone.Router.extend({
 		orderViewView.trigger('load');
 	},	
 
-	orderCardIndex: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','卡号订单管理');
-		var orderCardIndexView = new OrderCardIndexView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(orderCardIndexView);
-		orderCardIndexView.trigger('load');
-	},	
-
-	orderCardAdd: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','新增卡号订单');
-		var orderCardAddView = new OrderCardAddView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(orderCardAddView);
-		orderCardAddView.trigger('load');
-	},	
-
-	orderCardEdit: function(id){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','修改卡号订单');
-		var orderCardEditView = new OrderCardEditView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(orderCardEditView);
-		orderCardEditView.trigger('load');
-	},				
-
-	orderCardView: function(id){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','查看卡号订单');
-		var orderCardViewView = new OrderCardViewView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(orderCardViewView);
-		orderCardViewView.trigger('load');
-	},	
-
 	revenueIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
@@ -923,35 +938,6 @@ exports = module.exports = Backbone.Router.extend({
 		channelCategoryEditView.trigger('load');
 	},
 
-	gridIndex: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand','网格设置');
-		var gridIndexView = new GridIndexView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(gridIndexView);
-		gridIndexView.trigger('load');
-	},
-
-	gridEdit: function(id){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand','修改网格');
-		var gridEditView = new GridEditView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(gridEditView);
-		gridEditView.trigger('load');
-	},
-
 	departmentIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
@@ -980,4 +966,92 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(departmentEditView);
 		departmentEditView.trigger('load');
 	},	
+
+	// gridIndex: function(){
+	// 	if(!this.logined){
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	//this.appEvents.trigger('set:brand','网格设置');
+	// 	var gridIndexView = new GridIndexView({
+	// 		router: this,
+	// 		el: '#content',
+	// 	});
+	// 	this.changeView(gridIndexView);
+	// 	gridIndexView.trigger('load');
+	// },
+
+	// gridEdit: function(id){
+	// 	if(!this.logined){
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	//this.appEvents.trigger('set:brand','修改网格');
+	// 	var gridEditView = new GridEditView({
+	// 		router: this,
+	// 		el: '#content',
+	// 		id: id,
+	// 	});
+	// 	this.changeView(gridEditView);
+	// 	gridEditView.trigger('load');
+	// },
+
+	// orderCardIndex: function(){
+	// 	if(!this.logined){
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand','卡号订单管理');
+	// 	var orderCardIndexView = new OrderCardIndexView({
+	// 		router: this,
+	// 		el: '#content',
+	// 	});
+	// 	this.changeView(orderCardIndexView);
+	// 	orderCardIndexView.trigger('load');
+	// },	
+
+	// orderCardAdd: function(){
+	// 	if(!this.logined){
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand','新增卡号订单');
+	// 	var orderCardAddView = new OrderCardAddView({
+	// 		router: this,
+	// 		el: '#content',
+	// 	});
+	// 	this.changeView(orderCardAddView);
+	// 	orderCardAddView.trigger('load');
+	// },	
+
+	// orderCardEdit: function(id){
+	// 	if(!this.logined){
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand','修改卡号订单');
+	// 	var orderCardEditView = new OrderCardEditView({
+	// 		router: this,
+	// 		el: '#content',
+	// 		id: id,
+	// 	});
+	// 	this.changeView(orderCardEditView);
+	// 	orderCardEditView.trigger('load');
+	// },				
+
+	// orderCardView: function(id){
+	// 	if(!this.logined){
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand','查看卡号订单');
+	// 	var orderCardViewView = new OrderCardViewView({
+	// 		router: this,
+	// 		el: '#content',
+	// 		id: id,
+	// 	});
+	// 	this.changeView(orderCardViewView);
+	// 	orderCardViewView.trigger('load');
+	// },	
+
 });

@@ -21,11 +21,6 @@
 		"hash": "product/phone/index"
 	}, {
 		"id": 2,
-		"name": "媒体文件管理",
-		"nickname": "",
-		"hash": "media/index"
-	}, {
-		"id": 2,
 		"name": "号卡管理",
 		"nickname": "",
 		"hash": "product/card/index"
@@ -69,6 +64,21 @@
 		"name": "客户端功能设置",
 		"nickname": "",
 		"hash": "channel/category/index"
+	}, {
+		"id": 2,
+		"name": "静态网页管理",
+		"nickname": "",
+		"hash": "page/index"
+	}, {
+		"id": 2,
+		"name": "上传文件管理",
+		"nickname": "",
+		"hash": "media/index"
+	}, {
+		"id": 2,
+		"name": "首页轮播管理",
+		"nickname": "",
+		"hash": "carousel/index"
 	}, {
 		"id": 2,
 		"name": "用户反馈",

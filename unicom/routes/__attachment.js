@@ -11,8 +11,8 @@ exports =module.exports = function(app,models){
 			var file = req.files.files;
 			var filename = app.randomHex() + '.' + file.extension;//file.name;
 			var tmp_path = file.path;
-			var new_path = path.join(__dirname, '../public/_tmp/',filename);
-			var attachment = '/_tmp/' + filename;
+			var new_path = path.join(__dirname, '../public/_images/',filename);
+			var attachment = '/_images/' + filename;
 			fs.rename(tmp_path,new_path,function(err){
 				if(err) console.error(err);
 				if(err) return res.send({code: 40000, errmsg: 'upload error.'});
