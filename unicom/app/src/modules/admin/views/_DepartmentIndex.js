@@ -30,6 +30,8 @@ exports = module.exports = Backbone.View.extend({
 		'click .add': 'addDepartment',
 		'click .edit': 'editDepartment',
 		'click .delete': 'removeDepartment',
+		'click .import': 'importCustomer',
+		'click .export': 'exportCustomer',
 	},
 
 	load: function() {
@@ -72,6 +74,17 @@ exports = module.exports = Backbone.View.extend({
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}
+		return false;
+	},
+
+
+	importCustomer: function(){
+		this.router.navigate('department/import',{trigger: true});
+		return false;
+	},
+
+	exportCustomer: function(){
+		this.router.navigate('department/export',{trigger: true});
 		return false;
 	},
 

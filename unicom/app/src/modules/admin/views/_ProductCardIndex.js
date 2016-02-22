@@ -31,6 +31,7 @@ exports = module.exports = Backbone.View.extend({
 		'click .edit': 'editProductCard',
 		'click .delete': 'removeProductCard',
 		'click .import': 'importProductCard',
+		'click .export': 'exportProductCard',
 	},
 
 	load: function() {
@@ -79,6 +80,11 @@ exports = module.exports = Backbone.View.extend({
 
 	importProductCard: function(){
 		this.router.navigate('product/card/import',{trigger: true});
+		return false;
+	},
+
+	exportProductCard: function(){
+		this.router.navigate('product/card/export',{trigger: true});
 		return false;
 	},
 

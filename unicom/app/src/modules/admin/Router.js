@@ -44,9 +44,11 @@ var ProductPhonePackageEditView = require('./views/_ProductPhonePackageEdit');
 
 var ProductCardPackageIndexView = require('./views/_ProductCardPackageIndex');
 var ProductCardPackageEditView = require('./views/_ProductCardPackageEdit');
+
 var ProductCardIndexView = require('./views/_ProductCardIndex');
 var ProductCardEditView = require('./views/_ProductCardEdit');
 var ProductCardImportView = require('./views/_ProductCardImport');
+var ProductCardExportView = require('./views/_ProductCardExport');
 
 var ChannelIndexView = require('./views/_ChannelIndex');
 var ChannelEditView = require('./views/_ChannelEdit');
@@ -72,6 +74,8 @@ var ChannelCategoryEditView = require('./views/_ChannelCategoryEdit');
 
 var DepartmentIndexView = require('./views/_DepartmentIndex');
 var DepartmentEditView = require('./views/_DepartmentEdit');
+var DepartmentImportView = require('./views/_DepartmentImport');
+var DepartmentExportView = require('./views/_DepartmentExport');
 
 //** Deprecated
 // var GridIndexView = require('./views/_GridIndex');
@@ -146,6 +150,7 @@ exports = module.exports = Backbone.Router.extend({
 		'product/card/add': 'productCardEdit',
 		'product/card/edit/:id': 'productCardEdit',
 		'product/card/import': 'productCardImport',
+		'product/card/export': 'productCardExport',
 		'product/card/package/index': 'productCardPackageIndex',
 		'product/card/package/add': 'productCardPackageEdit',
 		'product/card/package/edit/:id': 'productCardPackageEdit',
@@ -169,6 +174,8 @@ exports = module.exports = Backbone.Router.extend({
 		'department/index': 'departmentIndex',
 		'department/add': 'departmentEdit',
 		'department/edit/:id': 'departmentEdit',
+		'department/import': 'departmentImport',
+		'department/export': 'departmentExport',
 
 		'revenue/index': 'revenueIndex',
 		'revenue/add': 'revenueEdit',
@@ -793,6 +800,21 @@ exports = module.exports = Backbone.Router.extend({
 		cardImportView.trigger('load');
 	},	
 
+
+	productCardExport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','卡号导出');
+		var cardExportView = new ProductCardExportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(cardExportView);
+		cardExportView.trigger('load');
+	},	
+
 	orderIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
@@ -965,6 +987,34 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(departmentEditView);
 		departmentEditView.trigger('load');
+	},	
+
+	departmentImport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','客户导入');
+		var departmentImportView = new DepartmentImportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(departmentImportView);
+		departmentImportView.trigger('load');
+	},	
+
+	departmentExport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','客户导出');
+		var departmentExportView = new DepartmentExportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(departmentExportView);
+		departmentExportView.trigger('load');
 	},	
 
 	// gridIndex: function(){

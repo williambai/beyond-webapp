@@ -69,18 +69,16 @@
 						<div id="departments"></div>
 						<span class="help-block"></span>
 					</div>
-<!-- 					<div class="form-group">
-						<label>渠道名称：</label>
-						<input type="text" name="channel" value="<%= model.channel %>" class="form-control" placeholder="请输入渠道名称并从列表中选择">
-						<div id="channels"></div>
+					<div class="form-group">
+						<label>指定客户经理：</label>
+						<input type="text" name="account_name" value="<%= model.account_name %>" class="form-control" placeholder="请输入客户经理姓名">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>网格名称：</label>
-						<input type="text" name="grid" value="<%= model.grid %>" class="form-control" placeholder="请输入网格名称并从列表中选择">
-						<div id="grids"></div>
+						<label>客户经理手机号：</label>
+						<input type="text" name="account_mobile" value="<%= model.account_mobile %>" class="form-control" placeholder="请输入客户经理手机号码">
 						<span class="help-block"></span>
-					</div> -->
+					</div>
 					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
@@ -120,6 +118,13 @@
 						</span>
 					</div>
 					<div class="form-group">
+						<label>导入方式：</label>
+						<div style="padding-left:30px;">
+							<input type="radio" name="method" value="增量" checked>&nbsp;&nbsp;增量&nbsp;&nbsp;
+							<input type="radio" name="method" value="全量">&nbsp;&nbsp;全量&nbsp;&nbsp;
+						</div>
+					</div>
+					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
 							<input type="submit" value="导入" class="btn btn-danger">
@@ -129,7 +134,7 @@
 						</div>
 						</div>
 					</div>
-				<input class="hidden" type="file" name="file"/>
+					<input class="hidden" type="file" name="file"/>
 				</form>
 				<hr>
 				<h4>导入excel数据表格列格式如下：</h4>
@@ -156,7 +161,17 @@
 						<tr>
 							<td>3</td>
 							<td>deparment</td>
-							<td>管理部门，用&gt;&gt;分隔部门层级</td>
+							<td>管理部门，用&gt;&gt;分隔组织层级</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>account_name</td>
+							<td>指定客户经理</td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td>account_mobile</td>
+							<td>客户经理手机号</td>
 						</tr>
 					</tbody>
 				</table>
@@ -222,8 +237,23 @@
 						</tr>
 						<tr>
 							<td>3</td>
+							<td>account</td>
+							<td>客户经理(手机号)</td>
+						</tr>
+						<tr>
+							<td>3</td>
 							<td>deparment</td>
-							<td>管理部门，用&gt;&gt;分隔部门层级</td>
+							<td>管理部门，用&gt;&gt;分隔组织层级</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>account_name</td>
+							<td>指定客户经理</td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td>account_mobile</td>
+							<td>客户经理手机号</td>
 						</tr>
 					</tbody>
 				</table>

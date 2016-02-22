@@ -1,11 +1,11 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery'),
-    cardTpl = require('../templates/_entityProductCard.tpl'),
+    departmentTpl = require('../templates/_entityDepartment.tpl'),
     FormView = require('./__FormView');
 var config = require('../conf');
 
-var ProductCard = require('../models/ProductCard');
+var Department = require('../models/Department');
 
 exports = module.exports = FormView.extend({
 	el: '#importForm',
@@ -14,8 +14,8 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options){
 		this.router = options.router;
-		this.model = new ProductCard();
-		var page = $(cardTpl);
+		this.model = new Department();
+		var page = $(departmentTpl);
 		var importTemplate = $('#importTemplate', page).html();
 		var reportTemplate = $('#importReportTemplate',page).html();
 		this.template = _.template(_.unescape(importTemplate || ''));
@@ -145,7 +145,7 @@ exports = module.exports = FormView.extend({
 	},
 
 	cancel: function(){
-		this.router.navigate('product/card/index',{trigger: true, replace: true});
+		this.router.navigate('department/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -159,7 +159,7 @@ exports = module.exports = FormView.extend({
 
 		}else{
 			//second fetch: submit
-			// this.router.navigate('product/card/index',{trigger: true, replace: true});
+			// this.router.navigate('department/index',{trigger: true, replace: true});
 			//reset form
 			// that.$('input[name=file]').val('');
 			// that.$('.attachments').empty();

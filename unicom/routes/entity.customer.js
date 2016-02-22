@@ -60,7 +60,7 @@ exports = module.exports = function(app, models) {
  		var workBook = xlsx.readFile(path.join(__dirname, '../config/customer.xlsx'));
  		var sheetName = workBook.SheetNames[0];
  		var workSheet = workBook.Sheets[sheetName];
- 		workSheet['!ref'] = 'A1:E' + docs.length;
+ 		workSheet['!ref'] = 'A1:E' + docs.length + 1;
  		workSheet['A1'] = {
  			t: 's',
  			v: 'name',
@@ -81,15 +81,15 @@ exports = module.exports = function(app, models) {
  		};
  		workSheet['D1'] = {
  			t: 's',
- 			v: 'channel',
- 			h: 'channel',
- 			w: 'channel',
+ 			v: 'account_name',
+ 			h: 'account_name',
+ 			w: 'account_name',
  		};
  		workSheet['E1'] = {
  			t: 's',
- 			v: 'grid',
- 			h: 'grid',
- 			w: 'grid',
+ 			v: 'account_mobile',
+ 			h: 'account_mobile',
+ 			w: 'account_mobile',
  		};
  		_.each(docs, function(doc, i) {
  			workSheet['A' + (2 + i)] = {
@@ -112,15 +112,15 @@ exports = module.exports = function(app, models) {
  			};
  			workSheet['D' + (2 + i)] = {
  				t: 's',
- 				v: doc.channel,
- 				h: doc.channel,
- 				w: doc.channel,
+ 				v: doc.account_name,
+ 				h: doc.account_name,
+ 				w: doc.account_name,
  			};
  			workSheet['E' + (2 + i)] = {
  				t: 's',
- 				v: doc.grid,
- 				h: doc.grid,
- 				w: doc.grid,
+ 				v: doc.account_mobile,
+ 				h: doc.account_mobile,
+ 				w: doc.account_mobile,
  			};
  		});
  		logger.debug('export workSheet: ' + JSON.stringify(workSheet));

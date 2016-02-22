@@ -7,8 +7,8 @@ module.exports = exports = function(mongoose){
 			unique: true,
 		},
 		department: [String],
-		channel: [String],
-		grid: [String],
+		account_name: String,//** 客户经理
+		account_mobile: String, //** 客户经理ID
 		lastupdatetime: {
 			type: Date,
 			default: Date.now

@@ -22,7 +22,8 @@ module.exports = exports = function(mongoose){
 			enum: {
 				values: '有效|无效'.split('|'),
 				message: 'enum validator failed for path {PATH} with value {VALUE}',
-			}
+			},
+			default: '有效'
 		},
 		creator:{
 			id: String,
