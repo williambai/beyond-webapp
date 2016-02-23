@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
-
+var config = require('./conf');
 
 var LayoutView = require('./views/__Layout');
 var IndexView = require('./views/Index');
@@ -39,8 +39,6 @@ var ExchangeIndexView = require('./views/_ExchangeIndex');
 var ExchangeViewView = require('./views/_ExchangeView');
 var OrderExchangeIndexView = require('./views/_OrderExchangeIndex');
 
-var config = require('./conf');
-var MENU_DEFAULT = require('./conf/menu');
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -103,7 +101,7 @@ exports = module.exports = Backbone.Router.extend({
 		this.account = account;
 		this.logined = true;
 		/** default menu */
-		this.layoutView.trigger('update:menu', _.sortBy(_.flatten(_.values(MENU_DEFAULT)), 'id'));
+		this.layoutView.trigger('update:menu', _.sortBy(_.flatten(_.values(config.menu)), 'id'));
 		return;
 		/** -OR- customize menu */
 		$.ajax({
@@ -113,16 +111,17 @@ exports = module.exports = Backbone.Router.extend({
 				withCredentials: true
 			},
 		}).done(function(data) {
+			var menu_default = config.menu || [];
 			var features = data.features || [];
-			var grant = that.account.grant || {};
-			var features_grant = _.keys(grant);
-			// console.log(features_grant);
-			var menuCustomized = _.pick(_.pick(MENU_DEFAULT, features), features_grant);
-			var grantMenuCustomized = _.sortBy(_.flatten(_.values(menuCustomized)), 'id');
-			// console.log(grantMenuCustomized);
-			that.layoutView.trigger('update:menu', grantMenuCustomized);
+			var menu_granted = [];
+			_.each(menu_default,function(menu){
+				if(_.isEmpty(menu.features)) return menu_granted.push(menu);
+				var menu_features = menu.features || [];
+				var intersection = _.intersection(features,menu_features);
+				if(!_.isEmpty(intersection)) menu_granted.push(menu);
+			});
+			that.layoutView.trigger('update:menu', menu_granted);
 		});
-
 	},
 
 	onLogout: function() {
