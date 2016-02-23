@@ -9,7 +9,6 @@ logger.setLevel('DEBUG');
  	var xlsx = require('xlsx');
  	var path = require('path');
 
-
  	var importData = function(req, res) {
  		var attachments;
  		if(typeof req.body.attachment == 'string'){
@@ -134,7 +133,7 @@ logger.setLevel('DEBUG');
  		};
 
  		var categories = (typeof req.query.category == 'string') ? [req.query.category] : req.query.category;
- 		console.log(categories)
+ 		// console.log(categories)
  		models
  			.ProductCard
  			.find({

@@ -19,6 +19,8 @@ var AccountEditView = require('./views/_AccountEdit');
 
 var GoodsIndexView = require('./views/_GoodsIndex');
 var GoodsEditView = require('./views/_GoodsEdit');
+var GoodsImportView = require('./views/_GoodsImport');
+var GoodsExportView = require('./views/_GoodsExport');
 
 var MediaIndexView = require('./views/_MediaIndex');
 var MediaEditView = require('./views/_MediaEdit');
@@ -61,6 +63,7 @@ var CustomerExportView = require('./views/_CustomerExport');
 var OrderIndexView = require('./views/_OrderIndex');
 var OrderViewView = require('./views/_OrderView');
 var OrderEditView = require('./views/_OrderEdit');
+var OrderExportView = require('./views/_OrderExport');
 
 var RevenueIndexView = require('./views/_RevenueIndex');
 var RevenueEditView = require('./views/_RevenueEdit');
@@ -119,6 +122,8 @@ exports = module.exports = Backbone.Router.extend({
 		'goods/index': 'goodsIndex',
 		'goods/add': 'goodsEdit',
 		'goods/edit/:id': 'goodsEdit',
+		'goods/import': 'goodsImport',
+		'goods/export': 'goodsExport',
 
 		'media/index': 'mediaIndex',
 		'media/add': 'mediaAdd',
@@ -158,6 +163,7 @@ exports = module.exports = Backbone.Router.extend({
 		'order/index': 'orderIndex',
 		'order/view/:id': 'orderView',
 		'order/edit/:id': 'orderEdit',
+		'order/export': 'orderExport',
 
 		'role/index': 'roleIndex',
 		'role/add': 'roleEdit',
@@ -506,6 +512,34 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(goodsEditView);
 		goodsEditView.trigger('load');
+	},	
+
+	goodsImport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','物料导入');
+		var goodsImportView = new GoodsImportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(goodsImportView);
+		goodsImportView.trigger('load');
+	},	
+
+	goodsExport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','物料导出');
+		var goodsExportView = new GoodsExportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(goodsExportView);
+		goodsExportView.trigger('load');
 	},	
 
 	mediaIndex: function(){
@@ -857,6 +891,21 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(orderViewView);
 		orderViewView.trigger('load');
+	},	
+
+
+	orderExport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','导出订单');
+		var orderExportView = new OrderExportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(orderExportView);
+		orderExportView.trigger('load');
 	},	
 
 	revenueIndex: function(){

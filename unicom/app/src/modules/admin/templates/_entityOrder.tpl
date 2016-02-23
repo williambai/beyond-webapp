@@ -1,6 +1,9 @@
 <div>
 	<div id="indexTemplate">
 		<div class="panel panel-default">
+			<div class="pull-right">
+				<button class="btn btn-primary export">导出</button>
+			</div>
 			<div class="panel-heading">
 				<h4 class="panel-title text-center">订单管理</h4>
 			</div>
@@ -357,6 +360,52 @@
 						</div>
 					</div>
 				</form>
+			</div>
+		</div>
+	</div>
+	<div id="exportTemplate">
+		<div class="panel panel-default" id="exportForm">
+			<div class="panel-heading">
+				<h3 class="panel-title text-center">导出订单</h3>
+			</div>
+			<div class="panel-body">
+				<form>
+					<input type="hidden" name="action" value="export">
+					<div class="form-group">
+						<label>起始日期：</label>
+							<input type="date" name="starttime" value="<%= new Date() %>" class="form-control">
+							<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>截止日期：</label>
+							<input type="date" name="endtime" value="<%= new Date() %>" class="form-control">
+							<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group">
+							<input type="submit" value="导出" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-primary back">取消</button>
+						</div>
+						</div>
+					</div>
+				</form>
+				<hr>				
+				<h4>导出excel数据表格列格式如下：</h4>
+				<p></p>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>列序号</th>
+							<th>列名称(即：excel第一行名称)</th>
+							<th>列含义</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>

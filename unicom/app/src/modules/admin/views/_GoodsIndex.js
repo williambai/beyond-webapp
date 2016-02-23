@@ -30,6 +30,8 @@ exports = module.exports = Backbone.View.extend({
 		'click .add': 'addGoods',
 		'click .edit': 'editGoods',
 		'click .delete': 'removeGoods',
+		'click .import': 'importGoods',
+		'click .export': 'exportGoods',
 	},
 
 	load: function() {
@@ -73,6 +75,16 @@ exports = module.exports = Backbone.View.extend({
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}
+		return false;
+	},
+
+	importGoods: function(){
+		this.router.navigate('goods/import',{trigger: true});
+		return false;
+	},
+
+	exportGoods: function(){
+		this.router.navigate('goods/export',{trigger: true});
 		return false;
 	},
 

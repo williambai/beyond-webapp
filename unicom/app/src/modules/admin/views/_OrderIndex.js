@@ -29,6 +29,7 @@ exports = module.exports = Backbone.View.extend({
 		'scroll': 'scroll',
 		'click .view': 'viewOrder',
 		'click .delete': 'removeOrder',
+		'click .export': 'exportOrder',
 	},
 
 	load: function() {
@@ -69,6 +70,11 @@ exports = module.exports = Backbone.View.extend({
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}
+		return false;
+	},
+
+	exportOrder: function(evt){
+		this.router.navigate('order/export',{trigger: true});
 		return false;
 	},
 

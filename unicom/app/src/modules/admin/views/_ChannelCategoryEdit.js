@@ -74,7 +74,7 @@ exports = module.exports = FormView.extend({
 				data = data || [];
 				var checkboxs = '';
 				data.forEach(function(item){
-					checkboxs += '<input type="checkbox" name="features[]" value="'+ item.nickname +'">&nbsp;'+ item.name +'&nbsp';
+					checkboxs += '<input type="checkbox" name="features[]" value="'+ item.nickname +'">&nbsp;&nbsp;'+ item.name +'&nbsp;&nbsp;<br/>';
 				});
 				that.$('#features').html(checkboxs);
 				var features = that.model.get('features') || [];
