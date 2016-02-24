@@ -61,28 +61,28 @@
  	 * action:
  	 *     
  	 */
- 	app.post('/channel/sale/leads', add);
+ 	app.post('/channel/sale/leads', app.grant, add);
  	/**
  	 * update channel/sale/leads
  	 * action:
  	 *     
  	 */
- 	app.put('/channel/sale/leads/:id', update);
+ 	app.put('/channel/sale/leads/:id', app.grant, update);
 
  	/**
  	 * delete channel/sale/leads
  	 * action:
  	 *     
  	 */
- 	app.delete('/channel/sale/leads/:id', remove);
+ 	app.delete('/channel/sale/leads/:id', app.grant, remove);
  	/**
  	 * get channel/sale/leads
  	 */
- 	app.get('/channel/sale/leads/:id', getOne);
+ 	app.get('/channel/sale/leads/:id', app.grant, getOne);
 
  	/**
  	 * get channel/sale/leads
  	 * action:
  	 */
- 	app.get('/channel/sale/leads', getMore);
+ 	app.get('/channel/sale/leads', app.grant, getMore);
  };

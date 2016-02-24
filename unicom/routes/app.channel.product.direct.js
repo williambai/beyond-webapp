@@ -122,14 +122,14 @@ logger.setLevel('INFO');
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/product/directs/:id', update);
+ 	app.put('/channel/product/directs/:id', app.grant, update);
 
  	/**
  	 * delete channel/product/directs
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/product/directs/:id', remove);
+ 	app.delete('/channel/product/directs/:id', app.grant, remove);
  	/**
  	 * get channel/product/directs
  	 */

@@ -117,28 +117,28 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/product/phone/:pid/packages', add);
+ 	app.post('/product/phone/:pid/packages', app.grant, add);
  	/**
  	 * update product/phone/:pid/packages
  	 * type:
  	 *     
  	 */
- 	app.put('/product/phone/:pid/packages/:id', update);
+ 	app.put('/product/phone/:pid/packages/:id', app.grant, update);
 
  	/**
  	 * delete product/phone/:pid/packages
  	 * type:
  	 *     
  	 */
- 	app.delete('/product/phone/:pid/packages/:id', remove);
+ 	app.delete('/product/phone/:pid/packages/:id', app.grant, remove);
  	/**
  	 * get product/phone/:pid/packages
  	 */
- 	app.get('/product/phone/:pid/packages/:id', getOne);
+ 	app.get('/product/phone/:pid/packages/:id', app.grant, getOne);
 
  	/**
  	 * get product/phone/:pid/packages
  	 * type:
  	 */
- 	app.get('/product/phone/:pid/packages', getMore);
+ 	app.get('/product/phone/:pid/packages', app.grant, getMore);
  };

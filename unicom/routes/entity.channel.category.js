@@ -60,28 +60,28 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/categories', add);
+ 	app.post('/channel/categories', app.grant, add);
  	/**
  	 * update channel/categories
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/categories/:id', update);
+ 	app.put('/channel/categories/:id', app.grant, update);
 
  	/**
  	 * delete channel/categories
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/categories/:id', remove);
+ 	app.delete('/channel/categories/:id', app.grant, remove);
  	/**
  	 * get channel/categories
  	 */
- 	app.get('/channel/categories/:id', getOne);
+ 	app.get('/channel/categories/:id', app.grant, getOne);
 
  	/**
  	 * get channel/categories
  	 * type:
  	 */
- 	app.get('/channel/categories', getMore);
+ 	app.get('/channel/categories', app.grant, getMore);
  };

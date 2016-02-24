@@ -81,28 +81,28 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/platform/sessions', add);
+ 	app.post('/platform/sessions', app.grant, add);
  	/**
  	 * update platform/sessions
  	 * type:
  	 *     
  	 */
- 	app.put('/platform/sessions/:id', update);
+ 	app.put('/platform/sessions/:id', app.grant, update);
 
  	/**
  	 * delete platform/sessions
  	 * type:
  	 *     
  	 */
- 	app.delete('/platform/sessions/:id', remove);
+ 	app.delete('/platform/sessions/:id', app.grant, remove);
  	/**
  	 * get platform/sessions
  	 */
- 	app.get('/platform/sessions/:id', getOne);
+ 	app.get('/platform/sessions/:id', app.grant, getOne);
 
  	/**
  	 * get platform/sessions
  	 * type:
  	 */
- 	app.get('/platform/sessions', getMore);
+ 	app.get('/platform/sessions', app.grant, getMore);
  };

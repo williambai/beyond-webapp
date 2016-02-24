@@ -153,29 +153,29 @@ exports = module.exports = function(app, models) {
 	 * action:
 	 *     
 	 */
-	app.post('/product/phones', add);
+	app.post('/product/phones', app.grant, add);
 	/**
 	 * update product/phones
 	 * action:
 	 *     
 	 */
-	app.put('/product/phones/:id', update);
+	app.put('/product/phones/:id', app.grant, update);
 
 	/**
 	 * delete product/phones
 	 * action:
 	 *     
 	 */
-	app.delete('/product/phones/:id', remove);
+	app.delete('/product/phones/:id', app.grant, remove);
 	/**
 	 * get product/phones
 	 */
-	app.get('/product/phones/:id', getOne);
+	app.get('/product/phones/:id', app.grant, getOne);
 
 	/**
 	 * get product/phones
 	 * action:
 	 *      action=category&category=xxx
 	 */
-	app.get('/product/phones', getMore);
+	app.get('/product/phones', app.grant, getMore);
 };

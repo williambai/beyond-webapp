@@ -84,28 +84,28 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/platform/roles', add);
+ 	app.post('/platform/roles', app.grant, add);
  	/**
  	 * update platform/roles
  	 * type:
  	 *     
  	 */
- 	app.put('/platform/roles/:id', update);
+ 	app.put('/platform/roles/:id', app.grant, update);
 
  	/**
  	 * delete platform/roles
  	 * type:
  	 *     
  	 */
- 	app.delete('/platform/roles/:id', remove);
+ 	app.delete('/platform/roles/:id', app.grant, remove);
  	/**
  	 * get platform/roles
  	 */
- 	app.get('/platform/roles/:id', getOne);
+ 	app.get('/platform/roles/:id', app.grant, getOne);
 
  	/**
  	 * get platform/roles
  	 * type:
  	 */
- 	app.get('/platform/roles', getMore);
+ 	app.get('/platform/roles', app.grant, getMore);
  };

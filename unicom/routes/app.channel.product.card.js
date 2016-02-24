@@ -140,20 +140,20 @@ exports = module.exports = function(app, models) {
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/product/cards', add);
+ 	app.post('/channel/product/cards', app.grant, add);
  	/**
  	 * update channel/product/cards
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/product/cards/:id', update);
+ 	app.put('/channel/product/cards/:id', app.grant, update);
 
  	/**
  	 * delete channel/product/cards
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/product/cards/:id', remove);
+ 	app.delete('/channel/product/cards/:id', app.grant, remove);
  	/**
  	 * get channel/product/cards
  	 */

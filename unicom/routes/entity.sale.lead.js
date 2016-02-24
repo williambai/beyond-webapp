@@ -64,28 +64,28 @@
  	 * action:
  	 *     
  	 */
- 	app.post('/sale/leads', add);
+ 	app.post('/sale/leads', app.grant, add);
  	/**
  	 * update sale/leads
  	 * action:
  	 *     
  	 */
- 	app.put('/sale/leads/:id', update);
+ 	app.put('/sale/leads/:id', app.grant, update);
 
  	/**
  	 * delete sale/leads
  	 * action:
  	 *     
  	 */
- 	app.delete('/sale/leads/:id', remove);
+ 	app.delete('/sale/leads/:id', app.grant, remove);
  	/**
  	 * get sale/leads
  	 */
- 	app.get('/sale/leads/:id', getOne);
+ 	app.get('/sale/leads/:id', app.grant, getOne);
 
  	/**
  	 * get sale/leads
  	 * action:
  	 */
- 	app.get('/sale/leads', getMore);
+ 	app.get('/sale/leads', app.grant, getMore);
  };

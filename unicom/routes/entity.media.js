@@ -112,29 +112,29 @@ logger.setLevel('INFO');
  	 * action:
  	 *     
  	 */
- 	app.post('/medias', add);
+ 	app.post('/medias', app.isLogin, add);
  
  	/**
  	 * update medias
  	 * action:
  	 *     
  	 */
- 	app.put('/medias/:id', update);
+ 	app.put('/medias/:id', app.isLogin, update);
  	/**
  	 * delete medias
  	 * action:
  	 *     
  	 */
- 	app.delete('/medias/:id', remove);
+ 	app.delete('/medias/:id', app.isLogin, remove);
  	/**
  	 * get medias
  	 */
- 	app.get('/medias/:id', getOne);
+ 	app.get('/medias/:id', app.isLogin, getOne);
 
  	/**
  	 * get medias
  	 * action:
  	 *      action=category&category=xxx
  	 */
- 	app.get('/medias', getMore);
+ 	app.get('/medias', app.isLogin, getMore);
  };

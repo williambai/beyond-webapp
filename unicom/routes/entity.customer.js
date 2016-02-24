@@ -251,28 +251,28 @@ exports = module.exports = function(app, models) {
  	 * type:
  	 *     
  	 */
- 	app.post('/customers', add);
+ 	app.post('/customers', app.grant, add);
  	/**
  	 * update customers
  	 * type:
  	 *     
  	 */
- 	app.put('/customers/:id', update);
+ 	app.put('/customers/:id', app.grant, update);
 
  	/**
  	 * delete customers
  	 * type:
  	 *     
  	 */
- 	app.delete('/customers/:id', remove);
+ 	app.delete('/customers/:id', app.grant, remove);
  	/**
  	 * get customers
  	 */
- 	app.get('/customers/:id', getOne);
+ 	app.get('/customers/:id', app.grant, getOne);
 
  	/**
  	 * get customers
  	 * type:
  	 */
- 	app.get('/customers', getMore);
+ 	app.get('/customers', app.grant, getMore);
  };

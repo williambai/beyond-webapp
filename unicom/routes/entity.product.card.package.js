@@ -114,24 +114,24 @@
  	 * action:
  	 *     
  	 */
- 	app.post('/product/card/packages', add);
+ 	app.post('/product/card/packages', app.grant, add);
  	/**
  	 * update product/card/packages
  	 * action:
  	 *     
  	 */
- 	app.put('/product/card/packages/:id', update);
+ 	app.put('/product/card/packages/:id', app.grant, update);
 
  	/**
  	 * delete product/card/packages
  	 * action:
  	 *     
  	 */
- 	app.delete('/product/card/packages/:id', remove);
+ 	app.delete('/product/card/packages/:id', app.grant, remove);
  	/**
  	 * get product/card/packages
  	 */
- 	app.get('/product/card/packages/:id', getOne);
+ 	app.get('/product/card/packages/:id', app.grant, getOne);
 
  	/**
  	 * get product/card/packages
@@ -139,5 +139,5 @@
  	 *       action=search&searchStr=
  	 *       action=cardType&cardType=
  	 */
- 	app.get('/product/card/packages', getMore);
+ 	app.get('/product/card/packages', app.grant, getMore);
  };

@@ -54,18 +54,18 @@ exports = module.exports = function(app, models) {
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/orders/:id', update);
+ 	app.put('/channel/orders/:id', app.grant, update);
 
  	/**
  	 * delete channel/orders
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/orders/:id', remove);
+ 	app.delete('/channel/orders/:id', app.grant, remove);
  	/**
  	 * get channel/orders
  	 */
- 	app.get('/channel/orders/:id', getOne);
+ 	app.get('/channel/orders/:id', app.grant, getOne);
 
  	/**
  	 * get channel/orders

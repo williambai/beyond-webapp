@@ -334,28 +334,28 @@ logger.setLevel('DEBUG');
  	 * type:
  	 *     
  	 */
- 	app.post('/departments', add);
+ 	app.post('/departments', app.grant, add);
  	/**
  	 * update departments
  	 * type:
  	 *     
  	 */
- 	app.put('/departments/:id', update);
+ 	app.put('/departments/:id', app.grant, update);
 
  	/**
  	 * delete departments
  	 * type:
  	 *     
  	 */
- 	app.delete('/departments/:id', remove);
+ 	app.delete('/departments/:id', app.grant, remove);
  	/**
  	 * get departments
  	 */
- 	app.get('/departments/:id', getOne);
+ 	app.get('/departments/:id', app.grant, getOne);
 
  	/**
  	 * get departments
  	 * type:
  	 */
- 	app.get('/departments', getMore);
+ 	app.get('/departments', app.isLogin, getMore);
  };

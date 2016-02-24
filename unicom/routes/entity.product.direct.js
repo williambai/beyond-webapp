@@ -114,29 +114,29 @@ logger.setLevel('INFO');
  	 * action:
  	 *     
  	 */
- 	app.post('/product/directs', add);
+ 	app.post('/product/directs', app.grant, add);
  	/**
  	 * update product/directs
  	 * action:
  	 *     
  	 */
- 	app.put('/product/directs/:id', update);
+ 	app.put('/product/directs/:id', app.grant, update);
 
  	/**
  	 * delete product/directs
  	 * action:
  	 *     
  	 */
- 	app.delete('/product/directs/:id', remove);
+ 	app.delete('/product/directs/:id', app.grant, remove);
  	/**
  	 * get product/directs
  	 */
- 	app.get('/product/directs/:id', getOne);
+ 	app.get('/product/directs/:id', app.grant, getOne);
 
  	/**
  	 * get product/directs
  	 * action:
  	 *      action=category&category=xxx
  	 */
- 	app.get('/product/directs', getMore);
+ 	app.get('/product/directs', app.grant, getMore);
  };

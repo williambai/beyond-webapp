@@ -138,28 +138,28 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/product/phones', add);
+ 	app.post('/channel/product/phones', app.grant, add);
  	/**
  	 * update channel/product/phones
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/product/phones/:id', update);
+ 	app.put('/channel/product/phones/:id', app.grant, update);
 
  	/**
  	 * delete channel/product/phones
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/product/phones/:id', remove);
+ 	app.delete('/channel/product/phones/:id', app.grant, remove);
  	/**
  	 * get channel/product/phones
  	 */
- 	app.get('/channel/product/phones/:id', getOne);
+ 	app.get('/channel/product/phones/:id', app.grant, getOne);
 
  	/**
  	 * get channel/product/phones
  	 * type:
  	 */
- 	app.get('/channel/product/phones', getMore);
+ 	app.get('/channel/product/phones', app.grant, getMore);
  };

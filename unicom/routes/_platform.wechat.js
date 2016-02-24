@@ -123,29 +123,29 @@ exports = module.exports = function(app, models) {
 	 * action:
 	 *     
 	 */
-	app.post('/platform/wechats', add);
+	app.post('/platform/wechats', app.grant, add);
 	/**
 	 * update platform/wechats
 	 * action:
 	 *     
 	 */
-	app.put('/platform/wechats/:id', update);
+	app.put('/platform/wechats/:id', app.grant, update);
 
 	/**
 	 * delete platform/wechats
 	 * action:
 	 *     
 	 */
-	app.delete('/platform/wechats/:id', remove);
+	app.delete('/platform/wechats/:id', app.grant, remove);
 	/**
 	 * get platform/wechats
 	 */
-	app.get('/platform/wechats/:id', getOne);
+	app.get('/platform/wechats/:id', app.grant, getOne);
 
 	/**
 	 * get platform/wechats
 	 * action:
 	 *      action=category&category=xxx
 	 */
-	app.get('/platform/wechats', getMore);
+	app.get('/platform/wechats', app.grant, getMore);
 };

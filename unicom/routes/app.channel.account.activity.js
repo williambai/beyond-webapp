@@ -61,24 +61,24 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/account/activities', add);
+ 	app.post('/channel/account/activities', app.grant, add);
  	/**
  	 * update channel/account/activities
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/account/activities/:id', update);
+ 	app.put('/channel/account/activities/:id', app.grant, update);
 
  	/**
  	 * delete channel/account/activities
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/account/activities/:id', remove);
+ 	app.delete('/channel/account/activities/:id', app.grant, remove);
  	/**
  	 * get channel/account/activities
  	 */
- 	app.get('/channel/account/activities/:id', getOne);
+ 	app.get('/channel/account/activities/:id', app.grant, getOne);
 
  	/**
  	 * get channel/account/activities

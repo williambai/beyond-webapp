@@ -266,29 +266,29 @@ logger.setLevel('DEBUG');
  	 * action:
  	 *     
  	 */
- 	app.post('/product/cards', add);
+ 	app.post('/product/cards', app.grant, add);
  	/**
  	 * update product/cards
  	 * action:
  	 *     
  	 */
- 	app.put('/product/cards/:id', update);
+ 	app.put('/product/cards/:id', app.grant, update);
 
  	/**
  	 * delete product/cards
  	 * action:
  	 *     
  	 */
- 	app.delete('/product/cards/:id', remove);
+ 	app.delete('/product/cards/:id', app.grant, remove);
  	/**
  	 * get product/cards
  	 */
- 	app.get('/product/cards/:id', getOne);
+ 	app.get('/product/cards/:id', app.grant, getOne);
 
  	/**
  	 * get product/cards
  	 * action:
  	 *      action=category&category=xxx
  	 */
- 	app.get('/product/cards', getMore);
+ 	app.get('/product/cards', app.grant, getMore);
  };

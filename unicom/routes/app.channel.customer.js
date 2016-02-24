@@ -60,28 +60,28 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/customers', add);
+ 	app.post('/channel/customers', app.grant, add);
  	/**
  	 * update channel/customers
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/customers/:id', update);
+ 	app.put('/channel/customers/:id', app.grant, update);
 
  	/**
  	 * delete channel/customers
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/customers/:id', remove);
+ 	app.delete('/channel/customers/:id', app.grant, remove);
  	/**
  	 * get channel/customers
  	 */
- 	app.get('/channel/customers/:id', getOne);
+ 	app.get('/channel/customers/:id', app.grant, getOne);
 
  	/**
  	 * get channel/customers
  	 * type:
  	 */
- 	app.get('/channel/customers', getMore);
+ 	app.get('/channel/customers', app.grant, getMore);
  };

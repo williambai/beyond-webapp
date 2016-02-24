@@ -71,28 +71,28 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/platform/wechat/customers', add);
+ 	app.post('/platform/wechat/customers', app.grant, add);
  	/**
  	 * update platform/wechat/customers
  	 * type:
  	 *     
  	 */
- 	app.put('/platform/wechat/customers/:id', update);
+ 	app.put('/platform/wechat/customers/:id', app.grant, update);
 
  	/**
  	 * delete platform/wechat/customers
  	 * type:
  	 *     
  	 */
- 	app.delete('/platform/wechat/customers/:id', remove);
+ 	app.delete('/platform/wechat/customers/:id', app.grant, remove);
  	/**
  	 * get platform/wechat/customers
  	 */
- 	app.get('/platform/wechat/customers/:id', getOne);
+ 	app.get('/platform/wechat/customers/:id', app.grant, getOne);
 
  	/**
  	 * get platform/wechat/customers
  	 * type:
  	 */
- 	app.get('/platform/wechat/customers', getMore);
+ 	app.get('/platform/wechat/customers', app.grant, getMore);
  };

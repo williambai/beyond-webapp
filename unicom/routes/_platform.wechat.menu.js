@@ -238,28 +238,28 @@
  	 * action:
  	 *     
  	 */
- 	app.post('/platform/wechat/:wid/menus', add);
+ 	app.post('/platform/wechat/:wid/menus', app.grant, add);
  	/**
  	 * update platform/wechat/:wid/menus
  	 * action:
  	 *     
  	 */
- 	app.put('/platform/wechat/:wid/menus/:id', update);
+ 	app.put('/platform/wechat/:wid/menus/:id', app.grant, update);
 
  	/**
  	 * delete platform/wechat/:wid/menus
  	 * action:
  	 *     
  	 */
- 	app.delete('/platform/wechat/:wid/menus/:id', remove);
+ 	app.delete('/platform/wechat/:wid/menus/:id', app.grant, remove);
  	/**
  	 * get platform/wechat/:wid/menus
  	 */
- 	app.get('/platform/wechat/:wid/menus/:id', getOne);
+ 	app.get('/platform/wechat/:wid/menus/:id', app.grant, getOne);
 
  	/**
  	 * get platform/wechat/:wid/menus
  	 * action:
  	 */
- 	app.get('/platform/wechat/:wid/menus', getMore);
+ 	app.get('/platform/wechat/:wid/menus', app.grant, getMore);
  };

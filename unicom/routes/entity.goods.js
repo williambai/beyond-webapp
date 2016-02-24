@@ -290,28 +290,28 @@ exports = module.exports = function(app, models) {
  	 * action:
  	 *     
  	 */
- 	app.post('/goods', add);
+ 	app.post('/goods', app.grant, add);
  	/**
  	 * update goods
  	 * action:
  	 *     
  	 */
- 	app.put('/goods/:id', update);
+ 	app.put('/goods/:id', app.grant, update);
 
  	/**
  	 * delete goods
  	 * action:
  	 *     
  	 */
- 	app.delete('/goods/:id', remove);
+ 	app.delete('/goods/:id', app.grant, remove);
  	/**
  	 * get goods
  	 */
- 	app.get('/goods/:id', getOne);
+ 	app.get('/goods/:id', app.grant, getOne);
 
  	/**
  	 * get goods
  	 * action:
  	 */
- 	app.get('/goods', getMore);
+ 	app.get('/goods', app.isLogin, getMore);
  };
