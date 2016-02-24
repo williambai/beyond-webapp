@@ -2,6 +2,7 @@
  	var async = require('async');
  	var path = require('path');
  	var fs = require('fs');
+	var crypto = require('crypto');
 
  	var Account = models.Account;
 
@@ -16,6 +17,9 @@
  		var accountId = req.params.id == 'me' ? req.session.accountId : req.params.id;
  		var type = req.query.type || '';
  		var account = req.body;
+		if(account.password){
+			account.password = crypto.createHash('sha256').update(account.password).digest('hex');
+		}
  		switch (type) {
  			case 'avatar':
  				// console.log(req.files);

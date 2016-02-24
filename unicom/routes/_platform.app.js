@@ -88,7 +88,7 @@
  	/**
  	 * get platform/apps
  	 */
- 	app.get('/platform/apps/:id', app.grant, getOne);
+ 	app.get('/platform/apps/:id', app.isLogin, getOne);
 
  	/**
  	 * get platform/apps

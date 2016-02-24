@@ -8,11 +8,15 @@ exports = module.exports = function(app, models) {
 	var async = require('async');
 	var path = require('path');
 	var fs = require('fs');
+	var crypto = require('crypto');
 
 	var Account = models.Account;
 
 	var add = function(req, res) {
 		var account = req.body;
+		if(account.password){
+			account.password = crypto.createHash('sha256').update(account.password).digest('hex');
+		}
 		// app
 		var apps = account.apps;
 		if (!_.isArray(apps)) apps = [];
@@ -45,6 +49,9 @@ exports = module.exports = function(app, models) {
 		var id = req.params.id;
 		var type = req.query.type || '';
 		var account = req.body;
+		if(account.password){
+			account.password = crypto.createHash('sha256').update(account.password).digest('hex');
+		}
 		account = _.omit(account, 'histories', 'registerCode', 'creator');
 
 		switch (type) {
