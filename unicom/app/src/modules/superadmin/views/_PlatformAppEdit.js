@@ -47,11 +47,14 @@ exports = module.exports = FormView.extend({
 			xhrFields: {
 				withCredentials: true
 			},
+			data: {
+				action: 'all'
+			},
 			success: function(collection){
 				collection = collection || [];
 				var featuresView = '';
 				collection.each(function(model){
-					featuresView += '<input type="checkbox" name="features[]" value="'+ model.get('nickname') +'">&nbsp;'+ model.get('name') +'&nbsp;&nbsp;&nbsp;';
+					featuresView += '<input type="checkbox" name="features[]" value="'+ model.get('nickname') +'">&nbsp;&nbsp;'+ model.get('name') +'&nbsp;&nbsp;&nbsp;<br/>';
 				});
 				that.$('#features').html(featuresView);
 				callback && callback();

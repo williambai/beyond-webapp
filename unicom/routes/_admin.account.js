@@ -200,29 +200,29 @@ exports = module.exports = function(app, models) {
  	 * add admin/accounts
  	 *     
  	 */
- 	app.post('/admin/accounts', add);
+ 	app.post('/admin/accounts', app.grant, add);
  	/**
  	 * update admin/accounts
  	 * type:
  	 *     avatar
  	 *     
  	 */
- 	app.put('/admin/accounts/:id', update);
+ 	app.put('/admin/accounts/:id', app.grant, update);
 
  	/**
  	 * delete admin/accounts
  	 *     
  	 */
- 	app.delete('/admin/accounts/:id', remove);
+ 	app.delete('/admin/accounts/:id', app.grant, remove);
 	/**
  	 * get admin/accounts
  	 */
- 	app.get('/admin/accounts/:id', getOne);
+ 	app.get('/admin/accounts/:id', app.grant, getOne);
 
  	/**
  	 * get admin/accounts
  	 * type:
  	 *    search
  	 */
- 	app.get('/admin/accounts', getMore);
+ 	app.get('/admin/accounts', app.grant, getMore);
  }

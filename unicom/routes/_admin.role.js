@@ -109,28 +109,28 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/admin/roles', add);
+ 	app.post('/admin/roles', app.grant, add);
  	/**
  	 * update admin/roles
  	 * type:
  	 *     
  	 */
- 	app.put('/admin/roles/:id', update);
+ 	app.put('/admin/roles/:id',app.grant,  update);
 
  	/**
  	 * delete admin/roles
  	 * type:
  	 *     
  	 */
- 	app.delete('/admin/roles/:id', remove);
+ 	app.delete('/admin/roles/:id', app.grant, remove);
  	/**
  	 * get admin/roles
  	 */
- 	app.get('/admin/roles/:id', getOne);
+ 	app.get('/admin/roles/:id', app.grant, getOne);
 
  	/**
  	 * get admin/roles
  	 * type:
  	 */
- 	app.get('/admin/roles', getMore);
+ 	app.get('/admin/roles',app.grant, getMore);
  };

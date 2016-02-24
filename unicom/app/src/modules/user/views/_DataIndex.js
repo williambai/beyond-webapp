@@ -51,7 +51,7 @@ exports = module.exports = Backbone.View.extend({
 			console.log(search);
 			that.$('#search').hide();
 		};
-		this.listView.collection.url = config.api.host + '/channel/product/goods?type=category&category=2G';
+		this.listView.collection.url = config.api.host + '/channel/product/directs?type=category&category=2G';
 		this.listView.trigger('load');
 	},
 

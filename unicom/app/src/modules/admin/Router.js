@@ -212,8 +212,8 @@ exports = module.exports = Backbone.Router.extend({
 		this.account = account;
 		this.logined = true;
 		/** default menu */
-		this.layoutView.trigger('update:menu', _.sortBy(_.flatten(_.values(config.menu)), 'id'));
-		return;
+		// this.layoutView.trigger('update:menu', _.sortBy(_.flatten(_.values(config.menu)), 'id'));
+		// return;
 		/** -OR- customize menu */
 		$.ajax({
 			url: config.api.host + '/platform/apps/' + that.appCode,
@@ -221,9 +221,15 @@ exports = module.exports = Backbone.Router.extend({
 			xhrFields: {
 				withCredentials: true
 			},
-		}).done(function(data) {
+		}).done(function(app) {
 			var menu_default = config.menu || [];
-			var features = data.features || [];
+			//** app features
+			var app_features = (app && app.features) || [];
+			//** user grant features
+			var grant_features = _.keys(that.account.grant);
+			//** both app and user have features 
+			var features = _.intersection(app_features,grant_features);
+			// console.log(features);
 			var menu_granted = [];
 			_.each(menu_default,function(menu){
 				if(_.isEmpty(menu.features)) return menu_granted.push(menu);
@@ -282,7 +288,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'index';
 			return;
 		}
-		//this.appEvents.trigger('set:brand', '登录');
+		this.appEvents.trigger('set:brand', '登录');
 		var loginView = new WeChatLoginView({
 			router: this,
 			appCode: this.appCode,
@@ -331,7 +337,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand', '编辑个人资料');
+		this.appEvents.trigger('set:brand', '编辑个人资料');
 		var profileEditView = new MyAccountEditView({
 			router: this,
 			el: '#content',
@@ -942,7 +948,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand','角色设置');
+		this.appEvents.trigger('set:brand','角色设置');
 		var roleIndexView = new RoleIndexView({
 			router: this,
 			el: '#content',
@@ -956,7 +962,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand','修改角色');
+		this.appEvents.trigger('set:brand','修改角色');
 		var roleEditView = new RoleEditView({
 			router: this,
 			el: '#content',
@@ -971,7 +977,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand','渠道类型设置');
+		this.appEvents.trigger('set:brand','渠道功能设置');
 		var channelCategoryIndexView = new ChannelCategoryIndexView({
 			router: this,
 			el: '#content',
@@ -985,7 +991,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand','新增渠道类型');
+		this.appEvents.trigger('set:brand','新增渠道类型');
 		var channelCategoryAddView = new ChannelCategoryAddView({
 			router: this,
 			el: '#content',
@@ -999,7 +1005,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand','修改渠道类型');
+		this.appEvents.trigger('set:brand','修改渠道类型');
 		var channelCategoryEditView = new ChannelCategoryEditView({
 			router: this,
 			el: '#content',
@@ -1014,7 +1020,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand','组织设置');
+		this.appEvents.trigger('set:brand','组织设置');
 		var departmentIndexView = new DepartmentIndexView({
 			router: this,
 			el: '#content',
@@ -1028,7 +1034,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand','修改组织');
+		this.appEvents.trigger('set:brand','修改组织');
 		var departmentEditView = new DepartmentEditView({
 			router: this,
 			el: '#content',
@@ -1071,7 +1077,7 @@ exports = module.exports = Backbone.Router.extend({
 	// 		window.location.hash = 'login';
 	// 		return;
 	// 	}
-	// 	//this.appEvents.trigger('set:brand','网格设置');
+	// 	this.appEvents.trigger('set:brand','网格设置');
 	// 	var gridIndexView = new GridIndexView({
 	// 		router: this,
 	// 		el: '#content',
@@ -1085,7 +1091,7 @@ exports = module.exports = Backbone.Router.extend({
 	// 		window.location.hash = 'login';
 	// 		return;
 	// 	}
-	// 	//this.appEvents.trigger('set:brand','修改网格');
+	// 	this.appEvents.trigger('set:brand','修改网格');
 	// 	var gridEditView = new GridEditView({
 	// 		router: this,
 	// 		el: '#content',

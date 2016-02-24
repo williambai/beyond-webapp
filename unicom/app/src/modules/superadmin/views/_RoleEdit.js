@@ -67,7 +67,7 @@ exports = module.exports = FormView.extend({
 	loadFeatures: function(callback){
 		var that = this;
 		$.ajax({
-			url: config.api.host + '/platform/features',
+			url: config.api.host + '/platform/features?action=all',
 			type: 'GET',
 			xhrFields: {
 				withCredentials: true

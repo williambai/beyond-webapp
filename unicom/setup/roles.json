@@ -3,45 +3,39 @@
 	"nickname": "superadmin",
 	"description": "系统管理员角色",
 	"grant": {
-		"account": {
-			"route": "/accounts",
-			"nickname": "account",
-			"name": "用户管理",
-			"remove": "true",
-			"update": "true",
-			"add": "true",
-			"getMore": "true",
-			"getOne": "true"
-		},
-		"role": {
-			"route": "/platform/roles",
-			"nickname": "role",
-			"name": "角色管理",
-			"remove": "true",
-			"update": "true",
-			"add": "true",
-			"getMore": "true",
-			"getOne": "true"
-		},
-		"feature": {
+		"platform_feature": {
 			"route": "/platform/features",
-			"nickname": "feature",
+			"nickname": "platform_feature",
 			"name": "功能管理",
 			"remove": "true",
 			"update": "true",
 			"add": "true",
 			"getMore": "true",
 			"getOne": "true"
-		}
-	}
-}, {
-	"name": "用户管理员",
-	"nickname": "admin_1",
-	"description": "管理用户，配置角色等",
-	"grant": {
-		"account": {
-			"route": "/accounts",
-			"nickname": "account",
+		},
+		"platform_role": {
+			"route": "/platform/roles",
+			"nickname": "platform_role",
+			"name": "角色管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"platform_app": {
+			"route": "/platform/apps",
+			"nickname": "platform_app",
+			"name": "应用管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"platform_account": {
+			"route": "/platform/accounts",
+			"nickname": "platform_account",
 			"name": "用户管理",
 			"remove": "true",
 			"update": "true",
@@ -49,44 +43,71 @@
 			"getMore": "true",
 			"getOne": "true"
 		},
-		"role": {
-			"route": "/platform/roles",
-			"nickname": "role",
-			"name": "角色管理",
+		"platform_session": {
+			"route": "/platform/sessions",
+			"nickname": "platform_session",
+			"name": "平台会话管理",
 			"remove": "true",
 			"update": "true",
 			"add": "true",
 			"getMore": "true",
 			"getOne": "true"
-		}
-	}
-}, {
-	"name": "页面配置管理员",
-	"nickname": "admin_page",
-	"description": "页面管理员角色",
-	"grant": {
-		"promote_product": {
-			"route": "/promote/products",
-			"nickname": "promote_product",
-			"name": "分类数据配置",
+		},
+		"cbss_account": {
+			"route": "/cbss/accounts",
+			"nickname": "cbss_account",
+			"name": "CBSS账号管理",
 			"remove": "true",
 			"update": "true",
 			"add": "true",
 			"getMore": "true",
 			"getOne": "true"
-		}
-	}
-}, {
-	"name": "注册用户",
-	"nickname": "register",
-	"description": "注册用户角色",
-	"grant": {
-		"page_data": {
-			"route": "/page/data",
-			"nickname": "page_data",
-			"name": "流量产品",
+		},
+		"platform_sms": {
+			"route": "/platform/smses",
+			"nickname": "platform_sms",
+			"name": "平台SMS管理",
+			"remove": "true",
+			"update": "true",
 			"add": "true",
 			"getMore": "true",
+			"getOne": "true"
+		},
+		"platform_wechat_customer": {
+			"route": "/platform/wechat/customers",
+			"nickname": "platform_wechat_customer",
+			"name": "平台微信客户管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"platform_wechat": {
+			"route": "/platform/wechats",
+			"nickname": "platform_wechat",
+			"name": "平台微信公众号设置",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"platform_database": {
+			"route": "/platform/databases",
+			"nickname": "platform_database",
+			"name": "平台数据维护",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"account": {
+			"route": "/accounts",
+			"nickname": "account",
+			"name": "用户个人账号",
+			"update": "true",
 			"getOne": "true"
 		}
 	}
@@ -95,27 +116,11 @@
 	"nickname": "channel",
 	"description": "渠道用户角色",
 	"grant": {
-		"channel_customer": {
-			"route": "/channel/customers",
-			"nickname": "channel_customer",
-			"name": "渠道用户的客户",
-			"remove": "true",
+		"channel_product_direct": {
+			"route": "/channel/product/directs",
+			"nickname": "channel_product_direct",
+			"name": "渠道可销售直通产品",
 			"update": "true",
-			"add": "true",
-			"getMore": "true",
-			"getOne": "true"
-		},
-		"channel_account_activity": {
-			"route": "/channel/account/activities",
-			"nickname": "channel_account_activity",
-			"name": "渠道用户动态",
-			"getMore": "true",
-			"getOne": "true"
-		},
-		"channel_order": {
-			"route": "/channel/orders",
-			"nickname": "channel_order",
-			"name": "渠道用户订单",
 			"add": "true",
 			"getMore": "true",
 			"getOne": "true"
@@ -129,18 +134,241 @@
 			"getMore": "true",
 			"getOne": "true"
 		},
-		"channel_product_goods": {
-			"route": "/channel/product/goods",
-			"nickname": "channel_product_goods",
-			"name": "渠道可推广产品",
+		"channel_product_phone": {
+			"route": "/channel/product/phones",
+			"nickname": "channel_product_phone",
+			"name": "渠道可销售终端产品",
 			"update": "true",
 			"add": "true",
 			"getMore": "true",
 			"getOne": "true"
 		},
-		"my_account": {
+		"channel_sale_lead": {
+			"route": "/channel/sale/leads",
+			"nickname": "channel_sale_lead",
+			"name": "销售线索",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"channel_customer": {
+			"route": "/channel/customers",
+			"nickname": "channel_customer",
+			"name": "渠道用户的客户",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"channel_order": {
+			"route": "/channel/orders",
+			"nickname": "channel_order",
+			"name": "渠道用户订单",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"channel_account_activity": {
+			"route": "/channel/account/activities",
+			"nickname": "channel_account_activity",
+			"name": "渠道用户动态",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"platform_feedback": {
+			"route": "/platform/feedbacks",
+			"nickname": "platform_feedback",
+			"name": "用户反馈",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"account": {
 			"route": "/accounts",
-			"nickname": "my_account",
+			"nickname": "account",
+			"name": "用户个人账号",
+			"update": "true",
+			"getOne": "true"
+		}
+	}
+}, {
+	"name": "后台管理员",
+	"nickname": "admin",
+	"description": "管理产品、用户、订单等",
+	"grant": {
+		"product_direct": {
+			"route": "/product/directs",
+			"nickname": "product_direct",
+			"name": "直通产品管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"product_card_package": {
+			"route": "/product/card/packages",
+			"nickname": "product_card_package",
+			"name": "号卡产品管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"product_phone": {
+			"route": "/product/phones",
+			"nickname": "product_phone",
+			"name": "终端产品管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+
+		"product_card": {
+			"route": "/product/cards",
+			"nickname": "product_card",
+			"name": "号卡管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"customer": {
+			"route": "/customers",
+			"nickname": "customer",
+			"name": "客户管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"admin_order": {
+			"route": "/admin/orders",
+			"nickname": "admin_order",
+			"name": "订单管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"admin_account": {
+			"route": "/admin/accounts",
+			"nickname": "admin_account",
+			"name": "用户管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+
+
+		"revenue": {
+			"route": "/revenues",
+			"nickname": "revenue",
+			"name": "金币管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+
+		"admin_role": {
+			"route": "/admin/roles",
+			"nickname": "admin_role",
+			"name": "角色管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+
+		"goods": {
+			"route": "/goods",
+			"nickname": "goods",
+			"name": "物料管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+
+		"department": {
+			"route": "/departments",
+			"nickname": "department",
+			"name": "组织及架构管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+
+		"channel_category": {
+			"route": "/channel/categories",
+			"nickname": "channel_category",
+			"name": "客户端功能设置",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"platform_page": {
+			"route": "/platform/pages",
+			"nickname": "platform_page",
+			"name": "静态网页管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+
+		"media": {
+			"route": "/medias",
+			"nickname": "media",
+			"name": "上传文件管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"carousel": {
+			"route": "/carousels",
+			"nickname": "carousel",
+			"name": "首页轮播管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"platform_feedback": {
+			"route": "/platform/feedbacks",
+			"nickname": "platform_feedback",
+			"name": "用户反馈",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"account": {
+			"route": "/accounts",
+			"nickname": "account",
 			"name": "用户个人账号",
 			"update": "true",
 			"getOne": "true"

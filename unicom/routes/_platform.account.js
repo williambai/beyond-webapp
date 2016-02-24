@@ -200,29 +200,29 @@ exports = module.exports = function(app, models) {
 	 * add platform/accounts
 	 *     
 	 */
-	app.post('/platform/accounts', add);
+	app.post('/platform/accounts', app.grant, add);
 	/**
 	 * update platform/accounts
 	 * type:
 	 *     avatar
 	 *     
 	 */
-	app.put('/platform/accounts/:id', update);
+	app.put('/platform/accounts/:id', app.grant, update);
 
 	/**
 	 * delete platform/accounts
 	 *     
 	 */
-	app.delete('/platform/accounts/:id', remove);
+	app.delete('/platform/accounts/:id', app.grant, remove);
 	/**
 	 * get platform/accounts
 	 */
-	app.get('/platform/accounts/:id', getOne);
+	app.get('/platform/accounts/:id', app.grant, getOne);
 
 	/**
 	 * get platform/accounts
 	 * type:
 	 *    search
 	 */
-	app.get('/platform/accounts', getMore);
+	app.get('/platform/accounts', app.grant, getMore);
 }

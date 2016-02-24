@@ -273,28 +273,28 @@ exports = module.exports = function(app, models) {
  	 * action:
  	 *     
  	 */
- 	app.post('/admin/orders', add);
+ 	app.post('/admin/orders', app.grant, add);
  	/**
  	 * update admin/orders
  	 * action:
  	 *     
  	 */
- 	app.put('/admin/orders/:id', update);
+ 	app.put('/admin/orders/:id', app.grant, update);
 
  	/**
  	 * delete admin/orders
  	 * action:
  	 *     
  	 */
- 	app.delete('/admin/orders/:id', remove);
+ 	app.delete('/admin/orders/:id', app.grant, remove);
  	/**
  	 * get admin/orders
  	 */
- 	app.get('/admin/orders/:id', getOne);
+ 	app.get('/admin/orders/:id', app.grant, getOne);
 
  	/**
  	 * get admin/orders
  	 * action:
  	 */
- 	app.get('/admin/orders', getMore);
+ 	app.get('/admin/orders',app.grant,  getMore);
  };

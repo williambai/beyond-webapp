@@ -112,33 +112,33 @@ logger.setLevel('INFO');
  	 * router outline
  	 */
  	/**
- 	 * add channel/product/goods
+ 	 * add channel/product/directs
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/product/goods', app.grant, add);
+ 	app.post('/channel/product/directs', app.grant, add);
  	/**
- 	 * update channel/product/goods
+ 	 * update channel/product/directs
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/product/goods/:id', update);
+ 	app.put('/channel/product/directs/:id', update);
 
  	/**
- 	 * delete channel/product/goods
+ 	 * delete channel/product/directs
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/product/goods/:id', remove);
+ 	app.delete('/channel/product/directs/:id', remove);
  	/**
- 	 * get channel/product/goods
+ 	 * get channel/product/directs
  	 */
- 	app.get('/channel/product/goods/:id', app.grant, getOne);
+ 	app.get('/channel/product/directs/:id', app.grant, getOne);
 
  	/**
- 	 * get channel/product/goods
+ 	 * get channel/product/directs
  	 * type:
  	 *      type=category&category=xxx
  	 */
- 	app.get('/channel/product/goods', app.grant, getMore);
+ 	app.get('/channel/product/directs', app.grant, getMore);
  };

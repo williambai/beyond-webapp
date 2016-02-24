@@ -39,49 +39,61 @@
  			});
  	};
  	var getMore = function(req, res) {
+ 		var action = req.query.action || '';
  		var per = 20;
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
-
- 		models.PlatformFeature
- 			.find({})
- 			.skip(per * page)
- 			.limit(per)
- 			.exec(function(err, docs) {
- 				if (err) return res.send(err);
- 				res.send(docs);
- 			});
+ 		switch(action){
+ 			case 'all':
+		 		models.PlatformFeature
+		 			.find({})
+		 			.exec(function(err, docs) {
+		 				if (err) return res.send(err);
+		 				res.send(docs);
+		 			});
+ 				break;
+ 			default:
+		 		models.PlatformFeature
+		 			.find({})
+		 			.skip(per * page)
+		 			.limit(per)
+		 			.exec(function(err, docs) {
+		 				if (err) return res.send(err);
+		 				res.send(docs);
+		 			});
+ 				break;
+ 		}
  	};
  	/**
  	 * router outline
  	 */
  	/**
  	 * add platform/features
- 	 * type:
+ 	 * action:
  	 *     
  	 */
- 	app.post('/platform/features', add);
+ 	app.post('/platform/features', app.grant, add);
  	/**
  	 * update platform/features
- 	 * type:
+ 	 * action:
  	 *     
  	 */
- 	app.put('/platform/features/:id', update);
+ 	app.put('/platform/features/:id', app.grant, update);
 
  	/**
  	 * delete platform/features
- 	 * type:
+ 	 * action:
  	 *     
  	 */
- 	app.delete('/platform/features/:id', remove);
+ 	app.delete('/platform/features/:id', app.grant, remove);
  	/**
  	 * get platform/features
  	 */
- 	app.get('/platform/features/:id', getOne);
+ 	app.get('/platform/features/:id', app.grant, getOne);
 
  	/**
  	 * get platform/features
- 	 * type:
+ 	 * action:
  	 */
- 	app.get('/platform/features', getMore);
+ 	app.get('/platform/features', app.isLogin, getMore);
  };

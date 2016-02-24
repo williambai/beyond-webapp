@@ -40,7 +40,7 @@ exports = module.exports = Backbone.View.extend({
 		this.listView = new ListView({
 			el: '#list',
 		});
-		this.listView.collection.url = config.api.host + '/channel/product/goods?type=category&category=APP';
+		this.listView.collection.url = config.api.host + '/channel/product/directs?type=category&category=APP';
 		this.listView.trigger('load');
 	},
 

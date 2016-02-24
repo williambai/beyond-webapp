@@ -17,17 +17,17 @@ _.extend(config,{
 		"id": 2,
 		"name": "流量产品",
 		"hash": "data/index",
-		"features": ["channel_product_goods"],
+		"features": ["channel_product_direct"],
 	},{
 		"id": 3,
 		"name": "传统增值",
 		"hash": "sms/index",
-		"features": ["channel_product_goods"],
+		"features": ["channel_product_direct"],
 	},{
 		"id": 4,
 		"name": "内容推荐",
 		"hash": "push/index",
-		"features": ["channel_product_goods"],
+		"features": ["channel_product_direct"],
 	},{
 		"id": 5,
 		"name": "号卡产品",
@@ -42,7 +42,7 @@ _.extend(config,{
 		"id": 7,
 		"name": "销售线索",
 		"hash": "sale/lead/index",
-		"features": [],
+		"features": ["channel_sale_lead"],
 	},{
 		"id": 8,
 		"name": "我的客户",
@@ -56,9 +56,8 @@ _.extend(config,{
 	},{
 		"id": 11,
 		"name": "意见反馈",
-		"nickname": "feedback",
 		"hash": "feedback/index",
-		"features": ["channel_reveue"],
+		"features": ["platform_feedback"],
 	},{
 		"id": 12,
 		"name": "同事圈",
@@ -68,7 +67,7 @@ _.extend(config,{
 		"id": 13,
 		"name": "我的资料",
 		"hash": "profile/me",
-		"features": ["my_account"],
+		"features": ["account"],
 	}]	
 });
 

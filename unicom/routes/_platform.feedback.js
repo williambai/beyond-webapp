@@ -115,29 +115,29 @@
  	 * action:
  	 *     
  	 */
- 	app.post('/platform/feedbacks', add);
+ 	app.post('/platform/feedbacks', app.isLogin, add);
  	/**
  	 * update platform/feedbacks
  	 * action:
  	 *       comment
  	 *     
  	 */
- 	app.put('/platform/feedbacks/:id', update);
+ 	app.put('/platform/feedbacks/:id', app.grant, update);
 
  	/**
  	 * delete platform/feedbacks
  	 * action:
  	 *     
  	 */
- 	app.delete('/platform/feedbacks/:id', remove);
+ 	app.delete('/platform/feedbacks/:id', app.grant, remove);
  	/**
  	 * get platform/feedbacks
  	 */
- 	app.get('/platform/feedbacks/:id', getOne);
+ 	app.get('/platform/feedbacks/:id', app.isLogin, getOne);
 
  	/**
  	 * get platform/feedbacks
  	 * action:
  	 */
- 	app.get('/platform/feedbacks', getMore);
+ 	app.get('/platform/feedbacks', app.isLogin, getMore);
  };

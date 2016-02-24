@@ -44,12 +44,12 @@ _.extend(config,{
 		"id": 2,
 		"name": "订单管理",
 		"hash": "order/index",
-		"features": ["order"],
+		"features": ["admin_order"],
 	}, {
 		"id": 2,
 		"name": "用户管理",
 		"hash": "account/index",
-		"features": ["account"],
+		"features": ["admin_account"],
 	}, {
 		"id": 2,
 		"name": "金币管理",
@@ -59,7 +59,7 @@ _.extend(config,{
 		"id": 2,
 		"name": "权限管理",
 		"hash": "role/index",
-		"features": ["role"],
+		"features": ["admin_role"],
 	}, {
 		"id": 2,
 		"name": "物料管理",
@@ -79,7 +79,7 @@ _.extend(config,{
 		"id": 2,
 		"name": "静态网页管理",
 		"hash": "page/index",
-		"features": ["page"],
+		"features": ["platform_page"],
 	}, {
 		"id": 2,
 		"name": "上传文件管理",
@@ -94,12 +94,12 @@ _.extend(config,{
 		"id": 2,
 		"name": "用户反馈",
 		"hash": "feedback/index",
-		"features": ["feedback"],
+		"features": ["platform_feedback"],
 	}, {
 		"id": 2,
 		"name": "我的资料",
 		"hash": "profile/me",
-		"features": ["my_account"],
+		"features": ["account"],
 	}]
 });
 
