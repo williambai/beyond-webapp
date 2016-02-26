@@ -65,7 +65,7 @@ CommandFactory.create = function(commandType) {
 
 			switch (attr.type) {
 				case 'text':
-					console.log(val);
+					// console.log(val);
 					(function(len) {
 						var bytesWriten;
 						if (len) {
@@ -143,8 +143,8 @@ CommandFactory.parse = function(data) {
 	}
 	var PDULen = data.readUInt32BE(0);
 	if(!commandType) return {
-		code: cmdID,
-		errmsg: cmdID + ' command不支持',
+		code: '0x' + cmdID.toString(16),
+		errmsg: '0x' + cmdID.toString(16) + ' command不支持',
 	};
 	var Message;
 	if(isResp){

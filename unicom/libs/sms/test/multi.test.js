@@ -17,30 +17,36 @@ var CommandFactory = require('../lib/commands');
 var Bind = CommandFactory.create('Bind');
 var Unbind = CommandFactory.create('Unbind');
 var Submit = CommandFactory.create('Submit');
-var handler = require('../lib/handler');
+var StreamSpliter = require('../lib/StreamSpliter');
 
-var client = net.connect({
-  host: 'localhost', //config.SPHost,
-  port: 8124, //config.SPPort,
-}, function() {
-  console.log('client connected.');
-  //** send Bind Command
-  var bind = new Bind(1, config.SPUser, config.SPPass);
-  client.write(bind.makePDU());
-});
-
-client.on('bind_resp', function() {
+var _send = function(docs){
+	//** send sms
 	doc = docs.pop();
 	if(!doc) {
+		console.log('<< 4. submit_resp');
 		//** send Unbind
 		var unbind = new Unbind();
 		client.write(unbind.makePDU());
+		console.log('>> 5. unbind');
 		return;
 	}
 	var mobiles = (doc.mobile instanceof Array) ? doc.mobile : [doc.mobile];
-	// //** send Submit
+	//** send Submit
 	var submit = new Submit(mobiles, 8, doc.content);
 	client.write(submit.makePDU());
+};
+
+var client = net.connect({
+  host: 'localhost', //config.SPHost,
+  port: config.SPPort,
+}, function() {
+  console.log('client connected.');
+});
+
+client.on('bind_resp', function() {
+	console.log('<< 2. bind_resp');
+	_send(docs);
+	console.log('>> 3. submit');
 });
 
 client.on('submit_resp', function(response) {
@@ -49,27 +55,20 @@ client.on('submit_resp', function(response) {
 	response.copy(series,0,8,20);
 	doc.series = series.toString('hex');
 	newDocs.push(doc);
-
-	doc = docs.pop();
-	if(!doc) {
-		//** send Unbind
-		var unbind = new Unbind();
-		client.write(unbind.makePDU());
-		return;
-	}
-	var mobiles = (doc.mobile instanceof Array) ? doc.mobile : [doc.mobile];
-	//** send Submit
-	var submit = new Submit(mobiles, 8, doc.content);
-	client.write(submit.makePDU());
+	//** send sms
+	_send(docs);
 });
 
 client.on('unbind_resp', function() {
+	console.log('<< 6. unbind_resp');
 	console.log('------ result ------');
 	console.log(newDocs);
-  client.end();
+	client.end();
 });
 
-client.on('response', function(buf) {
+var handler = new StreamSpliter(client);
+
+handler.on('message', function(buf) {
   var response = CommandFactory.parse(buf);
   console.log(response);
   if (response instanceof Bind.Resp) {
@@ -85,4 +84,8 @@ client.on('response', function(buf) {
   }
 });
 
-client.on('data', handler(client));
+//** send Bind Command
+var bind = new Bind(1, config.SPUser, config.SPPass);
+client.write(bind.makePDU());
+console.log('>> 1.bind');
+

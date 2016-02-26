@@ -1,54 +1,47 @@
 var request = require('request');
 
-var send = function(callback) {
-	request.post('http://localhost:8092/platform/smses', {
+var submit = function(callback) {
+	request.post('http://localhost:8092/system/sms/submit', {
 		form: {
-			action: 'send',
 		}
 	}, function(err, response, body) {
-		callback && callback(err, body);
+		if(err || response.statusCode != 200) throw new Error();
+		callback && callback(null, body);
 	});
 };
 
 var report = function(data, callback) {
-	request.post('http://localhost:8092/platform/smses', {
+	request.post('http://localhost:8092/system/sms/report', {
 		form: {
-			action: 'report',
 			data: data
 		}
 	}, function(err, response, body) {
-		callback(err, body);
+		if(err || response.statusCode != 200) throw new Error();
+		callback && callback(null, body);
 	});
 };
 
-var reply = function(data, callback) {
-	request.post('http://localhost:8092/platform/smses', {
+var deliver = function(data, callback) {
+	request.post('http://localhost:8092/system/sms/deliver', {
 		form: {
-			action: 'reply',
 			data: data,
 		}
 	}, function(err, response, body) {
-		callback(err, body);
+		if(err || response.statusCode != 200) throw new Error();
+		callback && callback(null, body);
 	});
 };
 
 exports = module.exports = {
-	send: send,
+	submit: submit,
 	report: report,
-	reply: reply,
+	deliver: deliver,
 };
 
+//** send sms
 if (process.argv[1] === __filename) {
-	send(function(err, result) {
+	submit(function(err, result) {
 		if (err) console.error(err);
 		console.log(result);
-		report({}, function(err,report){
-			if(err) console.error(err);
-			console.log(report);
-			reply({}, function(err,reply){
-				if(err) console.error(err);
-				console.log(reply);
-			});
-		});
 	});
 }

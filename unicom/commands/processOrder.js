@@ -1,22 +1,22 @@
 var request = require('request');
 
 var processOrder = function(callback) {
-	request.post('http://localhost:8092/platform/orders', {
+	request.post('http://localhost:8092/system/order/process', {
 		form: {
-			action: 'processOrder',
 		}
 	}, function(err, response, body) {
-		callback(err, body);
+		if(err || response.statusCode != 200) throw new Error();
+		callback && callback(null, body);
 	});
 };
 
 var confirmOrder = function(callback) {
-	request.post('http://localhost:8092/platform/orders', {
+	request.post('http://localhost:8092/system/order/confirm', {
 		form: {
-			action: 'confirmOrder',
 		}
 	}, function(err, response, body) {
-		callback(err, body);
+		if(err || response.statusCode != 200) throw new Error();
+		callback && callback(null, body);
 	});
 };
 

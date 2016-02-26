@@ -4,7 +4,7 @@ var Bind = CommandFactory.create('Bind');
 var Unbind = CommandFactory.create('Unbind');
 var Submit = CommandFactory.create('Submit');
 
-var handler = require('../lib/handler');
+var StreamSpliter = require('../lib/StreamSpliter');
 var smsServer = net.createServer();
 
 smsServer.on('connection', function(socket){
@@ -13,22 +13,25 @@ smsServer.on('connection', function(socket){
 		console.log('客户端连接断开。');
 	});
 
-	socket.on('response', function(buf) {
+	var handler = new StreamSpliter(socket);
+
+	handler.on('message', function(buf) {
 		// console.log(buf)
 		var command = CommandFactory.parse(buf);
 		console.log('---- start -----');		
-		console.log();
+		console.log(command);
 		var resp = new Buffer(21);
 		resp.writeUInt32BE(21,0);
-		if( instanceof Bind){
+		if( command instanceof Bind){
 			console.log('>> Bind');
 			resp.writeUInt32BE(0x80000001,4);
 			console.log('<< Bind_Resp');
-		}else if( instanceof Unbind){
+		}else if(command instanceof Unbind){
 			console.log('>> Unbind');
 			resp.writeUInt32BE(0x80000002,4);
 			console.log('<< Unbind_Resp');
-		}else if( instanceof Submit){
+		}else if(command instanceof Submit){
+			console.log(command.makePDU().length);
 			console.log('>> Submit');
 			resp.writeUInt32BE(0x80000003,4);
 			console.log('<< Submit_Resp');
@@ -39,12 +42,11 @@ smsServer.on('connection', function(socket){
 		socket.write(resp);
 		console.log('---- end -----\n\n\n');		
 	});
-	// socket.on('data', function(data){
-	// 	console.log(data);
-	// });
-	socket.on('data', handler(socket));
+	handler.on('end', function(){
+
+	});
 });
 
-smsServer.listen(8124, function(){
-	console.log('短信模拟服务器启动。port:8124');
+smsServer.listen(8801, function(){
+	console.log('短信模拟服务器启动。port:8801');
 });

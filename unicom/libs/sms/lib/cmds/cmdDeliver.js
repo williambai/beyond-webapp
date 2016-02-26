@@ -1,4 +1,4 @@
-var A = require('../Attributes');
+var A = require('../attributes');
 var override = require('../util').override;
 
 var defOptions = {

@@ -15,7 +15,7 @@ var nodemailer = require('nodemailer');
 
 
 log4js.configure(path.join(__dirname, 'config/log4js.json'));
-var logger = log4js.getLogger('nodejs:server');
+var logger = log4js.getLogger('server:main');
 logger.setLevel('INFO');
 
 //create an http server
@@ -169,58 +169,6 @@ app.server.listen(config.server.PORT, function() {
 });
 
 //** start SGIP Service
-// require('child_process').fork('./sgipService');
-
-//** schedule Jobs
-// var CronJob = require('cron').CronJob;
-// var updateWechatAccessToken = require('./commands/updateWechatAccessToken');
-// var refreshWechatAccessTokenJob = new CronJob({
-// 	cronTime: '00 */59 * * * *',
-// 	onTick: function() {
-// 		updateWechatAccessToken(function(err) {
-// 			if (err) return logger.error(err);
-// 			logger.info('update Wechat AccessToken successfully.');
-// 		});
-// 	},
-// 	start: true,
-// 	runOnInit: true,//** execute right now!
-// });
-
-// var updateCbssCookie = require('./commands/updateCbssCookie');
-// var refreshCbssCookieJob = new CronJob({
-// 	cronTime: '00 */5 * * * *',
-// 	onTick: function(){
-// 		updateCbssCookie(function(err) {
-// 			if (err) return console.log(err);
-// 			console.log('update CBSS Accounts Cookie successfully.');
-// 		});
-// 	},
-// 	start: true,
-// 	runOnInit: true,//** execute right now!
-// });
-// 
-// var processSMS = require('./commands/processSMS');
-// var processSMSJob = new CronJob({
-// 	cronTime: '*/10 * * * * *',
-// 	onTick: function(){
-// 		processSMS.send(function(err) {
-// 			if (err) return console.log(err);
-// 			console.log('process SMS peroid successfully.');
-// 		});
-// 	},
-// 	start: true,
-// 	runOnInit: true,//** execute right now!
-// });
-// var processOrder = require('./commands/processOrder');
-// var processOrderJob = new CronJob({
-// 	cronTime: '10 */2 * * * *',
-// 	onTick: function(){
-// 		processOrder.processOrder(function(err) {
-// 			if (err) return console.log(err);
-// 			console.log('process Order peroid successfully.');
-// 		});
-// 	},
-// 	start: true,
-// 	runOnInit: true,//** execute right now!
-// });
-// console.log('scheduleJobs is started.');
+require('child_process').fork('./sgipService');
+//** start cron jobs
+require('child_process').fork('./cronJobs');

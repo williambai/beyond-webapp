@@ -34,8 +34,8 @@
 			<div class="panel-body">
 				<form id="accountForm">
 					<div class="form-group">
-						<label for="mobile">手机号码：</label>
-						<input type="text" name="mobile" value="<%= model.mobile %>" class="form-control">
+						<label for="receiver">手机号码：</label>
+						<input type="text" name="receiver" value="<%= model.receiver %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
