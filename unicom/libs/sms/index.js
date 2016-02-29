@@ -1,3 +1,6 @@
+var path = require('path');
+var log4js = require('log4js');
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 var CommandFactory = require('./lib/commands');
 var StreamSpliter = require('./lib/StreamSpliter');
 
@@ -16,20 +19,20 @@ var send = function(docs, done) {
 		host: config.SPHost,
 		port: config.SPPort,
 	}, function() {
-		console.log('client connected.');
+		logger.info('client connected.');
 		//** send Bind Command
 		var bind = new Bind(1, config.SPUser, config.SPPass);
 		client.write(bind.makePDU());
 	});
 
 	client.on('error', function(err) {
-		console.log(err);
+		logger.error(err);
 		client.end();
 		done && done(err);
 	});
 
 	client.on('timeout', function(err) {
-		console.log(err);
+		logger.error(err);
 		client.end();
 		done && done(err);
 	});
@@ -38,7 +41,7 @@ var send = function(docs, done) {
 
 	handler.on('message', function(buf) {
 		var command = CommandFactory.parse(buf);
-		// console.log(command);
+		// logger.info(command);
 		if (command instanceof Bind.Resp) {
 			if (command.Result != 0) {
 				return client.end();
@@ -51,9 +54,9 @@ var send = function(docs, done) {
 				client.write(unbind.makePDU());
 				return;
 			}
-			var mobiles = (doc.mobile instanceof Array) ? doc.mobile : [doc.mobile];
+			var receivers = (doc.receiver || '').split(';');
 			// //** send Submit
-			var submit = new Submit(mobiles, 8, doc.content);
+			var submit = new Submit(receivers, 8, doc.content);
 			client.write(submit.makePDU());
 		} else if (command instanceof Unbind.Resp) {
 			//** unbind
@@ -71,9 +74,9 @@ var send = function(docs, done) {
 				client.write(unbind.makePDU());
 				return;
 			}
-			var mobiles = (doc.mobile instanceof Array) ? doc.mobile : [doc.mobile];
+			var receivers = (doc.receiver || '').split(';');
 			//** send Submit
-			var submit = new Submit(mobiles, 8, doc.content);
+			var submit = new Submit(receivers, 8, doc.content);
 			client.write(submit.makePDU());
 		}
 	});

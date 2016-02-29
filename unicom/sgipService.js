@@ -1,6 +1,7 @@
+var path = require('path');
 var log4js = require('log4js');
-var logger = log4js.getLogger('service:sgip12');
-logger.setLevel('DEBUG');
+log4js.configure(path.join(__dirname, 'config/log4js.json'));
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 
 var net = require('net');
 var request = require('request');
@@ -16,8 +17,11 @@ var sgipSerice = net.createServer();
 
 var config = require('./config/sp').SGIP12;
 
-sgipSerice.on('error', function() {
-	logger.error('sgipSerice error.');
+sgipSerice.on('error', function(err) {
+	logger.error(err);
+	sgipSerice.close(function(){
+		logger.info('sgip service is closed.');
+	});
 });
 
 sgipSerice.on('connection', function(socket) {
@@ -38,7 +42,7 @@ sgipSerice.on('connection', function(socket) {
 			logger.error('command parse error.');
 			return socket.end();
 		}
-		logger.debug(command);
+		logger.debug('command: ' + JSON.stringify(command));
 		if (command instanceof Bind) {
 			logger.debug('>> Bind');
 			if (command.loginType == 2 &&
@@ -86,8 +90,8 @@ sgipSerice.on('connection', function(socket) {
 				case 1: //** 等待发送
 					if(ReportType == 0){
 						//** submit report
-						processSMS.report(command,function(err){
-							if(err) logger.error(err);
+						processSMS.report(command,function(){
+							logger.info('<< Report command has been processed.');
 						});
 					}else if(ReportType == 1){
 						//** deliver report
@@ -115,8 +119,8 @@ sgipSerice.on('connection', function(socket) {
 			var MessageContent = command.MessageContent;
 			switch(MessageContent){
 				case 1: 
-					processSMS.deliver(command,function(err){
-						if(err) logger.error(err);
+					processSMS.deliver(command,function(){
+						logger.info('<< Deliver command has been processed.');
 					});
 					break;
 				default:

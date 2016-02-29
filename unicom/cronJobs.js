@@ -1,6 +1,7 @@
+var path = require('path');
 var log4js = require('log4js');
-var logger = log4js.getLogger('server:main');
-logger.setLevel('INFO');
+log4js.configure(path.join(__dirname, 'config/log4js.json'));
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 var CronJob = require('cron').CronJob;
 
 //** schedule Jobs
@@ -8,9 +9,8 @@ var CronJob = require('cron').CronJob;
 // var refreshWechatAccessTokenJob = new CronJob({
 // 	cronTime: '00 */59 * * * *',
 // 	onTick: function() {
-// 		updateWechatAccessToken(function(err) {
-// 			if (err) return logger.error(err);
-// 			logger.info('update Wechat AccessToken successfully.');
+// 		updateWechatAccessToken(function() {
+// 			logger.info('call Wechat AccessToken peroid job successfully.');
 // 		});
 // 	},
 // 	start: true,
@@ -21,9 +21,8 @@ var CronJob = require('cron').CronJob;
 // var refreshCbssCookieJob = new CronJob({
 // 	cronTime: '00 */5 * * * *',
 // 	onTick: function(){
-// 		updateCbssCookie(function(err) {
-// 			if (err) return logger.info(err);
-// 			logger.info('update CBSS Accounts Cookie successfully.');
+// 		updateCbssCookie(function() {
+// 			logger.info('call refresh CBSS Accounts Cookie job successfully.');
 // 		});
 // 	},
 // 	start: true,
@@ -34,9 +33,8 @@ var processSMS = require('./commands/processSMS');
 var processSMSJob = new CronJob({
 	cronTime: '*/10 * * * * *',
 	onTick: function(){
-		processSMS.submit(function(err) {
-			if (err) return logger.info(err);
-			logger.info('process SMS peroid successfully.');
+		processSMS.submit(function() {
+			logger.info('call SMS peroid job successfully.');
 		});
 	},
 	start: true,
@@ -46,9 +44,8 @@ var processOrder = require('./commands/processOrder');
 var processOrderJob = new CronJob({
 	cronTime: '10 */2 * * * *',
 	onTick: function(){
-		processOrder.processOrder(function(err) {
-			if (err) return logger.info(err);
-			logger.info('process Order peroid successfully.');
+		processOrder.processOrder(function() {
+			logger.info('call Order peroid job successfully.');
 		});
 	},
 	start: true,

@@ -1,7 +1,7 @@
 var util = require('util');
+var path = require('path');
 var log4js = require('log4js');
-var logger = log4js.getLogger('route:wechat.qrcode');
-logger.setLevel('DEBUG');
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 
 exports = module.exports = function(app, models) {
 	var request = require('request');

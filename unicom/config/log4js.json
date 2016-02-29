@@ -1,0 +1,50 @@
+{
+	"replaceConsole": true,
+	"appenders": [{
+		"type": "console"
+	}, {
+		"type": "logLevelFilter",
+		"level": "WARN",
+		"appender": {
+			"type": "file",
+			"filename": "logs/error.log",
+			"maxLogSize": 20480,
+			"backups": 3
+		}
+	}, {
+		"type": "logLevelFilter",
+		"level": "ALL",
+		"appender": {
+			"type": "file",
+			"filename": "logs/all.log",
+			"maxLogSize": 20480,
+			"backups": 3
+		}
+	}, {
+		"type": "file",
+		"filename": "logs/access.log",
+		"maxLogSize": 20480,
+		"backups": 3,
+		"category": "access",
+		"format": ":remote-addr :response-time - [:date] ':method :url HTTP/:http-version' :status :content-length ':referrer' ':user-agent'"
+	}, {
+		"type": "file",
+		"filename": "logs/sms.log",
+		"maxLogSize": 20480,
+		"backups": 3,
+		"category": ["sgipService.js","commands/processSMS.js"]
+	}, {
+		"type": "file",
+		"filename": "logs/wechat.log",
+		"maxLogSize": 20480,
+		"backups": 3,
+		"category": ["routes/_platform.wechat.js","routes/_platform.wechat.qrcode.js","commands/updateWechatAccessToken.js"]
+	}],
+	"levels": {
+		"access": "INFO",
+		"sgipService.js": "DEBUG",
+		"routes/_platform.wechat.js": "DEBUG",
+		"routes/_platform.wechat.qrcode.js": "DEBUG",
+		"commands/updateWechatAccessToken.js": "DEBUG"
+	}
+}

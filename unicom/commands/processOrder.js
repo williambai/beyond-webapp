@@ -1,3 +1,8 @@
+var path = require('path');
+var log4js = require('log4js');
+log4js.configure(path.join(__dirname, '../config/log4js.json'));
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
+
 var request = require('request');
 
 var processOrder = function(callback) {
@@ -5,8 +10,11 @@ var processOrder = function(callback) {
 		form: {
 		}
 	}, function(err, response, body) {
-		if(err || response.statusCode != 200) throw new Error();
-		callback && callback(null, body);
+		if(err || response.statusCode != 200) 
+			logger.error('process order failure, please check the url.');
+		else 
+			logger.info('process Order successfully.');
+		callback && callback();
 	});
 };
 

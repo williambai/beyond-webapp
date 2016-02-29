@@ -1,8 +1,13 @@
- exports = module.exports = function(app, models) {
+var path = require('path');
+var log4js = require('log4js');
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
+
+exports = module.exports = function(app, models) {
 
  	var _ = require('underscore');
  	var async = require('async');
  	var sp = require('../libs/sms');
+ 	var config = require('../config/sp').SGIP12;
 
  	/**
  	 * 由新建状态 转移到 失败状态或已发送状态
@@ -26,10 +31,11 @@
  			.limit(20)
  			.exec(function(err, docs) {
  				if (err) return res.send(err);
- 				if (_.isEmpty(docs)) return res.send({}); //没有可执行的新建SMS
+ 				if (_.isEmpty(docs)) return res.send({count:0}); //没有可执行的新建SMS
 				//** send sms
+				var count = docs.length;
 				sp.send(docs, function(err,newDocs) {
-					if(err) return res.send(err);
+					if(err) return res.status(406).send(err);
 					//** save sms'series info
 					async.each(newDocs,function(newDoc,callback){
 						//** 短信 cmdSubmit 对象
@@ -76,7 +82,7 @@
 						// 		});
 					}, function(err){
 						if(err) return res.send(err);
-						res.send({});
+						res.send({count: count});
 					});
 				});
  			});
@@ -87,6 +93,7 @@
  	 * 由已发送状态 转化为失败状态或已确认状态
  	 */
  	var report = function(req, res) {
+ 		logger.debug('report body: ' + JSON.stringify(req.body));
  		//** 短信报告cmdReport对象
  		var command = req.body.command || {};
  		//** 短信报告cmdReport.header对象
@@ -116,6 +123,7 @@
  	 * @return {[type]}            [description]
  	 */
  	var deliver = function(req, res) {
+ 		logger.debug('deliver body: ' + JSON.stringify(req.body));
  		//** 短信报告cmdDeliever对象
  		var command = req.body.command || {};
  		//** cmdDeliever.header对象

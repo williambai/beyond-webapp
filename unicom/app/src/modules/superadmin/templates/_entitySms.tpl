@@ -21,8 +21,9 @@
 				<button class="btn btn-success edit">编辑</button>
 				<button class="btn btn-danger delete">删除</button>
 			</div>
-			<h4><%= model.mobile %></h4>
-			<p>SMS内容：<%= model.content.slice(0,40) %>&nbsp;&nbsp;账户状态：<%= model.status %></p>
+			<h4><%= model.receiver %></h4>
+			<p>发送者：<%= model.sender %>&nbsp;&nbsp;状态：<%= model.status %></p>
+			<p>SMS内容：<%= model.content.slice(0,40) %></p>
 		</div>
 		<hr/>
 	</div>
@@ -34,7 +35,12 @@
 			<div class="panel-body">
 				<form id="accountForm">
 					<div class="form-group">
-						<label for="receiver">手机号码：</label>
+						<label>发送方：</label>
+						<input type="text" name="sender" value="<%= model.sender %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="receiver">接收方：</label>
 						<input type="text" name="receiver" value="<%= model.receiver %>" class="form-control">
 						<span class="help-block"></span>
 					</div>

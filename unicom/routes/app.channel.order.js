@@ -1,5 +1,6 @@
-var log4js = require('log4js'); 
-var logger = log4js.getLogger('route:channel.order');
+var path = require('path');
+var log4js = require('log4js');
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 
 
 exports = module.exports = function(app, models) {

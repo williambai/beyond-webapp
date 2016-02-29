@@ -15,10 +15,8 @@ var nodemailer = require('nodemailer');
 
 
 log4js.configure(path.join(__dirname, 'config/log4js.json'));
-var logger = log4js.getLogger('server:main');
-logger.setLevel('INFO');
-
-//create an http server
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
+//** create an http server
 app.server = http.createServer(app);
 app.randomHex = function() {
 	return new Date().getTime();
@@ -59,10 +57,7 @@ app.set('views', __dirname + '/views');
 // 	next();
 // });
 
-app.use(log4js.connectLogger(log4js.getLogger('server'), {
-	level: log4js.levels.INFO,
-	format: ':remote-addr :response-time - [:date] ":method :url HTTP/:http-version" :status :content-length ":referrer" ":user-agent"'
-}));
+app.use(log4js.connectLogger(log4js.getLogger('access')));
 app.use(express.static(__dirname + '/public'));
 // app.use(express.limit('1mb'));
 app.use(bodyParser.json()); // for parsing application/json
@@ -171,4 +166,4 @@ app.server.listen(config.server.PORT, function() {
 //** start SGIP Service
 require('child_process').fork('./sgipService');
 //** start cron jobs
-require('child_process').fork('./cronJobs');
+require('./cronJobs');

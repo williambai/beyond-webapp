@@ -9,7 +9,6 @@ module.exports = exports = function(mongoose) {
 		headerSeries: String, //** srcNodeID + cmdTime + cmdSeq
 		sender: String,
 		receiver: String,
-		mobile: String, //Deprecated!
 		content: String,
 		replies: [],
 		creator: {
