@@ -26,11 +26,14 @@ if (process.argv[1] === __filename) {
 		console.log(util.inspect(BindMessage.prototype));
 		var msg = new BindMessage(1, 'william', 'pass');
 		console.log(msg);
-		var PDU = msg.makePDU();		
+		var PDU = msg.makePDU();
 		console.log(PDU.slice(0, 20));
 		console.log(PDU.slice(20));
 		var msgEcho = CommandFactory.parse(PDU);
 		console.log(msgEcho);
 		console.log(msgEcho instanceof Bind);
+		//** Resp
+		var Resp = msg.makePDU(PDU);
+		console.log(Resp)
 	});
 }

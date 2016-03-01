@@ -33,6 +33,22 @@ sgipSerice.on('connection', function(socket) {
 
 	var handler = new StreamSpliter(socket);
 
+	var makeRespPDU = function(buf, result){
+		//** resp PDU(unbind 例外): 
+		//** 包含 4(总长度) + 4(command) + 12(序列号) + 1(result) + 8(保留) = 29
+		var command = 0x80000000 + buf.readUInt32BE(4);
+		var resp = new Buffer(29);
+		resp.writeUInt32BE(29,0);
+		//** resp command: 0x80000000 + command 
+		resp.writeUInt32BE(command,4);
+		//** copy 序列号
+		buf.copy(resp, 8, 8, 20);
+		//** result
+		resp.writeUInt8(result, 21);
+		logger.debug('resp PDU: ' + resp);
+		return resp;
+	};
+
 	handler.on('message', function(buf) {
 		// logger.debug(buf)
 		var command;
@@ -49,33 +65,24 @@ sgipSerice.on('connection', function(socket) {
 				command.loginName == config.listener.loginName &&
 				command.loginPass == config.listener.loginPass) {
 				logger.debug('>> Bind >> ok');
-				var resp = new Buffer(21);
-				resp.writeUInt32BE(21, 0);
-				resp.writeUInt32BE(0x80000001, 4);
-				buf.copy(resp, 8, 8, 20);
-				resp.writeUInt8(0, 20);
-				logger.debug(resp);
-				socket.write(resp);
+				//** write bind resp PDU
+				socket.write(makeRespPDU(buf,0));
 			} else {
-				var resp = new Buffer(21);
-				resp.writeUInt32BE(21, 0);
-				resp.writeUInt32BE(0x80000001, 4);
-				buf.copy(resp, 8, 8, 20);
-				resp.writeUInt8(1, 20);
-				logger.debug(resp);
-				socket.write(resp);
-				socket.end();
+				logger.debug('>> Bind >> error');
+				//** write bind resp PDU
+				socket.write(makeRespPDU(buf,1));
+				socket.destroy();
 			}
 		} else if (command instanceof Unbind) {
 			logger.debug('>> Unbind');
-			var resp = new Buffer(21);
-			resp.writeUInt32BE(21, 0);
+			//** unbind 4+4+12 = 20
+			var resp = new Buffer(20);
+			resp.writeUInt32BE(20, 0);
 			resp.writeUInt32BE(0x80000002, 4);
 			buf.copy(resp, 8, 8, 20);
-			resp.writeUInt8(0, 20);
-			logger.debug(resp);
+			logger.debug('unbind resp PDU: ' + resp);
 			socket.write(resp);
-			socket.end();
+			socket.destroy();
 		} else if (command instanceof Report) {
 			logger.debug('>> Report');
 			var srcNodeID = command.srcNodeID;
@@ -104,13 +111,8 @@ sgipSerice.on('connection', function(socket) {
 				default:
 					break;
 			}
-			var resp = new Buffer(21);
-			resp.writeUInt32BE(21, 0);
-			resp.writeUInt32BE(0x80000003, 4);
-			buf.copy(resp, 8, 8, 20);
-			resp.writeUInt8(0, 20);
-			logger.debug(resp);
-			socket.write(resp);
+			//** write report resp PDU
+			socket.write(makeRespPDU(buf,0));
 		} else if (command instanceof Deliver) {
 			logger.debug('>> Deliver');
 			var UserNumber = command.UserNumber;
@@ -126,21 +128,12 @@ sgipSerice.on('connection', function(socket) {
 				default:
 					break;	
 			}
-			var resp = new Buffer(21);
-			resp.writeUInt32BE(21, 0);
-			resp.writeUInt32BE(0x80000003, 4);
-			buf.copy(resp, 8, 8, 20);
-			resp.writeUInt8(0, 20);
-			logger.debug(resp);
-			socket.write(resp);
+			//** write report resp PDU
+			socket.write(makeRespPDU(buf,0));
 		} else {
-			var resp = new Buffer(21);
-			resp.writeUInt32BE(21, 0);
-			resp.writeUInt32BE(0x80000003, 4);
-			buf.copy(resp, 8, 8, 20);
-			resp.writeUInt8(35, 20); //- unknown error
-			logger.debug(resp);
-			socket.write(resp);
+			//** write resp PDU
+			//** 不提供此功能
+			socket.write(makeRespPDU(buf,30));
 		}
 	});
 });
