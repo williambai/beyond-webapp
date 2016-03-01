@@ -5,7 +5,7 @@
 				<button class="btn btn-primary add">新增</button>
 			</div>
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">角色管理</h4>
+				<h4 class="panel-title text-center">权限管理</h4>
 			</div>
 			<div class="panel-body">
 				<div id="list">
@@ -25,34 +25,34 @@
 	<div id="editTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">修改角色</h4>
+				<h4 class="panel-title text-center">修改权限</h4>
 			</div>
 			<div class="panel-body">
 				<form id="roleForm">
 					<div class="form-group">
-						<label>角色名称：</label>
+						<label>权限名称：</label>
 						<input type="text" name="name" value="<%= model.name %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>角色编码：</label>
+						<label>权限编码：</label>
 						<input type="text" name="nickname" value="<%= model.nickname %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>角色描述：</label>
+						<label>权限描述：</label>
 						<input type="text" name="description" value="<%= model.description %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 <!-- 					
 					<div class="form-group">
-						<label>角色归属的应用：</label>
+						<label>权限归属的应用：</label>
 						<div style="padding-left:30px;" id="apps">
 						</div>
 					</div>
  -->
  					<div class="form-group">
-						<label>角色权限：</label>
+						<label>可用资源：</label>
 						<div style="padding-left:30px;" id="features">
 						</div>
 					</div>

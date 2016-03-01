@@ -87,7 +87,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label>角色：</label>
+						<label>权限：</label>
 						<div style="padding-left:30px;" id="roles">
 						</div>
 					</div>

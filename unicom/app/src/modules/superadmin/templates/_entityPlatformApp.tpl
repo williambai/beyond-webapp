@@ -45,7 +45,7 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>包含功能：</label>
+						<label>可用资源：</label>
 						<div style="padding-left:30px;" id="features">
 						</div>
 					</div>

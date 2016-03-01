@@ -948,7 +948,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','角色设置');
+		this.appEvents.trigger('set:brand','权限管理');
 		var roleIndexView = new RoleIndexView({
 			router: this,
 			el: '#content',
@@ -962,7 +962,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','修改角色');
+		this.appEvents.trigger('set:brand','修改权限');
 		var roleEditView = new RoleEditView({
 			router: this,
 			el: '#content',

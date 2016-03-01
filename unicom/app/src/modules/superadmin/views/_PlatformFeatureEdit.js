@@ -141,7 +141,7 @@ exports = module.exports = FormView.extend({
 		this.$el.html(this.template({model: this.model.toJSON()}));
 		var status = this.model.get('status');
 		that.$('input[name="status"][value="'+ status +'"]').attr('checked',true);
-		if(this.model.isNew()) this.$('.panel-title').text('新增功能');
+		if(this.model.isNew()) this.$('.panel-title').text('新增资源');
 		return this;
 	},
 });

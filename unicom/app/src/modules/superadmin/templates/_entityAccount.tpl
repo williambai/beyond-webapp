@@ -87,8 +87,14 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label>角色：</label>
+						<label>权限：</label>
 						<div style="padding-left:30px;" id="roles">
+						</div>
+					</div>
+					<div class="form-group">
+						<label>角色：</label>
+						<div style="padding-left:30px;">
+							<input type="checkbox" name="" value="admin">&nbsp;&nbsp;管理员&nbsp;&nbsp;
 						</div>
 					</div>
 					<div class="form-group">

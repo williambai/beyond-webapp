@@ -305,7 +305,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','功能设置');
+		this.appEvents.trigger('set:brand','资源管理');
 		var featureIndexView = new FeatureIndexView({
 			router: this,
 			el: '#content',
@@ -319,7 +319,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','修改功能');
+		this.appEvents.trigger('set:brand','修改资源');
 		var featureEditView = new FeatureEditView({
 			router: this,
 			el: '#content',
@@ -363,7 +363,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','角色管理');
+		this.appEvents.trigger('set:brand','权限管理');
 		var roleIndexView = new RoleIndexView({
 			router: this,
 			el: '#content',
@@ -377,7 +377,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','修改角色');
+		this.appEvents.trigger('set:brand','修改权限');
 		var roleEditView = new RoleEditView({
 			router: this,
 			el: '#content',

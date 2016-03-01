@@ -5,7 +5,7 @@
 				<button class="btn btn-primary add">新增</button>
 			</div>
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">功能管理</h4>
+				<h4 class="panel-title text-center">资源管理</h4>
 			</div>
 			<div class="panel-body">
 				<div id="list">
@@ -25,33 +25,33 @@
  	<div id="editTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">修改功能</h4>
+				<h4 class="panel-title text-center">修改资源</h4>
 			</div>
 			<div class="panel-body">
 				<form id="roleForm">
 					<div class="form-group">
-						<label>功能名称：</label>
+						<label>资源名称：</label>
 						<input type="text" name="name" value="<%= model.name %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>功能编码：</label>
+						<label>资源编码：</label>
 						<input type="text" name="nickname" value="<%= model.nickname %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>功能路径：</label>
+						<label>资源路径：</label>
 						<input type="text" name="route" value="<%= model.route %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>功能描述：</label>
+						<label>资源描述：</label>
 						<input type="text" name="description" value="<%= model.description %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 <!--
  					<div class="form-group">
-						<label>功能归属的应用：</label>
+						<label>资源归属的应用：</label>
 						<div style="padding-left:30px;" id="apps">
 						</div>
 					</div>
