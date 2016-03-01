@@ -19,8 +19,10 @@ if (process.argv[1] === __filename) {
   process.nextTick(function(){
   	var CommandFactory = require('../commands');
     var Unbind = CommandFactory.create('Unbind');
-    var msg = new Unbind(1, 'kaven', 'psp');
-    var PDU = msg.makePDU();
+    var msg = new Unbind();
+    var PDU = msg.makePDU().slice(0,20);
+    //** unbind只有20个字节
+    PDU.writeUInt32BE(20, 0);
     var msgEcho = CommandFactory.parse(PDU);
     console.log(msg);
     console.log(PDU.slice(0, 20));

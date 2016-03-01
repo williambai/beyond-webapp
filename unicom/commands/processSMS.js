@@ -34,6 +34,7 @@ var report = function(data, callback) {
 		if(!err && response.statusCode == 200){
 			logger.debug('report result: ' + body);
 			var data = JSON.parse(body);
+			logger.info('report SMS successfully.');
 		}else{
 			logger.error(err || 'status code(' + response.statusCode + '): report failure, please check the url.');
 		}
@@ -50,6 +51,7 @@ var deliver = function(data, callback) {
 		if(!err && response.statusCode == 200){
 			logger.debug('deliver result: ' + body);
 			var data = JSON.parse(body);
+			logger.info('deliver SMS successfully.');
 		}else{
 			logger.error(err || 'status code(' + response.statusCode + '): submit failure, please check the url.');
 		}

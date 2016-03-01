@@ -6,15 +6,15 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 var request = require('request');
 
 var updateWechatAccessToken = function(callback) {
-	request.post('http://localhost:8092/platform/wechats', {
-		form: {
-			action: 'updateAccessToken',
-		}
+	request.post('http://localhost:8092/system/wechat/access_token', {
 	}, function(err, response, body) {
-		if(err || response.statusCode != 200) 
-			logger.error('refresh failure, please check the url.');
-		else 
+		if(!err && response.statusCode == 200){
+			logger.debug('refresh result: ' + body);
+			var data = JSON.parse(body);
 			logger.info('refresh Wechat AccessToken successfully.');
+		}else{
+			logger.error(err || 'status code(' + response.statusCode + '): refresh failure, please check the url.');
+		}
 		callback && callback();
 	});
 };

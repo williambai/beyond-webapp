@@ -26,7 +26,10 @@ var _send = function(docs){
 		console.log('<< 4. submit_resp');
 		//** send Unbind
 		var unbind = new Unbind();
-		client.write(unbind.makePDU());
+		var PDU = unbind.makePDU().slice(0,20);
+		//** unbind只有20个字节
+		PDU.writeUInt32BE(20, 0);
+		client.write(PDU);
 		console.log('>> 5. unbind');
 		return;
 	}

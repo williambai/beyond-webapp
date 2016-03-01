@@ -163,7 +163,20 @@ app.server.listen(config.server.PORT, function() {
 	logger.info(config.server.NAME + ' App is running at ' + config.server.PORT + ' now.');
 });
 
+var fork = require('child_process').fork;
 //** start SGIP Service
-require('child_process').fork('./sgipService');
+var sgipService = fork('./sgipService');
 //** start cron jobs
 require('./cronJobs');
+
+//** kill child process when SIGTERM received
+process.on('SIGTERM', function(){
+	logger.warn('receive SIGTERM and process exit.');
+	sgipService.kill('SIGTERM');
+	process.exit(1);
+});
+
+//** process uncaughtException
+// process.on('uncaughtException', function(){
+// 	process.exit(1);
+// });
