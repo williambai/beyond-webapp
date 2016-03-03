@@ -80,7 +80,7 @@
 				开始时间：
 				<%= date.getFullYear() +'-' + (1+date.getMonth()) + '-' + (date.getDate()) + ' '+ date.getHours() + ':'+ date.getMinutes() + ':'+ date.getSeconds() %>
 				&nbsp;&nbsp;交易次数：
-				<%= model.times %></p>
+				<%= model.times %>&nbsp;&nbsp;盈亏：<%= model.asset %></p>
 		</div>
 		<div class="graph"></div>
 		<hr/>
@@ -113,6 +113,11 @@
 								<div class="form-group">
 									<label>股票代码：</label>
 									<input type="text" name="stock[code]" value="<%= model.stock.code %>" class="form-control input-sm" placeholder="如，600030">
+									<span class="help-block"></span>
+								</div>
+								<div class="form-group">
+									<label>当前股票数量：</label>
+									<input type="text" name="quantity" value="<%= model.quantity %>" class="form-control input-sm" placeholder="">
 									<span class="help-block"></span>
 								</div>
 								<fiedset>
@@ -222,6 +227,21 @@
 								<div class="form-group">
 									<label>股票代码：</label>
 									<input type="text" name="stock[code]" value="<%= model.stock.code %>" class="form-control input-sm" placeholder="" readonly>
+									<span class="help-block"></span>
+								</div>
+								<div class="form-group">
+									<label>初始资产：</label>
+									<input type="text" name="asset" value="<%= model.asset %>" class="form-control input-sm" placeholder="" readonly>
+									<span class="help-block"></span>
+								</div>
+								<div class="form-group">
+									<label>负债：</label>
+									<input type="text" name="debt" value="<%= model.debt %>" class="form-control input-sm" placeholder="" readonly>
+									<span class="help-block"></span>
+								</div>
+								<div class="form-group">
+									<label>当前股票数量：</label>
+									<input type="text" name="quantity" value="<%= model.quantity %>" class="form-control input-sm" placeholder="" readonly>
 									<span class="help-block"></span>
 								</div>
 								<fiedset>
@@ -347,6 +367,11 @@
 								<div class="form-group">
 									<label>股票代码：</label>
 									<input type="text" name="stock[code]" value="<%= model.stock.code %>" class="form-control input-sm" placeholder="">
+									<span class="help-block"></span>
+								</div>
+								<div class="form-group">
+									<label>当前股票数量：</label>
+									<input type="text" name="quantity" value="<%= model.quantity %>" class="form-control input-sm" placeholder="">
 									<span class="help-block"></span>
 								</div>
 								<fiedset>

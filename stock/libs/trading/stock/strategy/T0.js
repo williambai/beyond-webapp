@@ -1,15 +1,9 @@
 var log4js = require('log4js');
 var path = require('path');
 var _ = require('underscore');
-log4js.configure(path.join(__dirname,'../../..','log4js.json'));
+log4js.configure(path.join(__dirname,'../../../..','log4js.json'));
 var logger = log4js.getLogger('trading');
 logger.setLevel('INFO');
-
-var T0 = function(options) {
-	this.options = options || {};
-	_.extend(this, T0);
-	return this;
-};
 
 var isTradingTime = function(time) {
 	var hhmmss = time.split(':');
@@ -18,6 +12,7 @@ var isTradingTime = function(time) {
 	var afternoonBeginTime = 13 * 60 * 60; //13:00:00
 	var afternonnEndTime = 15 * 60 * 60; //15:00:00
 	var seconds = (parseInt(hhmmss[0]) * 3600 + parseInt(hhmmss[1]) * 60 + parseInt(hhmmss[2]));
+	//is trading time?
 	if ((seconds > morningBeginTime && seconds < morningEndTime) ||
 		(seconds > afternoonBeginTime && seconds < afternonnEndTime)) {
 		return true;
@@ -25,7 +20,7 @@ var isTradingTime = function(time) {
 	return false;
 };
 
-T0.judge = function(stock, strategy, callback) {
+var judge = function(stock, strategy, callback) {
 	try {
 		var price, top, bottom, quantity, direction;
 		stock = stock || {};
@@ -58,20 +53,34 @@ T0.judge = function(stock, strategy, callback) {
 		// is times more than times_max, do nothing
 		if(strategy.times > params.times_max) return callback(null);
 		if(bid_direction == '待定'){
+			var countBuy = _.without(directions, '卖出');
+			var countSell = _.without(directions, '买入');
 			if(price <= bottom){
-				//price is lower than bottom, think to buy
-				return callback(null, {
-					action: 'bid',
-					price: price,
-					direction: '买入',
-				});
+				//** price is lower than bottom, think to buy
+				//** is not same direction depth too many?
+				if ((countBuy.length - countSell.length) < depth) {
+					//is count of buy direction less than depth ? if yes, buy now
+					return callback(null, {
+						action: 'bid',
+						price: price,
+						direction: '买入',
+					});
+				} else {
+					return callback(null);
+				}
 			}else if(price >= top){
-				//price is greater than top, think to sell
-				return callback(null, {
-					action: 'bid',
-					price: price,
-					direction: '卖出',
-				});
+				//** price is greater than top, think to sell
+				//** is not same direction depth too many?
+				if ((countSell.length - countBuy.length) < depth) {
+					//** is count of buy direction less than depth ? if yes, buy now
+					return callback(null, {
+						action: 'bid',
+						price: price,
+						direction: '卖出',
+					});
+				} else {
+					return callback(null);
+				}
 			}else{
 				// price is between bottom and top, do nothing
 				return callback(null);
@@ -163,4 +172,4 @@ T0.judge = function(stock, strategy, callback) {
 	}
 };
 
-exports = module.exports = T0;
+exports = module.exports = judge;

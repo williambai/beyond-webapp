@@ -11,11 +11,6 @@
 						<i class="fa fa-chevron-right"></i>
 					</span>
 				</a>
-				<!-- <a class="list-group-item" href="#evaluate">
-					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;交易评估
-					<i class="fa fa-chevron-right pull-right"></i>
-				</a> -->
 				<a class="list-group-item" href="#strategy">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;交易品种
@@ -24,6 +19,11 @@
 				<a class="list-group-item" href="#trading">
 					<i class="fa fa-meh-o fa-fw"></i>
 					&nbsp;交易记录
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#trade/account/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;账户管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#profile/me">

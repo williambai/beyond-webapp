@@ -1,6 +1,8 @@
 var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
+var validation = require('backbone-validation');
+_.extend(Backbone.Model.prototype,validation.mixin);
 
 var LayoutView = require('./views/__Layout');
 var RegisterView = require('./views/_AccountRegister');
@@ -10,10 +12,14 @@ var ProfileViewView = require('./views/_AccountView');
 var ProfileEditView = require('./views/_AccountEdit');
 var IndexView = require('./views/Index');
 
+var TradeAccountIndexView = require('./views/_TradeAccountIndex');
+var TradeAccountEditView = require('./views/_TradeAccountEdit');
+
 var TradingIndexView = require('./views/_TradingIndex');
 var TradingGraphView = require('./views/TradingGraph');
 var StrategyTradingListView = require('./views/_StrategyTradingList');
 var StrategyTradingGraphView = require('./views/_StrategyTradingGraph');
+
 
 var StrategyIndexView = require('./views/_StrategyIndex');
 var StrategyAddView = require('./views/_StrategyAdd');
@@ -48,6 +54,9 @@ exports = module.exports = Backbone.Router.extend({
 		'strategy/trading/graph/:symbol/:from': 'strategyTradingGraph',
 		'trading': 'tradingIndex',
 		'trading/graph/:symbol': 'tradingGraph',
+		'trade/account/index': 'tradeAccountIndex',
+		'trade/account/add': 'tradeAccountEdit',
+		'trade/account/edit/:id': 'tradeAccountEdit',
 		'*path': 'index',
 	},
 
@@ -312,5 +321,34 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(tradingGraphView);
 		tradingGraphView.trigger('load');
 	},
+
+	tradeAccountIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','账户管理');
+		var tradeAccountIndexView = new TradeAccountIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(tradeAccountIndexView);
+		tradeAccountIndexView.trigger('load');
+	},	
+
+	tradeAccountEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改账户');
+		var tradeAccountEditView = new TradeAccountEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(tradeAccountEditView);
+		tradeAccountEditView.trigger('load');
+	},	
 
 });

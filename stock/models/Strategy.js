@@ -1,18 +1,29 @@
 exports = module.exports = function(mongoose) {
 
 	var schema = new mongoose.Schema({
-		symbol: {
+		symbol: {//** 品种交易别名
 			type: String,
 			unique: true,
 			required: true
 		},
-
-		stock: {
+		name: String, //** 交易品种名称
+		nickname: String, //** 交易品种代码
+		quantity: {//** 品种当前数量
+			type: Number,
+			default: 0
+		},
+		//** 品种可用数量，用于卖出交易
+		asset: Number,//** 初始资产，在启动时初始化。收益 = 当前品种价格 * 当前品种数量 + 债务 - 初始资产
+		debt: {//** 债务，卖出减少债务，买入增加债务
+			type: Number,
+			default: 0,
+		},
+		stock: {//** Deprciated!!
 			name: String,
 			code: String,
 		},
 
-		bid: {//记录回撤时的最高或最低出价
+		bid: {//** 记录回撤时的最高或最低出价
 			direction: {
 				type: String, 
 				enum: {

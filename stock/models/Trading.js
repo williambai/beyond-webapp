@@ -1,14 +1,17 @@
 exports = module.exports = function(mongoose) {
 
 	var schema = new mongoose.Schema({
-		symbol: {
+		account: {
+			id: String,//** 交易账号
+			name: String,
+		},
+		name: String, //** 交易品种名称
+		nickname: String, //** 交易品种代码
+		symbol: {//** 品种交易别名
 			type: String,
 			required: '{PATH} is required!',
 		},
-		stock: {
-			name: String,
-			code: String,
-		},
+
 		direction: {
 			type: String,
 			enum: '买入|卖出'.split('|'),

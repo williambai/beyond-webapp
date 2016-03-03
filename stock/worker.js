@@ -5,12 +5,12 @@ var async = require('async');
 var fs = require('fs');
 var path = require('path');
 var cst = require('./config/constant');
-var trading = require('./libs/trading');
+var Trading = require('./libs/trading').stock;
 var citic = require('./libs/citic');
 
 log4js.configure(path.join(__dirname, 'log4js.json'));
 var logger = log4js.getLogger('worker');
-logger.setLevel('INFO');
+logger.setLevel('DEBUG');
 
 var status = {
 	platform: false,
@@ -31,7 +31,7 @@ var models = {
 	Strategy: require('./models/Strategy')(mongoose),
 };
 
-trading.on('quote', function(stock) {
+var quote = function(stock) {
 	// logger.debug('quote: ' + JSON.stringify(stock.symbol));
 	if (stock.price != '0.00') {
 		models.StockQuote
@@ -49,9 +49,9 @@ trading.on('quote', function(stock) {
 				}
 			);
 	}
-});
+};
 
-trading.on('bid', function(trade) {
+var bid = function(trade) {
 	trade = trade || {};
 	var stock = trade.stock;
 	var transaction = trade.transaction;
@@ -73,12 +73,13 @@ trading.on('bid', function(trade) {
 			if (err) return logger.error(err);
 		});
 
-});
+};
 
-trading.on('buy', function(trade) {
+var buy = function(trade) {
 	trade = trade || {};
 	var stock = trade.stock;
 	var transaction = trade.transaction;
+	var debt = - transaction.price * transaction.quantity;
 	transaction.symbol = stock.symbol;
 	logger.info('buy transaction: ' + JSON.stringify(transaction));
 
@@ -103,7 +104,8 @@ trading.on('buy', function(trade) {
 								}
 							},
 							$inc: {
-								'times': 1
+								'times': 1,
+								'debt': debt, 
 							}
 						}, {
 							upsert: false,
@@ -140,13 +142,14 @@ trading.on('buy', function(trade) {
 		}
 	);
 
-});
+};
 
-trading.on('sell', function(trade) {
+var sell = function(trade) {
 	trade = trade || {};
 	var stock = trade.stock;
 	var transaction = trade.transaction;
 	transaction.symbol = stock.symbol;
+	var debt = transaction.price * transaction.quantity;
 	logger.info('sell transaction: ' + JSON.stringify(transaction));
 	async.waterfall(
 		[
@@ -169,7 +172,8 @@ trading.on('sell', function(trade) {
 								}
 							},
 							$inc: {
-								'times': 1
+								'times': 1,
+								'debt': debt,
 							}
 						}, {
 							upsert: false,
@@ -205,7 +209,7 @@ trading.on('sell', function(trade) {
 			if (err) return logger.error(err);
 		}
 	);
-});
+};
 
 var getStatus = function() {
 	logger.info('collect status.');
@@ -232,6 +236,11 @@ var start = function() {
 			.exec(function(err, strategies) {
 				if (err) return logger.error(err);
 				if (_.isEmpty(strategies)) return logger.warn('没有可执行的。');
+				trading = new Trading();
+				trading.on('quote',quote);
+				trading.on('bid', bid);
+				trading.on('sell', sell);
+				trading.on('buy', buy);
 				trading.run(strategies, function(err, result) {
 					if (err) return logger.error(err);
 					var now = Date.now();

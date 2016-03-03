@@ -5,7 +5,7 @@
 				<button class="btn btn-primary add">新增</button>
 			</div>
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">股票账户管理</h4>
+				<h4 class="panel-title text-center">交易账户管理</h4>
 			</div>
 			<div class="panel-body">
 				<div id="search">
@@ -67,7 +67,7 @@
 					</div>
 					<div class="form-group">
 						<label>资金结余：</label>
-						<input type="text" name="balance" class="form-control">
+						<input type="text" name="balance" value="<%= model.balance %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
