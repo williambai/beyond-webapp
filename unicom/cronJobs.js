@@ -1,8 +1,35 @@
+//** common packages
 var path = require('path');
+var fs = require('fs');
+var net = require('net');
+var request = require('request');
+var config = {
+	db: require('./config/db'),
+	sp: require('./config/sp').SGIP12,
+};
+//** logger packages
 var log4js = require('log4js');
 log4js.configure(path.join(__dirname, 'config/log4js.json'));
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
+//** CronJob package
 var CronJob = require('cron').CronJob;
+
+//** MongoDB packages
+var mongoose = require('mongoose');
+mongoose.connect(config.db.URI, function onMongooseError(err) {
+	if (err) {
+		logger.error('Error: can not open Mongodb.');
+		throw err;
+	}
+});
+//** import MongoDB's models
+var models = {};
+fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
+	if (/\.js$/.test(file)) {
+		var modelName = file.substr(0, file.length - 3);
+		models[modelName] = require('./models/' + modelName)(mongoose);
+	}
+});
 
 //** schedule Jobs
 // var updateWechatAccessToken = require('./commands/updateWechatAccessToken');
@@ -29,17 +56,27 @@ var CronJob = require('cron').CronJob;
 // 	runOnInit: true,//** execute right now!
 // });
 // 
-var processSMS = require('./commands/processSMS');
-var processSMSJob = new CronJob({
+
+//** send 'new' sms in database
+var submit = require('./business/sms').submit;
+var sendSMSJob = new CronJob({
 	cronTime: '*/10 * * * * *',
 	onTick: function(){
-		processSMS.submit(function() {
-			logger.info('call SMS peroid job successfully.');
+		logger.debug('call SMS peroid job successfully.');
+		submit(models,function(err,result) {
+			if(err || !result) return logger.error(err);
+			if (result.count > 0) {
+				logger.info('submit ' + (result.count ) + ' SMS successfully.');
+			} else {
+				logger.info('none SMS need submit till now.');
+			}
+
 		});
 	},
 	start: true,
 	runOnInit: true,//** execute right now!
 });
+
 var processOrder = require('./commands/processOrder');
 var processOrderJob = new CronJob({
 	cronTime: '10 */2 * * * *',

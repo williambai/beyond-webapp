@@ -59,8 +59,6 @@ var StreamSpliter = function(stream){
 	stream.on('data', _handler);
 };
 
-
-
 util.inherits(StreamSpliter,EventEmitter);
 
 exports = module.exports = StreamSpliter;
