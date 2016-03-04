@@ -32,17 +32,18 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 });
 
 //** schedule Jobs
-// var updateWechatAccessToken = require('./commands/updateWechatAccessToken');
-// var refreshWechatAccessTokenJob = new CronJob({
-// 	cronTime: '00 */59 * * * *',
-// 	onTick: function() {
-// 		updateWechatAccessToken(function() {
-// 			logger.info('call Wechat AccessToken peroid job successfully.');
-// 		});
-// 	},
-// 	start: true,
-// 	runOnInit: true,//** execute right now!
-// });
+var updateWechatAccessToken = require('./business/wechat').updateAccessToken;
+var refreshWechatAccessTokenJob = new CronJob({
+	cronTime: '00 */59 * * * *',
+	onTick: function() {
+		updateWechatAccessToken(models,{},function(err,result) {
+			if(err) return logger.error(err);
+			logger.info('call Wechat AccessToken peroid job successfully.');
+		});
+	},
+	start: true,
+	runOnInit: true,//** execute right now!
+});
 
 // var updateCbssCookie = require('./commands/updateCbssCookie');
 // var refreshCbssCookieJob = new CronJob({
@@ -62,7 +63,6 @@ var submit = require('./business/sms').submit;
 var sendSMSJob = new CronJob({
 	cronTime: '*/10 * * * * *',
 	onTick: function(){
-		logger.debug('call SMS peroid job successfully.');
 		submit(models,function(err,result) {
 			if(err || !result) return logger.error(err);
 			if (result.count > 0) {
@@ -77,11 +77,12 @@ var sendSMSJob = new CronJob({
 	runOnInit: true,//** execute right now!
 });
 
-var processOrder = require('./commands/processOrder');
+var processOrder = require('./business/order').process;
 var processOrderJob = new CronJob({
 	cronTime: '10 */2 * * * *',
 	onTick: function(){
-		processOrder.processOrder(function() {
+		processOrder(models,{},function(err,result) {
+			if(err) return logger.error(err);
 			logger.info('call Order peroid job successfully.');
 		});
 	},
