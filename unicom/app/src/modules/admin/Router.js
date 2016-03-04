@@ -27,6 +27,9 @@ var MediaAddView = require('./views/_MediaAdd');
 
 var PageIndexView = require('./views/_PageIndex');
 var PageEditView = require('./views/_PageEdit');
+var PageDynamicIndexView = require('./views/_PageDynamicIndex');
+var PageDynamicEditView = require('./views/_PageDynamicEdit');
+var PageDynamicViewView = require('./views/_PageDynamicView');
 
 var CarouselIndexView = require('./views/_CarouselIndex');
 var CarouselEditView = require('./views/_CarouselEdit');
@@ -130,6 +133,10 @@ exports = module.exports = Backbone.Router.extend({
 		'page/index': 'pageIndex',
 		'page/add': 'pageEdit',
 		'page/edit/:id': 'pageEdit',
+		'page/dynamic/index': 'pageDynamicIndex',
+		'page/dynamic/add': 'pageDynamicEdit',
+		'page/dynamic/edit/:id': 'pageDynamicEdit',
+		'page/dynamic/view/:id': 'pageDynamicView',
 		'carousel/index': 'carouselIndex',
 		'carousel/add': 'carouselEdit',
 		'carousel/edit/:id': 'carouselEdit',
@@ -618,6 +625,51 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(pageEditView);
 		pageEditView.trigger('load');
+	},	
+
+
+	pageDynamicIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','模板管理');
+		var pageDynamicIndexView = new PageDynamicIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(pageDynamicIndexView);
+		pageDynamicIndexView.trigger('load');
+	},	
+
+	pageDynamicEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改模板');
+		var pageDynamicEditView = new PageDynamicEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(pageDynamicEditView);
+		pageDynamicEditView.trigger('load');
+	},	
+
+	pageDynamicView: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','查看模板');
+		var pageDynamicViewView = new PageDynamicViewView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(pageDynamicViewView);
+		pageDynamicViewView.trigger('load');
 	},	
 
 	carouselIndex: function(){

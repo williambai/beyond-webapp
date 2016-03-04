@@ -29,20 +29,26 @@
 		"format": ":remote-addr :response-time - [:date] ':method :url HTTP/:http-version' :status :content-length ':referrer' ':user-agent'"
 	}, {
 		"type": "file",
+		"filename": "logs/cron.log",
+		"maxLogSize": 20480,
+		"backups": 3,
+		"category": ["cronJobs.js","commands/processSMS.js","commands/updateWechatAccessToken.js"]
+	}, {
+		"type": "file",
 		"filename": "logs/sms.log",
 		"maxLogSize": 20480,
 		"backups": 3,
-		"category": ["sgipService.js","commands/processSMS.js"]
+		"category": ["sgipService.js"]
 	}, {
 		"type": "file",
 		"filename": "logs/wechat.log",
 		"maxLogSize": 20480,
 		"backups": 3,
-		"category": ["routes/_platform.wechat.js","routes/_platform.wechat.qrcode.js","commands/updateWechatAccessToken.js"]
+		"category": ["routes/_platform.wechat.js","routes/_platform.wechat.qrcode.js"]
 	}],
 	"levels": {
 		"access": "INFO",
-		"sgipService.js": "DEBUG",
+		"sgipService.js": "INFO",
 		"routes/_platform.wechat.js": "DEBUG",
 		"routes/_platform.wechat.qrcode.js": "DEBUG",
 		"commands/updateWechatAccessToken.js": "DEBUG"

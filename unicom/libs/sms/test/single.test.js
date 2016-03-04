@@ -15,7 +15,7 @@ var StreamSpliter = require('../lib/StreamSpliter');
 
 var client = net.connect({
   host: 'localhost', //config.SPHost,
-  port: config.SPPort,
+  port: 8802,//config.SPPort,
 }, function() {
   console.log('client connected.');
 });
@@ -74,5 +74,5 @@ handler.on('message', function(buf) {
 
 //** send Bind Command
 var bind = new Bind(1, config.SPUser, config.SPPass);
-// client.write(bind.makePDU());
+client.write(bind.makePDU());
 console.log('>> 1.bind');

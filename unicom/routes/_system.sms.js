@@ -123,8 +123,7 @@ exports = module.exports = function(app, models) {
 	/**
 	 * 创建客户上行短信deliver
 	 * 状态为收到
-	 * @param  {Function} callback [description]
-	 * @return {[type]}            [description]
+	 * command: {"header":{"srcNodeID":108512,"cmdTime":304105527,"cmdSeq":511019405},"UserNumber":"8615692740700","SPNumber":"10655836","TP_pid":0,"TP_udhi":0,"MessageCoding":0,"MessageLength":2,"MessageContent":{"type":"Buffer","data":[84,84]}}
 	 */
 	var deliver = function(req, res) {
 		logger.debug('deliver body: ' + JSON.stringify(req.body));
@@ -138,15 +137,22 @@ exports = module.exports = function(app, models) {
 		// });
 
 		//** 短信报告cmdDeliever对象
-		var command = req.body.command || {};
+		var command = req.body || {};
 		//** cmdDeliever.header对象
 		var header = command.header || {};
 		var doc = {};
 		doc.header = header;
 		doc.headerSeries = header.srcNodeID + '' + header.cmdTime + '' + header.cmdSeq;
-		doc.sender = command.SpNumber;
-		doc.receiver = command.UserNumber;
-		doc.content = command.MessageContent;
+		doc.sender = command.UserNumber;
+		doc.receiver = command.SPNumber;
+		//** message content transform
+		var messageContent = command.MessageContent || {};
+		var messageContentType = messageContent.type || 'Buffer';
+		var messageContentData = messageContent.data || []; 
+		var content = new Buffer(messageContentData).toString('utf8');
+		logger.debug('deliver message content:' + content);
+
+		doc.content = content;
 		doc.status = '收到';
 		models.PlatformSms
 			.create(doc, function(err) {

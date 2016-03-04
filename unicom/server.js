@@ -167,12 +167,13 @@ var fork = require('child_process').fork;
 //** start SGIP Service
 var sgipService = fork('./sgipService');
 //** start cron jobs
-require('./cronJobs');
+var cronJobs = fork('./cronJobs');
 
 //** kill child process when SIGTERM received
 process.on('SIGTERM', function(){
 	logger.warn('receive SIGTERM and process exit.');
 	sgipService.kill('SIGTERM');
+	cronJobs.kill('SIGTERM');
 	process.exit(1);
 });
 

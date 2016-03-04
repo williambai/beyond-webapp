@@ -77,11 +77,6 @@ _.extend(config,{
 		"features": ["channel_category"],
 	}, {
 		"id": 2,
-		"name": "静态网页管理",
-		"hash": "page/index",
-		"features": ["platform_page"],
-	}, {
-		"id": 2,
 		"name": "上传文件管理",
 		"hash": "media/index",
 		"features": ["media"],
@@ -90,6 +85,16 @@ _.extend(config,{
 		"name": "首页轮播管理",
 		"hash": "carousel/index",
 		"features": ["carousel"],
+	}, {
+		"id": 2,
+		"name": "静态网页管理",
+		"hash": "page/index",
+		"features": ["platform_page"],
+	}, {
+		"id": 2,
+		"name": "动态网页管理",
+		"hash": "page/dynamic/index",
+		"features": ["platform_page"],
 	}, {
 		"id": 2,
 		"name": "用户反馈",
