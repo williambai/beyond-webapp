@@ -79,7 +79,7 @@ var buy = function(trade) {
 	trade = trade || {};
 	var stock = trade.stock;
 	var transaction = trade.transaction;
-	var debt = - transaction.price * transaction.quantity;
+	var debt = transaction.price * transaction.quantity;
 	transaction.symbol = stock.symbol;
 	logger.info('buy transaction: ' + JSON.stringify(transaction));
 
@@ -104,8 +104,9 @@ var buy = function(trade) {
 								}
 							},
 							$inc: {
-								'times': 1,
-								'debt': debt, 
+								'times': 1, //** 增加交易次数
+								'debt': -debt, //** 增加债务(趋向负数方向)
+								'quantity': transaction.quantity, //** 增加持有数量
 							}
 						}, {
 							upsert: false,
@@ -172,8 +173,9 @@ var sell = function(trade) {
 								}
 							},
 							$inc: {
-								'times': 1,
-								'debt': debt,
+								'times': 1, //** 增加交易次数
+								'debt': debt, //** 减少债务(趋向正数方向)
+								'quantity': -transaction.quantity, //** 减少持有数量
 							}
 						}, {
 							upsert: false,

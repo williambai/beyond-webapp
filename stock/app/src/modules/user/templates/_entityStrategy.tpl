@@ -80,7 +80,7 @@
 				开始时间：
 				<%= date.getFullYear() +'-' + (1+date.getMonth()) + '-' + (date.getDate()) + ' '+ date.getHours() + ':'+ date.getMinutes() + ':'+ date.getSeconds() %>
 				&nbsp;&nbsp;交易次数：
-				<%= model.times %>&nbsp;&nbsp;盈亏：<%= model.asset %></p>
+				<%= model.times %>&nbsp;&nbsp;盈亏：￥<%= model.times == 0 ? 0 : (model.currentPrice * model.quantity + model.debt - model.asset).toFixed(2) %></p>
 		</div>
 		<div class="graph"></div>
 		<hr/>
