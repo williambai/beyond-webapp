@@ -357,5 +357,5 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  	 * get departments
  	 * type:
  	 */
- 	app.get('/departments', app.isLogin, getMore);
+ 	app.get('/departments', getMore);
  };

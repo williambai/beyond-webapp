@@ -51,16 +51,37 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	refreshCaptcha: function(){
+	refreshCaptcha: function(evt){
 		var that = this;
-		var func = function(i){
-			if(i < 0) return that.$('#captcha').html('<a href="#" id="refreshCaptcha">获取验证码</a>');
-			that.$('#captcha').html('<i class="fa fa-spinner fa-spin"></i>&nbsp;' + i + '&nbsp;秒');
-			setTimeout(function(){
-				func(--i);
-			},1000);
-		};
-		func(60);
+		//** 校验手机号码有效性
+		var keyup = that.$('input[name=email]').keyup();
+		if(that.$(evt.currentTarget).closest('.form-group').hasClass('has-error')) return false;
+		//** 获取手机号码
+		var mobile = that.$('input[name=email]').val();
+		//** 发送手机验证码
+		$.ajax({
+			url: config.api.host + '/register/captcha',
+			type: 'POST',
+			xhrFields: {
+				withCredentials: true
+			},
+			data: {
+				mobile: mobile
+			},
+		}).done(function(data){
+			//** 服务器端返回业务逻辑错误的处理
+			if(data && data.code){
+				return false;
+			}
+			var func = function(i){
+				if(i < 0) return that.$('#captcha').html('<a href="#" id="refreshCaptcha">获取验证码</a>');
+				that.$('#captcha').html('<i class="fa fa-spinner fa-spin"></i>&nbsp;' + i + '&nbsp;秒');
+				setTimeout(function(){
+					func(--i);
+				},1000);
+			};
+			func(60);
+		});
 		return false;
 	},
 

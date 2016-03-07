@@ -12,14 +12,60 @@ module.exports = exports = function(app, models) {
 	var smtpTransport = require('nodemailer-smtp-transport');
 	var config = {
 		mail: require('../config/mail'),
-		server: require('../config/server')
+		server: require('../config/server'),
+		sms: require('../config/sms'),
 	};
 	var Account = models.Account;
+
+	/**
+	 * 刷手机验证码
+	 * @param  {[type]} req [description]
+	 * @param  {[type]} res [description]
+	 * @return {[type]}     [description]
+	 */
+	var refreshCaptcha = function(req,res){
+		//** 检查sesssion中验证码的时间戳，如果< 5500ms，则返回'太频繁'的错误
+		var refreshCaptchaTime = req.session.refreshCaptchaTime;
+		if(refreshCaptchaTime && (Date.now()-refreshCaptchaTime) < 5500) return res.send({code:40112,errmsg: '太频繁'});
+		//** 检查手机号码有效性
+		var mobile = req.body.mobile;
+		if(/^861\d{10}$/.test(mobile)){
+			mobile = mobile;
+		}else if(/^1\d{10}$/.test(mobile)){
+			mobile = '86' + '' + mobile
+		}else{
+			return res.send({code: 40411,errmsg: '手机号码错误'});
+		}
+		//*** 创建4位验证码
+		var captcha = parseInt(10000 * Math.random());
+		//*** 使用短信模板更新短信内容
+		var content = config.sms.registrationCaptcha.replace(/\{[(a-z]+\}/ig, function(name) {
+				if (name == '{captcha}') return captcha;
+			});
+		//** 创建待发送的短信
+		var doc = {
+			receiver: mobile,
+			content: content,
+			status: '新建'
+		};
+		models.PlatformSms.create(doc, function(err){
+			if(err) return res.send(err);
+			//** 将验证码保存在保存session中
+			req.session.refreshCaptchaTime = Date.now();
+			req.session.captcha = captcha;
+			res.send({});
+		});
+	};
 
 	var register = function(req, res) {
 		var app = req.params.app;
 		var user = req.body || {};
-
+		//** 存在手机动态验证码，则需要检查验证的正确性
+		var email = req.body.email;
+		var captcha = req.body.captcha;
+		if(/^\d{11}$/.test(email) && captcha && captcha != req.session.captcha){
+			return res.send({code: 11210, errmsg: '验证码不正确'});
+		}
 		var password = user.password;
 
 		user.password = crypto.createHash('sha256').update(password).digest('hex');
@@ -38,32 +84,35 @@ module.exports = exports = function(app, models) {
 				if (err.code == 11000) {
 					return res.send({
 						code: 11000,
-						errmsg: '该邮箱已注册'
+						errmsg: '该手机号码/邮箱已注册'
 					});
 				}
 				return res.send(err);
 			}
 			res.send(doc);
 
-			var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
-			var text = config.mail.register_text.replace(/\{[(a-z]+\}/ig, function(name) {
-				if (name == '{host}') return req.header('host');
-				if (name == '{email}') return user.email;
-				if (name == '{code}') return user.registerCode;
-			});
+			//** 如果是电子邮件注册，则发送邮件
+			if(/^[a-zA-Z0-9_\.]+@[a-zA-Z0-9-]+[\.a-zA-Z]+$/.test(email)){
+				var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
+				var text = config.mail.register_text.replace(/\{[(a-z]+\}/ig, function(name) {
+					if (name == '{host}') return req.header('host');
+					if (name == '{email}') return user.email;
+					if (name == '{code}') return user.registerCode;
+				});
 
-			logger.info('register confirm email text: ' + text);
-			smtpTransporter.sendMail({
-					from: config.mail.from,
-					to: user.email,
-					subject: config.mail.register_subject,
-					text: text,
-				},
-				function(err, info) {
-					if (err) return logger.error(err);
-					logger.info(info);
-				}
-			);
+				logger.info('register confirm email text: ' + text);
+				smtpTransporter.sendMail({
+						from: config.mail.from,
+						to: user.email,
+						subject: config.mail.register_subject,
+						text: text,
+					},
+					function(err, info) {
+						if (err) return logger.error(err);
+						logger.info(info);
+					}
+				);				
+			}
 		});
 	};
 
@@ -217,10 +266,10 @@ module.exports = exports = function(app, models) {
 		// logger.info(req.body);
 		var email = req.body.email;
 		var password = req.body.password;
-		if (null == email || !(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(email)))
+		if (null == email || !(/^(1\d{10}|([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2}))$/.test(email)))
 			return res.send({
 				code: 40101,
-				errmsg: '不是有效的邮件地址'
+				errmsg: '不是有效的手机号码/邮件地址'
 			});
 
 		if (null == password || password.length < 1)
@@ -250,7 +299,7 @@ module.exports = exports = function(app, models) {
 							if (account.status == '未验证')
 								return callback({
 									code: 40402,
-									errmsg: '还未通过验证，请查看邮件，并尽快验证。'
+									errmsg: '需要管理员审核，请联系管理员。',//或者还未通过验证，请查看邮件，并尽快验证。'
 								});
 							if (account.password != crypto.createHash('sha256').update(password).digest('hex'))
 								return callback({
@@ -467,6 +516,8 @@ module.exports = exports = function(app, models) {
 	 * router outline
 	 */
 
+	 //** 手机注册获取动态验证码
+	app.post('/register/captcha', refreshCaptcha);
 	//register
 	app.post('/register/:app', register);
 	//confirm
