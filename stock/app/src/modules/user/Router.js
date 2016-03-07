@@ -27,6 +27,9 @@ var StrategyEditView = require('./views/_StrategyEdit');
 var StrategyViewView = require('./views/_StrategyView');
 var StrategyExportView = require('./views/_StrategyExport');
 var StrategyImportView = require('./views/_StrategyImport');
+
+var HomeIndexView = require('./views/_HomeIndex');
+
 var config = require('./conf');
 
 exports = module.exports = Backbone.Router.extend({
@@ -37,7 +40,8 @@ exports = module.exports = Backbone.Router.extend({
 	appEvents: _.extend({}, Backbone.Events), //app events
 
 	routes: {
-		'index': 'index',
+		'': 'home',
+		'index': 'home',
 		'login': 'login',
 		'logout': 'logout',
 		'register': 'register',
@@ -97,7 +101,22 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand', '首页');
-		var indexView = new IndexView({});
+		var indexView = new IndexView({
+			el: '#content'			
+		});
+		this.changeView(indexView);
+		indexView.trigger('load');
+	},
+
+	home: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '首页');
+		var indexView = new HomeIndexView({
+			el: '#content'			
+		});
 		this.changeView(indexView);
 		indexView.trigger('load');
 	},

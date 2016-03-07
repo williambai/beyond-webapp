@@ -235,6 +235,11 @@
 									<span class="help-block"></span>
 								</div>
 								<div class="form-group">
+									<label>初始资产单价：</label>
+									<input type="text" name="price" value="<%= model.price %>" class="form-control input-sm" placeholder="" readonly>
+									<span class="help-block"></span>
+								</div>
+								<div class="form-group">
 									<label>负债：</label>
 									<input type="text" name="debt" value="<%= model.debt %>" class="form-control input-sm" placeholder="" readonly>
 									<span class="help-block"></span>

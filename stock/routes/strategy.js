@@ -26,6 +26,8 @@ exports = module.exports = function(app, models) {
 		quote.getQuote(symbol,function(err,stock){
 			//** 复位初始债务
 			strategy.debt = 0;
+			//** 设置初始资产单价
+			strategy.price = Number(stock.price);
 			//** 计算初始资产
 			var quantity = strategy.quantity || 0;
 			strategy.asset = Number(quantity) * Number(stock.price);

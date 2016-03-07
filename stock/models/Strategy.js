@@ -21,6 +21,7 @@ exports = module.exports = function(mongoose) {
 			default: 0
 		},
 		asset: Number,//** 初始资产，在启动时初始化。收益 = 当前品种价格 * 当前品种数量 + 债务 - 初始资产
+		price: Number,//** 初始资产单位价格
 		debt: {//** 债务，卖出减少债务，买入增加债务
 			type: Number,
 			default: 0,
