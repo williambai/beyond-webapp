@@ -47,10 +47,10 @@ exports = module.exports = Backbone.View.extend({
 
 	render: function(){
 		//** 格式化 content
-		var content = this.model.get('content');
-		if(content) {
-			this.model.set('content', String.prototype.replace.call(content,/\n/g,'<br>'));
-		}
+		// var content = this.model.get('content');
+		// if(content) {
+		// 	this.model.set('content', String.prototype.replace.call(content,/\n/g,'<br>'));
+		// }
 		this.$el.html(this.template({model: this.model.toJSON()}));
 		return this;
 	},

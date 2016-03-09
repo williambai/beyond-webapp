@@ -104,30 +104,17 @@ exports = module.exports = Backbone.Router.extend({
 		// this.layoutView.trigger('update:menu', _.sortBy(_.flatten(_.values(config.menu)), 'id'));
 		// return;
 		/** -OR- customize menu */
-		$.ajax({
-			url: config.api.host + '/platform/apps/' + that.appCode,
-			type: 'GET',
-			xhrFields: {
-				withCredentials: true
-			},
-		}).done(function(app) {
-			var menu_default = config.menu || [];
-			//** app features
-			var app_features = (app && app.features) || [];
-			//** user grant features
-			var grant_features = _.keys(that.account.grant);
-			//** both app and user have features 
-			var features = _.intersection(app_features,grant_features);
-			// console.log(features);
-			var menu_granted = [];
-			_.each(menu_default,function(menu){
-				if(_.isEmpty(menu.features)) return menu_granted.push(menu);
-				var menu_features = menu.features || [];
-				var intersection = _.intersection(features,menu_features);
-				if(!_.isEmpty(intersection)) menu_granted.push(menu);
-			});
-			that.layoutView.trigger('update:menu', menu_granted);
+		var menu_default = config.menu || [];
+		var features = _.keys(that.account.grant);
+		// console.log(features);
+		var menu_granted = [];
+		_.each(menu_default,function(menu){
+			if(_.isEmpty(menu.features)) return menu_granted.push(menu);
+			var menu_features = menu.features || [];
+			var intersection = _.intersection(features,menu_features);
+			if(!_.isEmpty(intersection)) menu_granted.push(menu);
 		});
+		that.layoutView.trigger('update:menu', menu_granted);
 	},
 
 	onLogout: function() {

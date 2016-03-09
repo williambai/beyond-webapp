@@ -332,7 +332,7 @@ module.exports = exports = function(app, models) {
 					logger.debug('account:' + JSON.stringify(account));
 					var roles = account.roles || [];
 					logger.debug('roles:' + JSON.stringify(roles));
-
+					//** 根据用户的roles 查询用户权限
 					models.PlatformRole
 						.find({
 							'nickname': {
@@ -344,6 +344,7 @@ module.exports = exports = function(app, models) {
 							if (err) return callback(err);
 							logger.debug('docs: ' + JSON.stringify(docs));
 							docs = docs || [];
+							//** 权限选择各角色权限的并集
 							var grant = {};
 							_.each(docs, function(doc) {
 								_.extend(grant, doc.grant);
@@ -363,14 +364,31 @@ module.exports = exports = function(app, models) {
 				req.session.apps = account.apps || [];
 				req.session.grant = account.grant || {};
 				logger.debug(req.session.email + 'login(session): ' + JSON.stringify(req.session));
-				res.send({
-					id: req.session.accountId,
-					email: req.session.email,
-					username: req.session.username,
-					avatar: req.session.avatar,
-					grant: req.session.grant
-				});
-				logger.info('login: ' + email);
+				//** 取app可使用的资源与用户权限的交集
+				models.PlatformApp
+					.findOne({
+						nickname: app
+					})
+					.exec(function(err,doc){
+						if(err) return callback(err);
+						var features = doc.features || [];
+						logger.debug('app features: ' + JSON.stringify(features));
+						logger.debug('account.grant: ' + JSON.stringify(account.grant));
+						//** 取app可使用的资源与用户权限的交集
+						var grant = {};
+						_.each(features,function(feature){
+							grant[feature] = account.grant[feature];
+						});
+						logger.debug('app grant: ' + JSON.stringify(grant));
+						res.send({
+							id: req.session.accountId,
+							email: req.session.email,
+							username: req.session.username,
+							avatar: req.session.avatar,
+							grant: grant
+						});
+						logger.info('login: ' + email);
+					});
 			}
 		);
 	};
@@ -394,17 +412,33 @@ module.exports = exports = function(app, models) {
 		}
 		var app = req.params.app;
 		logger.debug('checkLogin from(app):' + app);
-		logger.debug('checkLogin(session):' + JSON.stringify(req.session));
+		// logger.debug('checkLogin(session):' + JSON.stringify(req.session));
+		//** 用户正在使用该app		
 		if (_.indexOf(req.session.apps, app) != -1) {
-			res.send({
-				id: req.session.accountId,
-				email: req.session.email,
-				username: req.session.username,
-				avatar: req.session.avatar,
-				grant: req.session.grant
+			return models.PlatformApp
+				.findOne({
+					nickname: app
+				})
+				.exec(function(err,doc){
+					if(err) return res.send(err);
+					var features = doc.features || [];
+					logger.debug('app features: ' + JSON.stringify(features));
+					logger.debug('req.session.grant: ' + JSON.stringify(req.session.grant));
+					//** 取app可使用的资源与用户权限的交集
+					var grant = {};
+					_.each(features,function(feature){
+						grant[feature] = req.session.grant[feature];
+					});
+					logger.debug('app grant: ' + JSON.stringify(grant));
+					res.send({
+						id: req.session.accountId,
+						email: req.session.email,
+						username: req.session.username,
+						avatar: req.session.avatar,
+						grant: grant
+					});
+					logger.info('checkLogin(pass): ' + req.session.email);
 			});
-			logger.info('checkLogin(pass): ' + req.session.email);
-			return;
 		}
 		if(req.session.openid){
 			logger.debug('req.session.openid: ' + req.session.openid);
@@ -446,14 +480,30 @@ module.exports = exports = function(app, models) {
 							req.session.grant = account.grant || {};
 							logger.debug(req.session.email + ' login(session): ' + JSON.stringify(req.session));
 							if (_.indexOf(req.session.apps, app) != -1) {
-								res.send({
-									id: req.session.accountId,
-									email: req.session.email,
-									username: req.session.username,
-									avatar: req.session.avatar,
-									grant: req.session.grant
-								});
-								logger.info('checkLogin(pass): ' + req.session.email);
+								models.PlatformApp
+									.findOne({
+										nickname: app
+									})
+									.exec(function(err,doc){
+										if(err) return res.send(err);
+										var features = doc.features || [];
+										logger.debug('app features: ' + JSON.stringify(features));
+										logger.debug('req.session.grant: ' + JSON.stringify(req.session.grant));
+										//** 取app可使用的资源与用户权限的交集
+										var grant = {};
+										_.each(features,function(feature){
+											grant[feature] = req.session.grant[feature];
+										});
+										logger.debug('app grant: ' + JSON.stringify(grant));
+										res.send({
+											id: req.session.accountId,
+											email: req.session.email,
+											username: req.session.username,
+											avatar: req.session.avatar,
+											grant: grant
+										});
+										logger.info('checkLogin(pass): ' + req.session.email);
+									});
 							} else {
 								res.send({
 									code: 40100,
@@ -484,7 +534,7 @@ module.exports = exports = function(app, models) {
 		res.send({
 			code: 40100,
 			errmsg: '401 Unauthorized.'
-		});
+		});	
 	};
 
 	var wechatAuthorized = function(req, res) {

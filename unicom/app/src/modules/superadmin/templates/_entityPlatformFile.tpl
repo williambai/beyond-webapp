@@ -119,7 +119,7 @@
 					<div class="form-group">
 						<label>文件内容：</label>
 						<br>
-						<code><%= model.content %></code>
+						<code><%- model.content %></code>
 					</div>
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
