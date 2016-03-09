@@ -32,18 +32,19 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 });
 
 //** schedule Jobs
-var updateWechatAccessToken = require('./business/wechat').updateAccessToken;
-var refreshWechatAccessTokenJob = new CronJob({
-	cronTime: '00 */59 * * * *',
-	onTick: function() {
-		updateWechatAccessToken(models,{},function(err,result) {
-			if(err) return logger.error(err);
-			logger.info('call Wechat AccessToken peroid job successfully.');
-		});
-	},
-	start: true,
-	runOnInit: true,//** execute right now!
-});
+// var updateWechatAccessToken = require('./business/wechat').updateAccessToken;
+// var refreshWechatAccessTokenJob = new CronJob({
+// 	cronTime: '00 */59 * * * *',
+// 	onTick: function() {
+// 		updateWechatAccessToken(models,{},function(err,result) {
+// 			if(err) return logger.error(err);
+// 			logger.debug('Wechat AccessToken: ' + JSON.stringify(result));
+// 			logger.info('call Wechat AccessToken peroid job successfully.');
+// 		});
+// 	},
+// 	start: true,
+// 	runOnInit: true,//** execute right now!
+// });
 
 // var updateCbssCookie = require('./commands/updateCbssCookie');
 // var refreshCbssCookieJob = new CronJob({
