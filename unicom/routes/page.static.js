@@ -1,13 +1,11 @@
+var _ = require('underscore');
+var fs = require('fs');
+var path = require('path');
 exports = module.exports = function(app, models) {
-
-
-	var _ = require('underscore');
-	var fs = require('fs');
-	var path = require('path');
 
 	var add = function(req,res){
 		if(!req.body.name) return res.send({code: 40122, errmsg: '文件名缺失'});
-		var filename = path.join(__dirname, '../public/_pages', req.body.name);
+		var filename = path.join(__dirname, '../public/statics', req.body.name);
 		var content = req.body.content || '';
 		fs.writeFile(filename,content, function(err){
 			if(err) return res.send(err);
@@ -15,7 +13,7 @@ exports = module.exports = function(app, models) {
 		});
 	};
 	var update = function(req,res){
-		var filename = path.join(__dirname, '../public/_pages', req.params.id);
+		var filename = path.join(__dirname, '../public/statics', req.params.id);
 		var content = req.body.content || '';
 		fs.writeFile(filename, content, function(err){
 			if(err) return res.send(err);
@@ -23,7 +21,7 @@ exports = module.exports = function(app, models) {
 		});
 	};
 	var remove = function(req,res){
-		var filename = path.join(__dirname, '../public/_pages', req.params.id);
+		var filename = path.join(__dirname, '../public/statics', req.params.id);
 		fs.unlink(filename, function(err){
 			if(err) return res.send(err);
 			res.send({});
@@ -31,12 +29,11 @@ exports = module.exports = function(app, models) {
 	};
 
 	var getOne = function(req,res){
-		var filename = path.join(__dirname, '../public/_pages', req.params.id);
+		var filename = path.join(__dirname, '../public/statics', req.params.id);
 		console.log(filename)
 		var content = fs.readFileSync(filename,{
 				encoding: 'utf8'
 			});
-		console.log(content)
 		res.send({
 			name: req.params.id,
 			content: content
@@ -47,7 +44,7 @@ exports = module.exports = function(app, models) {
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
-		var filepath = path.join(__dirname, '../public/_pages');
+		var filepath = path.join(__dirname, '../public/statics');
 		fs.readdir(filepath,function(err,filenames){
 			if(err){
 				err.code = 40400;
@@ -68,32 +65,32 @@ exports = module.exports = function(app, models) {
  	 * router outline
  	 */
  	/**
- 	 * add platform/pages
+ 	 * add page/statics
  	 *     
  	 */
- 	app.post('/platform/pages', app.isLogin, add);
+ 	app.post('/page/statics', app.isLogin, add);
  	/**
- 	 * update platform/pages
+ 	 * update page/statics
  	 * type:
  	 *     avatar
  	 *     
  	 */
- 	app.put('/platform/pages/:id', app.isLogin, update);
+ 	app.put('/page/statics/:id', app.isLogin, update);
 
  	/**
- 	 * delete platform/pages
+ 	 * delete page/statics
  	 *     
  	 */
- 	app.delete('/platform/pages/:id', app.isLogin, remove);
+ 	app.delete('/page/statics/:id', app.isLogin, remove);
 	/**
- 	 * get platform/pages
+ 	 * get page/statics
  	 */
- 	app.get('/platform/pages/:id', app.isLogin, getOne);
+ 	app.get('/page/statics/:id', app.isLogin, getOne);
 
  	/**
- 	 * get platform/pages
+ 	 * get page/statics
  	 * type:
  	 *    search
  	 */
- 	app.get('/platform/pages', app.isLogin, getMore);
+ 	app.get('/page/statics', app.isLogin, getMore);
 };

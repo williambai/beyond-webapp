@@ -1,15 +1,15 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    pageTpl = require('../templates/_entityPage.tpl'),
+    browserTpl = require('../templates/_entityPlatformFile.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var Page = require('../models/Page');
-var ListView = require('./_PageList');
-var SearchView = require('./_PageSearch');
+var PlatformFile = require('../models/PlatformFile');
+var ListView = require('./_PlatformFileList');
+var SearchView = require('./_PlatformFileSearch');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -19,7 +19,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(pageTpl);
+		var page = $(browserTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -27,9 +27,11 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addPage',
-		'click .edit': 'editPage',
-		'click .delete': 'removePage',
+		'click .addFile': 'addPlatformFile',
+		'click .view': 'viewPlatformFile',
+		'click .folder': 'browseFolder',
+		'click .edit': 'editPlatformFile',
+		'click .delete': 'removePlatformFile',
 	},
 
 	load: function() {
@@ -55,21 +57,34 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addPage: function(){
-		this.router.navigate('page/add',{trigger: true});
+	addPlatformFile: function(evt){
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
+		this.router.navigate('file/add/'+ encodeURIComponent(id),{trigger: true});
 		return false;
 	},
 
-	editPage: function(evt){
-		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('page/edit/'+ id,{trigger: true});
+	viewPlatformFile: function(evt){
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
+		this.router.navigate('file/view/'+ encodeURIComponent(id),{trigger: true});
 		return false;
 	},
 
-	removePage: function(evt){
+	browseFolder: function(evt){
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
+		this.listView.trigger('refresh', 'root=' + id);
+		return false;
+	},
+
+	editPlatformFile: function(evt){
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
+		this.router.navigate('file/edit/'+ id,{trigger: true});
+		return false;
+	},
+
+	removePlatformFile: function(evt){
 		if(window.confirm('您确信要删除吗？')){
-			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new Page({_id: id});
+			var id = this.$(evt.currentTarget).closest('.item').attr('id');
+			var model = new PlatformFile({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}

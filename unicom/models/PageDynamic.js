@@ -21,6 +21,6 @@ module.exports = exports = function(mongoose){
 		},
 	});
 
-	schema.set('collection','pages');
-	return mongoose.model('Page',schema);
+	schema.set('collection','page.dynamic');
+	return mongoose.model('PageDynamic',schema);
 };

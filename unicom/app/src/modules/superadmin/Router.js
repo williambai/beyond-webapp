@@ -15,6 +15,10 @@ var PlatformAppEditView = require('./views/_PlatformAppEdit');
 var PlatformSessionIndexView = require('./views/_PlatformSessionIndex');
 var PlatformSessionEditView = require('./views/_PlatformSessionEdit');
 
+var FileIndexView = require('./views/_PlatformFileIndex');
+var FileViewView = require('./views/_PlatformFileView');
+var FileEditView = require('./views/_PlatformFileEdit');
+
 var FeatureIndexView = require('./views/_PlatformFeatureIndex');
 var FeatureEditView = require('./views/_PlatformFeatureEdit');
 
@@ -62,6 +66,12 @@ exports = module.exports = Backbone.Router.extend({
 		'feature/index': 'featureIndex',
 		'feature/add': 'featureEdit',	
 		'feature/edit/:id': 'featureEdit',
+
+		'file/index': 'fileIndex',
+		'file/view/:id': 'fileView',
+		'file/add': 'fileEdit',
+		'file/edit/:id': 'fileEdit',
+
 		'account/index': 'accountIndex',
 		'account/add': 'accountEdit',
 		'account/edit/:id': 'accountEdit',
@@ -328,6 +338,54 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(featureEditView);
 		featureEditView.trigger('load');
 	},
+
+
+	fileIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','文件管理');
+		var fileIndexView = new FileIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(fileIndexView);
+		fileIndexView.trigger('load');
+	},
+
+
+	fileView: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','文件内容');
+		var fileViewView = new FileViewView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(fileViewView);
+		fileViewView.trigger('load');
+	},
+
+
+	fileEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改文件内容');
+		var fileEditView = new FileEditView({
+			router: this,
+			el: '#content',
+			id: id
+		});
+		this.changeView(fileEditView);
+		fileEditView.trigger('load');
+	},
+
 
 	accountIndex: function(){
 		if(!this.logined){

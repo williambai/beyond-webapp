@@ -65,6 +65,11 @@ _.extend(config,{
 		"features": ["platform_monitor"],
 	}, {
 		"id": 2,
+		"name": "文件管理",
+		"hash": "file/index",
+		"features": ["platform_database"],
+	}, {
+		"id": 2,
 		"name": "数据维护",
 		"hash": "database/index",
 		"features": ["platform_database"],

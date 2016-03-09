@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery'),
-    pageTpl = require('../templates/_entityPage.tpl'),
+    browserTpl = require('../templates/_entityPlatformFile.tpl'),
     SearchView = require('./__SearchView');
 var config = require('../conf');
 
@@ -12,7 +12,7 @@ exports = module.exports = SearchView.extend({
 	el: '#search',
 
 	initialize: function(options){
-		var page = $(pageTpl);
+		var page = $(browserTpl);
 		var searchTemplate = $('#searchTemplate', page).html();
 		this.template = _.template(_.unescape(searchTemplate || ''));
 		this.model = new SearchModel();

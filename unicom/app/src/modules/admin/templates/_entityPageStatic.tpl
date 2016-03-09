@@ -35,17 +35,17 @@
 		<hr/>
 	</div>
 	<div id="itemTemplate">
-		<div>
+		<div class="item"  id="<%= model.name %>">
 			<div class="media">
 				<div class="media-left">
 					<img class="media-object" src="images/html.jpg" width="50px" height="50px" style="max-width:50px;">
 				</div>
 				<div class="media-body">
-					<div class="pull-right" id="<%= model.name %>">
+					<div class="pull-right">
 						<button class="btn btn-success edit">编辑</button>
 						<button class="btn btn-danger delete">删除</button>
 					</div>
-					<a href="pages/<%= model.name %>" target="_blank"><h4><%= model.name %></h4></a>
+					<a href="statics/<%= model.name %>" target="_blank"><h4><%= model.name %></h4></a>
 				</div>
 			</div>
 			<hr/>

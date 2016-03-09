@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    pageTpl = require('../templates/_entityPageDynamic.tpl'),
-	PageDynamic = require('../models/PageDynamic');
+    browserTpl = require('../templates/_entityPlatformFile.tpl'),
+	PlatformFile = require('../models/PlatformFile');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
@@ -13,8 +13,8 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new PageDynamic({_id: options.id});
-		var page = $(pageTpl);
+		this.model = new PlatformFile({_id: options.id});
+		var page = $(browserTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -52,36 +52,38 @@ exports = module.exports = FormView.extend({
 	},
 
 	submit: function() {
-		var that = this;
-		//clear errors
-		this.$('.form-group').removeClass('has-error');
-		this.$('.form-group').find('span.help-block').empty();
-		var arr = this.$('form').serializeArray();
-		var errors = [];
-		_.each(arr,function(obj){
-			var error = that.model.preValidate(obj.name,obj.value);
-			if(error){
-				errors.push(error);
-				that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
-				that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
-			}
-		});
-		if(!_.isEmpty(errors)) return false;
-		//validate finished.
+		if(window.confirm('修改文件将造成永久的改变，请先做好备份。您确信要修改吗？')){
+			var that = this;
+			//clear errors
+			this.$('.form-group').removeClass('has-error');
+			this.$('.form-group').find('span.help-block').empty();
+			var arr = this.$('form').serializeArray();
+			var errors = [];
+			_.each(arr,function(obj){
+				var error = that.model.preValidate(obj.name,obj.value);
+				if(error){
+					errors.push(error);
+					that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
+					that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
+				}
+			});
+			if(!_.isEmpty(errors)) return false;
+			//validate finished.
 
-		var object = this.$('form').serializeJSON();
-		this.model.set(object);
-		// console.log(this.model.attributes);
-		this.model.save(null, {
-			xhrFields: {
-				withCredentials: true
-			},
-		});
+			var object = this.$('form').serializeJSON();
+			this.model.set(object);
+			// console.log(this.model.attributes);
+			this.model.save(null, {
+				xhrFields: {
+					withCredentials: true
+				},
+			});
+		}
 		return false;
 	},
 
 	cancel: function(){
-		this.router.navigate('page/dynamic/index',{trigger: true, replace: true});
+		this.router.navigate('file/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -93,7 +95,7 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			this.router.navigate('page/dynamic/index',{trigger: true, replace: true});
+			this.router.navigate('file/index',{trigger: true, replace: true});
 		}
 	},
 

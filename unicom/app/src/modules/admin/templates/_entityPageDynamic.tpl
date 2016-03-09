@@ -35,21 +35,37 @@
 		<hr/>
 	</div>
 	<div id="itemTemplate">
-		<div class="item" id="<%= model._id %>">
+		<div class="item" id="<%= model.name %>">
+			<% if(/jade$/.test(model.name)){ %>
 			<div class="media">
 				<div class="media-left">
-					<img class="media-object" src="images/html.jpg" width="50px" height="50px" style="max-width:50px;">
+					<img class="media-object" src="images/file.png" width="50px" height="50px" style="max-width:50px;">
 				</div>
 				<div class="media-body">
 					<div class="pull-right" id="<%= model.name %>">
-						<button class="btn btn-success view">模板</button>
+						<!-- <button class="btn btn-success view">模板</button> -->
 						<button class="btn btn-success edit">编辑</button>
 						<button class="btn btn-danger delete">删除</button>
 					</div>
-					<a href="pages/<%= model.url %>" target="_blank"><h4><%= model.url %></h4></a>
+					<a href="page/dynamic/<%= model.name.slice(0,-5) %>/preview" target="_blank"><h4><%= model.name %></h4></a>
 					<p><%= model.description %></p>
 				</div>
 			</div>
+			<% }else{ %>
+			<div class="media">
+				<div class="media-left">
+					<img class="media-object" src="images/folder.png" width="50px" height="50px" style="max-width:50px;">
+				</div>
+				<div class="media-body">
+					<div class="pull-right" id="<%= model.name %>">
+						<button class="btn btn-success edit">打开</button>
+						<button class="btn btn-danger delete">删除</button>
+					</div>
+					<a href="page/dynamic/<%= model.name.slice(0,-5) %>/preview" target="_blank"><h4><%= model.name %></h4></a>
+					<p><%= model.description %></p>
+				</div>
+			</div>
+			<% } %>
 			<hr/>
 		</div>
 	</div>
@@ -61,30 +77,31 @@
 			<div class="panel-body">
 				<form id="customerForm">
 					<div class="form-group">
-						<label>访问URL：</label>
-						<input type="text" name="url" value="<%= model.url %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>模板描述：</label>
-						<textarea name="description" class="form-control"><%= model.description %></textarea>
+						<label>文件名：</label>
+						<input type="text" name="name" value="<%= model.name %>" class="form-control" placeholder="模板文件名，后缀为.jade">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>模板分类：</label>
 						<div style="padding-left:30px;">
 							<input type="radio" name="category" value="page">&nbsp;&nbsp;页面
-							<input type="radio" name="category" value="layout">&nbsp;&nbsp;布局
 							<input type="radio" name="category" value="include">&nbsp;&nbsp;局部页面
+							<input type="radio" name="category" value="layout">&nbsp;&nbsp;布局
 						</div>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
+						<label>模板内容：</label>
+						<textarea name="content" class="form-control" rows="10"><%= model.content %></textarea>
+						<span class="help-block"></span>
+					</div>
+<!-- 					<div class="form-group">
 						<label>数据模型：</label>
 						<div id="models"></div>
 						<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+ -->
+ 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
 								<input type="submit" value="提交" class="btn btn-danger">

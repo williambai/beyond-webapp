@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    pageTpl = require('../templates/_entityPage.tpl'),
-	Page = require('../models/Page');
+    pageTpl = require('../templates/_entityPageStatic.tpl'),
+	Page = require('../models/PageStatic');
 var config = require('../conf');
 
 exports = module.exports = FormView.extend({
@@ -81,7 +81,7 @@ exports = module.exports = FormView.extend({
 	},
 
 	cancel: function(){
-		this.router.navigate('page/index',{trigger: true, replace: true});
+		this.router.navigate('page/static/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -93,7 +93,7 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			this.router.navigate('page/index',{trigger: true, replace: true});
+			this.router.navigate('page/static/index',{trigger: true, replace: true});
 		}
 	},
 

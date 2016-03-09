@@ -88,7 +88,7 @@ _.extend(config,{
 	}, {
 		"id": 2,
 		"name": "静态网页管理",
-		"hash": "page/index",
+		"hash": "page/static/index",
 		"features": ["platform_page"],
 	}, {
 		"id": 2,

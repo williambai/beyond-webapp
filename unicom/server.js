@@ -178,6 +178,9 @@ process.on('SIGTERM', function(){
 });
 
 //** process uncaughtException
-// process.on('uncaughtException', function(){
-// 	process.exit(1);
-// });
+process.on('uncaughtException', function(){
+	logger.warn('uncaughtException and process exit.');
+	sgipService.kill('SIGTERM');
+	cronJobs.kill('SIGTERM');
+	process.exit(1);
+});

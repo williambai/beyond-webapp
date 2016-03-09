@@ -25,8 +25,8 @@ var MediaIndexView = require('./views/_MediaIndex');
 var MediaEditView = require('./views/_MediaEdit');
 var MediaAddView = require('./views/_MediaAdd');
 
-var PageIndexView = require('./views/_PageIndex');
-var PageEditView = require('./views/_PageEdit');
+var PageStaticIndexView = require('./views/_PageStaticIndex');
+var PageStaticEditView = require('./views/_PageStaticEdit');
 var PageDynamicIndexView = require('./views/_PageDynamicIndex');
 var PageDynamicEditView = require('./views/_PageDynamicEdit');
 var PageDynamicViewView = require('./views/_PageDynamicView');
@@ -130,9 +130,9 @@ exports = module.exports = Backbone.Router.extend({
 		'media/index': 'mediaIndex',
 		'media/add': 'mediaAdd',
 		'media/edit/:id': 'mediaEdit',
-		'page/index': 'pageIndex',
-		'page/add': 'pageEdit',
-		'page/edit/:id': 'pageEdit',
+		'page/static/index': 'pageStaticIndex',
+		'page/static/add': 'pageStaticEdit',
+		'page/static/edit/:id': 'pageStaticEdit',
 		'page/dynamic/index': 'pageDynamicIndex',
 		'page/dynamic/add': 'pageDynamicEdit',
 		'page/dynamic/edit/:id': 'pageDynamicEdit',
@@ -598,33 +598,33 @@ exports = module.exports = Backbone.Router.extend({
 		mediaEditView.trigger('load');
 	},	
 
-	pageIndex: function(){
+	pageStaticIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','网页管理');
-		var pageIndexView = new PageIndexView({
+		var pageStaticIndexView = new PageStaticIndexView({
 			router: this,
 			el: '#content',
 		});
-		this.changeView(pageIndexView);
-		pageIndexView.trigger('load');
+		this.changeView(pageStaticIndexView);
+		pageStaticIndexView.trigger('load');
 	},	
 
-	pageEdit: function(id){
+	pageStaticEdit: function(id){
 		if(!this.logined){
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand','修改网页');
-		var pageEditView = new PageEditView({
+		var pageStaticEditView = new PageStaticEditView({
 			router: this,
 			el: '#content',
 			id: id,
 		});
-		this.changeView(pageEditView);
-		pageEditView.trigger('load');
+		this.changeView(pageStaticEditView);
+		pageStaticEditView.trigger('load');
 	},	
 
 

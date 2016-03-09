@@ -2,8 +2,8 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     ListView = require('./__ListView'),
-    pageTpl = require('../templates/_entityPage.tpl'),
-    PageCollection = require('../models/PageCollection');
+    pageTpl = require('../templates/_entityPageStatic.tpl'),
+    PageCollection = require('../models/PageStaticCollection');
 
 Backbone.$ = $;
 	
