@@ -28,7 +28,13 @@
 				<div style="text-align:right;">
 					<p><% if(/MicroMessenger/.test(navigator.userAgent)){ %>
 					<button class="btn btn-danger promote wechat">微信</button>&nbsp;&nbsp;
-					<% } %><button class="btn btn-danger sms">短信</button></p>
+					<% } %>
+					<% if(/iPhone/.test(navigator.userAgent)){ %>
+						<a href="sms:&body=短信内容" class="btn btn-danger sms">短信</a>
+					<% }else{ %>
+						<a href="sms:?body=短信内容" class="btn btn-danger sms">短信</a>
+					<% } %>
+					</p>
 					<p><button class="btn btn-success view">订购</button></p>
 				</div>
 			</div>

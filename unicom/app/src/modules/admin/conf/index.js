@@ -49,7 +49,7 @@ _.extend(config,{
 		"id": 2,
 		"name": "用户管理",
 		"hash": "account/index",
-		"features": ["admin_account"],
+		"features": ["platform_account"],
 	}, {
 		"id": 2,
 		"name": "金币管理",
@@ -57,9 +57,9 @@ _.extend(config,{
 		"features": ["revenue"],
 	}, {
 		"id": 2,
-		"name": "权限管理",
+		"name": "角色管理",
 		"hash": "role/index",
-		"features": ["admin_role"],
+		"features": ["platform_role"],
 	}, {
 		"id": 2,
 		"name": "物料管理",
@@ -77,7 +77,7 @@ _.extend(config,{
 		"features": ["channel_category"],
 	}, {
 		"id": 2,
-		"name": "上传文件管理",
+		"name": "媒体文件管理",
 		"hash": "media/index",
 		"features": ["media"],
 	}, {

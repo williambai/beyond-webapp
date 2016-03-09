@@ -27,7 +27,7 @@ exports = module.exports = function(app, models) {
 	var ROOT = path.join(__dirname, '../');
 	//** 需要保护和隐藏的文件夹或文件名
 	var ignoreFileOrFolder = {
-		'/': ['server.js', 'cronJobs.js', 'sgipService.js']
+		'/': ['server.js', 'cronJobs.js', 'sgipService.js','setup','commands','config','libs']
 	};
 
 	var add = function(req,res){
@@ -70,8 +70,9 @@ exports = module.exports = function(app, models) {
 	};
 
 	var getOne = function(req, res) {
+		var id = decodeURIComponent(req.params.id);
 		//** 相对路径
-		var relative = (req.params.id || '').replace(/\/\//, '/');
+		var relative = id.replace(/\/\//, '/');
 		//** 删除首个/字符
 		var filename = relative.slice(1);
 		//** 求出父路径
@@ -88,7 +89,7 @@ exports = module.exports = function(app, models) {
 			//** 忽略需要保护的文件
 		if (_.contains(ignores, filename)) {
 			return res.send({
-				name: req.params.id,
+				name: id,
 				path: relative,
 				content: ''
 			});
@@ -98,13 +99,13 @@ exports = module.exports = function(app, models) {
 			encoding: 'utf8'
 		}, function(err, content) {
 			if (err) return res.send({
-				name: req.params.id,
+				name: id,
 				path: relative,
 				content: ''
 			});
 			res.set('Content-Type', 'application/json');
 			res.send({
-				name: req.params.id,
+				name: id,
 				path: relative,
 				content: content
 			});
@@ -188,7 +189,7 @@ exports = module.exports = function(app, models) {
 	/**
 	 * 
 	 */
-	app.get('/platform/files', getMore);
-	app.get('/platform/files/:id', getOne);
-	app.put('/platform/files/:id', update);
+	app.get('/platform/files', app.isLogin, getMore);
+	app.get('/platform/files/:id', app.isLogin, getOne);
+	app.put('/platform/files/:id', app.isLogin, update);
 };

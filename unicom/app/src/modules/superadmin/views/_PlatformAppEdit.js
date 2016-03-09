@@ -137,6 +137,8 @@ exports = module.exports = FormView.extend({
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		var isDefault = this.model.get('isDefault');
+		this.$('input[name="isDefault"][value="'+ isDefault +'"]').attr('checked',true);
 		if(this.model.isNew()) this.$('.panel-title').text('新增应用');
 		return this;
 	},

@@ -13,7 +13,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new PlatformFile({_id: options.id});
+		this.model = new PlatformFile({_id: encodeURIComponent(options.id)});
 		var page = $(browserTpl);
 		var viewTemplate = $('#viewTemplate', page).html();
 		this.template = _.template(_.unescape(viewTemplate || ''));

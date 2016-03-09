@@ -25,7 +25,7 @@ _.extend(config,{
 		"features": ["platform_app"],
 	}, {
 		"id": 2,
-		"name": "权限管理",
+		"name": "角色管理",
 		"hash": "role/index",
 		"features": ["platform_role"],
 	}, {

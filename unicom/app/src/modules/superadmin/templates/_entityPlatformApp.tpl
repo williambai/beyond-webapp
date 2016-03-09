@@ -49,6 +49,13 @@
 						<div style="padding-left:30px;" id="features">
 						</div>
 					</div>
+ 					<div class="form-group">
+						<label>是否是默认应用：</label>
+						<div style="padding-left:30px;">
+							<input type="radio" name="isDefault" value="false">&nbsp;&nbsp;否
+							<input type="radio" name="isDefault" value="true">&nbsp;&nbsp;是
+						</div>
+					</div>
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">

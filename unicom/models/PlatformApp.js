@@ -7,12 +7,10 @@ module.exports = exports = function(mongoose) {
 		},
 		description: String,
 		features: [],
-		// features: [{
-		// 	id: mongoose.Schema.ObjectId,
-		// 	name: String,
-		// 	nickname: String,
-		// 	router: String
-		// }],
+		isDefault: {//** 是否是默认的App，注册用户属于默认应用
+			type: Boolean,
+			default: false,
+		}
 	});
 
 	schema.set('collection', 'platform.apps');

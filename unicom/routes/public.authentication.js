@@ -371,7 +371,7 @@ module.exports = exports = function(app, models) {
 					})
 					.exec(function(err,doc){
 						if(err) return callback(err);
-						var features = doc.features || [];
+						var features = doc ? (doc.features || []) : [];
 						logger.debug('app features: ' + JSON.stringify(features));
 						logger.debug('account.grant: ' + JSON.stringify(account.grant));
 						//** 取app可使用的资源与用户权限的交集
@@ -421,7 +421,7 @@ module.exports = exports = function(app, models) {
 				})
 				.exec(function(err,doc){
 					if(err) return res.send(err);
-					var features = doc.features || [];
+					var features = doc ? (doc.features || []) : [];
 					logger.debug('app features: ' + JSON.stringify(features));
 					logger.debug('req.session.grant: ' + JSON.stringify(req.session.grant));
 					//** 取app可使用的资源与用户权限的交集
@@ -486,7 +486,7 @@ module.exports = exports = function(app, models) {
 									})
 									.exec(function(err,doc){
 										if(err) return res.send(err);
-										var features = doc.features || [];
+										var features = doc ? (doc.features || []) : [];
 										logger.debug('app features: ' + JSON.stringify(features));
 										logger.debug('req.session.grant: ' + JSON.stringify(req.session.grant));
 										//** 取app可使用的资源与用户权限的交集
