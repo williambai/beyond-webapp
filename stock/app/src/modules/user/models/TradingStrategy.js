@@ -7,6 +7,7 @@ exports = module.exports = Backbone.Model.extend({
 	url: config.api.host + '/strategy',
 
 	defaults: {
+		bid:{},
 		stock: {},
 		params: {},
 		status: {}

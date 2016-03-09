@@ -76,11 +76,10 @@
 				<span style="background-color: green; color: white;">
 					<%= model.status.message %></span>
 				<% } %></h4>
-			<p>
-				开始时间：
-				<%= date.getFullYear() +'-' + (1+date.getMonth()) + '-' + (date.getDate()) + ' '+ date.getHours() + ':'+ date.getMinutes() + ':'+ date.getSeconds() %>
+				<p>盈亏：<span style="color:red">￥<%= model.times == 0 ? 0 : (model.currentPrice * model.quantity + model.debt - model.asset).toFixed(2) %></span>&nbsp;&nbsp;最后交易：<span style="color:red">￥<%= model.bid.price %>(<%= model.bid.direction %>)</span>&nbsp;&nbsp;当前价格：<%= model.currentPrice %></p>
+			<p>开始时间：<%= date.getFullYear() +'-' + (1+date.getMonth()) + '-' + (date.getDate()) + ' '+ date.getHours() + ':'+ date.getMinutes() + ':'+ date.getSeconds() %>
 				&nbsp;&nbsp;交易次数：
-				<%= model.times %>&nbsp;&nbsp;盈亏：￥<%= model.times == 0 ? 0 : (model.currentPrice * model.quantity + model.debt - model.asset).toFixed(2) %></p>
+				<%= model.times %></p>
 		</div>
 		<div class="graph"></div>
 		<hr/>
@@ -249,6 +248,19 @@
 									<input type="text" name="quantity" value="<%= model.quantity %>" class="form-control input-sm" placeholder="" readonly>
 									<span class="help-block"></span>
 								</div>
+								<fieldset>
+									<legend>出价状态</legend>
+									<div class="form-group">
+										<label>最高(低)出价：</label>
+										<input type="text" name="bid[price]" value="<%= model.bid.price %>" class="form-control input-sm" placeholder="">
+										<span class="help-block"></span>
+									</div>
+									<div class="form-group">
+										<label>出价方向：</label>
+										<input type="text" name="bid[direction]" value="<%= model.bid.direction %>" class="form-control input-sm" placeholder="">
+										<span class="help-block"></span>
+									</div>									
+								</fieldset>
 								<fiedset>
 									<legend>参数设置</legend>
 									<div class="form-group">
