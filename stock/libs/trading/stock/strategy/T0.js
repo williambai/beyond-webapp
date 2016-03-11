@@ -3,7 +3,7 @@ var path = require('path');
 var _ = require('underscore');
 log4js.configure(path.join(__dirname,'../../../..','log4js.json'));
 var logger = log4js.getLogger('trading');
-logger.setLevel('INFO');
+logger.setLevel('DEBUG');
 
 var isTradingTime = function(time) {
 	var hhmmss = time.split(':');
@@ -41,20 +41,23 @@ var judge = function(stock, strategy, callback) {
 			bottom = Number((params.init_p * (1 - 0.01 * params.buy_lt)).toFixed(2));
 			quantity = Number(params.quantity);
 		} else {
-			logger.debug(symbol + ' last transaction: ' + JSON.stringify(transaction));
+			// logger.debug(symbol + ' last transaction: ' + JSON.stringify(transaction));
 			top = Number((transaction.price * (1 + 0.01 * params.sell_gt)).toFixed(2));
 			bottom = Number((transaction.price * (1 - 0.01 * params.buy_lt)).toFixed(2));
 			direction = transaction.direction;
 			quantity = Number(transaction.quantity);
 		}
 		logger.info(stock.date + ' ' + stock.time + ' ' + symbol + '(' + stock.price + ') ' + '[' + bottom + ' - ' + top + ']');
+		//** 计算买卖次数
+		var directions = _.pluck(transactions, 'direction');
+		var countBuy = _.without(directions, '卖出');
+		var countSell = _.without(directions, '买入');
+		logger.debug(symbol + 'count [buy,sell]: ' + countBuy.length + ',' + countSell.length);
 		// is not trading time, do nothing
 		if (!isTradingTime(stock.time)) return callback(null);
 		// is times more than times_max, do nothing
 		if(strategy.times > params.times_max) return callback(null);
 		if(bid_direction == '待定'){
-			var countBuy = _.without(directions, '卖出');
-			var countSell = _.without(directions, '买入');
 			if(price <= bottom){
 				//** price is lower than bottom, think to buy
 				//** is not same direction depth too many?
@@ -93,7 +96,7 @@ var judge = function(stock, strategy, callback) {
 					price: price,
 					direction: '买入',
 				});				
-			}else if (price >= bid_price * (1 + 0.01*buy_drawdown)) {
+			}else if (price >= bid_price * (1 + 0.01*buy_drawdown) && price < transaction.price) {
 				//transaction is less than depth, do buy transaction
 				if (_.isEmpty(transactions)) {
 					return callback(null, {
@@ -106,7 +109,6 @@ var judge = function(stock, strategy, callback) {
 					var directions = _.pluck(transactions, 'direction');
 					var countBuy = _.without(directions, '卖出');
 					var countSell = _.without(directions, '买入');
-					logger.info(symbol + '[buy,sell] count:' + countBuy.length + ',' + countSell.length);
 					//is count of buy direction less than depth ? if yes, buy now
 					if ((countBuy.length - countSell.length) < depth) {
 						// //is not same direction depth too many?
@@ -121,8 +123,12 @@ var judge = function(stock, strategy, callback) {
 					}
 				}
 			}else{
-				// price is between bid_price and buy_drawdown, do nothing
-				return callback(null);
+				//** 价格高过之前设置的top，复位
+				return callback(null, {
+					action: 'bid',
+					price: price,
+					direction: '待定',
+				});
 			}
 		}else if(bid_direction == '卖出'){
 			if(price > bid_price){
@@ -132,7 +138,7 @@ var judge = function(stock, strategy, callback) {
 					price: price,
 					direction: '卖出',
 				});				
-			}else if (price <= bid_price * (1-0.01*sell_drawdown)) {
+			}else if (price > transaction.price && price <= bid_price * (1-0.01*sell_drawdown)) {
 				//price is higher than top, think to sell
 				if (_.isEmpty(transactions)) {
 					//transaction is less than depth, do sell transaction
@@ -146,7 +152,6 @@ var judge = function(stock, strategy, callback) {
 					var directions = _.pluck(transactions, 'direction');
 					var countBuy = _.without(directions, '卖出');
 					var countSell = _.without(directions, '买入');
-					logger.info(symbol + '[buy,sell] count:' + countBuy.length + ',' + countSell.length);
 					//is count of sell direction less than depth ? if yes, sell now
 					if ((countSell.length - countBuy.length) < depth) {
 						// is not same direction depth too many?
@@ -161,8 +166,12 @@ var judge = function(stock, strategy, callback) {
 					}
 				}
 			}else{
-				// price is between sell_drawdown and bid_price, do nothing
-				return callback(null);
+				//** 价格低过之前设置的bottom，复位
+				return callback(null, {
+					action: 'bid',
+					price: price,
+					direction: '待定',
+				});
 			}
 		}else{
 			return callback(null);
