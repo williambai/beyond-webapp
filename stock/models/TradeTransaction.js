@@ -13,24 +13,22 @@ exports = module.exports = function(mongoose) {
 		},
 		symbol: {//** 品种交易别名
 			type: String,
-			required: '{PATH} is required!',
+			required: true,
 		},
-		stock: {
-			name: String, //** 品种名称，如: 中国国航
-			nickname: String,//** 品种代码，如: 601111
-		},
+		name: String, //** 品种名称，如: 中国国航
+		nickname: String,//** 品种代码，如: 601111
 		direction: {
 			type: String,
 			enum: '买入|卖出'.split('|'),
-			required: '{PATH} is required!',
+			required: true,
 		},
 		price: {
 			type: Number,
-			required: '{PATH} is required!',
+			required: true,
 		},
 		quantity: {
 			type: Number,
-			required: '{PATH} is required!',
+			required: true,
 		},
 		tax: {
 			type: Number,
@@ -47,12 +45,12 @@ exports = module.exports = function(mongoose) {
 		date: {
 			type: String,
 			match: [/[0-9]+\-[0-9]+\-[0-9]+/, '{PATH}日期格式不对，格式为 xxxx-xx-xx'],
-			required: '{PATH} is required!',
+			required: true,
 		},
 		time: {
 			type: String,
 			match: [/[0-9]+:[0-9]+:[0-9]+/, '{PATH}时间格式不对，格式为 xx:xx:xx'],
-			required: '{PATH} is required!',
+			required: true,
 		},
 		createBy: {//** 交易拥有者
 			id: String,
@@ -64,10 +62,6 @@ exports = module.exports = function(mongoose) {
 		}
 	});
 
-	schema.set('collection', 'tradings');
-	if (mongoose.models.Trading) {
-		return mongoose.model('Trading');
-	}
-	return mongoose.model('Trading', schema);
-
+	schema.set('collection', 'trade.transactions');
+	return mongoose.model('TradeTransaction', schema);
 };

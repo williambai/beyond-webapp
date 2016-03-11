@@ -21,7 +21,7 @@ exports = module.exports = function(app, models) {
 						$lt: to
 					}
 				};
-				models.Trading
+				models.TradeTransaction
 					.find(query)
 					.sort({
 						'_id': 1
@@ -45,7 +45,7 @@ exports = module.exports = function(app, models) {
 						$lt: to
 					}
 				};
-				models.Trading
+				models.TradeTransaction
 					.find(query)
 					.sort({
 						_id: -1
@@ -78,7 +78,7 @@ exports = module.exports = function(app, models) {
 						}
 					}]
 				};
-				models.Trading
+				models.TradeTransaction
 					.find(query)
 					.sort({
 						_id: -1
@@ -92,7 +92,7 @@ exports = module.exports = function(app, models) {
 				break;
 			default:
 				query = {};
-				models.Trading
+				models.TradeTransaction
 					.find(query)
 					.sort({
 						_id: -1
@@ -122,5 +122,5 @@ exports = module.exports = function(app, models) {
 	 *         from: date begin, i.e. 2015-01-01
 	 *         to: date end
 	 */
-	app.get('/trading', getMore);
+	app.get('/trade/transactions', getMore);
 };

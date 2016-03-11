@@ -11,14 +11,24 @@
 						<i class="fa fa-chevron-right"></i>
 					</span>
 				</a>
-				<a class="list-group-item" href="#strategy">
+				<a class="list-group-item" href="#trade/portfolio/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;交易品种
+					&nbsp;投资组合
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#trading">
+				<a class="list-group-item" href="#trade/history/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;交易记录
+					&nbsp;投资历史记录
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#trade/transaction/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;交易历史记录
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#trade/strategy/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;策略管理
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#trade/account/index">

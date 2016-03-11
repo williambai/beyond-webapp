@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery'),
-    tradingTpl = require('../templates/_entityTrading.tpl'),
+    strategyTpl = require('../templates/_entityTradePortfolio.tpl'),
     SearchView = require('./__SearchView');
 var config = require('../conf');
 
@@ -12,8 +12,8 @@ exports = module.exports = SearchView.extend({
 	el: '#search',
 
 	initialize: function(options){
-		var page = $(tradingTpl);
-		var searchTemplate = $('#search2Template', page).html();
+		var page = $(strategyTpl);
+		var searchTemplate = $('#searchTemplate', page).html();
 		this.template = _.template(_.unescape(searchTemplate || ''));
 		this.model = new SearchModel();
 		this.on('load', this.load,this);

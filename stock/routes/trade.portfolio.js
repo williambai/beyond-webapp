@@ -5,15 +5,70 @@ exports = module.exports = function(app, models) {
 
 	var add = function(req, res) {
 		var strategy = req.body;
-		strategy.params = strategy.params || {};
-		strategy.params.name = 'T0';
-		strategy.params.description = 'T0 交易';
-		strategy.times = 0;
-		strategy.method = 'eq';
-		strategy.lastupdatetime = new Date();
-		models.Strategy.create(strategy, function(err, doc) {
+		//** 防止上传数据中带有 _id
+		strategy = _.omit(strategy, '_id');
+		//** 获取股票当前价格
+		var symbol = strategy.symbol;
+		//** 查找是否已经存在
+		models.TradePortfolio
+			.findOne({
+				symbol: symbol
+			})
+			.exec(function(err, doc) {
+				if (err) return res.send(err);
+				//** 获取最新报价
+				quote.getQuote(symbol, function(err, stock) {
+					//** 复位初始债务
+					strategy.debt = 0;
+					//** 设置初始资产单价
+					strategy.price = Number(stock.price);
+					//** 计算初始资产
+					var quantity = strategy.quantity || 0;
+					strategy.asset = Number(quantity) * Number(stock.price);
+					//** 复位已卖出数量
+					strategy.quantity_sold = 0;
+					//** 复位其他参数
+					strategy.times = {
+						buy: 0,
+						sell: 0,
+					};
+					strategy.transactions = [];
+					strategy.lastupdatetime = new Date();
+					if (doc) {
+						//** 如果存在，备份到Histrory
+						models.TradePortfolioHistory.create({
+							backup: doc
+						}, function(err, result) {
+							if (err) return res.send(err);
+							//** 更新
+							models.TradePortfolio
+								.findByIdAndUpdate(doc._id, strategy, function(err, newDoc) {
+									if (err) return res.send(err);
+									res.send(newDoc);
+								});
+						});
+					} else {
+						//** 创建
+						models.TradePortfolio.create(strategy, function(err, doc) {
+							if (err) return res.send(err);
+							res.send(doc);
+						});
+					}
+				});
+			});
+	};
+
+	var remove = function(req, res) {
+		var id = req.params.id;
+		models.TradePortfolio.findByIdAndRemove(id, function(err, doc) {
 			if (err) return res.send(err);
-			res.send(doc);
+			//** 保存到Histroy
+			models.TradePortfolioHistory.create({
+				backup: doc
+			}, function(err, result) {
+				if (err) return res.send(err);
+				res.send(doc);
+			});
 		});
 	};
 
@@ -23,7 +78,7 @@ exports = module.exports = function(app, models) {
 		var strategy = req.body;
 		//** 获取股票当前价格
 		var symbol = strategy.symbol;
-		quote.getQuote(symbol,function(err,stock){
+		quote.getQuote(symbol, function(err, stock) {
 			//** 复位初始债务
 			strategy.debt = 0;
 			//** 设置初始资产单价
@@ -37,7 +92,7 @@ exports = module.exports = function(app, models) {
 			strategy.transactions = [];
 			strategy.times = 0;
 			strategy.lastupdatetime = new Date();
-			models.Strategy.findByIdAndUpdate(id, {
+			models.TradePortfolio.findByIdAndUpdate(id, {
 				$set: strategy,
 			}, {
 				upsert: false
@@ -47,10 +102,11 @@ exports = module.exports = function(app, models) {
 			});
 		});
 	};
+
 	var getOne = function(req, res) {
-		models.Strategy.findById(req.params.id, function(err, doc) {
+		models.TradePortfolio.findById(req.params.id, function(err, doc) {
 			if (err) return res.send(err);
-			quote.getQuote(doc.symbol, function(err,stock){
+			quote.getQuote(doc.symbol, function(err, stock) {
 				//** 查找并转化成普通Object
 				var newDoc = doc.toObject();
 				//** 插入当前股票价格
@@ -91,7 +147,7 @@ exports = module.exports = function(app, models) {
 						}
 					}]
 				};
-				models.Strategy
+				models.TradePortfolio
 					.find(query)
 					.sort({
 						lastupdatetime: -1
@@ -100,27 +156,29 @@ exports = module.exports = function(app, models) {
 					.limit(per)
 					.exec(function(err, docs) {
 						if (err) return res.send(err);
-						var symbols = _.pluck(docs,'symbol');
+						var symbols = _.pluck(docs, 'symbol');
 						//** 获取股票当前价格
-						quote.getQuotes(symbols,function(err,stocks){
-							_.each(stocks,function(stock){
+						quote.getQuotes(symbols, function(err, stocks) {
+							_.each(stocks, function(stock) {
 								var newDocs = [];
 								// console.log(_.values(stocks))
-								_.each(_.values(stocks),function(stock){
+								_.each(_.values(stocks), function(stock) {
 									//** 查找并转化成普通Object
-									var doc = (_.findWhere(docs, {symbol:stock.symbol})).toObject();
+									var doc = (_.findWhere(docs, {
+										symbol: stock.symbol
+									})).toObject();
 									//** 插入当前股票价格
 									doc.currentPrice = Number(stock.price);
 									newDocs.push(doc);
 								});
 							});
 							res.send(docs);
-						});					
+						});
 					});
 				break;
 			default:
 				query = {};
-				models.Strategy
+				models.TradePortfolio
 					.find(query)
 					.select({
 						transactions: 0
@@ -132,20 +190,22 @@ exports = module.exports = function(app, models) {
 					.limit(per)
 					.exec(function(err, docs) {
 						if (err) return res.send(err);
-						var symbols = _.pluck(docs,'symbol');
+						var symbols = _.pluck(docs, 'symbol');
 						//** 获取股票当前价格
-						quote.getQuotes(symbols,function(err,stocks){
+						quote.getQuotes(symbols, function(err, stocks) {
 							var newDocs = [];
 							// console.log(_.values(stocks))
-							_.each(_.values(stocks),function(stock){
+							_.each(_.values(stocks), function(stock) {
 								//** 查找并转化成普通Object
-								var doc = (_.findWhere(docs, {symbol:stock.symbol})).toObject();
+								var doc = (_.findWhere(docs, {
+									symbol: stock.symbol
+								})).toObject();
 								//** 插入当前股票价格
 								doc.currentPrice = Number(stock.price);
 								newDocs.push(doc);
 							});
 							res.send(newDocs);
-						});					
+						});
 					});
 				break;
 		}
@@ -158,17 +218,21 @@ exports = module.exports = function(app, models) {
 	/**
 	 * post one
 	 */
-	app.post('/strategy', add);
+	app.post('/trade/portfolios', add);
 
+	/**
+	 * delete one
+	 */
+	app.delete('/trade/portfolios/:id', remove);
 	/**
 	 * put one
 	 */
-	app.put('/strategy/:id', update);
+	app.put('/trade/portfolios/:id', update);
 	/**
 	 * get one
 	 * 
 	 */
-	app.get('/strategy/:id', getOne);
+	app.get('/trade/portfolios/:id', getOne);
 
 	/**
 	 * get more
@@ -181,5 +245,5 @@ exports = module.exports = function(app, models) {
 	 *         from: date begin, i.e. 2015-01-01
 	 *         to: date end
 	 */
-	app.get('/strategy', getMore);
+	app.get('/trade/portfolios', getMore);
 };

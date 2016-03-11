@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var $ = require('jquery'),
-    strategyTpl = require('../templates/_entityStrategy.tpl'),
+    tradingTpl = require('../templates/_entityTradeTransaction.tpl'),
     SearchView = require('./__SearchView');
 var config = require('../conf');
 
@@ -9,27 +9,27 @@ var SearchModel = Backbone.Model.extend({
 
 });
 exports = module.exports = SearchView.extend({
-	el: '#export',
+	el: '#search',
 
 	initialize: function(options){
-		var page = $(strategyTpl);
-		var exportTemplate = $('#exportTemplate', page).html();
-		this.template = _.template(_.unescape(exportTemplate || ''));
+		var page = $(tradingTpl);
+		var searchTemplate = $('#search2Template', page).html();
+		this.template = _.template(_.unescape(searchTemplate || ''));
 		this.model = new SearchModel();
 		this.on('load', this.load,this);
 	},
 
 	events: {
-		'submit form': 'submit'
+		'submit form': 'search'
 	},
 
 	load: function(){
 		this.render();
 	},
 
-	submit: function(){
-		var object = this.$('form').serialize();
-		window.location.href = '/export/strategy?' + object;
+	search: function(){
+		var url = 'from=' + $('input[name=from]').val() + '&to=' + $('input[name=to]').val() + '&searchStr=' + $('input[name=searchStr]').val();
+		this.done(url);
 		return false;
 	},
 

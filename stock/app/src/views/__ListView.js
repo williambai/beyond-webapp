@@ -17,7 +17,7 @@ exports = module.exports = Backbone.View.extend({
 	collectionUrl: '',
 
 	initialize: function(options) {
-		// this.collectionUrl = this.collection.url;
+		this.collectionUrl = (this.collection.url instanceof Function) ? (this.collection.url)() : this.collection.url;
 		this.collection.on('reset', this.onCollectonAppend, this);
 		this.collection.on('update', this.onCollectonAppend, this);
 		this.on('append', this.onModelAppend, this);
@@ -39,10 +39,9 @@ exports = module.exports = Backbone.View.extend({
 		});
 	},
 
-	refresh: function(url) {
+	refresh: function(query){
 		this.$el.empty();
-		this.collection.url = url;
-		// this.collectionUrl = this.collection.url;
+		this.collection.url = this.collectionUrl + (query ? ('?' + query) : '');
 		this.collection.fetch({
 			reset: true,
 			xhrFields: {

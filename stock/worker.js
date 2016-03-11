@@ -24,12 +24,16 @@ var config = {
 	mail: require('./config/mail'),
 	db: require('./config/db')
 };
-//** import the models
-var models = {
-	StockQuote: require('./models/StockQuote')(mongoose),
-	Trading: require('./models/Trading')(mongoose),
-	Strategy: require('./models/Strategy')(mongoose),
-};
+
+
+//import the models
+var models = {};
+fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
+	if (/\.js$/.test(file)) {
+		var modelName = file.substr(0, file.length - 3);
+		models[modelName] = require('./models/' + modelName)(mongoose);
+	}
+});
 
 var quote = function(stock) {
 	// logger.debug('quote: ' + JSON.stringify(stock.symbol));
@@ -57,7 +61,7 @@ var bid = function(trade) {
 	var transaction = trade.transaction;
 	transaction.symbol = stock.symbol;
 	logger.info('bid transaction: ' + JSON.stringify(transaction));
-	models.Strategy.findOneAndUpdate({
+	models.TradePortfolio.findOneAndUpdate({
 			'symbol': stock.symbol
 		}, {
 			$set: {
@@ -86,7 +90,7 @@ var buy = function(trade) {
 	async.waterfall(
 		[
 			function pushTransaction(callback) {
-				models.Strategy
+				models.TradePortfolio
 					.findOneAndUpdate({
 							'symbol': stock.symbol
 						}, {
@@ -155,7 +159,7 @@ var sell = function(trade) {
 	async.waterfall(
 		[
 			function pushTransaction(callback) {
-				models.Strategy
+				models.TradePortfolio
 					.findOneAndUpdate({
 							'symbol': stock.symbol
 						}, {
@@ -231,7 +235,7 @@ var start = function() {
 	var interval = 5000;
 	intervalObject = setInterval(function() {
 		logger.debug('interval: ' + interval);
-		models.Strategy
+		models.TradePortfolio
 			.find({
 				'status.code': 1
 			})

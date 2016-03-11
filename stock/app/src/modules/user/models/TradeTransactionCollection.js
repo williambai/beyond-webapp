@@ -1,9 +1,9 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var config = require('../conf');
-var TradingStrategy = require('./TradingStrategy');
+var TradeTransaction = require('./TradeTransaction');
 
 exports = module.exports = Backbone.Collection.extend({
-	url: config.api.host + '/strategy',
-	model: TradingStrategy,
+	url: config.api.host + '/trade/transactions',
+	model: TradeTransaction,
 });

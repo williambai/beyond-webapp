@@ -2,8 +2,8 @@ var _ = require('underscore');
 var $ = require('jquery'),
     Backbone = require('backbone'),
     ListView = require('./__ListView'),
-    strategyTpl = require('../templates/_entityStrategy.tpl'),
-    StrategyCollection = require('../models/TradingStrategyCollection');
+    strategyTpl = require('../templates/_entityTradeStrategy.tpl'),
+    StrategyCollection = require('../models/TradeStrategyCollection');
 
 Backbone.$ = $;
 	

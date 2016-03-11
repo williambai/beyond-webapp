@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    strategyTpl = require('../templates/_entityStrategy.tpl'),
-	TradingStrategy = require('../models/TradingStrategy');
+    strategyTpl = require('../templates/_entityTradePortfolio.tpl'),
+	TradePortfolio = require('../models/TradePortfolio');
 
 exports = module.exports = FormView.extend({
 
@@ -12,7 +12,7 @@ exports = module.exports = FormView.extend({
 		var page = $(strategyTpl);
 		var addTemplate = $('#addTemplate', page).html();
 		this.template = _.template(_.unescape(addTemplate || ''));
-		this.model = new TradingStrategy();
+		this.model = new TradePortfolio();
 		FormView.prototype.initialize.apply(this, options);
 	},
 

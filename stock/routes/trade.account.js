@@ -27,7 +27,7 @@
 
  	var processCaptchaText = function(req,res){
  		var id = req.body.id;
- 		models.StockAccount
+ 		models.TradeAccount
  			.findById(id)
  			.exec(function(err, doc) {
  				var captchaText = req.body.plain;
@@ -67,7 +67,7 @@
  	};
 
  	var refreshCookie = function(req,res){
- 		models.StockAccount
+ 		models.TradeAccount
  			.find({
  				'company.name': '中信证券',
  				'login': true,
@@ -92,7 +92,7 @@
  							'cookie.casper.js',
  							'--id=' + id,
  							'--cookie=' + JSON.stringify(doc.cookies),
- 							'--refresh_url=' + 'http://localhost:8091/stock/accounts'
+ 							'--refresh_url=' + 'http://localhost:8091/trade/accounts'
  						], {
  							cwd: cbss_cwd,
  						},
@@ -115,7 +115,7 @@
  		try {
  			cookies = JSON.parse(req.body.cookies);
  		} catch (e) {};
- 		models.StockAccount
+ 		models.TradeAccount
  			.findByIdAndUpdate(
  				id, {
  					$set: {
@@ -216,7 +216,7 @@
  					console.log(doc.password);
  				}
  				return;
- 				models.StockAccount.create(doc,function(err) {
+ 				models.TradeAccount.create(doc,function(err) {
  					if (err) return res.send(err);
  					res.send({});
  				});
@@ -226,7 +226,7 @@
 
  	var remove = function(req, res) {
  		var id = req.params.id;
- 		models.StockAccount.findByIdAndRemove(id, function(err, doc) {
+ 		models.TradeAccount.findByIdAndRemove(id, function(err, doc) {
  			if (err) return res.send(err);
  			res.send(doc);
  		});
@@ -242,7 +242,7 @@
  					set.password = crypto.publicEncrypt(CITIC.publicKey,new Buffer(set.password)).toString('base64');
  					// console.log(set.password);
  				}
- 				models.StockAccount.findByIdAndUpdate(id, {
+ 				models.TradeAccount.findByIdAndUpdate(id, {
  						$set: set
  					}, {
  						'upsert': false,
@@ -262,7 +262,7 @@
  		var id = req.params.id;
  		var action = req.query.action || '';
  		switch (action) {
- 			default: models.StockAccount
+ 			default: models.TradeAccount
  				.findById(id)
  				.select({
  					password: 0
@@ -279,7 +279,7 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.StockAccount
+ 		models.TradeAccount
  			.find({})
  			.select({
  				password: 0
@@ -297,32 +297,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add stock/accounts
+ 	 * add trade/accounts
  	 * type:
  	 *     
  	 */
- 	app.post('/stock/accounts', add);
+ 	app.post('/trade/accounts', add);
  	/**
- 	 * update stock/accounts
+ 	 * update trade/accounts
  	 * type:
  	 *     
  	 */
- 	app.put('/stock/accounts/:id', update);
+ 	app.put('/trade/accounts/:id', update);
 
  	/**
- 	 * delete stock/accounts
+ 	 * delete trade/accounts
  	 * type:
  	 *     
  	 */
- 	app.delete('/stock/accounts/:id', remove);
+ 	app.delete('/trade/accounts/:id', remove);
  	/**
- 	 * get stock/accounts
+ 	 * get trade/accounts
  	 */
- 	app.get('/stock/accounts/:id', getOne);
+ 	app.get('/trade/accounts/:id', getOne);
 
  	/**
- 	 * get stock/accounts
+ 	 * get trade/accounts
  	 * type:
  	 */
- 	app.get('/stock/accounts', getMore);
+ 	app.get('/trade/accounts', getMore);
  };

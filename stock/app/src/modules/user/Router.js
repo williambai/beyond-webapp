@@ -15,18 +15,25 @@ var IndexView = require('./views/Index');
 var TradeAccountIndexView = require('./views/_TradeAccountIndex');
 var TradeAccountEditView = require('./views/_TradeAccountEdit');
 
-var TradingIndexView = require('./views/_TradingIndex');
-var TradingGraphView = require('./views/TradingGraph');
+var TradeStrategyIndexView = require('./views/_TradeStrategyIndex');
+var TradeStrategyEditView = require('./views/_TradeStrategyEdit');
+var TradeStrategyViewView = require('./views/_TradeStrategyView');
+var TradeStrategyInvestView = require('./views/_TradeStrategyInvest');
+
+var TradeTransactionIndexView = require('./views/_TradeTransactionIndex');
+var TradeTransactionGraphView = require('./views/TradeTransactionGraph');
+
 var StrategyTradingListView = require('./views/_StrategyTradingList');
 var StrategyTradingGraphView = require('./views/_StrategyTradingGraph');
 
 
-var StrategyIndexView = require('./views/_StrategyIndex');
+var TradePortfolioIndexView = require('./views/_TradePortfolioIndex');
+
 var StrategyAddView = require('./views/_StrategyAdd');
 var StrategyEditView = require('./views/_StrategyEdit');
 var StrategyViewView = require('./views/_StrategyView');
-var StrategyExportView = require('./views/_StrategyExport');
-var StrategyImportView = require('./views/_StrategyImport');
+// var StrategyExportView = require('./views/_StrategyExport');
+// var StrategyImportView = require('./views/_StrategyImport');
 
 var HomeIndexView = require('./views/_HomeIndex');
 
@@ -48,19 +55,30 @@ exports = module.exports = Backbone.Router.extend({
 		'forgotpassword': 'forgotPassword',
 		'profile/:id': 'profileView',
 		'profile/me/edit': 'profileEdit',
-		'strategy': 'strategyIndex',
-		'strategy/new': 'strategyAdd',
-		'strategy/edit/:id': 'strategyEdit',
+
+		'trade/strategy/index': 'tradeStrategyIndex',
+		'trade/strategy/add': 'tradeStrategyEdit',
+		'trade/strategy/edit/:id': 'tradeStrategyEdit',
+		'trade/strategy/view/:id': 'tradeStrategyView',
+		'trade/strategy/invest/:id': 'tradeStrategyInvest',
+
+		'trade/portfolio/index': 'tradePortfolioIndex',
+		'trade/portfolio/add': 'strategyAdd',
+		'trade/portfolio/edit/:id': 'strategyEdit',
+
 		'strategy/view/:id': 'strategyView',
 		'strategy/export': 'strategyExport',
 		'strategy/import': 'strategyImport',
 		'strategy/trading/record/:symbol/:from': 'strategyTradingList',
 		'strategy/trading/graph/:symbol/:from': 'strategyTradingGraph',
-		'trading': 'tradingIndex',
-		'trading/graph/:symbol': 'tradingGraph',
+
+		'trade/transaction/index': 'tradeTransactionIndex',
+		'trade/transaction/graph/:symbol': 'tradeTransactionGraph',
+
 		'trade/account/index': 'tradeAccountIndex',
 		'trade/account/add': 'tradeAccountEdit',
 		'trade/account/edit/:id': 'tradeAccountEdit',
+
 		'*path': 'index',
 	},
 
@@ -205,17 +223,77 @@ exports = module.exports = Backbone.Router.extend({
 		profileEditView.trigger('load');
 	},
 
-	strategyIndex: function() {
+
+	tradeStrategyIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '交易策略管理');
+		var tradeStrategyIndexView = new TradeStrategyIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(tradeStrategyIndexView);
+		tradeStrategyIndexView.trigger('load');
+	},
+
+	tradeStrategyEdit: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '编辑交易策略');
+		var tradeStrategyEditView = new TradeStrategyEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(tradeStrategyEditView);
+		tradeStrategyEditView.trigger('load');
+	},
+
+	tradeStrategyView: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '交易策略详情');
+		var tradeStrategyViewView = new TradeStrategyViewView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(tradeStrategyViewView);
+		tradeStrategyViewView.trigger('load');
+	},
+
+	tradeStrategyInvest: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '选择投资交易商');
+		var tradeStrategyInvestView = new TradeStrategyInvestView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(tradeStrategyInvestView);
+		tradeStrategyInvestView.trigger('load');
+	},
+
+	tradePortfolioIndex: function() {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand', '交易品种');
-		var strategyIndexView = new StrategyIndexView({
+		var tradePortfolioIndexView = new TradePortfolioIndexView({
 			el: '#content'
 		});
-		this.changeView(strategyIndexView);
-		strategyIndexView.trigger('load');
+		this.changeView(tradePortfolioIndexView);
+		tradePortfolioIndexView.trigger('load');
 	},
 
 	strategyAdd: function() {
@@ -317,28 +395,28 @@ exports = module.exports = Backbone.Router.extend({
 		tradingGraphView.trigger('load');
 	},
 
-	tradingIndex: function() {
+	tradeTransactionIndex: function() {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand', '交易记录');
-		var tradingIndexView = new TradingIndexView();
-		this.changeView(tradingIndexView);
-		tradingIndexView.trigger('load');
+		var tradeTransactionIndexView = new TradeTransactionIndexView();
+		this.changeView(tradeTransactionIndexView);
+		tradeTransactionIndexView.trigger('load');
 	},
 
-	tradingGraph: function(symbol) {
+	tradeTransactionGraph: function(symbol) {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand', '交易图表');
-		var tradingGraphView = new TradingGraphView({
+		var tradeTransactionGraphView = new TradeTransactionGraphView({
 			symbol: symbol
 		});
-		this.changeView(tradingGraphView);
-		tradingGraphView.trigger('load');
+		this.changeView(tradeTransactionGraphView);
+		tradeTransactionGraphView.trigger('load');
 	},
 
 	tradeAccountIndex: function(){

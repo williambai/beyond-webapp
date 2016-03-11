@@ -4,10 +4,10 @@ var $ = require('jquery'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
-var strategyTpl = require('../templates/_entityStrategy.tpl');
+var strategyTpl = require('../templates/_entityTradePortfolio.tpl');
 
 Backbone.$ = $;
-var GraphView = require('../views/_TradingGraph');
+var GraphView = require('../views/_TradeTransactionGraph');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -33,7 +33,7 @@ exports = module.exports = Backbone.View.extend({
 		this.render();
 
 		this.graphView = new GraphView({symbol: this.symbol});
-		this.graphView.trigger('refresh', config.api.host + '/trading?type=graph&symbol=' + this.symbol + '&from=' + this.from);
+		this.graphView.trigger('refresh', config.api.host + '/trade/transactions?type=graph&symbol=' + this.symbol + '&from=' + this.from);
 	},
 
 	render: function() {

@@ -1,30 +1,27 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    tradingTpl = require('../templates/_entityTrading.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
-var SearchView = require('../views/_TradingSearch');
-var ListView = require('../views/_TradingList');
-
 Backbone.$ = $;
+
+var SearchView = require('../views/_TradeTransactionSearch2');
+var GraphView = require('../views/_TradeTransactionGraph');
 
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
 
 	loadingTemplate: _.template(loadingTpl),
+	template: _.template('<div><a class="btn btn-primary" onclick="window.history.back();return false;">返回</a></div><hr/><div id="search"></div><div id="graph"></div>'),
 
 	initialize: function(options) {
-		var page = $(tradingTpl);
-		var indexTemplate = $('#indexTemplate', page).html();
-		this.template = _.template(_.unescape(indexTemplate || ''));
+		this.symbol = options.symbol;
 		this.on('load', this.load, this);
 	},
 
 	events: {
-		'scroll': 'scroll',
 	},
 
 	load: function() {
@@ -32,24 +29,17 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
+		this.graphView = new GraphView({symbol: this.symbol});
+
 		this.searchView = new SearchView({
 			el: '#search',
 		});
-		this.searchView.done = function(query) {
-			that.listView.trigger('refresh', config.api.host + '/trading?type=search&' + query);
+
+		this.searchView.done = function(query){
+			that.graphView.trigger('refresh', query);
 		};
-
-		this.listView = new ListView({
-			el: '#list',
-		});
-
+		this.graphView.trigger('load');
 		this.searchView.trigger('load');
-		this.listView.trigger('load');
-	},
-
-	scroll: function() {
-		this.listView.scroll();
-		return false;
 	},
 
 	render: function() {

@@ -1,47 +1,12 @@
 exports = module.exports = function(mongoose) {
 
 	var schema = new mongoose.Schema({
-		symbol: {//** 品种交易别名
+		symbol: {//** 品种交易别名，如: sh601111
 			type: String,
-			unique: true,
-			required: true
+			required: true,
 		},
-		name: String, //** 交易品种名称
-		nickname: String, //** 交易品种代码
-		stock: {//** Deprciated!!
-			name: String,
-			code: String,
-		},
-		quantity: {//** 品种当前数量
-			type: Number,
-			default: 0
-		},
-		quantity_sold: {//** 品种已卖出数量，用于T+0卖出交易判断
-			type: Number,
-			default: 0
-		},
-		asset: Number,//** 初始资产，在启动时初始化。收益 = 当前品种价格 * 当前品种数量 + 债务 - 初始资产
-		price: Number,//** 初始资产单位价格
-		debt: {//** 债务，卖出减少债务，买入增加债务
-			type: Number,
-			default: 0,
-		},
-
-		bid: {//** 记录回撤时的最高或最低出价
-			direction: {
-				type: String, 
-				enum: {
-					values: '买入|待定|卖出'.split('|'),
-					message: 'enum validator failed for path {PATH} with value {VALUE}',
-				},
-				default: '待定',
-			},
-			price: {// 最高卖出或最低买入的竞价
-				type: Number,
-				min: 0,
-				default: 0,
-			},
-		},
+		name: String, //** 品种名称，如: 中国国航
+		nickname: String,//** 品种代码，如: 601111
 
 		//strategy params
 		params: {
@@ -51,6 +16,7 @@ exports = module.exports = function(mongoose) {
 					values: 'T0'.split('|'),
 					message: 'enum validator failed for path {PATH} with value {VALUE}',
 				},
+				default: 'T0',
 				required: true,
 			},
 			description: String,
@@ -141,51 +107,14 @@ exports = module.exports = function(mongoose) {
 				},
 			}
 		},
-		//transactions depth
-		transactions: [{
-			price: {
-				type: Number, //成交价(元)
-				min: 0,
-				max: 100,
-			},
-			quantity: {
-				type: Number, //买入量(股)
-				min: -100000,
-				max: 100000,
-			},
-			direction: {
-				type: String, 
-				enum: {
-					values: '买入|卖出'.split('|'),
-					message: 'enum validator failed for path {PATH} with value {VALUE}',
-				},
-			},
-		}],
 
-		times: {
-			type: Number, //买卖总次数
-			default: 0,
-		},
-	
-		status: {
-			code: {
-				type: Number,
-				enum: {
-					values: '0|1'.split('|'), //1: 正常交易，0：停止交易
-					message: 'enum validator failed for path {PATH} with value {VALUE}',
-				},
-			},
-			message: String,
-		},
 		lastupdatetime: {
 			type: Date,
 			default: Date.now,
 		},
 	});
 
-	// schema.set('collection', 'stragtegies');
-	// if (mongoose.models.Strategy) {
-	// 	return mongoose.model('Strategy');
-	// }
-	// return mongoose.model('Strategy', schema);
+	schema.set('collection', 'trade.stragtegies');
+
+	return mongoose.model('TradeStrategy', schema);
 };

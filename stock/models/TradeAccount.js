@@ -9,6 +9,7 @@ module.exports = exports = function(mongoose){
 		company: {//账户所属公司
 			id: String,
 			name: String,
+			avatar: String,
 		},
 		asset: Number,//** 资产总额
 		balance: Number,//** 账户资产结余		
@@ -36,6 +37,6 @@ module.exports = exports = function(mongoose){
 
 	});
 
-	schema.set('collection','stock.accounts');
-	return mongoose.model('StockAccount',schema);
+	schema.set('collection','trade.accounts');
+	return mongoose.model('TradeAccount',schema);
 };

@@ -71,7 +71,7 @@
 		<div>
 			<% var date = new Date(model.lastupdatetime); %>
 			<h4>
-				<a href="#trading/graph/<%= model.symbol %>
+				<a href="#trade/transaction/graph/<%= model.symbol %>
 					">
 					<%= model.symbol %></a>
 				&nbsp;&nbsp;

@@ -1,11 +1,11 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    strategyTpl = require('../templates/_entityStrategy.tpl'),
+    strategyTpl = require('../templates/_entityTradePortfolio.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
-var ListView = require('../views/_TradingList');
+var ListView = require('../views/_TradeTransactionList');
 
 Backbone.$ = $;
 

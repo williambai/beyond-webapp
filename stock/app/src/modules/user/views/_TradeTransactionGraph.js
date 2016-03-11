@@ -16,7 +16,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	load: function() {
-		this.url = config.api.host + '/trading?type=graph&symbol=' + this.symbol;
+		this.url = config.api.host + '/trade/transactions?type=graph&symbol=' + this.symbol;
 		this.render();
 	},
 

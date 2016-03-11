@@ -36,10 +36,8 @@ exports = module.exports = function(mongoose) {
 		time: String, //时间
 	});
 
-	schema.set('collection', 'stockquotes');
-	if (mongoose.models.StockQuote) {
-		return mongoose.model('StockQuote');
-	}
+	schema.set('collection', 'trade.quotes');
+
 	schema.index({symbol:1,date:1,time:1});
-	return mongoose.model('StockQuote', schema);
+	return mongoose.model('TradeQuote', schema);
 };
