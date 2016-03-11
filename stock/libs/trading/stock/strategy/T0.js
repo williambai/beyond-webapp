@@ -47,12 +47,11 @@ var judge = function(stock, strategy, callback) {
 			direction = transaction.direction;
 			quantity = Number(transaction.quantity);
 		}
-		logger.info(stock.date + ' ' + stock.time + ' ' + symbol + '(' + stock.price + ') ' + '[' + bottom + ' - ' + top + ']');
 		//** 计算买卖次数
 		var directions = _.pluck(transactions, 'direction');
 		var countBuy = _.without(directions, '卖出');
 		var countSell = _.without(directions, '买入');
-		logger.debug(symbol + 'count [buy,sell]: ' + countBuy.length + ',' + countSell.length);
+		logger.info(stock.date + ' ' + stock.time + ' ' + symbol + '(' + stock.price + ') ' + '[' + countBuy.length + ',' + countSell.length +'][' + bottom + ' - ' +  transaction.price + ' - ' + top + ']');
 		// is not trading time, do nothing
 		if (!isTradingTime(stock.time)) return callback(null);
 		// is times more than times_max, do nothing
