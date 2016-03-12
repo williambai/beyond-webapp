@@ -4,58 +4,76 @@ var _ = require('underscore');
 exports = module.exports = function(app, models) {
 
 	var add = function(req, res) {
-		var strategy = req.body;
-		//** 防止上传数据中带有 _id
-		strategy = _.omit(strategy, '_id');
-		//** 获取股票当前价格
-		var symbol = strategy.symbol;
-		//** 查找是否已经存在
-		models.TradePortfolio
+		var trader = req.body.trader || {};
+		//** 如果没有选择交易商，则返回错误	
+		if(!trader.name) return res.send({code: 40422, errmsg: '请选择交易商'});
+		models.TradeAccount
 			.findOne({
-				symbol: symbol
+				'company.name': trader.name,
+				'createBy.id': req.session.accountId,
 			})
-			.exec(function(err, doc) {
-				if (err) return res.send(err);
-				//** 获取最新报价
-				quote.getQuote(symbol, function(err, stock) {
-					//** 复位初始债务
-					strategy.debt = 0;
-					//** 设置初始资产单价
-					strategy.price = Number(stock.price);
-					//** 计算初始资产
-					var quantity = strategy.quantity || 0;
-					strategy.asset = Number(quantity) * Number(stock.price);
-					//** 复位已卖出数量
-					strategy.quantity_sold = 0;
-					//** 复位其他参数
-					strategy.times = {
-						buy: 0,
-						sell: 0,
+			.exec(function(err,tradeAccount){
+				if(err || !tradeAccount) return res.send(err || {code: 40423, errmsg: '请先绑定交易商'});
+				var strategy = req.body;
+				//** 防止上传数据中带有 _id
+				strategy = _.omit(strategy, '_id');
+				//** 设置交易账户
+				strategy.account = {
+						id: tradeAccount._id,
+						user: tradeAccount.user,
+						company: tradeAccount.company,
 					};
-					strategy.transactions = [];
-					strategy.lastupdatetime = new Date();
-					if (doc) {
-						//** 如果存在，备份到Histrory
-						models.TradePortfolioHistory.create({
-							backup: doc
-						}, function(err, result) {
-							if (err) return res.send(err);
-							//** 更新
-							models.TradePortfolio
-								.findByIdAndUpdate(doc._id, strategy, function(err, newDoc) {
+				//** 获取股票当前价格
+				var symbol = strategy.symbol;
+				//** 查找是否已经存在
+				models.TradePortfolio
+					.findOne({
+						symbol: symbol
+					})
+					.exec(function(err, doc) {
+						if (err) return res.send(err);
+						//** 获取最新报价
+						quote.getQuote(symbol, function(err, stock) {
+							//** 复位初始债务
+							strategy.debt = 0;
+							//** 设置初始资产单价
+							strategy.price = Number(stock.price);
+							//** 计算初始资产
+							var quantity = strategy.quantity || 0;
+							strategy.asset = Number(quantity) * Number(stock.price);
+							//** 复位已卖出数量
+							strategy.quantity_sold = 0;
+							//** 复位其他参数
+							strategy.times = {
+								buy: 0,
+								sell: 0,
+							};
+							strategy.transactions = [];
+							strategy.lastupdatetime = new Date();
+							if (doc) {
+								//** 如果存在，备份到Histrory
+								models.TradePortfolioHistory.create({
+									backup: doc
+								}, function(err, result) {
 									if (err) return res.send(err);
-									res.send(newDoc);
+									//** 更新
+									models.TradePortfolio
+										.findByIdAndUpdate(doc._id, strategy, function(err, newDoc) {
+											if (err) return res.send(err);
+											res.send(newDoc);
+										});
 								});
+							} else {
+								//** 创建
+								models.TradePortfolio.create(strategy, function(err, doc) {
+									if (err) return res.send(err);
+									res.send(doc);
+								});
+							}
 						});
-					} else {
-						//** 创建
-						models.TradePortfolio.create(strategy, function(err, doc) {
-							if (err) return res.send(err);
-							res.send(doc);
-						});
-					}
-				});
+					});				
 			});
+
 	};
 
 	var remove = function(req, res) {
@@ -72,36 +90,21 @@ exports = module.exports = function(app, models) {
 		});
 	};
 
-	var update = function(req, res) {
-		// console.log(req.body)
-		var id = req.params.id;
-		var strategy = req.body;
-		//** 获取股票当前价格
-		var symbol = strategy.symbol;
-		quote.getQuote(symbol, function(err, stock) {
-			//** 复位初始债务
-			strategy.debt = 0;
-			//** 设置初始资产单价
-			strategy.price = Number(stock.price);
-			//** 计算初始资产
-			var quantity = strategy.quantity || 0;
-			strategy.asset = Number(quantity) * Number(stock.price);
-			//** 复位已卖出数量
-			strategy.quantity_sold = 0;
-			//** 复位其他参数
-			strategy.transactions = [];
-			strategy.times = 0;
-			strategy.lastupdatetime = new Date();
-			models.TradePortfolio.findByIdAndUpdate(id, {
-				$set: strategy,
-			}, {
-				upsert: false
-			}, function(err, doc) {
-				if (err) return res.send(err);
-				res.send(doc);
-			});
-		});
-	};
+ 	var update = function(req, res) {
+ 		var id = req.params.id;
+ 		var set = req.body;
+ 		models.TradePortfolio.findByIdAndUpdate(id, {
+ 				$set: set
+ 			}, {
+ 				'upsert': false,
+ 				'new': true,
+ 			},
+ 			function(err, doc) {
+ 				if (err) return res.send(err);
+ 				res.send(doc);
+ 			}
+ 		);
+ 	};
 
 	var getOne = function(req, res) {
 		models.TradePortfolio.findById(req.params.id, function(err, doc) {

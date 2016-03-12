@@ -3,7 +3,11 @@ module.exports = exports = function(mongoose){
 	var schema = new mongoose.Schema({
 		account: {//** StockAccount 交易账号信息
 			id: String,
+			user: {//账户所有人信息
+				name: String,//** 真实姓名
+			},
 			company: {
+				id: String,
 				name: String,
 				avatar: String,
 			},
@@ -75,6 +79,16 @@ module.exports = exports = function(mongoose){
 					message: 'enum validator failed for path {PATH} with value {VALUE}',
 				},
 			},
+			date: {
+				type: String,
+				match: [/[0-9]+\-[0-9]+\-[0-9]+/, '{PATH}日期格式不对，格式为 xxxx-xx-xx'],
+				required: true,
+			},
+			time: {
+				type: String,
+				match: [/[0-9]+:[0-9]+:[0-9]+/, '{PATH}时间格式不对，格式为 xx:xx:xx'],
+				required: true,
+			},
 		},
 		//transactions depth
 		transactions: [{
@@ -94,6 +108,16 @@ module.exports = exports = function(mongoose){
 					values: '买入|卖出'.split('|'),
 					message: 'enum validator failed for path {PATH} with value {VALUE}',
 				},
+			},
+			date: {
+				type: String,
+				match: [/[0-9]+\-[0-9]+\-[0-9]+/, '{PATH}日期格式不对，格式为 xxxx-xx-xx'],
+				required: true,
+			},
+			time: {
+				type: String,
+				match: [/[0-9]+:[0-9]+:[0-9]+/, '{PATH}时间格式不对，格式为 xx:xx:xx'],
+				required: true,
 			},
 		}],
 		status: {

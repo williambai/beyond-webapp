@@ -1,7 +1,7 @@
 <div class="sidebar sidebar-left">
 	<div class="scrollable" style="padding-top:70px;">
 		<div class="scrollable-header app-name">
-			<a href="#" onclick="window.location.reload();return false;">{产品名称}</a>
+			<a href="#" onclick="window.location.reload();return false;">白杨投资理财</a>
 		</div>
 		<div class="scrollable-content">
 			<div class="list-group">
@@ -16,14 +16,19 @@
 					&nbsp;投资组合
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
-				<a class="list-group-item" href="#trade/history/index">
+				<a class="list-group-item" href="#trade/order/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;投资历史记录
+					&nbsp;下单记录
+					<i class="fa fa-chevron-right pull-right"></i>
+				</a>
+				<a class="list-group-item" href="#trade/portfolio/histroy/index">
+					<i class="fa fa-meh-o fa-fw"></i>
+					&nbsp;往届投资
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#trade/transaction/index">
 					<i class="fa fa-meh-o fa-fw"></i>
-					&nbsp;交易历史记录
+					&nbsp;撮合记录
 					<i class="fa fa-chevron-right pull-right"></i>
 				</a>
 				<a class="list-group-item" href="#trade/strategy/index">

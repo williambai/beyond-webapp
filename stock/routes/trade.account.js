@@ -211,11 +211,14 @@
  			default:
  				var doc = req.body;
  				if(doc.password){
- 					doc.password = crypto.publicEncrypt(CITIC.publicKey,doc.password);
- 					doc.password = crypto.privateDecrypt(CITIC.privateKey,doc.password);
- 					console.log(doc.password);
+ 					doc.password = crypto.publicEncrypt(CITIC.publicKey,new Buffer(doc.password)).toString('base64');
+ 					// console.log(doc.password);
  				}
- 				return;
+ 				//** 设置createBy 用户
+ 				doc.createBy = {
+ 					id: req.session.accountId,
+ 					name: req.session.username,
+ 				};
  				models.TradeAccount.create(doc,function(err) {
  					if (err) return res.send(err);
  					res.send({});
@@ -242,7 +245,10 @@
  					set.password = crypto.publicEncrypt(CITIC.publicKey,new Buffer(set.password)).toString('base64');
  					// console.log(set.password);
  				}
- 				models.TradeAccount.findByIdAndUpdate(id, {
+ 				models.TradeAccount.findOneAndUpdate({
+ 						_id: id,
+ 						'createBy.id': req.session.accountId
+ 					}, {
  						$set: set
  					}, {
  						'upsert': false,
@@ -265,6 +271,8 @@
  			default: models.TradeAccount
  				.findById(id)
  				.select({
+ 					cookies: 0,
+ 					cookieRaw: 0,
  					password: 0
  				})
  				.exec(function(err, doc) {
@@ -282,6 +290,8 @@
  		models.TradeAccount
  			.find({})
  			.select({
+ 				cookies: 0,
+ 				cookieRaw: 0,
  				password: 0
  			})
  			.skip(per * page)

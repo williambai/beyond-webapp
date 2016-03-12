@@ -2,13 +2,13 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
 	loadingTpl = require('../templates/__loading.tpl'),
-	strategyTpl = require('../templates/_entityTradePortfolio.tpl');
+	strategyTpl = require('../templates/_entityTradePortfolioHistroy.tpl');
 var config = require('../conf');
 
-var TradePortfolio = require('../models/TradePortfolio');
+var TradePortfolio = require('../models/TradePortfolioHistroy');
 
 // var SearchView = require('../views/_StrategySearch');
-var ListView = require('../views/_TradePortfolioList');
+var ListView = require('../views/_TradePortfolioHistroyList');
 
 Backbone.$ = $;
 
@@ -29,8 +29,6 @@ exports = module.exports = Backbone.View.extend({
 		'scroll': 'scroll',
 		'click .view': 'viewPortfolio',
 		'click .delete': 'removePortfolio',
-		'click .startTrade': 'startTrade',
-		'click .stopTrade': 'stopTrade',		
 	},
 
 	load: function() {
@@ -60,7 +58,7 @@ exports = module.exports = Backbone.View.extend({
 
 	viewPortfolio: function(evt){
 		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		this.router.navigate('trade/portfolio/view/'+ id,{trigger: true});
+		this.router.navigate('trade/portfolio/histroy/view/'+ id,{trigger: true});
 		return false;
 	},
 
@@ -70,53 +68,6 @@ exports = module.exports = Backbone.View.extend({
 			var model = new TradePortfolio({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
-		}
-		return false;
-	},
-
-	startTrade: function(evt){
-		var that = this;
-		if(window.confirm('您确信要启动交易吗？')){
-			var id = this.$(evt.currentTarget).closest('.item').attr('id');
-			// var model = new TradePortfolio({_id: id});
-			// model.set('status','实战');
-			$.ajax({
-				url: config.api.host + '/trade/portfolios/' + id,
-				type: 'PUT',
-				xhrFields: {
-					withCredentials: true
-				},
-				data: {
-					status: '实战',
-				},
-				crossDomain: true,
-			}).done(function(){
-				that.listView.trigger('refresh');
-			});
-		}
-		return false;
-	},
-
-
-	stopTrade: function(evt){
-		var that = this;
-		if(window.confirm('您确信要停止交易吗？')){
-			var id = this.$(evt.currentTarget).closest('.item').attr('id');
-			// var model = new TradePortfolio({_id: id});
-			// model.set('status','实战');
-			$.ajax({
-				url: config.api.host + '/trade/portfolios/' + id,
-				type: 'PUT',
-				xhrFields: {
-					withCredentials: true
-				},
-				data: {
-					status: '模拟',
-				},
-				crossDomain: true,
-			}).done(function(){
-				that.listView.trigger('refresh');
-			});
 		}
 		return false;
 	},

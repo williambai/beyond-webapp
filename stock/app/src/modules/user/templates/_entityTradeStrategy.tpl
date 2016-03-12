@@ -324,7 +324,7 @@
 					<div class="panel-body">
 						<div class="form-group">
 							<label>选择交易商：</label>
-							<input type="radio" name="account[company][name]" value="中信证券">&nbsp;&nbsp;中信证券
+							<input type="radio" name="name" value="中信证券">&nbsp;&nbsp;中信证券
 							<span class="help-block"></span>
 						</div>
 						<div class="form-group">

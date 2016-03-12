@@ -8,6 +8,10 @@ exports = module.exports = function(mongoose) {
 		name: String, //** 品种名称，如: 中国国航
 		nickname: String,//** 品种代码，如: 601111
 
+		quantity: {//** 品种初始数量
+			type: Number,
+			default: 0
+		},
 		//strategy params
 		params: {
 			name: {

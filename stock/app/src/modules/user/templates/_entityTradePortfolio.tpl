@@ -26,18 +26,13 @@
 			</div>
 			<div>
 				<h4>
-					<a href="#strategy/trading/graph/<%= model.symbol %>/<%= date.getTime() %>"><%= model.name %></a>
+					<a href="#" class="view"><%= model.name %></a>
 					&nbsp;&nbsp;
 					<%= model.nickname %>
 					&nbsp;&nbsp;
-					<% if(model.status == '模拟'){ %>
-					<span style="background-color: red; color: white;">
-						<%= model.status %></span>
-					<% }else{ %>
-					<span style="background-color: green; color: white;">
-						<%= model.status %></span>
-					<% } %></h4>
-					<p>盈亏：<span style="color:red">￥<%= model.times == 0 ? 0 : (model.currentPrice * model.quantity + model.debt - model.asset).toFixed(2) %></span>&nbsp;&nbsp;最后交易：<span style="color:red">￥<%= model.bid.price %>(<%= model.bid.direction %>)</span>&nbsp;&nbsp;当前价格：<%= model.currentPrice %></p>
+					<span style="background-color: green; color: white;"><%= model.status %>状态</span>
+				</h4>
+				<p>盈亏：<span style="color:red">￥<%= model.times == 0 ? 0 : (model.currentPrice * model.quantity + model.debt - model.asset).toFixed(2) %></span>&nbsp;&nbsp;最后交易：<span style="color:red">￥<%= model.bid.price %>(<%= model.bid.direction %>)</span>&nbsp;&nbsp;当前价格：<%= model.currentPrice %></p>
 				<p>开始时间：<%= date.getFullYear() +'-' + (1+date.getMonth()) + '-' + (date.getDate()) + ' '+ date.getHours() + ':'+ date.getMinutes() + ':'+ date.getSeconds() %>
 					&nbsp;&nbsp;交易次数：
 					<%= model.times.buy + model.times.sell %></p>
@@ -46,21 +41,26 @@
 			<hr/>
 		</div>
 	</div>
-	<div id="listTradingTemplate">
-	</div>
-	<hr/>
-	<div id="itemTradingTemplate">
-		<div class="pull-right">
-			<p>
-				<a href="#/trading/update" id="">成交</a>
-				&nbsp;
-			</p>
+	<div id="viewTemplate">
+		<div>
+			<a class="btn btn-primary" onclick="window.history.back();return false;">返回</a>
 		</div>
+		<hr/>
+		<p><strong><%= model.symbol %></strong>&nbsp;自&nbsp;<strong><%= model.from %></strong>&nbsp;起的交易记录。</p>
+		<div id="graphTransaction">
+		</div>
+		<h3 class="text-center">以下为交易明细</h3>
+		<hr/>
+		<div id="listTransaction">
+		</div>
+	</div>
+
+	<div id="itemTransactionTemplate">
 		<div>
 			<% var date = new Date(model.lastupdatetime); %>
 			<h4>
-				<%= model.symbol %>
-				&nbsp;&nbsp;
+				<%= model.name %>&nbsp;&nbsp;<%= model.nickname %>&nbsp;&nbsp;
+				
 				<% if(model.direction == '买入'){ %>
 				<span style="background-color: green;color:white;">
 					<%= model.direction %></span>
@@ -68,27 +68,14 @@
 				<span style="background-color: red;color:white;">
 					<%= model.direction %></span>
 				<% } %>
-				：￥ <u><%= model.price %></u>
+				￥<u><%= model.price %></u>
 				&nbsp;&nbsp;
 				<%= model.status %></h4>
 			<p>
-				交易日期：
-				<%= model.date %>
-				，交易时间：
-				<%= model.time %></p>
-			<p>
-				生成时间：
-				<%= date.getFullYear() +'-' + (1+date.getMonth()) + '-' + (date.getDate()) + ' '+ date.getHours() + ':'+ date.getMinutes() + ':'+ date.getSeconds() %></p>
+				交易日期：<%= model.date %>&nbsp;&nbsp;交易时间：<%= model.time %>
+			</p>
 		</div>
 		<hr/>
-	</div>
-	<div id="graphTemplate">
-		<div>
-			<a class="btn btn-primary" onclick="window.history.back();return false;">返回</a>
-		</div>
-		<hr/>
-		<p><strong><%= symbol %></strong>&nbsp;自&nbsp;<strong><%= from %></strong>&nbsp;起的交易记录。</p>
-		<div id="graph"></div>
 	</div>
 </div>
 <!-- 

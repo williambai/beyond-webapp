@@ -11,9 +11,8 @@ var multer = require('multer');
 var app = express();
 var nodemailer = require('nodemailer');
 
-log4js.configure(path.join(__dirname, 'log4js.json'));
-var logger = log4js.getLogger('server');
-logger.setLevel('DEBUG');
+log4js.configure(path.join(__dirname,'config', 'log4js.json'));
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 
 var workerStatus = {
 	platform: false,

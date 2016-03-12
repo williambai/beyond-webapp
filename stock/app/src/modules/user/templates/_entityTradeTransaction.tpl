@@ -5,10 +5,10 @@
 		<div id="panel">
 			<div class="panel panel-default">
 				<div class="pull-right">
-					<a href="#trading/export" class="btn btn-info">导出</a>
+					<button class="btn btn-primary export">导出</button>
 				</div>
 				<div class="panel-heading">
-					<h3 class="panel-title text-center">&nbsp;</h3>
+					<h3 class="panel-title text-center">交易历史记录</h3>
 				</div>
 				<div class="panel-body">
 					<div id="list"></div>
@@ -71,10 +71,10 @@
 		<div>
 			<% var date = new Date(model.lastupdatetime); %>
 			<h4>
-				<a href="#trade/transaction/graph/<%= model.symbol %>
+<!-- 				<a href="#trade/transaction/graph/<%= model.symbol %>
 					">
 					<%= model.symbol %></a>
-				&nbsp;&nbsp;
+ -->				<%= model.symbol %>&nbsp;&nbsp;
 				<% if(model.direction == '买入'){ %>
 				<span style="background-color: green;color:white;">
 					<%= model.direction %></span>

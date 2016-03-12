@@ -1,4 +1,3 @@
-var debug = true;
 var log4js = require('log4js');
 var _ = require('underscore');
 var async = require('async');
@@ -8,9 +7,8 @@ var cst = require('./config/constant');
 var Trading = require('./libs/trading').stock;
 var citic = require('./libs/citic');
 
-log4js.configure(path.join(__dirname, 'log4js.json'));
-var logger = log4js.getLogger('worker');
-logger.setLevel('DEBUG');
+log4js.configure(path.join(__dirname, 'config', 'log4js.json'));
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 
 var status = {
 	platform: false,
@@ -38,7 +36,7 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 var quote = function(stock) {
 	// logger.debug('quote: ' + JSON.stringify(stock.symbol));
 	if (stock.price != '0.00') {
-		models.StockQuote
+		models.TradeQuote
 			.findOneAndUpdate({
 					'symbol': stock.symbol,
 					'date': stock.date,
@@ -82,6 +80,7 @@ var bid = function(trade) {
 var buy = function(trade) {
 	trade = trade || {};
 	var stock = trade.stock;
+	var strategy = trade.strategy;
 	var transaction = trade.transaction;
 	var debt = transaction.price * transaction.quantity;
 	transaction.symbol = stock.symbol;
@@ -90,22 +89,27 @@ var buy = function(trade) {
 	async.waterfall(
 		[
 			function pushTransaction(callback) {
+				//** 当前交易
+				var currentTransaction = {
+					price: transaction.price,
+					quantity: transaction.quantity,
+					direction: transaction.direction,
+					date: stock.date,
+					time: stock.time,
+				};
 				models.TradePortfolio
 					.findOneAndUpdate({
 							'symbol': stock.symbol
 						}, {
 							$set: {
+								lastTransaction: currentTransaction,
 								bid: {
 									direction: '待定',
 									price: transaction.price
 								}
 							},
 							$push: {
-								'transactions': {
-									price: transaction.price,
-									quantity: transaction.quantity,
-									direction: transaction.direction
-								}
+								'transactions': currentTransaction
 							},
 							$inc: {
 								'times': 1, //** 增加交易次数
@@ -121,22 +125,21 @@ var buy = function(trade) {
 						}
 					);
 			},
-			function saveTrading(callback) {
+			function saveTransaction(callback) {
 				var newTrade = {
+					account: strategy.account,
 					symbol: stock.symbol,
-					stock: stock.stock,
+					name: strategy.name,
+					nickname: strategy.nickname,
 					price: transaction.price,
 					quantity: transaction.quantity,
 					direction: transaction.direction,
-					status: {
-						code: -1,
-						message: '未成交',
-					},
+					status: '未成交',
 					tax: 0,
 					date: stock.date,
 					time: stock.time,
 				};
-				models.Trading.create(newTrade, function(err, doc) {
+				models.TradeTransaction.create(newTrade, function(err, doc) {
 					if (err) return callback(err);
 					callback(null);
 				});
@@ -152,6 +155,7 @@ var buy = function(trade) {
 var sell = function(trade) {
 	trade = trade || {};
 	var stock = trade.stock;
+	var strategy = trade.strategy;
 	var transaction = trade.transaction;
 	transaction.symbol = stock.symbol;
 	var debt = transaction.price * transaction.quantity;
@@ -159,22 +163,27 @@ var sell = function(trade) {
 	async.waterfall(
 		[
 			function pushTransaction(callback) {
+				//** 当前交易
+				var currentTransaction = {
+					price: transaction.price,
+					quantity: transaction.quantity,
+					direction: transaction.direction,
+					date: stock.date,
+					time: stock.time,
+				};
 				models.TradePortfolio
 					.findOneAndUpdate({
 							'symbol': stock.symbol
 						}, {
 							$set: {
+								lastTransaction: currentTransaction,//** 设置最后一次交易
 								bid: {
 									direction: '待定',
 									price: transaction.price
 								}
 							},
 							$push: {
-								transactions: {
-									price: transaction.price,
-									quantity: transaction.quantity,
-									direction: transaction.direction
-								}
+								transactions: currentTransaction
 							},
 							$inc: {
 								'times': 1, //** 增加交易次数
@@ -190,22 +199,21 @@ var sell = function(trade) {
 						}
 					);
 			},
-			function saveTrading(callback) {
+			function saveTransaction(callback) {
 				var newTrade = {
+					account: strategy.account,
 					symbol: stock.symbol,
-					stock: stock.stock,
+					name: strategy.name,
+					nickname: strategy.nickname,
 					price: transaction.price,
 					quantity: transaction.quantity,
 					direction: transaction.direction,
-					status: {
-						code: -1,
-						message: '未成交',
-					},
+					status: '未成交',
 					tax: 0,
 					date: stock.date,
 					time: stock.time,
 				};
-				models.Trading.create(newTrade, function(err, doc) {
+				models.TradeTransaction.create(newTrade, function(err, doc) {
 					if (err) return callback(err);
 					callback(null);
 				});
@@ -234,16 +242,16 @@ var start = function() {
 	var lastTimestamp = Date.now();
 	var interval = 5000;
 	intervalObject = setInterval(function() {
-		logger.debug('interval: ' + interval);
+		logger.debug('执行交易间隔 interval: ' + interval);
 		models.TradePortfolio
 			.find({
-				'status.code': 1
+				'status': '实战'
 			})
 			.exec(function(err, strategies) {
 				if (err) return logger.error(err);
-				if (_.isEmpty(strategies)) return logger.warn('没有可执行的。');
+				if (_.isEmpty(strategies)) return logger.debug('没有可执行的。');
 				trading = new Trading();
-				trading.on('quote',quote);
+				trading.on('quote', quote);
 				trading.on('bid', bid);
 				trading.on('sell', sell);
 				trading.on('buy', buy);

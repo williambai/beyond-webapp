@@ -1,0 +1,38 @@
+{
+	"appenders": [{
+		"type": "console"
+	}, {
+		"type": "logLevelFilter",
+		"level": "WARN",
+		"appender": {
+			"type": "file",
+			"filename": "logs/error.log",
+			"maxLogSize": 20480,
+			"backups": 3
+		}
+	}, {
+		"type": "logLevelFilter",
+		"level": "ALL",
+		"appender": {
+			"type": "file",
+			"filename": "logs/all.log",
+			"maxLogSize": 20480,
+			"backups": 3
+		}
+	}, {
+		"type": "file",
+		"filename": "logs/work.log",
+		"maxLogSize": 20480,
+		"backups": 3,
+		"category": "worker"
+	}, {
+		"type": "file",
+		"filename": "logs/trading.log",
+		"maxLogSize": 20480,
+		"backups": 3,
+		"category": "trading"
+	}],
+	"levels": {
+		"worker": "DEBUG"
+	}
+}

@@ -28,7 +28,7 @@ module.exports = exports = function(mongoose){
 		},
 		createBy: {//** 账户创建者
 			id: String,
-			name: String,			
+			name: String,
 		},
 		lastupdatetime: {
 			type: Date,

@@ -8,5 +8,5 @@ module.exports = exports = function(mongoose){
 		},
 	});
 	schema.set('collection','trade.portfolio.histroies');
-	return mongoose.model('TradePortfolioHistroy',schema);//** 保存TradePortfolio历史记录
+	return mongoose.model('TradePortfolioHistory',schema);//** 保存TradePortfolio历史记录
 };

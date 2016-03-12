@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var Backbone = require('backbone'),
 	$ = require('jquery'),
-    strategyTpl = require('../templates/_entityTradePortfolio.tpl'),
-	TradePortfolio = require('../models/TradePortfolio');
+    strategyTpl = require('../templates/_entityTradePortfolioHistroy.tpl'),
+	TradePortfolio = require('../models/TradePortfolioHistroy');
 var config = require('../conf');
 var d3 = require('d3');
 
@@ -40,7 +40,8 @@ exports = module.exports = Backbone.View.extend({
 
 	change: function(){
 		var that = this;
-		var transactions = this.model.get('transactions');
+		var backup = this.model.get('backup');
+		var transactions = backup.transactions;
 		console.log(transactions)
 		//** 显示列表
 		_.each(transactions,function(transaction){

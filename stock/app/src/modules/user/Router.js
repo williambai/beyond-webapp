@@ -23,19 +23,21 @@ var TradeStrategyInvestView = require('./views/_TradeStrategyInvest');
 var TradeTransactionIndexView = require('./views/_TradeTransactionIndex');
 var TradeTransactionGraphView = require('./views/TradeTransactionGraph');
 
-var StrategyTradingListView = require('./views/_StrategyTradingList');
-var StrategyTradingGraphView = require('./views/_StrategyTradingGraph');
-
-
 var TradePortfolioIndexView = require('./views/_TradePortfolioIndex');
+var TradePortfolioViewView = require('./views/_TradePortfolioView');
+var TradePortfolioHistroyIndexView = require('./views/_TradePortfolioHistroyIndex');
+var TradePortfolioHistroyViewView = require('./views/_TradePortfolioHistroyView');
 
-var StrategyAddView = require('./views/_StrategyAdd');
-var StrategyEditView = require('./views/_StrategyEdit');
-var StrategyViewView = require('./views/_StrategyView');
+var HomeIndexView = require('./views/_HomeIndex');
+
+// var StrategyTradingListView = require('./views/_StrategyTradingList');
+// var StrategyTradingGraphView = require('./views/_StrategyTradingGraph');
+// var StrategyAddView = require('./views/_StrategyAdd');
+// var StrategyEditView = require('./views/_StrategyEdit');
+// var StrategyViewView = require('./views/_StrategyView');
 // var StrategyExportView = require('./views/_StrategyExport');
 // var StrategyImportView = require('./views/_StrategyImport');
 
-var HomeIndexView = require('./views/_HomeIndex');
 
 var config = require('./conf');
 
@@ -63,21 +65,25 @@ exports = module.exports = Backbone.Router.extend({
 		'trade/strategy/invest/:id': 'tradeStrategyInvest',
 
 		'trade/portfolio/index': 'tradePortfolioIndex',
-		'trade/portfolio/add': 'strategyAdd',
-		'trade/portfolio/edit/:id': 'strategyEdit',
+		'trade/portfolio/view/:id': 'tradePortfolioView',
 
-		'strategy/view/:id': 'strategyView',
-		'strategy/export': 'strategyExport',
-		'strategy/import': 'strategyImport',
-		'strategy/trading/record/:symbol/:from': 'strategyTradingList',
-		'strategy/trading/graph/:symbol/:from': 'strategyTradingGraph',
+		'trade/portfolio/histroy/index': 'tradePortfolioHistroyIndex',
+		'trade/portfolio/histroy/view/:id': 'tradePortfolioHistroyView',
 
 		'trade/transaction/index': 'tradeTransactionIndex',
-		'trade/transaction/graph/:symbol': 'tradeTransactionGraph',
+		// 'trade/transaction/graph/:symbol': 'tradeTransactionGraph',
 
 		'trade/account/index': 'tradeAccountIndex',
 		'trade/account/add': 'tradeAccountEdit',
 		'trade/account/edit/:id': 'tradeAccountEdit',
+
+		// 'trade/add': 'strategyAdd',
+		// 'trade/edit/:id': 'strategyEdit',
+		// 'strategy/view/:id': 'strategyView',
+		// 'strategy/export': 'strategyExport',
+		// 'strategy/import': 'strategyImport',
+		// 'strategy/trading/record/:symbol/:from': 'strategyTradingList',
+		// 'strategy/trading/graph/:symbol/:from': 'strategyTradingGraph',
 
 		'*path': 'index',
 	},
@@ -288,112 +294,159 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '交易品种');
+		this.appEvents.trigger('set:brand', '投资组合');
 		var tradePortfolioIndexView = new TradePortfolioIndexView({
+			router: this,
 			el: '#content'
 		});
 		this.changeView(tradePortfolioIndexView);
 		tradePortfolioIndexView.trigger('load');
 	},
 
-	strategyAdd: function() {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand', '新增交易品种');
-		var strategyEditView = new StrategyAddView({
-			el: '#content'
-		});
-		this.changeView(strategyEditView);
-		strategyEditView.trigger('load');
-	},
 
-	strategyView: function(id) {
+	tradePortfolioView: function(id) {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
 		this.appEvents.trigger('set:brand', '查看交易品种');
-		var strategyViewView = new StrategyViewView({
+		var tradePortfolioViewView = new TradePortfolioViewView({
+			router: this,
 			id: id,
 			el: '#content'
 		});
-		this.changeView(strategyViewView);
-		strategyViewView.trigger('load');
+		this.changeView(tradePortfolioViewView);
+		tradePortfolioViewView.trigger('load');
 	},
 
-	strategyEdit: function(id) {
+	tradePortfolioHistroyIndex: function() {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '编辑交易品种');
-		var strategyEditView = new StrategyEditView({
+		this.appEvents.trigger('set:brand', '投资交易历史');
+		var tradePortfolioHistroyIndexView = new TradePortfolioHistroyIndexView({
+			router: this,
+			el: '#content'
+		});
+		this.changeView(tradePortfolioHistroyIndexView);
+		tradePortfolioHistroyIndexView.trigger('load');
+	},
+
+
+	tradePortfolioHistroyView: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand', '查看交易品种');
+		var tradePortfolioHistroyViewView = new TradePortfolioHistroyViewView({
+			router: this,
 			id: id,
 			el: '#content'
 		});
-		this.changeView(strategyEditView);
-		strategyEditView.trigger('load');
+		this.changeView(tradePortfolioHistroyViewView);
+		tradePortfolioHistroyViewView.trigger('load');
 	},
 
-	strategyExport: function(id) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand', '导出交易品种');
-		var strategyExportView = new StrategyExportView({
-			id: id,
-			el: '#content'
-		});
-		this.changeView(strategyExportView);
-		strategyExportView.trigger('load');
-	},
+	// strategyAdd: function() {
+	// 	if (!this.logined) {
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand', '新增交易品种');
+	// 	var strategyEditView = new StrategyAddView({
+	// 		el: '#content'
+	// 	});
+	// 	this.changeView(strategyEditView);
+	// 	strategyEditView.trigger('load');
+	// },
 
-	strategyImport: function(id) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand', '导入交易品种');
-		var strategyImportView = new StrategyImportView({
-			id: id,
-			el: '#content'
-		});
-		this.changeView(strategyImportView);
-		strategyImportView.trigger('load');
-	},
+	// strategyView: function(id) {
+	// 	if (!this.logined) {
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand', '查看交易品种');
+	// 	var strategyViewView = new StrategyViewView({
+	// 		id: id,
+	// 		el: '#content'
+	// 	});
+	// 	this.changeView(strategyViewView);
+	// 	strategyViewView.trigger('load');
+	// },
 
-	strategyTradingList: function(symbol, from) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand', '本轮交易记录');
-		var tradingListView = new StrategyTradingListView({
-			el: '#content',
-			symbol: symbol,
-			from: from
-		});
-		this.changeView(tradingListView);
-		tradingListView.trigger('load');
-	},
+	// strategyEdit: function(id) {
+	// 	if (!this.logined) {
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand', '编辑交易品种');
+	// 	var strategyEditView = new StrategyEditView({
+	// 		id: id,
+	// 		el: '#content'
+	// 	});
+	// 	this.changeView(strategyEditView);
+	// 	strategyEditView.trigger('load');
+	// },
 
-	strategyTradingGraph: function(symbol, from) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand', '本轮交易图表');
-		var tradingGraphView = new StrategyTradingGraphView({
-			symbol: symbol,
-			from: from,
-			el: '#content'
-		});
-		this.changeView(tradingGraphView);
-		tradingGraphView.trigger('load');
-	},
+	// strategyExport: function(id) {
+	// 	if (!this.logined) {
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand', '导出交易品种');
+	// 	var strategyExportView = new StrategyExportView({
+	// 		id: id,
+	// 		el: '#content'
+	// 	});
+	// 	this.changeView(strategyExportView);
+	// 	strategyExportView.trigger('load');
+	// },
+
+	// strategyImport: function(id) {
+	// 	if (!this.logined) {
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand', '导入交易品种');
+	// 	var strategyImportView = new StrategyImportView({
+	// 		id: id,
+	// 		el: '#content'
+	// 	});
+	// 	this.changeView(strategyImportView);
+	// 	strategyImportView.trigger('load');
+	// },
+
+	// strategyTradingList: function(symbol, from) {
+	// 	if (!this.logined) {
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand', '本轮交易记录');
+	// 	var tradingListView = new StrategyTradingListView({
+	// 		el: '#content',
+	// 		symbol: symbol,
+	// 		from: from
+	// 	});
+	// 	this.changeView(tradingListView);
+	// 	tradingListView.trigger('load');
+	// },
+
+	// strategyTradingGraph: function(symbol, from) {
+	// 	if (!this.logined) {
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand', '本轮交易图表');
+	// 	var tradingGraphView = new StrategyTradingGraphView({
+	// 		symbol: symbol,
+	// 		from: from,
+	// 		el: '#content'
+	// 	});
+	// 	this.changeView(tradingGraphView);
+	// 	tradingGraphView.trigger('load');
+	// },
 
 	tradeTransactionIndex: function() {
 		if (!this.logined) {
@@ -406,18 +459,18 @@ exports = module.exports = Backbone.Router.extend({
 		tradeTransactionIndexView.trigger('load');
 	},
 
-	tradeTransactionGraph: function(symbol) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand', '交易图表');
-		var tradeTransactionGraphView = new TradeTransactionGraphView({
-			symbol: symbol
-		});
-		this.changeView(tradeTransactionGraphView);
-		tradeTransactionGraphView.trigger('load');
-	},
+	// tradeTransactionGraph: function(symbol) {
+	// 	if (!this.logined) {
+	// 		window.location.hash = 'login';
+	// 		return;
+	// 	}
+	// 	this.appEvents.trigger('set:brand', '交易图表');
+	// 	var tradeTransactionGraphView = new TradeTransactionGraphView({
+	// 		symbol: symbol
+	// 	});
+	// 	this.changeView(tradeTransactionGraphView);
+	// 	tradeTransactionGraphView.trigger('load');
+	// },
 
 	tradeAccountIndex: function(){
 		if(!this.logined){

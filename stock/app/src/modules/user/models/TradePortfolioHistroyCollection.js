@@ -4,6 +4,6 @@ var config = require('../conf');
 var TradePortfolioHistroy = require('./TradePortfolioHistroy');
 
 exports = module.exports = Backbone.Collection.extend({
-	url: config.api.host + '/trade/portfolios',
+	url: config.api.host + '/trade/portfolio/histroies',
 	model: TradePortfolioHistroy,
 });
