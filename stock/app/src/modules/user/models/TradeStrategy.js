@@ -8,16 +8,69 @@ exports = module.exports = Backbone.Model.extend({
 
 	defaults: {
 		bid: {},
-		params: {},
+		params: {
+			name: 'T0',
+			buy_drawdown: 0,
+			sell_drawdown: 0,
+			method: 'eq',
+		},
 	},
 	validation: {
+		'name': {
+			required: true,
+			msg: '不能为空'
+		},
 		'symbol': {
 			required: true,
 			msg: '不能为空'
 		},
-		'name': {
+		'params[name]': {
 			required: true,
 			msg: '不能为空'
+		},
+		'params[risk_h]': {
+			range: [0, 100],
+			msg: '必须为数字',
+		},
+		'params[risk_l]': {
+			range: [0, 100],
+			msg: '必须为数字',
+		},
+		'params[init_p]': {
+			range: [0, 100],
+			msg: '必须为数字',
+		},
+		'params[init_v]': {
+			range: [1000, 10000],
+			msg: '必须为数字',
+		},
+		'params[buy_lt]': {
+			max: 10,
+			msg: '必须为数字',
+		},
+		'params[buy_drawdown]': {
+			range: [0, 10],
+			msg: '必须为数字',
+		},
+		'params[sell_gt]': {
+			max: 10,
+			msg: '必须为数字',
+		},
+		'params[sell_drawdown]': {
+			range: [0, 10],
+			msg: '必须为数字',
+		},
+		'params[quantity]': {
+			min: 1000,
+			msg: '必须为数字',
+		},
+		'params[depth]': {
+			range: [1, 10],
+			msg: '必须为数字',
+		},
+		'params[times_max]': {
+			min: 1,
+			msg: '必须为数字',
 		},
 	},
 

@@ -82,12 +82,10 @@ module.exports = exports = function(mongoose){
 			date: {
 				type: String,
 				match: [/[0-9]+\-[0-9]+\-[0-9]+/, '{PATH}日期格式不对，格式为 xxxx-xx-xx'],
-				required: true,
 			},
 			time: {
 				type: String,
 				match: [/[0-9]+:[0-9]+:[0-9]+/, '{PATH}时间格式不对，格式为 xx:xx:xx'],
-				required: true,
 			},
 		},
 		//transactions depth
@@ -112,12 +110,10 @@ module.exports = exports = function(mongoose){
 			date: {
 				type: String,
 				match: [/[0-9]+\-[0-9]+\-[0-9]+/, '{PATH}日期格式不对，格式为 xxxx-xx-xx'],
-				required: true,
 			},
 			time: {
 				type: String,
 				match: [/[0-9]+:[0-9]+:[0-9]+/, '{PATH}时间格式不对，格式为 xx:xx:xx'],
-				required: true,
 			},
 		}],
 		status: {
