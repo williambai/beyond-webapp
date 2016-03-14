@@ -19,7 +19,11 @@ StockTrading.prototype.executeStrategy = function(stocks) {
 		var symbol = strategy.symbol;
 		that.emit('quote', stocks[symbol]);
 		T0(stocks[symbol], strategy, function(err, data) {
-			if (err || !data) return done(null);
+			if (err) {
+				console.error('error: ' + err);
+				return done(null);
+			}
+			if(!data) return done(null); //** 不需要后续处理
 			if(data.action == 'bid') {
 				that.emit('bid', {
 					stock: stocks[symbol],
@@ -51,7 +55,7 @@ StockTrading.prototype.run = function(strategies, done) {
 	var symbols = _.pluck(strategies, 'symbol');
 	quote.getQuotes(symbols, function(err, stocks) {
 		if (err) return done(err);
-		console.log('----  '+ (new Date()).toLocaleString() +'  ----');
+		console.log('----  trading run at: '+ (new Date()).toLocaleString() +'  ----');
 		async.eachSeries(strategies, that.executeStrategy(stocks), done);
 	}, done);
 };

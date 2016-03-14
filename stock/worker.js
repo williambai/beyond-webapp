@@ -112,7 +112,7 @@ var buy = function(trade) {
 								'transactions': currentTransaction
 							},
 							$inc: {
-								'times': 1, //** 增加交易次数
+								'times.buy': 1, //** 增加交易次数
 								'debt': -debt, //** 增加债务(趋向负数方向)
 								'quantity': transaction.quantity, //** 增加持有数量
 							}
@@ -186,7 +186,7 @@ var sell = function(trade) {
 								transactions: currentTransaction
 							},
 							$inc: {
-								'times': 1, //** 增加交易次数
+								'times.sell': 1, //** 增加交易次数
 								'debt': debt, //** 减少债务(趋向正数方向)
 								'quantity': -transaction.quantity, //** 减少持有数量
 							}
@@ -245,8 +245,8 @@ var start = function() {
 		logger.debug('执行交易间隔 interval: ' + interval);
 		models.TradePortfolio
 			.find({
-				'status': '实战'
 			})
+			.select({transactions: 0})// ** 忽略 transactions
 			.exec(function(err, strategies) {
 				if (err) return logger.error(err);
 				if (_.isEmpty(strategies)) return logger.debug('没有可执行的。');

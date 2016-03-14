@@ -122,8 +122,8 @@ exports = module.exports = function(app, models) {
 	var getMore = function(req, res) {
 		var per = 20;
 		var type = req.query.type || '';
-		var page = req.query.page || 0;
-		page = (!page || page < 0) ? 0 : page;
+ 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
+ 		page = (!page || page < 0) ? 0 : page;
 		var query = {};
 		switch (type) {
 			case 'search':
@@ -158,7 +158,7 @@ exports = module.exports = function(app, models) {
 					.skip(per * page)
 					.limit(per)
 					.exec(function(err, docs) {
-						if (err) return res.send(err);
+						if (err || _.isEmpty(docs)) return res.send(err);
 						var symbols = _.pluck(docs, 'symbol');
 						//** 获取股票当前价格
 						quote.getQuotes(symbols, function(err, stocks) {
