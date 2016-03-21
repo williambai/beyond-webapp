@@ -1,3 +1,7 @@
+/**
+ * 简单商品 
+ * 每个商品与产品(goods._id)一对一
+ */
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
@@ -13,8 +17,8 @@ module.exports = exports = function(mongoose){
 		endtime: String,
 		display_sort: Number,
 		goods: {
-			id: String,
-			name: String
+			id: String,//** 产品编码(goods.barcode)
+			name: String, //** 产品名称(goods.name)
 		},
 		bonus: {
 			income: Number,//** 佣金收入

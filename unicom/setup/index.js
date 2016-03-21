@@ -1,3 +1,5 @@
+var path = require('path');
+var fs = require('fs');
 var _ = require('underscore');
 var async = require('async');
 var crypto = require('crypto');
@@ -8,13 +10,13 @@ var config = {
 	};		
 
 //import the models
-var models = {
-		Account: require('../models/Account')(mongoose),
-		AccountActivity: require('../models/AccountActivity')(mongoose),
-		PlatformApp: require('../models/PlatformApp')(mongoose),
-		PlatformFeature: require('../models/PlatformFeature')(mongoose),
-		PlatformRole: require('../models/PlatformRole')(mongoose),		
-	};
+var models = {};
+fs.readdirSync(path.join(__dirname, '..', 'models')).forEach(function(file) {
+	if (/\.js$/.test(file)) {
+		var modelName = file.substr(0, file.length - 3);
+		models[modelName] = require('../models/' + modelName)(mongoose);
+	}
+});
 
 mongoose.connect(config.db.URI,function onMongooseError(err){
 	if(err) {
@@ -43,6 +45,9 @@ var dropCollections = function(done) {
 			},
 			function(callback){
 				models.Account.remove(callback);
+			},
+			function(callback){
+				models.Goods.remove(callback);
 			},
 		],
 		function(err, result) {
@@ -98,7 +103,7 @@ var upsertRoles = function(done) {
  * 
  * create Account
  * 
- */var accounts = require('./accounts');
+ */
 
 var upsertAccounts = function(done) {
 	var accounts = require('./accounts');
@@ -110,6 +115,21 @@ var upsertAccounts = function(done) {
 	}, done);
 };
 
+/**
+ * 
+ * create Goods
+ * 
+ */
+
+var upsertGoods = function(done) {
+	var goods = require('./goods');
+	async.eachSeries(goods, function(item, callback) {
+		models.Goods.create(item, function(err) {
+			if (err) return callback(err);
+			callback(null);
+		});
+	}, done);
+};
 async.series(
 	[
 		dropCollections,
@@ -117,6 +137,7 @@ async.series(
 		upsertRoles,
 		upsertApps,
 		upsertAccounts,
+		upsertGoods,
 	],
 	function(err, result) {
 		if (err) console.log(err);

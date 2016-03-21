@@ -8,6 +8,7 @@
             "platform_app",
             "platform_role",
             "platform_account",
+            "platform_file",
             "platform_session",
             "platform_sms",
             "cbss_account",

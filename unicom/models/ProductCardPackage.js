@@ -1,3 +1,7 @@
+/**
+ * 号卡商品
+ * 每个商品对应一个产品，但每个产品下有多个SKU(ProductCard)
+ */
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
@@ -20,8 +24,8 @@ module.exports = exports = function(mongoose){
 		unit: String,
 		quantity: Number,
 		goods: {
-			id: String,
-			name: String,
+			id: String,//** 产品编码(goods.barcode)
+			name: String, //** 产品名称(goods.name)
 		},
 		bonus: {
 			income: Number,//** 佣金收入

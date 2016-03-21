@@ -9,6 +9,8 @@
 			console.log(cbss_cwd);
 			var worker = require('child_process').execFile(
 				'casperjs', [
+					'--ignore-ssl-errors=true',
+					'--ssl-protocol=any',
 					'login.casper.js',
 					'--id=' + id,
 					'--captcha_file=' + path.join(__dirname,'../public/_tmp/captcha_' + id + '.png'),
@@ -66,7 +68,7 @@
 			.findByIdAndUpdate(
 				id, {
 					$set: {
-						'login': true,
+						'login': req.body.success,
 						'cookieRaw': 'cookieRaw',
 						'cookie': req.body.cookie,
 						'lastupdatetime': Date.now(),
@@ -190,6 +192,8 @@
  	var update = function(req, res) {
  		var id = req.params.id;
 		var set = req.body;
+		//** 更新，则退出登录
+		set.login = false;
 		models.CbssAccount.findByIdAndUpdate(id, {
 				$set: set
 			}, {

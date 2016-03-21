@@ -73,7 +73,7 @@ exports = module.exports = FormView.extend({
 				var goods = '<ul class="list-group">';
 				data.forEach(function(item){
 					goods += '<li class="list-group-item">'+ 
-							item.foreigner + '|' + 
+							item.barcode + '|' + 
 							item.name  + '|' + 
 							item.category + '|' +
 							item.price + item.unit + '|' +

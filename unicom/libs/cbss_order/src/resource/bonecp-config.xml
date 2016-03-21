@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bonecp-config>
+	<named-config name="db1">
+		<property name="poolName">hubeict_db</property>
+		<property name="partitionCount">1</property>
+		<property name="minConnectionsPerPartition">2</property>
+		<property name="maxConnectionsPerPartition">5</property>
+		<property name="acquireIncrement">10</property>
+		<property name="logStatementsEnabled">true</property>
+		<property name="jdbcUrl">jdbc:mysql://localhost:3306/cbss_order?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8</property>
+		<property name="username">root</property>
+		<property name="password"></property>
+	</named-config>
+	<named-config name="db2">
+		<property name="poolName">hubeict_db</property>
+		<property name="partitionCount">1</property>
+		<property name="minConnectionsPerPartition">2</property>
+		<property name="maxConnectionsPerPartition">5</property>
+		<property name="acquireIncrement">10</property>
+		<property name="logStatementsEnabled">true</property>
+		<property name="jdbcUrl">jdbc:mysql://localhost:3306/cbss_order?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8</property>
+		<property name="username">root</property>
+		<property name="password"></property>
+	</named-config>
+</bonecp-config>

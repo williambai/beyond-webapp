@@ -28,6 +28,13 @@
         "status": "有效"
     },
     {
+        "description": "平台文件管理：系统管理员查看和维护文件内容。",
+        "name": "平台文件管理",
+        "nickname": "platform_file",
+        "route": "/platform/files",
+        "status": "有效"
+    },
+    {
         "description": "平台Session管理：系统管理员查看和维护用户Session。",
         "name": "平台会话管理",
         "nickname": "platform_session",

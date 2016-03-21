@@ -1,8 +1,10 @@
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
-		username: String,
-		password: String,
+		province_name: String, //** 省市名称
+		province_id: String, //** 省市编码
+		username: String,//** cbss账号
+		password: String,//** cbss密码
 		cookie: {},
 		cookieRaw: String,
 		login: {
@@ -20,7 +22,6 @@ module.exports = exports = function(mongoose){
 			type: Date,
 			default: Date.now
 		},
-
 	});
 
 	schema.set('collection','cbss.accounts');

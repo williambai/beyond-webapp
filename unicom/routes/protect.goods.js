@@ -97,9 +97,9 @@ exports = module.exports = function(app, models) {
  		};
  		workSheet['G1'] = {
  			t: 's',
- 			v: 'foreigner',
- 			h: 'foreigner',
- 			w: 'foreigner',
+ 			v: 'barcode',
+ 			h: 'barcode',
+ 			w: 'barcode',
  		};
  		//** build data
  		_.each(docs, function(doc, i) {
@@ -141,9 +141,9 @@ exports = module.exports = function(app, models) {
  			};
  			workSheet['G' + (2 + i)] = {
  				t: 's',
- 				v: doc.foreigner,
- 				h: doc.foreigner,
- 				w: doc.foreigner,
+ 				v: doc.barcode,
+ 				h: doc.barcode,
+ 				w: doc.barcode,
  			};
  		});
  	};

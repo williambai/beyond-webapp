@@ -42,9 +42,9 @@
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4><%= model.name %></h4>
+		<h4><%= model.name %>&nbsp;&nbsp;<%= model.price %><%= model.unit %></h4>
 		<p>类型：<%= model.category %>, 状态：<%= model.status %></p>
-		<p><%= model.description %></p>
+		<p></p>
 		<hr/>
 	</div>
  	<div id="editTemplate">
@@ -60,6 +60,11 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
+						<label>物料编码：</label>
+						<input type="text" name="barcode" value="<%= model.barcode %>" class="form-control" placeholder="BSS系统对应的业务ID">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
 						<label>物料描述：</label>
 						<textarea name="description" class="form-control"><%= model.description%></textarea>
 						<span class="help-block"></span>
@@ -67,17 +72,10 @@
 					<div class="form-group">
 						<label>物料类型：</label>
 						<div style="padding-left:30px;">
-							<input type="radio" name="category" value="流量业务" checked>&nbsp;&nbsp;流量业务
-							<input type="radio" name="category" value="增值业务">&nbsp;&nbsp;增值业务
-							<input type="radio" name="category" value="号卡业务">&nbsp;&nbsp;号卡业务
-							<input type="radio" name="category" value="终端业务">&nbsp;&nbsp;终端业务
-							<input type="radio" name="category" value="兑换业务">&nbsp;&nbsp;兑换业务
+							<input type="radio" name="category" value="2G" checked>&nbsp;&nbsp;2G
+							<input type="radio" name="category" value="3G">&nbsp;&nbsp;3G
+							<input type="radio" name="category" value="4G">&nbsp;&nbsp;4G
 						</div>
-					</div>
-					<div class="form-group">
-						<label>物料数量：</label>
-						<input type="text" name="quantity" value="<%= model.quantity %>" class="form-control">
-						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>参考价格：</label>
@@ -90,8 +88,8 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>第三方系统ID：</label>
-						<input type="text" name="foreigner" value="<%= model.foreigner %>" class="form-control" placeholder="BSS系统对应的业务ID">
+						<label>参考数量：</label>
+						<input type="text" name="quantity" value="<%= model.quantity %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

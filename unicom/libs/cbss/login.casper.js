@@ -1,6 +1,7 @@
 /**
  * http://stackoverflow.com/questions/26555777/how-to-stop-casperjs-execution-and-let-the-user-input-some-value-and-then-contin/26556151#26556151
  * @type {[type]}
+ * --ignore-ssl-errors=true
  */
 var fs = require('fs');
 var system = require('system');
@@ -17,6 +18,14 @@ var casper = require('casper').create({
 	logLevel: "info",
 	verbose: true
 });
+//** 默认http headers
+var headers = {
+	'Accept-Language': 'zh-CN',
+	'Accept': 'text/html, application/xhtml+xml, */*',
+	'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko',
+	'Connection': 'Keep-Alive',
+	'Host': 'cbss.10010.com',
+};
 //** setup params
 console.log(JSON.stringify(casper.cli.options));
 var accountId = casper.cli.options['id'] || '';
@@ -46,7 +55,7 @@ server.listen(serverPort, {
 
 	if (request.post) { // is there a response?
 		var action = request.post.action || '';
-		if(action == 'login'){
+		if (action == 'login') {
 			casper.then(function() {
 				//** check if it is correct by reading request.post ...
 				var username = request.post.username || '';
@@ -73,36 +82,49 @@ server.listen(serverPort, {
 					response.write('');
 					response.close();
 					//** do login
-					casper.evaluate(function(username,password,captcha){
-						document.querySelector('input[name="username"]').setAttribute('value',username);
-						document.querySelector('input[name="password"]').setAttribute('value',password);
-						document.querySelector('input[name="jcaptcha"]').setAttribute('value',captcha);
-					},username,password,captcha);
+					casper.evaluate(function(username, password, captcha) {
+						//** 设置用户名
+						document.querySelector('#STAFF_ID').setAttribute('value', username);
+						//** 设置密码
+						document.querySelector('#LOGIN_PASSWORD').setAttribute('value', password);
+						//** 设置省份代码，湖北:17
+						var provinceObj = document.getElementById('LOGIN_PROVINCE_CODE');
+						provinceObj.options[17].selected = true;
+						//** 设置验证码
+						document.querySelector('#VERIFY_CODE').setAttribute('value', captcha);
+					}, username, password, captcha);
 
+					//** 查看登录界面表单填写是否正确
 					casper.capture(loginFile);
-					//** submit login
+					//** 提交登录表单
 					casper.then(function(){
-						casper.click('input#submit_btn');
+						// casper.evaluate(function(){
+						// 	// document.querySelector('form[name="Form0"]').submit();
+						// 	document.querySelector('input[type="button"]').click();
+						// });
+						casper.click('input[type="button"]');
 					});
-					
-					casper.wait(2000);
 
-					casper.then(function(){
+					casper.wait(2000);
+					//** 获取登录成功界面
+					casper.capture(loginFile);
+					//** 返回cookies
+					casper.then(function() {
 						var success = false;
-						if(casper.exists('#menuTD')){
-							success = true;
-						}
-						casper.evaluate(function(url,accountId, cookies, success){
-							__utils__.sendAJAX(url,'POST', {
+						// if (casper.exists('#menuTD')) {
+						// 	success = true;
+						// }
+						casper.evaluate(function(url, accountId, cookies, success) {
+							__utils__.sendAJAX(url, 'POST', {
 								action: 'updateCookie',
 								id: accountId,
 								cookies: cookies,
 								success: success
-							},false);
-						},callbackUrl,accountId,JSON.stringify(phantom.cookies),success);					
+							}, false);
+						}, callbackUrl, accountId, JSON.stringify(phantom.cookies), success);
 					});
 					//** close
-					casper.then(function(){
+					casper.then(function() {
 						server.close();
 						continues = true; // abort the neverendingWait
 					});
@@ -127,7 +149,7 @@ phantom.cookiesEnabled = true;
 var data = "[]"; //fs.read('./_tmp/_cookie.txt') || "[]";
 phantom.cookies = JSON.parse(data);
 //load account
-var account = '';//JSON.parse(fs.read('../../config/account.json') || "{}");
+var account = ''; //JSON.parse(fs.read('../../config/account.json') || "{}");
 
 //captcha
 var code = '';
@@ -139,12 +161,13 @@ var neverendingWait = function() {
 };
 
 casper.checkCaptcha = function() {
-	// here the CAPTCHA is saved to disk but it can also be set directly if captured through casper.captureBase64
-	this.captureSelector(captchaFile, 'img');
+	//** 下载验证码图片
+	this.download('https://hb.cbss.10010.com/image?mode=validate&width=60&height=20', captchaFile);
+	//** 查看登录界面是否正确显示
 	this.capture(loginFile);
 
-	// send request to the secondary program from the page context
-	this.evaluate(function(url,file, accountId) {
+	//** send request to the secondary program from the page context
+	this.evaluate(function(url, file, accountId) {
 		__utils__.sendAJAX(url, 'POST', {
 			action: 'uploadImage',
 			file: file,
@@ -155,13 +178,41 @@ casper.checkCaptcha = function() {
 };
 
 
-casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
-casper.start('https://portal.chinanetcenter.com/cas/login?service=https%3A%2F%2Fportal.chinanetcenter.com%2Fuuc%2Fr_sec_login');
+casper.userAgent('Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko');
 
-casper.then(function() {
-	this.checkCaptcha();
+casper.on("resource.error", function(resourceError) {
+	console.log('Unable to load resource (#' + resourceError.id + 'URL:' + resourceError.url + ')');
+	console.log('Error code: ' + resourceError.errorCode + '. Description: ' + resourceError.errorString);
 });
 
-casper.then(neverendingWait);
+//** 启动
+casper.start('https://cbss.10010.com/essframe', {
+		method: 'get',
+		headers: headers,
+	});
+
+casper.then(function() {
+	this.evaluate(function() {
+		//** 显示登录主界面
+		document.querySelector('div#main').setAttribute('style', 'display:block');
+		//** 隐藏ssl错误内容
+		document.querySelector('div#dmsg2').setAttribute('style', 'display:none');
+	});
+	this.click('img#captureImage');
+	this.click('input[type="button"]');
+	this.wait(1000);
+	this.capture('./_tmp/index.png');
+	// this.download('https://hb.cbss.10010.com/image?mode=validate&width=60&height=20','./_tmp/captcha.png');
+	// this.captureSelector('./_tmp/captchaImage.png','div#VerifyPart2');//img#captureImage');
+	//** 调试登录页面
+	// this.echo(this.getHTML());
+	// this.echo(this.getHTML('div#main'));
+});
+
+// casper.then(function() {
+// 	this.checkCaptcha();
+// });
+
+// casper.then(neverendingWait);
 
 casper.run();

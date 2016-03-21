@@ -1,3 +1,7 @@
+/**
+ * 号卡库存
+ * 按分类(category)，对应产品的SKU
+ */
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({

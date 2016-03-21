@@ -18,14 +18,16 @@
 	<div id="itemTemplate">
 		<div class="item" id="<%= model._id %>">
 	 		<div class="pull-right">
-				<% if(!model.login){ %>
+<!-- 				<% if(!model.login){ %>
 					<button class="btn btn-primary login">登录</button>
 				<% } %>
-				<button class="btn btn-success edit">编辑</button>
+ -->
+ 				<button class="btn btn-success edit">编辑</button>
 				<button class="btn btn-danger delete">删除</button>
 			</div>
 			<h4><%= model.username %></h4>
-			<p>登录状态：<%= model.login %>&nbsp;&nbsp;账户状态：<%= model.status %></p>
+			<p>所属省份：<%= model.province_name %>&nbsp;&nbsp;账户状态：<%= model.status %></p>
+			<!-- <p>登录状态：<%= model.login %></p> -->
 		</div>
 		<hr/>
 	</div>
@@ -39,6 +41,16 @@
 					<div class="form-group">
 						<label for="username">账户名称：</label>
 						<input type="text" name="username" value="<%= model.username %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="username">账户所属省份：</label>
+						<input type="text" name="province_name" value="<%= model.province_name %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="username">账户所属省份编码：</label>
+						<input type="text" name="province_id" value="<%= model.province_id %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

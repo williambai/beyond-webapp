@@ -1,3 +1,7 @@
+/**
+ * 终端商品
+ * 每个终端商品对应多个内嵌packages, 每个package对应一个产品(goods._id)
+ */
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
@@ -27,8 +31,8 @@ module.exports = exports = function(mongoose){
 			month_return: Number,
 			coupon: String,
 			goods: {
-				id: String,
-				name: String,
+				id: String,//** 产品编码(goods.barcode)
+				name: String, //** 产品名称(goods.name)
 			},
 			bonus: {
 				income: Number,//** 佣金收入

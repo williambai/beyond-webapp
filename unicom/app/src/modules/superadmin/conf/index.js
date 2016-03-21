@@ -67,7 +67,7 @@ _.extend(config,{
 		"id": 2,
 		"name": "文件管理",
 		"hash": "file/index",
-		"features": ["platform_database"],
+		"features": ["platform_file"],
 	}, {
 		"id": 2,
 		"name": "数据维护",

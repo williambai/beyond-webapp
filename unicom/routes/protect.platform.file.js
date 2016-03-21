@@ -27,22 +27,38 @@ exports = module.exports = function(app, models) {
 	var ROOT = path.join(__dirname, '../');
 	//** 需要保护和隐藏的文件夹或文件名
 	var ignoreFileOrFolder = {
-		'/': ['server.js', 'cronJobs.js', 'sgipService.js','setup','commands','config','libs']
+		'/': [
+			'server.js',
+			'cronJobs.js',
+			'sgipService.js',
+			'setup',
+			'commands',
+			'config',
+			'libs', 
+			'_app', 
+			'_dest', 
+			'app', 
+			'build',
+			'test',
+		]
 	};
 
-	var add = function(req,res){
-		if(!req.body.name) return res.send({code: 40122, errmsg: '文件名缺失'});
+	var add = function(req, res) {
+		if (!req.body.name) return res.send({
+			code: 40122,
+			errmsg: '文件名缺失'
+		});
 		var filename = path.join(__dirname, '../public/statics', req.body.name);
 		var content = req.body.content || '';
-		fs.writeFile(filename,content, function(err){
-			if(err) return res.send(err);
+		fs.writeFile(filename, content, function(err) {
+			if (err) return res.send(err);
 			res.send({});
 		});
 	};
 
-	var update = function(req,res){
+	var update = function(req, res) {
 		//** 相对路径
-		var relative = (req.params.id || '').replace(/\/\//, '/');
+		var relative = (decodeURIComponent(req.params.id) || '').replace(/\/\//, '/');
 		//** 删除首个/字符
 		var filename = relative.slice(1);
 		//** 求出父路径
@@ -63,8 +79,8 @@ exports = module.exports = function(app, models) {
 			});
 		}
 		var content = req.body.content || '';
-		fs.writeFile(path.join(ROOT, relative), content, function(err){
-			if(err) return res.send(err);
+		fs.writeFile(path.join(ROOT, relative), content, function(err) {
+			if (err) return res.send(err);
 			res.send({});
 		});
 	};
@@ -163,7 +179,7 @@ exports = module.exports = function(app, models) {
 			//** 排序，文件夹在前，文件在后
 			var groups = _.groupBy(files, 'type');
 			files = [];
-			files = files.concat(groups.folder || [],groups.file || []);
+			files = files.concat(groups.folder || [], groups.file || []);
 			//** 如果不是ROOT，则增加../父目录
 			if (directory != ROOT) {
 				files.unshift({
@@ -189,7 +205,7 @@ exports = module.exports = function(app, models) {
 	/**
 	 * 
 	 */
-	app.get('/platform/files', app.isLogin, getMore);
-	app.get('/platform/files/:id', app.isLogin, getOne);
-	app.put('/platform/files/:id', app.isLogin, update);
+	app.get('/platform/files', app.grant, getMore);
+	app.get('/platform/files/:id', app.grant, getOne);
+	app.put('/platform/files/:id', app.grant, update);
 };

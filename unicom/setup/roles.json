@@ -43,6 +43,16 @@
 			"getMore": "true",
 			"getOne": "true"
 		},
+		"platform_file": {
+			"route": "/platform/files",
+			"nickname": "platform_file",
+			"name": "平台文件管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
 		"platform_session": {
 			"route": "/platform/sessions",
 			"nickname": "platform_session",

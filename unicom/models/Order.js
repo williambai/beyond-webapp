@@ -1,41 +1,46 @@
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
-		customer: {
-			name: String,
-			id: String,
-		},
-		name: String,
-		description: String,
-		category: {
+		name: String, //** 订单编码
+		description: String, //** 订单描述
+		category: { //** 订单分类
 			type: String,
 			enum: {
 				values: '数据订购|传统增值|内容推荐|活动推荐|号卡|终端|金币兑换'.split('|'),
 				message: 'enum validator failed for path {PATH} with value {VALUE}',
 			}
 		},
-		// goods: {
-		// 	id: mongoose.Schema.Types.ObjectId,
-		// 	name: String,
-		// 	nickname: String,
-		// 	sourceId: String,
-		// },
-		items: [
+		customer: {
+			id: String, //** 客户Id(customer._id)
+			name: String, //** 客户姓名
+			mobile: String, //** 客户手机号
+			idNo: String, //** 客户身份证号码
+			idType: String, //** 客户身份证类型
+			idAddress: String, //** 客户身份证地址
+			address: String, //** 客户通讯地址
+			phone: String,//** 客户备用联系电话
+			location: String, //** 客户地理位置
+		},
+		items: [ //** 订单项目
 			{
+				id: String, //** 产品id(goods._id)
+				name: String,//** 产品名称(goods.name)
+				category: String, //** 产品分类(goods.category)
+				barcode: String, //** 产品编码(goods.barcode)
+				price: Number, //** 商品单价(product.price)
+				quantity: Number, //** 商品数量(product.quantity)
+				referer: {}, //** 商品来源(product._id、商品模型名称或商品其他信息)			
+				//Deprecated!
+				source: {},//goods 
 				id: mongoose.Schema.Types.ObjectId,
 				model: String,
-				name: String,
-				category: String,
-				price: Number,
-				quantity: Number,
-				source: {},//goods
 			}
 		],
 		total: Number,
 		place: {
-			name: String,
+			name: String,//** 订单发生地
 		},
-		dispatch: {
+		dispatch: { //** 订单配送
 			method: {
 				type: String,
 				enum: {
@@ -46,16 +51,17 @@ module.exports = exports = function(mongoose){
 			phone: String,
 			address: String,
 		},
-		customerInfo: {
+		//Deprecated!!
+		customerInfo: { //** 客户其他信息
 			name: String,
-			idNo: String,
-			idType: String,
-			idAddress: String,
-			address: String,
-			phone: String,
-			location: String,
+			idNo: String, //** 客户身份证号码
+			idType: String, //** 客户身份证类型
+			idAddress: String, //** 客户身份证地址
+			address: String, //** 客户通讯地址
+			phone: String,//** 客户备用联系电话
+			location: String, //** 客户地理位置
 		},
-		createBy: {
+		createBy: { //** 订单创建者
 			id: {
 				type: mongoose.Schema.Types.ObjectId,
 				ref: 'Account',
@@ -64,7 +70,7 @@ module.exports = exports = function(mongoose){
 			mobile: String,
 			avatar: String,
 		},
-		bonus: {
+		bonus: { //** 佣金情况
 			income: Number,
 			times: Number,
 			points: {
@@ -84,14 +90,14 @@ module.exports = exports = function(mongoose){
 				default: '冻结',
 			},			
 		},
-		status: {
+		status: { //** 订单状态
 			type: String,
 			enum: {
 				values: '新建|已确认|已配送|完成|用户取消|后台取消|其他原因'.split('|'),
 				message: 'enum validator failed for path {PATH} with value {VALUE}',
 			}
 		},
-		histories: [],
+		histories: [], //** 订单修改记录
 		lastupdatetime: {
 			type: Date,
 			default: Date.now
