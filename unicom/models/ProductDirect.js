@@ -16,6 +16,7 @@ module.exports = exports = function(mongoose){
 		starttime: String,
 		endtime: String,
 		display_sort: Number,
+		tags: [],
 		goods: {
 			id: String,//** 产品编码(goods.barcode)
 			name: String, //** 产品名称(goods.name)

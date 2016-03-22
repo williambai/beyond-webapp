@@ -10,6 +10,7 @@ exports = module.exports = FormView.extend({
 	el: '#productForm',
 
 	modelFilled: false,
+	categories: [],//** 产品分类
 
 	initialize: function(options) {
 		this.router = options.router;
@@ -29,14 +30,27 @@ exports = module.exports = FormView.extend({
 	},
 
 	load: function(){
-		if(this.model.isNew()){
-			this.modelFilled = true;
-			return;
-		}
-		this.model.fetch({
+		var that = this;
+		$.ajax({
+			url: config.api.host + '/product/categories',
+			type: 'GET',
 			xhrFields: {
 				withCredentials: true
 			},
+			crossDomain: true,
+		}).done(function(data) {
+			that.categories = data;
+			if(that.model.isNew()){
+				that.modelFilled = true;
+				that.fillCategoryOptions();
+				return;
+			}
+
+			that.model.fetch({
+				xhrFields: {
+					withCredentials: true
+				},
+			});
 		});
 	},
 
@@ -57,6 +71,16 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 	
+	fillCategoryOptions: function(){
+		var that = this;
+		var optionsHtml = '<options>';
+		_.each(that.categories,function(option){
+			optionsHtml += '<option value="' + option.name + '">' +option.name + '</option>';
+		});
+		optionsHtml += '</options>';
+		that.$('select[name=category]').html(optionsHtml);
+	},
+
 	getGoods: function(evt){
 		this.$('#goods').empty();
 		var that = this;
@@ -145,12 +169,15 @@ exports = module.exports = FormView.extend({
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		//** 填充产品分类options
+		this.fillCategoryOptions();
+		//** 当前选择
+		var category = this.model.get('category');
+		this.$('select[name=category]').val(category);
 		var starttime = this.model.get('starttime');
 		this.$('input[name=starttime]').val(starttime);
 		var endtime = this.model.get('endtime');
 		this.$('input[name=endtime]').val(endtime);
-		var category = this.model.get('category');
-		this.$('input[name=category][value='+ category +']').attr('checked',true);
 		var status = this.model.get('status');
 		this.$('input[name=status][value='+ status +']').attr('checked',true);
 		if(this.model.isNew()) this.$('.panel-title').text('新增产品');

@@ -17,24 +17,24 @@ _.extend(config,{
 		"features": [],
 	}, {
 		"id": 2,
-		"name": "直通产品管理",
+		"name": "产品管理",
 		"hash": "product/direct/index",
 		"features": ["product_direct"],
-	}, {
-		"id": 2,
-		"name": "号卡产品管理",
-		"hash": "product/card/package/index",
-		"features": ["product_card_package"],
-	}, {
-		"id": 2,
-		"name": "终端产品管理",
-		"hash": "product/phone/index",
-		"features": ["product_phone"],
-	}, {
-		"id": 2,
-		"name": "号卡管理",
-		"hash": "product/card/index",
-		"features": ["product_card"],
+	// }, {
+	// 	"id": 2,
+	// 	"name": "号卡产品管理",
+	// 	"hash": "product/card/package/index",
+	// 	"features": ["product_card_package"],
+	// }, {
+	// 	"id": 2,
+	// 	"name": "终端产品管理",
+	// 	"hash": "product/phone/index",
+	// 	"features": ["product_phone"],
+	// }, {
+	// 	"id": 2,
+	// 	"name": "号卡管理",
+	// 	"hash": "product/card/index",
+	// 	"features": ["product_card"],
 	}, {
 		"id": 2,
 		"name": "客户管理",
@@ -66,16 +66,16 @@ _.extend(config,{
 		"hash": "goods/index",
 		"features": ["goods"],
 	}, {
-		"id": 2,
-		"name": "组织及架构管理",
-		"hash": "department/index",
-		"features": ["department"],
-	}, {
-		"id": 2,
-		"name": "客户端功能设置",
-		"hash": "channel/category/index",
-		"features": ["channel_category"],
-	}, {
+	// 	"id": 2,
+	// 	"name": "组织及架构管理",
+	// 	"hash": "department/index",
+	// 	"features": ["department"],
+	// }, {
+	// 	"id": 2,
+	// 	"name": "客户端功能设置",
+	// 	"hash": "channel/category/index",
+	// 	"features": ["channel_category"],
+	// }, {
 		"id": 2,
 		"name": "媒体文件管理",
 		"hash": "media/index",
@@ -86,16 +86,16 @@ _.extend(config,{
 		"hash": "carousel/index",
 		"features": ["carousel"],
 	}, {
-		"id": 2,
-		"name": "静态网页管理",
-		"hash": "page/static/index",
-		"features": ["platform_page"],
-	}, {
-		"id": 2,
-		"name": "动态网页管理",
-		"hash": "page/dynamic/index",
-		"features": ["platform_page"],
-	}, {
+	// 	"id": 2,
+	// 	"name": "静态网页管理",
+	// 	"hash": "page/static/index",
+	// 	"features": ["platform_page"],
+	// }, {
+	// 	"id": 2,
+	// 	"name": "动态网页管理",
+	// 	"hash": "page/dynamic/index",
+	// 	"features": ["platform_page"],
+	// }, {
 		"id": 2,
 		"name": "用户反馈",
 		"hash": "feedback/index",

@@ -18,6 +18,9 @@ exports = module.exports = ListView.extend({
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){
-		return this.template({model: model.toJSON()});
+		var item = this.template({model: model.toJSON()});
+		var $item = $(item);
+		$item.find('img').attr('src', model.get('thumbnail_url'));
+		return $item.html();
 	},
 });

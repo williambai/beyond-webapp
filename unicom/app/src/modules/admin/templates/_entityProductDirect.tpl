@@ -2,7 +2,8 @@
 	<div id="indexTemplate">
 		<div class="panel panel-default">
 			<div class="pull-right">
-				<button class="btn btn-primary add">新增</button>
+				<a class="btn btn-primary" href="#product/category/index">产品分类</a>
+				<button class="btn btn-primary add">新增产品</button>
 			</div>
 			<div class="panel-heading">
 				<h4 class="panel-title text-center">直通产品管理</h4>
@@ -48,17 +49,28 @@
 		<hr/>
 	</div>
 	<div id="itemTemplate">
-		<div class="pull-right" id="<%= model._id %>">
-			<button class="btn btn-success edit">编辑</button>
-			<button class="btn btn-danger delete">删除</button>
+		<div>
+			<div class="item" id="<%= model._id %>">
+				<div class="row">
+					<div class="col-xs-1">
+						<img width="50px" heigh="50px">
+					</div>
+					<div class="col-xs-9">
+						<h4><%= model.name %>&nbsp;<span class="bg-success"><%= model.status %></span></h4>
+						<p>产品分类：<%= model.category %></p>
+						<p>产品标签：<%= model.tags.join('  ') %></p>
+						<%if(model.starttime){ %>
+						<p>活动时间：<%= model.starttime %> ~ <%= model.endtime %></p>
+						<% } %>
+					</div>
+					<div class="col-xs-2">
+						<button class="btn btn-success edit">编辑</button>
+						<button class="btn btn-danger delete">删除</button>
+					</div>
+				</div>
+				<hr/>
+			</div>
 		</div>
-		<h4><%= model.name %>&nbsp;<span class="bg-success"><%= model.status %></span></h4>
-		<p>产品分类：<%= model.category %></p>
-		<p><%= model.description %></p>
-		<%if(model.starttime){ %>
-		<p>活动时间：<%= model.starttime %> ~ <%= model.endtime %></p>
-		<% } %>
-		<hr/>
 	</div>
 	<div id="editTemplate">
 		<div class="panel panel-default">
@@ -68,20 +80,14 @@
 			<div class="panel-body">
 				<form id="customerForm">
 					<div class="form-group">
-						<label>产品类别：</label>
-						<div style="padding-left:30px;">
-							<input type="radio" name="category" value="2G" checked>&nbsp;&nbsp;2G流量
-							<input type="radio" name="category" value="3G">&nbsp;&nbsp;3G流量
-							<input type="radio" name="category" value="4G">&nbsp;&nbsp;4G流量
-							<input type="radio" name="category" value="SMS">&nbsp;&nbsp;增值服务
-							<input type="radio" name="category" value="APP">&nbsp;&nbsp;应用推荐
-							<input type="radio" name="category" value="EVENT">&nbsp;&nbsp;活动推荐
-						</div>
+						<label>产品名称：</label>
+						<input type="text" name="name" value="<%= model.name %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>产品名称：</label>
-						<input type="text" name="name" value="<%= model.name %>" class="form-control">
+						<label>产品类别：</label>
+						<select name="category" class="form-control">
+						</select>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

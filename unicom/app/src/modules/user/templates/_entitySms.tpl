@@ -2,26 +2,25 @@
 	<div id="indexTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h5 class="panel-title text-center">传统增值服务</h5>
+				<h5 class="panel-title text-center">所有产品</h5>
 			</div>
 			<div class="panel-body">
-				<div id="list">
+				<div class="row">
+					<div id="list">
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div id="itemTemplate">
-		<div class="item" id="<%= model._id %>">
-			<div class="pull-right">
-				<% if(/MicroMessenger/.test(navigator.userAgent)){ %>
-				<p><button class="btn btn-danger promote">推广</button></p>
-				<% } %>
-				<p><button class="btn btn-success view">订购</button></p>
+		<div>
+			<div class="item col-xs-6" id="<%= model._id %>">
+				<div class="text-center">
+					<img src="" width="80px" height="80px">
+					<h4><%= model.name %></h4>
+					<p>&nbsp;</p>
+				</div>
 			</div>
-			<h4><%= model.name %></h4>
-			<p><%= model.description %></p>
-			<p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：<%= model.bonus.income %>&nbsp;元&nbsp;&nbsp;积分：<%= model.bonus.points %></p>
-			<hr/>
 		</div>
 	</div>
 	<div id="viewTemplate">

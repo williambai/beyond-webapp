@@ -1,0 +1,42 @@
+[
+	{
+		"name": "半年包专区",
+		"thumbnail": "/images/product_category_1.png"
+	},
+	{
+		"name": "沃+视频专区",
+		"thumbnail": "/images/product_category_2.png"
+	},
+	{
+		"name": "活动产品专区",
+		"thumbnail": "/images/product_category_3.png"
+	},
+	{
+		"name": "闲时包专区",
+		"thumbnail": "/images/product_category_4.png"
+	},
+	{
+		"name": "4G专区",
+		"thumbnail": "/images/product_category_5.png"
+	},
+	{
+		"name": "3G专区",
+		"thumbnail": "/images/product_category_6.png"
+	},
+	{
+		"name": "2G专区",
+		"thumbnail": "/images/product_category_7.png"
+	},
+	{
+		"name": "定向专区",
+		"thumbnail": "/images/product_category_8.png"
+	},
+	{
+		"name": "通讯产品专区",
+		"thumbnail": "/images/product_category_9.png"
+	},
+	{
+		"name": "通讯助手专区",
+		"thumbnail": "/images/product_category_10.png"
+	}
+]

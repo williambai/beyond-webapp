@@ -34,8 +34,6 @@ var RevenueStatView = require('../user/views/_RevenueStat');
 var SaleLeadIndexView = require('../user/views/_SaleLeadIndex');
 var SaleLeadEditView = require('../user/views/_SaleLeadEdit');
 
-var ExchangeIndexView = require('../user/views/_ExchangeIndex');
-var ExchangeViewView = require('../user/views/_ExchangeView');
 
 var config = require('./conf');
 
@@ -78,9 +76,6 @@ exports = module.exports = Backbone.Router.extend({
 		'revenue/stat': 'revenueStat',
 		'sale/lead/index': 'saleLeadIndex',
 		'sale/lead/edit/:id': 'saleLeadEdit',
-
-		'exchange/index': 'exchangeIndex',
-		'exchange/view/:id': 'exchangeView',
 
 		'*path': 'index',
 	},
@@ -458,34 +453,6 @@ exports = module.exports = Backbone.Router.extend({
 		activityIndexView.trigger('load');
 	},
 
-	exchangeIndex: function() {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '我的成绩');
-		var exchangeIndexView = new ExchangeIndexView({
-			router: this,
-			el: '#content'
-		});
-		this.changeView(exchangeIndexView);
-		exchangeIndexView.trigger('load');
-	},
-
-	exchangeView: function(id) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '流量推荐');
-		var exchangeViewView = new ExchangeViewView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(exchangeViewView);
-		exchangeViewView.trigger('load');
-	},
 	revenueIndex: function() {
 		if (!this.logined) {
 			window.location.hash = 'login';

@@ -1,22 +1,22 @@
 var _ = require('underscore');
 var Backbone = require('backbone'),
 	$ = require('jquery'),
-    exchangeTpl = require('../templates/_entityExchange.tpl'),
-	ProductExchange = require('../models/ProductExchange');
+    productTpl = require('../templates/_entityProductDirect.tpl'),
+	ProductDirect = require('../models/ProductDirect');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var ExchangeAddView = require('./_ExchangeAdd');
+var DataOrderView = require('./_DataOrder');
 
 exports = module.exports = Backbone.View.extend({
 
-	el: '#exchangeView',
+	el: '#dataView',
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new ProductExchange({_id: options.id});
-		var page = $(exchangeTpl);
+		this.model = new ProductDirect({_id: options.id});
+		var page = $(productTpl);
 		var viewTemplate = $('#viewTemplate', page).html();
 		this.template = _.template(_.unescape(viewTemplate || ''));
 		this.model.on('change', this.change ,this);
@@ -37,16 +37,16 @@ exports = module.exports = Backbone.View.extend({
 
 	change: function(){
 		this.render();
-		this.exchangeAddView = new ExchangeAddView({
+		this.dataAddView = new DataOrderView({
 			router: this.router,
-			el: '#addView',
+			el: '#orderView',
 			product: this.model,
 		});
-		this.exchangeAddView.on('ready',this.exchangeAddViewReady,this);
-		this.exchangeAddView.trigger('load');
+		this.dataAddView.on('ready',this.dataAddViewReady,this);
+		this.dataAddView.trigger('load');
 	},
 
-	exchangeAddViewReady: function(){
+	dataAddViewReady: function(){
 		// var goods = this.model.get('goods');
 		// this.$('form').prepend('<input type="hidden" name="product[id]" value="'+ this.model.get('_id') + '">');
 		// this.$('form').prepend('<input type="hidden" name="product[name]" value="'+ this.model.get('subject') + '">');
@@ -58,7 +58,7 @@ exports = module.exports = Backbone.View.extend({
 
 	back: function(){
 		window.history.back();
-		// this.router.navigate('exchange/index',{trigger: true, replace: true});
+		// this.router.navigate('data/index',{trigger: true, replace: true});
 		return false;
 	},
 

@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    smsTpl = require('../templates/_entitySms.tpl'),
+    categoryTpl = require('../templates/_entityCategory.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 var ListView = require('./_SmsList');
@@ -16,7 +16,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(smsTpl);
+		var page = $(categoryTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -24,9 +24,7 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .item': 'smsView',
-		'click .view': 'smsView',
-		'click .promote': 'promote',
+		'click .item': 'categoryView',
 	},
 
 	load: function() {
@@ -45,15 +43,9 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
-	smsView: function(evt){
+	categoryView: function(evt){
 		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		this.router.navigate('/product/categories/'+ id,{trigger: true});
-		return false;
-	},
-	
-	promote: function(evt){
-		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		window.location.href = config.api.host + '/sale/page/data/' + config.wechat.appid + '/' + id + '/' + this.router.account.id;
+		this.router.navigate('/category/'+ id + '/products',{trigger: true});
 		return false;
 	},
 

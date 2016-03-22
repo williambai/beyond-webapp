@@ -1,15 +1,13 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    productTpl = require('../templates/_entityProductDirect.tpl'),
+    categoryTpl = require('../templates/_entityProductCategory.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-var ProductDirect = require('../models/ProductDirect');
-var ListView = require('./_ProductDirectList');
-var SearchView = require('./_ProductDirectSearch');
+var ListView = require('./_ProductCategoryList');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -19,7 +17,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(productTpl);
+		var page = $(categoryTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -27,9 +25,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addProductDirect',
-		'click .edit': 'editProductDirect',
-		'click .delete': 'removeProductDirect',
+		'click .add': 'addProductCategory',
+		'click .edit': 'editProductCategory',
+		'click .delete': 'removeProductCategory',
 	},
 
 	load: function() {
@@ -37,16 +35,9 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
-		this.searchView = new SearchView({
-			el: '#search',
-		});
-		this.searchView.done = function(query){
-			that.listView.trigger('refresh', query);
-		};
 		this.listView = new ListView({
 			el: '#list',
 		});
-		this.searchView.trigger('load');
 		this.listView.trigger('load');
 	},
 
@@ -54,22 +45,21 @@ exports = module.exports = Backbone.View.extend({
 		this.listView.scroll();
 		return false;
 	},
-	
-	addProductDirect: function(){
-		this.router.navigate('product/direct/add',{trigger: true});
+	addProductCategory: function(){
+		this.router.navigate('product/category/add',{trigger: true});
 		return false;
 	},
 
-	editProductDirect: function(evt){
+	editProductCategory: function(evt){
 		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		this.router.navigate('product/direct/edit/'+ id,{trigger: true});
+		this.router.navigate('product/category/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeProductDirect: function(evt){
+	removeProductCategory: function(evt){
 		if(window.confirm('您确信要删除吗？')){
 			var id = this.$(evt.currentTarget).closest('.item').attr('id');
-			var model = new ProductDirect({_id: id});
+			var model = new ProductCategory({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}

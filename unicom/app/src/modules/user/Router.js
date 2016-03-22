@@ -16,6 +16,12 @@ var ActivityIndexView = require('./views/_ActivityIndex');
 var FeedbackIndexView = require('../../views/_FeedbackIndex');
 var FeedbackEditView = require('../../views/_FeedbackEdit');
 
+var HelpIndexView = require('./views/_HelpIndex');
+var CategoryIndexView = require('./views/_CategoryIndex');
+var ProductDirectCollection = require('./models/ProductDirectCollection');
+var ProductDirectIndexView = require('./views/_ProductDirectIndex');
+var ProductDirectViewView = require('./views/_ProductDirectView');
+
 var PushIndexView = require('./views/_PushIndex');
 var PushViewView = require('./views/_PushView');
 var DataIndexView = require('./views/_DataIndex');
@@ -34,11 +40,6 @@ var RevenueStatView = require('./views/_RevenueStat');
 
 var SaleLeadIndexView = require('./views/_SaleLeadIndex');
 var SaleLeadEditView = require('./views/_SaleLeadEdit');
-
-var ExchangeIndexView = require('./views/_ExchangeIndex');
-var ExchangeViewView = require('./views/_ExchangeView');
-var OrderExchangeIndexView = require('./views/_OrderExchangeIndex');
-
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -59,19 +60,26 @@ exports = module.exports = Backbone.Router.extend({
 		'profile/edit/me': 'profileEdit',
 		'feedback/index': 'feedbackIndex',
 		'feedback/add': 'feedbackEdit',
+		'help/index': 'helpIndex',
+
+		'category/index': 'categoryIndex',//** 产品分类
+		'category/:cid/products': 'productByCategoryIndex',//** 按分类查找产品
+		'product/hots': 'productHotIndex',//** 热门产品
+		'product/view/:id': 'productView',
+
 
 		'activity/index': 'activityIndex',
-		'push/index': 'pushIndex',
-		'push/view/:id': 'pushView',
-		'data/index': 'dataIndex',
-		'data/view/:id': 'dataView',
-		'sms/index': 'smsIndex',
-		'sms/view/:id': 'smsView',
-		'card/index': 'cardIndex',
-		'card/view/:id': 'cardView',
-		'phone/index': 'phoneIndex',
-		'phone/view/:id': 'phoneView',
-		'phone/detail/:id': 'phoneDetail',
+		// 'push/index': 'pushIndex',
+		// 'push/view/:id': 'pushView',
+		// 'data/index': 'dataIndex',
+		// 'data/view/:id': 'dataView',
+		// 'sms/index': 'smsIndex',
+		// 'sms/view/:id': 'smsView',
+		// 'card/index': 'cardIndex',
+		// 'card/view/:id': 'cardView',
+		// 'phone/index': 'phoneIndex',
+		// 'phone/view/:id': 'phoneView',
+		// 'phone/detail/:id': 'phoneDetail',
 		'order/index': 'orderIndex',
 		'customer/index': 'customerIndex',
 		'revenue/index': 'revenueIndex',
@@ -79,10 +87,6 @@ exports = module.exports = Backbone.Router.extend({
 
 		'sale/lead/index': 'saleLeadIndex',
 		'sale/lead/edit/:id': 'saleLeadEdit',
-
-		'exchange/index': 'exchangeIndex',
-		'exchange/view/:id': 'exchangeView',
-		'order/exchange/index': 'orderExchangeIndex',
 
 		'*path': 'index',
 	},
@@ -258,7 +262,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','意见反馈');
+		// this.appEvents.trigger('set:brand','意见反馈');
 		var feedbackIndexView = new FeedbackIndexView({
 			router: this,
 			el: '#content',
@@ -272,7 +276,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','意见反馈');
+		// this.appEvents.trigger('set:brand','意见反馈');
 		var feedbackEditView = new FeedbackEditView({
 			router: this,
 			el: '#content',
@@ -282,6 +286,81 @@ exports = module.exports = Backbone.Router.extend({
 		feedbackEditView.trigger('load');
 	},	
 
+	helpIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		// this.appEvents.trigger('set:brand','意见反馈');
+		var helpIndexView = new HelpIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(helpIndexView);
+		helpIndexView.trigger('load');
+	},	
+
+	categoryIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '流量推荐');
+		var categoryIndexView = new CategoryIndexView({
+			router: this,
+			el: '#content'
+		});
+		this.changeView(categoryIndexView);
+		categoryIndexView.trigger('load');
+	},
+
+
+	productByCategoryIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		var productDirectCollection = new ProductDirectCollection();
+		//this.appEvents.trigger('set:brand', '号卡');
+		var productDirectIndexView = new ProductDirectIndexView({
+			router: this,
+			el: '#content',
+			collection: productDirectCollection,
+		});
+		this.changeView(productDirectIndexView);
+		productDirectIndexView.trigger('load');
+	},
+
+	productHotIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		var productDirectCollection = new ProductDirectCollection();
+		// this.appEvents.trigger('set:brand', '热门产品');
+		var productDirectIndexView = new ProductDirectIndexView({
+			router: this,
+			el: '#content',
+			collection: productDirectCollection,
+		});
+		this.changeView(productDirectIndexView);
+		productDirectIndexView.trigger('load');
+	},
+
+	productView: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '流量推荐');
+		var productViewView = new ProductDirectViewView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(productViewView);
+		productViewView.trigger('load');
+	},
 
 	cardIndex: function() {
 		if (!this.logined) {
@@ -501,36 +580,6 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(saleLeadEditView);
 		saleLeadEditView.trigger('load');
-	},
-
-
-	exchangeIndex: function() {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '我的成绩');
-		var exchangeIndexView = new ExchangeIndexView({
-			router: this,
-			el: '#content'
-		});
-		this.changeView(exchangeIndexView);
-		exchangeIndexView.trigger('load');
-	},
-
-	exchangeView: function(id) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '流量推荐');
-		var exchangeViewView = new ExchangeViewView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(exchangeViewView);
-		exchangeViewView.trigger('load');
 	},
 
 	orderExchangeIndex: function() {

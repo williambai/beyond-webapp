@@ -49,6 +49,12 @@ var dropCollections = function(done) {
 			function(callback){
 				models.Goods.remove(callback);
 			},
+			function(callback){
+				models.ProductCategory.remove(callback);
+			},
+			function(callback){
+				models.ProductDirect.remove(callback);
+			},
 		],
 		function(err, result) {
 			if (err) return done(err);
@@ -130,6 +136,39 @@ var upsertGoods = function(done) {
 		});
 	}, done);
 };
+
+/**
+ * 
+ * create ProductCategory
+ * 
+ */
+
+var upsertProductCategory = function(done) {
+	var category = require('./product.category');
+	async.eachSeries(category, function(item, callback) {
+		models.ProductCategory.create(item, function(err) {
+			if (err) return callback(err);
+			callback(null);
+		});
+	}, done);
+};
+
+/**
+ * 
+ * create ProductDirect
+ * 
+ */
+
+var upsertProductDirect = function(done) {
+	var product = require('./product.direct');
+	async.eachSeries(product, function(item, callback) {
+		models.ProductDirect.create(item, function(err) {
+			if (err) return callback(err);
+			callback(null);
+		});
+	}, done);
+};
+
 async.series(
 	[
 		dropCollections,
@@ -138,6 +177,8 @@ async.series(
 		upsertApps,
 		upsertAccounts,
 		upsertGoods,
+		upsertProductCategory,
+		upsertProductDirect,
 	],
 	function(err, result) {
 		if (err) console.log(err);

@@ -15,30 +15,30 @@ _.extend(config,{
 		"features": [],
 	},{
 		"id": 2,
-		"name": "流量产品",
-		"hash": "data/index",
+		"name": "热门产品",
+		"hash": "product/hots",
 		"features": ["channel_product_direct"],
 	},{
 		"id": 3,
-		"name": "传统增值",
-		"hash": "sms/index",
+		"name": "所有产品",
+		"hash": "category/index",
 		"features": ["channel_product_direct"],
 	},{
-		"id": 4,
-		"name": "内容推荐",
-		"hash": "push/index",
-		"features": ["channel_product_direct"],
-	},{
-		"id": 5,
-		"name": "号卡产品",
-		"hash": "card/index",
-		"features": ["channel_product_card"],
-	},{
-		"id": 6,
-		"name": "终端产品",
-		"hash": "phone/index",
-		"features": ["channel_product_phone"],
-	},{
+	// 	"id": 4,
+	// 	"name": "内容推荐",
+	// 	"hash": "push/index",
+	// 	"features": ["channel_product_direct"],
+	// },{
+	// 	"id": 5,
+	// 	"name": "号卡产品",
+	// 	"hash": "card/index",
+	// 	"features": ["channel_product_card"],
+	// },{
+	// 	"id": 6,
+	// 	"name": "终端产品",
+	// 	"hash": "phone/index",
+	// 	"features": ["channel_product_phone"],
+	// },{
 		"id": 7,
 		"name": "销售线索",
 		"hash": "sale/lead/index",
@@ -50,13 +50,13 @@ _.extend(config,{
 		"features": ["channel_customer"],
 	},{
 		"id": 9,
-		"name": "我的业绩",
+		"name": "个人中心",
 		"hash": "order/index",
 		"features": ["channel_order"],
 	},{
 		"id": 11,
-		"name": "意见反馈",
-		"hash": "feedback/index",
+		"name": "帮助中心",
+		"hash": "help/index",
 		"features": ["platform_feedback"],
 	},{
 		"id": 12,

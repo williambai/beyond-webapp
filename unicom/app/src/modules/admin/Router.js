@@ -34,6 +34,9 @@ var PageDynamicViewView = require('./views/_PageDynamicView');
 var CarouselIndexView = require('./views/_CarouselIndex');
 var CarouselEditView = require('./views/_CarouselEdit');
 
+var ProductCategoryIndexView = require('./views/_ProductCategoryIndex');
+var ProductCategoryEditView = require('./views/_ProductCategoryEdit');
+
 var ProductDirectIndexView = require('./views/_ProductDirectIndex');
 var ProductDirectEditView = require('./views/_ProductDirectEdit');
 
@@ -140,6 +143,10 @@ exports = module.exports = Backbone.Router.extend({
 		'carousel/index': 'carouselIndex',
 		'carousel/add': 'carouselEdit',
 		'carousel/edit/:id': 'carouselEdit',
+
+		'product/category/index': 'productCategoryIndex',
+		'product/category/add': 'productCategoryEdit',
+		'product/category/edit/:id': 'productCategoryEdit',
 
 		'product/direct/index': 'productDirectIndex',
 		'product/direct/add': 'productDirectEdit',
@@ -716,6 +723,37 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(productDirectEditView);
 		productDirectEditView.trigger('load');
 	},		
+
+
+	productCategoryIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','产品分类管理');
+		var productCategoryIndexView = new ProductCategoryIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(productCategoryIndexView);
+		productCategoryIndexView.trigger('load');
+	},	
+
+	productCategoryEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改产品分类');
+		var productCategoryEditView = new ProductCategoryEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(productCategoryEditView);
+		productCategoryEditView.trigger('load');
+	},		
+
 
 
 	productExchangeIndex: function(){

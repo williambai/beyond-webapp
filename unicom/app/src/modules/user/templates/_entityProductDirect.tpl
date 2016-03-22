@@ -26,7 +26,7 @@
 					<p><button class="btn btn-success view">订购</button></p>
 				</div>
 			</div>
-			<h4><%= model.name %></h4>
+			<img width="50px" heigh="50px"><h4><%= model.name %></h4>
 			<p><%= model.tags.join('   ') %></p>
 			<p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：<%= model.bonus.income %>&nbsp;元&nbsp;&nbsp;积分：<%= model.bonus.points %></p>
 			<hr/>

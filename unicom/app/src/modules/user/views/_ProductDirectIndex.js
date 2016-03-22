@@ -1,12 +1,12 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    exchangeTpl = require('../templates/_entityExchange.tpl'),
+    productTpl = require('../templates/_entityProductDirect.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
-var ListView = require('./_ExchangeList');
 
 Backbone.$ = $;
+var ListView = require('./_ProductDirectList');
 
 exports = module.exports = Backbone.View.extend({
 
@@ -16,16 +16,18 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(exchangeTpl);
+		var page = $(productTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
+
 		this.on('load', this.load, this);
 	},
 
 	events: {
 		'scroll': 'scroll',
-		'click .orderIndex': 'exchangeOrderIndex',
-		'click .view': 'exchangeView',
+		'click .search': 'search',
+		'click .view': 'productView',
+		'click .wechat': 'wechat',
 	},
 
 	load: function() {
@@ -35,6 +37,7 @@ exports = module.exports = Backbone.View.extend({
 		this.listView = new ListView({
 			el: '#list',
 		});
+		this.listView.collection.url = config.api.host + '/channel/product/directs';
 		this.listView.trigger('load');
 	},
 
@@ -43,15 +46,20 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
-	exchangeOrderIndex: function(evt){
-		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('/order/exchange/index',{trigger: true});
+	search: function(){
+		this.$('#search').show();
 		return false;
 	},
 
-	exchangeView: function(evt){
-		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('exchange/view/'+ id,{trigger: true});
+	productView: function(evt){
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
+		this.router.navigate('product/view/'+ id,{trigger: true});
+		return false;
+	},
+
+	wechat: function(evt){
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
+		window.location.href = config.api.host + '/sale/page/data/' + config.wechat.appid + '/' + id + '/' + this.router.account.id;
 		return false;
 	},
 	
