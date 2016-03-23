@@ -28,7 +28,7 @@ exports = module.exports = function(app, models) {
  			default:
  				models.Order
  					.find({
- 						'createBy.id': req.session.accountId,
+ 						// 'createBy.id': req.session.accountId,
  					})
  					.sort({
  						_id: -1

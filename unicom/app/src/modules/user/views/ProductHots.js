@@ -1,12 +1,48 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    productTpl = require('../templates/_entityProductDirect.tpl'),
+    productTpl = require('../templates/_entityProduct.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
-var ListView = require('./_ProductDirectList');
+var ListView = require('./__ListView');
+
+//** Product模型
+var Product = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/channel/product/directs',	
+	defaults: {
+		goods: {},
+		bonus: {
+			income: 0,
+			times: 1,
+		},
+	},
+});
+
+//** Product集合
+var ProductCollection = Backbone.Collection.extend({
+	model: Product,
+	url: config.api.host + '/channel/product/directs',
+});
+
+//** 列表子视图
+var ProductListView = ListView.extend({
+	el: '#list',
+
+	initialize: function(options){
+		var page = $(productTpl);
+		var itemTemplate = $('#itemTemplate', page).html();
+		this.template = _.template(_.unescape(itemTemplate || ''));
+		this.collection = new ProductCollection();
+		ListView.prototype.initialize.apply(this,options);
+	},
+	getNewItemView: function(model){
+		return this.template({model: model.toJSON()});
+	},
+});
+
 
 exports = module.exports = Backbone.View.extend({
 
@@ -17,7 +53,7 @@ exports = module.exports = Backbone.View.extend({
 	initialize: function(options) {
 		this.router = options.router;
 		var page = $(productTpl);
-		var indexTemplate = $('#indexTemplate', page).html();
+		var indexTemplate = $('#hotTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 
 		this.on('load', this.load, this);
@@ -34,7 +70,7 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 		this.loaded = true;
 		this.render();
-		this.listView = new ListView({
+		this.listView = new ProductListView({
 			el: '#list',
 		});
 		this.listView.collection.url = config.api.host + '/channel/product/directs';

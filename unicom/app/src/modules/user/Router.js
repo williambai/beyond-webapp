@@ -11,35 +11,42 @@ var LoginView = require('../../views/_Login');
 var WeChatLoginView = require('../../views/_WeChatLogin');
 var MyAccountViewView = require('../../views/_MyAccountView');
 var MyAccountEditView = require('../../views/_MyAccountEdit');
+// var FeedbackIndexView = require('../../views/_FeedbackIndex');
+// var FeedbackEditView = require('../../views/_FeedbackEdit');
+
 var IndexView = require('./views/Index');
-var ActivityIndexView = require('./views/_ActivityIndex');
-var FeedbackIndexView = require('../../views/_FeedbackIndex');
-var FeedbackEditView = require('../../views/_FeedbackEdit');
+var ActivityIndexView = require('./views/ActivityIndex');
 
-var HelpIndexView = require('./views/_HelpIndex');
-var CategoryIndexView = require('./views/_CategoryIndex');
-var ProductDirectCollection = require('./models/ProductDirectCollection');
-var ProductDirectIndexView = require('./views/_ProductDirectIndex');
-var ProductDirectViewView = require('./views/_ProductDirectView');
+var HelpIndexView = require('./views/HelpIndex');
+var MeIndexView = require('./views/MeIndex');
+var MeChangePassView = require('./views/MeChangePass');
+var MeBankView = require('./views/MeBank');
+var MeBonusView = require('./views/MeBonus');
+var MeBonusOrderView = require('./views/MeBonusOrder');
+var RankPersonView = require('./views/RankPerson');
+var CategoryIndexView = require('./views/CategoryIndex');
+var CategoryProductView = require('./views/CategoryProducts');
+var ProductHotsView = require('./views/ProductHots');
+var ProductOrderView = require('./views/ProductOrder');
+var OrderIndexView = require('./views/OrderIndex');
+var CustomerIndexView = require('./views/CustomerIndex');
+var SaleLeadIndexView = require('./views/SaleLeadIndex');
+var SaleLeadEditView = require('./views/SaleLeadEdit');
 
-var PushIndexView = require('./views/_PushIndex');
-var PushViewView = require('./views/_PushView');
-var DataIndexView = require('./views/_DataIndex');
-var DataViewView = require('./views/_DataView');
-var SmsIndexView = require('./views/_SmsIndex');
-var SmsViewView = require('./views/_SmsView');
-var CardIndexView = require('./views/_CardIndex');
-var CardViewView = require('./views/_CardView');
-var PhoneIndexView = require('./views/_PhoneIndex');
-var PhoneViewView = require('./views/_PhoneView');
-var PhoneDetailView = require('./views/_PhoneDetail');
-var OrderIndexView = require('./views/_OrderIndex');
-var CustomerIndexView = require('./views/_CustomerIndex');
-var RevenueIndexView = require('./views/_RevenueIndex');
-var RevenueStatView = require('./views/_RevenueStat');
+// var PushIndexView = require('./views/_PushIndex');
+// var PushViewView = require('./views/_PushView');
+// var DataIndexView = require('./views/_DataIndex');
+// var DataViewView = require('./views/_DataView');
+// var SmsIndexView = require('./views/_SmsIndex');
+// var SmsViewView = require('./views/_SmsView');
+// var CardIndexView = require('./views/_CardIndex');
+// var CardViewView = require('./views/_CardView');
+// var PhoneIndexView = require('./views/_PhoneIndex');
+// var PhoneViewView = require('./views/_PhoneView');
+// var PhoneDetailView = require('./views/_PhoneDetail');
+// var RevenueIndexView = require('./views/_RevenueIndex');
+// var RevenueStatView = require('./views/_RevenueStat');
 
-var SaleLeadIndexView = require('./views/_SaleLeadIndex');
-var SaleLeadEditView = require('./views/_SaleLeadEdit');
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -61,11 +68,18 @@ exports = module.exports = Backbone.Router.extend({
 		'feedback/index': 'feedbackIndex',
 		'feedback/add': 'feedbackEdit',
 		'help/index': 'helpIndex',
+		'me/index': 'meIndex',
+		'me/changepass': 'meChangePass',
+		'me/bank': 'meBank',
+		'me/bonus': 'meBonus',
+		'me/bonus/:id': 'meBonusOrder',
+		'me/order': 'orderIndex',
+		'rank/person': 'rankPerson',
 
 		'category/index': 'categoryIndex',//** 产品分类
-		'category/:cid/products': 'productByCategoryIndex',//** 按分类查找产品
-		'product/hots': 'productHotIndex',//** 热门产品
-		'product/view/:id': 'productView',
+		'category/:cid/products': 'categoryProduct',//** 按分类查找产品
+		'product/hots': 'productHot',//** 热门产品
+		'product/view/:id': 'productOrder',//** 产品推荐
 
 
 		'activity/index': 'activityIndex',
@@ -300,6 +314,93 @@ exports = module.exports = Backbone.Router.extend({
 		helpIndexView.trigger('load');
 	},	
 
+	meIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		// this.appEvents.trigger('set:brand','意见反馈');
+		var meIndexView = new MeIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(meIndexView);
+		meIndexView.trigger('load');
+	},	
+
+	meChangePass: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		// this.appEvents.trigger('set:brand','意见反馈');
+		var meChangePassView = new MeChangePassView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(meChangePassView);
+		meChangePassView.trigger('load');
+	},	
+
+	meBank: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		// this.appEvents.trigger('set:brand','意见反馈');
+		var meBankView = new MeBankView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(meBankView);
+		meBankView.trigger('load');
+	},	
+
+	meBonus: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		// this.appEvents.trigger('set:brand','意见反馈');
+		var meBonusView = new MeBonusView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(meBonusView);
+		meBonusView.trigger('load');
+	},	
+
+	meBonusOrder: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		// this.appEvents.trigger('set:brand','意见反馈');
+		var meBonusOrderView = new MeBonusOrderView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(meBonusOrderView);
+		meBonusOrderView.trigger('load');
+	},	
+
+
+	rankPerson: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		// this.appEvents.trigger('set:brand','意见反馈');
+		var rankPersonView = new RankPersonView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(rankPersonView);
+		rankPersonView.trigger('load');
+	},	
+
 	categoryIndex: function() {
 		if (!this.logined) {
 			window.location.hash = 'login';
@@ -315,51 +416,48 @@ exports = module.exports = Backbone.Router.extend({
 	},
 
 
-	productByCategoryIndex: function() {
+	categoryProduct: function(id) {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
-		var productDirectCollection = new ProductDirectCollection();
 		//this.appEvents.trigger('set:brand', '号卡');
-		var productDirectIndexView = new ProductDirectIndexView({
+		var categoryProductView = new CategoryProductView({
 			router: this,
 			el: '#content',
-			collection: productDirectCollection,
+			id: id,
 		});
-		this.changeView(productDirectIndexView);
-		productDirectIndexView.trigger('load');
+		this.changeView(categoryProductView);
+		categoryProductView.trigger('load');
 	},
 
-	productHotIndex: function() {
+	productHot: function() {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
-		var productDirectCollection = new ProductDirectCollection();
 		// this.appEvents.trigger('set:brand', '热门产品');
-		var productDirectIndexView = new ProductDirectIndexView({
+		var productHotView = new ProductHotsView({
 			router: this,
 			el: '#content',
-			collection: productDirectCollection,
 		});
-		this.changeView(productDirectIndexView);
-		productDirectIndexView.trigger('load');
+		this.changeView(productHotView);
+		productHotView.trigger('load');
 	},
 
-	productView: function(id) {
+	productOrder: function(id) {
 		if (!this.logined) {
 			window.location.hash = 'login';
 			return;
 		}
 		//this.appEvents.trigger('set:brand', '流量推荐');
-		var productViewView = new ProductDirectViewView({
+		var productOrderView = new ProductOrderView({
 			router: this,
 			el: '#content',
 			id: id,
 		});
-		this.changeView(productViewView);
-		productViewView.trigger('load');
+		this.changeView(productOrderView);
+		productOrderView.trigger('load');
 	},
 
 	cardIndex: function() {

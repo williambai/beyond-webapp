@@ -4,10 +4,41 @@ var $ = require('jquery'),
     orderTpl = require('../templates/_entityOrder.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
+var ListView = require('./__ListView');
+var Utils = require('./__Util');
 
 Backbone.$ = $;
+//** 模型
+var Order = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/channel/orders',	
+	defaults: {
+		customer: {},
+		product: {},
+		goods: {}
+	},
+});
+//** 集合
+var OrderCollection = Backbone.Collection.extend({
+	model: Order,
+	url: config.api.host + '/channel/orders',
+});
+//** List子视图
+var OrderListView = ListView.extend({
+	el: '#list',
 
-var ListView = require('./_OrderList');
+	initialize: function(options){
+		var page = $(orderTpl);
+		var itemTemplate = $('#itemTemplate', page).html();
+		this.template = _.template(_.unescape(itemTemplate || ''));
+		this.collection = new OrderCollection();
+		ListView.prototype.initialize.apply(this,options);
+	},
+	getNewItemView: function(model){
+		model.set('deltatime',Utils.transformTime(model.get('lastupdatetime')));
+		return this.template({model: model.toJSON()});
+	},
+});
 
 exports = module.exports = Backbone.View.extend({
 
@@ -34,7 +65,7 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
-		this.listView = new ListView({
+		this.listView = new OrderListView({
 			el: '#list',
 		});
 		this.listView.trigger('load');

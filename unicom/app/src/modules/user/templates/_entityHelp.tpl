@@ -47,7 +47,9 @@
 	</div>
 	<div id="policyTemplate">
 		<div>
-			<button class="back">返回帮助中心</button>
+			<div class="nav-back">
+				<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+			</div>
 			<h4>佣金政策</h4>
 			<p>1、销售记录对账</p>
 			<p>
@@ -68,7 +70,9 @@
 	</div>
 	<div id="saleTemplate">
 		<div>
-			<button class="back">返回帮助中心</button>
+			<div class="nav-back">
+				<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+			</div>
 			<p>1、3G流量包推荐话术</p>
 			<p>
 				1、××先生（女士）！目前100M手机上网流量是我们免费赠送给您的，如果您没有用，等同于赠送给您的这价值10块钱的流量包浪费了，我给您发一些实用的手机应用链接，这些手机应用对您的生活和工作很适用，您不妨试用一下，稍后请您注意查收。如果流量不够用，可以购买我们的联通加油包。
@@ -137,7 +141,9 @@
 	</div>
 	<div id="faqTemplate">
 		<div>
-			<button class="back">返回帮助中心</button>
+			<div class="nav-back">
+				<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+			</div>
 			<p></p>
 			<p>1、“联通沃助手”是什么？</p>
 			<p></p>

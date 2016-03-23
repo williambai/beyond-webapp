@@ -4,10 +4,43 @@ var $ = require('jquery'),
     categoryTpl = require('../templates/_entityCategory.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
-var ListView = require('./_SmsList');
-
+var ListView = require('./__ListView');
 Backbone.$ = $;
 
+//** Category模型
+var Category = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/product/categories',	
+	defaults: {
+	},
+});
+//** Category集合
+var CategoryCollection = Backbone.Collection.extend({
+	model: Category,
+	url: config.api.host + '/product/categories',
+});
+
+//** 列表子视图
+var CategoryListView = ListView.extend({
+
+	el: '#list',
+
+	initialize: function(options){
+		var page = $(categoryTpl);
+		var itemTemplate = $('#itemTemplate', page).html();
+		this.template = _.template(_.unescape(itemTemplate || ''));
+		this.collection = new CategoryCollection();
+		ListView.prototype.initialize.apply(this,options);
+	},
+	getNewItemView: function(model){
+		var item = this.template({model: model.toJSON()});
+		var $item = $(item);
+		$item.find('img').attr('src', model.get('thumbnail'));
+		return $item.html();
+	},
+});
+
+//** 主视图
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
@@ -31,10 +64,9 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 		this.loaded = true;
 		this.render();
-		this.listView = new ListView({
+		this.listView = new CategoryListView({
 			el: '#list',
 		});
-		this.listView.collection.url = config.api.host + '/product/categories';
 		this.listView.trigger('load');
 	},
 

@@ -4,11 +4,38 @@ var $ = require('jquery'),
     leadTpl = require('../templates/_entitySaleLead.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
+var ListView = require('./__ListView');
 
 Backbone.$ = $;
 
-var SaleLead = require('../models/SaleLead');
-var ListView = require('./_SaleLeadList');
+//** 模型
+var SaleLead = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/channel/sale/leads',	
+	defaults: {
+		customer: {}
+	},
+});
+//** 集合
+var SaleLeadCollection = Backbone.Collection.extend({
+	model: SaleLead,
+	url: config.api.host + '/channel/sale/leads',
+});
+
+var SaleLeadListView = ListView.extend({
+	el: '#list',
+
+	initialize: function(options){
+		var page = $(leadTpl);
+		var itemTemplate = $('#itemTemplate', page).html();
+		this.template = _.template(_.unescape(itemTemplate || ''));
+		this.collection = new SaleLeadCollection();
+		ListView.prototype.initialize.apply(this,options);
+	},
+	getNewItemView: function(model){
+		return this.template({model: model.toJSON()});
+	},
+});
 
 exports = module.exports = Backbone.View.extend({
 
@@ -36,7 +63,7 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
-		this.listView = new ListView({
+		this.listView = new SaleLeadListView({
 			el: '#list',
 		});
 

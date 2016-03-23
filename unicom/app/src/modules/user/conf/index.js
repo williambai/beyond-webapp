@@ -35,8 +35,8 @@ _.extend(config,{
 	// 	"features": ["channel_product_card"],
 	// },{
 	// 	"id": 6,
-	// 	"name": "终端产品",
-	// 	"hash": "phone/index",
+	// 	"name": "销售记录",
+	// 	"hash": "order/index",
 	// 	"features": ["channel_product_phone"],
 	// },{
 		"id": 7,
@@ -51,7 +51,7 @@ _.extend(config,{
 	},{
 		"id": 9,
 		"name": "个人中心",
-		"hash": "order/index",
+		"hash": "me/index",
 		"features": ["channel_order"],
 	},{
 		"id": 11,

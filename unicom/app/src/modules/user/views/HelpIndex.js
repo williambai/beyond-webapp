@@ -48,8 +48,8 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	policyView: function(evt){
+		// this.$el.before('<div style="width:100%;height:40px;padding:2px;background-color:lightgrey;"><button class="btn btn-default back">返回帮助中心</button></div>');
 		this.$el.html(this.policyTemplate());
-		console.log(this.policyTemplate())
 		return false;
 	},
 

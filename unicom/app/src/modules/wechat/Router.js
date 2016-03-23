@@ -3,36 +3,36 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 
 
-var LayoutView = require('./views/__Layout');
-var RegisterView = require('../../views/_Register');
-var ForgotPasswordView = require('../../views/_ForgotPassword');
-var LoginView = require('../../views/_Login');
-var MyAccountViewView = require('../../views/_MyAccountView');
-var MyAccountEditView = require('../../views/_MyAccountEdit');
-var IndexView = require('../user/views/Index');
-var ActivityIndexView = require('../user/views/_ActivityIndex');
-var FeedbackIndexView = require('../../views/_FeedbackIndex');
-var FeedbackEditView = require('../../views/_FeedbackEdit');
+// var LayoutView = require('./views/__Layout');
+// var RegisterView = require('../../views/_Register');
+// var ForgotPasswordView = require('../../views/_ForgotPassword');
+// var LoginView = require('../../views/_Login');
+// var MyAccountViewView = require('../../views/_MyAccountView');
+// var MyAccountEditView = require('../../views/_MyAccountEdit');
+// var IndexView = require('../user/views/Index');
+// var ActivityIndexView = require('../user/views/_ActivityIndex');
+// var FeedbackIndexView = require('../../views/_FeedbackIndex');
+// var FeedbackEditView = require('../../views/_FeedbackEdit');
 
-var IndexView = require('../user/views/Index');
-var PushIndexView = require('../user/views/_PushIndex');
-var PushViewView = require('../user/views/_PushView');
-var DataIndexView = require('../user/views/_DataIndex');
-var DataViewView = require('../user/views/_DataView');
-var SmsIndexView = require('../user/views/_SmsIndex');
-var SmsViewView = require('../user/views/_SmsView');
-var CardIndexView = require('../user/views/_CardIndex');
-var CardViewView = require('../user/views/_CardView');
-var PhoneIndexView = require('../user/views/_PhoneIndex');
-var PhoneViewView = require('../user/views/_PhoneView');
-var PhoneDetailView = require('../user/views/_PhoneDetail');
-var OrderIndexView = require('../user/views/_OrderIndex');
-var CustomerIndexView = require('../user/views/_CustomerIndex');
-var RevenueIndexView = require('../user/views/_RevenueIndex');
-var RevenueStatView = require('../user/views/_RevenueStat');
+// var IndexView = require('../user/views/Index');
+// var PushIndexView = require('../user/views/_PushIndex');
+// var PushViewView = require('../user/views/_PushView');
+// var DataIndexView = require('../user/views/_DataIndex');
+// var DataViewView = require('../user/views/_DataView');
+// var SmsIndexView = require('../user/views/_SmsIndex');
+// var SmsViewView = require('../user/views/_SmsView');
+// var CardIndexView = require('../user/views/_CardIndex');
+// var CardViewView = require('../user/views/_CardView');
+// var PhoneIndexView = require('../user/views/_PhoneIndex');
+// var PhoneViewView = require('../user/views/_PhoneView');
+// var PhoneDetailView = require('../user/views/_PhoneDetail');
+// var OrderIndexView = require('../user/views/_OrderIndex');
+// var CustomerIndexView = require('../user/views/_CustomerIndex');
+// var RevenueIndexView = require('../user/views/_RevenueIndex');
+// var RevenueStatView = require('../user/views/_RevenueStat');
 
-var SaleLeadIndexView = require('../user/views/_SaleLeadIndex');
-var SaleLeadEditView = require('../user/views/_SaleLeadEdit');
+// var SaleLeadIndexView = require('../user/views/_SaleLeadIndex');
+// var SaleLeadEditView = require('../user/views/_SaleLeadEdit');
 
 
 var config = require('./conf');

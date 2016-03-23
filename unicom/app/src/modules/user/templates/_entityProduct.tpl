@@ -1,5 +1,16 @@
 <div>
 	<div id="indexTemplate">
+		<div>
+			<div class="nav-back">
+				<button class="btn btn-primary pull-left back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+				<h4 class="text-center"><%= model.name %></h4>
+			</div>
+			<p>&nbsp;</p>
+			<div id="list">
+			</div>
+		</div>
+	</div>
+	<div id="hotTemplate">
 		<div class="panel panel-default">
  			<div class="panel-heading">
 				<h5 class="panel-title text-center">热门产品</h5>
@@ -34,6 +45,9 @@
 	</div>
 	<div id="viewTemplate">
 		<div>
+			<div class="nav-back">
+				<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+			</div>
 			<div class="row">
 				<div class="col-xs-10">
 					<div class="pull-left">

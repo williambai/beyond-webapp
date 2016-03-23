@@ -5,6 +5,17 @@
 				<h5 class="panel-title text-center">我的工作成绩</h5>
 			</div>
 			<div class="panel-body">
+				<div id="list">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="_indexTemplate">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">我的工作成绩</h5>
+			</div>
+			<div class="panel-body">
 				<div class="">
 					<div class="row">
 						<div class="col-sm-4 col-xs-4">

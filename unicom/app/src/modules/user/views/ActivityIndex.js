@@ -4,10 +4,57 @@ var $ = require('jquery'),
     activityTpl = require('../templates/_entityActivity.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
+var ListView = require('./__ListView');
+var Utils = require('./__Util');
 
 Backbone.$ = $;
 
-var ListView = require('./_ActivityList');
+//** Activity模型
+var Activity = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/channel/account/activities',	
+	defaults: {
+	}
+});
+//** Activity集合
+var ActivityCollection = Backbone.Collection.extend({
+	model: Activity,
+	url: config.api.host + '/channel/account/activities',
+});
+
+//** List子视图
+var ActivityListView = ListView.extend({
+	el: '#list',
+
+	initialize: function(options){
+		var page = $(activityTpl);
+		var itemTemplate = $('#itemTemplate', page).html();
+		this.template = _.template(_.unescape(itemTemplate || ''));
+		this.collection = new ActivityCollection();
+		ListView.prototype.initialize.apply(this,options);
+	},
+	getNewItemView: function(model){
+		this._convertContent(model);
+		this._transformTime(model);
+		var item = '<div>' + this.template({model: model.toJSON()}) + '</div>';
+		var $item = $(item);
+		$item.find('img').attr('src', model.get('avatar'));
+		return $item.html();
+	},
+
+	_convertContent: function(model){
+		var type = model.get('type');
+		var contentObject = model.get('content');
+		var newContent = Utils.buildContent(type, contentObject);
+		model.set('content',newContent);
+	},
+
+	_transformTime: function(model){
+		var createtime = model.get('lastupdatetime');
+		var deltatime = Utils.transformTime(createtime);
+		model.set('deltatime', deltatime);
+	},
+});
 
 exports = module.exports = Backbone.View.extend({
 
@@ -41,7 +88,7 @@ exports = module.exports = Backbone.View.extend({
 		// 	$(current).removeClass('active');
 		// 	console.log('carousel running.');
 		// },10000);
-		this.listView = new ListView({
+		this.listView = new ActivityListView({
 			el: '#list',
 		});
 		this.listView.trigger('load');

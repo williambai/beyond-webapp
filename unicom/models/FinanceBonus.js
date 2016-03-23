@@ -1,27 +1,28 @@
 /**
  * 财务模块
- * - 用户佣金
+ * - 用户佣金发放
  */
 
 module.exports = exports = function(mongoose) {
 
 	var schema = new mongoose.Schema({
-		uid: { //** 系统用户
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Account'
-		},
-		oid: { //** 订单Id
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Order'
-		},
-		category:{
+		uid: String, //** 用户ID
+		username: String, //** 用户名
+		mobile: String, //** 用户手机号
+		year: Number, //** 年份
+		month: Number,//** 月份
+		amount: Number,//** 业务数额
+		tax: Number,//** 税收
+		cash: Number, //** 实际派发数额
+		reason: String, //** 调整原因
+		status: {
 			type: String,
 			enum: {
-				values: '第一次解冻|第二次解冻|第三次解冻|全部解冻'.split('|'),
+				values: '未核算|已核算'.split('|'),
 				message: 'enum validator failed for path {PATH} with value {VALUE}',
-			}
+			},
+			default: '未核算',
 		},
-		amount: Number, //** 佣金收入金额，增加为+，减少为-
 		lastupdatetime: {
 			type: Date,
 			default: Date.now

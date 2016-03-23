@@ -1,10 +1,19 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    leadTpl = require('../templates/_entitySaleLead.tpl'),
-	SaleLead = require('../models/SaleLead');
+	Backbone = require('backbone'),
+    leadTpl = require('../templates/_entitySaleLead.tpl');
 var config = require('../conf');
 
+//** 模型
+var SaleLead = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/channel/sale/leads',	
+	defaults: {
+		customer: {}
+	},
+});
+//** 主视图
 exports = module.exports = FormView.extend({
 
 	el: '#accountForm',
