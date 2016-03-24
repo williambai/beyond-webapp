@@ -104,6 +104,7 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  			default:
 		 		models.ProductDirect
 		 			.find({})
+		 			.sort({display_sort: -1})
 		 			.skip(per * page)
 		 			.limit(per)
 		 			.exec(function(err, docs) {

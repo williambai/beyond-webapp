@@ -15,7 +15,10 @@ module.exports = exports = function(mongoose){
 		quantity: Number,
 		starttime: String,
 		endtime: String,
-		display_sort: Number,
+		display_sort: {
+			type: Number,
+			default: 0
+		},
 		tags: [],
 		goods: {
 			name: String,//** 产品名称(goods.name)
@@ -25,11 +28,11 @@ module.exports = exports = function(mongoose){
 			price: Number, //** 产品单价(product.price)
 			bonus: Number, //** 单个产品佣金
 		},
-		bonus: {
-			income: Number,//** 佣金收入
-			times: Number, //** 佣金分几次兑现
-			points: Number,//** 积分
-		},
+		// bonus: {
+		// 	income: Number,//** 佣金收入
+		// 	times: Number, //** 佣金分几次兑现
+		// 	points: Number,//** 积分
+		// },
 		status: {
 			type: String,
 			enum: {

@@ -8,7 +8,7 @@ var config = require('../conf');
 //** 模型
 var SaleLead = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/channel/sale/leads',	
+	urlRoot: config.api.host + '/private/sale/leads',	
 	defaults: {
 		customer: {}
 	},

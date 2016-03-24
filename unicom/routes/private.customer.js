@@ -42,9 +42,18 @@
  		var per = 20;
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
-
+ 		var department = (req.session.department && req.session.department.id) || '';
+ 		var mobile = (req.session.account && req.session.account.email) || '';
  		models.Customer
- 			.find({})
+ 			.find({
+ 				$or: [
+ 					{
+ 						'department': department, //** 用户所在部门分配的客户
+ 					},{
+ 						'account_mobile': mobile, //** 用户分配的客户
+ 					}
+ 				]
+ 			})
  			.skip(per * page)
  			.limit(per)
  			.exec(function(err, docs) {
@@ -56,32 +65,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add channel/customers
+ 	 * add private/customers
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/customers', app.grant, add);
+ 	app.post('/private/customers', app.isLogin, add);
  	/**
- 	 * update channel/customers
+ 	 * update private/customers
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/customers/:id', app.grant, update);
+ 	app.put('/private/customers/:id', app.isLogin, update);
 
  	/**
- 	 * delete channel/customers
+ 	 * delete private/customers
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/customers/:id', app.grant, remove);
+ 	app.delete('/private/customers/:id', app.isLogin, remove);
  	/**
- 	 * get channel/customers
+ 	 * get private/customers
  	 */
- 	app.get('/channel/customers/:id', app.grant, getOne);
+ 	app.get('/private/customers/:id', app.isLogin, getOne);
 
  	/**
- 	 * get channel/customers
+ 	 * get private/customers
  	 * type:
  	 */
- 	app.get('/channel/customers', app.grant, getMore);
+ 	app.get('/private/customers', app.isLogin, getMore);
  };

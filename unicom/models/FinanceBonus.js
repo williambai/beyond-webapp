@@ -7,7 +7,7 @@ module.exports = exports = function(mongoose) {
 
 	var schema = new mongoose.Schema({
 		uid: String, //** 用户ID
-		username: String, //** 用户名
+		name: String, //** 用户名
 		mobile: String, //** 用户手机号
 		year: Number, //** 年份
 		month: Number,//** 月份

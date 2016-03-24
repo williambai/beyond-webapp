@@ -11,14 +11,14 @@ Backbone.$ = $;
 //** Customer模型
 var Customer = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/channel/customers',	
+	urlRoot: config.api.host + '/private/customers',	
 	defaults: {
 	},
 });
 //** Customer集合
 var CustomerCollection = Backbone.Collection.extend({
 	model: Customer,
-	url: config.api.host + '/channel/customers',
+	url: config.api.host + '/private/customers',
 });
 
 //** List子视图

@@ -13,11 +13,11 @@ exports = module.exports = function(app, models) {
 		mobiles = _.without(mobiles, '');
 		async.waterfall(
 			[
-				function product(callback) {
+				function getProduct(callback) {
 					models.ProductDirect
 						.findById(product._id)
-						.exec(function(err,prod){
-							if(err) return callback(err);
+						.exec(function(err, prod){
+							if(err || !prod) return callback(err);
 							var goods = prod.goods || {};
 							var orders = [];
 							_.each(mobiles, function(mobile) {
@@ -42,24 +42,25 @@ exports = module.exports = function(app, models) {
 							callback(null,orders);
 						});
 				},
-				function order(orders,callback) {
+				function createOrders(orders,callback) {
+					console.log(orders)
 					models.Order.create(orders, function(err){
 						if(err) return callback(err);
 						callback(null);
 					});
 				},
-				// function activity(docs, callback) {
-				// 	var activity = {
-				// 		uid: req.session.accountId,
-				// 		username: req.session.username,
-				// 		avatar: req.session.avatar || '/images/avatar.jpg',
-				// 		type: 'text',
-				// 		content: {
-				// 			body: '向朋友推荐了<u>' + product.name + '</u>产品',
-				// 		}
-				// 	};
-				// 	models.AccountActivity.create(activity, callback);
-				// }
+				function activity(callback) {
+					var activity = {
+						uid: req.session.accountId,
+						username: req.session.username,
+						avatar: req.session.avatar || '/images/avatar.jpg',
+						type: 'text',
+						content: {
+							body: '向朋友推荐了<u>' + product.name + '</u>产品',
+						}
+					};
+					models.AccountActivity.create(activity, callback);
+				}
 			],
 			function(err, result) {
 				if (err) return res.send(err);

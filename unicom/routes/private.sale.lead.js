@@ -1,19 +1,22 @@
  exports = module.exports = function(app, models) {
 
- 	var add = function(req, res) {
- 		res.set('Content-Type', 'text/html');
- 		res.render('data_success');
- 		return;
+ 	// var add = function(req, res) {
+ 	// 	res.set('Content-Type', 'text/html');
+ 	// 	res.render('data_success');
+ 	// 	return;
 
- 		var doc = new models.SaleLead(req.body);
- 		doc.save(function(err) {
- 			if (err) return res.send(err);
- 			res.send({});
- 		});
- 	};
+ 	// 	var doc = new models.SaleLead(req.body);
+ 	// 	doc.save(function(err) {
+ 	// 		if (err) return res.send(err);
+ 	// 		res.send({});
+ 	// 	});
+ 	// };
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.SaleLead.findByIdAndRemove(id,function(err,doc){
+ 		models.SaleLead.findOneAndRemove({
+ 			_id: id,
+ 			'sale.id': req.session.accountId, //** 仅自己可操作
+ 		},function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -21,7 +24,10 @@
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.SaleLead.findByIdAndUpdate(id, {
+ 		models.SaleLead.findOneAndUpdate({
+ 			_id: id,
+ 			'sale.id': req.session.accountId, //** 仅自己可操作
+ 		}, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -36,9 +42,12 @@
  	var getOne = function(req, res) {
  		var id = req.params.id;
  		models.SaleLead
- 			.findById(id)
+ 			.findOne({
+ 				_id: id,
+	 			'sale.id': req.session.accountId, //** 仅自己可操作
+ 			})
  			.exec(function(err, doc) {
- 				if (err) return res.send(err);
+ 				if (err || !doc) return res.send(err || {});
  				res.send(doc);
  			});
  	};
@@ -48,7 +57,9 @@
  		page = (!page || page < 0) ? 0 : page;
 
  		models.SaleLead
- 			.find({})
+ 			.find({
+	 			'sale.id': req.session.accountId, //** 仅自己可操作
+ 			})
  			.skip(per * page)
  			.limit(per)
  			.exec(function(err, docs) {
@@ -60,32 +71,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add sale/leads
+ 	 * add private/sale/leads
  	 * action:
  	 *     
  	 */
- 	app.post('/sale/leads', app.grant, add);
+ 	// app.post('/private/sale/leads', app.isLogin, add);
  	/**
- 	 * update sale/leads
+ 	 * update private/sale/leads
  	 * action:
  	 *     
  	 */
- 	app.put('/sale/leads/:id', app.grant, update);
+ 	app.put('/private/sale/leads/:id', app.isLogin, update);
 
  	/**
- 	 * delete sale/leads
+ 	 * delete private/sale/leads
  	 * action:
  	 *     
  	 */
- 	app.delete('/sale/leads/:id', app.grant, remove);
+ 	app.delete('/private/sale/leads/:id', app.isLogin, remove);
  	/**
- 	 * get sale/leads
+ 	 * get private/sale/leads
  	 */
- 	app.get('/sale/leads/:id', app.grant, getOne);
+ 	app.get('/private/sale/leads/:id', app.isLogin, getOne);
 
  	/**
- 	 * get sale/leads
+ 	 * get private/sale/leads
  	 * action:
  	 */
- 	app.get('/sale/leads', app.grant, getMore);
+ 	app.get('/private/sale/leads', app.isLogin, getMore);
  };

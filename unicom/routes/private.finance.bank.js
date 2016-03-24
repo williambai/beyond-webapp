@@ -39,7 +39,7 @@
  	var getOne = function(req, res) {
  		var id = req.params.id;
  		models.FinanceBank
- 			.findById({
+ 			.findOne({
  				_id: id,
  				uid: req.session.accountId, //** 只能看自己的 			 				
  			})

@@ -11,7 +11,7 @@ Backbone.$ = $;
 //** 模型
 var SaleLead = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/channel/sale/leads',	
+	urlRoot: config.api.host + '/private/sale/leads',	
 	defaults: {
 		customer: {}
 	},
@@ -19,7 +19,7 @@ var SaleLead = Backbone.Model.extend({
 //** 集合
 var SaleLeadCollection = Backbone.Collection.extend({
 	model: SaleLead,
-	url: config.api.host + '/channel/sale/leads',
+	url: config.api.host + '/private/sale/leads',
 });
 
 var SaleLeadListView = ListView.extend({

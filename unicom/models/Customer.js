@@ -9,7 +9,7 @@ module.exports = exports = function(mongoose){
 		address: String, //** 客户通讯地址
 		phone: String,//** 客户备用联系电话
 		location: String, //** 客户地理位置
-		department: [String], //** 客户直接管理部门
+		department: String, //** 客户直接管理部门
 		account_name: String,//** 特定客户经理
 		account_mobile: String, //** 特定客户经理ID
 		status: {

@@ -10,7 +10,7 @@ Backbone.$ = $;
 //** Product模型
 var Product = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/channel/product/directs',	
+	urlRoot: config.api.host + '/public/products',	
 	defaults: {
 		goods: {},
 		bonus: {
@@ -23,7 +23,7 @@ var Product = Backbone.Model.extend({
 //** Order模型
 var ProductOrder = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/channel/product/goods',	
+	urlRoot: config.api.host + '/public/orders',	
 
 	validation: {
 		'mobile[]': {
