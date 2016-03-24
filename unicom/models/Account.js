@@ -11,6 +11,7 @@ module.exports = exports = function(mongoose) {
 		apps: [],
 		roles: [],
 		department: {
+			id: String, //** 营业厅
 			name: String,
 			path: String,
 		},

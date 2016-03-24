@@ -45,14 +45,14 @@
 									<span class="help-block"></span>
 								</div>
 								<div class="form-group">
-									<label>渠道名称：</label>
+									<label>营业厅：</label>
 									<input type="hidden" name="department[path]">
 									<input type="text" name="department[name]" class="form-control input-sm" placeholder="请输入渠道名称，并在列表中选择">
 									<div id="departments"></div>
 									<span class="help-block"></span>
 								</div>
 								<div class="form-group">
-									<label>渠道地址：</label>
+									<label>营业厅地址：</label>
 									<input type="text" name="department[address]" class="form-control input-sm" disabled>
 									<span class="help-block"></span>
 								</div>

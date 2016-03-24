@@ -66,11 +66,11 @@ _.extend(config,{
 		"hash": "goods/index",
 		"features": ["goods"],
 	}, {
-	// 	"id": 2,
-	// 	"name": "组织及架构管理",
-	// 	"hash": "department/index",
-	// 	"features": ["department"],
-	// }, {
+		"id": 2,
+		"name": "营业厅管理",
+		"hash": "department/index",
+		"features": ["department"],
+	}, {
 	// 	"id": 2,
 	// 	"name": "客户端功能设置",
 	// 	"hash": "channel/category/index",

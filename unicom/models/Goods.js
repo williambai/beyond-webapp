@@ -12,6 +12,7 @@ module.exports = exports = function(mongoose){
 		price: Number, //** 产品建议价格
 		unit: String, //** 产品价格单位
 		quantity: Number, //** 产品库存：库存量
+		bonus: Number, //** 单个佣金
 		status: {
 			type: String,
 			enum: {

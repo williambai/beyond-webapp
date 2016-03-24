@@ -4,7 +4,7 @@ var config = require('../conf');
 
 exports = module.exports = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/product/categories',
+	urlRoot: config.api.host + '/protect/product/categories',
 
 	validation: {
 		name: {

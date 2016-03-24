@@ -10,14 +10,14 @@ Backbone.$ = $;
 //** Category模型
 var Category = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/product/categories',	
+	urlRoot: config.api.host + '/public/product/categories',	
 	defaults: {
 	},
 });
 //** Category集合
 var CategoryCollection = Backbone.Collection.extend({
 	model: Category,
-	url: config.api.host + '/product/categories',
+	url: config.api.host + '/public/product/categories',
 });
 
 //** 列表子视图

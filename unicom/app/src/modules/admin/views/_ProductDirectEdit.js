@@ -32,7 +32,7 @@ exports = module.exports = FormView.extend({
 	load: function(){
 		var that = this;
 		$.ajax({
-			url: config.api.host + '/product/categories',
+			url: config.api.host + '/public/product/categories',
 			type: 'GET',
 			xhrFields: {
 				withCredentials: true

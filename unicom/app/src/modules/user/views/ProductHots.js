@@ -11,7 +11,7 @@ var ListView = require('./__ListView');
 //** Product模型
 var Product = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/channel/product/directs',	
+	urlRoot: config.api.host + '/public/products',	
 	defaults: {
 		goods: {},
 		bonus: {
@@ -24,7 +24,7 @@ var Product = Backbone.Model.extend({
 //** Product集合
 var ProductCollection = Backbone.Collection.extend({
 	model: Product,
-	url: config.api.host + '/channel/product/directs',
+	url: config.api.host + '/public/products',
 });
 
 //** 列表子视图
@@ -73,7 +73,7 @@ exports = module.exports = Backbone.View.extend({
 		this.listView = new ProductListView({
 			el: '#list',
 		});
-		this.listView.collection.url = config.api.host + '/channel/product/directs';
+		this.listView.collection.url = config.api.host + '/public/products';
 		this.listView.trigger('load');
 	},
 

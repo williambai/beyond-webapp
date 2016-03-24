@@ -18,8 +18,12 @@ module.exports = exports = function(mongoose){
 		display_sort: Number,
 		tags: [],
 		goods: {
-			id: String,//** 产品编码(goods.barcode)
-			name: String, //** 产品名称(goods.name)
+			name: String,//** 产品名称(goods.name)
+			id: String, //** 产品id(goods._id)
+			category: String, //** 产品分类(goods.category)
+			barcode: String, //** 产品编码(goods.barcode)
+			price: Number, //** 产品单价(product.price)
+			bonus: Number, //** 单个产品佣金
 		},
 		bonus: {
 			income: Number,//** 佣金收入

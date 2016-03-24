@@ -2,21 +2,25 @@
 
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.ProductCategory
- 			.findById(id)
+ 		models.Order
+ 			.findById({
+ 				_id: id,
+ 				'createBy.id': req.session.accountId, //** 只能看自己的 			 				
+ 			})
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
  				res.send(doc);
  			});
  	};
-
  	var getMore = function(req, res) {
  		var per = 20;
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.ProductCategory
- 			.find({})
+ 		models.Order
+ 			.find({
+ 				'createBy.id': req.session.accountId, //** 只能看自己的 			 				
+ 			})
  			.skip(per * page)
  			.limit(per)
  			.exec(function(err, docs) {
@@ -24,19 +28,17 @@
  				res.send(docs);
  			});
  	};
-
  	/**
  	 * router outline
  	 */
-
  	/**
- 	 * get protect/product/categories
+ 	 * get private/orders
  	 */
- 	app.get('/public/product/categories/:id', app.isLogin, getOne);
+ 	app.get('/private/orders/:id', app.isLogin, getOne);
 
  	/**
- 	 * get public/product/categories
+ 	 * get private/orders
  	 * type:
  	 */
- 	app.get('/public/product/categories', app.isLogin, getMore);
+ 	app.get('/private/orders', app.isLogin, getMore);
  };
