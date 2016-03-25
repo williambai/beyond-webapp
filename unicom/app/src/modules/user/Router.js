@@ -23,6 +23,7 @@ var MeChangePassView = require('./views/MeChangePass');
 var MeBankView = require('./views/MeBank');
 var MeBonusView = require('./views/MeBonus');
 var MeBonusOrderView = require('./views/MeBonusOrder');
+var RankTeamView = require('./views/RankTeam');
 var RankPersonView = require('./views/RankPerson');
 var CategoryIndexView = require('./views/CategoryIndex');
 var CategoryProductView = require('./views/CategoryProducts');
@@ -75,6 +76,7 @@ exports = module.exports = Backbone.Router.extend({
 		'me/bonus/:id': 'meBonusOrder',
 		'me/order': 'orderIndex',
 		'rank/person': 'rankPerson',
+		'rank/team': 'rankTeam',
 
 		'category/index': 'categoryIndex',//** 产品分类
 		'category/:cid/products': 'categoryProduct',//** 按分类查找产品
@@ -399,6 +401,22 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(rankPersonView);
 		rankPersonView.trigger('load');
+	},	
+
+
+	rankTeam: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		// this.appEvents.trigger('set:brand','意见反馈');
+		var rankTeamView = new RankTeamView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(rankTeamView);
+		rankTeamView.trigger('load');
 	},	
 
 	categoryIndex: function() {

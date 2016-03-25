@@ -12,7 +12,7 @@ Backbone.$ = $;
 //** Bonus模型
 var Bonus = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/channel/product/directs',	
+	urlRoot: config.api.host + '/protect/finance/bonuses',	
 	defaults: {
 	},
 });
@@ -20,14 +20,17 @@ var Bonus = Backbone.Model.extend({
 //** Order模型
 var Order = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/channel/product/directs',	
+	urlRoot: config.api.host + '/public/orders',	
 	defaults: {
+		customer: {},
+		product: {},
+		goods: {}
 	},
 });
 //** Order集合
 var OrderCollection = Backbone.Collection.extend({
 	model: Order,
-	url: config.api.host + '/channel/product/directs',
+	url: config.api.host + '/public/orders',
 });
 
 //** 列表子视图	
@@ -42,7 +45,11 @@ var OrderListView = ListView.extend({
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){
-		return this.template({model: model.toJSON()});
+		model.set('deltatime',Utils.transformTime(model.get('lastupdatetime')));
+		var item = this.template({model: model.toJSON()});
+		var $item = $(item);
+		$item.find('img').attr('src', model.get('thumbnail'));
+		return $item.html();
 	},
 });
 

@@ -33,24 +33,24 @@
 						<div class="text-center menu-block-2x" style="background-color:red;">
 							<a href="#order/index">
 								<h4> <i class="fa fa-user fa-lg"></i>
-									&nbsp;我的成绩
+									&nbsp;我的业绩
 								</h4>
 							</a>
 						</div>
 					</div>
 					<div class="col-sm-5 col-xs-5 menu-block-right">
 						<div class="text-center menu-block-1x first" style="background-color:green;">
-							<a href="#data/index">
+							<a href="#product/hots">
 								<h4> <i class="fa fa-star-o fa-lg"></i>
-									&nbsp;流量产品
+									&nbsp;热门产品
 								</h4>
 							</a>
 						</div>
 						<div class="text-center menu-block-1x" style="background-color:green;">
-							<a href="#sms/index">
+							<a href="#category/index">
 								<h4>
 									<i class="fa fa-sun-o fa-lg"></i>
-									&nbsp;增值产品
+									&nbsp;所有产品
 								</h4>
 							</a>
 						</div>
@@ -59,20 +59,20 @@
 				<div class="row">
 					<div class="col-sm-7 col-xs-7 menu-block-left">
 						<div class="text-center menu-block-1x" style="background-color:red;">
-							<a href="#push/index">
+							<a href="#sale/lead/index">
 								<h4>
 									<i class="fa fa-book fa-lg"></i>
-									&nbsp;内容推荐
+									&nbsp;销售线索
 								</h4>
 							</a>
 						</div>
 					</div>
 					<div class="col-sm-5 col-xs-5 menu-block-right">
 						<div class="text-center menu-block-1x" style="background-color:green;">
-							<a href="#phone/index">
+							<a href="#customer/index">
 								<h4>
 									<i class="fa fa-user fa-lg"></i>
-									&nbsp;终端产品
+									&nbsp;客户关怀
 								</h4>
 							</a>
 						</div>
@@ -91,10 +91,10 @@
 					</div>
 					<div class="col-sm-5 col-xs-5 menu-block-right">
 						<div class="text-center menu-block-1x" style="background-color:green;">
-							<a href="#card/index">
+							<a href="#me/index">
 								<h4>
 									<i class="fa fa-star-o fa-lg"></i>
-									&nbsp;号卡产品
+									&nbsp;个人中心
 								</h4>
 							</a>
 						</div>

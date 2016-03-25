@@ -26,6 +26,7 @@ exports = module.exports = function(app, models) {
 										mobile: mobile,
 									},
 									goods: goods,
+									thumbnail: prod.thumbnail_url,
 									quantity: 1,
 									total: goods.price, 
 									bonus: goods.bonus, 
@@ -84,7 +85,7 @@ exports = module.exports = function(app, models) {
 		switch (action) {
 			case 'rankp': //** 个人排行
 				var days = parseInt(req.query.days || 0); //** 向前天数
-				var category = req.query.category || 'city'; //** 数据过滤/切分类型
+				var category = req.query.category || 'department'; //** 数据过滤/切分类型
 				// var content = req.query.content || ''; //** 用户session中对应的"所在Xx"
 				var now = new Date();
 				var nowYear = now.getFullYear();
@@ -110,57 +111,61 @@ exports = module.exports = function(app, models) {
 						lastupdatetime: 1,
 					}
 				});
-				switch(category){
-					case 'city':
-						//** 过滤时间段和department.city字段
-						aggregate.append({
-							$match: {
-								lastupdatetime: {
-									$gte: startDate,
-									$lt: endDate,
-								},
-								'department.city': req.session.department.city || '',
-							}
-						});
-						break;
-					case 'grid':
-						//** 过滤时间段和department.grid字段
-						aggregate.append({
-							$match: {
-								lastupdatetime: {
-									$gte: startDate,
-									$lt: endDate,
-								},
-								'department.grid': req.session.department.grid || '',
-							}
-						});
-						break;
-					case 'district':
-						//** 过滤时间段和department.distric字段
-						aggregate.append({
-							$match: {
-								lastupdatetime: {
-									$gte: startDate,
-									$lt: endDate,
-								},
-								'department.district': req.session.department.district || '',
-							}
-						});
-						break;
-					case 'department':
-					default:
-						//** 过滤时间段和department.name字段
-						aggregate.append({
-							$match: {
-								lastupdatetime: {
-									$gte: startDate,
-									$lt: endDate,
-								},
-								'department.name': req.session.department.name || '',
-							}
-						});
-						break;
-				}
+				// switch(category){
+				// 	case 'city':
+				// 		//** 过滤时间段和department.city字段
+				// 		var city = (req.session.department && req.session.department.city) || ''
+				// 		aggregate.append({
+				// 			$match: {
+				// 				lastupdatetime: {
+				// 					$gte: startDate,
+				// 					$lt: endDate,
+				// 				},
+				// 				'department.city': city,
+				// 			}
+				// 		});
+				// 		break;
+				// 	case 'grid':
+				// 		//** 过滤时间段和department.grid字段
+				// 		var grid = (req.session.department && req.session.department.grid) || '';
+				// 		aggregate.append({
+				// 			$match: {
+				// 				lastupdatetime: {
+				// 					$gte: startDate,
+				// 					$lt: endDate,
+				// 				},
+				// 				'department.grid': grid,
+				// 			}
+				// 		});
+				// 		break;
+				// 	case 'district':
+				// 		//** 过滤时间段和department.distric字段
+				// 		var district = (req.session.department && req.session.department.district) || '';
+				// 		aggregate.append({
+				// 			$match: {
+				// 				lastupdatetime: {
+				// 					$gte: startDate,
+				// 					$lt: endDate,
+				// 				},
+				// 				'department.district': district,
+				// 			}
+				// 		});
+				// 		break;
+				// 	case 'department':
+				// 	default:
+				// 		//** 过滤时间段和department.name字段
+				// 		var departmentName = (req.session.department && req.session.department.name) || '';
+				// 		aggregate.append({
+				// 			$match: {
+				// 				lastupdatetime: {
+				// 					$gte: startDate,
+				// 					$lt: endDate,
+				// 				},
+				// 				'department.name': departmentName,
+				// 			}
+				// 		});
+				// 		break;
+				// }
 				//** 按用户名分组
 				aggregate.append({
 					$group: {
@@ -188,24 +193,38 @@ exports = module.exports = function(app, models) {
 						if(err) return res.send(err);
 						//** 已获取按20个用户的统计信息
 						//** 20个用户的_id
-						var userIds = _.pluck(docs,'_id');
+						var userObjs = [];
+						_.each(docs,function(doc){
+							userObjs.push(_.pick(doc,'_id'))
+						});
+		console.log('++++')				
+		console.log(userObjs)
+						//** 没有数据了
+						if(userObjs.length == 0) return res.send([]);
+						//** 还有有数据
 						models.Account
 							.find({
-								_id: {
-									$or: userIds 
-								}
+								$or: userObjs
+							})
+							.select({
+								// username: 1,
+								// email: 1,
 							})
 							// .select({}) //** 过滤信息
 							.exec(function(err,users){
-								if(err) return res.send(err);
+								if(err || !users) return res.send(err || []);
+								var newUsers = [];
 								_.each(users,function(user){
+									var newUser = user.toJSON();
 									//** 找到统计数组中对应user的对象
-									var orderStat = _.findWhere(docs,{_id: user._id});
+									var userId = String(user._id);//???
+									var orderStat = _.findWhere(docs,{_id: userId});
 									//** 扩展对应user的统计信息
-									_.extend(user,orderStat);
+									_.extend(newUser,orderStat);
+									newUsers.push(newUser);
 								});
 								//** 返回带统计信息的用户数组
-								res.send(users);
+								res.send(newUsers);
 							});
 					});
 				break;
@@ -258,6 +277,7 @@ exports = module.exports = function(app, models) {
 			default:
 				models.Order
 					.find({})
+					.sort({_id: -1})
 					.skip(per * page)
 					.limit(per)
 					.exec(function(err, docs) {

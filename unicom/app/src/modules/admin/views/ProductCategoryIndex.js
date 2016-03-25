@@ -4,11 +4,44 @@ var $ = require('jquery'),
     categoryTpl = require('../templates/_entityProductCategory.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
+var ListView = require('./__ListView');
 
 Backbone.$ = $;
+//** 模型
+var ProductCategory = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/protect/product/categories',
 
-var ListView = require('./_ProductCategoryList');
+	validation: {
+		name: {
+			required : true,
+			msg: '请输入名称'
+		},
+	},
+});
+//** 集合
+var ProductCategoryCollection = Backbone.Collection.extend({
+	url: config.api.host + '/protect/product/categories',
+	model: ProductCategory,
+});
+//** List子视图
+var ProductCategoryListView = ListView.extend({
+	el: '#list',
 
+	initialize: function(options){
+		var page = $(categoryTpl);
+		var itemTemplate = $('#itemTemplate', page).html();
+		this.template = _.template(_.unescape(itemTemplate || ''));
+		this.collection = new ProductCategoryCollection();
+		ListView.prototype.initialize.apply(this,options);
+	},
+	getNewItemView: function(model){
+		var item = this.template({model: model.toJSON()});
+		var $item = $(item);
+		$item.find('img').attr('src', model.get('thumbnail'));
+		return $item.html();
+	},
+});
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
@@ -35,7 +68,7 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
-		this.listView = new ListView({
+		this.listView = new ProductCategoryListView({
 			el: '#list',
 		});
 		this.listView.trigger('load');

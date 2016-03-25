@@ -20,6 +20,7 @@ module.exports = exports = function(mongoose){
 			price: Number, //** 产品单价(product.price)
 			bonus: Number, //** 单个产品佣金
 		},
+		thumbnail: String, //** 商品图标
 		quantity: { //** 商品数量(product.quantity)
 			type: Number,
 			default: 0,
@@ -28,9 +29,15 @@ module.exports = exports = function(mongoose){
 			type: Number,
 			default: 0,
 		},
-		bonus: { //** 订单总佣金
-			type: Number,
-			default: 0,
+		bonus: { //** 订单红利
+			cash: {//** 佣金
+				type: Number,
+				default: 0,
+			},
+			points:{ //** 积分
+				type: Number,
+				default: 0,				
+			}
 		},
 		createBy: { //** 订单创建者
 			id: String,
@@ -40,6 +47,7 @@ module.exports = exports = function(mongoose){
 		},
 		department: {
 			id: String,
+			name: String, //** 营业厅名称
 			city: String, //** 城市名称
 			grid: String, //** 网格编码
 			district: String, //** 地区编码			

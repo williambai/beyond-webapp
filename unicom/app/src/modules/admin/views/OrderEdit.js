@@ -1,10 +1,32 @@
 var _ = require('underscore');
+var Backbone = require('backbone');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
     orderTpl = require('../templates/_entityOrder.tpl'),
 	Order = require('../models/Order');
 var config = require('../conf');
 
+Backbone.$ = $;
+
+//** Order模型
+var Order = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/admin/orders',	
+	defaults: {
+		customer: {},
+		goods: {},
+		customerInfo: {},
+		bonus: {
+			cash: 0,
+			points: 0,
+		},
+		createBy: {},
+		department: {},
+	},
+	validation: {
+	},
+});
+//** 主视图
 exports = module.exports = FormView.extend({
 
 	el: '#orderForm',

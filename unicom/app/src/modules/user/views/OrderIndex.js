@@ -11,7 +11,7 @@ Backbone.$ = $;
 //** 模型
 var Order = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/channel/orders',	
+	urlRoot: config.api.host + '/public/orders',	
 	defaults: {
 		customer: {},
 		product: {},
@@ -21,7 +21,7 @@ var Order = Backbone.Model.extend({
 //** 集合
 var OrderCollection = Backbone.Collection.extend({
 	model: Order,
-	url: config.api.host + '/channel/orders',
+	url: config.api.host + '/public/orders',
 });
 //** List子视图
 var OrderListView = ListView.extend({
@@ -36,7 +36,10 @@ var OrderListView = ListView.extend({
 	},
 	getNewItemView: function(model){
 		model.set('deltatime',Utils.transformTime(model.get('lastupdatetime')));
-		return this.template({model: model.toJSON()});
+		var item = this.template({model: model.toJSON()});
+		var $item = $(item);
+		$item.find('img').attr('src', model.get('thumbnail'));
+		return $item.html();
 	},
 });
 

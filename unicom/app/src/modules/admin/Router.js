@@ -13,17 +13,29 @@ var FeedbackEditView = require('../../views/_FeedbackEdit');
 
 var IndexView = require('./views/Index');
 
-var AccountIndexView = require('./views/_AccountIndex');
-var AccountEditView = require('./views/_AccountEdit');
-
-var GoodsIndexView = require('./views/_GoodsIndex');
-var GoodsEditView = require('./views/_GoodsEdit');
-var GoodsImportView = require('./views/_GoodsImport');
-var GoodsExportView = require('./views/_GoodsExport');
+var AccountIndexView = require('./views/AccountIndex');
+var AccountEditView = require('./views/AccountEdit');
+var ProductCategoryIndexView = require('./views/ProductCategoryIndex');
+var ProductCategoryEditView = require('./views/ProductCategoryEdit');
+var ProductDirectIndexView = require('./views/ProductDirectIndex');
+var ProductDirectEditView = require('./views/ProductDirectEdit');
+var GoodsIndexView = require('./views/GoodsIndex');
+var GoodsEditView = require('./views/GoodsEdit');
+var GoodsImportView = require('./views/GoodsImport');
+var GoodsExportView = require('./views/GoodsExport');
+var BonusIndexView = require('./views/BonusIndex');
+var BonusEditView = require('./views/BonusEdit');
+var OrderIndexView = require('./views/OrderIndex');
+// var OrderViewView = require('./views/_OrderView');
+var OrderEditView = require('./views/OrderEdit');
+var OrderExportView = require('./views/OrderExport');
+var CarouselIndexView = require('./views/CarouselIndex');
+var CarouselEditView = require('./views/CarouselEdit');
 
 var MediaIndexView = require('./views/_MediaIndex');
 var MediaEditView = require('./views/_MediaEdit');
 var MediaAddView = require('./views/_MediaAdd');
+
 
 var PageStaticIndexView = require('./views/_PageStaticIndex');
 var PageStaticEditView = require('./views/_PageStaticEdit');
@@ -31,17 +43,9 @@ var PageDynamicIndexView = require('./views/_PageDynamicIndex');
 var PageDynamicEditView = require('./views/_PageDynamicEdit');
 var PageDynamicViewView = require('./views/_PageDynamicView');
 
-var CarouselIndexView = require('./views/_CarouselIndex');
-var CarouselEditView = require('./views/_CarouselEdit');
 
-var ProductCategoryIndexView = require('./views/_ProductCategoryIndex');
-var ProductCategoryEditView = require('./views/_ProductCategoryEdit');
-
-var ProductDirectIndexView = require('./views/_ProductDirectIndex');
-var ProductDirectEditView = require('./views/_ProductDirectEdit');
-
-var ProductExchangeIndexView = require('./views/_ProductExchangeIndex');
-var ProductExchangeEditView = require('./views/_ProductExchangeEdit');
+// var ProductExchangeIndexView = require('./views/_ProductExchangeIndex');
+// var ProductExchangeEditView = require('./views/_ProductExchangeEdit');
 
 
 var ProductPhoneIndexView = require('./views/_ProductPhoneIndex');
@@ -64,11 +68,6 @@ var CustomerIndexView = require('./views/_CustomerIndex');
 var CustomerEditView = require('./views/_CustomerEdit');
 var CustomerImportView = require('./views/_CustomerImport');
 var CustomerExportView = require('./views/_CustomerExport');
-
-var OrderIndexView = require('./views/_OrderIndex');
-var OrderViewView = require('./views/_OrderView');
-var OrderEditView = require('./views/_OrderEdit');
-var OrderExportView = require('./views/_OrderExport');
 
 var RevenueIndexView = require('./views/_RevenueIndex');
 var RevenueEditView = require('./views/_RevenueEdit');
@@ -117,6 +116,10 @@ exports = module.exports = Backbone.Router.extend({
 		'account/index': 'accountIndex',
 		'account/add': 'accountEdit',
 		'account/edit/:id': 'accountEdit',
+
+		'bonus/index': 'bonusIndex',
+		'bonus/add': 'bonusEdit',
+		'bonus/edit/:id': 'bonusEdit',
 
 		'customer/index': 'customerIndex',
 		'customer/add': 'customerEdit',
@@ -404,6 +407,35 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(accountEditView);
 		accountEditView.trigger('load');
+	},	
+
+	bonusIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','佣金管理');
+		var bonusIndexView = new BonusIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(bonusIndexView);
+		bonusIndexView.trigger('load');
+	},	
+
+	bonusEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','发放佣金');
+		var bonusEditView = new BonusEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(bonusEditView);
+		bonusEditView.trigger('load');
 	},	
 
 	channelIndex: function(){

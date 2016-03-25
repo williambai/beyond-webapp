@@ -149,18 +149,25 @@
 	<div id="bonusItemTemplate">
 		<div>
 			<div class="item" id="<%= model._id %>">
-				按笔显示
+				<div class="row">
+					<div class="col-xs-10">
+						<h4><%= model.year %>&nbsp;年&nbsp;<%= model.month %>&nbsp;月&nbsp;(<%= model.status %>)</h4>
+					</div>
+					<div class="clo-xs-2 text-center">
+						<h4 class=""><%= model.amount %>&nbsp;元</h4>
+					</div>
+				</div>
 			</div>
+			<hr/>
 		</div>
 	</div>
 	<div id="bonusOrderListTemplate">
 		<div>
 			<div class="nav-back">
 				<button class="btn btn-primary pull-left back"><i class="fa fa-reply">&nbsp;</i>返回</button>
-				<h4 class="text-center">佣金收入明细</h4>
+				<h4 class="text-center"><%= model.year %>年<%= model.month %>月佣金收入明细</h4>
 			</div>
 			<p>&nbsp;</p>
-			<p><%= model.name %></p>
 			<div id="list">
 			</div>
 		</div>
@@ -168,8 +175,26 @@
 	<div id="bonusOrderItemTemplate">
 		<div>
 			<div class="item" id="<%= model._id %>">
-				订单项
+				<div class="media">
+					<div class="media-left">
+						<img src="" width="50px" height="50px">
+					</div>
+					<div class="media-body">
+						<h4><%= model.goods.name %>&nbsp;&nbsp;<i class="fa fa-flag"></i>&nbsp;<%= model.status %></h4>
+				 		<p><i class="fa fa-user"></i>&nbsp;<%= model.customer.mobile %></p>
+						<p><i class="fa fa-clock-o"></i>&nbsp;<%= new Date(model.lastupdatetime).toLocaleString() %></p>
+					</div>
+					<div class="media-right">
+				 		<div class="pull-right">
+				 			<h4><!-- <i class="fa fa-cart-arrow-down"></i> -->&nbsp;￥<%= model.bonus %></h4>
+<!-- 				 			<h4><i class="fa fa-gift"></i>&nbsp;+&nbsp;<%= model.bonus.income %></h4>
+				 			<h4><i class="fa fa-thumbs-o-up"></i>&nbsp;+&nbsp;<%= model.bonus.points %></h4>
+ -->				 		</div>
+					</div>
+				</div>
+
 			</div>
+			<hr/>
 		</div>
 	</div>
 </div>

@@ -1,20 +1,29 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    categoryTpl = require('../templates/_entityProductCategory.tpl'),
-	ProductCategory = require('../models/ProductCategory');
+	Backbone = require('backbone'),
+    bonusTpl = require('../templates/_entityBonus.tpl');
 var config = require('../conf');
 
+Backbone.$ = $;
+
+//** 模型
+var Bank = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/protect/finance/bonuses',	
+});
+
+//** 主页面
 exports = module.exports = FormView.extend({
 
-	el: '#categoryForm',
+	el: '#bonusForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new ProductCategory({_id: options.id});
-		var page = $(categoryTpl);
+		this.model = new Bank({_id: options.id});
+		var page = $(bonusTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -84,28 +93,26 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 	
+
 	cancel: function(){
-		this.router.navigate('product/category/index',{trigger: true, replace: true});
+		this.router.navigate('bonus/index',{trigger: true, replace: true});
 		return false;
 	},
-	
+
 	//fetch event: done
 	done: function(response){
-		var that = this;
 		if(!this.modelFilled){
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
-
 		}else{
 			//second fetch: submit
-			this.router.navigate('product/category/index',{trigger: true, replace: true});
+			this.router.navigate('bonus/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		if(this.model.isNew()) this.$('.panel-title').text('新增分类');
 		return this;
 	},
 });

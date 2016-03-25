@@ -3,11 +3,20 @@
  	var _ = require('underscore');
 
  	var add = function(req, res) {
-		res.send({});
- 	};
- 	var remove = function(req,res){
+ 		var doc = req.body;
+ 		models.FinanceBonus.create(doc,function(err) {
+ 			if (err) return res.send(err);
  			res.send({});
+ 		});
  	};
+ 	var remove = function(req, res) {
+ 		var id = req.params.id;
+ 		models.FinanceBonus.findByIdAndRemove(id, function(err, doc) {
+ 			if (err) return res.send(err);
+ 			res.send(doc);
+ 		});
+ 	};
+
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
@@ -40,28 +49,33 @@
  		var action = req.query.action || '';
  		var year = req.query.year || now.getFullYear();
  		var month = req.query.month || (now.getMonth() + 1);
+ 		var status = req.query.status || '';
  		var per = 20;
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
  		switch(action){
  			case 'search':
  				var searchStr = req.query.searchStr || '';
- 				var regex = new RegExp(searchStr,'i');
- 				models.FinanceBonus
- 					find({
+ 				var searchRegex = new RegExp(searchStr,'i');
+ 				var query = models.FinanceBonus.find({
  						year: year,
  						month: month,
- 						$or: [{
-  							name: {
- 								$regex: regex,
- 							},
- 						},{
- 							mobile: {
- 								$regex: regex,
- 							}
- 						}],
- 					})
-		 			.skip(per * page)
+	 					$or: [{
+	 						'name': {
+	 							$regex: searchRegex
+	 						}
+	 					}, {
+	 						'mobile': {
+	 							$regex: searchRegex
+	 						}
+	 					}]
+	 				});
+ 				if (!_.isEmpty(status)) {
+ 					query.where({
+ 						status:status,
+ 					});
+ 				}
+ 				query.skip(per * page)
 		 			.limit(per)
 		 			.exec(function(err, docs) {
 		 				if (err) return res.send(err);
@@ -70,11 +84,8 @@
  				break;
  			default:
 		 		models.FinanceBonus
-		 			.find({
-		 				year: year,
-		 				month: month
-		 			})
-		 			.sort({_id: -1})
+		 			.find({})
+		 			.sort({lastupdatetime: -1})
 		 			.skip(per * page)
 		 			.limit(per)
 		 			.exec(function(err, docs) {

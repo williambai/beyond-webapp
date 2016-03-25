@@ -17,15 +17,25 @@
 	</div>	
 	<div id="searchTemplate">
 		<form id="searchForm" class="form-inline">
+			<input type="hidden" name="action" value="search">
+			<div class="form-group">
+				<label>&nbsp;从：&nbsp;</label>
+				<input type="date" name="from" class="form-control" placeholder="yyyy/mm/dd">&nbsp;&nbsp;
+			</div>
+			<div class="form-group">
+				<label>&nbsp;到：&nbsp;</label>
+				<input type="date" name="from" class="form-control" placeholder="yyyy/mm/dd">&nbsp;&nbsp;
+			</div>
 			<div class="form-group">
 				<label>&nbsp;&nbsp;</label>
 				<input type="text" name="searchStr" class="form-control" placeholder="客户手机号码">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
-				<select class="form-control">
-					<option>全部</option>
-					<option>新建</option>
-					<option>完成</option>
+				<select class="form-control" name="status">
+					<option value="">全部</option>
+					<option value="新建">新建</option>
+					<option value="成功">成功</option>
+					<option value="失败">失败</option>
 				</select>&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
@@ -36,11 +46,11 @@
 	</div>
 	<div id="itemTemplate">
 		<div class="pull-right" id="<%= model._id %>">
-			<button class="btn btn-success view">详情</button>
+			<button class="btn btn-success edit">详情</button>
 <!-- 			<button class="btn btn-success delete">删除</button>
  -->		</div>
-		<h4><%= model.name %></h4>
-		<p><%= model.description %></p>
+		<h4><%= model.goods.name %></h4>
+		<p><i class="fa fa-user"></i>&nbsp;<%= model.customer.mobile %></p>
 		<p><i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %>&nbsp;&nbsp;<i class="fa fa-calendar"></i>&nbsp;<%= new Date(model.lastupdatetime).toLocaleString() %></p>
 		<hr/>
 	</div>
@@ -57,19 +67,64 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>客户：</label>
-							<input type="text" name="customer[id]" value="<%= model.customer.id %>&nbsp;&nbsp;<%= model.customer.name %>" class="form-control" readonly>
+						<label>业务号码：</label>
+							<input type="text" value="<%= model.customer.mobile %>&nbsp;&nbsp;<%= model.customer.name %>" class="form-control" readonly>
 							<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>订单名称：</label>
-						<input type="text" class="form-control" value="<%= model.name %>" readonly>
+						<label>产品名称：</label>
+						<input type="text" class="form-control" value="<%= model.goods.name %>" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>订单描述：</label>
-						<textarea class="form-control" readonly><%= model.description %></textarea>
+						<label>产品编码：</label>
+						<input type="text" class="form-control" value="<%= model.goods.barcode %>" readonly>
 						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>产品数量：</label>
+						<input type="text" class="form-control" value="<%= model.quantity %>" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>总价：</label>
+						<input type="text" class="form-control" value="<%= model.total %>" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>佣金：</label>
+							<input type="text" value="<%= model.bonus.cash %>" class="form-control"  readonly>
+							<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>积分：</label>
+							<input type="text" value="<%= model.bonus.points %>" class="form-control" readonly>
+							<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>订单创建人：</label>
+							<input type="text" value="<%= model.createBy.mobile %>" class="form-control" readonly>
+							<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>所属营业厅：</label>
+							<input type="text" value="<%= model.department.name %>" class="form-control" readonly>
+							<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>所属城市：</label>
+							<input type="text" value="<%= model.department.city %>" class="form-control" readonly>
+							<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>所属地区编码：</label>
+							<input type="text" value="<%= model.department.district %>" class="form-control" readonly>
+							<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>所属网络编码：</label>
+							<input type="text" value="<%= model.department.grid %>" class="form-control" readonly>
+							<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>订单状态：</label>
@@ -85,113 +140,9 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>佣金总额：</label>
-							<input type="text" name="bonus[income]" value="<%= model.bonus.income %>" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>返佣分批次数：</label>
-						<input type="text" name="bonus[times]" value="<%= model.bonus.times %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>返佣状态：</label>
-						<div style="padding-left:30px;">
-							<input type="radio" name="bonus[cashStatus]" value="冻结" checked>&nbsp;&nbsp;冻结&nbsp;&nbsp;
-							<input type="radio" name="bonus[cashStatus]" value="第一次解冻">&nbsp;&nbsp;第一次解冻&nbsp;&nbsp;
-							<input type="radio" name="bonus[cashStatus]" value="第二次解冻">&nbsp;&nbsp;第二次解冻&nbsp;&nbsp;
-							<input type="radio" name="bonus[cashStatus]" value="全部解冻">&nbsp;&nbsp;全部解冻&nbsp;&nbsp;
-						</div>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>已兑现佣金：</label>
-							<input type="text" name="bonus[cash]" value="<%= model.bonus.cash %>" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>积分：</label>
-							<input type="text" name="bonus[points]" value="<%= model.bonus.points %>" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h4 class="panel-title text-center">商品清单</h4>
-						</div>
-						<div class="panel-body">
-							<div id="items">
-							</div>
-							<div>
-								<h3 class="text-right">总价：<%= Number(model.total).toFixed(2) %>元</h3>
-							</div>
-						</div>
-					</div>
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h4 class="panel-title text-center">客户信息</h4>
-						</div>
-						<div class="panel-body">
-							<div class="form-group">
-								<label>客户姓名：</label>
-									<input type="text" name="customerInfo[name]" value="<%= model.customerInfo.name %>" class="form-control">
-									<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>证件类型：</label>
-									<input type="text" name="customerInfo[idType]" value="<%= model.customerInfo.idType %>" class="form-control">
-									<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>证件号码：</label>
-									<input type="text" name="customerInfo[idNo]" value="<%= model.customerInfo.idNo %>" class="form-control">
-									<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>证件地址：</label>
-									<input type="text" name="customerInfo[idAddress]" value="<%= model.customerInfo.idAddress %>" class="form-control">
-									<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>联系电话：</label>
-									<input type="text" name="customerInfo[phone]" value="<%= model.customerInfo.phone %>" class="form-control">
-									<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>联系地址：</label>
-									<input type="text" name="customerInfo[address]" value="<%= model.customerInfo.address %>" class="form-control">
-									<span class="help-block"></span>
-							</div>
-						</div>
-					</div>
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h4 class="panel-title text-center">配送信息</h4>
-						</div>
-						<div class="panel-body">
-							<div class="form-group">
-								<label>配送方式：</label>
-								<div style="padding-left:30px;">
-									<input type="radio" name="dispatch[method]" value="自提" checked>&nbsp;&nbsp;自提&nbsp;&nbsp;
-									<input type="radio" name="dispatch[method]" value="物流">&nbsp;&nbsp;物流&nbsp;&nbsp;
-								</div>
-								<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>联系电话：</label>
-									<input type="text" name="dispatch[phone]" value="<%= model.dispatch.phone %>" class="form-control">
-									<span class="help-block"></span>
-							</div>
-							<div class="form-group">
-								<label>收货地址：</label>
-									<input type="text" name="dispatch[address]" value="<%= model.dispatch.address %>" class="form-control">
-									<span class="help-block"></span>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
-								<input type="submit" value="更改订单信息" class="btn btn-danger">
+								<input type="submit" value="更改订单状态" class="btn btn-danger">
 							</div>
 							<div class="btn-group">
 								<button class="btn btn-primary back">取消</button>
@@ -202,6 +153,55 @@
 			</div>
 		</form>
 	</div>
+	<div id="exportTemplate">
+		<div class="panel panel-default" id="exportForm">
+			<div class="panel-heading">
+				<h3 class="panel-title text-center">导出订单</h3>
+			</div>
+			<div class="panel-body">
+				<form>
+					<input type="hidden" name="action" value="export">
+					<div class="form-group">
+						<label>起始日期：</label>
+							<input type="date" name="starttime" value="" class="form-control">
+							<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>截止日期：</label>
+							<input type="date" name="endtime" value="" class="form-control">
+							<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group">
+							<input type="submit" value="导出" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-primary back">取消</button>
+						</div>
+						</div>
+					</div>
+				</form>
+				<hr>				
+				<h4>导出excel数据表格列格式如下：</h4>
+				<p></p>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>列序号</th>
+							<th>列名称(即：excel第一行名称)</th>
+							<th>列含义</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 
 	<div id="viewTemplate">
 		<div class="panel panel-default">
 			<div class="pull-right">
@@ -273,7 +273,7 @@
 							<p><%= model.bonus.points %></p>
 						</div>
 					</div>
-<!-- 					<div class="form-group">
+					<div class="form-group">
 						<label class="col-sm-2">物料名称：</label>
 						<div class="col-sm-10">
 							<p><%= model.goodId %></p>
@@ -285,7 +285,7 @@
 							<p><%= model.goodName %></p>
 						</div>
 					</div>
- -->					<div class="panel panel-default">
+					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title text-center">商品清单</h4>
 						</div>
@@ -362,51 +362,4 @@
 				</form>
 			</div>
 		</div>
-	</div>
-	<div id="exportTemplate">
-		<div class="panel panel-default" id="exportForm">
-			<div class="panel-heading">
-				<h3 class="panel-title text-center">导出订单</h3>
-			</div>
-			<div class="panel-body">
-				<form>
-					<input type="hidden" name="action" value="export">
-					<div class="form-group">
-						<label>起始日期：</label>
-							<input type="date" name="starttime" value="<%= new Date() %>" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>截止日期：</label>
-							<input type="date" name="endtime" value="<%= new Date() %>" class="form-control">
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<div class="btn-group btn-group-justified">
-							<div class="btn-group">
-							<input type="submit" value="导出" class="btn btn-danger">
-						</div>
-						<div class="btn-group">
-							<button class="btn btn-primary back">取消</button>
-						</div>
-						</div>
-					</div>
-				</form>
-				<hr>				
-				<h4>导出excel数据表格列格式如下：</h4>
-				<p></p>
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>列序号</th>
-							<th>列名称(即：excel第一行名称)</th>
-							<th>列含义</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
-</div>
+	</div> -->

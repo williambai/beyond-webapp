@@ -1,10 +1,22 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    carouselTpl = require('../templates/_entityCarousel.tpl'),
-	Carousel = require('../models/Carousel');
+	Backbone = require('backbone'),
+    carouselTpl = require('../templates/_entityCarousel.tpl');
 var config = require('../conf');
 
+Backbone.$ = $;
+
+//** 模型
+var Carousel = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/carousels',
+	defaults: {
+		display_sort: 0,
+	}
+});
+
+//** 主视图
 exports = module.exports = FormView.extend({
 
 	el: '#carouselForm',

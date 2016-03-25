@@ -52,9 +52,9 @@ _.extend(config,{
 		"features": ["platform_account"],
 	}, {
 		"id": 2,
-		"name": "金币管理",
-		"hash": "revenue/index",
-		"features": ["revenue"],
+		"name": "佣金管理",
+		"hash": "bonus/index",
+		"features": ["admin_order"],
 	}, {
 		"id": 2,
 		"name": "角色管理",

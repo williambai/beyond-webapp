@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    rankTpl = require('../templates/_entityRankPerson.tpl'),
+    rankTpl = require('../templates/_entityRankTeam.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var ListView = require('./__ListView');
 var SearchView = require('./__SearchView');

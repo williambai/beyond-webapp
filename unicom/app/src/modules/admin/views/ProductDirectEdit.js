@@ -1,10 +1,35 @@
 var _ = require('underscore');
+var Backbone = require('backbone');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    productTpl = require('../templates/_entityProductDirect.tpl'),
-	ProductDirect = require('../models/ProductDirect');
+    productTpl = require('../templates/_entityProductDirect.tpl');
 var config = require('../conf');
 
+Backbone.$ = $;
+
+//** 模型
+var ProductDirect = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/product/directs',	
+	defaults: {
+		goods: {},
+		bonus: {
+			income: 0,
+			times: 1,
+			points: 0,
+		},
+	},
+	validation: {
+	    'name': {
+	    	minLength: 2,
+	    	msg:'长度至少两位'
+	    },
+	    'goods[id]': {
+			required: true,
+			msg: '请选择一个物料'
+	    }
+	},
+});
 exports = module.exports = FormView.extend({
 
 	el: '#productForm',

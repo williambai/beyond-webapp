@@ -1,12 +1,37 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    accountTpl = require('../templates/_entityAccount.tpl'),
-	Account = require('../models/Account');
+	Backbone = require('backbone'),
+    accountTpl = require('../templates/_entityAccount.tpl');
 var config = require('../conf');
+
+Backbone.$ = $;
 
 var RoleCollection = require('../models/RoleCollection');
 var PlatformAppCollection = require('../models/PlatformAppCollection');
+
+//** 模型
+var Account = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/platform/accounts',
+	defaults: {
+		apps: [],
+		roles: [],
+		department: {},
+	},
+
+	validation: {
+		'username': {
+			required: true,
+			msg: '请输入用户名'
+		},
+		'email': {
+			pattern: /^(1\d{10}|[a-zA-Z0-9_\.]+@[a-zA-Z0-9-]+[\.a-zA-Z]+)$/,
+			msg: '请输入有效的手机号码或电子邮件'
+		},
+	},
+	
+});
 
 exports = module.exports = FormView.extend({
 

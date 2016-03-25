@@ -22,25 +22,34 @@
 		</div>
 	</div>
 	<div id="itemTemplate">
-		<div class="item" id="<%= model._id %>">
-			<div class="pull-right">
-				<div style="text-align:right;">
-					<p><% if(/MicroMessenger/.test(navigator.userAgent)){ %>
-					<button class="btn btn-danger promote wechat">微信</button>&nbsp;&nbsp;
-					<% } %>
-					<% if(/iPhone/.test(navigator.userAgent)){ %>
-						<a href="sms:&body=短信内容" class="btn btn-danger sms">短信</a>
-					<% }else{ %>
-						<a href="sms:?body=短信内容" class="btn btn-danger sms">短信</a>
-					<% } %>
-					</p>
-					<p><button class="btn btn-success view">订购</button></p>
+		<div>
+			<div class="item" id="<%= model._id %>">
+				<div class="media">
+					<div class="media-left">
+						<img width="50px" height="50px">
+					</div>
+					<div class="media-body">
+						<h4><%= model.name %></h4>
+						<p><%= model.tags.join('   ') %></p>
+						<p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：<%= model.bonus.income %>&nbsp;元&nbsp;&nbsp;积分：<%= model.bonus.points %></p>
+					</div>
+					<div class="media-right">
+						<div style="text-align:right;">
+							<p><% if(/MicroMessenger/.test(navigator.userAgent)){ %>
+							<button class="btn btn-danger promote wechat">微信</button>&nbsp;&nbsp;
+							<% } %>
+							<% if(/iPhone/.test(navigator.userAgent)){ %>
+								<a href="sms:&body=短信内容" class="btn btn-danger sms">短信</a>
+							<% }else{ %>
+								<a href="sms:?body=短信内容" class="btn btn-danger sms">短信</a>
+							<% } %>
+							</p>
+							<p><button class="btn btn-success view">订购</button></p>
+						</div>
+					</div>
+					<hr/>
 				</div>
 			</div>
-			<img width="50px" heigh="50px"><h4><%= model.name %></h4>
-			<p><%= model.tags.join('   ') %></p>
-			<p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：<%= model.bonus.income %>&nbsp;元&nbsp;&nbsp;积分：<%= model.bonus.points %></p>
-			<hr/>
 		</div>
 	</div>
 	<div id="viewTemplate">

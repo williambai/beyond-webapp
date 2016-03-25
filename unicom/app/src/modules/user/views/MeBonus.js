@@ -12,7 +12,7 @@ Backbone.$ = $;
 //** 模型
 var Bonus = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/channel/product/directs',	
+	urlRoot: config.api.host + '/protect/finance/bonuses',	
 	defaults: {
 	},
 });
@@ -20,7 +20,7 @@ var Bonus = Backbone.Model.extend({
 //** 集合
 var BonusCollection = Backbone.Collection.extend({
 	model: Bonus,
-	url: config.api.host + '/channel/product/directs',
+	url: config.api.host + '/protect/finance/bonuses',
 });
 
 //** 列表子视图	

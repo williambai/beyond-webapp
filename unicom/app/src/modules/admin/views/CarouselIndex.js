@@ -4,12 +4,45 @@ var $ = require('jquery'),
     carouselTpl = require('../templates/_entityCarousel.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
+var ListView = require('./__ListView');
 
 Backbone.$ = $;
 
-var Carousel = require('../models/Carousel');
-var ListView = require('./_CarouselList');
+//** 模型
+var Carousel = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/carousels',
+	defaults: {
+		display_sort: 0,
+	}
+});
 
+//** 集合
+var CarouselCollection = Backbone.Collection.extend({
+	url: config.api.host + '/carousels',
+	model: Carousel,
+});
+
+//** list子视图
+var CarouselListView = ListView.extend({
+	el: '#list',
+
+	initialize: function(options){
+		var page = $(carouselTpl);
+		var itemTemplate = $('#itemTemplate', page).html();
+		this.template = _.template(_.unescape(itemTemplate || ''));
+		this.collection = new CarouselCollection();
+		ListView.prototype.initialize.apply(this,options);
+	},
+	getNewItemView: function(model){
+		var item = this.template({model: model.toJSON()});
+		var $item = $(item);
+		$item.find('img').attr('src', model.get('img_url'));
+		return $item.html();
+	},
+});
+
+//** 主视图
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
@@ -36,7 +69,7 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
-		this.listView = new ListView({
+		this.listView = new CarouselListView({
 			el: '#list',
 		});
 		this.listView.trigger('load');

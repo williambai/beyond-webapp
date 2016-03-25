@@ -68,7 +68,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	group_rank: function(evt){
-		this.router.navigate('/rank/group',{trigger: true, replace: false});
+		this.router.navigate('/rank/team',{trigger: true, replace: false});
 		return false;
 	},
 
