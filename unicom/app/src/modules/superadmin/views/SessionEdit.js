@@ -2,31 +2,28 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    carouselTpl = require('../templates/_entityCarousel.tpl');
+    sessionTpl = require('../templates/_entityPlatformSession.tpl');
 var config = require('../conf');
-
 Backbone.$ = $;
 
 //** 模型
-var Carousel = Backbone.Model.extend({
+var Session = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/carousels',
-	defaults: {
-		display_sort: 0,
-	}
+	urlRoot: config.api.host + '/protect/sessions',
+	validation: {
+	},
 });
 
-//** 主视图
 exports = module.exports = FormView.extend({
 
-	el: '#carouselForm',
+	el: '#sessionForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Carousel({_id: options.id});
-		var page = $(carouselTpl);
+		this.model = new Session({_id: options.id});
+		var page = $(sessionTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -48,6 +45,7 @@ exports = module.exports = FormView.extend({
 				withCredentials: true
 			},
 		});
+
 	},
 
 	inputText: function(evt){
@@ -95,27 +93,41 @@ exports = module.exports = FormView.extend({
 		});
 		return false;
 	},
-	
 
 	cancel: function(){
-		this.router.navigate('carousel/index',{trigger: true, replace: true});
+		this.router.navigate('session/index',{trigger: true, replace: true});
 		return false;
 	},
-
+	
 	//fetch event: done
 	done: function(response){
+		var that = this;
 		if(!this.modelFilled){
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
 		}else{
 			//second fetch: submit
-			this.router.navigate('carousel/index',{trigger: true, replace: true});
+			this.router.navigate('session/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
+		var that = this;
+		// if(!this.model.isNew()){
+			var session = this.model.get('session');
+			try{
+				session = JSON.parse(session);
+				this.model.set('email',session.email);
+				this.model.set('username',session.username);
+				this.model.set('apps',session.apps);
+				this.model.set('grants', _.keys(session.grant).join('; '));
+			}catch(err){
+				this.model.set('email',session);
+			}			
+		// }
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		if(this.model.isNew()) this.$('.panel-title').text('新增功能');
 		return this;
 	},
 });

@@ -1,67 +1,53 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    productTpl = require('../templates/_entityProductDirect.tpl'),
+    departmentTpl = require('../templates/_entityDepartment.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 var ListView = require('./__ListView');
 var SearchView = require('./__SearchView');
+
 Backbone.$ = $;
 
 //** 模型
-var ProductDirect = Backbone.Model.extend({
+var Department = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/product/directs',	
-	defaults: {
-		goods: {},
-		bonus: {
-			income: 0,
-			times: 1,
-			points: 0,
-		},
-	},
+	urlRoot: config.api.host + '/protect/departments',
+
 	validation: {
-	    'name': {
-	    	minLength: 2,
-	    	msg:'长度至少两位'
-	    },
-	    'goods[id]': {
-			required: true,
-			msg: '请选择一个物料'
-	    }
+		name: {
+			required : true,
+			msg: '请输入组织名称'
+		},
 	},
 });
 //** 集合
-var ProductDirectCollection = Backbone.Collection.extend({
-	url: config.api.host + '/protect/product/directs',
-	model: ProductDirect,
+var DepartmentCollection = Backbone.Collection.extend({
+	url: config.api.host + '/protect/departments',
+	model: Department,
 });
 
-//** List子视图	
-var ProductListView = ListView.extend({
+//** list子视图
+var DepartmentListView = ListView.extend({
 	el: '#list',
 
 	initialize: function(options){
-		var page = $(productTpl);
+		var page = $(departmentTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
 		this.template = _.template(_.unescape(itemTemplate || ''));
-		this.collection = new ProductDirectCollection();
+		this.collection = new DepartmentCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){
-		var item = this.template({model: model.toJSON()});
-		var $item = $(item);
-		$item.find('img').attr('src', model.get('thumbnail_url'));
-		return $item.html();
+		return this.template({model: model.toJSON()});
 	},
 });
-
 //** search子视图
-var ProductSearchView =  SearchView.extend({
+var DepartmentSearchView = SearchView.extend({
 	el: '#search',
 
 	initialize: function(options){
-		var page = $(productTpl);
+		var page = $(departmentTpl);
 		var searchTemplate = $('#searchTemplate', page).html();
 		this.template = _.template(_.unescape(searchTemplate || ''));
 		this.model = new (Backbone.Model.extend({}));
@@ -83,10 +69,9 @@ var ProductSearchView =  SearchView.extend({
 	},
 
 	render: function(){
-		this.$el.html(this.template({model: this.model.toJSON()}));
+		this.$el.html(this.template());
 	},
 });
-
 //** 主视图
 exports = module.exports = Backbone.View.extend({
 
@@ -96,7 +81,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(productTpl);
+		var page = $(departmentTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -104,9 +89,11 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addProductDirect',
-		'click .edit': 'editProductDirect',
-		'click .delete': 'removeProductDirect',
+		'click .add': 'addDepartment',
+		'click .edit': 'editDepartment',
+		'click .delete': 'removeDepartment',
+		'click .import': 'importCustomer',
+		'click .export': 'exportCustomer',
 	},
 
 	load: function() {
@@ -114,13 +101,13 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
-		this.searchView = new ProductSearchView({
+		this.searchView = new DepartmentSearchView({
 			el: '#search',
 		});
 		this.searchView.done = function(query){
 			that.listView.trigger('refresh', query);
 		};
-		this.listView = new ProductListView({
+		this.listView = new DepartmentListView({
 			el: '#list',
 		});
 		this.searchView.trigger('load');
@@ -131,25 +118,35 @@ exports = module.exports = Backbone.View.extend({
 		this.listView.scroll();
 		return false;
 	},
-	
-	addProductDirect: function(){
-		this.router.navigate('product/direct/add',{trigger: true});
+	addDepartment: function(){
+		this.router.navigate('department/add',{trigger: true});
 		return false;
 	},
 
-	editProductDirect: function(evt){
-		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		this.router.navigate('product/direct/edit/'+ id,{trigger: true});
+	editDepartment: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('department/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeProductDirect: function(evt){
+	removeDepartment: function(evt){
 		if(window.confirm('您确信要删除吗？')){
-			var id = this.$(evt.currentTarget).closest('.item').attr('id');
-			var model = new ProductDirect({_id: id});
+			var id = this.$(evt.currentTarget).parent().attr('id');
+			var model = new Department({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}
+		return false;
+	},
+
+
+	importCustomer: function(){
+		this.router.navigate('department/import',{trigger: true});
+		return false;
+	},
+
+	exportCustomer: function(){
+		this.router.navigate('department/export',{trigger: true});
 		return false;
 	},
 

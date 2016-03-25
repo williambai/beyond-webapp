@@ -6,16 +6,16 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  exports = module.exports = function(app, models) {
  	var _ = require('underscore');
 
- 	var add = function(req, res) {
- 		var doc = new models.ProductDirect(req.body);
+	var add = function(req, res) {
+ 		var doc = new models.Media(req.body);
  		doc.save(function(err) {
  			if (err) return res.send(err);
- 			res.send({});
+			res.send({});
  		});
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.ProductDirect.findByIdAndRemove(id,function(err,doc){
+ 		models.Media.findByIdAndRemove(id,function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
  		});
@@ -23,7 +23,7 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.ProductDirect.findByIdAndUpdate(id, {
+ 		models.Media.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -37,7 +37,7 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.ProductDirect
+ 		models.Media
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -51,28 +51,26 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  		page = (!page || page < 0) ? 0 : page;
  		switch(action){
  			case 'search':
-	 			var searchStr = req.query.searchStr || '';
-	 			var searchRegex = new RegExp(searchStr, 'i');
-	 			var status = req.query.status;
-	 			var category = req.query.category;
-	 			var query = models.ProductDirect.find({
- 						$or: [{
- 							'name': {
- 								$regex: searchRegex
- 							}
- 						}, {
- 							'goods.name': {
- 								$regex: searchRegex
- 							}
- 						}]
+ 				var searchStr = req.query.searchStr || '';
+ 				var searchRegex = new RegExp(searchStr, 'i');
+ 				var status = req.query.status;
+ 				var query = models.Media.find({
+ 					$or: [{
+ 						'name': {
+ 							$regex: searchRegex
+ 						}
+ 					}, {
+ 						'url': {
+ 							$regex: searchRegex
+ 						}
+ 					}]
+ 				});
+ 				if (!_.isEmpty(status)) {
+ 					query.where({
+ 						status: status
  					});
-	 			if (!_.isEmpty(status)) {
-	 				query.where({status: status});
-	 			}
-	 			if(!_.isEmpty(category)){
-	 				query.where({category: category});
-	 			};
-				query.sort({
+ 				}
+ 				query.sort({
  						_id: -1
  					})
  					.skip(per * page)
@@ -81,9 +79,9 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  						if (err) return res.send(err);
  						res.send(docs);
  					});
- 	 			break; 			
- 			case 'category':
- 				models.ProductDirect
+ 				break;
+  			case 'category':
+ 				models.Media
  					.find({
  						category: req.query.category,
  						status: '有效',
@@ -96,7 +94,7 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 		 			});
  				break;
  			default:
-		 		models.ProductDirect
+		 		models.Media
 		 			.find({})
 		 			.skip(per * page)
 		 			.limit(per)
@@ -110,33 +108,33 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  	 * router outline
  	 */
  	/**
- 	 * add protect/product/directs
+ 	 * add protect/medias
  	 * action:
  	 *     
  	 */
- 	app.post('/protect/product/directs', app.grant, add);
+ 	app.post('/protect/medias', app.isLogin, add);
+ 
  	/**
- 	 * update protect/product/directs
+ 	 * update protect/medias
  	 * action:
  	 *     
  	 */
- 	app.put('/protect/product/directs/:id', app.grant, update);
+ 	app.put('/protect/medias/:id', app.isLogin, update);
+ 	/**
+ 	 * delete protect/medias
+ 	 * action:
+ 	 *     
+ 	 */
+ 	app.delete('/protect/medias/:id', app.isLogin, remove);
+ 	/**
+ 	 * get protect/medias
+ 	 */
+ 	app.get('/protect/medias/:id', app.isLogin, getOne);
 
  	/**
- 	 * delete protect/product/directs
- 	 * action:
- 	 *     
- 	 */
- 	app.delete('/protect/product/directs/:id', app.grant, remove);
- 	/**
- 	 * get protect/product/directs
- 	 */
- 	app.get('/protect/product/directs/:id', app.grant, getOne);
-
- 	/**
- 	 * get protect/product/directs
+ 	 * get protect/medias
  	 * action:
  	 *      action=category&category=xxx
  	 */
- 	app.get('/protect/product/directs', app.grant, getMore);
+ 	app.get('/protect/medias', app.isLogin, getMore);
  };

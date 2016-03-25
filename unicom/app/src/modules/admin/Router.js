@@ -32,9 +32,18 @@ var OrderExportView = require('./views/OrderExport');
 var CarouselIndexView = require('./views/CarouselIndex');
 var CarouselEditView = require('./views/CarouselEdit');
 
-var MediaIndexView = require('./views/_MediaIndex');
-var MediaEditView = require('./views/_MediaEdit');
-var MediaAddView = require('./views/_MediaAdd');
+var MediaIndexView = require('./views/MediaIndex');
+var MediaEditView = require('./views/MediaEdit');
+var MediaAddView = require('./views/MediaAdd');
+var CustomerIndexView = require('./views/CustomerIndex');
+var CustomerEditView = require('./views/CustomerEdit');
+var CustomerImportView = require('./views/CustomerImport');
+var CustomerExportView = require('./views/CustomerExport');
+var DepartmentIndexView = require('./views/DepartmentIndex');
+var DepartmentEditView = require('./views/DepartmentEdit');
+var DepartmentImportView = require('./views/DepartmentImport');
+var DepartmentExportView = require('./views/DepartmentExport');
+
 
 
 var PageStaticIndexView = require('./views/_PageStaticIndex');
@@ -48,26 +57,22 @@ var PageDynamicViewView = require('./views/_PageDynamicView');
 // var ProductExchangeEditView = require('./views/_ProductExchangeEdit');
 
 
-var ProductPhoneIndexView = require('./views/_ProductPhoneIndex');
-var ProductPhoneEditView = require('./views/_ProductPhoneEdit');
-var ProductPhonePackageIndexView = require('./views/_ProductPhonePackageIndex');
-var ProductPhonePackageEditView = require('./views/_ProductPhonePackageEdit');
+// var ProductPhoneIndexView = require('./views/_ProductPhoneIndex');
+// var ProductPhoneEditView = require('./views/_ProductPhoneEdit');
+// var ProductPhonePackageIndexView = require('./views/_ProductPhonePackageIndex');
+// var ProductPhonePackageEditView = require('./views/_ProductPhonePackageEdit');
 
-var ProductCardPackageIndexView = require('./views/_ProductCardPackageIndex');
-var ProductCardPackageEditView = require('./views/_ProductCardPackageEdit');
+// var ProductCardPackageIndexView = require('./views/_ProductCardPackageIndex');
+// var ProductCardPackageEditView = require('./views/_ProductCardPackageEdit');
 
-var ProductCardIndexView = require('./views/_ProductCardIndex');
-var ProductCardEditView = require('./views/_ProductCardEdit');
-var ProductCardImportView = require('./views/_ProductCardImport');
-var ProductCardExportView = require('./views/_ProductCardExport');
+// var ProductCardIndexView = require('./views/_ProductCardIndex');
+// var ProductCardEditView = require('./views/_ProductCardEdit');
+// var ProductCardImportView = require('./views/_ProductCardImport');
+// var ProductCardExportView = require('./views/_ProductCardExport');
 
 var ChannelIndexView = require('./views/_ChannelIndex');
 var ChannelEditView = require('./views/_ChannelEdit');
 
-var CustomerIndexView = require('./views/_CustomerIndex');
-var CustomerEditView = require('./views/_CustomerEdit');
-var CustomerImportView = require('./views/_CustomerImport');
-var CustomerExportView = require('./views/_CustomerExport');
 
 var RevenueIndexView = require('./views/_RevenueIndex');
 var RevenueEditView = require('./views/_RevenueEdit');
@@ -78,11 +83,6 @@ var RoleEditView = require('./views/_RoleEdit');
 var ChannelCategoryIndexView = require('./views/_ChannelCategoryIndex');
 var ChannelCategoryAddView = require('./views/_ChannelCategoryAdd');
 var ChannelCategoryEditView = require('./views/_ChannelCategoryEdit');
-
-var DepartmentIndexView = require('./views/_DepartmentIndex');
-var DepartmentEditView = require('./views/_DepartmentEdit');
-var DepartmentImportView = require('./views/_DepartmentImport');
-var DepartmentExportView = require('./views/_DepartmentExport');
 
 //** Deprecated
 // var GridIndexView = require('./views/_GridIndex');

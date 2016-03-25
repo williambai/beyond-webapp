@@ -11,8 +11,8 @@ var LoginView = require('../../views/_Login');
 var WeChatLoginView = require('../../views/_WeChatLogin');
 var MyAccountViewView = require('../../views/_MyAccountView');
 var MyAccountEditView = require('../../views/_MyAccountEdit');
-// var FeedbackIndexView = require('../../views/_FeedbackIndex');
-// var FeedbackEditView = require('../../views/_FeedbackEdit');
+var FeedbackIndexView = require('../../views/_FeedbackIndex');
+var FeedbackEditView = require('../../views/_FeedbackEdit');
 
 var IndexView = require('./views/Index');
 var ActivityIndexView = require('./views/ActivityIndex');

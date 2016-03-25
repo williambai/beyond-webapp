@@ -2,52 +2,104 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    carouselTpl = require('../templates/_entityCarousel.tpl');
+    mediaTpl = require('../templates/_entityMedia.tpl');
 var config = require('../conf');
-
 Backbone.$ = $;
 
 //** 模型
-var Carousel = Backbone.Model.extend({
+var Media = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/carousels',
+	urlRoot: config.api.host + '/protect/medias',	
 	defaults: {
-		display_sort: 0,
+		goods: {}
 	}
 });
 
 //** 主视图
 exports = module.exports = FormView.extend({
 
-	el: '#carouselForm',
-
-	modelFilled: false,
+	el: '#dataForm',
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Carousel({_id: options.id});
-		var page = $(carouselTpl);
-		var editTemplate = $('#editTemplate', page).html();
-		this.template = _.template(_.unescape(editTemplate || ''));
+		this.model = new Media();
+		var page = $(mediaTpl);
+		var addTemplate = $('#addTemplate', page).html();
+		this.template = _.template(_.unescape(addTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
 		'keyup input[type=text]': 'inputText',
+		'click .send-file': 'showFileExplorer',
+		'change input[name=file]': 'addAttachment',
+		'click .attachment': 'removeAttachment',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
 
 	load: function(){
-		if(this.model.isNew()){
-			this.modelFilled = true;
-			return;
-		}
-		this.model.fetch({
+		this.render();
+	},
+
+
+	showFileExplorer: function() {
+		$('input[name=file]').click();
+		return false;
+	},
+
+	addAttachment: function(evt) {
+		var that = this;
+		var formData = new FormData();
+		formData.append('files', evt.currentTarget.files[0]);
+		$.ajax({
+			url: config.api.host + '/attachments',
+			type: 'POST',
+			data: formData,
 			xhrFields: {
 				withCredentials: true
 			},
+			cache: false, //MUST be false
+			processData: false, //MUST be false
+			contentType: false, //MUST be false
+		}).done(function(data) {
+			if (data) {
+				// if(/jpg|png/.test(data.type)){
+				that.model.set(data);
+				that.render();
+				that.$('.attachments').html('<span class="attachment"><img src="' + data.url + '" width="200px" height="200px">&nbsp;</span><p>点击照片可以删除重选。</p>');
+				that.$('input[name=file]').val('');				
+				// }
+			}
+		}).fail(function(err) {
+			console.log(err);
 		});
+		return false;
+	},
+
+	removeAttachment: function(evt) {
+		if (confirm('放弃上传它吗？')) {
+			var that = this;
+			var filename = $(evt.currentTarget).find('img').attr('src');
+			$.ajax({
+				url: config.api.host + '/attachments',
+				type: 'DELETE',
+				data: {
+					filename: filename
+				},
+				xhrFields: {
+					withCredentials: true
+				},
+			}).done(function() {
+				//remove attatchment
+				$(evt.currentTarget).remove();
+			}).fail(function() {
+			});
+		}
+		that.$('.attachments').html('<button class="btn btn-promary send-file"> <i class="fa fa-5x fa-plus-circle"></i></button>');
+		that.model.clear();
+		that.render();
+		return false;
 	},
 
 	inputText: function(evt){
@@ -95,23 +147,14 @@ exports = module.exports = FormView.extend({
 		});
 		return false;
 	},
-	
 
 	cancel: function(){
-		this.router.navigate('carousel/index',{trigger: true, replace: true});
+		this.router.navigate('media/index',{trigger: true, replace: true});
 		return false;
 	},
 
-	//fetch event: done
 	done: function(response){
-		if(!this.modelFilled){
-			//first fetch: get model
-			this.modelFilled = true;
-			this.render();
-		}else{
-			//second fetch: submit
-			this.router.navigate('carousel/index',{trigger: true, replace: true});
-		}
+		this.router.navigate('media/index',{trigger: true, replace: true});
 	},
 
 	render: function(){

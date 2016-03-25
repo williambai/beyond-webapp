@@ -269,32 +269,32 @@ exports = module.exports = function(app, models) {
  	 * router outline
  	 */
  	/**
- 	 * add admin/orders
+ 	 * add protect/orders
  	 * action:
  	 *     
  	 */
- 	app.post('/admin/orders', app.grant, add);
+ 	app.post('/protect/orders', app.grant, add);
  	/**
- 	 * update admin/orders
+ 	 * update protect/orders
  	 * action:
  	 *     
  	 */
- 	app.put('/admin/orders/:id', app.grant, update);
+ 	app.put('/protect/orders/:id', app.grant, update);
 
  	/**
- 	 * delete admin/orders
+ 	 * delete protect/orders
  	 * action:
  	 *     
  	 */
- 	app.delete('/admin/orders/:id', app.grant, remove);
+ 	app.delete('/protect/orders/:id', app.grant, remove);
  	/**
- 	 * get admin/orders
+ 	 * get protect/orders
  	 */
- 	app.get('/admin/orders/:id', app.grant, getOne);
+ 	app.get('/protect/orders/:id', app.grant, getOne);
 
  	/**
- 	 * get admin/orders
+ 	 * get protect/orders
  	 * action:
  	 */
- 	app.get('/admin/orders',app.grant,  getMore);
+ 	app.get('/protect/orders',app.grant,  getMore);
  };

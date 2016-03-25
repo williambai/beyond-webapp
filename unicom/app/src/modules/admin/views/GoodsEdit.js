@@ -1,10 +1,31 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    goodsTpl = require('../templates/_entityGoods.tpl'),
-	Goods = require('../models/Goods');
+	Backbone = require('backbone'),
+    goodsTpl = require('../templates/_entityGoods.tpl');
 var config = require('../conf');
 
+Backbone.$ = $;
+
+//** 模型
+var Goods = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/protect/goods',	
+	defaults: {
+	},
+	validation: {
+	    'name': {
+	    	minLength: 2,
+	    	msg:'长度至少两位'
+	    },
+	    'barcode': {
+			required: true,
+			msg: '请输入运营商系统的物料号'
+	    }
+	},
+});
+
+//** 主页面
 exports = module.exports = FormView.extend({
 
 	el: '#goodsForm',

@@ -12,7 +12,7 @@ Backbone.$ = $;
 //** Order模型
 var Order = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/admin/orders',	
+	urlRoot: config.api.host + '/protect/orders',	
 	defaults: {
 		customer: {},
 		goods: {},
@@ -30,7 +30,7 @@ var Order = Backbone.Model.extend({
 
 //** Order集合
 var OrderCollection = Backbone.Collection.extend({
-	url: config.api.host + '/admin/orders',
+	url: config.api.host + '/protect/orders',
 	model: Order,
 });
 //** List子视图

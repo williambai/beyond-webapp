@@ -1,70 +1,63 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    productTpl = require('../templates/_entityProductDirect.tpl'),
+    appTpl = require('../templates/_entityApp.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 var ListView = require('./__ListView');
 var SearchView = require('./__SearchView');
+
 Backbone.$ = $;
 
 //** 模型
-var ProductDirect = Backbone.Model.extend({
+var App = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/product/directs',	
+	urlRoot: config.api.host + '/protect/apps',
 	defaults: {
-		goods: {},
-		bonus: {
-			income: 0,
-			times: 1,
-			points: 0,
-		},
+		status: {}
 	},
 	validation: {
-	    'name': {
-	    	minLength: 2,
-	    	msg:'长度至少两位'
-	    },
-	    'goods[id]': {
+		name: {
 			required: true,
-			msg: '请选择一个物料'
-	    }
+			msg: '请输入名称(中英文字母)'
+		},
+		nickname: {
+			required: true,
+			msg: '请输入编码(字母、_与数字的组合)'
+		}
 	},
 });
+
 //** 集合
-var ProductDirectCollection = Backbone.Collection.extend({
-	url: config.api.host + '/protect/product/directs',
-	model: ProductDirect,
+var AppCollection = Backbone.Collection.extend({
+	url: config.api.host + '/protect/apps',
+	model: App,
 });
 
-//** List子视图	
-var ProductListView = ListView.extend({
+//** list子视图
+var AppListView = ListView.extend({
 	el: '#list',
 
 	initialize: function(options){
-		var page = $(productTpl);
+		var page = $(appTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
 		this.template = _.template(_.unescape(itemTemplate || ''));
-		this.collection = new ProductDirectCollection();
+		this.collection = new AppCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){
-		var item = this.template({model: model.toJSON()});
-		var $item = $(item);
-		$item.find('img').attr('src', model.get('thumbnail_url'));
-		return $item.html();
+		return this.template({model: model.toJSON()});
 	},
 });
 
 //** search子视图
-var ProductSearchView =  SearchView.extend({
+var AppSearchView = SearchView.extend({
 	el: '#search',
 
 	initialize: function(options){
-		var page = $(productTpl);
+		var page = $(appTpl);
 		var searchTemplate = $('#searchTemplate', page).html();
 		this.template = _.template(_.unescape(searchTemplate || ''));
-		this.model = new (Backbone.Model.extend({}));
 		this.on('load', this.load,this);
 	},
 
@@ -83,7 +76,7 @@ var ProductSearchView =  SearchView.extend({
 	},
 
 	render: function(){
-		this.$el.html(this.template({model: this.model.toJSON()}));
+		this.$el.html(this.template());
 	},
 });
 
@@ -96,7 +89,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(productTpl);
+		var page = $(appTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -104,9 +97,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addProductDirect',
-		'click .edit': 'editProductDirect',
-		'click .delete': 'removeProductDirect',
+		'click .add': 'addApp',
+		'click .edit': 'editApp',
+		'click .delete': 'removeApp',
 	},
 
 	load: function() {
@@ -114,13 +107,13 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
-		this.searchView = new ProductSearchView({
+		this.searchView = new SearchView({
 			el: '#search',
 		});
 		this.searchView.done = function(query){
 			that.listView.trigger('refresh', query);
 		};
-		this.listView = new ProductListView({
+		this.listView = new AppListView({
 			el: '#list',
 		});
 		this.searchView.trigger('load');
@@ -131,22 +124,21 @@ exports = module.exports = Backbone.View.extend({
 		this.listView.scroll();
 		return false;
 	},
-	
-	addProductDirect: function(){
-		this.router.navigate('product/direct/add',{trigger: true});
+	addApp: function(){
+		this.router.navigate('app/add',{trigger: true});
 		return false;
 	},
 
-	editProductDirect: function(evt){
-		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		this.router.navigate('product/direct/edit/'+ id,{trigger: true});
+	editApp: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('app/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeProductDirect: function(evt){
+	removeApp: function(evt){
 		if(window.confirm('您确信要删除吗？')){
-			var id = this.$(evt.currentTarget).closest('.item').attr('id');
-			var model = new ProductDirect({_id: id});
+			var id = this.$(evt.currentTarget).parent().attr('id');
+			var model = new App({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}

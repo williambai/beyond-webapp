@@ -2,31 +2,35 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    carouselTpl = require('../templates/_entityCarousel.tpl');
+    departmentTpl = require('../templates/_entityDepartment.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
 //** 模型
-var Carousel = Backbone.Model.extend({
+var Department = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/carousels',
-	defaults: {
-		display_sort: 0,
-	}
+	urlRoot: config.api.host + '/protect/departments',
+
+	validation: {
+		name: {
+			required : true,
+			msg: '请输入组织名称'
+		},
+	},
 });
 
 //** 主视图
 exports = module.exports = FormView.extend({
 
-	el: '#carouselForm',
+	el: '#departmentForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Carousel({_id: options.id});
-		var page = $(carouselTpl);
+		this.model = new Department({_id: options.id});
+		var page = $(departmentTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -34,6 +38,8 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'keyup input[type=text]': 'inputText',
+		'keyup input[name=path]': 'getDepartments',
+		'click .department': 'selectDepartment',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -67,6 +73,39 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	getDepartments: function(evt){
+		this.$('#departments').empty();
+		var that = this;
+		var searchStr = this.$(evt.currentTarget).val() || '';
+		if(searchStr.length >1){
+			$.ajax({
+				url: config.api.host + '/protect/departments?type=search&searchStr=' + searchStr,
+				type: 'GET',
+				xhrFields: {
+					withCredentials: true
+				},
+			}).done(function(data){
+				data = data || [];
+				var departmentsView = '<ul>';
+				data.forEach(function(item){
+					departmentsView += '<li class="department" id="'+ item._id +'">' + item.path + '</li>';
+				});
+				departmentsView += '</ul>';
+				that.$('#departments').html(departmentsView);
+			});				
+		}
+		return false;
+	},
+
+	selectDepartment: function(evt){
+		var id = this.$(evt.currentTarget).attr('id');
+		var path = this.$(evt.currentTarget).text();
+		this.$('input[name=parent]').val(id);
+		this.$('input[name=path]').val(path);
+		this.$('#departments').empty();
+		return false;
+	},
+
 	submit: function() {
 		var that = this;
 		//clear errors
@@ -96,26 +135,28 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 	
-
 	cancel: function(){
-		this.router.navigate('carousel/index',{trigger: true, replace: true});
+		this.router.navigate('department/index',{trigger: true, replace: true});
 		return false;
 	},
-
+	
 	//fetch event: done
 	done: function(response){
+		var that = this;
 		if(!this.modelFilled){
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
+
 		}else{
 			//second fetch: submit
-			this.router.navigate('carousel/index',{trigger: true, replace: true});
+			this.router.navigate('department/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		if(this.model.isNew()) this.$('.panel-title').text('新增组织');
 		return this;
 	},
 });

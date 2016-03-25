@@ -247,32 +247,32 @@ exports = module.exports = function(app, models) {
  	 * router outline
  	 */
  	/**
- 	 * add customers
+ 	 * add protect/customers
  	 * type:
  	 *     
  	 */
- 	app.post('/customers', app.grant, add);
+ 	app.post('/protect/customers', app.grant, add);
  	/**
- 	 * update customers
+ 	 * update protect/customers
  	 * type:
  	 *     
  	 */
- 	app.put('/customers/:id', app.grant, update);
+ 	app.put('/protect/customers/:id', app.grant, update);
 
  	/**
- 	 * delete customers
+ 	 * delete protect/customers
  	 * type:
  	 *     
  	 */
- 	app.delete('/customers/:id', app.grant, remove);
+ 	app.delete('/protect/customers/:id', app.grant, remove);
  	/**
- 	 * get customers
+ 	 * get protect/customers
  	 */
- 	app.get('/customers/:id', app.grant, getOne);
+ 	app.get('/protect/customers/:id', app.grant, getOne);
 
  	/**
- 	 * get customers
+ 	 * get protect/customers
  	 * type:
  	 */
- 	app.get('/customers', app.grant, getMore);
+ 	app.get('/protect/customers', app.grant, getMore);
  };

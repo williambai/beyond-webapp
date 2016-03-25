@@ -1,7 +1,7 @@
  exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
- 		var doc = new models.PlatformCarousel(req.body);
+ 		var doc = new models.PlatformApp(req.body);
  		doc.save(function(err) {
  			if (err) return res.send(err);
  			res.send({});
@@ -9,7 +9,7 @@
  	};
  	var remove = function(req, res) {
  		var id = req.params.id;
- 		models.PlatformCarousel.findByIdAndRemove(id, function(err, doc) {
+ 		models.PlatformApp.findByIdAndRemove(id, function(err, doc) {
  			if (err) return res.send(err);
  			res.send(doc);
  		});
@@ -17,7 +17,7 @@
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		models.PlatformCarousel.findByIdAndUpdate(id, {
+ 		models.PlatformApp.findByIdAndUpdate(id, {
  				$set: set
  			}, {
  				'upsert': false,
@@ -32,7 +32,7 @@
  	var getOne = function(req, res) {
  		var id = req.params.id;
  		if (id.length != 24) {
- 			models.PlatformCarousel
+ 			models.PlatformApp
  				.findOne({
  					nickname: id,
  				})
@@ -42,7 +42,7 @@
  				});
  			return;
  		}
- 		models.PlatformCarousel
+ 		models.PlatformApp
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -54,7 +54,7 @@
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.PlatformCarousel
+ 		models.PlatformApp
  			.find({})
  			.skip(per * page)
  			.limit(per)
@@ -67,32 +67,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add protect/carousels
+ 	 * add protect/apps
  	 * type:
  	 *     
  	 */
- 	app.post('/protect/carousels', add);
+ 	app.post('/protect/apps', app.grant, add);
  	/**
- 	 * update protect/carousels
+ 	 * update protect/apps
  	 * type:
  	 *     
  	 */
- 	app.put('/protect/carousels/:id', update);
+ 	app.put('/protect/apps/:id', app.grant, update);
 
  	/**
- 	 * delete protect/carousels
+ 	 * delete protect/apps
  	 * type:
  	 *     
  	 */
- 	app.delete('/protect/carousels/:id', remove);
+ 	app.delete('/protect/apps/:id', app.grant, remove);
  	/**
- 	 * get protect/carousels
+ 	 * get protect/apps
  	 */
- 	app.get('/protect/carousels/:id', getOne);
+ 	app.get('/protect/apps/:id', app.isLogin, getOne);
 
  	/**
- 	 * get protect/carousels
+ 	 * get protect/apps
  	 * type:
  	 */
- 	app.get('/protect/carousels', getMore);
+ 	app.get('/protect/apps', app.isLogin, getMore);
  };

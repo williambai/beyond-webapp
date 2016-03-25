@@ -2,31 +2,42 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    carouselTpl = require('../templates/_entityCarousel.tpl');
+    roleTpl = require('../templates/_entityPlatformFeature.tpl'),
+	Feature = require('../models/PlatformFeature');
+var PlatformAppCollection = require('../models/PlatformAppCollection');
 var config = require('../conf');
 
 Backbone.$ = $;
 
 //** 模型
-var Carousel = Backbone.Model.extend({
+var Feature = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/carousels',
+	urlRoot: config.api.host + '/protect/features',
 	defaults: {
-		display_sort: 0,
-	}
+	},
+	validation: {
+		name: {
+			required: true,
+			msg: '请输入名称'
+		},
+		nickname: {
+			required: true,
+			msg: '请输入编码(字母、_与数字的组合)'
+		}
+	},
 });
 
 //** 主视图
 exports = module.exports = FormView.extend({
 
-	el: '#carouselForm',
+	el: '#featureForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Carousel({_id: options.id});
-		var page = $(carouselTpl);
+		this.model = new Feature({_id: options.id});
+		var page = $(roleTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -40,6 +51,8 @@ exports = module.exports = FormView.extend({
 
 	load: function(){
 		if(this.model.isNew()){
+			//get apps
+			this.loadApps();
 			this.modelFilled = true;
 			return;
 		}
@@ -47,6 +60,29 @@ exports = module.exports = FormView.extend({
 			xhrFields: {
 				withCredentials: true
 			},
+		});
+
+	},
+
+	loadApps: function(callback){
+		callback && callback();
+		return;
+		
+		var that = this;
+		var platformAppCollection = new PlatformAppCollection();
+		platformAppCollection.fetch({
+			xhrFields: {
+				withCredentials: true
+			},
+			success: function(collection){
+				collection = collection || [];
+				var appsView = '';
+				collection.each(function(model){
+					appsView += '<input type="checkbox" name="app[]" value="'+ model.get('nickname') +'">&nbsp;'+ model.get('name') +'&nbsp;&nbsp;&nbsp;';
+				});
+				that.$('#apps').html(appsView);
+				callback && callback();
+			}
 		});
 	},
 
@@ -95,27 +131,39 @@ exports = module.exports = FormView.extend({
 		});
 		return false;
 	},
-	
 
 	cancel: function(){
-		this.router.navigate('carousel/index',{trigger: true, replace: true});
+		this.router.navigate('feature/index',{trigger: true, replace: true});
 		return false;
 	},
-
+	
 	//fetch event: done
 	done: function(response){
+		var that = this;
 		if(!this.modelFilled){
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
+			//get apps
+			this.loadApps(function(){
+				//set apps
+				var apps = that.model.get('app');
+				_.each(apps, function(app){
+					that.$('input[name="app[]"][value="'+ app +'"]').attr('checked', true);
+				});
+			});
 		}else{
 			//second fetch: submit
-			this.router.navigate('carousel/index',{trigger: true, replace: true});
+			this.router.navigate('feature/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
+		var that = this;
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		var status = this.model.get('status');
+		that.$('input[name="status"][value="'+ status +'"]').attr('checked',true);
+		if(this.model.isNew()) this.$('.panel-title').text('新增资源');
 		return this;
 	},
 });

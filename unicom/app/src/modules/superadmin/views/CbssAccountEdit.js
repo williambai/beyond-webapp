@@ -2,31 +2,34 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    carouselTpl = require('../templates/_entityCarousel.tpl');
+    accountTpl = require('../templates/_entityCbssAccount.tpl'),
+	CbssAccount = require('../models/CbssAccount');
 var config = require('../conf');
-
 Backbone.$ = $;
 
 //** 模型
-var Carousel = Backbone.Model.extend({
+var Account = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/carousels',
-	defaults: {
-		display_sort: 0,
-	}
+	urlRoot: config.api.host + '/cbss/accounts',	
+
+	validation: {
+		'username': {
+			required: true,
+			msg: '请输入用户名'
+		},
+	},
 });
 
-//** 主视图
 exports = module.exports = FormView.extend({
 
-	el: '#carouselForm',
+	el: '#accountForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Carousel({_id: options.id});
-		var page = $(carouselTpl);
+		this.model = new CbssAccount({_id: options.id});
+		var page = $(accountTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -88,6 +91,34 @@ exports = module.exports = FormView.extend({
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
 		// console.log(this.model.attributes);
+
+		var password = this.model.get('password');
+		var cpassword = this.model.get('cpassword');
+
+		if(password != cpassword){
+			var error = '两次输入不一致';
+			that.$('[name="cpassword"]').parent().addClass('has-error');
+			that.$('[name="cpassword"]').parent().find('span.help-block').text(error);
+			return false;			
+		}
+		if(!_.isEmpty(password) && password.length < 2){
+			var error = '请输入账户密码';
+			that.$('[name="password"]').parent().addClass('has-error');
+			that.$('[name="password"]').parent().find('span.help-block').text(error);
+			return false;
+		}
+		if(_.isEmpty(password)){
+			if(that.model.isNew()){
+				var error = '新账户必须设置密码';
+				that.$('[name="password"]').parent().addClass('has-error');
+				that.$('[name="password"]').parent().find('span.help-block').text(error);
+				return false;
+			}else {
+				this.model.unset('password',{silent: true});
+				this.model.unset('cpassword',{silent: true});			
+			}
+		}
+
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true
@@ -98,7 +129,7 @@ exports = module.exports = FormView.extend({
 	
 
 	cancel: function(){
-		this.router.navigate('carousel/index',{trigger: true, replace: true});
+		this.router.navigate('cbss/account/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -110,12 +141,13 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			this.router.navigate('carousel/index',{trigger: true, replace: true});
+			this.router.navigate('cbss/account/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		if(this.model.isNew()) this.$('.panel-title').text('新增账户');
 		return this;
 	},
 });

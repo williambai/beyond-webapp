@@ -2,246 +2,253 @@
     {
         "description": "平台功能管理：系统管理员使用的维护系统的功能模块，配合grant使用。",
         "name": "平台功能管理",
-        "nickname": "platform_feature",
-        "route": "/platform/features",
+        "nickname": "protect_feature",
+        "route": "/protect/features",
         "status": "有效"
     },
     {
         "description": "平台应用管理：系统管理员使用的维护应用包含的功能模块，配合app使用。",
         "name": "平台应用管理",
-        "nickname": "platform_app",
-        "route": "/platform/apps",
+        "nickname": "protect_app",
+        "route": "/protect/apps",
         "status": "有效"
     },
     {
         "description": "平台角色管理：系统管理员使用的维护平台的所有角色。",
         "name": "平台角色管理",
-        "nickname": "platform_role",
-        "route": "/platform/roles",
+        "nickname": "protect_role",
+        "route": "/protect/roles",
         "status": "有效"
     },
     {
         "description": "平台用户账户管理：维护平台的所有用户，包括删除用户。",
         "name": "平台用户管理",
-        "nickname": "platform_account",
-        "route": "/platform/accounts",
+        "nickname": "protect_account",
+        "route": "/protect/accounts",
         "status": "有效"
     },
     {
         "description": "平台文件管理：系统管理员查看和维护文件内容。",
         "name": "平台文件管理",
-        "nickname": "platform_file",
-        "route": "/platform/files",
+        "nickname": "protect_file",
+        "route": "/protect/files",
         "status": "有效"
     },
     {
         "description": "平台Session管理：系统管理员查看和维护用户Session。",
         "name": "平台会话管理",
-        "nickname": "platform_session",
-        "route": "/platform/sessions",
+        "nickname": "protect_session",
+        "route": "/protect/sessions",
         "status": "有效"
     },
     {
         "description": "CBSS账号管理：系统管理员增加、删除和查看和维护CBSS账号。",
         "name": "CBSS账号管理",
-        "nickname": "cbss_account",
-        "route": "/cbss/accounts",
-        "status": "有效"
-    },
-    {
-        "description": "平台SMS管理：系统管理员查看和维护用户SMS。",
-        "name": "平台SMS管理",
-        "nickname": "platform_sms",
-        "route": "/platform/smses",
+        "nickname": "protect_cbss_account",
+        "route": "/protect/cbss/accounts",
         "status": "有效"
     },
     {
         "description": "平台微信客户管理：系统管理员查看和维护用户微信客户账号。",
         "name": "平台微信客户管理",
-        "nickname": "platform_wechat_customer",
-        "route": "/platform/wechat/customers",
+        "nickname": "protect_wechat_customer",
+        "route": "/protect/wechat/customers",
         "status": "有效"
     },
     {
         "description": "平台微信公众号设置：系统管理员设置和维护平台对应的微信公众号。",
         "name": "平台微信公众号设置",
-        "nickname": "platform_wechat",
-        "route": "/platform/wechats",
+        "nickname": "protect_wechat",
+        "route": "/protect/wechats",
+        "status": "有效"
+    },
+    {
+        "description": "平台微信公众号菜单设置：系统管理员设置和维护平台对应的微信公众号菜单。",
+        "name": "平台微信公众号菜单设置",
+        "nickname": "protect_wechat_menu",
+        "route": "/protect/wechat/menus",
         "status": "有效"
     },
     {
         "description": "平台运营监控：系统管理员查看和监控系统运营指标，保证系统健康运营。",
         "name": "平台运营监控",
-        "nickname": "platform_monitor",
-        "route": "/platform/monitors",
+        "nickname": "protect_monitor",
+        "route": "/protect/monitors",
         "status": "有效"
     },
     {
         "description": "平台数据管理：系统管理员备份或恢复数据。",
         "name": "平台数据维护",
-        "nickname": "platform_database",
-        "route": "/platform/databases",
+        "nickname": "protect_database",
+        "route": "/protect/databases",
         "status": "有效"
     },
     {
         "description": "直通产品管理：管理员新增、删除和修改直通产品。",
         "name": "直通产品管理",
-        "nickname": "product_direct",
-        "route": "/product/directs",
+        "nickname": "protect_product_direct",
+        "route": "/protect/product/directs",
         "status": "有效"
     },
-    {
-        "description": "号卡产品管理：管理员新增、删除和修改号卡产品包。",
-        "name": "号卡产品管理",
-        "nickname": "product_card_package",
-        "route": "/product/card/packages",
-        "status": "有效"
-    },
-    {
-        "description": "终端产品管理：管理员新增、删除和修改终端产品。",
-        "name": "终端产品管理",
-        "nickname": "product_phone",
-        "route": "/product/phones",
-        "status": "有效"
-    },
-    {
-        "description": "号卡管理：管理员新增、删除和修改号卡。",
-        "name": "号卡管理",
-        "nickname": "product_card",
-        "route": "/product/cards",
-        "status": "有效"
-    },
+    // {
+    //     "description": "号卡产品管理：管理员新增、删除和修改号卡产品包。",
+    //     "name": "号卡产品管理",
+    //     "nickname": "product_card_package",
+    //     "route": "/product/card/packages",
+    //     "status": "有效"
+    // },
+    // {
+    //     "description": "终端产品管理：管理员新增、删除和修改终端产品。",
+    //     "name": "终端产品管理",
+    //     "nickname": "product_phone",
+    //     "route": "/product/phones",
+    //     "status": "有效"
+    // },
+    // {
+    //     "description": "号卡管理：管理员新增、删除和修改号卡。",
+    //     "name": "号卡管理",
+    //     "nickname": "product_card",
+    //     "route": "/product/cards",
+    //     "status": "有效"
+    // },
     {
         "description": "客户管理：管理员新增、删除和修改客户。",
         "name": "客户管理",
-        "nickname": "customer",
-        "route": "/customers",
+        "nickname": "protect_customer",
+        "route": "/protect_customers",
         "status": "有效"
     },
     {
         "description": "订单管理，管理员修改客户信息，订单状态等",
         "name": "订单管理",
-        "nickname": "admin_order",
-        "route": "/admin/orders",
+        "nickname": "protect_order",
+        "route": "/protect/orders",
         "status": "有效"
     },
+    // {
+    //     "description": "用户账户管理：管理员使用的受限的用户管理功能，不包括删除用户。",
+    //     "name": "用户管理",
+    //     "nickname": "protect_account",
+    //     "route": "/protect/accounts",
+    //     "status": "有效"
+    // },
+    // {
+    //     "description": "业务角色管理：管理员使用的受限的角色管理功能，不包括删除角色。",
+    //     "name": "业务角色管理",
+    //     "nickname": "protect_role",
+    //     "route": "/protect/roles",
+    //     "status": "有效"
+    // },
     {
-        "description": "用户账户管理：管理员使用的受限的用户管理功能，不包括删除用户。",
-        "name": "用户管理",
-        "nickname": "admin_account",
-        "route": "/admin/accounts",
-        "status": "有效"
-    },
-    {
-        "description": "业务角色管理：管理员使用的受限的角色管理功能，不包括删除角色。",
-        "name": "业务角色管理",
-        "nickname": "admin_role",
-        "route": "/admin/roles",
+        "description": "平台SMS管理：系统管理员查看和维护用户SMS。",
+        "name": "平台SMS管理",
+        "nickname": "protect_sms",
+        "route": "/protect/smses",
         "status": "有效"
     },
     {
         "description": "物料管理：管理员新增、删除和修改物料。",
         "name": "物料管理",
-        "nickname": "goods",
-        "route": "/goods",
+        "nickname": "protect_goods",
+        "route": "/protect/goods",
         "status": "有效"
     },
     {
         "description": "组织架构管理：管理员新增、删除和修改组织及其架构。",
         "name": "组织架构管理",
-        "nickname": "department",
-        "route": "/departments",
+        "nickname": "protect_department",
+        "route": "/protect/departments",
         "status": "有效"
     },
     {
         "description": "媒体文件管理：管理员上传、删除和修改媒体文件。",
         "name": "媒体文件管理",
-        "nickname": "media",
-        "route": "/medias",
+        "nickname": "protect_media",
+        "route": "/protect/medias",
         "status": "有效"
     },
-    {
-        "description": "客户端功能设置：管理员设置移动客户端App上的功能。",
-        "name": "客户端功能设置",
-        "nickname": "channel_category",
-        "route": "/channel/categories",
-        "status": "有效"
-    },
+    // {
+    //     "description": "客户端功能设置：管理员设置移动客户端App上的功能。",
+    //     "name": "客户端功能设置",
+    //     "nickname": "channel_category",
+    //     "route": "/channel/categories",
+    //     "status": "有效"
+    // },
     {
         "description": "首页轮播管理：管理员新增、删除和修改首页轮播。",
         "name": "首页轮播管理",
-        "nickname": "carousel",
-        "route": "/carousels",
+        "nickname": "protect_carousel",
+        "route": "/protect/carousels",
         "status": "有效"
-    },
-    {
-        "description": "静态网页管理：管理员新增、删除和修改page。",
-        "name": "静态网页管理",
-        "nickname": "platform_page",
-        "route": "/platform/pages",
-        "status": "有效"
-    },
-    {
-        "description": "用户反馈：用户新增反馈，所有平台用户可见。",
-        "name": "用户反馈",
-        "nickname": "platform_feedback",
-        "route": "/platform/feedbacks",
-        "status": "有效"
-    },
-    {
-        "description": "登录用户维护个人账户信息，包括查看和修改自己的账号信息",
-        "name": "用户个人账号",
-        "nickname": "account",
-        "route": "/accounts",
-        "status": "有效"
-    },
-    {
-        "description": "直通产品展现与渠道人员下单。",
-        "name": "直通产品渠道销售",
-        "nickname": "channel_product_direct",
-        "route": "/channel/product/directs",
-        "status": "有效"
-    },
-    {
-        "description": "号卡产品展现与渠道人员下单。",
-        "name": "号卡产品渠道销售",
-        "nickname": "channel_product_card",
-        "route": "/channel/product/cards",
-        "status": "有效"
-    },
-    {
-        "description": "终端产品展现与渠道人员下单。",
-        "name": "终端产品渠道销售",
-        "nickname": "channel_product_phone",
-        "route": "/channel/product/phones",
-        "status": "有效"
-    },
-    {
-        "description": "渠道人员查看销售线索、拨打电话等",
-        "name": "销售线索",
-        "nickname": "channel_sale_lead",
-        "route": "/channel/sale/leads",
-        "status": "有效"
-    },
-    {
-        "description": "渠道人员查看、跟踪和关怀自己的客户",
-        "name": "渠道用户的客户",
-        "nickname": "channel_customer",
-        "route": "/channel/customers",
-        "status": "有效"
-    },
-    {
-        "description": "渠道人员查看自己的订单等",
-        "name": "渠道用户的订单",
-        "nickname": "channel_order",
-        "route": "/channel/orders",
-        "status": "有效"
-    },
-    {
-        "description": "渠道人员查看同事和自己的动态",
-        "name": "渠道用户的动态",
-        "nickname": "channel_account_activity",
-        "route": "/channel/account/activities",
-        "status": "有效"
+    // },
+    // {
+    //     "description": "静态网页管理：管理员新增、删除和修改page。",
+    //     "name": "静态网页管理",
+    //     "nickname": "protect_page",
+    //     "route": "/protect/pages",
+    //     "status": "有效"
+    // },
+    // {
+    //     "description": "用户反馈：用户新增反馈，所有平台用户可见。",
+    //     "name": "用户反馈",
+    //     "nickname": "protect_feedback",
+    //     "route": "/protect/feedbacks",
+    //     "status": "有效"
+    // },
+    // {
+    //     "description": "登录用户维护个人账户信息，包括查看和修改自己的账号信息",
+    //     "name": "用户个人账号",
+    //     "nickname": "account",
+    //     "route": "/accounts",
+    //     "status": "有效"
+    // },
+    // {
+    //     "description": "直通产品展现与渠道人员下单。",
+    //     "name": "直通产品渠道销售",
+    //     "nickname": "channel_product_direct",
+    //     "route": "/channel/product/directs",
+    //     "status": "有效"
+    // },
+    // {
+    //     "description": "号卡产品展现与渠道人员下单。",
+    //     "name": "号卡产品渠道销售",
+    //     "nickname": "channel_product_card",
+    //     "route": "/channel/product/cards",
+    //     "status": "有效"
+    // },
+    // {
+    //     "description": "终端产品展现与渠道人员下单。",
+    //     "name": "终端产品渠道销售",
+    //     "nickname": "channel_product_phone",
+    //     "route": "/channel/product/phones",
+    //     "status": "有效"
+    // },
+    // {
+    //     "description": "渠道人员查看销售线索、拨打电话等",
+    //     "name": "销售线索",
+    //     "nickname": "channel_sale_lead",
+    //     "route": "/channel/sale/leads",
+    //     "status": "有效"
+    // },
+    // {
+    //     "description": "渠道人员查看、跟踪和关怀自己的客户",
+    //     "name": "渠道用户的客户",
+    //     "nickname": "channel_customer",
+    //     "route": "/channel/customers",
+    //     "status": "有效"
+    // },
+    // {
+    //     "description": "渠道人员查看自己的订单等",
+    //     "name": "渠道用户的订单",
+    //     "nickname": "channel_order",
+    //     "route": "/channel/orders",
+    //     "status": "有效"
+    // },
+    // {
+    //     "description": "渠道人员查看同事和自己的动态",
+    //     "name": "渠道用户的动态",
+    //     "nickname": "channel_account_activity",
+    //     "route": "/channel/account/activities",
+    //     "status": "有效"
     }
 ]

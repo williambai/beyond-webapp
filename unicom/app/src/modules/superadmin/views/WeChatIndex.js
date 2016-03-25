@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    carouselTpl = require('../templates/_entityCarousel.tpl'),
+    wechatTpl = require('../templates/_entityWeChat.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 var ListView = require('./__ListView');
@@ -9,36 +9,30 @@ var ListView = require('./__ListView');
 Backbone.$ = $;
 
 //** 模型
-var Carousel = Backbone.Model.extend({
+var Wechat = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/carousels',
-	defaults: {
-		display_sort: 0,
-	}
+	urlRoot: config.api.host + '/protect/wechats',
 });
 
 //** 集合
-var CarouselCollection = Backbone.Collection.extend({
-	url: config.api.host + '/protect/carousels',
-	model: Carousel,
+var WechatCollection = Backbone.Collection.extend({
+	url: config.api.host + '/protect/wechats',
+	model: Wechat,
 });
 
 //** list子视图
-var CarouselListView = ListView.extend({
+var WechatListView = ListView.extend({
 	el: '#list',
 
 	initialize: function(options){
-		var page = $(carouselTpl);
+		var page = $(wechatTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
 		this.template = _.template(_.unescape(itemTemplate || ''));
-		this.collection = new CarouselCollection();
+		this.collection = new WechatCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){
-		var item = this.template({model: model.toJSON()});
-		var $item = $(item);
-		$item.find('img').attr('src', model.get('img_url'));
-		return $item.html();
+		return this.template({model: model.toJSON()});
 	},
 });
 
@@ -51,7 +45,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(carouselTpl);
+		var page = $(wechatTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -59,17 +53,17 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addCarousel',
-		'click .edit': 'editCarousel',
-		'click .delete': 'removeCarousel',
+		'click .add': 'addWeChat',
+		'click .edit': 'editWeChat',
+		'click .delete': 'removeWeChat',
+		'click .menu': 'wechatMenu',
 	},
 
 	load: function() {
 		var that = this;
 		this.loaded = true;
 		this.render();
-
-		this.listView = new CarouselListView({
+		this.listView = new WechatListView({
 			el: '#list',
 		});
 		this.listView.trigger('load');
@@ -79,25 +73,34 @@ exports = module.exports = Backbone.View.extend({
 		this.listView.scroll();
 		return false;
 	},
-	
-	addCarousel: function(){
-		this.router.navigate('carousel/add',{trigger: true});
+
+	addWeChat: function(evt){
+		this.router.navigate('wechat/add',{trigger: true});
 		return false;
 	},
 
-	editCarousel: function(evt){
-		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		this.router.navigate('carousel/edit/'+ id,{trigger: true});
+	editWeChat: function(evt){
+		var $item = this.$(evt.currentTarget).parent().parent();
+		var id = $item.attr('id');
+		this.router.navigate('wechat/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeCarousel: function(evt){
+	removeWeChat: function(evt){
+		var $item = this.$(evt.currentTarget).parent().parent();
+		var id = $item.attr('id');
 		if(window.confirm('您确信要删除吗？')){
-			var id = this.$(evt.currentTarget).closest('.item').attr('id');
-			var model = new Carousel({_id: id});
+			var model = new WeChat({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}
+		return false;
+	},
+
+	wechatMenu: function(evt){
+		var $item = this.$(evt.currentTarget).parent().parent();
+		var id = $item.attr('id');
+		this.router.navigate('wechat/' + id + '/menu/index',{trigger: true});
 		return false;
 	},
 

@@ -2,30 +2,25 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    goodsTpl = require('../templates/_entityGoods.tpl');
+    departmentTpl = require('../templates/_entityDepartment.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
 //** 模型
-var Goods = Backbone.Model.extend({
+var Department = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/goods',	
-	defaults: {
-	},
+	urlRoot: config.api.host + '/protect/departments',
+
 	validation: {
-	    'name': {
-	    	minLength: 2,
-	    	msg:'长度至少两位'
-	    },
-	    'barcode': {
-			required: true,
-			msg: '请输入运营商系统的物料号'
-	    }
+		name: {
+			required : true,
+			msg: '请输入组织名称'
+		},
 	},
 });
 
-//** 主页面
+//** 主视图
 exports = module.exports = FormView.extend({
 
 	el: '#exportForm',
@@ -35,7 +30,7 @@ exports = module.exports = FormView.extend({
 	initialize: function(options) {
 		this.router = options.router;
 		this.model = new (Backbone.Model.extend({}));
-		var page = $(goodsTpl);
+		var page = $(departmentTpl);
 		var exportTemplate = $('#exportTemplate', page).html();
 		this.template = _.template(_.unescape(exportTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -43,6 +38,8 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'keyup input[type=text]': 'inputText',
+		'keyup input[name="path"]': 'getDepartments',
+		'click .department': 'selectDepartment',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -76,6 +73,37 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	getDepartments: function(evt) {
+		this.$('#departments').empty();
+		var that = this;
+		var searchStr = this.$(evt.currentTarget).val() || '';
+		if (searchStr.length > 1) {
+			$.ajax({
+				url: config.api.host + '/protect/departments?type=search&searchStr=' + searchStr,
+				type: 'GET',
+				xhrFields: {
+					withCredentials: true
+				},
+			}).done(function(data) {
+				data = data || [];
+				var departmentsView = '<ul>';
+				data.forEach(function(item) {
+					departmentsView += '<li class="department" id="' + item._id + '">' + item.path + '</li>';
+				});
+				departmentsView += '</ul>';
+				that.$('#departments').html(departmentsView);
+			});
+		}
+		return false;
+	},
+
+	selectDepartment: function(evt) {
+		var id = this.$(evt.currentTarget).attr('id');
+		var path = this.$(evt.currentTarget).text();
+		this.$('input[name="path"]').val(path);
+		this.$('#departments').empty();
+		return false;
+	},
 
 	submit: function() {
 		var that = this;
@@ -97,12 +125,12 @@ exports = module.exports = FormView.extend({
 
 		var query = this.$('form').serialize();
 		//download file
-		window.location.href = config.api.host + '/protect/goods?' + query;
+		window.location.href = config.api.host + '/protect/departments?' + query;
 		return false;
 	},
 
 	cancel: function() {
-		this.router.navigate('goods/index', {
+		this.router.navigate('department/index', {
 			trigger: true,
 			replace: true
 		});
@@ -119,7 +147,7 @@ exports = module.exports = FormView.extend({
 
 		} else {
 			//second fetch: submit
-			this.router.navigate('goods/index', {
+			this.router.navigate('department/index', {
 				trigger: true,
 				replace: true
 			});

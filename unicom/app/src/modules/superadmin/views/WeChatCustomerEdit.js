@@ -2,31 +2,33 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    carouselTpl = require('../templates/_entityCarousel.tpl');
+    wechatTpl = require('../templates/_entityPlatformWeChatCustomer.tpl'),
+	PlatformWeChatCustomer = require('../models/PlatformWeChatCustomer');
 var config = require('../conf');
 
 Backbone.$ = $;
 
 //** 模型
-var Carousel = Backbone.Model.extend({
+var WeChatCustomer = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/carousels',
+	urlRoot: config.api.host + '/protect/wechat/customers',	
+
 	defaults: {
-		display_sort: 0,
-	}
+		creator: {}
+	},
 });
 
 //** 主视图
 exports = module.exports = FormView.extend({
 
-	el: '#carouselForm',
+	el: '#accountForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Carousel({_id: options.id});
-		var page = $(carouselTpl);
+		this.model = new PlatformWeChatCustomer({_id: options.id});
+		var page = $(wechatTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -88,6 +90,7 @@ exports = module.exports = FormView.extend({
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
 		// console.log(this.model.attributes);
+
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true
@@ -98,7 +101,7 @@ exports = module.exports = FormView.extend({
 	
 
 	cancel: function(){
-		this.router.navigate('carousel/index',{trigger: true, replace: true});
+		this.router.navigate('wechat/customer/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -110,12 +113,13 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			this.router.navigate('carousel/index',{trigger: true, replace: true});
+			this.router.navigate('wechat/customer/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		if(this.model.isNew()) this.$('.panel-title').text('新增微信客户');
 		return this;
 	},
 });

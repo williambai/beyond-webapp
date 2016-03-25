@@ -10,38 +10,35 @@ var MyAccountViewView = require('../../views/_MyAccountView');
 var MyAccountEditView = require('../../views/_MyAccountEdit');
 var IndexView = require('./views/Index');
 
-var PlatformAppIndexView = require('./views/_PlatformAppIndex');
-var PlatformAppEditView = require('./views/_PlatformAppEdit');
-var PlatformSessionIndexView = require('./views/_PlatformSessionIndex');
-var PlatformSessionEditView = require('./views/_PlatformSessionEdit');
+var FeatureIndexView = require('./views/FeatureIndex');
+var FeatureEditView = require('./views/FeatureEdit');
+var AppIndexView = require('./views/AppIndex');
+var AppEditView = require('./views/AppEdit');
+var RoleIndexView = require('./views/RoleIndex');
+var RoleEditView = require('./views/RoleEdit');
+var AccountIndexView = require('./views/AccountIndex');
+var AccountEditView = require('./views/AccountEdit');
+var CbssAccountIndexView = require('./views/CbssAccountIndex');
+var CbssAccountEditView = require('./views/CbssAccountEdit');
+var SessionIndexView = require('./views/SessionIndex');
+var SessionEditView = require('./views/SessionEdit');
+var WeChatCustomerIndexView = require('./views/WeChatCustomerIndex');
+var WeChatCustomerEditView = require('./views/WeChatCustomerEdit');
+var WeChatIndexView = require('./views/WeChatIndex');
+var WeChatEditView = require('./views/WeChatEdit');
 
 var FileIndexView = require('./views/_PlatformFileIndex');
 var FileViewView = require('./views/_PlatformFileView');
 var FileEditView = require('./views/_PlatformFileEdit');
 
-var FeatureIndexView = require('./views/_PlatformFeatureIndex');
-var FeatureEditView = require('./views/_PlatformFeatureEdit');
-
-var AccountIndexView = require('./views/_AccountIndex');
-var AccountEditView = require('./views/_AccountEdit');
-
-var CbssAccountIndexView = require('./views/_CbssAccountIndex');
-var CbssAccountEditView = require('./views/_CbssAccountEdit');
-
 var SmsIndexView = require('./views/_SmsIndex');
 var SmsEditView = require('./views/_SmsEdit');
 
-var PlatformWeChatCustomerIndexView = require('./views/_PlatformWeChatCustomerIndex');
-var PlatformWeChatCustomerEditView = require('./views/_PlatformWeChatCustomerEdit');
 
-var WeChatIndexView = require('./views/_WeChatIndex');
-var WeChatEditView = require('./views/_WeChatEdit');
 var WeChatMenuIndexView = require('./views/_WeChatMenuIndex');
 var WeChatMenuEditView = require('./views/_WeChatMenuEdit');
 var WeChatMenuExportView = require('./views/_WeChatMenuExport');
 
-var RoleIndexView = require('./views/_RoleIndex');
-var RoleEditView = require('./views/_RoleEdit');
 
 exports = module.exports = Backbone.Router.extend({
 	appCode: config.app.nickname,
@@ -269,7 +266,7 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','应用管理');
-		var appIndexView = new PlatformAppIndexView({
+		var appIndexView = new AppIndexView({
 			router: this,
 			el: '#content',
 		});
@@ -283,7 +280,7 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','新增应用');
-		var appEditView = new PlatformAppEditView({
+		var appEditView = new AppEditView({
 			router: this,
 			el: '#content',
 			id: id,
@@ -298,7 +295,7 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','会话管理');
-		var sessionIndexView = new PlatformSessionIndexView({
+		var sessionIndexView = new SessionIndexView({
 			router: this,
 			el: '#content',
 		});
@@ -312,7 +309,7 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','编辑会话');
-		var sessionEditView = new PlatformSessionEditView({
+		var sessionEditView = new SessionEditView({
 			router: this,
 			el: '#content',
 			id: id,
@@ -520,7 +517,7 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','微信客户管理');
-		var wechatCustomerIndexView = new PlatformWeChatCustomerIndexView({
+		var wechatCustomerIndexView = new WeChatCustomerIndexView({
 			router: this,
 			el: '#content',
 		});
@@ -534,7 +531,7 @@ exports = module.exports = Backbone.Router.extend({
 			return;
 		}
 		this.appEvents.trigger('set:brand','修改微信客户');
-		var wechatCustomerEditView = new PlatformWeChatCustomerEditView({
+		var wechatCustomerEditView = new WeChatCustomerEditView({
 			router: this,
 			el: '#content',
 			id: id,

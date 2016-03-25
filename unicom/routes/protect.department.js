@@ -330,32 +330,32 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  	 * router outline
  	 */
  	/**
- 	 * add departments
+ 	 * add protect/departments
  	 * type:
  	 *     
  	 */
- 	app.post('/departments', app.grant, add);
+ 	app.post('/protect/departments', app.grant, add);
  	/**
- 	 * update departments
+ 	 * update protect/departments
  	 * type:
  	 *     
  	 */
- 	app.put('/departments/:id', app.grant, update);
+ 	app.put('/protect/departments/:id', app.grant, update);
 
  	/**
- 	 * delete departments
+ 	 * delete protect/departments
  	 * type:
  	 *     
  	 */
- 	app.delete('/departments/:id', app.grant, remove);
+ 	app.delete('/protect/departments/:id', app.grant, remove);
  	/**
- 	 * get departments
+ 	 * get protect/departments
  	 */
- 	app.get('/departments/:id', app.grant, getOne);
+ 	app.get('/protect/departments/:id', app.grant, getOne);
 
  	/**
- 	 * get departments
+ 	 * get protect/departments
  	 * type:
  	 */
- 	app.get('/departments', getMore);
+ 	app.get('/protect/departments', getMore);
  };

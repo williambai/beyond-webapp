@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    carouselTpl = require('../templates/_entityCarousel.tpl'),
+    featureTpl = require('../templates/_entityPlatformFeature.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 var ListView = require('./__ListView');
@@ -9,36 +9,42 @@ var ListView = require('./__ListView');
 Backbone.$ = $;
 
 //** 模型
-var Carousel = Backbone.Model.extend({
+var Feature = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/carousels',
+	urlRoot: config.api.host + '/protect/features',
 	defaults: {
-		display_sort: 0,
-	}
+	},
+	validation: {
+		name: {
+			required: true,
+			msg: '请输入名称'
+		},
+		nickname: {
+			required: true,
+			msg: '请输入编码(字母、_与数字的组合)'
+		}
+	},
 });
 
 //** 集合
-var CarouselCollection = Backbone.Collection.extend({
-	url: config.api.host + '/protect/carousels',
-	model: Carousel,
+var FeatureCollection = Backbone.Collection.extend({
+	url: config.api.host + '/protect/features',
+	model: Feature,
 });
 
 //** list子视图
-var CarouselListView = ListView.extend({
+var FeatureListView = ListView.extend({
 	el: '#list',
 
 	initialize: function(options){
-		var page = $(carouselTpl);
+		var page = $(featureTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
 		this.template = _.template(_.unescape(itemTemplate || ''));
-		this.collection = new CarouselCollection();
+		this.collection = new FeatureCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){
-		var item = this.template({model: model.toJSON()});
-		var $item = $(item);
-		$item.find('img').attr('src', model.get('img_url'));
-		return $item.html();
+		return this.template({model: model.toJSON()});
 	},
 });
 
@@ -51,7 +57,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(carouselTpl);
+		var page = $(featureTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -59,9 +65,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addCarousel',
-		'click .edit': 'editCarousel',
-		'click .delete': 'removeCarousel',
+		'click .add': 'addFeature',
+		'click .edit': 'editFeature',
+		'click .delete': 'removeFeature',
 	},
 
 	load: function() {
@@ -69,9 +75,10 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
-		this.listView = new CarouselListView({
+		this.listView = new FeatureListView({
 			el: '#list',
 		});
+
 		this.listView.trigger('load');
 	},
 
@@ -80,21 +87,21 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addCarousel: function(){
-		this.router.navigate('carousel/add',{trigger: true});
+	addFeature: function(){
+		this.router.navigate('feature/add',{trigger: true});
 		return false;
 	},
 
-	editCarousel: function(evt){
-		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		this.router.navigate('carousel/edit/'+ id,{trigger: true});
+	editFeature: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('feature/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeCarousel: function(evt){
+	removeFeature: function(evt){
 		if(window.confirm('您确信要删除吗？')){
-			var id = this.$(evt.currentTarget).closest('.item').attr('id');
-			var model = new Carousel({_id: id});
+			var id = this.$(evt.currentTarget).parent().attr('id');
+			var model = new Feature({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}

@@ -2,30 +2,25 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    goodsTpl = require('../templates/_entityGoods.tpl');
+    departmentTpl = require('../templates/_entityDepartment.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
 //** 模型
-var Goods = Backbone.Model.extend({
+var Department = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/goods',	
-	defaults: {
-	},
+	urlRoot: config.api.host + '/protect/departments',
+
 	validation: {
-	    'name': {
-	    	minLength: 2,
-	    	msg:'长度至少两位'
-	    },
-	    'barcode': {
-			required: true,
-			msg: '请输入运营商系统的物料号'
-	    }
+		name: {
+			required : true,
+			msg: '请输入组织名称'
+		},
 	},
 });
 
-//** 主页面
+//** 主视图
 exports = module.exports = FormView.extend({
 	el: '#importForm',
 
@@ -33,8 +28,8 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options){
 		this.router = options.router;
-		this.model = new Goods();
-		var page = $(goodsTpl);
+		this.model = new Department();
+		var page = $(departmentTpl);
 		var importTemplate = $('#importTemplate', page).html();
 		var reportTemplate = $('#importReportTemplate',page).html();
 		this.template = _.template(_.unescape(importTemplate || ''));
@@ -164,7 +159,7 @@ exports = module.exports = FormView.extend({
 	},
 
 	cancel: function(){
-		this.router.navigate('goods/index',{trigger: true, replace: true});
+		this.router.navigate('department/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -178,7 +173,7 @@ exports = module.exports = FormView.extend({
 
 		}else{
 			//second fetch: submit
-			// this.router.navigate('goods/index',{trigger: true, replace: true});
+			// this.router.navigate('department/index',{trigger: true, replace: true});
 			//reset form
 			// that.$('input[name=file]').val('');
 			// that.$('.attachments').empty();

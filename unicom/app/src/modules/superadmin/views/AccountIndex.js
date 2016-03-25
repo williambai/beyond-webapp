@@ -1,67 +1,65 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    productTpl = require('../templates/_entityProductDirect.tpl'),
+    accountTpl = require('../templates/_entityAccount.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
-var ListView = require('./__ListView');
 var SearchView = require('./__SearchView');
+var ListView = require('./__ListView');
+
 Backbone.$ = $;
 
 //** 模型
-var ProductDirect = Backbone.Model.extend({
+var Account = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/product/directs',	
+	urlRoot: config.api.host + '/platform/accounts',
 	defaults: {
-		goods: {},
-		bonus: {
-			income: 0,
-			times: 1,
-			points: 0,
+		apps: [],
+		roles: [],
+		department: {},
+	},
+
+	validation: {
+		'username': {
+			required: true,
+			msg: '请输入用户名'
+		},
+		'email': {
+			pattern: /^(1\d{10}|[a-zA-Z0-9_\.]+@[a-zA-Z0-9-]+[\.a-zA-Z]+)$/,
+			msg: '请输入有效的手机号码或电子邮件'
 		},
 	},
-	validation: {
-	    'name': {
-	    	minLength: 2,
-	    	msg:'长度至少两位'
-	    },
-	    'goods[id]': {
-			required: true,
-			msg: '请选择一个物料'
-	    }
-	},
-});
-//** 集合
-var ProductDirectCollection = Backbone.Collection.extend({
-	url: config.api.host + '/protect/product/directs',
-	model: ProductDirect,
+	
 });
 
-//** List子视图	
-var ProductListView = ListView.extend({
+//** 集合
+var AccountCollection = Backbone.Collection.extend({
+	url: config.api.host + '/platform/accounts',
+	model: Account,
+});
+
+//** list子视图
+var AccountListView = ListView.extend({
 	el: '#list',
 
 	initialize: function(options){
-		var page = $(productTpl);
+		var page = $(accountTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
 		this.template = _.template(_.unescape(itemTemplate || ''));
-		this.collection = new ProductDirectCollection();
+		this.collection = new AccountCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){
-		var item = this.template({model: model.toJSON()});
-		var $item = $(item);
-		$item.find('img').attr('src', model.get('thumbnail_url'));
-		return $item.html();
+		return this.template({model: model.toJSON()});
 	},
 });
 
 //** search子视图
-var ProductSearchView =  SearchView.extend({
+var AccountSearchView = SearchView.extend({
 	el: '#search',
 
 	initialize: function(options){
-		var page = $(productTpl);
+		var page = $(accountTpl);
 		var searchTemplate = $('#searchTemplate', page).html();
 		this.template = _.template(_.unescape(searchTemplate || ''));
 		this.model = new (Backbone.Model.extend({}));
@@ -96,35 +94,35 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(productTpl);
+		var page = $(accountTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
+
 		this.on('load', this.load, this);
 	},
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addProductDirect',
-		'click .edit': 'editProductDirect',
-		'click .delete': 'removeProductDirect',
+		'click .add': 'addAccount',
+		'click .edit': 'editAccount',
+		'click .delete': 'removeAccount',
 	},
 
 	load: function() {
 		var that = this;
 		this.loaded = true;
 		this.render();
-
-		this.searchView = new ProductSearchView({
+		this.listView = new AccountListView({
+			el: '#list',
+		});
+		this.listView.trigger('load');
+		this.searchView = new AccountSearchView({
 			el: '#search',
 		});
 		this.searchView.done = function(query){
 			that.listView.trigger('refresh', query);
 		};
-		this.listView = new ProductListView({
-			el: '#list',
-		});
 		this.searchView.trigger('load');
-		this.listView.trigger('load');
 	},
 
 	scroll: function() {
@@ -132,27 +130,27 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addProductDirect: function(){
-		this.router.navigate('product/direct/add',{trigger: true});
+	addAccount: function(){
+		this.router.navigate('account/add',{trigger: true});
 		return false;
 	},
 
-	editProductDirect: function(evt){
-		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		this.router.navigate('product/direct/edit/'+ id,{trigger: true});
+	editAccount: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('account/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeProductDirect: function(evt){
+	removeAccount: function(evt){
 		if(window.confirm('您确信要删除吗？')){
-			var id = this.$(evt.currentTarget).closest('.item').attr('id');
-			var model = new ProductDirect({_id: id});
+			var id = this.$(evt.currentTarget).parent().attr('id');
+			var model = new Account({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}
 		return false;
 	},
-
+	
 	render: function() {
 		if (!this.loaded) {
 			this.$el.html(this.loadingTemplate());

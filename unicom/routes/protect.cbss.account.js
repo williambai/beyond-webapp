@@ -107,7 +107,7 @@
  							'cookie.refresh.casper.js',
  							'--id=' + id,
  							'--cookie=' + JSON.stringify(doc.cookies),
- 							'--refresh_url=' + 'http://localhost:8091/cbss/accounts'
+ 							'--refresh_url=' + 'http://localhost:8091/protect/cbss/accounts'
  						], {
  							cwd: cbss_cwd,
  						},
@@ -239,32 +239,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add cbss/accounts
+ 	 * add protect/cbss/accounts
  	 * type:
  	 *     
  	 */
- 	app.post('/cbss/accounts', add);
+ 	app.post('/protect/cbss/accounts', add);
  	/**
- 	 * update cbss/accounts
+ 	 * update protect/cbss/accounts
  	 * type:
  	 *     
  	 */
- 	app.put('/cbss/accounts/:id', update);
+ 	app.put('/protect/cbss/accounts/:id', update);
 
  	/**
- 	 * delete cbss/accounts
+ 	 * delete protect/cbss/accounts
  	 * type:
  	 *     
  	 */
- 	app.delete('/cbss/accounts/:id', remove);
+ 	app.delete('/protect/cbss/accounts/:id', remove);
  	/**
- 	 * get cbss/accounts
+ 	 * get protect/cbss/accounts
  	 */
- 	app.get('/cbss/accounts/:id', getOne);
+ 	app.get('/protect/cbss/accounts/:id', getOne);
 
  	/**
- 	 * get cbss/accounts
+ 	 * get protect/cbss/accounts
  	 * type:
  	 */
- 	app.get('/cbss/accounts', getMore);
+ 	app.get('/protect/cbss/accounts', getMore);
  };

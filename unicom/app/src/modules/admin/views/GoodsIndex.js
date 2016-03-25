@@ -12,7 +12,7 @@ Backbone.$ = $;
 //** 模型
 var Goods = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/goods',	
+	urlRoot: config.api.host + '/protect/goods',	
 	defaults: {
 	},
 	validation: {
@@ -28,7 +28,7 @@ var Goods = Backbone.Model.extend({
 });
 //** 集合
 var GoodsCollection = Backbone.Collection.extend({
-	url: config.api.host + '/goods',
+	url: config.api.host + '/protect/goods',
 	model: Goods,
 });
 

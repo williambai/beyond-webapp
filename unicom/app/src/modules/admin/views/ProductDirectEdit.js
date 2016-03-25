@@ -10,7 +10,7 @@ Backbone.$ = $;
 //** 模型
 var ProductDirect = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/product/directs',	
+	urlRoot: config.api.host + '/protect/product/directs',	
 	defaults: {
 		goods: {},
 		bonus: {

@@ -1,67 +1,52 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    productTpl = require('../templates/_entityProductDirect.tpl'),
+    mediaTpl = require('../templates/_entityMedia.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 var ListView = require('./__ListView');
 var SearchView = require('./__SearchView');
+
 Backbone.$ = $;
 
 //** 模型
-var ProductDirect = Backbone.Model.extend({
+var Media = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/product/directs',	
+	urlRoot: config.api.host + '/protect/medias',	
 	defaults: {
-		goods: {},
-		bonus: {
-			income: 0,
-			times: 1,
-			points: 0,
-		},
-	},
-	validation: {
-	    'name': {
-	    	minLength: 2,
-	    	msg:'长度至少两位'
-	    },
-	    'goods[id]': {
-			required: true,
-			msg: '请选择一个物料'
-	    }
-	},
+		goods: {}
+	}
 });
 //** 集合
-var ProductDirectCollection = Backbone.Collection.extend({
-	url: config.api.host + '/protect/product/directs',
-	model: ProductDirect,
+var MediaCollection = Backbone.Collection.extend({
+	url: config.api.host + '/protect/medias',
+	model: Media,
 });
 
-//** List子视图	
-var ProductListView = ListView.extend({
+//** list子视图
+var MediaListView = ListView.extend({
 	el: '#list',
 
 	initialize: function(options){
-		var page = $(productTpl);
+		var page = $(mediaTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
 		this.template = _.template(_.unescape(itemTemplate || ''));
-		this.collection = new ProductDirectCollection();
+		this.collection = new MediaCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){
 		var item = this.template({model: model.toJSON()});
 		var $item = $(item);
-		$item.find('img').attr('src', model.get('thumbnail_url'));
+		$item.find('img').attr('src', model.get('url'));
 		return $item.html();
 	},
 });
-
-//** search子视图
-var ProductSearchView =  SearchView.extend({
+//** search 子视图
+var MediaSearchView = SearchView.extend({
 	el: '#search',
 
 	initialize: function(options){
-		var page = $(productTpl);
+		var page = $(mediaTpl);
 		var searchTemplate = $('#searchTemplate', page).html();
 		this.template = _.template(_.unescape(searchTemplate || ''));
 		this.model = new (Backbone.Model.extend({}));
@@ -96,7 +81,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(productTpl);
+		var page = $(mediaTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -104,9 +89,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addProductDirect',
-		'click .edit': 'editProductDirect',
-		'click .delete': 'removeProductDirect',
+		'click .add': 'addMedia',
+		'click .edit': 'editMedia',
+		'click .delete': 'removeMedia',
 	},
 
 	load: function() {
@@ -114,15 +99,15 @@ exports = module.exports = Backbone.View.extend({
 		this.loaded = true;
 		this.render();
 
-		this.searchView = new ProductSearchView({
+		this.searchView = new MediaSearchView({
 			el: '#search',
+		});
+		this.listView = new MediaListView({
+			el: '#list',
 		});
 		this.searchView.done = function(query){
 			that.listView.trigger('refresh', query);
 		};
-		this.listView = new ProductListView({
-			el: '#list',
-		});
 		this.searchView.trigger('load');
 		this.listView.trigger('load');
 	},
@@ -132,21 +117,21 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addProductDirect: function(){
-		this.router.navigate('product/direct/add',{trigger: true});
+	addMedia: function(){
+		this.router.navigate('media/add',{trigger: true});
 		return false;
 	},
 
-	editProductDirect: function(evt){
-		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		this.router.navigate('product/direct/edit/'+ id,{trigger: true});
+	editMedia: function(evt){
+		var id = this.$(evt.currentTarget).parent().attr('id');
+		this.router.navigate('media/edit/'+ id,{trigger: true});
 		return false;
 	},
 
-	removeProductDirect: function(evt){
+	removeMedia: function(evt){
 		if(window.confirm('您确信要删除吗？')){
-			var id = this.$(evt.currentTarget).closest('.item').attr('id');
-			var model = new ProductDirect({_id: id});
+			var id = this.$(evt.currentTarget).parent().attr('id');
+			var model = new Media({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}

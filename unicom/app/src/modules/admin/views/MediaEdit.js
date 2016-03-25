@@ -2,31 +2,30 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    carouselTpl = require('../templates/_entityCarousel.tpl');
+    mediaTpl = require('../templates/_entityMedia.tpl');
 var config = require('../conf');
-
 Backbone.$ = $;
 
 //** 模型
-var Carousel = Backbone.Model.extend({
+var Media = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/carousels',
+	urlRoot: config.api.host + '/protect/medias',	
 	defaults: {
-		display_sort: 0,
+		goods: {}
 	}
 });
 
 //** 主视图
 exports = module.exports = FormView.extend({
 
-	el: '#carouselForm',
+	el: '#mediaForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Carousel({_id: options.id});
-		var page = $(carouselTpl);
+		this.model = new Media({_id: options.id});
+		var page = $(mediaTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -39,10 +38,6 @@ exports = module.exports = FormView.extend({
 	},
 
 	load: function(){
-		if(this.model.isNew()){
-			this.modelFilled = true;
-			return;
-		}
 		this.model.fetch({
 			xhrFields: {
 				withCredentials: true
@@ -95,10 +90,9 @@ exports = module.exports = FormView.extend({
 		});
 		return false;
 	},
-	
 
 	cancel: function(){
-		this.router.navigate('carousel/index',{trigger: true, replace: true});
+		this.router.navigate('media/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -110,12 +104,14 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			this.router.navigate('carousel/index',{trigger: true, replace: true});
+			this.router.navigate('media/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		this.$('img').attr('src', this.model.get('url'));
+		if(this.model.isNew()) this.$('.panel-title').text('新增媒体文件');
 		return this;
 	},
 });

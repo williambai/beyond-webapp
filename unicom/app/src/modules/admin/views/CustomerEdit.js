@@ -1,41 +1,43 @@
 var _ = require('underscore');
-var Backbone = require('backbone');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    orderTpl = require('../templates/_entityOrder.tpl');
+	Backbone = require('backbone'),
+    customerTpl = require('../templates/_entityCustomer.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
-//** Order模型
-var Order = Backbone.Model.extend({
+//** 模型
+var Customer = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/orders',	
+	urlRoot: config.api.host + '/protect/customers',	
+	
 	defaults: {
-		customer: {},
-		goods: {},
-		customerInfo: {},
-		bonus: {
-			cash: 0,
-			points: 0,
-		},
-		createBy: {},
-		department: {},
 	},
+	
 	validation: {
-	},
+		'name': {
+			required: true,
+			msg: '请输入客户姓名'
+		},
+		'mobile': {
+			pattern: /^(1\d{10}|[a-zA-Z0-9_\.]+@[a-zA-Z0-9-]+[\.a-zA-Z]+)$/,
+			msg: '请输入有效的手机号码'
+		},
+	},	
 });
+
 //** 主视图
 exports = module.exports = FormView.extend({
 
-	el: '#orderForm',
+	el: '#customerForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Order({_id: options.id});
-		var page = $(orderTpl);
+		this.model = new Customer({_id: options.id});
+		var page = $(customerTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -43,8 +45,12 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'keyup input[type=text]': 'inputText',
-		'keyup input[name="department[name]"]': 'getDepartments',
+		'keyup input[name="department"]': 'getDepartments',
 		'click .department': 'selectDepartment',
+		// 'keyup input[name="channel"]': 'getChannels',
+		// 'click .channel': 'selectChannel',
+		// 'keyup input[name="grid"]': 'getGrids',
+		// 'click .grid': 'selectGrid',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -84,7 +90,7 @@ exports = module.exports = FormView.extend({
 		var searchStr = this.$(evt.currentTarget).val() || '';
 		if(searchStr.length >1){
 			$.ajax({
-				url: config.api.host + '/channel/departments?type=search&searchStr=' + searchStr,
+				url: config.api.host + '/departments?type=search&searchStr=' + searchStr,
 				type: 'GET',
 				xhrFields: {
 					withCredentials: true
@@ -93,7 +99,7 @@ exports = module.exports = FormView.extend({
 				data = data || [];
 				var departmentsView = '<ul>';
 				data.forEach(function(item){
-					departmentsView += '<li class="department" id="'+ item._id +'" data="'+ item.name +'">' + item.path + '</li>';
+					departmentsView += '<li class="department" id="'+ item._id +'">' + item.path + '</li>';
 				});
 				departmentsView += '</ul>';
 				that.$('#departments').html(departmentsView);
@@ -105,13 +111,74 @@ exports = module.exports = FormView.extend({
 	selectDepartment: function(evt){
 		var id = this.$(evt.currentTarget).attr('id');
 		var path = this.$(evt.currentTarget).text();
-		var name = this.$(evt.currentTarget).attr('data');
-		this.$('input[name="department[id]"]').val(id);
-		this.$('input[name="department[path]"]').val(path);
-		this.$('input[name="department[name]"]').val(name);
+		this.$('input[name="department"]').val(path);
 		this.$('#departments').empty();
 		return false;
 	},
+
+	// getChannels: function(evt){
+	// 	this.$('#channels').empty();
+	// 	var that = this;
+	// 	var searchStr = this.$(evt.currentTarget).val() || '';
+	// 	if(searchStr.length >1){
+	// 		$.ajax({
+	// 			url: config.api.host + '/channel/entities?type=search&searchStr=' + searchStr,
+	// 			type: 'GET',
+	// 			xhrFields: {
+	// 				withCredentials: true
+	// 			},
+	// 		}).done(function(data){
+	// 			data = data || [];
+	// 			var channelsView = '<ul>';
+	// 			data.forEach(function(item){
+	// 				channelsView += '<li class="channel" id="'+ item._id +'">' + item.name + '</li>';
+	// 			});
+	// 			channelsView += '</ul>';
+	// 			that.$('#channels').html(channelsView);
+	// 		});				
+	// 	}
+	// 	return false;
+	// },
+
+	// selectChannel: function(evt){
+	// 	var id = this.$(evt.currentTarget).attr('id');
+	// 	var name = this.$(evt.currentTarget).text();
+	// 	this.$('input[name="channel"]').val(name);
+	// 	this.$('#channels').empty();
+	// 	return false;
+	// },
+
+	// getGrids: function(evt){
+	// 	this.$('#grids').empty();
+	// 	var that = this;
+	// 	var searchStr = this.$(evt.currentTarget).val() || '';
+	// 	if(searchStr.length >1){
+	// 		$.ajax({
+	// 			url: config.api.host + '/channel/grids?type=search&searchStr=' + searchStr,
+	// 			type: 'GET',
+	// 			xhrFields: {
+	// 				withCredentials: true
+	// 			},
+	// 		}).done(function(data){
+	// 			data = data || [];
+	// 			var gridsView = '<ul>';
+	// 			data.forEach(function(item){
+	// 				gridsView += '<li class="grid" id="'+ item._id +'">' + item.name + '</li>';
+	// 			});
+	// 			gridsView += '</ul>';
+	// 			that.$('#grids').html(gridsView);
+	// 		});				
+	// 	}
+	// 	return false;
+	// },
+
+	// selectGrid: function(evt){
+	// 	var id = this.$(evt.currentTarget).attr('id');
+	// 	var name = this.$(evt.currentTarget).text();
+	// 	this.$('input[name="grid"]').val(name);
+	// 	this.$('#grids').empty();
+	// 	return false;
+	// },
 
 	submit: function() {
 		var that = this;
@@ -142,40 +209,30 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 	
-
 	cancel: function(){
-		this.router.navigate('order/index',{trigger: true, replace: true});
+		this.router.navigate('customer/index',{trigger: true, replace: true});
 		return false;
 	},
-
+	
 	//fetch event: done
 	done: function(response){
+		var that = this;
 		if(!this.modelFilled){
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
+
 		}else{
 			//second fetch: submit
-			this.router.navigate('order/index',{trigger: true, replace: true});
+			this.router.navigate('customer/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		var itemsView = '<table class="table table-striped">';
-		itemsView += '<thead><tr><td>名称</td><td>单价</td><td>数量</td><td>小计</td></tr></thead>';
-		itemsView += '<tbody>';
-		var items = this.model.get('items') || [];
-		items.forEach(function(item){
-			itemsView +='<tr>'+
-						'<td>' + item.name + '</td>' +
-						'<td>' + Number(item.price).toFixed(2) + '</td>' +
-						'<td>' + item.quantity + '</td>' +
-						'<td>' + Number(item.price * item.quantity).toFixed(2) + '</td>' +
-						'</tr>';
-		});
-		itemsView += '</tbody></table>';
-		this.$('#items').html(itemsView);
+		if(this.model.isNew()) this.$('.panel-title').text('新增客户');
+		var status = this.model.get('status');
+		this.$('input[name=status][value='+ status +']').attr('checked',true);
 		return this;
 	},
 });
