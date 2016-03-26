@@ -4,7 +4,6 @@ var Backbone = require('backbone');
 var config = require('./conf');
 
 var LayoutView = require('./views/__Layout');
-var IndexView = require('./views/Index');
 var RegisterView = require('../../views/_Register');
 var ForgotPasswordView = require('../../views/_ForgotPassword');
 var LoginView = require('../../views/_Login');
@@ -33,21 +32,6 @@ var OrderIndexView = require('./views/OrderIndex');
 var CustomerIndexView = require('./views/CustomerIndex');
 var SaleLeadIndexView = require('./views/SaleLeadIndex');
 var SaleLeadEditView = require('./views/SaleLeadEdit');
-
-// var PushIndexView = require('./views/_PushIndex');
-// var PushViewView = require('./views/_PushView');
-// var DataIndexView = require('./views/_DataIndex');
-// var DataViewView = require('./views/_DataView');
-// var SmsIndexView = require('./views/_SmsIndex');
-// var SmsViewView = require('./views/_SmsView');
-// var CardIndexView = require('./views/_CardIndex');
-// var CardViewView = require('./views/_CardView');
-// var PhoneIndexView = require('./views/_PhoneIndex');
-// var PhoneViewView = require('./views/_PhoneView');
-// var PhoneDetailView = require('./views/_PhoneDetail');
-// var RevenueIndexView = require('./views/_RevenueIndex');
-// var RevenueStatView = require('./views/_RevenueStat');
-
 
 exports = module.exports = Backbone.Router.extend({
 
@@ -83,23 +67,9 @@ exports = module.exports = Backbone.Router.extend({
 		'product/hots': 'productHot',//** 热门产品
 		'product/view/:id': 'productOrder',//** 产品推荐
 
-
 		'activity/index': 'activityIndex',
-		// 'push/index': 'pushIndex',
-		// 'push/view/:id': 'pushView',
-		// 'data/index': 'dataIndex',
-		// 'data/view/:id': 'dataView',
-		// 'sms/index': 'smsIndex',
-		// 'sms/view/:id': 'smsView',
-		// 'card/index': 'cardIndex',
-		// 'card/view/:id': 'cardView',
-		// 'phone/index': 'phoneIndex',
-		// 'phone/view/:id': 'phoneView',
-		// 'phone/detail/:id': 'phoneDetail',
 		'order/index': 'orderIndex',
 		'customer/index': 'customerIndex',
-		'revenue/index': 'revenueIndex',
-		'revenue/stat': 'revenueStat',
 
 		'sale/lead/index': 'saleLeadIndex',
 		'sale/lead/edit/:id': 'saleLeadEdit',
@@ -157,7 +127,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand', '贵州联通沃助手');
+		// this.appEvents.trigger('set:brand', '贵州联通沃助手');
 		var indexView = new IndexView({
 			router: this,
 		});
@@ -215,7 +185,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'index';
 			return;
 		}
-		//this.appEvents.trigger('set:brand', '登录');
+		//this.appEvents.trigger('set:brand', '微信登录');
 		var loginView = new WeChatLoginView({
 			router: this,
 			appCode: this.appCode,
@@ -278,7 +248,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		// this.appEvents.trigger('set:brand','意见反馈');
+		//this.appEvents.trigger('set:brand','意见反馈');
 		var feedbackIndexView = new FeedbackIndexView({
 			router: this,
 			el: '#content',
@@ -292,7 +262,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		// this.appEvents.trigger('set:brand','意见反馈');
+		//this.appEvents.trigger('set:brand','反映问题');
 		var feedbackEditView = new FeedbackEditView({
 			router: this,
 			el: '#content',
@@ -307,7 +277,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		// this.appEvents.trigger('set:brand','意见反馈');
+		//this.appEvents.trigger('set:brand','帮助中心');
 		var helpIndexView = new HelpIndexView({
 			router: this,
 			el: '#content',
@@ -321,7 +291,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		// this.appEvents.trigger('set:brand','意见反馈');
+		//this.appEvents.trigger('set:brand','个人中心');
 		var meIndexView = new MeIndexView({
 			router: this,
 			el: '#content',
@@ -335,7 +305,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		// this.appEvents.trigger('set:brand','意见反馈');
+		//this.appEvents.trigger('set:brand','修改密码');
 		var meChangePassView = new MeChangePassView({
 			router: this,
 			el: '#content',
@@ -349,7 +319,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		// this.appEvents.trigger('set:brand','意见反馈');
+		//this.appEvents.trigger('set:brand','银行卡');
 		var meBankView = new MeBankView({
 			router: this,
 			el: '#content',
@@ -363,7 +333,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		// this.appEvents.trigger('set:brand','意见反馈');
+		//this.appEvents.trigger('set:brand','我的佣金');
 		var meBonusView = new MeBonusView({
 			router: this,
 			el: '#content',
@@ -377,7 +347,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		// this.appEvents.trigger('set:brand','意见反馈');
+		//this.appEvents.trigger('set:brand','佣金明细');
 		var meBonusOrderView = new MeBonusOrderView({
 			router: this,
 			el: '#content',
@@ -393,7 +363,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		// this.appEvents.trigger('set:brand','意见反馈');
+		//this.appEvents.trigger('set:brand','个人排行榜');
 		var rankPersonView = new RankPersonView({
 			router: this,
 			el: '#content',
@@ -409,7 +379,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		// this.appEvents.trigger('set:brand','意见反馈');
+		//this.appEvents.trigger('set:brand','营业厅排行榜');
 		var rankTeamView = new RankTeamView({
 			router: this,
 			el: '#content',
@@ -424,7 +394,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand', '流量推荐');
+		//this.appEvents.trigger('set:brand', '产品目录');
 		var categoryIndexView = new CategoryIndexView({
 			router: this,
 			el: '#content'
@@ -439,7 +409,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand', '号卡');
+		//this.appEvents.trigger('set:brand', '全部产品');
 		var categoryProductView = new CategoryProductView({
 			router: this,
 			el: '#content',
@@ -454,7 +424,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		// this.appEvents.trigger('set:brand', '热门产品');
+		//this.appEvents.trigger('set:brand', '热门产品');
 		var productHotView = new ProductHotsView({
 			router: this,
 			el: '#content',
@@ -468,7 +438,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand', '流量推荐');
+		//this.appEvents.trigger('set:brand', '产品推荐');
 		var productOrderView = new ProductOrderView({
 			router: this,
 			el: '#content',
@@ -476,169 +446,6 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(productOrderView);
 		productOrderView.trigger('load');
-	},
-
-	cardIndex: function() {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '号卡');
-		var cardIndexView = new CardIndexView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(cardIndexView);
-		cardIndexView.trigger('load');
-	},
-
-
-	cardView: function(id) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '卡号推荐');
-		var cardViewView = new CardViewView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(cardViewView);
-		cardViewView.trigger('load');
-	},
-
-
-	phoneIndex: function() {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '号卡');
-		var phoneIndexView = new PhoneIndexView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(phoneIndexView);
-		phoneIndexView.trigger('load');
-	},
-
-	phoneView: function(id) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '卡号推荐');
-		var phoneViewView = new PhoneViewView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(phoneViewView);
-		phoneViewView.trigger('load');
-	},
-
-
-	phoneDetail: function(id) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '卡号推荐');
-		var phoneDetailView = new PhoneDetailView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(phoneDetailView);
-		phoneDetailView.trigger('load');
-	},
-
-	pushIndex: function() {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '内容推荐');
-		var pushIndexView = new PushIndexView({
-			router: this,
-			el: '#content'
-		});
-		this.changeView(pushIndexView);
-		pushIndexView.trigger('load');
-	},
-
-	pushView: function(id) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '内容推荐');
-		var pushViewView = new PushViewView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(pushViewView);
-		pushViewView.trigger('load');
-	},
-
-	dataIndex: function() {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '流量推荐');
-		var dataIndexView = new DataIndexView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(dataIndexView);
-		dataIndexView.trigger('load');
-	},
-
-	dataView: function(id) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '流量推荐');
-		var dataViewView = new DataViewView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(dataViewView);
-		dataViewView.trigger('load');
-	},
-
-	smsIndex: function() {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '流量推荐');
-		var smsIndexView = new SmsIndexView({
-			router: this,
-			el: '#content'
-		});
-		this.changeView(smsIndexView);
-		smsIndexView.trigger('load');
-	},
-
-	smsView: function(id) {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '流量推荐');
-		var smsViewView = new SmsViewView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(smsViewView);
-		smsViewView.trigger('load');
 	},
 
 	orderIndex: function() {
@@ -660,7 +467,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand', '我的成绩');
+		//this.appEvents.trigger('set:brand', '我的客户');
 		var customerIndexView = new CustomerIndexView({
 			router: this,
 			el: '#content'
@@ -674,7 +481,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand', '我的成绩');
+		//this.appEvents.trigger('set:brand', '销售线索');
 		var saleLeadIndexView = new SaleLeadIndexView({
 			router: this,
 			el: '#content'
@@ -688,7 +495,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand', '流量推荐');
+		//this.appEvents.trigger('set:brand', '销售线索处理');
 		var saleLeadEditView = new SaleLeadEditView({
 			router: this,
 			el: '#content',
@@ -696,49 +503,6 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(saleLeadEditView);
 		saleLeadEditView.trigger('load');
-	},
-
-	orderExchangeIndex: function() {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '我的成绩');
-		var orderExchangeIndexView = new OrderExchangeIndexView({
-			router: this,
-			el: '#content'
-		});
-		this.changeView(orderExchangeIndexView);
-		orderExchangeIndexView.trigger('load');
-	},
-
-	revenueIndex: function() {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '我的金币');
-		var revenueIndexView = new RevenueIndexView({
-			router: this,
-			el: '#content'
-		});
-		this.changeView(revenueIndexView);
-		revenueIndexView.trigger('load');
-	},
-
-
-	revenueStat: function() {
-		if (!this.logined) {
-			window.location.hash = 'login';
-			return;
-		}
-		//this.appEvents.trigger('set:brand', '我的金币');
-		var revenueStatView = new RevenueStatView({
-			router: this,
-			el: '#content'
-		});
-		this.changeView(revenueStatView);
-		revenueStatView.trigger('load');
 	},
 
 	activityIndex: function() {

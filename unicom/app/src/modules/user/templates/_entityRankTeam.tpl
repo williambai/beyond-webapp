@@ -12,8 +12,8 @@
 			<div class="clearfix"></div>
 			<hr/>
 			<div class="tabs">
-				<ul class="nav nav-tabs nav-justified">
-				  <li role="presentation" class="rankPlace" id="grid"><a href="#">本网格</a></li>
+				<ul class="nav nav-tabs">
+				  <li role="presentation" class="rankPlace active" id="grid"><a href="#">本网格</a></li>
 				  <li role="presentation" class="rankPlace" id="district"><a href="#">本地区</a></li>
 				  <li role="presentation" class="rankPlace" id="city"><a href="#">所在市</a></li>
 				</ul>
@@ -26,7 +26,7 @@
 			</div>
 			<div class="panel panel-danger">
 				<div class="panel-heading">
-					<h5 class="panel-title text-center">个人排行榜</h5>
+					<h5 class="panel-title text-center">团队排行榜</h5>
 				</div>
 				<div class="panel-body">
 					<div id="list">

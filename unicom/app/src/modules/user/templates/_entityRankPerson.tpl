@@ -12,7 +12,7 @@
 			<div class="clearfix"></div>
 			<hr/>
 			<div class="tabs">
-				<ul class="nav nav-tabs nav-justified">
+				<ul class="nav nav-tabs">
 				  <li role="presentation" class="rankPlace active" id="department"><a href="#">营业厅</a></li>
 				  <li role="presentation" class="rankPlace" id="grid"><a href="#">本网格</a></li>
 				  <li role="presentation" class="rankPlace" id="district"><a href="#">本地区</a></li>

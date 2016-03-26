@@ -33,44 +33,40 @@
 	 									type: 'view',
 	 									name: '意见反馈',
 	 									url: 'http://wo.pdbang.cn/wechat.html#feedback/index'
+	 								},{
+	 									type: 'view',
+	 									name: '帮助中心',
+	 									url: 'http://wo.pdbang.cn/wechat.html#help/index'
 	 								}]
 	 							}, {
 	 								name: 'Wo产品',
 	 								sub_button: [{
 	 									type: 'view',
-	 									name: '流量产品',
-	 									url: 'http://wo.pdbang.cn/wechat.html#data/index'
+	 									name: '热门产品',
+	 									url: 'http://wo.pdbang.cn/wechat.html#product/hots'
 	 								}, {
 	 									type: 'view',
-	 									name: '传统增值',
-	 									url: 'http://wo.pdbang.cn/wechat.html#sms/index'
-	 								}, {
-	 									type: 'view',
-	 									name: '内容推荐',
-	 									url: 'http://wo.pdbang.cn/wechat.html#push/index'
-	 								}, {
-	 									type: 'view',
-	 									name: '号卡产品',
-	 									url: 'http://wo.pdbang.cn/wechat.html#card/index'
-	 								}, {
-	 									type: 'view',
-	 									name: '终端产品',
-	 									url: 'http://wo.pdbang.cn/wechat.html#phone/index'
+	 									name: '全部产品',
+	 									url: 'http://wo.pdbang.cn/wechat.html#category/index'
 	 								}]
 	 							}, {
 	 								name: '我的领地',
 	 								sub_button: [{
 	 									type: 'view',
-	 									name: '我的成绩',
+	 									name: '我的业绩',
 	 									url: 'http://wo.pdbang.cn/wechat.html#order/index'
+	 								},{
+	 									type: 'view',
+	 									name: '我的收入',
+	 									url: 'http://wo.pdbang.cn/wechat.html#me/bonus'
 	 								},{
 	 									type: 'view',
 	 									name: '我的客户',
 	 									url: 'http://wo.pdbang.cn/wechat.html#customer/index'
 	 								},{
 	 									type: 'view',
-	 									name: '我的金币',
-	 									url: 'http://wo.pdbang.cn/wechat.html#revenue/stat'
+	 									name: '个人中心',
+	 									url: 'http://wo.pdbang.cn/wechat.html#me/index'
 	 								},{
 	 									type: 'view',
 	 									name: '我的资料',

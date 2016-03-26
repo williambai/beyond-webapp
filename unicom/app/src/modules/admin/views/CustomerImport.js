@@ -92,7 +92,7 @@ exports = module.exports = FormView.extend({
 		var formData = new FormData();
 		formData.append('files', evt.currentTarget.files[0]);
 		$.ajax({
-			url: config.api.host + '/attachments',
+			url: config.api.host + '/public/attachments',
 			type: 'POST',
 			data: formData,
 			xhrFields: {
@@ -117,7 +117,7 @@ exports = module.exports = FormView.extend({
 			var that = this;
 			var filename = $(evt.currentTarget).find('img').attr('src');
 			$.ajax({
-				url: config.api.host + '/attachments',
+				url: config.api.host + '/public/attachments',
 				type: 'DELETE',
 				data: {
 					filename: filename
