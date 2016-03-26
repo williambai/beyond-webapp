@@ -27,17 +27,13 @@ var WeChatCustomerEditView = require('./views/WeChatCustomerEdit');
 var WeChatIndexView = require('./views/WeChatIndex');
 var WeChatEditView = require('./views/WeChatEdit');
 
-var FileIndexView = require('./views/_PlatformFileIndex');
-var FileViewView = require('./views/_PlatformFileView');
-var FileEditView = require('./views/_PlatformFileEdit');
+var FileIndexView = require('./views/FileIndex');
+var FileViewView = require('./views/FileView');
+var FileEditView = require('./views/FileEdit');
 
-var SmsIndexView = require('./views/_SmsIndex');
-var SmsEditView = require('./views/_SmsEdit');
-
-
-var WeChatMenuIndexView = require('./views/_WeChatMenuIndex');
-var WeChatMenuEditView = require('./views/_WeChatMenuEdit');
-var WeChatMenuExportView = require('./views/_WeChatMenuExport');
+var WeChatMenuIndexView = require('./views/WeChatMenuIndex');
+var WeChatMenuEditView = require('./views/WeChatMenuEdit');
+var WeChatMenuExportView = require('./views/WeChatMenuExport');
 
 
 exports = module.exports = Backbone.Router.extend({
@@ -79,10 +75,6 @@ exports = module.exports = Backbone.Router.extend({
 		'cbss/account/index': 'cbssAccountIndex',
 		'cbss/account/add': 'cbssAccountEdit',
 		'cbss/account/edit/:id': 'cbssAccountEdit',
-
-		'sms/index': 'smsIndex',
-		'sms/add': 'smsEdit',
-		'sms/edit/:id': 'smsEdit',
 
 		'wechat/customer/index': 'wechatCustomerIndex',
 		'wechat/customer/add': 'wechatCustomerEdit',
@@ -480,35 +472,6 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(cbssAccountEditView);
 		cbssAccountEditView.trigger('load');
-	},	
-
-	smsIndex: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','SMS管理');
-		var smsIndexView = new SmsIndexView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(smsIndexView);
-		smsIndexView.trigger('load');
-	},	
-
-	smsEdit: function(id){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','修改SMS');
-		var smsEditView = new SmsEditView({
-			router: this,
-			el: '#content',
-			id: id,
-		});
-		this.changeView(smsEditView);
-		smsEditView.trigger('load');
 	},	
 
 	wechatCustomerIndex: function(){

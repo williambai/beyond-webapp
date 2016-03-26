@@ -1,10 +1,29 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    feedbackTpl = require('../templates/_entityFeedback.tpl'),
-	Feedback = require('../models/Feedback');
+	Backbone = require('backbone'),
+    feedbackTpl = require('../templates/_entityFeedback.tpl');
 var config = require('../conf');
 
+Backbone.$ = $;
+
+//** 模型
+var Feedback = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/private/feedbacks',	
+	
+	defaults: {
+	},
+	
+	// validation: {
+	// 	'name': {
+	// 		required: true,
+	// 		msg: '请输入客户姓名'
+	// 	}
+	// },	
+});
+
+//** 主视图
 exports = module.exports = FormView.extend({
 
 	el: '#feedbackForm',
@@ -68,7 +87,7 @@ exports = module.exports = FormView.extend({
 		var formData = new FormData();
 		formData.append('files', evt.currentTarget.files[0]);
 		$.ajax({
-			url: config.api.host + '/attachments',
+			url: config.api.host + '/public/attachments',
 			type: 'POST',
 			data: formData,
 			xhrFields: {
@@ -93,7 +112,7 @@ exports = module.exports = FormView.extend({
 			var that = this;
 			var filename = $(evt.currentTarget).find('img').attr('src');
 			$.ajax({
-				url: config.api.host + '/attachments',
+				url: config.api.host + '/public/attachments',
 				type: 'DELETE',
 				data: {
 					filename: filename

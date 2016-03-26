@@ -1,9 +1,16 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    browserTpl = require('../templates/_entityPlatformFile.tpl'),
-	PlatformFile = require('../models/PlatformFile');
+	Backbone = require('backbone'),
+    browserTpl = require('../templates/_entityPlatformFile.tpl');
 var config = require('../conf');
+Backbone.$ = $;
+
+//** 模型
+var PlatformFile = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/protect/files',	
+});
 
 exports = module.exports = FormView.extend({
 

@@ -1,11 +1,26 @@
 var _ = require('underscore');
 var $ = require('jquery'),
-	FormView = require('./__FormView'),
-	ForgotPassword = require('../models/ForgotPassword');
+	Backbone = require('backbone'),
+	FormView = require('./__FormView');
 var accountTpl = require('../templates/_entityMyAccount.tpl');
 
 var config = require('../conf');
 
+//** 模型
+var ForgotPassword = Backbone.Model.extend({
+	
+	url: config.api.host + '/forgotPassword',
+
+	validation: {
+		'email': {
+	      required: true,
+	      pattern: 'email',
+	      msg: '请输入有效的电子邮件'
+	    },
+	},
+});
+
+//** 主视图
 exports = module.exports = FormView.extend({
 
 	el: '#forgotPasswordForm',

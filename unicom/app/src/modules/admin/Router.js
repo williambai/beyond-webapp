@@ -44,13 +44,14 @@ var DepartmentEditView = require('./views/DepartmentEdit');
 var DepartmentImportView = require('./views/DepartmentImport');
 var DepartmentExportView = require('./views/DepartmentExport');
 
+var SmsIndexView = require('./views/SmsIndex');
+var SmsEditView = require('./views/SmsEdit');
 
-
-var PageStaticIndexView = require('./views/_PageStaticIndex');
-var PageStaticEditView = require('./views/_PageStaticEdit');
-var PageDynamicIndexView = require('./views/_PageDynamicIndex');
-var PageDynamicEditView = require('./views/_PageDynamicEdit');
-var PageDynamicViewView = require('./views/_PageDynamicView');
+// var PageStaticIndexView = require('./views/_PageStaticIndex');
+// var PageStaticEditView = require('./views/_PageStaticEdit');
+// var PageDynamicIndexView = require('./views/_PageDynamicIndex');
+// var PageDynamicEditView = require('./views/_PageDynamicEdit');
+// var PageDynamicViewView = require('./views/_PageDynamicView');
 
 
 // var ProductExchangeIndexView = require('./views/_ProductExchangeIndex');
@@ -70,24 +71,19 @@ var PageDynamicViewView = require('./views/_PageDynamicView');
 // var ProductCardImportView = require('./views/_ProductCardImport');
 // var ProductCardExportView = require('./views/_ProductCardExport');
 
-var ChannelIndexView = require('./views/_ChannelIndex');
-var ChannelEditView = require('./views/_ChannelEdit');
-
-
-var RevenueIndexView = require('./views/_RevenueIndex');
-var RevenueEditView = require('./views/_RevenueEdit');
-
-var RoleIndexView = require('./views/_RoleIndex');
-var RoleEditView = require('./views/_RoleEdit');
-
-var ChannelCategoryIndexView = require('./views/_ChannelCategoryIndex');
-var ChannelCategoryAddView = require('./views/_ChannelCategoryAdd');
-var ChannelCategoryEditView = require('./views/_ChannelCategoryEdit');
+// var ChannelCategoryIndexView = require('./views/_ChannelCategoryIndex');
+// var ChannelCategoryAddView = require('./views/_ChannelCategoryAdd');
+// var ChannelCategoryEditView = require('./views/_ChannelCategoryEdit');
 
 //** Deprecated
+// var ChannelIndexView = require('./views/_ChannelIndex');
+// var ChannelEditView = require('./views/_ChannelEdit');
 // var GridIndexView = require('./views/_GridIndex');
 // var GridEditView = require('./views/_GridEdit');
-
+// var RevenueIndexView = require('./views/_RevenueIndex');
+// var RevenueEditView = require('./views/_RevenueEdit');
+// var RoleIndexView = require('./views/_RoleIndex');
+// var RoleEditView = require('./views/_RoleEdit');
 // var OrderCardIndexView = require('./views/_OrderCardIndex');
 // var OrderCardAddView = require('./views/_OrderCardAdd');
 // var OrderCardEditView = require('./views/_OrderCardEdit');
@@ -146,6 +142,10 @@ exports = module.exports = Backbone.Router.extend({
 		'carousel/index': 'carouselIndex',
 		'carousel/add': 'carouselEdit',
 		'carousel/edit/:id': 'carouselEdit',
+
+		'sms/index': 'smsIndex',
+		'sms/add': 'smsEdit',
+		'sms/edit/:id': 'smsEdit',
 
 		'product/category/index': 'productCategoryIndex',
 		'product/category/add': 'productCategoryEdit',
@@ -622,6 +622,35 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(mediaEditView);
 		mediaEditView.trigger('load');
+	},	
+
+	smsIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','SMS管理');
+		var smsIndexView = new SmsIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(smsIndexView);
+		smsIndexView.trigger('load');
+	},	
+
+	smsEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改SMS');
+		var smsEditView = new SmsEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(smsEditView);
+		smsEditView.trigger('load');
 	},	
 
 	pageStaticIndex: function(){

@@ -1,10 +1,38 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-	Register = require('../models/Register');
+	Backbone = require('backbone');
 var accountTpl = require('../templates/_entityMyAccount.tpl');
 var config = require('../conf');
 
+//** 模型
+var Register = Backbone.Model.extend({
+	url: config.api.host + '/register',
+
+	initialize: function(options) {
+		if (options && options.appCode)
+			this.url = this.url + '/' + options.appCode;
+	},
+
+	validation: {
+		username: {
+			required: true,
+			minLength: 2,
+			msg: '用户名至少2个字母或汉字'
+		},
+		email: {
+			pattern: /^(1\d{10}|[a-zA-Z0-9_\.]+@[a-zA-Z0-9-]+[\.a-zA-Z]+)$/,
+			msg: '请输入有效的手机号码'
+		},
+		password: {
+			required: true,
+			minLength: 5,
+			msg: '密码长度至少五位'
+		},
+	},
+});
+
+//** 主视图
 exports = module.exports = FormView.extend({
 
 	el: '#registerForm',

@@ -7,10 +7,29 @@ var config = require('../conf');
 
 Backbone.$ = $;
 
-var RoleCollection = require('../models/RoleCollection');
-var PlatformAppCollection = require('../models/PlatformAppCollection');
+//** role模型
+var Role =  Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/protect/roles',
+});
+//** role集合
+var RoleCollection = Backbone.Collection.extend({
+	url: config.api.host + '/protect/roles',
+	model: Role,
+});
 
-//** 模型
+//** app模型
+var App = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/protect/apps',
+});
+
+//** app集合
+var AppCollection = Backbone.Collection.extend({
+	url: config.api.host + '/protect/apps',
+	model: App,
+});
+//** account模型
 var Account = Backbone.Model.extend({
 	idAttribute: '_id',
 	urlRoot: config.api.host + '/protect/accounts',

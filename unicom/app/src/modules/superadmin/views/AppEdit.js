@@ -4,11 +4,34 @@ var FormView = require('./__FormView'),
 	Backbone = require('backbone'),
     appTpl = require('../templates/_entityApp.tpl');
 var config = require('../conf');
-var PlatformFeatureCollection  = require('../models/PlatformFeatureCollection');
 
 Backbone.$ = $;
 
-//** 模型
+//** Feature模型
+var Feature = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/protect/features',
+	defaults: {
+	},
+	validation: {
+		name: {
+			required: true,
+			msg: '请输入名称'
+		},
+		nickname: {
+			required: true,
+			msg: '请输入编码(字母、_与数字的组合)'
+		}
+	},
+});
+
+//** Feature集合
+var FeatureCollection = Backbone.Collection.extend({
+	url: config.api.host + '/protect/features',
+	model: Feature,
+});
+
+//** App模型
 var App = Backbone.Model.extend({
 	idAttribute: '_id',
 	urlRoot: config.api.host + '/protect/apps',
@@ -64,8 +87,8 @@ exports = module.exports = FormView.extend({
 
 	loadFeatures: function(callback){
 		var that = this;
-		var platformFeatureCollection = new PlatformFeatureCollection();
-		platformFeatureCollection.fetch({
+		var featureCollection = new FeatureCollection();
+		featureCollection.fetch({
 			xhrFields: {
 				withCredentials: true
 			},

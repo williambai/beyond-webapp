@@ -7,8 +7,13 @@ var config = require('../conf');
 
 Backbone.$ = $;
 
-var Menu = require('../models/WeChatMenu');
-var ListView = require('./_WeChatMenuList');
+//** 模型
+var Menu = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: function(){
+		return config.api.host + '/protect/wechat/'+ this.get('wid') + '/menus';
+	},
+});
 
 exports = module.exports = Backbone.View.extend({
 

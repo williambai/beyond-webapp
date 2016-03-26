@@ -2,8 +2,7 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    wechatTpl = require('../templates/_entityPlatformWeChatCustomer.tpl'),
-	PlatformWeChatCustomer = require('../models/PlatformWeChatCustomer');
+    wechatTpl = require('../templates/_entityPlatformWeChatCustomer.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;

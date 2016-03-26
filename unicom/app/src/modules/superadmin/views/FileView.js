@@ -1,11 +1,15 @@
 var _ = require('underscore');
 var Backbone = require('backbone'),
 	$ = require('jquery'),
-    browserTpl = require('../templates/_entityPlatformFile.tpl'),
-	PlatformFile = require('../models/PlatformFile');
+    browserTpl = require('../templates/_entityPlatformFile.tpl');
 var config = require('../conf');
-
 Backbone.$ = $;
+
+//** 模型
+var PlatformFile = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/protect/files',	
+});
 
 exports = module.exports = Backbone.View.extend({
 

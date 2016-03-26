@@ -4,12 +4,40 @@ var $ = require('jquery'),
     smsTpl = require('../templates/_entitySms.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
+var ListView = require('./__ListView');
 
 Backbone.$ = $;
 
-var Sms = require('../models/PlatformSms');
-var ListView = require('./_SmsList');
+//** 模型
+var Sms = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/protect/smses',	
 
+});
+
+//** 集合
+var SmsCollection = Backbone.Collection.extend({
+	url: config.api.host + '/protect/smses',
+	model: Sms,
+});
+
+//** list 子视图
+var SmsListView = ListView.extend({
+	el: '#list',
+
+	initialize: function(options){
+		var page = $(smsTpl);
+		var itemTemplate = $('#itemTemplate', page).html();
+		this.template = _.template(_.unescape(itemTemplate || ''));
+		this.collection = new SmsCollection();
+		ListView.prototype.initialize.apply(this,options);
+	},
+	getNewItemView: function(model){
+		return this.template({model: model.toJSON()});
+	},
+});
+
+//** 主视图
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
@@ -35,7 +63,7 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 		this.loaded = true;
 		this.render();
-		this.listView = new ListView({
+		this.listView = new SmsListView({
 			el: '#list',
 		});
 		this.listView.trigger('load');

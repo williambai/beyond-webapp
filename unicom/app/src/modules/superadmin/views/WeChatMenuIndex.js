@@ -4,12 +4,42 @@ var $ = require('jquery'),
     menuTpl = require('../templates/_entityWeChatMenu.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
+var ListView = require('./__ListView');
 
 Backbone.$ = $;
 
-var Menu = require('../models/WeChatMenu');
-var ListView = require('./_WeChatMenuList');
+//** 模型
+var Menu = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: function(){
+		return config.api.host + '/protect/wechat/'+ this.get('wid') + '/menus';
+	},
+});
+//** 集合
+var MenuCollection = Backbone.Collection.extend({
+	url: function(){
+		return config.api.host + '/protect/wechat/'+ this.wid + '/menus';
+	},	
+	model: Menu,
+});
 
+//** List子视图
+var MenuListView = ListView.extend({
+	el: '#list',
+
+	initialize: function(options){
+		var page = $(menuTpl);
+		var itemTemplate = $('#itemTemplate', page).html();
+		this.template = _.template(_.unescape(itemTemplate || ''));
+		this.collection = new MenuCollection();
+		this.collection.wid = options.wid;
+		ListView.prototype.initialize.apply(this,options);
+	},
+	getNewItemView: function(model){
+		return this.template({model: model.toJSON()});
+	},
+});
+//** 主视图
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
@@ -37,7 +67,7 @@ exports = module.exports = Backbone.View.extend({
 		var that = this;
 		this.loaded = true;
 		this.render();
-		this.listView = new ListView({
+		this.listView = new MenuListView({
 			el: '#list',
 			wid: this.wid,
 		});

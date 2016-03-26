@@ -2,14 +2,36 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    roleTpl = require('../templates/_entityPlatformFeature.tpl'),
-	Feature = require('../models/PlatformFeature');
-var PlatformAppCollection = require('../models/PlatformAppCollection');
+    roleTpl = require('../templates/_entityPlatformFeature.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
+//** App模型
+var App = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/protect/apps',
+	defaults: {
+		status: {}
+	},
+	validation: {
+		name: {
+			required: true,
+			msg: '请输入名称(中英文字母)'
+		},
+		nickname: {
+			required: true,
+			msg: '请输入编码(字母、_与数字的组合)'
+		}
+	},
+});
 
-//** 模型
+//** App集合
+var AppCollection = Backbone.Collection.extend({
+	url: config.api.host + '/protect/apps',
+	model: App,
+});
+
+//** Feature模型
 var Feature = Backbone.Model.extend({
 	idAttribute: '_id',
 	urlRoot: config.api.host + '/protect/features',
@@ -69,8 +91,8 @@ exports = module.exports = FormView.extend({
 		return;
 		
 		var that = this;
-		var platformAppCollection = new PlatformAppCollection();
-		platformAppCollection.fetch({
+		var appCollection = new AppCollection();
+		appCollection.fetch({
 			xhrFields: {
 				withCredentials: true
 			},

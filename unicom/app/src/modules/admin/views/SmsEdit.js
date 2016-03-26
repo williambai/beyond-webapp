@@ -1,20 +1,28 @@
 var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
-    menuTpl = require('../templates/_entityWeChatMenu.tpl'),
-	WeChatMenu = require('../models/WeChatMenu');
+	Backbone = require('backbone'),
+    smsTpl = require('../templates/_entitySms.tpl');
 var config = require('../conf');
+Backbone.$ = $;
+
+//** 模型
+var Sms = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/protect/smses',	
+
+});
 
 exports = module.exports = FormView.extend({
 
-	el: '#menuForm',
+	el: '#accountForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new WeChatMenu({_id: options.id, wid: options.wid});
-		var page = $(menuTpl);
+		this.model = new Sms({_id: options.id});
+		var page = $(smsTpl);
 		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
@@ -22,8 +30,6 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'keyup input[type=text]': 'inputText',
-		'keyup input[name="path"]': 'getMenus',
-		'click .menu': 'selectMenu',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -54,39 +60,6 @@ exports = module.exports = FormView.extend({
 				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
 			}
 		})
-		return false;
-	},
-
-	getMenus: function(evt){
-		this.$('#menus').empty();
-		var that = this;
-		var searchStr = this.$(evt.currentTarget).val() || '';
-		if(searchStr.length >1){
-			$.ajax({
-				url: config.api.host + '/protect/wechat/'+ this.model.get('wid') +'/menus?action=search&searchStr=' + searchStr,
-				type: 'GET',
-				xhrFields: {
-					withCredentials: true
-				},
-			}).done(function(data){
-				data = data || [];
-				var menusView = '<ul>';
-				data.forEach(function(item){
-					menusView += '<li class="menu" id="'+ item._id +'">' + item.path + '</li>';
-				});
-				menusView += '</ul>';
-				that.$('#menus').html(menusView);
-			});				
-		}
-		return false;
-	},
-
-	selectMenu: function(evt){
-		var id = this.$(evt.currentTarget).attr('id');
-		var path = this.$(evt.currentTarget).text();
-		this.$('input[name="parent"]').val(id);
-		this.$('input[name="path"]').val(path);
-		this.$('#menus').empty();
 		return false;
 	},
 
@@ -122,7 +95,7 @@ exports = module.exports = FormView.extend({
 	
 
 	cancel: function(){
-		this.router.navigate('wechat/'+ this.model.get('wid') + '/menu/index',{trigger: true, replace: true});
+		this.router.navigate('sms/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -134,15 +107,13 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			this.router.navigate('wechat/'+ this.model.get('wid') + '/menu/index',{trigger: true, replace: true});
+			this.router.navigate('sms/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		if(this.model.isNew()) this.$('.panel-title').text('新增菜单');
-		var category = this.model.get('category');
-		this.$('input[name="category"][value="'+ category +'"]').attr('checked',true);
+		if(this.model.isNew()) this.$('.panel-title').text('新增用户');
 		var status = this.model.get('status');
 		this.$('input[name="status"][value="'+ status +'"]').attr('checked',true);
 		return this;

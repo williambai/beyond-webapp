@@ -2,13 +2,12 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    accountTpl = require('../templates/_entityCbssAccount.tpl'),
-	CbssAccount = require('../models/CbssAccount');
+    accountTpl = require('../templates/_entityCbssAccount.tpl');
 var config = require('../conf');
 Backbone.$ = $;
 
 //** 模型
-var Account = Backbone.Model.extend({
+var CbssAccount = Backbone.Model.extend({
 	idAttribute: '_id',
 	urlRoot: config.api.host + '/protect/cbss/accounts',	
 

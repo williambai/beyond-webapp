@@ -73,16 +73,6 @@ exports = module.exports = [{
 			"getMore": "true",
 			"getOne": "true"
 		},
-		"protect_sms": {
-			"route": "/protect/smses",
-			"nickname": "protect_sms",
-			"name": "SMS管理",
-			"remove": "true",
-			"update": "true",
-			"add": "true",
-			"getMore": "true",
-			"getOne": "true"
-		},
 		"protect_wechat_customer": {
 			"route": "/protect/wechat/customers",
 			"nickname": "protect_wechat_customer",
@@ -184,6 +174,16 @@ exports = module.exports = [{
 			"route": "/protect/goods",
 			"nickname": "protect_goods",
 			"name": "物料管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
+		"protect_sms": {
+			"route": "/protect/smses",
+			"nickname": "protect_sms",
+			"name": "SMS管理",
 			"remove": "true",
 			"update": "true",
 			"add": "true",
