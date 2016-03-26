@@ -2,12 +2,22 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
 	FormView = require('./__FormView'),
-	accountTpl = require('../templates/_entityMyAccount.tpl'),
-	Account = require('../models/MyAccount');
+	accountTpl = require('../templates/_entityMyAccount.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
+//** 模型
+var Account = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/accounts',
+
+	defaults: {
+		status: {},
+	},
+});
+
+//** 主视图
 exports = module.exports = FormView.extend({
 
 	el: '#accountForm',

@@ -2,12 +2,37 @@ var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
 	FormView = require('./__FormView'),
-	accountTpl = require('../templates/_entityMyAccount.tpl'),
-	Account = require('../models/MyAccount');
+	accountTpl = require('../templates/_entityMyAccount.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
+//** 模型
+var Account = Backbone.Model.extend({
+	idAttribute: '_id',
+	urlRoot: config.api.host + '/accounts',
+
+	defaults: {
+		status: {},
+	},
+
+	validation: {
+		'username': {
+			required: true,
+			msg: '请输入用户名'
+		},
+		'email': {
+			pattern: /^(1\d{10}|[a-zA-Z0-9_\.]+@[a-zA-Z0-9-]+[\.a-zA-Z]+)$/,
+			msg: '请输入有效的手机号码或电子邮件'
+		},
+		biography: {
+			minLength: 5,
+			msg: '字数太少了'
+		},
+	},
+});
+
+//** 主视图
 exports = module.exports = FormView.extend({
 
 	el: '#accountForm',
