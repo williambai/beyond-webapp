@@ -98,8 +98,8 @@ app.get('/', function(req, res) {
 
 //是否登录
 app.isLogin = function(req, res, next) {
-	var grant = req.session.grant;
-	if (!_.isEmpty(grant)) return next();
+	var account = req.session.accountId;
+	if (account) return next();
 	res.status(401).end();
 };
 

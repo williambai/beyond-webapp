@@ -44,7 +44,7 @@ exports = module.exports = Backbone.View.extend({
 	submit: function(evt){
 		var that = this;
 		$.ajax({
-			url: config.api.host + '/platform/wechat/'+ that.wid + '/menus',
+			url: config.api.host + '/protect/wechat/'+ that.wid + '/menus',
 			type: 'POST',
 			data: {
 				action: 'export'

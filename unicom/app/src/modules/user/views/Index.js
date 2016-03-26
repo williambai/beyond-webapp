@@ -29,7 +29,7 @@ exports = module.exports = Backbone.View.extend({
 		that.loaded = true;
 		that.render();
 		$.ajax({
-			url: config.api.host +'/carousels',
+			url: config.api.host +'/protect/carousels',
 			type: 'GET',
 			xhrFields: {
 				withCredentials: true

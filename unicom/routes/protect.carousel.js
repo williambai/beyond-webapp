@@ -71,28 +71,28 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/protect/carousels', add);
+ 	app.post('/protect/carousels', app.grant, add);
  	/**
  	 * update protect/carousels
  	 * type:
  	 *     
  	 */
- 	app.put('/protect/carousels/:id', update);
+ 	app.put('/protect/carousels/:id', app.grant, update);
 
  	/**
  	 * delete protect/carousels
  	 * type:
  	 *     
  	 */
- 	app.delete('/protect/carousels/:id', remove);
+ 	app.delete('/protect/carousels/:id', app.grant, remove);
  	/**
  	 * get protect/carousels
  	 */
- 	app.get('/protect/carousels/:id', getOne);
+ 	app.get('/protect/carousels/:id', app.grant, getOne);
 
  	/**
  	 * get protect/carousels
  	 * type:
  	 */
- 	app.get('/protect/carousels', getMore);
+ 	app.get('/protect/carousels', app.isLogin, getMore);
  };

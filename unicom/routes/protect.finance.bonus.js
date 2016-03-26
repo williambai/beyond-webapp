@@ -103,24 +103,24 @@
  	 * action:
  	 *     
  	 */
- 	app.post('/protect/finance/bonuses', app.isLogin, add);
+ 	app.post('/protect/finance/bonuses', app.grant, add);
  	/**
  	 * update protect/finance/bonuses
  	 * action:
  	 *     
  	 */
- 	app.put('/protect/finance/bonuses/:id', app.isLogin, update);
+ 	app.put('/protect/finance/bonuses/:id', app.grant, update);
 
  	/**
  	 * delete protect/finance/bonuses
  	 * action:
  	 *     
  	 */
- 	app.delete('/protect/finance/bonuses/:id', app.isLogin, remove);
+ 	app.delete('/protect/finance/bonuses/:id', app.grant, remove);
  	/**
  	 * get protect/finance/bonuses
  	 */
- 	app.get('/protect/finance/bonuses/:id', app.isLogin, getOne);
+ 	app.get('/protect/finance/bonuses/:id', app.grant, getOne);
 
  	/**
  	 * get protect/finance/bonuses
@@ -128,5 +128,5 @@
  	 * action:
  	 * 		?action=search&searchStr=#&year=#&month=#
  	 */
- 	app.get('/protect/finance/bonuses', app.isLogin, getMore);
+ 	app.get('/protect/finance/bonuses', app.grant, getMore);
  };

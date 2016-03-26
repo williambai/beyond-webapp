@@ -12,14 +12,14 @@ Backbone.$ = $;
 //** Activity模型
 var Activity = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/channel/account/activities',	
+	urlRoot: config.api.host + '/public/account/activities',	
 	defaults: {
 	}
 });
 //** Activity集合
 var ActivityCollection = Backbone.Collection.extend({
 	model: Activity,
-	url: config.api.host + '/channel/account/activities',
+	url: config.api.host + '/public/account/activities',
 });
 
 //** List子视图

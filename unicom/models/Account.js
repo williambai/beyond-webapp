@@ -11,9 +11,11 @@ module.exports = exports = function(mongoose) {
 		apps: [],
 		roles: [],
 		department: {
-			id: String, //** 营业厅
-			name: String,
-			path: String,
+			id: String, 
+			name: String,//** 营业厅
+			city: String, //** 城市名称
+			grid: String, //** 网格编码
+			district: String, //** 地区编码
 		},
 		birthday: {
 			day: {

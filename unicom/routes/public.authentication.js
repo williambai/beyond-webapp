@@ -58,7 +58,7 @@ module.exports = exports = function(app, models) {
 	};
 
 	var register = function(req, res) {
-		var app = req.params.app;
+		var app = req.params.app || 'channel';
 		var user = req.body || {};
 		//** 存在手机动态验证码，则需要检查验证的正确性
 		var email = req.body.email;
@@ -73,10 +73,9 @@ module.exports = exports = function(app, models) {
 
 		user.avatar = '/images/avatar.jpg';
 		user.status = '未验证';
-		user.apps = [];
+		user.apps = [];//** 注册默认来自应用'channel'
 		user.apps.push(app);
 		user.roles = [];
-		user.roles.push('channel');
 		user.lastupdatetime = new Date();
 
 		Account.create(user, function(err, doc) {
@@ -358,9 +357,10 @@ module.exports = exports = function(app, models) {
 			function(err, account) {
 				if (err) return res.send(err);
 				req.session.accountId = account._id;
-				req.session.email = account.email;
+				req.session.email = account.email;//** 设置用户邮件/手机
 				req.session.username = account.username;
-				req.session.avatar = account.avatar || '';
+				req.session.avatar = account.avatar || ''; 
+				req.session.department = account.department || {}; //** 设置用户部门
 				req.session.apps = account.apps || [];
 				req.session.grant = account.grant || {};
 				logger.debug(req.session.email + 'login(session): ' + JSON.stringify(req.session));
@@ -394,7 +394,9 @@ module.exports = exports = function(app, models) {
 	};
 
 	var logout = function(req, res) {
+		req.session.accountId = null;
 		req.session.openid = undefined;
+		req.session.department = {};
 		req.session.apps = [];
 		req.session.grant = {};
 		logger.debug(req.session.email + ' logout(session): ' + JSON.stringify(req.session));
@@ -476,6 +478,7 @@ module.exports = exports = function(app, models) {
 							req.session.email = account.email;
 							req.session.username = account.username;
 							req.session.avatar = account.avatar || '';
+							req.session.department = account.department || {}; //** 设置用户部门
 							req.session.apps = account.apps || [];
 							req.session.grant = account.grant || {};
 							logger.debug(req.session.email + ' login(session): ' + JSON.stringify(req.session));

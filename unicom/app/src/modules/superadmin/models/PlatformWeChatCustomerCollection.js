@@ -4,6 +4,6 @@ var PlatformWeChatCustomer = require('./PlatformWeChatCustomer');
 var config = require('../conf');
 
 exports = module.exports = Backbone.Collection.extend({
-	url: config.api.host + '/platform/wechat/customers',
+	url: config.api.host + '/protect/wechat/customers',
 	model: PlatformWeChatCustomer,
 });

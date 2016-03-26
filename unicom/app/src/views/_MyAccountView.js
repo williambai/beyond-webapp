@@ -63,7 +63,7 @@ exports = module.exports = FormView.extend({
 		var openid = this.model.get('openid');
 		if(!openid){
 			$.ajax({
-				url: config.api.host + '/platform/wechat/'+ config.wechat.appid +'/qrcode/100001',
+				url: config.api.host + '/public/wechat/'+ config.wechat.appid +'/qrcode/100001',
 				type: 'POST',
 				xhrFields: {
 					withCredentials: true
@@ -76,7 +76,7 @@ exports = module.exports = FormView.extend({
 				var refresh = function(ticket){
 					if(that.$('#wechat').length > 0){
 						$.ajax({
-							url: config.api.host + '/platform/wechat/'+ config.wechat.appid +'/qrcode/'+ ticket,
+							url: config.api.host + '/public/wechat/'+ config.wechat.appid +'/qrcode/'+ ticket,
 							type: 'GET',
 							xhrFields: {
 								withCredentials: true

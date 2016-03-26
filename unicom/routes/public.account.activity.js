@@ -57,32 +57,32 @@
  	 * router outline
  	 */
  	/**
- 	 * add channel/account/activities
+ 	 * add public/account/activities
  	 * type:
  	 *     
  	 */
- 	app.post('/channel/account/activities', app.grant, add);
+ 	app.post('/public/account/activities', app.isLogin, add);
  	/**
- 	 * update channel/account/activities
+ 	 * update public/account/activities
  	 * type:
  	 *     
  	 */
- 	app.put('/channel/account/activities/:id', app.grant, update);
+ 	app.put('/public/account/activities/:id', app.isLogin, update);
 
  	/**
- 	 * delete channel/account/activities
+ 	 * delete public/account/activities
  	 * type:
  	 *     
  	 */
- 	app.delete('/channel/account/activities/:id', app.grant, remove);
+ 	app.delete('/public/account/activities/:id', app.isLogin, remove);
  	/**
- 	 * get channel/account/activities
+ 	 * get public/account/activities
  	 */
- 	app.get('/channel/account/activities/:id', app.grant, getOne);
+ 	app.get('/public/account/activities/:id', app.isLogin, getOne);
 
  	/**
- 	 * get channel/account/activities
+ 	 * get public/account/activities
  	 * type:
  	 */
- 	app.get('/channel/account/activities', app.grant, getMore);
+ 	app.get('/public/account/activities', app.isLogin, getMore);
  };

@@ -12,7 +12,7 @@ Backbone.$ = $;
 //** 模型
 var Account = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/platform/accounts',
+	urlRoot: config.api.host + '/protect/accounts',
 	defaults: {
 		apps: [],
 		roles: [],
@@ -34,7 +34,7 @@ var Account = Backbone.Model.extend({
 
 //** 集合
 var AccountCollection = Backbone.Collection.extend({
-	url: config.api.host + '/platform/accounts',
+	url: config.api.host + '/protect/accounts',
 	model: Account,
 });
 

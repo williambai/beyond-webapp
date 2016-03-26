@@ -63,7 +63,7 @@ exports = module.exports = FormView.extend({
 		var searchStr = this.$(evt.currentTarget).val() || '';
 		if(searchStr.length >1){
 			$.ajax({
-				url: config.api.host + '/platform/wechat/'+ this.model.get('wid') +'/menus?action=search&searchStr=' + searchStr,
+				url: config.api.host + '/protect/wechat/'+ this.model.get('wid') +'/menus?action=search&searchStr=' + searchStr,
 				type: 'GET',
 				xhrFields: {
 					withCredentials: true

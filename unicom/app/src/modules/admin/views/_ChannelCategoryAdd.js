@@ -27,7 +27,7 @@ exports = module.exports = FormView.extend({
 		var that = this;
 		this.render();
 		$.ajax({
-			url: config.api.host + '/platform/features',
+			url: config.api.host + '/protect/features',
 			type: 'GET',
 			xhrFields: {
 				withCredentials: true

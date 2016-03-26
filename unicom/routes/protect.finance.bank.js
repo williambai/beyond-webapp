@@ -55,12 +55,12 @@
  	/**
  	 * get protect/finance/banks
  	 */
- 	app.get('/protect/finance/banks/:id', app.isLogin, getOne);
+ 	app.get('/protect/finance/banks/:id', app.grant, getOne);
 
  	/**
  	 * get protect/finance/banks
  	 * action:
  	 * 	     action=search&searchStr=?
  	 */
- 	app.get('/protect/finance/banks', app.isLogin, getMore);
+ 	app.get('/protect/finance/banks', app.grant, getMore);
  };

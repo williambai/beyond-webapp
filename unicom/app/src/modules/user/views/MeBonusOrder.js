@@ -12,7 +12,7 @@ Backbone.$ = $;
 //** Bonus模型
 var Bonus = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/finance/bonuses',	
+	urlRoot: config.api.host + '/private/finance/bonuses',	
 	defaults: {
 	},
 });

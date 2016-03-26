@@ -71,28 +71,28 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/protect/product/categories',  add);
+ 	app.post('/protect/product/categories', app.grant,  add);
  	/**
  	 * update protect/product/categories
  	 * type:
  	 *     
  	 */
- 	app.put('/protect/product/categories/:id',  update);
+ 	app.put('/protect/product/categories/:id', app.grant,  update);
 
  	/**
  	 * delete protect/product/categories
  	 * type:
  	 *     
  	 */
- 	app.delete('/protect/product/categories/:id',  remove);
+ 	app.delete('/protect/product/categories/:id', app.grant,  remove);
  	/**
  	 * get protect/product/categories
  	 */
- 	app.get('/protect/product/categories/:id', getOne);
+ 	app.get('/protect/product/categories/:id', app.grant, getOne);
 
  	/**
  	 * get protect/product/categories
  	 * type:
  	 */
- 	app.get('/protect/product/categories', getMore);
+ 	app.get('/protect/product/categories',app.grant,  getMore);
  };

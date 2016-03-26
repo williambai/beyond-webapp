@@ -243,28 +243,28 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/protect/cbss/accounts', add);
+ 	app.post('/protect/cbss/accounts', app.grant, add);
  	/**
  	 * update protect/cbss/accounts
  	 * type:
  	 *     
  	 */
- 	app.put('/protect/cbss/accounts/:id', update);
+ 	app.put('/protect/cbss/accounts/:id', app.grant, update);
 
  	/**
  	 * delete protect/cbss/accounts
  	 * type:
  	 *     
  	 */
- 	app.delete('/protect/cbss/accounts/:id', remove);
+ 	app.delete('/protect/cbss/accounts/:id', app.grant, remove);
  	/**
  	 * get protect/cbss/accounts
  	 */
- 	app.get('/protect/cbss/accounts/:id', getOne);
+ 	app.get('/protect/cbss/accounts/:id', app.grant, getOne);
 
  	/**
  	 * get protect/cbss/accounts
  	 * type:
  	 */
- 	app.get('/protect/cbss/accounts', getMore);
+ 	app.get('/protect/cbss/accounts', app.grant, getMore);
  };

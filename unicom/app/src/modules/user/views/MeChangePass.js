@@ -10,7 +10,7 @@ Backbone.$ = $;
 //** 模型
 var ChangePass = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/account/changepass',	
+	urlRoot: config.api.host + '/private/account/changepass',	
 });
 
 exports = module.exports = FormView.extend({

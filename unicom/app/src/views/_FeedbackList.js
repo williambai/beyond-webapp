@@ -86,7 +86,7 @@ exports = module.exports = ListView.extend({
 		var comment = this.$('textarea[name=comment]').val() || '';
 		if(comment.length>0){
 			$.ajax({
-				url: config.api.host + '/platform/feedbacks/' + id + '?action=comment',
+				url: config.api.host + '/private/feedbacks/' + id + '?action=comment',
 				type: 'PUT',
 				data: {
 					content: comment,

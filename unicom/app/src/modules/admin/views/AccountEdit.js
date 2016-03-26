@@ -13,7 +13,7 @@ var PlatformAppCollection = require('../models/PlatformAppCollection');
 //** 模型
 var Account = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/platform/accounts',
+	urlRoot: config.api.host + '/protect/accounts',
 	defaults: {
 		apps: [],
 		roles: [],
@@ -139,7 +139,7 @@ exports = module.exports = FormView.extend({
 		var formData = new FormData();
 		formData.append('files', evt.currentTarget.files[0]);
 		$.ajax({
-			url: config.api.host + '/platform/accounts/'+ this.model.get('_id') +'?type=avatar',
+			url: config.api.host + '/protect/accounts/'+ this.model.get('_id') +'?type=avatar',
 			type: 'PUT',
 			xhrFields: {
 				withCredentials: true
@@ -166,7 +166,7 @@ exports = module.exports = FormView.extend({
 		var searchStr = this.$(evt.currentTarget).val() || '';
 		if(searchStr.length >1){
 			$.ajax({
-				url: config.api.host + '/departments?type=search&searchStr=' + searchStr,
+				url: config.api.host + '/protect/departments?type=search&searchStr=' + searchStr,
 				type: 'GET',
 				xhrFields: {
 					withCredentials: true

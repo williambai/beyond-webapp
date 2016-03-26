@@ -69,34 +69,34 @@
  	 * router outline
  	 */
  	/**
- 	 * add platform/smses
+ 	 * add protect/smses
  	 * action:
  	 *     
  	 */
- 	app.post('/platform/smses', add);
+ 	app.post('/protect/smses', app.grant, add);
  	/**
- 	 * update platform/smses
+ 	 * update protect/smses
  	 * action:
  	 *     
  	 */
- 	app.put('/platform/smses/:id', update);
+ 	app.put('/protect/smses/:id', app.grant, update);
 
  	/**
- 	 * delete platform/smses
+ 	 * delete protect/smses
  	 * action:
  	 *     
  	 */
- 	app.delete('/platform/smses/:id', remove);
+ 	app.delete('/protect/smses/:id', app.grant, remove);
  	/**
- 	 * get platform/smses
+ 	 * get protect/smses
  	 */
- 	app.get('/platform/smses/:id', getOne);
+ 	app.get('/protect/smses/:id', app.grant, getOne);
 
  	/**
- 	 * get platform/smses
+ 	 * get protect/smses
  	 * action:
  	 */
- 	app.get('/platform/smses', getMore);
+ 	app.get('/protect/smses', app.grant, getMore);
 
  };
 	// /**

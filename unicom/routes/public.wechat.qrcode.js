@@ -108,14 +108,14 @@ exports = module.exports = function(app, models) {
 	 * router outline
 	 */
 	/**
-	 * add platform/wechat/qrcode
+	 * add public/wechat/qrcode
 	 * action:
 	 *     
 	 */
-	app.post('/platform/wechat/:appid/qrcode/:sceneid', add);
+	app.post('/public/wechat/:appid/qrcode/:sceneid', add);
 	/**
-	 * get platform/wechat/qrcode
+	 * get public/wechat/qrcode
 	 */
-	app.get('/platform/wechat/:appid/qrcode/:ticket', getOne);
+	app.get('/public/wechat/:appid/qrcode/:ticket', getOne);
 
 };

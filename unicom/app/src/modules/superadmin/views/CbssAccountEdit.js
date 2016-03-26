@@ -10,7 +10,7 @@ Backbone.$ = $;
 //** 模型
 var Account = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/cbss/accounts',	
+	urlRoot: config.api.host + '/protect/cbss/accounts',	
 
 	validation: {
 		'username': {

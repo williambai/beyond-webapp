@@ -238,28 +238,28 @@
  	 * action:
  	 *     
  	 */
- 	app.post('/protect/wechat/:wid/menus', app.grant, add);
+ 	app.post('/protect/wechat/:wid/menus', app.isLogin, add);
  	/**
  	 * update protect/wechat/:wid/menus
  	 * action:
  	 *     
  	 */
- 	app.put('/protect/wechat/:wid/menus/:id', app.grant, update);
+ 	app.put('/protect/wechat/:wid/menus/:id', app.isLogin, update);
 
  	/**
  	 * delete protect/wechat/:wid/menus
  	 * action:
  	 *     
  	 */
- 	app.delete('/protect/wechat/:wid/menus/:id', app.grant, remove);
+ 	app.delete('/protect/wechat/:wid/menus/:id', app.isLogin, remove);
  	/**
  	 * get protect/wechat/:wid/menus
  	 */
- 	app.get('/protect/wechat/:wid/menus/:id', app.grant, getOne);
+ 	app.get('/protect/wechat/:wid/menus/:id', app.isLogin, getOne);
 
  	/**
  	 * get protect/wechat/:wid/menus
  	 * action:
  	 */
- 	app.get('/protect/wechat/:wid/menus', app.grant, getMore);
+ 	app.get('/protect/wechat/:wid/menus', app.isLogin, getMore);
  };

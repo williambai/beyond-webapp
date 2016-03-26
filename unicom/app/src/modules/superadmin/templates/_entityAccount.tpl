@@ -66,19 +66,34 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label for="email">电子邮件：</label>
+						<label for="email">电子邮件/手机号码：</label>
 						<input type="text" name="email" value="<%= model.email %>" class="form-control" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label for="department">所在部门名称：</label>
-						<input type="text" name="department[name]" value="<%= model.department.name %>" class="form-control" placeholder="请输入部门名称，并在列表中选择">
+						<label for="department">所在营业厅：</label>
+						<input type="text" name="department[name]" value="<%= model.department.name %>" class="form-control" placeholder="请输入营业厅名称，并在列表中选择">
 						<div id="departments"></div>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label for="department">所在部门路径：</label>
+						<label for="department">营业厅地址：</label>
 						<input type="text" name="department[path]" value="<%= model.department.path %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="email">所在城市：</label>
+						<input type="text" name="department[city]" value="<%= model.department.city %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="email">所在网格编码：</label>
+						<input type="text" name="department[grid]" value="<%= model.department.grid %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="email">所在地区编码：</label>
+						<input type="text" name="department[district]" value="<%= model.department.district %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -87,7 +102,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label>角色：</label>
+						<label>后台角色：</label>
 						<div style="padding-left:30px;" id="roles">
 						</div>
 					</div>

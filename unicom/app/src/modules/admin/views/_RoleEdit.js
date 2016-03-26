@@ -44,7 +44,7 @@ exports = module.exports = FormView.extend({
 	loadFeatures: function(callback){
 		var that = this;
 		$.ajax({
-			url: config.api.host + '/platform/features?app=admin',
+			url: config.api.host + '/protect/features?app=admin',
 			type: 'GET',
 			xhrFields: {
 				withCredentials: true

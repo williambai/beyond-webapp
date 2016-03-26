@@ -11,7 +11,7 @@ Backbone.$ = $;
 //** 模型
 var CbssAccount = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/cbss/accounts',	
+	urlRoot: config.api.host + '/protect/cbss/accounts',	
 
 	validation: {
 		'username': {
@@ -23,7 +23,7 @@ var CbssAccount = Backbone.Model.extend({
 
 //** 集合
 var CbssAccountCollection = Backbone.Collection.extend({
-	url: config.api.host + '/cbss/accounts',
+	url: config.api.host + '/protect/cbss/accounts',
 	model: CbssAccount,
 });
 
@@ -89,7 +89,7 @@ exports = module.exports = Backbone.View.extend({
 		$item.find('.login').addClass('disabled');
 		$item.append('<div class="captchaForm"><p>登录中。。。，请稍后</p></div>');
 		$.ajax({
-			url: config.api.host + '/cbss/accounts',
+			url: config.api.host + '/protect/cbss/accounts',
 			type: 'POST',
 			xhrFields: {
 				withCredentials: true
@@ -102,7 +102,7 @@ exports = module.exports = Backbone.View.extend({
 		}).done(function(data) {
 			var interval = setInterval(function(){
 				$.ajax({
-					url: config.api.host + '/cbss/accounts',
+					url: config.api.host + '/protect/cbss/accounts',
 					type: 'POST',
 					xhrFields: {
 						withCredentials: true
@@ -138,7 +138,7 @@ exports = module.exports = Backbone.View.extend({
 		var captchaText = this.$('input[name=captcha]').val();
 		$item.find('.captchaForm').html('<p>正在验证...</p>');
 		$.ajax({
-			url: config.api.host + '/cbss/accounts',
+			url: config.api.host + '/protect/cbss/accounts',
 			type: 'POST',
 			xhrFields: {
 				withCredentials: true

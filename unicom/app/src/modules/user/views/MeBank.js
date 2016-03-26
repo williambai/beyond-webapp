@@ -10,7 +10,7 @@ Backbone.$ = $;
 //** 模型
 var Bank = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/account/changepass',	
+	urlRoot: config.api.host + '/privite/banks',	
 });
 
 //** 主页面
