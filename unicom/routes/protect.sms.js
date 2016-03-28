@@ -1,8 +1,30 @@
- exports = module.exports = function(app, models) {
+var configSp = require('../config/sp').SGIP12;
 
+var getCurrentTime = function(){
+	var d = new Date();
+	var mTime = 0;
+	mTime = mTime * 100 + (d.getMonth() + 1);
+	mTime = mTime * 100 + d.getDate();
+	mTime = mTime * 100 + d.getHours();
+	mTime = mTime * 100 + d.getMinutes();
+	mTime = mTime * 100 + d.getSeconds();
+	return mTime;
+};
 
+exports = module.exports = function(app, models) {
   	var add = function(req, res) {
 		var doc = req.body;
+		doc.header = {};
+		doc.header.srcNodeID = configSp.NodeID;
+		doc.header.cmdTime = getCurrentTime();
+		doc.header.cmdSeq = app.genNextSeq();
+		doc.headerSeries = doc.header.srcNodeID + '' + doc.header.cmdTime + '' + doc.header.cmdSeq;
+		//** 短信创建者
+		doc.createBy = {
+			id: req.session.accountId,
+			name: req.session.username,
+		};
+		doc.status = '新建';
 		models.PlatformSms.create(doc, function(err) {
 			if (err) return res.send(err);
 			res.send({});
@@ -52,18 +74,51 @@
  			});
  	};
  	var getMore = function(req, res) {
+ 		var action = req.query.action || '';
  		var per = 20;
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
 
- 		models.PlatformSms
- 			.find({})
- 			.skip(per * page)
- 			.limit(per)
- 			.exec(function(err, docs) {
- 				if (err) return res.send(err);
- 				res.send(docs);
- 			});
+		switch (action) {
+			case 'search':
+				var searchStr = req.query.searchStr || '';
+				var searchRegex = new RegExp(searchStr, 'i');
+				var query = models.PlatformSms.find({
+					$or: [{
+						'sender': {
+							$regex: searchRegex
+						}
+					}, {
+						'receiver': {
+							$regex: searchRegex
+						}
+					}]
+				});
+				query
+					.sort({
+						_id: -1
+					})
+					.skip(per * page)
+					.limit(per)
+					.exec(function(err, docs) {
+						if (err) return res.send(err);
+						res.send(docs);
+					});
+				break;
+			default:
+				models.PlatformSms
+					.find({})
+					.sort({
+						_id: -1
+					})
+					.skip(per * page)
+					.limit(per)
+					.exec(function(err, docs) {
+						if (err) return res.send(err);
+						res.send(docs);
+					});
+				break;
+		}
  	};
  	/**
  	 * router outline

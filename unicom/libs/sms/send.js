@@ -59,9 +59,15 @@ var sendSMS = function(docs, done) {
 			return;
 		}
 		var receivers = (doc.receiver || '').split(';');
-		//** send Submit
+		//** 构建Submit
 		var submit = new Submit(receivers, 8, doc.content);
-		client.write(submit.makePDU());
+		//** 设置SMS头(8,20)
+		var reqPDU = new Buffer(20);
+		reqPDU.writeUInt32BE(doc.header.srcNodeID || 0, 8);
+		reqPDU.writeUInt32BE(doc.header.cmdTime || 0, 12);
+		reqPDU.writeUInt32BE(doc.header.cmdSeq || 0, 16);
+		//** 发送SMS 
+		client.write(submit.makePDU(reqPDU));
 		logger.debug('>> 3. submit');
 	};
 

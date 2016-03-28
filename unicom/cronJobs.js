@@ -59,25 +59,6 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 // });
 // 
 
-//** send 'new' sms in database
-var submit = require('./business/sms').submit;
-var sendSMSJob = new CronJob({
-	cronTime: '*/10 * * * * *',
-	onTick: function(){
-		submit(models,function(err,result) {
-			if(err || !result) return logger.error(err);
-			if (result.count > 0) {
-				logger.info('submit ' + (result.count ) + ' SMS successfully.');
-			} else {
-				logger.info('none SMS need submit till now.');
-			}
-
-		});
-	},
-	start: true,
-	runOnInit: true,//** execute right now!
-});
-
 var processOrder = require('./business/order').process;
 var processOrderJob = new CronJob({
 	cronTime: '10 */2 * * * *',

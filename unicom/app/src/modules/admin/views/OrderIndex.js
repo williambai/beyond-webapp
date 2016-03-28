@@ -16,7 +16,6 @@ var Order = Backbone.Model.extend({
 	defaults: {
 		customer: {},
 		goods: {},
-		customerInfo: {},
 		bonus: {
 			cash: 0,
 			points: 0,

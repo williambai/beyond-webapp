@@ -9,8 +9,17 @@ Backbone.$ = $;
 //** 模型
 var Sms = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/smses',	
-
+	urlRoot: config.api.host + '/protect/smses',
+	validation: {
+		sender: {
+			pattern: /^\d*$/,
+			msg: '输入业务代码，仅数字部分',
+		},
+		receiver: {
+			pattern: /^(\d{11}\D+)*\d{11}$/,
+			msg: '11位手机号码，以;隔开',
+		}
+	}
 });
 
 exports = module.exports = FormView.extend({
@@ -30,6 +39,7 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'keyup input[type=text]': 'inputText',
+		'keyup textarea': 'inputText',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -113,9 +123,14 @@ exports = module.exports = FormView.extend({
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		if(this.model.isNew()) this.$('.panel-title').text('新增用户');
-		var status = this.model.get('status');
-		this.$('input[name="status"][value="'+ status +'"]').attr('checked',true);
+		if(this.model.isNew()){
+			this.$('.panel-title').text('新增SMS');
+			this.$('input').removeAttr('readonly');
+			this.$('textarea').removeAttr('readonly');
+		}else{
+			var status = this.model.get('status');
+			this.$('input[name="status"][value="'+ status +'"]').attr('checked',true);
+		} 
 		return this;
 	},
 });

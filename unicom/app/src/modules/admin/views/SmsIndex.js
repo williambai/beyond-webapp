@@ -5,6 +5,7 @@ var $ = require('jquery'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 var ListView = require('./__ListView');
+var SearchView = require('./__SearchView');
 
 Backbone.$ = $;
 
@@ -37,6 +38,36 @@ var SmsListView = ListView.extend({
 	},
 });
 
+//** Search子视图
+var SmsSearchView = SearchView.extend({
+	el: '#search',
+
+	initialize: function(options){
+		var page = $(smsTpl);
+		var searchTemplate = $('#searchTemplate', page).html();
+		this.template = _.template(_.unescape(searchTemplate || ''));
+		this.model = new (Backbone.Model.extend({}));
+		this.on('load', this.load,this);
+	},
+
+	events: {
+		'submit form': 'search'
+	},
+
+	load: function(){
+		this.render();
+	},
+
+	search: function(){
+		var query = this.$('form').serialize();
+		this.done(query);
+		return false;
+	},
+
+	render: function(){
+		this.$el.html(this.template({model: this.model.toJSON()}));
+	},
+});
 //** 主视图
 exports = module.exports = Backbone.View.extend({
 
@@ -67,6 +98,13 @@ exports = module.exports = Backbone.View.extend({
 			el: '#list',
 		});
 		this.listView.trigger('load');
+		this.searchView = new SmsSearchView({
+			el: '#search',
+		});
+		this.searchView.done = function(query){
+			that.listView.trigger('refresh', query);
+		};
+		this.searchView.trigger('load');
 	},
 
 	scroll: function() {

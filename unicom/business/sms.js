@@ -11,7 +11,7 @@ var sms = {};
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
  */
-sms.submit = function(models,done){
+sms.submit = function(models, done) {
 	models.PlatformSms
 		.find({
 			'status': '新建'
@@ -19,7 +19,7 @@ sms.submit = function(models,done){
 		.limit(20)
 		.exec(function(err, docs) {
 			if (err) return done(err);
-			if (_.isEmpty(docs)) return done(null,{
+			if (_.isEmpty(docs)) return done(null, {
 				count: 0
 			}); //没有可执行的新建SMS
 			//** send sms
@@ -32,16 +32,12 @@ sms.submit = function(models,done){
 					var command = newDoc.command || {};
 					var header = command.header || {};
 					var headerSeries = header.srcNodeID + '' + header.cmdTime + '' + header.cmdSeq;
-					var sender = config.options.SPNumber || '';
-					var status = '已发送';
 					models.PlatformSms
-						.findByIdAndUpdate(
-							newDoc._id, {
+						.findOneAndUpdate({
+								headerSeries: headerSeries
+							}, {
 								$set: {
-									'header': header,
-									'headerSeries': headerSeries,
-									'sender': sender,
-									'status': status,
+									status: '已发送',
 								}
 							}, {
 								'upsert': false,
@@ -51,9 +47,28 @@ sms.submit = function(models,done){
 								if (err) return callback(err);
 								callback();
 							});
+					// var sender = config.options.SPNumber || '';
+					// var status = '已发送';
+					// models.PlatformSms
+					// 	.findByIdAndUpdate(
+					// 		newDoc._id, {
+					// 			$set: {
+					// 				'header': header,
+					// 				'headerSeries': headerSeries,
+					// 				'sender': sender,
+					// 				'status': status,
+					// 			}
+					// 		}, {
+					// 			'upsert': false,
+					// 			'new': true,
+					// 		},
+					// 		function(err) {
+					// 			if (err) return callback(err);
+					// 			callback();
+					// 		});
 				}, function(err) {
 					if (err) return done(err);
-					done(null,{
+					done(null, {
 						count: count
 					});
 				});
@@ -92,29 +107,29 @@ sms.report = function(models, options, done) {
  * 创建客户上行短信deliver
  * 状态为收到
  */
-sms.deliver = function(models,options,done) {
+sms.deliver = function(models, options, done) {
 	//** 短信报告cmdDeliever对象
 	var command = options.command || {};
 	//** cmdDeliever.header对象
 	var header = command.header || {};
-		var doc = {};
-		doc.header = header;
-		doc.headerSeries = header.srcNodeID + '' + header.cmdTime + '' + header.cmdSeq;
-		doc.sender = command.UserNumber;
-		doc.receiver = command.SPNumber;
-		//** message content transform
-		var messageContent = command.MessageContent || {};
-		var messageContentType = messageContent.type || 'Buffer';
-		var messageContentData = messageContent.data || []; 
+	var doc = {};
+	doc.header = header;
+	doc.headerSeries = header.srcNodeID + '' + header.cmdTime + '' + header.cmdSeq;
+	doc.sender = command.UserNumber;
+	doc.receiver = command.SPNumber;
+	//** message content transform
+	var messageContent = command.MessageContent || {};
+	var messageContentType = messageContent.type || 'Buffer';
+	var messageContentData = messageContent.data || [];
 
-		var content = new Buffer(messageContentData).toString('utf8');
-		doc.content = content;
-		doc.status = '收到';
-		models.PlatformSms
-			.create(doc, function(err) {
-				if (err) return done(err);
-				done(null);
-			});
+	var content = new Buffer(messageContentData).toString('utf8');
+	doc.content = content;
+	doc.status = '收到';
+	models.PlatformSms
+		.create(doc, function(err) {
+			if (err) return done(err);
+			done(null);
+		});
 };
 
 exports = module.exports = sms;

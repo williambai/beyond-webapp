@@ -21,6 +21,14 @@ app.server = http.createServer(app);
 app.randomHex = function() {
 	return new Date().getTime();
 };
+//** 同一时间不重复的序列号，与构建SMS相关
+var curSeq = 0xffffffff;
+app.genNextSeq = function() {
+	curSeq = (curSeq > 0x7fffff00) ? 0 : curSeq + 1;
+	console.log('+++++')
+	console.log(curSeq)
+	return curSeq;
+};
 
 //** import the data layer
 var mongoose = require('mongoose');
@@ -105,31 +113,31 @@ app.isLogin = function(req, res, next) {
 
 //授权判断中间件
 app.grant = function(req, res, next) {
-	logger.debug('session(grant):' + JSON.stringify(req.session));
-	logger.debug('req.path(grant): ' + util.inspect(req.path));
-	logger.debug('req.params.id(grant): ' + util.inspect(req.params.id));
-	logger.debug('req.method(grant): ' + req.method);
+	// logger.debug('session(grant):' + JSON.stringify(req.session));
+	// logger.debug('req.path(grant): ' + util.inspect(req.path));
+	// logger.debug('req.params.id(grant): ' + util.inspect(req.params.id));
+	// logger.debug('req.method(grant): ' + req.method);
 	var path = req.path;
 	if ((req.method == 'PUT' ||
 			req.method == 'DELETE' ||
 			req.method == 'GET') && req.params.id) {
 		var id = path.lastIndexOf('/');
-		logger.debug('path.lastIndexOf "/"(grant): ' + id);
+		// logger.debug('path.lastIndexOf "/"(grant): ' + id);
 		if (id != -1) path = path.slice(0, id);
 	}
-	logger.debug('route(grant):' + path);
+	// logger.debug('route(grant):' + path);
 
 	var grant = req.session.grant || {};
 	var features = _.values(grant);
-	logger.debug('features(grant): ' + JSON.stringify(features));
+	// logger.debug('features(grant): ' + JSON.stringify(features));
 	var feature = (_.where(features, {
 		route: path
 	}))[0];
 	if (_.isUndefined(feature)) return res.status(401).end();
-	logger.debug('current feature(grant):' + JSON.stringify(feature));
+	// logger.debug('current feature(grant):' + JSON.stringify(feature));
 
 	var regexp_path = new RegExp(path, 'i');
-	logger.debug('regexp_path(grant):' + regexp_path);
+	// logger.debug('regexp_path(grant):' + regexp_path);
 	if (regexp_path.test(feature.route)) {
 		if (req.method == 'POST' && feature.add) return next();
 		if (req.method == 'PUT' && feature.update) return next();

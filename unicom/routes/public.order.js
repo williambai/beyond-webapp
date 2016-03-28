@@ -2,6 +2,18 @@ var util = require('util');
 var path = require('path');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
+var configSp = require('../config/sp').SGIP12;
+
+var getCurrentTime = function(){
+	var d = new Date();
+	var mTime = 0;
+	mTime = mTime * 100 + (d.getMonth() + 1);
+	mTime = mTime * 100 + d.getDate();
+	mTime = mTime * 100 + d.getHours();
+	mTime = mTime * 100 + d.getMinutes();
+	mTime = mTime * 100 + d.getSeconds();
+	return mTime;
+};
 
 exports = module.exports = function(app, models) {
 	var _ = require('underscore');
@@ -47,10 +59,30 @@ exports = module.exports = function(app, models) {
 					console.log(orders)
 					models.Order.create(orders, function(err){
 						if(err) return callback(err);
+						callback(null,orders);
+					});
+				},
+				function createSms(orders,callback){
+					var smses = [];
+					_.each(orders,function(order){
+						var sms = {};
+						sms.header = {};
+						sms.header.srcNodeID = configSp.NodeID;
+						sms.header.cmdTime = getCurrentTime();
+						sms.header.cmdSeq = app.genNextSeq();
+						sms.headerSeries = sms.header.srcNodeID + '' + sms.header.cmdTime + '' + sms.header.cmdSeq;
+						sms.sender = configSp.options.SPNumber + String(order.goods && order.goods.id).replace(/\D/g,''); 
+						sms.receiver = order.customer.mobile;
+						sms.content = '订购'+ order.goods.name + '，回复Y，确认订购。';
+						sms.status = '新建';
+						smses.push(sms);
+					});
+					models.PlatformSms.create(smses, function(err){
+						if(err) return callback(err);
 						callback(null);
 					});
 				},
-				function activity(callback) {
+				function createActivity(callback) {
 					var activity = {
 						uid: req.session.accountId,
 						username: req.session.username,

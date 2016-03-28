@@ -15,15 +15,28 @@
 			</div>
 		</div>
 	</div>
+	<div id="searchTemplate">
+		<form id="searchForm" class="form-inline">
+			<input type="hidden" name="action" value="search">
+			<div class="form-group">
+				<label>搜索：</label>
+				<input type="text" name="searchStr" class="form-control" placeholder="11位手机号码">&nbsp;&nbsp;
+			</div>
+			<div class="form-group">
+				<input type="submit" value="查询" class="btn btn-info btn-block">
+			</div>
+		</form>
+		<hr/>
+	</div>
 	<div id="itemTemplate">
 		<div class="item" id="<%= model._id %>">
 	 		<div class="pull-right">
 				<button class="btn btn-success edit">编辑</button>
 				<button class="btn btn-danger delete">删除</button>
 			</div>
-			<h4><%= model.receiver %></h4>
-			<p>发送者：<%= model.sender %>&nbsp;&nbsp;状态：<%= model.status %></p>
-			<p>SMS内容：<%= model.content.slice(0,40) %></p>
+			<h4>发送者：<%= model.sender %>&nbsp;&nbsp;<%= model.status %></h4>
+			<p>接收者：<%= model.receiver && model.receiver.slice(0,40) %></p>
+			<p>SMS内容：<%= model.content && model.content.slice(0,40) %></p>
 		</div>
 		<hr/>
 	</div>
@@ -36,17 +49,17 @@
 				<form id="accountForm">
 					<div class="form-group">
 						<label>发送方：</label>
-						<input type="text" name="sender" value="<%= model.sender %>" class="form-control" readonly>
+						<input type="text" name="sender" value="<%= model.sender %>" class="form-control" placeholder="10655836+业务代码" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label for="receiver">接收方：</label>
-						<input type="text" name="receiver" value="<%= model.receiver %>" class="form-control">
+						<textarea name="receiver" class="form-control" placeholder="11位的手机号码。如果是多个，请用;分隔" readonly><%= model.receiver %></textarea> 
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label for="content">SMS内容：</label>
-						<textarea name="content" class="form-control"><%= model.content %></textarea>
+						<textarea name="content" class="form-control" readonly><%= model.content %></textarea>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -55,8 +68,6 @@
 							<input type="radio" name="status" value="新建" checked>&nbsp;&nbsp;新建&nbsp;&nbsp;
 							<input type="radio" name="status" value="已发送">&nbsp;&nbsp;已发送&nbsp;&nbsp;
 							<input type="radio" name="status" value="已确认">&nbsp;&nbsp;已确认&nbsp;&nbsp;
-							<input type="radio" name="status" value="已订购">&nbsp;&nbsp;已订购&nbsp;&nbsp;
-							<input type="radio" name="status" value="已取消">&nbsp;&nbsp;已取消&nbsp;&nbsp;
 							<input type="radio" name="status" value="已处理">&nbsp;&nbsp;已处理&nbsp;&nbsp;
 							<input type="radio" name="status" value="失败">&nbsp;&nbsp;失败&nbsp;&nbsp;
 						</div>

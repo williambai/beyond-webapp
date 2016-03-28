@@ -82,6 +82,37 @@ sgipSerice.on('connection', function(socket) {
 	receiver.process(socket);
 });
 
+/**
+ * 以服务模式接收短信中心转发的短信
+ */
+
 sgipSerice.listen(config.sp.listener.port, function() {
 	logger.info('SGIP短信接收服务启动在 port:' + config.sp.listener.port);
+});
+
+/**
+ * 周期性发送数据库中的新短信
+ * 
+ */
+
+//** CronJob package
+var CronJob = require('cron').CronJob;
+
+//** send 'new' sms in database
+var submit = require('./business/sms').submit;
+var sendSMSJob = new CronJob({
+	cronTime: '*/10 * * * * *',
+	onTick: function(){
+		submit(models,function(err,result) {
+			if(err || !result) return logger.error(err);
+			if (result.count > 0) {
+				logger.info('submit ' + (result.count ) + ' SMS successfully.');
+			} else {
+				logger.info('none SMS need submit till now.');
+			}
+
+		});
+	},
+	start: true,
+	runOnInit: true,//** execute right now!
 });
