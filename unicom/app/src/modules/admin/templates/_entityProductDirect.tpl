@@ -142,9 +142,10 @@
 						<div id="goods"></div>
 						<span class="help-block"></span>
 					</div>
+					<input type="hidden" name="goods[id]" value="<%= model.goods.id %>">
 					<div class="form-group">
 						<label>物料编码：</label>
-						<input type="text" name="goods[id]" value="<%= model.goods.id %>" class="form-control" readonly>
+						<input type="text" name="goods[barcode]" value="<%= model.goods.barcode %>" class="form-control" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

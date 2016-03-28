@@ -38,21 +38,21 @@ var _processOrder = function(models,options,done) {
 
 
 					//** process 4G order
-					var path = require('path');
-					cbss_cwd = path.join(__dirname, '../libs/cbss');
-					var worker = require('child_process').execFile(
-						'casperjs', [
-							'order.casper.js',
-							'--id=' + id,
-							'--cookie=' + JSON.stringify(doc.cookies),
+					// var path = require('path');
+					// cbss_cwd = path.join(__dirname, '../libs/cbss');
+					// var worker = require('child_process').execFile(
+					// 	'casperjs', [
+					// 		'order.casper.js',
+					// 		'--id=' + id,
+					// 		'--cookie=' + JSON.stringify(doc.cookies),
 
-						], {
-							cwd: cbss_cwd,
-						},
-						function(err, stdout, stderr) {
-							if (err) return done(err);
-							_processOrder(models,options,done);
-						});
+					// 	], {
+					// 		cwd: cbss_cwd,
+					// 	},
+					// 	function(err, stdout, stderr) {
+					// 		if (err) return done(err);
+					// 		_processOrder(models,options,done);
+					// 	});
 				});
 		});
 };

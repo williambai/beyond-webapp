@@ -1,8 +1,12 @@
+var _ = require('underscore');
+
  exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
- 		var doc = new models.FinanceBank(req.body);
- 		doc.save(function(err) {
+ 		var doc = req.body;
+ 		doc.uid = req.session.accountId;
+ 		models.FinanceBank
+ 			.create(doc,function(err) {
  			if (err) return res.send(err);
  			res.send({});
  		});
@@ -19,15 +23,18 @@
  		});
  	};
  	var update = function(req, res) {
- 		var id = req.params.id;
+ 		var meId = req.session.accountId;
  		var set = req.body;
- 		models.FinanceBank.findOneAndUpdate({
- 			_id: id,
- 			uid: req.session.accountId, //** 只能改自己的 			
- 		}, {
+ 		//** 移除id
+ 		set = _.omit(set,'_id');
+ 		set.uid = meId;
+ 		models.FinanceBank
+ 			.findOneAndUpdate({
+	 			uid: meId, //** 只能改自己的 			
+	 		}, {
  				$set: set
  			}, {
- 				'upsert': false,
+ 				'upsert': true,
  				'new': true,
  			},
  			function(err, doc) {
@@ -40,11 +47,11 @@
  		var id = req.params.id;
  		models.FinanceBank
  			.findOne({
- 				_id: id,
  				uid: req.session.accountId, //** 只能看自己的 			 				
  			})
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
+ 				if(!doc) return res.send({});
  				res.send(doc);
  			});
  	};

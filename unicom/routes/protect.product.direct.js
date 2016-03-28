@@ -7,11 +7,20 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  	var _ = require('underscore');
 
  	var add = function(req, res) {
- 		var doc = new models.ProductDirect(req.body);
- 		doc.save(function(err) {
- 			if (err) return res.send(err);
- 			res.send({});
- 		});
+ 		var doc = req.body;
+ 		models.Goods
+ 			.findById(
+ 				doc.goods.id,
+ 				function(err,goods){
+ 					if(err || !goods) return res.send(err || {code: 404112, errmsg: 'goods id 不存在。'});
+ 					//** 保存goods
+ 					doc.goods = goods;
+ 					models.ProductDirect
+ 						.create(doc, function(err) {
+	 						if (err) return res.send(err);
+	 						res.send({});
+	 					});
+ 				});
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
@@ -22,18 +31,26 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  	};
  	var update = function(req, res) {
  		var id = req.params.id;
- 		var set = req.body;
- 		models.ProductDirect.findByIdAndUpdate(id, {
- 				$set: set
- 			}, {
- 				'upsert': false,
- 				'new': true,
- 			},
- 			function(err, doc) {
- 				if (err) return res.send(err);
- 				res.send(doc);
- 			}
- 		);
+ 		var doc = req.body;
+ 		models.Goods
+ 			.findById(
+ 				doc.goods.id,
+ 				function(err,goods){
+ 					if(err || !goods) return res.send(err || {code: 404112, errmsg: 'goods id 不存在。'});
+ 					//** 保存goods
+ 					doc.goods = goods;
+ 					models.ProductDirect.findByIdAndUpdate(id, {
+ 							$set: doc
+ 						}, {
+ 							'upsert': false,
+ 							'new': true,
+ 						},
+ 						function(err, doc) {
+ 							if (err) return res.send(err);
+ 							res.send(doc);
+ 						}
+ 					);
+ 				});
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;

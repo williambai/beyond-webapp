@@ -60,7 +60,9 @@ var sendSMS = function(docs, done) {
 		}
 		var receivers = (doc.receiver || '').split(';');
 		//** 构建Submit
-		var submit = new Submit(receivers, 8, doc.content);
+		var submit = new Submit(receivers, 8, doc.content, {
+			SPNumber: doc.sender
+		});
 		//** 设置SMS头(8,20)
 		var reqPDU = new Buffer(20);
 		reqPDU.writeUInt32BE(doc.header.srcNodeID || 0, 8);

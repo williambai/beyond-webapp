@@ -21,7 +21,12 @@ var Goods = Backbone.Model.extend({
 	    'barcode': {
 			required: true,
 			msg: '请输入运营商系统的物料号'
-	    }
+	    },
+	    'smscode': {
+	    	min: 0,
+	    	max: 99999999,
+	    	msg:'请输入八位以内的数字'
+	    },
 	},
 });
 

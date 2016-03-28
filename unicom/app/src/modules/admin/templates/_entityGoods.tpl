@@ -42,9 +42,9 @@
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4><%= model.name %>&nbsp;&nbsp;<%= model.price %><%= model.unit %></h4>
-		<p>类型：<%= model.category %>, 状态：<%= model.status %></p>
-		<p></p>
+		<h4><%= model.name %>&nbsp;&nbsp;类型：<%= model.category %></h4>
+		<!-- <p><%= model.price %><%= model.unit %>, 状态：<%= model.status %></p> -->
+		<p>物料编码：<%= model.barcode %>&nbsp;&nbsp;业务编码：<%= model.smscode %></p>
 		<hr/>
 	</div>
  	<div id="editTemplate">
@@ -54,6 +54,11 @@
 			</div>
 			<div class="panel-body">
 				<form id="goodsForm">
+					<div class="form-group">
+						<label>业务(短信)唯一编码：</label>
+						<input type="text" name="smscode" value="<%= model.smscode %>" class="form-control" placeholder="六位以内数字，不可重复">
+						<span class="help-block"></span>
+					</div>
 					<div class="form-group">
 						<label>物料名称：</label>
 						<input type="text" name="name" value="<%= model.name %>" class="form-control">
@@ -90,6 +95,11 @@
 					<div class="form-group">
 						<label>参考数量：</label>
 						<input type="text" name="quantity" value="<%= model.quantity %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>代理佣金：</label>
+						<input type="text" name="bonus" value="<%= model.bonus %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

@@ -63,7 +63,7 @@
 				<form id="accountForm">
 					<div class="form-group">
 						<label for="email">原密码：</label>
-						<input type="text" name="old_password" class="form-control">
+						<input type="password" name="old_password" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -100,23 +100,33 @@
 				<p>&nbsp;</p>
 				<form id="accountForm">
 					<div class="form-group">
-						<label for="bank_name">发卡银行</label>
-						<input type="text" name="bank_name" value="<%= model.bank_name %>" class="form-control">
+						<label for="bankName">发卡银行</label>
+						<input type="text" name="bankName" value="<%= model.bankName %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label for="account_name">户名：</label>
-						<input type="text" name="account_name" value="<%= model.account_name %>" class="form-control"/>
+						<label for="bankAddr">开户行地址：</label>
+						<input type="text" name="bankAddr" value="<%= model.bankAddr %>" placeholder="如果不记得，可以不填" class="form-control"/>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label for="account_no">卡号：</label>
-						<input type="text" name="account_no" value="<%= model.account_no %>" class="form-control"/>
+						<label for="accountName">户名：</label>
+						<input type="text" name="accountName" value="<%= model.accountName %>" class="form-control"/>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label for="account_name">身份证号码：</label>
-						<input type="text" name="account_card_id" value="<%= model.account_card_id %>" class="form-control"/>
+						<label for="accountNo">卡号：</label>
+						<input type="text" name="accountNo" value="<%= model.accountNo %>" class="form-control"/>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="expired">有效期：</label>
+						<input type="text" name="expired" value="<%= model.expired %>" class="form-control" placeholder="yyyy/mm/dd">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="cardId">身份证号码：</label>
+						<input type="text" name="cardId" value="<%= model.cardId %>" class="form-control"/>
 						<span class="help-block"></span>
 					</div>
 					<p></p>

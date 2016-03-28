@@ -24,7 +24,7 @@ var ProductDirect = Backbone.Model.extend({
 	    	minLength: 2,
 	    	msg:'长度至少两位'
 	    },
-	    'goods[id]': {
+	    'goods[name]': {
 			required: true,
 			msg: '请选择一个物料'
 	    }
@@ -112,7 +112,7 @@ exports = module.exports = FormView.extend({
 		var searchStr = this.$('input[name="goods[name]"]').val() || '';
 		if(searchStr.length > 1){
 			$.ajax({
-				url: config.api.host + '/protect/goods?type=search&per=10&searchStr=' + searchStr,
+				url: config.api.host + '/protect/goods?action=search&per=10&searchStr=' + searchStr,
 				type: 'GET',
 				fields: {
 					withCredentials: true
@@ -122,11 +122,11 @@ exports = module.exports = FormView.extend({
 				var goods = '<ul class="list-group">';
 				data.forEach(function(item){
 					goods += '<li class="list-group-item">'+ 
+							item.smscode + '|' +
 							item.barcode + '|' + 
 							item.name  + '|' + 
-							item.category + '|' +
-							item.price + item.unit + '|' +
-							item.quantity + '</li>';
+							item._id  +
+							'</li>';
 				});
 				goods += '</ul>';
 				that.$('#goods').html(goods);
@@ -137,8 +137,9 @@ exports = module.exports = FormView.extend({
 
 	selectGoods: function(evt){
 		var goods = $(evt.currentTarget).text().split('|');
-		this.$('input[name="goods[id]"]').val(goods[0]);
-		this.$('input[name="goods[name]"]').val(goods[1]);
+		this.$('input[name="goods[barcode]"]').val(goods[1]);
+		this.$('input[name="goods[name]"]').val(goods[2]);
+		this.$('input[name="goods[id]"]').val(goods[3]);
 		this.$('#goods').empty();
 		return false;
 	},

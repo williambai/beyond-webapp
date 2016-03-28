@@ -71,7 +71,7 @@ exports = module.exports = function(app, models) {
 						sms.header.cmdTime = getCurrentTime();
 						sms.header.cmdSeq = app.genNextSeq();
 						sms.headerSeries = sms.header.srcNodeID + '' + sms.header.cmdTime + '' + sms.header.cmdSeq;
-						sms.sender = configSp.options.SPNumber + String(order.goods && order.goods.id).replace(/\D/g,''); 
+						sms.sender = configSp.options.SPNumber + String(order.goods && order.goods.smscode).replace(/\D/g,''); 
 						sms.receiver = order.customer.mobile;
 						sms.content = '订购'+ order.goods.name + '，回复Y，确认订购。';
 						sms.status = '新建';

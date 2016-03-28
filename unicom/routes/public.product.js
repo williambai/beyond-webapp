@@ -92,7 +92,7 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  						category: {
  							$regex: searchRegex
  						},
- 						// status: '有效',
+ 						status: '有效',
  					})
 		 			.skip(per * page)
 		 			.limit(per)
@@ -103,7 +103,9 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  				break;
  			default:
 		 		models.ProductDirect
-		 			.find({})
+		 			.find({
+		 				status: '有效',
+		 			})
 		 			.sort({display_sort: -1})
 		 			.skip(per * page)
 		 			.limit(per)

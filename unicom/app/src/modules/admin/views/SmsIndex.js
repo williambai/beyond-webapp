@@ -4,6 +4,7 @@ var $ = require('jquery'),
     smsTpl = require('../templates/_entitySms.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
+var Utils = require('./__Util');
 var ListView = require('./__ListView');
 var SearchView = require('./__SearchView');
 
@@ -34,7 +35,14 @@ var SmsListView = ListView.extend({
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){
+		this._transformTime(model);
 		return this.template({model: model.toJSON()});
+	},
+
+	_transformTime: function(model){
+		var createtime = model.get('lastupdatetime');
+		var deltatime = Utils.transformTime(createtime);
+		model.set('deltatime', deltatime);
 	},
 });
 

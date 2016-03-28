@@ -3,6 +3,7 @@
 		"name": "4G半年包(100元1G立即生效)",
 		"category": "4G",
 		"barcode": "8000610700",
+		"smscode": "610700",
 		"unit": "元",
 		"price": 100
 	},
@@ -10,6 +11,7 @@
 		"name": "WO+视频PPTV定向流量包月",
 		"category": "4G",
 		"barcode": "8000616600",
+		"smscode": "616600",
 		"unit": "元",
 		"price": 15
 	},
@@ -17,6 +19,7 @@
 		"name": "WO+视频凤凰定向流量包月",
 		"category": "4G",
 		"barcode": "8000610900",
+		"smscode": "610900",
 		"unit": "元",
 		"price": 15
 	},
@@ -24,6 +27,7 @@
 		"name": "WO+视频腾讯定向流量包月",
 		"category": "4G",
 		"barcode": "4900115200",
+		"smscode": "115200",
 		"unit": "元",
 		"price": 15
 	},
@@ -31,6 +35,7 @@
 		"name": "QQ音乐",
 		"category": "4G",
 		"barcode": "9071993101",
+		"smscode": "993101",
 		"unit": "元",
 		"price": 9
 	},
@@ -38,6 +43,7 @@
 		"name": "开机提醒",
 		"category": "4G",
 		"barcode": "9071990805",
+		"smscode": "990805",
 		"unit": "元",
 		"price": 3
 	},
@@ -45,6 +51,7 @@
 		"name": "来电秘书",
 		"category": "4G",
 		"barcode": "9071230301",
+		"smscode": "230301",
 		"unit": "元",
 		"price": 3
 	},
@@ -52,6 +59,7 @@
 		"name": "省内城市天气",
 		"category": "4G",
 		"barcode": "4900111900",
+		"smscode": "111900",
 		"unit": "元",
 		"price": 3
 	},
@@ -59,6 +67,7 @@
 		"name": "沃酷狗",
 		"category": "4G",
 		"barcode": "3002_100_1536_0",
+		"smscode": "10015360",
 		"unit": "元",
 		"price": 9
 	},
@@ -66,6 +75,7 @@
 		"name": "4G省内半年包(40元1.5G立即生效)",
 		"category": "4G",
 		"barcode": "3001_100_1024_0",
+		"smscode": "10010240",
 		"unit": "元",
 		"price": 40
 	},
@@ -73,6 +83,7 @@
 		"name": "武汉通信无忧包1元版",
 		"category": "4G",
 		"barcode": "9071030701",
+		"smscode": "030701",
 		"unit": "元",
 		"price": 1
 	}

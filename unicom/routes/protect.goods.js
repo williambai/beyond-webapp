@@ -235,34 +235,36 @@ exports = module.exports = function(app, models) {
 
  		switch (action) {
  			case 'search':
- 				var searchStr = req.query.searchStr || '';
- 				var searchRegex = new RegExp(searchStr, 'i');
- 				var status = req.query.status;
- 				var query = models.Goods.find({
- 					$or: [{
- 						'name': {
- 							$regex: searchRegex
- 						}
- 					}, {
- 						'category': {
- 							$regex: searchRegex
- 						}
- 					}]
- 				});
- 				if (!_.isEmpty(status)) {
- 					query.where({
- 						status: status
+	 			var searchStr = req.query.searchStr || '';
+ 				try{
+ 					var searchRegex = new RegExp(searchStr, 'i');
+ 					var status = req.query.status;
+ 					var query = models.Goods.find({
+ 						$or: [{
+ 							'name': {
+ 								$regex: searchRegex
+ 							}
+ 						}]
  					});
+ 					if (!_.isEmpty(status)) {
+ 						query.where({
+ 							status: status
+ 						});
+ 					}
+ 					query.sort({
+ 							_id: -1
+ 						})
+ 						.skip(per * page)
+ 						.limit(per)
+ 						.exec(function(err, docs) {
+ 							if (err) return res.send(err);
+ 							res.send(docs);
+ 						});
+
+ 				}catch(e){
+ 					logger.error('正则表达式错误：' + e);
+ 					res.send({});
  				}
- 				query.sort({
- 						_id: -1
- 					})
- 					.skip(per * page)
- 					.limit(per)
- 					.exec(function(err, docs) {
- 						if (err) return res.send(err);
- 						res.send(docs);
- 					});
  				break;
  			case 'export': 
  				exportData(req,res);

@@ -10,7 +10,13 @@ Backbone.$ = $;
 //** 模型
 var ChangePass = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/private/account/changepass',	
+	urlRoot: config.api.host + '/private/account/changepass',
+	validation: {
+		'old_password': {
+			required: true,
+			msg: '请输入原密码'
+		},
+	}
 });
 
 exports = module.exports = FormView.extend({
@@ -21,7 +27,7 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new ChangePass({_id: options.id});
+		this.model = new ChangePass();
 		var page = $(meTpl);
 		var editTemplate = $('#accountTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
@@ -83,6 +89,31 @@ exports = module.exports = FormView.extend({
 
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
+		var password = this.model.get('password');
+		var cpassword = this.model.get('cpassword');
+		if(password != cpassword){
+			var error = '两次输入不一致';
+			that.$('[name="cpassword"]').parent().addClass('has-error');
+			that.$('[name="cpassword"]').parent().find('span.help-block').text(error);
+			return false;			
+		}
+		if(!_.isEmpty(password) && password.length < 5){
+			var error = '密码长度至少五位';
+			that.$('[name="password"]').parent().addClass('has-error');
+			that.$('[name="password"]').parent().find('span.help-block').text(error);
+			return false;
+		}
+		if(_.isEmpty(password)){
+			if(that.model.isNew()){
+				var error = '用户必须设置密码';
+				that.$('[name="password"]').parent().addClass('has-error');
+				that.$('[name="password"]').parent().find('span.help-block').text(error);
+				return false;
+			}else {
+				this.model.unset('password',{silent: true});
+				this.model.unset('cpassword',{silent: true});			
+			}
+		}
 		// console.log(this.model.attributes);
 		this.model.save(null, {
 			xhrFields: {

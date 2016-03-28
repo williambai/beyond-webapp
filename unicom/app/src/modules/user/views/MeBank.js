@@ -10,7 +10,25 @@ Backbone.$ = $;
 //** 模型
 var Bank = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/privite/banks',	
+	urlRoot: config.api.host + '/private/finance/banks',
+	validation: {
+		'bankName': {
+			required: true,
+			msg: '请输入开户银行名称'
+		},
+		'accountNo': {
+			required: true,
+			msg: '请输入银行卡号',
+		},
+		'accountName': {
+			required: true,
+			msg: '请输入账户姓名',
+		},
+		'cardId': {
+			required: true,
+			msg: '请输入身份证号码',
+		},
+	}
 });
 
 //** 主页面
@@ -22,7 +40,7 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Bank({_id: options.id});
+		this.model = new Bank({_id: 'me'});
 		var page = $(meTpl);
 		var editTemplate = $('#bankTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));

@@ -25,6 +25,7 @@ module.exports = exports = function(mongoose){
 			id: String, //** 产品id(goods._id)
 			category: String, //** 产品分类(goods.category)
 			barcode: String, //** 产品编码(goods.barcode)
+			smscode: String, //** 业务(SMS)编码(goods.smscode)
 			price: Number, //** 产品单价(product.price)
 			bonus: Number, //** 单个产品佣金
 		},

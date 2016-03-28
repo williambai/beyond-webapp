@@ -37,6 +37,7 @@
 			<h4>发送者：<%= model.sender %>&nbsp;&nbsp;<%= model.status %></h4>
 			<p>接收者：<%= model.receiver && model.receiver.slice(0,40) %></p>
 			<p>SMS内容：<%= model.content && model.content.slice(0,40) %></p>
+			<p><i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %>&nbsp;&nbsp;<i class="fa fa-calendar"></i>&nbsp;<%= new Date(model.lastupdatetime).toLocaleString() %></p>
 		</div>
 		<hr/>
 	</div>
