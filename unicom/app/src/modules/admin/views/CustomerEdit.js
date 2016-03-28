@@ -13,6 +13,7 @@ var Customer = Backbone.Model.extend({
 	urlRoot: config.api.host + '/protect/customers',	
 	
 	defaults: {
+		department: {},
 	},
 	
 	validation: {
@@ -45,7 +46,7 @@ exports = module.exports = FormView.extend({
 
 	events: {
 		'keyup input[type=text]': 'inputText',
-		'keyup input[name="department"]': 'getDepartments',
+		'keyup input[name="department[name]"]': 'getDepartments',
 		'click .department': 'selectDepartment',
 		// 'keyup input[name="channel"]': 'getChannels',
 		// 'click .channel': 'selectChannel',
@@ -90,7 +91,7 @@ exports = module.exports = FormView.extend({
 		var searchStr = this.$(evt.currentTarget).val() || '';
 		if(searchStr.length >1){
 			$.ajax({
-				url: config.api.host + '/departments?type=search&searchStr=' + searchStr,
+				url: config.api.host + '/protect/departments?type=search&searchStr=' + searchStr,
 				type: 'GET',
 				xhrFields: {
 					withCredentials: true
@@ -99,7 +100,7 @@ exports = module.exports = FormView.extend({
 				data = data || [];
 				var departmentsView = '<ul>';
 				data.forEach(function(item){
-					departmentsView += '<li class="department" id="'+ item._id +'">' + item.path + '</li>';
+					departmentsView += '<li class="department" id="'+ item._id +'" addr="'+ item.address +'" name="'+ item.name +'" city="' + item.city + '" grid="'+ item.grid +'" district="'+ item.district +'">' + item.name + ' | ' + item.address + '</li>';
 				});
 				departmentsView += '</ul>';
 				that.$('#departments').html(departmentsView);
@@ -110,8 +111,16 @@ exports = module.exports = FormView.extend({
 
 	selectDepartment: function(evt){
 		var id = this.$(evt.currentTarget).attr('id');
-		var path = this.$(evt.currentTarget).text();
-		this.$('input[name="department"]').val(path);
+		var name = this.$(evt.currentTarget).attr('name');
+		var address = this.$(evt.currentTarget).attr('addr');
+		var city = this.$(evt.currentTarget).attr('city');
+		var grid = this.$(evt.currentTarget).attr('grid');
+		var district = this.$(evt.currentTarget).attr('district');
+		this.$('input[name="department[name]"]').val(name);
+		this.$('input[name="department[address]"]').val(address);
+		this.$('input[name="department[city]"]').val(city);
+		this.$('input[name="department[grid]"]').val(grid);
+		this.$('input[name="department[district]"]').val(district);
 		this.$('#departments').empty();
 		return false;
 	},

@@ -9,7 +9,13 @@ module.exports = exports = function(mongoose){
 		address: String, //** 客户通讯地址
 		phone: String,//** 客户备用联系电话
 		location: String, //** 客户地理位置
-		department: String, //** 客户直接管理部门
+		department: { //** 客户直接管理部门
+			id: String, 
+			name: String, //** 营业厅名称
+			city: String, //** 城市名称
+			grid: String, //** 网格编码
+			district: String, //** 地区编码
+		},
 		account_name: String,//** 特定客户经理
 		account_mobile: String, //** 特定客户经理ID
 		status: {

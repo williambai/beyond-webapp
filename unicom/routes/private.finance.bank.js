@@ -5,6 +5,7 @@ var _ = require('underscore');
  	var add = function(req, res) {
  		var doc = req.body;
  		doc.uid = req.session.accountId;
+ 		doc.mobile = req.session.email;
  		models.FinanceBank
  			.create(doc,function(err) {
  			if (err) return res.send(err);
@@ -28,6 +29,7 @@ var _ = require('underscore');
  		//** 移除id
  		set = _.omit(set,'_id');
  		set.uid = meId;
+ 		set.mobile = req.session.email;
  		models.FinanceBank
  			.findOneAndUpdate({
 	 			uid: meId, //** 只能改自己的 			

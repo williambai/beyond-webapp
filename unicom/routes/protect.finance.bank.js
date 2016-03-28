@@ -19,9 +19,15 @@
  				var searchStr = req.query.searchStr || '';
  				var searchRegex = new RegExp(searchStr, 'i');
  				var query = models.FinanceBank.find({
- 					'accountName': {
- 						$regex: searchRegex
- 					}
+ 					$or: [{
+ 						'accountName': {
+ 							$regex: searchRegex
+ 						}
+ 					}, {
+ 						'mobile': {
+ 							$regex: searchRegex
+ 						}
+ 					}]
  				});
  				query.sort({
  						_id: -1

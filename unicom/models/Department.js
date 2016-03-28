@@ -2,6 +2,7 @@ module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
 		name: String,
+		nickname: String,
 		address: String,
 		zipcode: String,
 		website: String,

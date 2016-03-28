@@ -23,6 +23,9 @@ var GoodsIndexView = require('./views/GoodsIndex');
 var GoodsEditView = require('./views/GoodsEdit');
 var GoodsImportView = require('./views/GoodsImport');
 var GoodsExportView = require('./views/GoodsExport');
+var BankIndexView = require('./views/BankIndex');
+var BankEditView = require('./views/BankEdit');
+
 var BonusIndexView = require('./views/BonusIndex');
 var BonusEditView = require('./views/BonusEdit');
 var OrderIndexView = require('./views/OrderIndex');
@@ -116,6 +119,10 @@ exports = module.exports = Backbone.Router.extend({
 		'bonus/index': 'bonusIndex',
 		'bonus/add': 'bonusEdit',
 		'bonus/edit/:id': 'bonusEdit',
+
+		'bank/index': 'bankIndex',
+		'bank/add': 'bankEdit',
+		'bank/edit/:id': 'bankEdit',
 
 		'customer/index': 'customerIndex',
 		'customer/add': 'customerEdit',
@@ -436,6 +443,36 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(bonusEditView);
 		bonusEditView.trigger('load');
+	},	
+
+	bankIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','银行卡管理');
+		var bankIndexView = new BankIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(bankIndexView);
+		bankIndexView.trigger('load');
+	},	
+
+
+	bankEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','查看银行卡');
+		var bankEditView = new BankEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(bankEditView);
+		bankEditView.trigger('load');
 	},	
 
 	channelIndex: function(){

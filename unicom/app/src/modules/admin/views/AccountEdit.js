@@ -29,6 +29,22 @@ var Account = Backbone.Model.extend({
 			pattern: /^(1\d{10}|[a-zA-Z0-9_\.]+@[a-zA-Z0-9-]+[\.a-zA-Z]+)$/,
 			msg: '请输入有效的手机号码或电子邮件'
 		},
+		'department[name]': {
+			required: true,
+			msg: '请输入营业厅名称',
+		},
+		'department[city]': {
+			required: true,
+			msg: '请输入城市名称',
+		},
+		'department[grid]': {
+			required: true,
+			msg: '请输入网格编码',
+		},
+		'department[district]': {
+			required: true,
+			msg: '请输入地区编码',
+		},
 	},
 	
 });
@@ -175,7 +191,7 @@ exports = module.exports = FormView.extend({
 				data = data || [];
 				var departmentsView = '<ul>';
 				data.forEach(function(item){
-					departmentsView += '<li class="department" id="'+ item._id +'" addr="'+ item.address +'" name="'+ item.name +'">' + item.path + '</li>';
+					departmentsView += '<li class="department" id="'+ item._id +'" addr="'+ item.address +'" name="'+ item.name +'" city="' + item.city + '" grid="'+ item.grid +'" district="'+ item.district +'">' + item.name + ' | ' + item.address + '</li>';
 				});
 				departmentsView += '</ul>';
 				that.$('#departments').html(departmentsView);
@@ -186,12 +202,16 @@ exports = module.exports = FormView.extend({
 
 	selectDepartment: function(evt){
 		var id = this.$(evt.currentTarget).attr('id');
-		var path = this.$(evt.currentTarget).text();
 		var name = this.$(evt.currentTarget).attr('name');
 		var address = this.$(evt.currentTarget).attr('addr');
+		var city = this.$(evt.currentTarget).attr('city');
+		var grid = this.$(evt.currentTarget).attr('grid');
+		var district = this.$(evt.currentTarget).attr('district');
 		this.$('input[name="department[name]"]').val(name);
-		this.$('input[name="department[path]"]').val(path);
 		this.$('input[name="department[address]"]').val(address);
+		this.$('input[name="department[city]"]').val(city);
+		this.$('input[name="department[grid]"]').val(grid);
+		this.$('input[name="department[district]"]').val(district);
 		this.$('#departments').empty();
 		return false;
 	},

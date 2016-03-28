@@ -41,8 +41,8 @@
 			<button class="btn btn-success edit">编辑</button>
 			<!-- <button class="btn btn-danger delete">删除</button> -->
 		</div>
-		<h4 class="media-heading"><%= model.username %>&nbsp;&nbsp;</h4>
-		<p><%= model.email %></p>
+		<h4 class="media-heading"><%= model.username %>&nbsp;&nbsp;<%= model.email %></h4>
+		<p>城市：<%= model.department.city %>&nbsp;地区：<%= model.department.district %>&nbsp;网格：<%= model.department.grid %></p>
 		<hr/>
 	</div>
 	<div id="editTemplate">
@@ -78,7 +78,7 @@
 					</div>
 					<div class="form-group">
 						<label for="department">营业厅地址：</label>
-						<input type="text" name="department[path]" value="<%= model.department.path %>" class="form-control" readonly>
+						<input type="text" name="department[address]" value="<%= model.department.address %>" class="form-control" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

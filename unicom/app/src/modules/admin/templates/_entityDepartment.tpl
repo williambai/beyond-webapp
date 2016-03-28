@@ -36,7 +36,7 @@
 			<button class="btn btn-danger delete">删除</button>
 		</div>
 		<h4><%= model.name %></h4>
-		<p>组织关系：<%= model.path %></p>
+		<p>城市：<%= model.city %>&nbsp;地区：<%= model.district %>&nbsp;网格：<%= model.grid %></p>
 	</div>
 	<div id="editTemplate">
 		<div class="panel panel-default">
@@ -52,7 +52,22 @@
 					</div>
 					<div class="form-group">
 						<label>组织编码：</label>
-						<input type="text" name="nickname" value="<%= model.name %>" class="form-control">
+						<input type="text" name="nickname" value="<%= model.nickname %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>所在城市：</label>
+						<input type="text" name="city" value="<%= model.city %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>所在网格：</label>
+						<input type="text" name="grid" value="<%= model.grid %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>所在地区：</label>
+						<input type="text" name="district" value="<%= model.district %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -85,14 +100,15 @@
 						<input type="text" name="website" value="<%= model.website %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+<!-- 					<div class="form-group">
 						<label>归属(上级组织)：</label>
 						<input type="hidden" name="parent" value="<%= model.parent %>">
 						<input type="text" name="path" value="<%= model.path %>" class="form-control" placeholder="请输入上一级组织名称">
 						<div id="departments"></div>
 						<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+ -->
+ 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
 							<input type="submit" value="提交" class="btn btn-danger">

@@ -6,6 +6,7 @@ module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
 		uid: String, //** 用户Id
+		mobile: String, //** 用户手机号
 		bankName: String,//** 银行名称
 		bankCode: String,//** 银行代码
 		bankAddr: String,//** 银行地址

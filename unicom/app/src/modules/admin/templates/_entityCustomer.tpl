@@ -43,7 +43,7 @@
 			<button class="btn btn-danger delete">删除</button>
 		</div>
 		<h4><%= model.mobile %>&nbsp;&nbsp;<%= model.name %></h4>
-		<p>管理部门：<%= model.department %></p>
+		<p>营业厅：<%= model.department.name %></p>
 		<hr/>
 	</div>
 	<div id="editTemplate">
@@ -64,8 +64,8 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>管理部门：</label>
-						<input type="text" name="department" value="<%= model.department %>" class="form-control" placeholder="请输入组织名称并从列表中选择">
+						<label>营业厅名称：</label>
+						<input type="text" name="department[name]" value="<%= model.department.name %>" class="form-control" placeholder="请输入组织名称并从列表中选择">
 						<div id="departments"></div>
 						<span class="help-block"></span>
 					</div>
