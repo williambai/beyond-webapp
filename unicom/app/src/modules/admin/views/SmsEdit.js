@@ -16,7 +16,8 @@ var Sms = Backbone.Model.extend({
 			msg: '输入业务代码，仅数字部分',
 		},
 		receiver: {
-			pattern: /^(\d{11}\D+)*\d{11}$/,
+			required: true,
+			// pattern: /^(\d{11}\D+)*\d{11}$/,
 			msg: '11位手机号码，以;隔开',
 		}
 	}

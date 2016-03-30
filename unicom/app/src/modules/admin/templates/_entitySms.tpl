@@ -34,7 +34,7 @@
 				<button class="btn btn-success edit">编辑</button>
 				<button class="btn btn-danger delete">删除</button>
 			</div>
-			<h4>发送者：<%= model.sender %>&nbsp;&nbsp;<%= model.status %></h4>
+			<h4>发送者：<%= model.sender %>&nbsp;&nbsp;<span style="color:red;"><%= model.status %></span></h4>
 			<p>接收者：<%= model.receiver && model.receiver.slice(0,40) %></p>
 			<p>SMS内容：<%= model.content && model.content.slice(0,40) %></p>
 			<p><i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %>&nbsp;&nbsp;<i class="fa fa-calendar"></i>&nbsp;<%= new Date(model.lastupdatetime).toLocaleString() %></p>
@@ -68,9 +68,8 @@
 						<div style="padding-left:30px;">
 							<input type="radio" name="status" value="新建" checked>&nbsp;&nbsp;新建&nbsp;&nbsp;
 							<input type="radio" name="status" value="已发送">&nbsp;&nbsp;已发送&nbsp;&nbsp;
-							<input type="radio" name="status" value="已确认">&nbsp;&nbsp;已确认&nbsp;&nbsp;
+							<input type="radio" name="status" value="收到">&nbsp;&nbsp;收到&nbsp;&nbsp;
 							<input type="radio" name="status" value="已处理">&nbsp;&nbsp;已处理&nbsp;&nbsp;
-							<input type="radio" name="status" value="失败">&nbsp;&nbsp;失败&nbsp;&nbsp;
 						</div>
 					</div>
 					<div class="form-group">

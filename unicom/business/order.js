@@ -26,13 +26,14 @@ var _processOrder = function(models,options,done) {
 			//** 提取客户号码，去除最前面的86
 			var mobile = (doc.sender || '').replace(/^86/, '');
 			//** 提取业务(短信)代码，去除SPNumber(10655836)部分
-			var regexSmscode = new RegExp('/^'+SPNumber + '/', 'i');
+			var regexSmscode = new RegExp('^' + SPNumber, 'i');
 			var smscode = (doc.receiver || '').replace(regexSmscode,'');
 			//** find the order
 			models.Order
 				.findOneAndUpdate({
 					'customer.mobile': mobile,
 					'goods.smscode': smscode,
+					'status': '新建',
 				}, {
 					$set: {
 						status: '已处理',
@@ -62,7 +63,7 @@ var _processOrder = function(models,options,done) {
 					// 		if (err) return done(err);
 					// 		_processOrder(models,options,done);
 					// 	});
-					res.send({});
+					done(null);
 				});
 		});
 };

@@ -49,7 +49,7 @@
 			<button class="btn btn-success edit">详情</button>
 <!-- 			<button class="btn btn-success delete">删除</button>
  -->		</div>
-		<h4><%= model.goods && model.goods.name %></h4>
+		<h4><%= model.goods && model.goods.name %>&nbsp;<span style="color:red;"><%= model.status %></span></h4>
 		<p><i class="fa fa-user"></i>&nbsp;<%= model.customer && model.customer.mobile %></p>
 		<p><i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %>&nbsp;&nbsp;<i class="fa fa-calendar"></i>&nbsp;<%= new Date(model.lastupdatetime).toLocaleString() %></p>
 		<hr/>

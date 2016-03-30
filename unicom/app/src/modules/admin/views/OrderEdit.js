@@ -162,20 +162,22 @@ exports = module.exports = FormView.extend({
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		var itemsView = '<table class="table table-striped">';
-		itemsView += '<thead><tr><td>名称</td><td>单价</td><td>数量</td><td>小计</td></tr></thead>';
-		itemsView += '<tbody>';
-		var items = this.model.get('items') || [];
-		items.forEach(function(item){
-			itemsView +='<tr>'+
-						'<td>' + item.name + '</td>' +
-						'<td>' + Number(item.price).toFixed(2) + '</td>' +
-						'<td>' + item.quantity + '</td>' +
-						'<td>' + Number(item.price * item.quantity).toFixed(2) + '</td>' +
-						'</tr>';
-		});
-		itemsView += '</tbody></table>';
-		this.$('#items').html(itemsView);
+		// var itemsView = '<table class="table table-striped">';
+		// itemsView += '<thead><tr><td>名称</td><td>单价</td><td>数量</td><td>小计</td></tr></thead>';
+		// itemsView += '<tbody>';
+		// var items = this.model.get('items') || [];
+		// items.forEach(function(item){
+		// 	itemsView +='<tr>'+
+		// 				'<td>' + item.name + '</td>' +
+		// 				'<td>' + Number(item.price).toFixed(2) + '</td>' +
+		// 				'<td>' + item.quantity + '</td>' +
+		// 				'<td>' + Number(item.price * item.quantity).toFixed(2) + '</td>' +
+		// 				'</tr>';
+		// });
+		// itemsView += '</tbody></table>';
+		// this.$('#items').html(itemsView);
+		var status = this.model.get('status');
+		this.$('input[name=status][value='+ status +']').attr('checked',true);
 		return this;
 	},
 });
