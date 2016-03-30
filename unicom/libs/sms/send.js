@@ -1,3 +1,14 @@
+/**
+ * 状态图：
+ * start -> bind
+ * bind -> bindResp
+ * bindResp -> (submit | end)
+ * submit -> (submitResp | end)
+ * submitResp -> (submit | end | unbind)
+ * unbind -> unbindResp
+ * unbindResp -> end
+ */
+
 //** common package
 var util = require('util');
 var net = require('net');
@@ -59,8 +70,16 @@ var sendSMS = function(docs, done) {
 			return;
 		}
 		var receivers = (doc.receiver || '').split(';');
+		var newReceivers = [];
+		//** 短信号码前要加86
+		receivers.forEach(function(receiver){
+			//** 过滤符合11位长度的手机号码
+			if(/\d{11}/.test(receiver)){
+				newReceivers.push('86' + receiver.trim());
+			}
+		});
 		//** 构建Submit
-		var submit = new Submit(receivers, 8, doc.content, {
+		var submit = new Submit(newReceivers, 8, doc.content, {
 			SPNumber: doc.sender
 		});
 		//** 设置SMS头(8,20)
@@ -108,3 +127,45 @@ var sendSMS = function(docs, done) {
 };
 
 exports = module.exports = sendSMS;
+
+
+//** unit test
+if (process.argv[1] == __filename) {
+	var send = exports;
+	var docs = [{
+		header: {
+			srcNodeID: 0001,
+			cmdTime:123456,
+			cmdSeq:0,
+		},
+		headerSeries: '00011234560',
+		sender: '1065981',
+		reciever: '15620001781',
+		content: 'some content',
+	}, {
+		header: {
+			srcNodeID: 0001,
+			cmdTime:123456,
+			cmdSeq:1,
+		},
+		headerSeries: '00011234561',
+		sender: '1065981',
+		reciever: '15620001782',
+		content: 'some content',
+	}, {
+		header: {
+			srcNodeID: 0001,
+			cmdTime:123456,
+			cmdSeq:2,
+		},
+		headerSeries: '00011234562',
+		sender: '1065981',
+		mobile: '15620001783',
+		content: 'some content',
+	}];
+
+	send(docs, function(err, newDocs) {
+		if (err) return console.log(err);
+		console.log(JSON.stringify(newDocs));
+	});
+}

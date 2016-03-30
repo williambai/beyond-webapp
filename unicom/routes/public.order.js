@@ -2,18 +2,9 @@ var util = require('util');
 var path = require('path');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
-var configSp = require('../config/sp').SGIP12;
 
-var getCurrentTime = function(){
-	var d = new Date();
-	var mTime = 0;
-	mTime = mTime * 100 + (d.getMonth() + 1);
-	mTime = mTime * 100 + d.getDate();
-	mTime = mTime * 100 + d.getHours();
-	mTime = mTime * 100 + d.getMinutes();
-	mTime = mTime * 100 + d.getSeconds();
-	return mTime;
-};
+//** SP 短信配置
+var configSp = require('../config/sp').SGIP12;
 
 exports = module.exports = function(app, models) {
 	var _ = require('underscore');
@@ -56,7 +47,6 @@ exports = module.exports = function(app, models) {
 						});
 				},
 				function createOrders(orders,callback) {
-					console.log(orders)
 					models.Order.create(orders, function(err){
 						if(err) return callback(err);
 						callback(null,orders);
@@ -66,12 +56,8 @@ exports = module.exports = function(app, models) {
 					var smses = [];
 					_.each(orders,function(order){
 						var sms = {};
-						sms.header = {};
-						sms.header.srcNodeID = configSp.NodeID;
-						sms.header.cmdTime = getCurrentTime();
-						sms.header.cmdSeq = app.genNextSeq();
-						sms.headerSeries = sms.header.srcNodeID + '' + sms.header.cmdTime + '' + sms.header.cmdSeq;
-						sms.sender = configSp.options.SPNumber + String(order.goods && order.goods.smscode).replace(/\D/g,''); 
+						//** sms业务代码部分
+						sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
 						sms.receiver = order.customer.mobile;
 						sms.content = '订购'+ order.goods.name + '，回复Y，确认订购。';
 						sms.status = '新建';
@@ -229,8 +215,6 @@ exports = module.exports = function(app, models) {
 						_.each(docs,function(doc){
 							userObjs.push(_.pick(doc,'_id'))
 						});
-		console.log('++++')				
-		console.log(userObjs)
 						//** 没有数据了
 						if(userObjs.length == 0) return res.send([]);
 						//** 还有有数据

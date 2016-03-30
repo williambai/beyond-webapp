@@ -25,8 +25,6 @@ app.randomHex = function() {
 var curSeq = 0xffffffff;
 app.genNextSeq = function() {
 	curSeq = (curSeq > 0x7fffff00) ? 0 : curSeq + 1;
-	console.log('+++++')
-	console.log(curSeq)
 	return curSeq;
 };
 

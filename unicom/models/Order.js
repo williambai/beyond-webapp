@@ -56,7 +56,7 @@ module.exports = exports = function(mongoose){
 		status: { //** 订单状态
 			type: String,
 			enum: {
-				values: '新建|已确认|已配送|完成|用户取消|后台取消|其他原因'.split('|'),
+				values: '新建|已处理|成功|失败'.split('|'),
 				message: 'enum validator failed for path {PATH} with value {VALUE}',
 			}
 		},

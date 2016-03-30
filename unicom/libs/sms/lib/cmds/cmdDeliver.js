@@ -41,7 +41,7 @@ if (process.argv[1] === __filename) {
   process.nextTick(function() {
     var CommandFactory = require('../commands');
     var Deliver = CommandFactory.create('Deliver');
-    var msg = new Deliver('8612345678901', 'kaven', 'psp');
+    var msg = new Deliver('8612345678901', 'kaven', new Buffer('psp'));
     var PDU = msg.makePDU();
     var msgEcho = msg.parse(PDU);
     console.log(msg);

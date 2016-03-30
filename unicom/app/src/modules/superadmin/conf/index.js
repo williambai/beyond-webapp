@@ -42,7 +42,7 @@ _.extend(config,{
 		"id": 2,
 		"name": "CBSS账户管理",
 		"hash": "cbss/account/index",
-		"features": ["cbss_account"],
+		"features": ["protect_cbss_account"],
 	}, {
 		"id": 2,
 		"name": "微信客户管理",

@@ -11,6 +11,9 @@
 						<div class="panel-body">
 							<div id="error"></div>
 							<form>
+							    <div class="form-group">
+							    	<p style="color:red;">如果无法注册，请联系QQ群完成注册和认证！</p>
+								</div>
 								<div class="form-group">
 									<label for="username">姓名：</label>
 									<input type="text" name="username" value="<%= model.username %>" class="form-control input-sm" placeholder="英文字母或汉字"/>
@@ -46,8 +49,11 @@
 								</div>
 								<div class="form-group">
 									<label>营业厅：</label>
-									<input type="hidden" name="department[path]">
-									<input type="text" name="department[name]" class="form-control input-sm" placeholder="请输入渠道名称，并在列表中选择">
+									<input type="hidden" name="department[id]">
+									<input type="hidden" name="department[city]">
+									<input type="hidden" name="department[grid]">
+									<input type="hidden" name="department[district]">
+									<input type="text" name="department[name]" class="form-control input-sm" placeholder="请输入渠道名称，并在列表中选择。如果没有，则填入”其他“">
 									<div id="departments"></div>
 									<span class="help-block"></span>
 								</div>
@@ -59,7 +65,8 @@
 		                        <div class="form-group">
 		                        	<a href="#" class="pull-right" id="login">已经有账号了，去登录！</a>
 		                    	</div>
-		                    	<br>
+		                    	<br/>
+		                    	<br/>
 								<div class="form-group">
 									<input type="submit" value="现在注册" class="btn btn-primary btn-block"/>
 								</div>
@@ -71,7 +78,7 @@
 		</div>
 		<div class="text-center">
 		    <hr>
-		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司&nbsp;&nbsp;技术支持QQ群：</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>
@@ -88,6 +95,7 @@
 						<div class="panel-body">
 							<p>恭喜您，注册成功!</p>
 							<p>您还不能登录，请等待审核通过。</p>
+							<p>或联系QQ群：</p>
 						</div>
 					</div>
 				</div>
@@ -101,7 +109,7 @@
 		<p>&nbsp;</p>
 		<hr>
 		<div class="text-center">
-		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司&nbsp;&nbsp;技术支持QQ群：</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>		
 	</div>
@@ -164,7 +172,7 @@
 
 		<div class="text-center">
 		    <hr>
-		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司&nbsp;&nbsp;技术支持QQ群：</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>
@@ -180,8 +188,8 @@
 						<div id="error"></div>
 						<form role="form">
 							<div class="form-group" id="email">
-								<label for="email">您的邮件地址：</label>
-								<input type="text" name="email" class="form-control" placeholder="邮件地址">
+								<label for="email">您的手机号码/邮件地址：</label>
+								<input type="text" name="email" class="form-control" placeholder="手机号码/邮件地址">
 								<span class="help-block"></span>
 							</div>
 		                        <div class="form-group">
@@ -199,7 +207,7 @@
 		</div>
 		<div class="text-center">
 		    <hr>
-		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司&nbsp;&nbsp;技术支持QQ群：</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>
@@ -211,10 +219,10 @@
 				<div class="">
 					<div class="panel panel-default">
 						<div class="panel-heading">
-							<h3 class="panel-title text-center">邮件发送成功</h3>
+							<h3 class="panel-title text-center">短信/邮件发送成功</h3>
 						</div>
 						<div class="panel-body">
-							<p>请检查邮箱，按邮件提示重置密码。</p>
+							<p>请检查短信/邮箱，按提示重置密码。</p>
 						</div>
 					</div>
 				</div>
@@ -229,7 +237,7 @@
 
 		<div class="text-center">
 		    <hr>
-		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司&nbsp;&nbsp;技术支持QQ群：</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>
@@ -354,7 +362,7 @@
 
 		<div class="text-center">
 		    <hr>
-		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司&nbsp;&nbsp;技术支持QQ群：</p>
 		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
 		</div>
 	</div>	

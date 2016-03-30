@@ -1,4 +1,4 @@
-var order = {};
+exports = module.exports  = {};
 /**
  * 处理2G/3G/4G订单
  * SMS状态：由收到 转化为 已处理
@@ -6,6 +6,11 @@ var order = {};
  * @param {Function} callback [description]
  */
 var _processOrder = function(models,options,done) {
+	if(arguments.length<3) throw new Error('参数不足：function(models,options,done)');
+	options = options || {};
+	if (!options.SPNumber) throw new Error('options对象参数不足，至少包含：{SPNumber}。');
+	var SPNumber = options.SPNumber || '10655836';
+
 	models.PlatformSms
 		.findOneAndUpdate({
 			status: '收到',
@@ -17,12 +22,17 @@ var _processOrder = function(models,options,done) {
 			'upsert': false,
 			'new': true,
 		}, function(err, doc) {
-			if (err) return done(err);
-			if (!doc) return done(null);
+			if (err || !doc) return done(err);
+			//** 提取客户号码，去除最前面的86
+			var mobile = (doc.sender || '').replace(/^86/, '');
+			//** 提取业务(短信)代码，去除SPNumber(10655836)部分
+			var regexSmscode = new RegExp('/^'+SPNumber + '/', 'i');
+			var smscode = (doc.receiver || '').replace(regexSmscode,'');
 			//** find the order
 			models.Order
 				.findOneAndUpdate({
-					status: '新建',
+					'customer.mobile': mobile,
+					'goods.smscode': smscode,
 				}, {
 					$set: {
 						status: '已处理',
@@ -31,8 +41,7 @@ var _processOrder = function(models,options,done) {
 					'upsert': false,
 					'new': true,
 				}, function(err, order) {
-					if (err) return done(err);
-					if (!order) return done(null);
+					if (err || !order) return done(err);
 					//** process 2G/3G order
 
 
@@ -53,11 +62,12 @@ var _processOrder = function(models,options,done) {
 					// 		if (err) return done(err);
 					// 		_processOrder(models,options,done);
 					// 	});
+					res.send({});
 				});
 		});
 };
 
-order.process = function(models,options,done){
+exports.process = function(models,options,done){
 	_processOrder(models,options,done);
 };
 
@@ -93,7 +103,7 @@ var _confirmOrder = function(models,options,done) {
 							'new': true,
 						},
 						function(err, doc) {
-							if (err) return done(err);
+							if (err || !doc) return done(err);
 							_confirmOrder(models,options,done);
 						});
 			} else {
@@ -112,7 +122,7 @@ var _confirmOrder = function(models,options,done) {
 							'new': true,
 						},
 						function(err, doc) {
-							if (err) return done(err);
+							if (err || !doc) return done(err);
 							_confirmOrder(models,options,done);
 						});
 			}
@@ -120,8 +130,6 @@ var _confirmOrder = function(models,options,done) {
 		});
 };
 
-order.confirm = function(models,options,done) {
+exports.confirm = function(models,options,done) {
 	_confirmOrder(models,options,done);
 };
-
-exports = module.exports = order;

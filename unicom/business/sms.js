@@ -19,9 +19,10 @@ sms.submit = function(models, done) {
 		.limit(20)
 		.exec(function(err, docs) {
 			if (err) return done(err);
+			//** 没有可执行的新建SMS
 			if (_.isEmpty(docs)) return done(null, {
 				count: 0
-			}); //没有可执行的新建SMS
+			});
 			//** send sms
 			var count = docs.length;
 			sendSMS(docs, function(err, newDocs) {
@@ -47,25 +48,6 @@ sms.submit = function(models, done) {
 								if (err) return callback(err);
 								callback();
 							});
-					// var sender = config.options.SPNumber || '';
-					// var status = '已发送';
-					// models.PlatformSms
-					// 	.findByIdAndUpdate(
-					// 		newDoc._id, {
-					// 			$set: {
-					// 				'header': header,
-					// 				'headerSeries': headerSeries,
-					// 				'sender': sender,
-					// 				'status': status,
-					// 			}
-					// 		}, {
-					// 			'upsert': false,
-					// 			'new': true,
-					// 		},
-					// 		function(err) {
-					// 			if (err) return callback(err);
-					// 			callback();
-					// 		});
 				}, function(err) {
 					if (err) return done(err);
 					done(null, {
@@ -75,6 +57,35 @@ sms.submit = function(models, done) {
 			});
 		});
 };
+
+/**
+ * 创建客户上行短信deliver
+ * 状态为收到
+ */
+sms.deliver = function(models, options, done) {
+	//** 短信报告cmdDeliever对象
+	var command = options.command || {};
+	//** cmdDeliever.header对象
+	var header = command.header || {};
+	var doc = {};
+	doc.header = header;
+	doc.headerSeries = header.srcNodeID + '' + header.cmdTime + '' + header.cmdSeq;
+	doc.sender = command.UserNumber;
+	doc.receiver = command.SPNumber;
+	//** message content transform
+	var messageContent = command.MessageContent || {};
+	var messageContentType = messageContent.type || 'Buffer';
+	var messageContentData = messageContent.data || [];
+	var content = new Buffer(messageContentData).toString('utf8');
+	doc.content = content;
+	doc.status = '收到';
+	models.PlatformSms
+		.create(doc, function(err) {
+			if (err) return done(err);
+			done(null);
+		});
+};
+
 /**
  * SGIP服务反馈短信发送的结果报告
  * 由已发送状态 转化为失败状态或已确认状态
@@ -101,35 +112,6 @@ sms.report = function(models, options, done) {
 				if (err) return done(err);
 				done(null);
 			});
-};
-
-/**
- * 创建客户上行短信deliver
- * 状态为收到
- */
-sms.deliver = function(models, options, done) {
-	//** 短信报告cmdDeliever对象
-	var command = options.command || {};
-	//** cmdDeliever.header对象
-	var header = command.header || {};
-	var doc = {};
-	doc.header = header;
-	doc.headerSeries = header.srcNodeID + '' + header.cmdTime + '' + header.cmdSeq;
-	doc.sender = command.UserNumber;
-	doc.receiver = command.SPNumber;
-	//** message content transform
-	var messageContent = command.MessageContent || {};
-	var messageContentType = messageContent.type || 'Buffer';
-	var messageContentData = messageContent.data || [];
-
-	var content = new Buffer(messageContentData).toString('utf8');
-	doc.content = content;
-	doc.status = '收到';
-	models.PlatformSms
-		.create(doc, function(err) {
-			if (err) return done(err);
-			done(null);
-		});
 };
 
 exports = module.exports = sms;

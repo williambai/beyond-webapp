@@ -207,6 +207,7 @@ exports = module.exports = FormView.extend({
 		var city = this.$(evt.currentTarget).attr('city');
 		var grid = this.$(evt.currentTarget).attr('grid');
 		var district = this.$(evt.currentTarget).attr('district');
+		this.$('input[name="department[id]"]').val(id);
 		this.$('input[name="department[name]"]').val(name);
 		this.$('input[name="department[address]"]').val(address);
 		this.$('input[name="department[city]"]').val(city);

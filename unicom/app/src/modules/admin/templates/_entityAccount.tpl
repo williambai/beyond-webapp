@@ -70,6 +70,7 @@
 						<input type="text" name="email" value="<%= model.email %>" class="form-control" readonly>
 						<span class="help-block"></span>
 					</div>
+					<input type="hidden" name="department[id]" value="<%= model.department.id %>">
 					<div class="form-group">
 						<label for="department">所在营业厅：</label>
 						<input type="text" name="department[name]" value="<%= model.department.name %>" class="form-control" placeholder="请输入营业厅名称，并在列表中选择">

@@ -116,3 +116,9 @@ var sendSMSJob = new CronJob({
 	start: true,
 	runOnInit: true,//** execute right now!
 });
+
+//** process uncaughtException
+process.on('uncaughtException', function(){
+	logger.warn('uncaughtException and process exit.');
+	process.exit(1);
+});

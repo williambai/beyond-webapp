@@ -10,7 +10,7 @@ var config = {
 //** logger packages
 var log4js = require('log4js');
 log4js.configure(path.join(__dirname, 'config/log4js.json'));
-var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
+var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
 //** CronJob package
 var CronJob = require('cron').CronJob;
 
@@ -62,13 +62,22 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 var processOrder = require('./business/order').process;
 var processOrderJob = new CronJob({
 	cronTime: '10 */2 * * * *',
-	onTick: function(){
-		processOrder(models,{},function(err,result) {
-			if(err) return logger.error(err);
-			logger.info('call Order peroid job successfully.');
-		});
+	onTick: function() {
+		processOrder(models,
+			config.sp.options,
+			function(err, result) {
+				if (err) return logger.error(err);
+				logger.info('call Order peroid job successfully.');
+			}
+		);
 	},
 	start: true,
-	runOnInit: true,//** execute right now!
+	runOnInit: true, //** execute right now!
 });
 logger.info('scheduleJobs is started.');
+
+//** process uncaughtException
+process.on('uncaughtException', function(){
+	logger.warn('uncaughtException and process exit.');
+	process.exit(1);
+});

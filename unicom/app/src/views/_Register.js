@@ -24,10 +24,18 @@ var Register = Backbone.Model.extend({
 			pattern: /^(1\d{10}|[a-zA-Z0-9_\.]+@[a-zA-Z0-9-]+[\.a-zA-Z]+)$/,
 			msg: '请输入有效的手机号码'
 		},
+		// captcha: {
+		// 	required: true,
+		// 	msg: '请输入验证码'
+		// },
 		password: {
 			required: true,
 			minLength: 5,
 			msg: '密码长度至少五位'
+		},
+		'department[name]': {
+			required: true,
+			msg: '请输入营业厅名称，如果没有，则填入"其他"'
 		},
 	},
 });
@@ -129,7 +137,7 @@ exports = module.exports = FormView.extend({
 				data = data || [];
 				var departmentsView = '<ul>';
 				data.forEach(function(item){
-					departmentsView += '<li class="department" id="'+ item._id +'" addr="'+ item.address +'" name="'+ item.name +'">' + item.path + '</li>';
+					departmentsView += '<li class="department" id="'+ item._id +'" addr="'+ item.address +'" name="'+ item.name +'" city="' + item.city + '" grid="'+ item.grid +'" district="'+ item.district +'">' + item.name + ' | ' + item.address + '</li>';
 				});
 				departmentsView += '</ul>';
 				that.$('#departments').html(departmentsView);
@@ -140,12 +148,17 @@ exports = module.exports = FormView.extend({
 
 	selectDepartment: function(evt){
 		var id = this.$(evt.currentTarget).attr('id');
-		var path = this.$(evt.currentTarget).text();
 		var name = this.$(evt.currentTarget).attr('name');
 		var address = this.$(evt.currentTarget).attr('addr');
+		var city = this.$(evt.currentTarget).attr('city');
+		var grid = this.$(evt.currentTarget).attr('grid');
+		var district = this.$(evt.currentTarget).attr('district');
+		this.$('input[name="department[id]"]').val(id);
 		this.$('input[name="department[name]"]').val(name);
-		this.$('input[name="department[path]"]').val(path);
 		this.$('input[name="department[address]"]').val(address);
+		this.$('input[name="department[city]"]').val(city);
+		this.$('input[name="department[grid]"]').val(grid);
+		this.$('input[name="department[district]"]').val(district);
 		this.$('#departments').empty();
 		return false;
 	},

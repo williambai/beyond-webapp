@@ -50,7 +50,7 @@
 				<form id="accountForm">
 					<div class="form-group">
 						<label>发送方：</label>
-						<input type="text" name="sender" value="<%= model.sender %>" class="form-control" placeholder="10655836+业务代码" readonly>
+						<input type="text" name="sender" value="<%= model.sender %>" class="form-control" placeholder="业务代码" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

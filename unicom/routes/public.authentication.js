@@ -29,27 +29,24 @@ module.exports = exports = function(app, models) {
 		if(refreshCaptchaTime && (Date.now()-refreshCaptchaTime) < 5500) return res.send({code:40112,errmsg: '太频繁'});
 		//** 检查手机号码有效性
 		var mobile = req.body.mobile;
-		if(/^861\d{10}$/.test(mobile)){
-			mobile = mobile;
-		}else if(/^1\d{10}$/.test(mobile)){
-			mobile = '86' + '' + mobile
-		}else{
+		if(!/^1\d{10}$/.test(mobile)){
 			return res.send({code: 40411,errmsg: '手机号码错误'});
 		}
 		//*** 创建4位验证码
-		var captcha = parseInt(10000 * Math.random());
+		var captcha = _.random(1000,9999);
+		logger.debug('注册验证码：' + captcha);
 		//*** 使用短信模板更新短信内容
 		var content = config.sms.registrationCaptcha.replace(/\{[(a-z]+\}/ig, function(name) {
 				if (name == '{captcha}') return captcha;
 			});
 		//** 创建待发送的短信
-		var doc = {
-			receiver: mobile,
-			content: content,
-			status: '新建'
-		};
-		models.PlatformSms.create(doc, function(err){
+		var sms = {};
+		sms.receiver = mobile;
+		sms.content = content;
+		sms.status = '新建';
+		models.PlatformSms.create(sms, function(err){
 			if(err) return res.send(err);
+			logger.debug(mobile+ '的注册短信已发送');
 			//** 将验证码保存在保存session中
 			req.session.refreshCaptchaTime = Date.now();
 			req.session.captcha = captcha;
@@ -60,11 +57,14 @@ module.exports = exports = function(app, models) {
 	var register = function(req, res) {
 		var app = req.params.app || 'channel';
 		var user = req.body || {};
-		//** 存在手机动态验证码，则需要检查验证的正确性
 		var email = req.body.email;
 		var captcha = req.body.captcha;
-		if(/^\d{11}$/.test(email) && captcha && captcha != req.session.captcha){
-			return res.send({code: 11210, errmsg: '验证码不正确'});
+
+		//** 存在手机动态验证码，则需要检查验证的正确性
+		if(/^\d{11}$/.test(email)){
+			if(!(captcha && (captcha == req.session.captcha))){
+				return res.send({code: 11210, errmsg: '验证码不正确'});
+			}
 		}
 		var password = user.password;
 
@@ -156,10 +156,10 @@ module.exports = exports = function(app, models) {
 
 	var forgotPassword = function(req, res) {
 		var email = req.body.email;
-		if (null == email || !(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(email)))
+		if (null == email || !(/^\d{11}$/.test(email) || (/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(email))))
 			return res.send({
 				code: 40101,
-				errmsg: '不是有效的邮件地址'
+				errmsg: '不是有效的手机号码/邮件地址'
 			});
 
 		var host = req.header('host');
@@ -171,27 +171,62 @@ module.exports = exports = function(app, models) {
 				if (err) return res.send(err);
 				if (!doc) return res.send({
 					code: 40400,
-					errmsg: '邮件不存在'
+					errmsg: '手机号码/邮件不存在'
 				});
-				res.send(doc);
+				res.send({});
 
-				var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
-				var text = config.mail.reset_text.replace(/\{[(a-z]+\}/ig, function(name) {
-					if (name == '{host}') return req.header('host');
-					if (name == '{token}') return doc._id
-				});
-				logger.info('forgot password email content: ' + text);
-				smtpTransporter.sendMail({
-						from: config.mail.from,
-						to: email,
-						subject: config.mail.reset_subject,
-						text: text,
-					},
-					function(err, info) {
-						if (err) return logger.error(err);
-						logger.info(info);
-					}
-				);
+				if(/^[a-zA-Z0-9_\.]+@[a-zA-Z0-9-]+[\.a-zA-Z]+$/.test(email)){
+					//** 如果是电子邮件，则发送邮件
+					var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
+					var text = config.mail.reset_text.replace(/\{[(a-z]+\}/ig, function(name) {
+						if (name == '{host}') return req.header('host');
+						if (name == '{token}') return doc._id
+					});
+					logger.info('forgot password email content: ' + text);
+					smtpTransporter.sendMail({
+							from: config.mail.from,
+							to: email,
+							subject: config.mail.reset_subject,
+							text: text,
+						},
+						function(err, info) {
+							if (err) return logger.error(err);
+							logger.info(info);
+						}
+					);
+				}else if(/^\d{11}$/.test(email)){
+					//** 如果是手机号码，则发送短信
+					var password = String(_.random(100000,999999));
+					//*** 使用短信模板更新短信内容
+					var content = config.sms.forgotPassword.replace(/\{[(a-z]+\}/ig, function(name) {
+							if (name == '{password}') return password;
+						});
+					var sms = {};
+					sms.receiver = email;
+					sms.content = content;
+					sms.status = '新建';
+					//** 发送短信
+					models.PlatformSms
+						.create(sms, function(err,doc){
+							if(err) return logger.error('找回密码创建短信错误');
+							logger.debug('找回密码短信已发送');
+							//** 更新密码
+							models.Account
+								.findOneAndUpdate({
+									email: email
+								},{
+									$set: {
+										password: crypto.createHash('sha256').update(password).digest('hex'),
+									}
+								},{
+									'upsert': false,
+									'new': true
+								}, function(err, doc){
+									if(err) return logger.error('找回密码修改密码错误');
+									logger.debug('找回密码密码已修改');
+								});
+						});
+				}
 			}
 		);
 	};

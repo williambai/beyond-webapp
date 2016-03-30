@@ -36,13 +36,11 @@ function StreamSpliter(stream, method){
       try {
         dueLen = lenMethod.call(data, 0);
       } catch (e) {
-        console.log('+++++')
         self.emit('error', e);
         stream.removeListener('data', handler);
         return;
       }
       if (dueLen === 0) {
-        console.log('------')
         self.emit('end', null);
         stream.removeListener('data', handler);
         return;

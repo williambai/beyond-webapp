@@ -8,15 +8,15 @@ var config = require('../conf');
 
 //** 模型
 var ForgotPassword = Backbone.Model.extend({
-	
+
 	url: config.api.host + '/forgotPassword',
 
 	validation: {
 		'email': {
-	      required: true,
-	      pattern: 'email',
-	      msg: '请输入有效的电子邮件'
-	    },
+			required: true,
+			pattern: /^(1\d{10}|[a-zA-Z0-9_\.]+@[a-zA-Z0-9-]+[\.a-zA-Z]+)$/,
+			msg: '请输入有效的手机号码或电子邮件'
+		},
 	},
 });
 
@@ -37,23 +37,23 @@ exports = module.exports = FormView.extend({
 	},
 
 	events: {
-		'keyup input[type=text]': 'inputText',		
+		'keyup input[type=text]': 'inputText',
 		'submit form': 'forgotPassword',
 		'click #login': 'gotoLogin',
 	},
-	
-	inputText: function(evt){
+
+	inputText: function(evt) {
 		var that = this;
 		//clear error
 		this.$(evt.currentTarget).parent().removeClass('has-error');
 		this.$(evt.currentTarget).parent().find('span.help-block').empty();
 		var arr = this.$(evt.currentTarget).serializeArray();
-		_.each(arr,function(obj){
-			var error = that.model.preValidate(obj.name,obj.value);
-			if(error){
+		_.each(arr, function(obj) {
+			var error = that.model.preValidate(obj.name, obj.value);
+			if (error) {
 				//set error
 				this.$(evt.currentTarget).parent().addClass('has-error');
-				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
+				this.$(evt.currentTarget).parent().find('span.help-block').text(error);
 			}
 		})
 		return false;
@@ -66,15 +66,15 @@ exports = module.exports = FormView.extend({
 		this.$('.form-group').find('span.help-block').empty();
 		var arr = this.$('form').serializeArray();
 		var errors = [];
-		_.each(arr,function(obj){
-			var error = that.model.preValidate(obj.name,obj.value);
-			if(error){
+		_.each(arr, function(obj) {
+			var error = that.model.preValidate(obj.name, obj.value);
+			if (error) {
 				errors.push(error);
 				that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
 				that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
 			}
 		});
-		if(!_.isEmpty(errors)) return false;
+		if (!_.isEmpty(errors)) return false;
 		//validate finished.
 
 		var object = this.$('form').serializeJSON();
@@ -89,15 +89,20 @@ exports = module.exports = FormView.extend({
 	},
 
 	gotoLogin: function() {
-		this.router.navigate('login',{trigger: true,replace: true});
+		this.router.navigate('login', {
+			trigger: true,
+			replace: true
+		});
 		return false;
 	},
 
-	done: function(){
+	done: function() {
 		this.$el.html(this.successTemplate());
 	},
-	render: function(){
-		this.$el.html(this.template({model: this.model.toJSON()}));
+	render: function() {
+		this.$el.html(this.template({
+			model: this.model.toJSON()
+		}));
 		return this;
 	},
 });
