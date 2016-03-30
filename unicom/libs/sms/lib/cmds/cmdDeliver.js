@@ -48,5 +48,6 @@ if (process.argv[1] === __filename) {
     console.log(PDU.slice(0, 20));
     console.log(PDU.slice(20));
     console.log(msgEcho);
+    console.log(msgEcho.MessageContent.toString('utf8'));
   });
 }

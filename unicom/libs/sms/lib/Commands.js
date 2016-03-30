@@ -73,9 +73,9 @@ CommandFactory.create = function(commandType) {
 							sPtr += len;
 							// console.log(PDU.slice(sPtr, sPtr + len));
 						} else {
-							console.log('++++')
-							console.log(val);
-							console.log(sPtr);
+							// console.log('++++')
+							// console.log(val);
+							// console.log(sPtr);
 							// for attr that length is determined by its instance length, not by its type's fixed length
 							// for example MessageContent attr in Submit PDU
 							bytesWriten = val.copy(PDU, sPtr);

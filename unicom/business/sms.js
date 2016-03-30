@@ -72,11 +72,8 @@ sms.deliver = function(models, options, done) {
 	doc.headerSeries = header.srcNodeID + '' + header.cmdTime + '' + header.cmdSeq;
 	doc.sender = command.UserNumber;
 	doc.receiver = command.SPNumber;
-	//** message content transform
-	var messageContent = command.MessageContent || {};
-	var messageContentType = messageContent.type || 'Buffer';
-	var messageContentData = messageContent.data || [];
-	var content = new Buffer(messageContentData).toString('utf8');
+	//** message content
+	var content = command.MessageContent.toString('utf8');
 	doc.content = content;
 	doc.status = '收到';
 	models.PlatformSms
