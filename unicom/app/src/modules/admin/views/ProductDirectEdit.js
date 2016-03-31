@@ -121,11 +121,13 @@ exports = module.exports = FormView.extend({
 				data = data || [];
 				var goods = '<ul class="list-group">';
 				data.forEach(function(item){
-					goods += '<li class="list-group-item">'+ 
+					goods += '<li class="list-group-item" id="' +
+							item._id + '" price="'+ 
+							item.price + '" quantity="'+ 
+							(item.quantity || '') +'">'+ 
 							item.smscode + '|' +
 							item.barcode + '|' + 
-							item.name  + '|' + 
-							item._id  +
+							item.name + 
 							'</li>';
 				});
 				goods += '</ul>';
@@ -136,10 +138,16 @@ exports = module.exports = FormView.extend({
 	},
 
 	selectGoods: function(evt){
+		var id= $(evt.currentTarget).attr('id');
+		var price = $(evt.currentTarget).attr('price');
+		var quantity = $(evt.currentTarget).attr('quantity');
 		var goods = $(evt.currentTarget).text().split('|');
 		this.$('input[name="goods[barcode]"]').val(goods[1]);
 		this.$('input[name="goods[name]"]').val(goods[2]);
-		this.$('input[name="goods[id]"]').val(goods[3]);
+		this.$('input[name=name]').val(goods[2]);
+		this.$('input[name="goods[id]"]').val(id);
+		this.$('input[name=price]').val(price);
+		this.$('input[name=quantity]').val(quantity);
 		this.$('#goods').empty();
 		return false;
 	},

@@ -19,7 +19,7 @@ module.exports = exports = function(mongoose){
 			type: Number,
 			default: 0
 		},
-		tags: [],
+		tags: String, //** 以空格分隔的字符串
 		goods: {
 			name: String,//** 产品名称(goods.name)
 			id: String, //** 产品id(goods._id)

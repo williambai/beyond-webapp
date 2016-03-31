@@ -23,6 +23,7 @@ exports = module.exports = [
         "description": "运营后台管理员使用",
         "features": [
             "protect_product_direct",
+            "protect_product_category",
             "protect_customer",
             "protect_order",
             "protect_account",

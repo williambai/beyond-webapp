@@ -91,6 +91,13 @@ exports = module.exports = [
         "status": "有效"
     },
     {
+        "description": "产品分类管理：管理员新增、删除和修改产品分类。",
+        "name": "产品分类管理",
+        "nickname": "protect_product_category",
+        "route": "/protect/product/cateogies",
+        "status": "有效"
+    },
+    {
         "description": "银行卡管理：查看用户的银行卡信息。",
         "name": "银行卡管理",
         "nickname": "protect_finance_bank",

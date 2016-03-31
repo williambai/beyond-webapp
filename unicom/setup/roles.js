@@ -129,6 +129,16 @@ exports = module.exports = [{
 			"getMore": "true",
 			"getOne": "true"
 		},
+		"protect_product_category": {
+			"route": "/protect/product/categories",
+			"nickname": "protect_product_category",
+			"name": "产品分类管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
 		"protect_customer": {
 			"route": "/protect/customers",
 			"nickname": "protect_customer",
