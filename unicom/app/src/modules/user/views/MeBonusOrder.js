@@ -20,7 +20,7 @@ var Bonus = Backbone.Model.extend({
 //** Order模型
 var Order = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/public/orders',	
+	urlRoot: config.api.host + '/private/orders',	
 	defaults: {
 		customer: {},
 		product: {},
@@ -30,7 +30,7 @@ var Order = Backbone.Model.extend({
 //** Order集合
 var OrderCollection = Backbone.Collection.extend({
 	model: Order,
-	url: config.api.host + '/public/orders',
+	url: config.api.host + '/private/orders',
 });
 
 //** 列表子视图	

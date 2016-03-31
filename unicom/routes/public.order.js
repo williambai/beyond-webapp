@@ -102,21 +102,80 @@ exports = module.exports = function(app, models) {
 		page = (!page || page < 0) ? 0 : page;
 		switch (action) {
 			case 'rankp': //** 个人排行
-				var days = parseInt(req.query.days || 0); //** 向前天数
-				var category = req.query.category || 'department'; //** 数据过滤/切分类型
-				// var content = req.query.content || ''; //** 用户session中对应的"所在Xx"
+				var days = parseInt(req.query.days || 1); //** 向前天数
+				var place = req.query.place || 'department'; //** 数据过滤/切分类型
+
+				//** 计算时间跨度
 				var now = new Date();
+				var begin = new Date(now.getTime() - (days-1) * 24 * 3600 * 1000); 
+				var beginYear = begin.getFullYear();
+				var beginMonth = begin.getMonth();
+				var beginDate = begin.getDate();
+				//** 开始日期
+				var startDate = new Date(beginYear, beginMonth, beginDate); 
 				var nowYear = now.getFullYear();
 				var nowMonth = now.getMonth();
 				var nowDate = now.getDate() + 1;
-				var begin = new Date(now.getTime() + days * 24 * 3600 * 1000); //** 开始时间
-				var beginYear = begin.getFullYear();
-				var beginMonth = begin.getMonth();
-				var beginDate = begin.getDate() + days;
-				var startDate = new Date(beginYear, beginMonth, beginDate); //开始日期
-				var endDate = new Date(nowYear, nowMonth, nowDate); // 截止日期
+				//** 截止日期
+				var endDate = new Date(nowYear, nowMonth, nowDate); 
 
 				var aggregate = models.Order.aggregate();
+
+				switch(place){
+					case 'city':
+						//** 过滤时间段和department.city字段
+						var city = (req.session.department && req.session.department.city) || '';
+						aggregate.append({
+							$match: {
+								lastupdatetime: {
+									$gte: startDate,
+									// $lt: endDate,
+								},
+								'department.city': city,
+							}
+						});
+						break;
+					case 'grid':
+						//** 过滤时间段和department.grid字段
+						var grid = (req.session.department && req.session.department.grid) || '';
+						aggregate.append({
+							$match: {
+								lastupdatetime: {
+									$gte: startDate,
+									// $lt: endDate,
+								},
+								'department.grid': grid,
+							}
+						});
+						break;
+					case 'district':
+						//** 过滤时间段和department.distric字段
+						var district = (req.session.department && req.session.department.district) || '';
+						aggregate.append({
+							$match: {
+								lastupdatetime: {
+									$gte: startDate,
+									// $lt: endDate,
+								},
+								'department.district': district,
+							}
+						});
+						break;
+					case 'department':
+					default:
+						//** 过滤时间段和department.name字段
+						var departmentName = (req.session.department && req.session.department.name) || '';
+						aggregate.append({
+							$match: {
+								lastupdatetime: {
+									$gte: startDate,
+									// $lt: endDate,
+								},
+								'department.name': departmentName,
+							}
+						});
+						break;
+				}
 				//** 缩小数据量
 				aggregate.append({
 					$project: {
@@ -129,65 +188,10 @@ exports = module.exports = function(app, models) {
 						lastupdatetime: 1,
 					}
 				});
-				// switch(category){
-				// 	case 'city':
-				// 		//** 过滤时间段和department.city字段
-				// 		var city = (req.session.department && req.session.department.city) || ''
-				// 		aggregate.append({
-				// 			$match: {
-				// 				lastupdatetime: {
-				// 					$gte: startDate,
-				// 					$lt: endDate,
-				// 				},
-				// 				'department.city': city,
-				// 			}
-				// 		});
-				// 		break;
-				// 	case 'grid':
-				// 		//** 过滤时间段和department.grid字段
-				// 		var grid = (req.session.department && req.session.department.grid) || '';
-				// 		aggregate.append({
-				// 			$match: {
-				// 				lastupdatetime: {
-				// 					$gte: startDate,
-				// 					$lt: endDate,
-				// 				},
-				// 				'department.grid': grid,
-				// 			}
-				// 		});
-				// 		break;
-				// 	case 'district':
-				// 		//** 过滤时间段和department.distric字段
-				// 		var district = (req.session.department && req.session.department.district) || '';
-				// 		aggregate.append({
-				// 			$match: {
-				// 				lastupdatetime: {
-				// 					$gte: startDate,
-				// 					$lt: endDate,
-				// 				},
-				// 				'department.district': district,
-				// 			}
-				// 		});
-				// 		break;
-				// 	case 'department':
-				// 	default:
-				// 		//** 过滤时间段和department.name字段
-				// 		var departmentName = (req.session.department && req.session.department.name) || '';
-				// 		aggregate.append({
-				// 			$match: {
-				// 				lastupdatetime: {
-				// 					$gte: startDate,
-				// 					$lt: endDate,
-				// 				},
-				// 				'department.name': departmentName,
-				// 			}
-				// 		});
-				// 		break;
-				// }
-				//** 按用户名分组
+				//** 按createBy.mobile分组
 				aggregate.append({
 					$group: {
-						_id: '$createBy.id',
+						_id: '$createBy.mobile',
 						quantity: {
 							'$sum': '$quantity',
 						},
@@ -211,20 +215,24 @@ exports = module.exports = function(app, models) {
 						if(err) return res.send(err);
 						//** 已获取按20个用户的统计信息
 						//** 20个用户的_id
-						var userObjs = [];
-						_.each(docs,function(doc){
-							userObjs.push(_.pick(doc,'_id'))
-						});
+						var mobiles = [];
+						// _.each(docs,function(doc){
+						// 	mobiles.push(_.pick(doc,'_id'))
+						// });
+						mobiles = _.pluck(docs,'_id');
 						//** 没有数据了
-						if(userObjs.length == 0) return res.send([]);
+						if(mobiles.length == 0) return res.send([]);
 						//** 还有有数据
 						models.Account
 							.find({
-								$or: userObjs
+								email: {
+									$in: mobiles
+								}
 							})
 							.select({
-								// username: 1,
-								// email: 1,
+								username: 1,
+								email: 1,
+								department: 1,
 							})
 							// .select({}) //** 过滤信息
 							.exec(function(err,users){
@@ -232,20 +240,156 @@ exports = module.exports = function(app, models) {
 								var newUsers = [];
 								_.each(users,function(user){
 									var newUser = user.toJSON();
-									//** 找到统计数组中对应user的对象
-									var userId = String(user._id);//???
-									var orderStat = _.findWhere(docs,{_id: userId});
+									//** 找到统计数组(mobile)中对应user的对象(email)
+									var email = String(user.email);//** email = mobile
+									var orderStat = _.findWhere(docs,{_id: email});
 									//** 扩展对应user的统计信息
-									_.extend(newUser,orderStat);
+									newUser = _.defaults(newUser,orderStat);
 									newUsers.push(newUser);
 								});
 								//** 返回带统计信息的用户数组
-								res.send(newUsers);
+								res.send(_.sortBy(newUsers,'total').reverse());
 							});
 					});
 				break;
 			case 'rankg': //** 营业厅排行
-				res.send([]);
+				var days = parseInt(req.query.days || 1); //** 向前天数
+				var place = req.query.place || 'grid'; //** 数据过滤/切分类型
+
+				//** 计算时间跨度
+				var now = new Date();
+				var begin = new Date(now.getTime() - (days-1) * 24 * 3600 * 1000); 
+				var beginYear = begin.getFullYear();
+				var beginMonth = begin.getMonth();
+				var beginDate = begin.getDate();
+				//** 开始日期
+				var startDate = new Date(beginYear, beginMonth, beginDate); 
+				var nowYear = now.getFullYear();
+				var nowMonth = now.getMonth();
+				var nowDate = now.getDate() + 1;
+				//** 截止日期
+				var endDate = new Date(nowYear, nowMonth, nowDate); 
+
+				var aggregate = models.Order.aggregate();
+
+				switch(place){
+					case 'city':
+						//** 过滤时间段和department.city字段
+						var city = (req.session.department && req.session.department.city) || '';
+						aggregate.append({
+							$match: {
+								lastupdatetime: {
+									$gte: startDate,
+									// $lt: endDate,
+								},
+								'department.city': city,
+							}
+						});
+						break;
+					case 'district':
+						//** 过滤时间段和department.distric字段
+						var district = (req.session.department && req.session.department.district) || '';
+						aggregate.append({
+							$match: {
+								lastupdatetime: {
+									$gte: startDate,
+									// $lt: endDate,
+								},
+								'department.district': district,
+							}
+						});
+						break;
+
+					case 'grid':
+					default:
+						//** 过滤时间段和department.grid字段
+						var grid = (req.session.department && req.session.department.grid) || '';
+						aggregate.append({
+							$match: {
+								lastupdatetime: {
+									$gte: startDate,
+									// $lt: endDate,
+								},
+								'department.grid': grid,
+							}
+						});
+						break;
+				}
+				//** 缩小数据量
+				aggregate.append({
+					$project: {
+						quantity: 1,
+						total: 1,
+						bonus: 1,
+						createBy:1,
+						department: 1,
+						status: 1,
+						lastupdatetime: 1,
+					}
+				});
+				//** 按department.name分组
+				aggregate.append({
+					$group: {
+						_id: '$department.name',
+						quantity: {
+							'$sum': '$quantity',
+						},
+						total: {
+							'$sum': '$total',
+						},
+						bonus: {
+							'$sum': '$bonus',
+						},
+						count: {
+							'$sum': 1
+						}
+					},
+				});
+				//** 按数量降序排列
+				aggregate
+					.sort({quantity: -1})
+					.skip(per * page)
+					.limit(per)
+					.exec(function(err,docs){
+						if(err) return res.send(err);
+						//** 已获取按20个department.name的统计信息
+						return res.send(docs);
+						//** 20个用户的_id
+						var mobiles = [];
+						// _.each(docs,function(doc){
+						// 	mobiles.push(_.pick(doc,'_id'))
+						// });
+						mobiles = _.pluck(docs,'_id');
+						//** 没有数据了
+						if(mobiles.length == 0) return res.send([]);
+						//** 还有有数据
+						models.Account
+							.find({
+								email: {
+									$in: mobiles
+								}
+							})
+							.select({
+								username: 1,
+								email: 1,
+							})
+							// .select({}) //** 过滤信息
+							.exec(function(err,users){
+								if(err || !users) return res.send(err || []);
+								var newUsers = [];
+								_.each(users,function(user){
+									var newUser = user.toJSON();
+									//** 找到统计数组(mobile)中对应user的对象(email)
+									var email = String(user.email);//** email = mobile
+									var orderStat = _.findWhere(docs,{_id: email});
+									//** 扩展对应user的统计信息
+									newUser = _.defaults(newUser,orderStat);
+									newUsers.push(newUser);
+								});
+								//** 返回带统计信息的用户数组
+								res.send(_.sortBy(newUsers,'total').reverse());
+							});
+					});
 				break;
 			case 'search':
 				var searchStr = req.query.searchStr || '';

@@ -216,16 +216,21 @@ exports = module.exports = function(app, models) {
 
  		switch (action) {
  			case 'search':
+ 				//** 查询起始时间
+ 				var from = new Date(req.query.from || 0);
+ 				//** 查询结束时间
+ 				var to = new Date(req.query.to || Date.now());
+ 				//** 搜索字符串
  				var searchStr = req.query.searchStr || '';
  				var searchRegex = new RegExp(searchStr, 'i');
  				var status = req.query.status;
  				var query = models.Order.find({
  					$or: [{
- 						'name': {
+ 						'customer.mobile': {
  							$regex: searchRegex
  						}
  					}, {
- 						'category': {
+ 						'createBy.mobile': {
  							$regex: searchRegex
  						}
  					}]

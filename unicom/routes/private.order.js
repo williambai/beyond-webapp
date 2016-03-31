@@ -21,6 +21,7 @@
  			.find({
  				'createBy.id': req.session.accountId, //** 只能看自己的 			 				
  			})
+ 			.sort({_id: -1})
  			.skip(per * page)
  			.limit(per)
  			.exec(function(err, docs) {

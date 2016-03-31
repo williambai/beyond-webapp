@@ -57,9 +57,9 @@ var OrderSearchView = SearchView.extend({
 	},
 
 	refreshList: function(){
-		var rankDay = this.$('.rankDay.active').attr('id');
-		var rankPlace = this.$('.rankPlace.active').attr('id');
-		this.done('action=rankp'+'&rankDay=' + rankDay + '&rankPlace=' + rankPlace);
+		var rankDay = this.$('.rankDay.active').attr('data');
+		var rankPlace = this.$('.rankPlace.active').attr('data');
+		this.done('action=rankp'+'&days=' + rankDay + '&place=' + rankPlace);
 		return false;
 	},
 
@@ -126,7 +126,7 @@ exports = module.exports = Backbone.View.extend({
 			el: '#list',
 		});
 		//** 初始化url
-		this.listView.collection.url = config.api.host + '/public/orders?action=rankp';
+		this.listView.collection.url = config.api.host + '/public/orders?action=rankp&days=1&place=department';
 		this.searchView.trigger('load');
 		this.listView.trigger('load');
 	},

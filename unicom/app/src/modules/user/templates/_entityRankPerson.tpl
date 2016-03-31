@@ -3,20 +3,20 @@
 		<div>
 			<div class="pull-right">
 				<ul class="nav nav-tabs">
-				  <li role="presentation" class="rankDay active" id="today"><a href="#">今天</a></li>
-				  <li role="presentation" class="rankDay" id="yesterday"><a href="#">昨天</a></li>
-				  <li role="presentation" class="rankDay" id="thisweek"><a href="#">本周</a></li>
-				  <li role="presentation" class="rankDay" id="thismonth"><a href="#">本月</a></li>
+				  <li role="presentation" class="rankDay active" data="1"><a href="#">今天</a></li>
+				  <li role="presentation" class="rankDay" data="2"><a href="#">最近两天</a></li>
+				  <li role="presentation" class="rankDay" data="7"><a href="#">最近一周</a></li>
+				  <li role="presentation" class="rankDay" data="30"><a href="#">最近一月</a></li>
 				</ul>
 			</div>
 			<div class="clearfix"></div>
 			<hr/>
 			<div class="tabs">
 				<ul class="nav nav-tabs">
-				  <li role="presentation" class="rankPlace active" id="department"><a href="#">营业厅</a></li>
-				  <li role="presentation" class="rankPlace" id="grid"><a href="#">本网格</a></li>
-				  <li role="presentation" class="rankPlace" id="district"><a href="#">本地区</a></li>
-				  <li role="presentation" class="rankPlace" id="city"><a href="#">所在市</a></li>
+				  <li role="presentation" class="rankPlace active" data="department"><a href="#">营业厅</a></li>
+				  <li role="presentation" class="rankPlace" data="grid"><a href="#">本网格</a></li>
+				  <li role="presentation" class="rankPlace" data="district"><a href="#">本地区</a></li>
+				  <li role="presentation" class="rankPlace" data="city"><a href="#">所在市</a></li>
 				</ul>
 			</div>
 		</div>
@@ -44,7 +44,7 @@
 				</div>
 				<div class="col-xs-7">
 					<h4><%= model.username %></h4>
-					<h5><%= model.department %></h5>
+					<h5><%= model.department && model.department.name %></h5>
 				</div>
 				<div class="col-xs-2">
 					<h4>

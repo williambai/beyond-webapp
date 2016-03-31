@@ -42,6 +42,7 @@
 			<!-- <button class="btn btn-danger delete">删除</button> -->
 		</div>
 		<h4 class="media-heading"><%= model.username %>&nbsp;&nbsp;<%= model.email %></h4>
+		<h5><%= model.department.name %></h5>
 		<p>城市：<%= model.department.city %>&nbsp;地区：<%= model.department.district %>&nbsp;网格：<%= model.department.grid %></p>
 		<hr/>
 	</div>

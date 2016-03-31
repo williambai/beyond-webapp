@@ -24,11 +24,11 @@
 			</div>
 			<div class="form-group">
 				<label>&nbsp;到：&nbsp;</label>
-				<input type="date" name="from" class="form-control" placeholder="yyyy/mm/dd">&nbsp;&nbsp;
+				<input type="date" name="to" class="form-control" placeholder="yyyy/mm/dd">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
 				<label>&nbsp;&nbsp;</label>
-				<input type="text" name="searchStr" class="form-control" placeholder="客户手机号码">&nbsp;&nbsp;
+				<input type="text" name="searchStr" class="form-control" placeholder="手机号码">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
 				<select class="form-control" name="status">
@@ -47,10 +47,9 @@
 	<div id="itemTemplate">
 		<div class="pull-right" id="<%= model._id %>">
 			<button class="btn btn-success edit">详情</button>
-<!-- 			<button class="btn btn-success delete">删除</button>
- -->		</div>
+		</div>
 		<h4><%= model.goods && model.goods.name %>&nbsp;<span style="color:red;"><%= model.status %></span></h4>
-		<p><i class="fa fa-user"></i>&nbsp;<%= model.customer && model.customer.mobile %></p>
+		<p><i class="fa fa-user"></i>&nbsp;<%= model.customer && model.customer.mobile %>&nbsp;&nbsp;是&nbsp;<%= model.createBy && model.createBy.mobile %>&nbsp;创建</p>
 		<p><i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %>&nbsp;&nbsp;<i class="fa fa-calendar"></i>&nbsp;<%= new Date(model.lastupdatetime).toLocaleString() %></p>
 		<hr/>
 	</div>
