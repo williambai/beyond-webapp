@@ -156,7 +156,7 @@ exports = module.exports = function(app, models) {
 			.exec(function(err,doc){
 				if (err || !doc) return res.send(err);
 				var link = req.protocol + '://' + req.headers['host'] + req.path;
-				var imgUrl = req.protocol + '://' + req.headers['host'] + '/images/avatar.jpg';
+				var imgUrl = req.protocol + '://' + req.headers['host'] + doc.thumbnail_url;
 				var shareMessage = {
 					title: doc.name, // 分享标题
 					desc: doc.description, // 分享描述
@@ -175,9 +175,11 @@ exports = module.exports = function(app, models) {
 					product: {
 						name: doc.name,
 						description: doc.description,
+						thumbnail_url: doc.thumbnail_url,
 						category: doc.category,
 						price: doc.price,
 						unit: doc.unit,
+						tags: doc.tags,
 					},
 					config: res.locals.config || {},
 					shareMessage: shareMessage || {}
@@ -197,8 +199,10 @@ exports = module.exports = function(app, models) {
 				name: 'product.name',
 				description: 'product.description',
 				category: 'product.category',
+				thumbnail_url: "/images/product_2.png",
 				price: '10.00',
 				unit: '元',
+				tags: "3G省内,半年包,40元1.5G,立即生效"
 			},
 			config: {},
 			shareMessage: {}
@@ -226,7 +230,10 @@ exports = module.exports = function(app, models) {
 
 	};
 
+	//** app在分享至微信界面时调用
 	app.get('/sale/page/data/:appid/:pid/:uid', _updateWeChatCustomer, _prepareWeChatJsTicket, dataPage);
+	//** 客户提交申请
 	app.post('/sale/page/data/:appid/:pid/:uid', addDataSaleLead);
+	//** 开发界面使用
 	app.get('/sale/page/data/dev',dev);
 };

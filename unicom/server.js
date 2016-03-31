@@ -21,12 +21,6 @@ app.server = http.createServer(app);
 app.randomHex = function() {
 	return new Date().getTime();
 };
-//** 同一时间不重复的序列号，与构建SMS相关
-var curSeq = 0xffffffff;
-app.genNextSeq = function() {
-	curSeq = (curSeq > 0x7fffff00) ? 0 : curSeq + 1;
-	return curSeq;
-};
 
 //** import the data layer
 var mongoose = require('mongoose');

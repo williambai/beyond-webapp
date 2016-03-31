@@ -30,7 +30,7 @@
 					</div>
 					<div class="media-body">
 						<h4><%= model.name %></h4>
-						<p><%= model.tags.join('   ') %></p>
+						<p><%= model.tags %></p>
 						<!-- <p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：<%= model.bonus.income %>&nbsp;元&nbsp;&nbsp;积分：<%= model.bonus.points %></p> -->
 					</div>
 				</div>
@@ -53,6 +53,7 @@
 			<div class="nav-back">
 				<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
 			</div>
+			<br/>
 			<div class="row">
 				<div class="col-xs-10">
 					<div class="pull-left">
@@ -62,7 +63,7 @@
 						<h4>
 							<%= model.name %>
 						</h4>
-						<p>佣金：<%= model.bonus.income %>&nbsp;元&nbsp;&nbsp;积分：<%= model.bonus.points %></p>
+						<p>佣金：<%= model.goods && model.goods.bonus %>&nbsp;元</p>
 						<p></p>
 					</div>
 				</div>

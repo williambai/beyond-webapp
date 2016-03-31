@@ -13,10 +13,6 @@ var Product = Backbone.Model.extend({
 	urlRoot: config.api.host + '/public/products',	
 	defaults: {
 		goods: {},
-		bonus: {
-			income: 0,
-			times: 1,
-		},
 	},
 });
 
@@ -199,6 +195,8 @@ exports = module.exports = Backbone.View.extend({
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		var thumbnail_url = this.model.get('thumbnail_url'); 
+		this.$('img').attr('src', thumbnail_url);
 		return this;
 	},
 });
