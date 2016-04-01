@@ -66,9 +66,9 @@
 					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
-							<input type="radio" name="status" value="有效" checked>&nbsp;&nbsp;有效&nbsp;&nbsp;
-							<input type="radio" name="status" value="无效">&nbsp;&nbsp;无效&nbsp;&nbsp;
-							<input type="radio" name="status" value="已处理">&nbsp;&nbsp;已处理&nbsp;&nbsp;
+							<input type="radio" name="status" value="未处理" checked>&nbsp;&nbsp;未处理&nbsp;&nbsp;
+							<input type="radio" name="status" value="废弃">&nbsp;&nbsp;废弃&nbsp;&nbsp;
+							<input type="radio" name="status" value="成功">&nbsp;&nbsp;成功&nbsp;&nbsp;
 						</div>
 					</div>
 					<div class="form-group">

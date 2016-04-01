@@ -37,10 +37,10 @@ module.exports = exports = function(mongoose){
 		status: {
 			type: String,
 			enum: {
-				values: '有效|无效|已处理'.split('|'),
+				values: '未处理|废弃|成功'.split('|'),
 				message: 'enum validator failed for path {PATH} with value {VALUE}',
 			},
-			default: '有效',
+			default: '未处理',
 		},
 		lastupdatetime: {
 			type: Date,

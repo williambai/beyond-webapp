@@ -115,16 +115,22 @@ module.exports = exports = function(app, models) {
 		});
 	};
 
+	/**
+	 * 注册邮件自助验证
+	 * @param  {[type]} req [description]
+	 * @param  {[type]} res [description]
+	 * @return {[type]}     [description]
+	 */
 	var confirm = function(req, res) {
-		var email = req.body.email;
-		var code = req.body.code;
+		var email = req.query.email;
+		var registerCode = req.query.registerCode;
 
-		if (null == email || !(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(email)))
+		if (!email || !(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(email)))
 			return res.send({
 				code: 40101,
 				errmsg: '邮件地址错误'
 			});
-		if (null == code)
+		if (!code || !/\w+/.test(code))
 			return res.send({
 				code: 40110,
 				errmsg: '验证码不存在',
@@ -132,20 +138,20 @@ module.exports = exports = function(app, models) {
 		Account
 			.findOneAndUpdate({
 					email: email,
-					registerCode: code
+					registerCode: registerCode
 				}, {
 					$set: {
-						'status.code': 0,
-						'status.message': '注册成功，可以登陆'
+						'status': '正常',
 					}
 				}, {
-					upsert: false,
+					'upsert': false,
+					'new': true,
 				},
 				function(err, doc) {
 					if (err) return res.send(err);
 					if (!doc) return res.send({
 						code: 40400,
-						errmsg: '验证错误'
+						errmsg: '邮件校验错误'
 					});
 					return res.send({
 						success: true
@@ -154,6 +160,13 @@ module.exports = exports = function(app, models) {
 			);
 	};
 
+	/**
+	 * 找回密码
+	 * 包括：短信/邮件
+	 * @param  {[type]} req [description]
+	 * @param  {[type]} res [description]
+	 * @return {[type]}     [description]
+	 */
 	var forgotPassword = function(req, res) {
 		var email = req.body.email;
 		if (null == email || !(/^\d{11}$/.test(email) || (/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(email))))
@@ -177,12 +190,15 @@ module.exports = exports = function(app, models) {
 
 				if(/^[a-zA-Z0-9_\.]+@[a-zA-Z0-9-]+[\.a-zA-Z]+$/.test(email)){
 					//** 如果是电子邮件，则发送邮件
-					var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
+					var password = String(_.random(10000000,99999999));
+					//*** 使用找密码邮件模板更新邮件内容
 					var text = config.mail.reset_text.replace(/\{[(a-z]+\}/ig, function(name) {
 						if (name == '{host}') return req.header('host');
-						if (name == '{token}') return doc._id
+						if(name == '{password}') return password;
 					});
-					logger.info('forgot password email content: ' + text);
+					logger.debug('forgot password email content: ' + text);
+					//** 发送邮件
+					var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
 					smtpTransporter.sendMail({
 							from: config.mail.from,
 							to: email,
@@ -190,8 +206,23 @@ module.exports = exports = function(app, models) {
 							text: text,
 						},
 						function(err, info) {
-							if (err) return logger.error(err);
-							logger.info(info);
+							if (err) return logger.error('找回密码创建邮件错误');
+							logger.debug('找回密码邮件已发送');
+							//** 更新密码
+							models.Account
+								.findOneAndUpdate({
+									email: email
+								},{
+									$set: {
+										password: crypto.createHash('sha256').update(password).digest('hex'),
+									}
+								},{
+									'upsert': false,
+									'new': true
+								}, function(err, doc){
+									if(err) return logger.error('找回密码修改密码错误');
+									logger.debug('找回密码密码已修改');
+								});							
 						}
 					);
 				}else if(/^\d{11}$/.test(email)){
@@ -231,70 +262,12 @@ module.exports = exports = function(app, models) {
 		);
 	};
 
-	var resetPassword = function(req, res) {
-		var token = req.body.token;
-		if (null == token)
-			return res.send({
-				code: 40400,
-				errmsg: '无效的请求，缺少token'
-			});
-
-		var password = req.body.password;
-		var cpassword = req.body.cpassword;
-
-		if (null == password || null == cpassword || password.length < 5)
-			return res.send({
-				code: 40102,
-				errmsg: '密码长度不正确'
-			});
-		if (cpassword != password)
-			return res.send({
-				name: 40103,
-				errmsg: '两次输入不一致'
-			});
-		var id = token;
-		Account.findByIdAndUpdate(id, {
-				$set: {
-					password: crypto.createHash('sha256').update(password).digest('hex')
-				}
-			}, {
-				upsert: false
-			},
-			function(err, doc) {
-				if (err) return res.send(err);
-				res.send(doc);
-			}
-		);
-	};
-
-	var inviteFriend = function(req, res) {
-		var emails = req.body.emails || [];
-		res.send({
-			success: true
-		});
-
-		var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
-
-		var text = config.mail.invite_text.replace(/\{[(a-z]+\}/ig, function(name) {
-			if (name == '{host}') return req.header('host');
-			if (name == '{username}') return req.session.username;
-			if (name == '{email}') return req.session.email;
-		});
-
-		logger.info('invite email text: ' + text);
-		emails.forEach(function(email) {
-			smtpTransporter.sendMail({
-				from: config.mail.from,
-				to: email,
-				subject: config.mail.invite_subject,
-				text: text,
-			}, function(err, info) {
-				if (err) return logger.error(err);
-				logger.info(info);
-			});
-		});
-	};
-
+	/**
+	 * 登录
+	 * @param  {[type]} req [description]
+	 * @param  {[type]} res [description]
+	 * @return {[type]}     [description]
+	 */
 	var login = function(req, res) {
 		var app = req.params.app;
 		// logger.info(req.body);
@@ -345,6 +318,7 @@ module.exports = exports = function(app, models) {
 									code: 40404,
 									errmsg: '您没有访问该应用的权限。如需访问，请联系系统管理员。'
 								});
+							logger.debug('登录账户:' + JSON.stringify(account));
 							callback(null, account);
 						});
 				},
@@ -362,10 +336,10 @@ module.exports = exports = function(app, models) {
 								'new': true,
 							}, callback);
 				},
-				function role(account, callback) {
-					logger.debug('account:' + JSON.stringify(account));
+				function setGrantByAccountRole(account, callback) {
 					var roles = account.roles || [];
-					logger.debug('roles:' + JSON.stringify(roles));
+					logger.debug('登录账户的应用：' + JSON.stringify(account.apps || []));
+					logger.debug('登录账户的角色:' + JSON.stringify(roles));
 					//** 根据用户的roles 查询用户权限
 					models.PlatformRole
 						.find({
@@ -374,23 +348,24 @@ module.exports = exports = function(app, models) {
 							}
 						})
 						.exec(function(err, docs) {
-							logger.debug('Role model error: ' + err);
 							if (err) return callback(err);
-							logger.debug('docs: ' + JSON.stringify(docs));
 							docs = docs || [];
 							//** 权限选择各角色权限的并集
 							var grant = {};
 							_.each(docs, function(doc) {
 								_.extend(grant, doc.grant);
 							});
-							logger.debug('grant: ' + JSON.stringify(grant));
+							logger.debug('登录账户的权限集: ' + JSON.stringify(grant));
 							account.grant = grant;
 							callback(null, account);
 						});
 				}
 			],
 			function(err, account) {
-				if (err) return res.send(err);
+				if (err) {
+					logger.error(err);
+					return res.send(err);
+				}
 				req.session.accountId = account._id;
 				req.session.email = account.email;//** 设置用户邮件/手机
 				req.session.username = account.username;
@@ -398,23 +373,24 @@ module.exports = exports = function(app, models) {
 				req.session.department = account.department || {}; //** 设置用户部门
 				req.session.apps = account.apps || [];
 				req.session.grant = account.grant || {};
-				logger.debug(req.session.email + 'login(session): ' + JSON.stringify(req.session));
+				logger.debug('登录账户的session: ' + JSON.stringify(req.session));
 				//** 取app可使用的资源与用户权限的交集
 				models.PlatformApp
 					.findOne({
 						nickname: app
 					})
 					.exec(function(err,doc){
-						if(err) return callback(err);
-						var features = doc ? (doc.features || []) : [];
-						logger.debug('app features: ' + JSON.stringify(features));
-						logger.debug('account.grant: ' + JSON.stringify(account.grant));
-						//** 取app可使用的资源与用户权限的交集
+						if(err) logger.error(err);
+						//** 取出app允许的features
+						var features = doc && doc.features || [];
+						// logger.debug('app features: ' + JSON.stringify(features));
+						// logger.debug('account.grant: ' + JSON.stringify(account.grant));
+						//** 计算app可使用的资源与用户权限的交集
 						var grant = {};
 						_.each(features,function(feature){
 							grant[feature] = account.grant[feature];
 						});
-						logger.debug('app grant: ' + JSON.stringify(grant));
+						// logger.debug('取app.features与account.grant的交集: ' + JSON.stringify(grant));
 						res.send({
 							id: req.session.accountId,
 							email: req.session.email,
@@ -422,23 +398,18 @@ module.exports = exports = function(app, models) {
 							avatar: req.session.avatar,
 							grant: grant
 						});
-						logger.info('login: ' + email);
+						logger.info(email + '登录成功！');
 					});
 			}
 		);
 	};
 
-	var logout = function(req, res) {
-		req.session.accountId = null;
-		req.session.openid = undefined;
-		req.session.department = {};
-		req.session.apps = [];
-		req.session.grant = {};
-		logger.debug(req.session.email + ' logout(session): ' + JSON.stringify(req.session));
-		logger.info('logout: ' + req.session.email);
-		res.send({});
-	};
-
+	/**
+	 * 自动登录
+	 * @param  {[type]} req [description]
+	 * @param  {[type]} res [description]
+	 * @return {[type]}     [description]
+	 */
 	var checkLogin = function(req, res) {
 		//** no req.session
 		if(!req.session){
@@ -447,26 +418,27 @@ module.exports = exports = function(app, models) {
 				errmsg: '401 Unauthorized.'
 			});
 		}
-		var app = req.params.app;
-		logger.debug('checkLogin from(app):' + app);
 		// logger.debug('checkLogin(session):' + JSON.stringify(req.session));
+		var app = req.params.app;
+		logger.debug('从('+ app +')自动登录...');
 		//** 用户正在使用该app		
 		if (_.indexOf(req.session.apps, app) != -1) {
-			return models.PlatformApp
+			models.PlatformApp
 				.findOne({
 					nickname: app
 				})
 				.exec(function(err,doc){
 					if(err) return res.send(err);
-					var features = doc ? (doc.features || []) : [];
-					logger.debug('app features: ' + JSON.stringify(features));
-					logger.debug('req.session.grant: ' + JSON.stringify(req.session.grant));
-					//** 取app可使用的资源与用户权限的交集
+					//** 取出app允许的features
+					var features = doc && doc.features || [];
+					// logger.debug('app features: ' + JSON.stringify(features));
+					// logger.debug('req.session.grant: ' + JSON.stringify(req.session.grant));
+					//** 计算app可使用的资源与用户权限的交集
 					var grant = {};
 					_.each(features,function(feature){
 						grant[feature] = req.session.grant[feature];
 					});
-					logger.debug('app grant: ' + JSON.stringify(grant));
+					logger.debug('自动登录，取app.features与account.grant的交集: ' + JSON.stringify(grant));
 					res.send({
 						id: req.session.accountId,
 						email: req.session.email,
@@ -474,8 +446,9 @@ module.exports = exports = function(app, models) {
 						avatar: req.session.avatar,
 						grant: grant
 					});
-					logger.info('checkLogin(pass): ' + req.session.email);
-			});
+					logger.info(req.session.email + '自动登录成功！');
+				});
+			return;	
 		}
 		if(req.session.openid){
 			logger.debug('req.session.openid: ' + req.session.openid);
@@ -499,16 +472,19 @@ module.exports = exports = function(app, models) {
 							}
 						})
 						.exec(function(err, docs) {
-							logger.debug('Role model error: ' + err);
+							if(err) logger.error(err);
 							if (err) return res.send(err);
-							logger.debug('docs: ' + JSON.stringify(docs));
+							logger.debug('微信自动登录，用户角色集: ' + JSON.stringify(docs));
 							docs = docs || [];
+							//** 权限选择各角色权限的并集
 							var grant = {};
 							_.each(docs, function(doc) {
 								_.extend(grant, doc.grant);
 							});
-							logger.debug('grant: ' + JSON.stringify(grant));
+							logger.debug('微信自动登录，用户权限集: ' + JSON.stringify(grant));
+							//** 给用户权限赋值
 							account.grant = grant;
+							//** 更新session
 							req.session.accountId = account._id;
 							req.session.email = account.email;
 							req.session.username = account.username;
@@ -516,7 +492,8 @@ module.exports = exports = function(app, models) {
 							req.session.department = account.department || {}; //** 设置用户部门
 							req.session.apps = account.apps || [];
 							req.session.grant = account.grant || {};
-							logger.debug(req.session.email + ' login(session): ' + JSON.stringify(req.session));
+							logger.debug(req.session.email + ' 用户微信自动登录(session): ' + JSON.stringify(req.session));
+
 							if (_.indexOf(req.session.apps, app) != -1) {
 								models.PlatformApp
 									.findOne({
@@ -524,15 +501,12 @@ module.exports = exports = function(app, models) {
 									})
 									.exec(function(err,doc){
 										if(err) return res.send(err);
-										var features = doc ? (doc.features || []) : [];
-										logger.debug('app features: ' + JSON.stringify(features));
-										logger.debug('req.session.grant: ' + JSON.stringify(req.session.grant));
+										var features = doc && doc.features || [];
 										//** 取app可使用的资源与用户权限的交集
 										var grant = {};
 										_.each(features,function(feature){
 											grant[feature] = req.session.grant[feature];
 										});
-										logger.debug('app grant: ' + JSON.stringify(grant));
 										res.send({
 											id: req.session.accountId,
 											email: req.session.email,
@@ -540,41 +514,69 @@ module.exports = exports = function(app, models) {
 											avatar: req.session.avatar,
 											grant: grant
 										});
-										logger.info('checkLogin(pass): ' + req.session.email);
+										logger.info(req.session.email + '用户微信(openid='+ req.session.openid +')自动登录成功！');
 									});
 							} else {
+								logger.warn(req.session.email + '用户微信(openid='+ req.session.openid +')自动登录失败！');
 								res.send({
 									code: 40100,
 									errmsg: '401 Unauthorized.'
 								});
-								logger.warn('checkLogin(fail): ' + req.session.email);
 							}
 						});
 				});	
 			return;		
 		}
-		//** come from wechat
+		//** 来自微信客户端
 		if (/MicroMessenger/.test(req.headers['user-agent'])) {
 			logger.debug('user-agent:' + JSON.stringify(req.headers['user-agent']));
 			//** step 1: request wechat openid
 			if(!req.session.openid){
 				var appid = (!_.isEmpty(req.query.appid)) ? req.query.appid : 'wx0179baae6973c5e6';
+				//** 设置微信web oauth 2.0 的回调地址
 				var redirect_uri = 'http://wo.pdbang.cn/wechat/oauth2/authorized/' + appid;
 				var state = Date.now();
-				logger.debug('redirect to https://open.weixin.qq.com/connect/oauth2/authorize?appid=');
-				return res.send({code: 30200, redirect: 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect'});
-				// return res.status(302).send('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect');
+				logger.debug('微信自动登录，重定向到：https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect');
+				res.send({code: 30200, redirect: 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect'});
+				// res.status(302).send('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect');
+				return;
 			}
 		}
-		if(req.session.email){
-			logger.warn('checkLogin(fail): ' + req.session.email);
-		}
+		logger.debug('不允许自动登录。');
 		res.send({
 			code: 40100,
 			errmsg: '401 Unauthorized.'
 		});	
 	};
 
+	/**
+	 * 登出
+	 * @param  {[type]} req [description]
+	 * @param  {[type]} res [description]
+	 * @return {[type]}     [description]
+	 */
+	var logout = function(req, res) {
+		req.session.accountId = null;
+		req.session.openid = undefined;
+		req.session.department = {};
+		req.session.apps = [];
+		req.session.grant = {};
+		logger.debug(req.session.email + ' 用户账户登出的session: ' + JSON.stringify(req.session));
+		logger.info(req.session.email + '登出成功！');
+		res.send({});
+	};
+
+	/**
+	 * 用户在微信客户端登录时，OAuth 2.0 认证回调
+	 *
+	 * |- 微信认证"公众服务号"
+	 *  |- 如果失败，则跳转至失败页面：http://wo.pdbang.cn/wechat_error.html
+	 *  |- 如果成功，则跳转至默认首页：http://wo.pdbang.cn/wechat.html#index
+	 *  
+	 * @param  {[type]} req [description]
+	 * @param  {[type]} res [description]
+	 * @return {[type]}     [description]
+	 */
 	var wechatAuthorized = function(req, res) {
 		//** step 2: response openid from wechat
 		var code = req.query.code;
@@ -600,28 +602,138 @@ module.exports = exports = function(app, models) {
 			});
 	};
 
+	var inviteFriend = function(req, res) {
+		var emails = req.body.emails || [];
+		res.send({
+			success: true
+		});
+
+		var smtpTransporter = nodemailer.createTransport(smtpTransport(config.mail));
+
+		var text = config.mail.invite_text.replace(/\{[(a-z]+\}/ig, function(name) {
+			if (name == '{host}') return req.header('host');
+			if (name == '{username}') return req.session.username;
+			if (name == '{email}') return req.session.email;
+		});
+
+		logger.info('invite email text: ' + text);
+		emails.forEach(function(email) {
+			smtpTransporter.sendMail({
+				from: config.mail.from,
+				to: email,
+				subject: config.mail.invite_subject,
+				text: text,
+			}, function(err, info) {
+				if (err) return logger.error(err);
+				logger.info(info);
+			});
+		});
+	};
+
 	/**
 	 * router outline
 	 */
 
 	 //** 手机注册获取动态验证码
 	app.post('/register/captcha', refreshCaptcha);
-	//register
+	//** 注册
 	app.post('/register/:app', register);
-	//confirm
-	app.post('/register/confirm', confirm);
-	//login
+	//** 邮件确认 /register/confirm?email=&code=
+	app.get('/register/confirm', confirm);
+	//** 登录
 	app.post('/login/:app', login);
-	//logout
+	//** 登出
 	app.get('/logout', logout);
-	//check login
+	//** 自动登录，检查cookie中的session_id
 	app.get('/login/check/:app', checkLogin);
-	//forgot password
+	//** 找回密码
 	app.post('/forgotPassword', forgotPassword);
-	// reset password
-	app.post('/resetPassword', resetPassword);
-	//invite
+	//** 邀请好友
 	app.post('/invite/friend', app.grant, inviteFriend);
-	//wechat authorized
+	//** 微信OAuth2.0认证回调
 	app.get('/wechat/oauth2/authorized/:appid', wechatAuthorized);
+
 };
+
+	//Depreciated!
+	//** reset password
+	// app.post('/resetPassword', resetPassword);
+
+	// var resetPassword = function(req, res) {
+	// 	var token = req.body.token;
+	// 	if (null == token)
+	// 		return res.send({
+	// 			code: 40400,
+	// 			errmsg: '无效的请求，缺少token'
+	// 		});
+
+	// 	var password = req.body.password;
+	// 	var cpassword = req.body.cpassword;
+
+	// 	if (null == password || null == cpassword || password.length < 5)
+	// 		return res.send({
+	// 			code: 40102,
+	// 			errmsg: '密码长度不正确'
+	// 		});
+	// 	if (cpassword != password)
+	// 		return res.send({
+	// 			name: 40103,
+	// 			errmsg: '两次输入不一致'
+	// 		});
+	// 	var id = token;
+	// 	Account.findByIdAndUpdate(id, {
+	// 			$set: {
+	// 				password: crypto.createHash('sha256').update(password).digest('hex')
+	// 			}
+	// 		}, {
+	// 			upsert: false
+	// 		},
+	// 		function(err, doc) {
+	// 			if (err) return res.send(err);
+	// 			res.send(doc);
+	// 		}
+	// 	);
+	// };
+
+
+	//Depreciated!
+	//** confirm
+	// app.post('/register/confirm', confirm);
+	// var confirm = function(req, res) {
+	// 	var email = req.body.email;
+	// 	var code = req.body.code;
+
+	// 	if (null == email || !(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(email)))
+	// 		return res.send({
+	// 			code: 40101,
+	// 			errmsg: '邮件地址错误'
+	// 		});
+	// 	if (null == code)
+	// 		return res.send({
+	// 			code: 40110,
+	// 			errmsg: '验证码不存在',
+	// 		});
+	// 	Account
+	// 		.findOneAndUpdate({
+	// 				email: email,
+	// 				registerCode: code
+	// 			}, {
+	// 				$set: {
+	// 					'status.code': 0,
+	// 					'status.message': '注册成功，可以登陆'
+	// 				}
+	// 			}, {
+	// 				upsert: false,
+	// 			},
+	// 			function(err, doc) {
+	// 				if (err) return res.send(err);
+	// 				if (!doc) return res.send({
+	// 					code: 40400,
+	// 					errmsg: '验证错误'
+	// 				});
+	// 				return res.send({
+	// 					success: true
+	// 				});
+	// 			}
+	// 		);
+	// };
