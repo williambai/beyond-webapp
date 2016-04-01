@@ -23,7 +23,7 @@
 	</div>
 	<div id="itemTemplate">
 		<div>
-			<div class="item" id="<%= model._id %>">
+			<div class="item" id="<%= model._id %>" data="<%= model.name %>">
 				<div class="media">
 					<div class="media-left">
 						<img width="50px" height="50px">
@@ -37,11 +37,7 @@
 				<p style="text-align:right"><% if(/MicroMessenger/.test(navigator.userAgent)){ %>
 				<button class="btn btn-danger promote wechat">微信推广</button>
 				<% } %>
-				<% if(/iPhone/.test(navigator.userAgent)){ %>
-					<a href="sms:&body=短信内容" class="btn btn-danger sms">短信推广</a>
-				<% }else{ %>
-					<a href="sms:?body=短信内容" class="btn btn-danger sms">短信推广</a>
-				<% } %>
+				<button class="btn btn-danger sms">短信推广</button>
 				<button class="btn btn-success view">订购推荐</button>
 				</p>
 				<hr/>
@@ -60,7 +56,7 @@
 						<img width="50px" height="50px">
 					</div>
 					<div style="padding-left:60px;">
-						<h4>
+						<h4 >
 							<%= model.name %>
 						</h4>
 						<p>佣金：<%= model.goods && model.goods.bonus %>&nbsp;元</p>

@@ -117,36 +117,11 @@ exports = module.exports = function(app, models) {
 					res.locals.ticket = body.ticket;
 					res.locals.config = config;
 					next();
-					// var url = req.protocol + '://' + req.headers['host'] + req.originalUrl;
-					// var link = req.protocol + '://' + req.headers['host'] + req.path;
-					// var imgUrl = req.protocol + '://' + req.headers['host'] + '/images/avatar.jpg';
-					// logger.debug(url);
-					// var config = sign(body.ticket, url);
-					// config.appid = appid;
-					// var shareMessage = {
-					// 	title: '数据业务推荐', // 分享标题
-					// 	desc: '选择数据业务', // 分享描述
-					// 	link: link, // 分享链接
-					// 	imgUrl: imgUrl, // 分享图标
-					// 	type: 'link', // 分享类型,music、video或link，不填默认为link
-					// 	dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-					// };
-					// logger.debug(config);
-					// res.set('Content-Type', 'text/html');
-					// res.render('data', {
-					// 	params: {
-					// 		appid: appid,
-					// 		pid: productid,
-					// 		uid: saleid,
-					// 	},
-					// 	config: config,
-					// 	shareMessage: shareMessage
-					// });
 				});
 			});
 	};
 
-	var dataPage = function(req,res){
+	var snsShareWeixinPage = function(req,res){
 		var appid = req.params.appid;
 		var pid = req.params.pid;
 		var uid = req.params.uid;
@@ -155,7 +130,7 @@ exports = module.exports = function(app, models) {
 			.findById(pid)
 			.exec(function(err,doc){
 				if (err || !doc) return res.send(err);
-				var link = req.protocol + '://' + req.headers['host'] + req.path;
+				var link = req.protocol + '://' + req.headers['host'] + '/sns/web/sale/' + pid +'/' + uid;
 				var imgUrl = req.protocol + '://' + req.headers['host'] + doc.thumbnail_url;
 				var shareMessage = {
 					title: doc.name, // 分享标题
@@ -166,7 +141,7 @@ exports = module.exports = function(app, models) {
 					dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
 				};
 				res.set('Content-Type', 'text/html');
-				res.render('data', {
+				res.render('sns_share_weixin', {
 					params: {
 						appid: appid,
 						pid: pid,
@@ -187,11 +162,10 @@ exports = module.exports = function(app, models) {
 			});
 	};
 
-	var dev = function(req,res){
+	var snsShareWeixinPageDev = function(req,res){
 		res.set('Content-Type', 'text/html');
-		res.render('data', {
+		res.render('sns_share_weixin', {
 			params: {
-				appid: 'appid',
 				pid: '566e17d72ad3a36d0c5b614a',
 				uid: 'saleid',
 			},
@@ -209,31 +183,83 @@ exports = module.exports = function(app, models) {
 		});
 	};
 
-	var addDataSaleLead = function(req,res){
+	/**
+	 * 添加销售线索
+	 * @param {[type]} req [description]
+	 * @param {[type]} res [description]
+	 */
+	var addSaleLead = function(req,res){
 		var pid = req.params.pid;
-		models
-			.ProductDirect
-			.findById(pid)
-			.exec(function(err,product){
-				if(err || !product) return res.send(err);
-				var doc = req.body;
-				doc.name = product.name;
-				doc.description = product.description;
+		var uid = req.params.uid;
+		var customer = req.body.customer || {};
+		models.Account
+			.findById(uid, function(err,account){
+				if(err || !account) return res.send(err);
 				models
-					.SaleLead
-					.create(doc, function(err,result){
-						if(err) return res.send(err);
-						res.set('Content-Type', 'text/html');
-						res.render('data_success');
+					.ProductDirect
+					.findById(pid)
+					.exec(function(err,product){
+						if(err || !product) return res.send(err);
+						var doc = {
+							product: product,
+							customer: customer,
+							seller: account.toJSON(),
+						};
+						doc.seller.id = account._id;
+						models
+							.SaleLead
+							.create(doc, function(err){
+								if(err) return res.send(err);
+								res.redirect('/sns/web/sale/success');
+							});
 					});
+
 			});
 
 	};
 
+	var saleSuccessPage = function(req,res){
+		res.set('Content-Type', 'text/html');
+		res.render('sale_success');
+	};
+
+	var snsSaleWebPage = function(req,res){
+		var pid = req.params.pid;
+		var uid = req.params.uid;
+		models
+			.ProductDirect
+			.findById(pid)
+			.exec(function(err,doc){
+				if (err || !doc) return res.send(err);
+				res.set('Content-Type', 'text/html');
+				res.render('sns_sale_web', {
+					params: {
+						pid: pid,
+						uid: uid,
+					},
+					product: {
+						name: doc.name,
+						description: doc.description,
+						thumbnail_url: doc.thumbnail_url,
+						category: doc.category,
+						price: doc.price,
+						unit: doc.unit,
+						tags: doc.tags,
+					},
+				});
+			});
+	};
+
+	//** sns开发weixin share界面使用
+	app.get('/dev/sns/weixin/share/pid/uid',snsShareWeixinPageDev);
+	//** sns客户web访问页面
+	app.get('/sns/web/sale/:pid/:uid', snsSaleWebPage);
+	//** sns客户web提交申请，新增销售线索
+	app.post('/sns/web/sale/:pid/:uid', addSaleLead);
+	//** sns客户web提交成功显示
+	app.get('/sns/web/sale/success', saleSuccessPage);
+
 	//** app在分享至微信界面时调用
-	app.get('/sale/page/data/:appid/:pid/:uid', _updateWeChatCustomer, _prepareWeChatJsTicket, dataPage);
-	//** 客户提交申请
-	app.post('/sale/page/data/:appid/:pid/:uid', addDataSaleLead);
-	//** 开发界面使用
-	app.get('/sale/page/data/dev',dev);
+	app.get('/sns/weixin/share/:appid/:pid/:uid', _updateWeChatCustomer, _prepareWeChatJsTicket, snsShareWeixinPage);
+
 };

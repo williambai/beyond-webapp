@@ -1,0 +1,96 @@
+doctype html
+
+html(lang="zh-CN")
+	head
+		//- include include/head
+		title 沃助手
+		meta(charset="UTF-8")
+		meta(http-equiv="X-UA-Compatible" content="IE=edge,chrome=1")
+		meta(name="apple-mobile-web-app-capable" content="yes")
+		meta(name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-ui")
+		meta(name="apple-mobile-web-app-status-bar-style" content="yes")
+		link(rel="stylesheet" href="/css/app.css")
+		script(src="http://libs.baidu.com/jquery/1.9.0/jquery.js")
+	body.has-navbar-top
+		div.app
+			div.navbar.navbar-app.navbar-absolute-top
+				div.navbar-brand.navbar-brand-center
+					贵州联通沃助手
+			div.app-body
+				div.app-content
+					div.scrollable
+						div#content.scrollable-content.section
+							div
+								img(src="/images/wo.jpg" width="100%")
+								p &nbsp;
+								form#addSaleLead(method="POST", action="/sns/web/sale/#{params.pid}/#{params.uid}")
+									div.row
+										div.col-xs-9
+											div.pull-left
+												img(src="#{product.thumbnail_url}" width="50px" height="50px")
+											div(style="padding-left:60px;")
+												h4 #{product.name}
+												p #{product.tags}
+												p &nbsp;
+										div.col-xs-3
+											h4(style="color:red;text-align:right;") #{product.price} #{product.unit}
+									input(type="hidden" name="name" value="#{product.name}")
+									input(type="hidden" name="description" value="#{product.description}")
+									div.panel.panel-default
+										div.panel-heading
+											h4.panel-title.text-center 申请订购
+										div.panel-body
+											div.form-group
+												label 姓名：
+												input.form-control(type="text" name="customer[name]")
+												span.help-block
+											div.form-group
+												label 手机号码：
+												input.form-control(type="text" name="customer[phone]")
+												span.help-block
+											div.form-group
+												label 产品数量：
+												input.form-control(type="text" name="quantity" value="1")
+												span.help-block
+											div.form-group
+												label 留言：
+												textarea.form-control(name="customer[attach]")
+												span.help-block
+									input.btn.btn-danger.btn-block(type="submit" value="确认申请")
+									p &nbsp;
+									h4 产品说明：
+									hr
+									p #{product.description}
+								p  
+								p  
+								p  
+		script.
+			$(function(){
+				var validate = function(obj){
+					if(obj.name == 'customer[name]' && obj.value.length == 0){
+						return '留个姓名，至少留个姓吧';
+					}
+					if(obj.name == 'customer[phone]' && !/^\d{11}$/.test(obj.value)){
+						return '请输入有效的手机号码';
+					}
+				};
+				$('input[type="submit"]').click(function(){
+					//** clear errors
+					$('.form-group').removeClass('has-error');
+					$('.form-group').find('span.help-block').empty();
+					var arr = $('form').serializeArray();
+					//console.log(arr)
+					var errors = [];
+					arr.forEach(function(obj){
+						var error = validate(obj);
+						if(error){
+							errors.push(error);
+							$('[name="' + obj.name + '"]').parent().addClass('has-error');
+							$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
+						}
+					});
+					//console.log(errors)
+					if(errors.length == 0) return $('form').submit();
+					return false;
+				});
+			});

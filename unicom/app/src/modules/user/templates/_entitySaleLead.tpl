@@ -19,8 +19,9 @@
 				<!-- <button class="btn btn-danger delete">删除</button> -->
 			</div>
 			<div>
-				<h4><%= model.name %>&nbsp;&nbsp;<span class="bg-success"><%= model.status %></span></h4>
-				<p><%= model.description %></p>
+				<h4><%= model.customer && model.customer.phone %>&nbsp;&nbsp;<span class="bg-success"><%= model.customer && model.customer.name %></span></h4>
+				<p><%= model.product && model.product.name %></p>
+				<p><i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %>&nbsp;<i class="fa fa-flag"></i>&nbsp;<%= model.status %></p>
 			</div>
 		</div>
 		<hr/>
@@ -34,32 +35,32 @@
 				<form id="accountForm">
 					<div class="form-group">
 						<label for="name">产品名称：</label>
-						<input type="text" name="name" value="<%= model.name %>" class="form-control" disabled>
+						<input type="text" name="product[name]" value="<%= model.product && model.product.name %>" class="form-control" disabled>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label for="description">产品描述：</label>
-						<textarea name="description" class="form-control" disabled><%= model.description %></textarea>
+						<textarea name="product[description]" class="form-control" disabled><%= model.product && model.product.description %></textarea>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label for="quantity">订购数量：</label>
-						<input type="text" name="quantity" value="<%= model.quantity %>" class="form-control" disabled>
+						<input type="text" name="product[quantity]" value="<%= model.product && model.product.quantity %>" class="form-control" disabled>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label for="name">客户姓名：</label>
-						<input type="text" name="customer[name]" value="<%= model.customer.name %>" class="form-control" disabled>
+						<input type="text" name="customer[name]" value="<%= model.customer && model.customer.name %>" class="form-control" disabled>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label for="phone">电话号码：<a href="tel:<%= model.customer.phone %>" class="btn btn-danger">拨打电话</a></label>
-						<input type="text" name="customer[phone]" value="<%= model.customer.phone %>" class="form-control" disabled>
+						<label for="phone">电话号码：<a href="tel:<%= model.customer && model.customer.phone %>" class="btn btn-danger">拨打电话</a></label>
+						<input type="text" name="customer[phone]" value="<%= model.customer && model.customer.phone %>" class="form-control" disabled>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label for="attach">客户留言：</label>
-						<textarea name="customer[attach]" class="form-control" disabled><%= model.customer.attach %></textarea>
+						<textarea name="customer[attach]" class="form-control" disabled><%= model.customer && model.customer.attach %></textarea>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

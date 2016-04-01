@@ -5,6 +5,7 @@ var $ = require('jquery'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 var ListView = require('./__ListView');
+var Utils = require('./__Util');
 
 Backbone.$ = $;
 
@@ -13,7 +14,8 @@ var SaleLead = Backbone.Model.extend({
 	idAttribute: '_id',
 	urlRoot: config.api.host + '/private/sale/leads',	
 	defaults: {
-		customer: {}
+		customer: {},
+		product: {}
 	},
 });
 //** 集合
@@ -33,6 +35,7 @@ var SaleLeadListView = ListView.extend({
 		ListView.prototype.initialize.apply(this,options);
 	},
 	getNewItemView: function(model){
+		model.set('deltatime',Utils.transformTime(model.get('lastupdatetime')));
 		return this.template({model: model.toJSON()});
 	},
 });

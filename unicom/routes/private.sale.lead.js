@@ -15,7 +15,7 @@
  		var id = req.params.id;
  		models.SaleLead.findOneAndRemove({
  			_id: id,
- 			'sale.id': req.session.accountId, //** 仅自己可操作
+ 			'seller.id': req.session.accountId, //** 仅自己可操作
  		},function(err,doc){
  			if(err) return res.send(err);
  			res.send(doc);
@@ -26,7 +26,7 @@
  		var set = req.body;
  		models.SaleLead.findOneAndUpdate({
  			_id: id,
- 			'sale.id': req.session.accountId, //** 仅自己可操作
+ 			'seller.id': req.session.accountId, //** 仅自己可操作
  		}, {
  				$set: set
  			}, {
@@ -44,7 +44,7 @@
  		models.SaleLead
  			.findOne({
  				_id: id,
-	 			'sale.id': req.session.accountId, //** 仅自己可操作
+	 			'seller.id': req.session.accountId, //** 仅自己可操作
  			})
  			.exec(function(err, doc) {
  				if (err || !doc) return res.send(err || {});
@@ -58,7 +58,7 @@
 
  		models.SaleLead
  			.find({
-	 			'sale.id': req.session.accountId, //** 仅自己可操作
+	 			'seller.id': req.session.accountId, //** 仅自己可操作
  			})
  			.skip(per * page)
  			.limit(per)

@@ -67,6 +67,7 @@ exports = module.exports = Backbone.View.extend({
 		'click .search': 'search',
 		'click .view': 'productView',
 		'click .wechat': 'wechat',
+		'click .sms': 'sms',
 	},
 
 	load: function() {
@@ -98,10 +99,35 @@ exports = module.exports = Backbone.View.extend({
 
 	wechat: function(evt){
 		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		window.location.href = config.api.host + '/sale/page/data/' + config.wechat.appid + '/' + id + '/' + this.router.account.id;
+		window.location.href = config.api.host + '/sns/weixin/share/' + config.wechat.appid + '/' + id + '/' + this.router.account.id;
 		return false;
 	},
 	
+	sms: function(evt){
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
+		var productName = this.$(evt.currentTarget).closest('.item').attr('data');
+		$.ajax({
+			url: config.api.host + '/s', //** 短连接地址
+			type: 'POST',
+			xhrFields: {
+				withCredentials: true
+			},
+			data: {
+				original: config.api.host + '/sns/web/sale/' + id + '/' + this.router.account.id,
+			},
+			crossDomain: true,
+		}).done(function(data) {
+			var shortCode = data.shortCode;
+			var smsBody = '贵州联通沃产品有礼了：' + productName + '产品抢先订。' + config.api.host + '/s/' + shortCode;
+			if(/iPhone/.test(navigator.userAgent)){
+				window.location.href="sms:sms:&body=" + smsBody;
+			}else{
+				window.location.href="sms:?body=" + smsBody;
+			}
+		});
+		return false;
+	},
+
 	render: function() {
 		if (!this.loaded) {
 			this.$el.html(this.loadingTemplate());

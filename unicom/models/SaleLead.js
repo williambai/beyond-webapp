@@ -1,17 +1,15 @@
 module.exports = exports = function(mongoose){
 
 	var schema = new mongoose.Schema({
-		name: String,
-		description: String,
-		category: String,
-		price: Number,
-		quantity: {
-			type: Number,
-			default: 1
-		},
-		goods:{
-			id: String,
-			model: String,
+		product: {
+			name: String,
+			description: String,
+			category: String,
+			price: Number,
+			quantity: {
+				type: Number,
+				default: 1
+			},
 		},
 		customer: {
 			name: String,
@@ -29,9 +27,10 @@ module.exports = exports = function(mongoose){
 			address: String,
 			attach: String,//留言
 		},
-		sale: {//** 客户经理
-			id: String,
-			name: String,
+		seller: {//** 客户经理
+			id: String, //** Account._id
+			email: String, //** 用户手机号
+			username: String, 
 		},
 		status: {
 			type: String,
@@ -40,6 +39,10 @@ module.exports = exports = function(mongoose){
 				message: 'enum validator failed for path {PATH} with value {VALUE}',
 			},
 			default: '有效',
+		},
+		lastupdatetime: {
+			type: Date,
+			default: Date.now,
 		},
 	});
 
