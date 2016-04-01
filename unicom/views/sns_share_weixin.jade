@@ -43,6 +43,22 @@ html(lang="zh-CN")
 						div#content.scrollable-content.section
 							div
 								img(src="/images/wo.jpg" width="100%")
+								div.panel.panel-default
+									div.panel-heading
+										h4.panel-title.text-center 产品介绍
+									div.panel-body
+										div.row
+											div.col-xs-9
+												div.pull-left
+													img(src="#{product.thumbnail_url}" width="50px" height="50px")
+												div(style="padding-left:60px;")
+													h4 #{product.name}
+													p #{product.tags}
+											div.col-xs-3
+												h4(style="color:red;text-align:right;") #{product.price} #{product.unit}
+										hr
+										h4 产品说明：
+										p #{product.description}
 								div.btn-group.btn-group-justified
 									div.btn-group
 										button.btn.btn-primary(onclick="share_to_frend()")
@@ -52,23 +68,11 @@ html(lang="zh-CN")
 										button.btn.btn-success(onclick="share_to_frend()")
 											img(src="/images/tofriends.png" width="32" height="32")
 											span(style="") 分享到朋友圈
-								p &nbsp;
-								div.row
-									div.col-xs-9
-										div.pull-left
-											img(src="#{product.thumbnail_url}" width="50px" height="50px")
-										div(style="padding-left:60px;")
-											h4 #{product.name}
-											p #{product.tags}
-											p &nbsp;
-									div.col-xs-3
-										h4(style="color:red;text-align:right;") #{product.price} #{product.unit}
-								h4 产品说明：
+							p &nbsp;
+							div.text-center
 								hr
-								p #{product.description}
-								p  
-								p  
-								p  
+								p 版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司&nbsp;&nbsp;技术支持QQ群：
+							p &nbsp;
 		script.
 			wx.config({
 				//- debug: true,

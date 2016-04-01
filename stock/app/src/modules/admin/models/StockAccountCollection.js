@@ -4,6 +4,6 @@ var StockAccount = require('./StockAccount');
 var config = require('../conf');
 
 exports = module.exports = Backbone.Collection.extend({
-	url: config.api.host + '/stock/accounts',
+	url: config.api.host + '/trade/accounts',
 	model: StockAccount,
 });

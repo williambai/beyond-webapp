@@ -36,7 +36,7 @@ exports = module.exports = Backbone.View.extend({
 			el: '#search',
 		});
 		this.searchView.done = function(query) {
-			that.listView.trigger('refresh', config.api.host + '/trade/transactions?type=search&' + query);
+			that.listView.trigger('refresh', query);
 		};
 
 		this.listView = new ListView({

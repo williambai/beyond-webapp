@@ -24,8 +24,8 @@
 				<button class="btn btn-success edit">编辑</button>
 				<button class="btn btn-danger delete">删除</button>
 			</div>
-			<h4>[<%= model.company.name %>]&nbsp;&nbsp;<%= model.user.name %></h4>
-			<p>账户：<%= model.username %>
+			<h4><%= model.user.name %></h4>
+			<p>账户：<span style="color:red;"><%= model.username %>&nbsp;&nbsp;[<%= model.company.name %>]</span></p>
 			<p>登录状态：<%= model.login %>&nbsp;&nbsp;账户状态：<%= model.status %></p>
 			<p>更新时间: &nbsp;<%= (new Date(model.lastupdatetime)).toLocaleString() %></p>
 		</div>

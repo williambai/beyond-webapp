@@ -22,24 +22,29 @@ html(lang="zh-CN")
 						div#content.scrollable-content.section
 							div
 								img(src="/images/wo.jpg" width="100%")
-								p &nbsp;
-								form#addSaleLead(method="POST", action="/sns/web/sale/#{params.pid}/#{params.uid}")
-									div.row
-										div.col-xs-9
-											div.pull-left
-												img(src="#{product.thumbnail_url}" width="50px" height="50px")
-											div(style="padding-left:60px;")
-												h4 #{product.name}
-												p #{product.tags}
-												p &nbsp;
-										div.col-xs-3
-											h4(style="color:red;text-align:right;") #{product.price} #{product.unit}
-									input(type="hidden" name="name" value="#{product.name}")
-									input(type="hidden" name="description" value="#{product.description}")
-									div.panel.panel-default
-										div.panel-heading
-											h4.panel-title.text-center 申请订购
-										div.panel-body
+								div.panel.panel-default
+									div.panel-heading
+										h4.panel-title.text-center 产品简介
+									div.panel-body
+										div.row
+											div.col-xs-9
+												div.pull-left
+													img(src="#{product.thumbnail_url}" width="50px" height="50px")
+												div(style="padding-left:60px;")
+													h4 #{product.name}
+													p #{product.tags}
+											div.col-xs-3
+												h4(style="color:red;text-align:right;") #{product.price} #{product.unit}
+										hr
+										h4 产品说明：
+										p #{product.description}
+								div.panel.panel-default
+									div.panel-heading
+										h4.panel-title.text-center 申请订购
+									div.panel-body
+										form#addSaleLead(method="POST", action="/sns/web/sale/#{params.pid}/#{params.uid}")
+											input(type="hidden" name="name" value="#{product.name}")
+											input(type="hidden" name="description" value="#{product.description}")
 											div.form-group
 												label 姓名：
 												input.form-control(type="text" name="customer[name]")
@@ -56,14 +61,13 @@ html(lang="zh-CN")
 												label 留言：
 												textarea.form-control(name="customer[attach]")
 												span.help-block
-									input.btn.btn-danger.btn-block(type="submit" value="确认申请")
-									p &nbsp;
-									h4 产品说明：
-									hr
-									p #{product.description}
-								p  
-								p  
-								p  
+								input.btn.btn-danger.btn-block(type="submit" value="确认申请")
+							p &nbsp;
+							p &nbsp;
+							div.text-center
+								hr
+								p 版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司&nbsp;&nbsp;技术支持QQ群：
+							p &nbsp;
 		script.
 			$(function(){
 				var validate = function(obj){

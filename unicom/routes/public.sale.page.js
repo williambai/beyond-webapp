@@ -201,11 +201,12 @@ exports = module.exports = function(app, models) {
 					.exec(function(err,product){
 						if(err || !product) return res.send(err);
 						var doc = {
-							product: product,
+							product: product.toJSON(),
 							customer: customer,
 							seller: account.toJSON(),
 						};
 						doc.seller.id = account._id;
+						doc.product.id = product._id;
 						models
 							.SaleLead
 							.create(doc, function(err){
@@ -220,7 +221,7 @@ exports = module.exports = function(app, models) {
 
 	var saleSuccessPage = function(req,res){
 		res.set('Content-Type', 'text/html');
-		res.render('sale_success');
+		res.render('sns_sale_success');
 	};
 
 	var snsSaleWebPage = function(req,res){

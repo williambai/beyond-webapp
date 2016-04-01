@@ -61,6 +61,7 @@
 	 			'seller.id': req.session.accountId, //** 仅自己可操作
  			})
  			.skip(per * page)
+ 			.sort({_id: -1})
  			.limit(per)
  			.exec(function(err, docs) {
  				if (err) return res.send(err);
