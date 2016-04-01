@@ -196,6 +196,7 @@ exports = module.exports = function(app, models) {
 						var symbols = _.pluck(docs, 'symbol');
 						//** 获取股票当前价格
 						quote.getQuotes(symbols, function(err, stocks) {
+							if(err) return res.send(docs); //** 无法获取当前价格，直接返回
 							var newDocs = [];
 							// console.log(_.values(stocks))
 							_.each(_.values(stocks), function(stock) {

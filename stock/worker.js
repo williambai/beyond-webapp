@@ -33,24 +33,25 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 	}
 });
 
+//** 将报价保存到数据库
 var quote = function(stock) {
 	// logger.debug('quote: ' + JSON.stringify(stock.symbol));
-	if (stock.price != '0.00') {
-		models.TradeQuote
-			.findOneAndUpdate({
-					'symbol': stock.symbol,
-					'date': stock.date,
-					'time': stock.time,
-				}, {
-					$set: stock
-				}, {
-					upsert: true
-				},
-				function(err, doc) {
-					if (err) return logger.error(err);
-				}
-			);
-	}
+	// if (stock.price != '0.00') {
+	// 	models.TradeQuote
+	// 		.findOneAndUpdate({
+	// 				'symbol': stock.symbol,
+	// 				'date': stock.date,
+	// 				'time': stock.time,
+	// 			}, {
+	// 				$set: stock
+	// 			}, {
+	// 				upsert: true
+	// 			},
+	// 			function(err, doc) {
+	// 				if (err) return logger.error(err);
+	// 			}
+	// 		);
+	// }
 };
 
 var bid = function(trade) {

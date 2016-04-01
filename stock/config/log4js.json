@@ -33,6 +33,6 @@
 		"category": "trading"
 	}],
 	"levels": {
-		"worker": "DEBUG"
+		"worker": "INFO"
 	}
 }
