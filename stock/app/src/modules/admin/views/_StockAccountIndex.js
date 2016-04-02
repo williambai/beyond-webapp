@@ -55,7 +55,7 @@ exports = module.exports = Backbone.View.extend({
 		$item.find('.login').addClass('disabled');
 		$item.append('<div class="captchaForm"><p>登录中。。。，请稍后</p></div>');
 		$.ajax({
-			url: config.api.host + '/stock/accounts',
+			url: config.api.host + '/trade/accounts',
 			type: 'POST',
 			xhrFields: {
 				withCredentials: true
@@ -68,7 +68,7 @@ exports = module.exports = Backbone.View.extend({
 		}).done(function(data) {
 			var interval = setInterval(function(){
 				$.ajax({
-					url: config.api.host + '/stock/accounts',
+					url: config.api.host + '/trade/accounts',
 					type: 'POST',
 					xhrFields: {
 						withCredentials: true
@@ -104,7 +104,7 @@ exports = module.exports = Backbone.View.extend({
 		var captchaText = this.$('input[name=captcha]').val();
 		$item.find('.captchaForm').html('<p>正在验证...</p>');
 		$.ajax({
-			url: config.api.host + '/stock/accounts',
+			url: config.api.host + '/trade/accounts',
 			type: 'POST',
 			xhrFields: {
 				withCredentials: true

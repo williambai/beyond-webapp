@@ -6,13 +6,19 @@ var fs = require('fs');
 var system = require('system');
 var server = require('webserver').create();
 var casper = require('casper').create({
-	// clientScripts: ['jquery.js'],
+	clientScripts: [
+		// 'jquery.js'
+	],
 	pageSettings: {
+		userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36',
 		webSecurityEnabled: false,
 		javascriptEnabled: true,
 		loadImages: true,
-		loadPlugins: false
+		localToRemoteUrlAccessEnabled: false,
+		loadPlugins: false,
+		XSSAuditingEnabled: false,
 	},
+	// viewportSize: {width: 800, height: 600},//** 视图大小
 	timeout: 100000,
 	logLevel: "info",
 	verbose: true
@@ -99,12 +105,17 @@ server.listen(serverPort, {
 							success = true;
 						}
 						casper.evaluate(function(url,accountId, cookies, success){
-							__utils__.sendAJAX(url,'POST', {
-								action: 'updateCookie',
-								id: accountId,
-								cookies: cookies,
-								success: success
-							},false);
+							__utils__.sendAJAX(
+								url,
+								'POST',
+								{
+									action: 'updateCookie',
+									id: accountId,
+									cookies: cookies,
+									success: success
+								},
+								false
+							);
 						},callbackUrl,accountId,JSON.stringify(phantom.cookies),success);					
 					});
 					//** close
@@ -173,8 +184,6 @@ casper.checkCaptcha = function() {
 	return this;
 };
 
-
-casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 casper.start('https://etrade.cs.ecitic.com/ymtrade/login/login.jsp?ssl=false&ftype=pro');
 
 // casper.then(function(){
