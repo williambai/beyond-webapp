@@ -1,28 +1,46 @@
+var util = require('util');
+var path = require('path');
+var log4js = require('log4js');
+var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
+var cp = require('child_process');
+
  exports = module.exports = function(app, models) {
 
+	//** 预设casperjs 内部Http server的服务端口
+	var capser_server_port = 8085; 
  	var captchaImage = {};
 
  	var autoLogin = function(req,res){
-			var id = req.body.id;
-			var path = require('path');
-			cbss_cwd = path.join(__dirname, '../libs/cbss');
-			console.log(cbss_cwd);
-			var worker = require('child_process').execFile(
-				'casperjs', [
-					'--ignore-ssl-errors=true',
-					'--ssl-protocol=any',
-					'login.casper.js',
-					'--id=' + id,
-					'--captcha_file=' + path.join(__dirname,'../public/_tmp/captcha_' + id + '.png'),
-					'--login_file=' + path.join(__dirname,'../public/_tmp/login_' + id + '.png'),
-				], {
-					cwd: cbss_cwd,
-				},
-				function(err, stdout, stderr) {
-					if (err) return console.log(err);
-				});
-			console.log('casperjs started.');
-			res.send({});
+		//** 账户id
+		var id = req.body.id;
+		//** 设置captcha图片上传POST回调，由casperjs调用
+		var callback_url = req.header('origin') + '/protect/cbss/accounts';
+		//** 预设希望captcha图片文件的存储路径
+		var captcha_file = path.join(__dirname, '../public/_tmp/captcha_' + id + '.png');
+		//** 预设希望login页面截图文件的存储路径(调试有用，生产无用)
+		var login_file = path.join(__dirname, '../public/_tmp/login_' + id + '.png');
+		//** 运行casperjs的相对路径
+		casperjs_cwd = path.join(__dirname, '../libs/cbss');
+		//** 调用casperjs子进程
+		var worker = cp.execFile(
+			'casperjs', [
+				'login.casper.js',
+				'--ignore-ssl-errors=true',
+				'--ssl-protocol=any',
+				'--id=' + id,
+				'--callback_url=' + callback_url,
+				'--captcha_file=' + captcha_file,
+				'--login_file=' + login_file,
+				'--server_port=' + capser_server_port,
+			], {
+				cwd: casperjs_cwd,
+			},
+			function(err, stdout, stderr) {
+				if (err) return logger.error(err);
+				logger.debug(stdout);
+			});
+		logger.debug('casperjs started.');
+		res.send({});
  	};
  	var processCaptchaText = function(req,res){
 		var id = req.body.id;
@@ -41,10 +59,11 @@
 					password: doc.password,
 					captcha: captchaText,
 				});
-				console.log(postData)
+				logger.debug(postData)
+				//** 连接casperjs，传递登录Form数据
 				var request = http.request({
 					hostname: 'localhost',
-					port: 8084,
+					port: capser_server_port,
 					path: '/',
 					method: 'POST',
 					headers: {
@@ -52,10 +71,10 @@
 						'Content-Length': postData.length
 					},
 				}, function(response) {
-					console.log('response from casper(action:login): ' + response.statusCode);
+					logger.debug('response from casper(action:login): ' + response.statusCode);
 				});
 				request.on('error', function(err) {
-					console.error('problem with request: ' + err.message);
+					logger.error('problem with request: ' + err.message);
 				});
 				request.write(postData);
 				request.end();
@@ -64,13 +83,17 @@
  	};
  	var updateCookie = function(req,res){
 		var id = req.body.id;
+		var cookies = [];
+		try {
+			cookies = JSON.parse(req.body.cookies);
+		} catch (e) {};
 		models.CbssAccount
 			.findByIdAndUpdate(
 				id, {
 					$set: {
 						'login': req.body.success,
-						'cookieRaw': 'cookieRaw',
-						'cookie': req.body.cookie,
+						'cookieRaw': req.body.cookies,
+						'cookies': cookies,
 						'lastupdatetime': Date.now(),
 					}
 				}, {
@@ -107,14 +130,14 @@
  							'cookie.refresh.casper.js',
  							'--id=' + id,
  							'--cookie=' + JSON.stringify(doc.cookies),
- 							'--refresh_url=' + 'http://localhost:8091/protect/cbss/accounts'
+ 							'--refresh_url=' + 'http://localhost:8092/protect/cbss/accounts'
  						], {
  							cwd: cbss_cwd,
  						},
  						function(err, stdout, stderr) {
- 							if (err) console.error(err);
- 							console.log('-----refresh cookie--------');
- 							console.log(stdout);
+ 							if (err) logger.error(err);
+ 							logger.debug('-----refresh cookie--------');
+ 							logger.debug(stdout);
  							setTimeout(function() {
  								_refreshCookie(docs);
  							}, 1000);
@@ -137,7 +160,7 @@
 				//** (step 2)casperjs uploadImage 
 				//** casperjs save captcha image into /_tmp/captcha.png
 				//** after that, casperjs server is listening to HOST:PORT(localhost:8084) forever.
-				// console.log(req.body);
+				// logger.debug(req.body);
 				if (req.body.id && req.body.file) {
 					captchaImage[req.body.id] = req.body.file;
 				}
@@ -164,7 +187,7 @@
 			case 'updateCookie':
 				//** (client)call from casperjs
 				//** update cookie
-				// console.log('updateCookie: ' + JSON.stringify(req.body));
+				// logger.debug('updateCookie: ' + JSON.stringify(req.body));
 				updateCookie(req, res);
 				break;
 			case 'refreshCookie':
@@ -243,7 +266,8 @@
  	 * type:
  	 *     
  	 */
- 	app.post('/protect/cbss/accounts', app.grant, add);
+ 	// app.post('/protect/cbss/accounts', app.grant, add);
+ 	app.post('/protect/cbss/accounts', add);
  	/**
  	 * update protect/cbss/accounts
  	 * type:

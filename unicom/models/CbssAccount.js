@@ -5,7 +5,7 @@ module.exports = exports = function(mongoose){
 		province_id: String, //** 省市编码
 		username: String,//** cbss账号
 		password: String,//** cbss密码
-		cookie: {},
+		cookies: [],
 		cookieRaw: String,
 		login: {
 			type: Boolean,

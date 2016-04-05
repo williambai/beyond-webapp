@@ -7,29 +7,27 @@ var fs = require('fs');
 var system = require('system');
 var server = require('webserver').create();
 var casper = require('casper').create({
-	// clientScripts: ['jquery.js'],
+	clientScripts: [
+		// 'jquery.js'
+	],
 	pageSettings: {
+		userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36',
 		webSecurityEnabled: false,
 		javascriptEnabled: true,
 		loadImages: true,
-		loadPlugins: false
+		localToRemoteUrlAccessEnabled: false,
+		loadPlugins: false,
+		XSSAuditingEnabled: false,
 	},
+	// viewportSize: {width: 800, height: 600},//** 视图大小
 	timeout: 100000,
-	logLevel: "info",
+	logLevel: "debug",
 	verbose: true
 });
-//** 默认http headers
-var headers = {
-	'Accept-Language': 'zh-CN',
-	'Accept': 'text/html, application/xhtml+xml, */*',
-	'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko',
-	'Connection': 'Keep-Alive',
-	'Host': 'cbss.10010.com',
-};
 //** setup params
 console.log(JSON.stringify(casper.cli.options));
 var accountId = casper.cli.options['id'] || '';
-var callbackUrl = casper.cli.options['callback_url'] || 'http://localhost:8092/cbss/accounts';
+var callbackUrl = casper.cli.options['callback_url'] || 'http://localhost:8092/protect/cbss/accounts';
 var captchaFile = casper.cli.options['captcha_file'] || './_tmp/captcha.png';
 var loginFile = casper.cli.options['login_file'] || './_tmp/login.png';
 var serverPort = casper.cli.options['server_port'] || 8084;
@@ -84,7 +82,7 @@ server.listen(serverPort, {
 					//** do login
 					casper.evaluate(function(username, password, captcha) {
 						//** 设置用户名
-						document.querySelector('#STAFF_ID').setAttribute('value', username);
+						document.querySelector('input[name="STAFF_ID"]').setAttribute('value', username);
 						//** 设置密码
 						document.querySelector('#LOGIN_PASSWORD').setAttribute('value', password);
 						//** 设置省份代码，湖北:17
@@ -94,19 +92,22 @@ server.listen(serverPort, {
 						document.querySelector('#VERIFY_CODE').setAttribute('value', captcha);
 					}, username, password, captcha);
 
+					casper.wait(1000);
 					//** 查看登录界面表单填写是否正确
-					casper.capture(loginFile);
+					casper.echo(casper.getFormValues('form'));
+					// casper.capture(loginFile);
 					//** 提交登录表单
 					casper.then(function(){
 						// casper.evaluate(function(){
 						// 	// document.querySelector('form[name="Form0"]').submit();
 						// 	document.querySelector('input[type="button"]').click();
 						// });
-						casper.click('input[type="button"]');
+						this.mouseEvent('click','input[type="button"]');
 					});
 
 					casper.wait(2000);
-					//** 获取登录成功界面
+					//** 获取登录成功(主页)界面
+					casper.echo(casper.getHTML());
 					casper.capture(loginFile);
 					//** 返回cookies
 					casper.then(function() {
@@ -177,14 +178,18 @@ casper.checkCaptcha = function() {
 	return this;
 };
 
-
-casper.userAgent('Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko');
-
 casper.on("resource.error", function(resourceError) {
 	console.log('Unable to load resource (#' + resourceError.id + 'URL:' + resourceError.url + ')');
 	console.log('Error code: ' + resourceError.errorCode + '. Description: ' + resourceError.errorString);
 });
 
+//** http headers
+var headers = {
+	'Accept-Language': 'zh-CN',
+	'Accept': 'text/html, application/xhtml+xml, */*',
+	'Connection': 'Keep-Alive',
+	'Host': 'cbss.10010.com',
+};
 //** 启动
 casper.start('https://cbss.10010.com/essframe', {
 		method: 'get',
@@ -201,7 +206,7 @@ casper.then(function() {
 	this.click('img#captureImage');
 	this.click('input[type="button"]');
 	this.wait(1000);
-	this.capture('./_tmp/index.png');
+	this.capture(loginFile);
 	// this.download('https://hb.cbss.10010.com/image?mode=validate&width=60&height=20','./_tmp/captcha.png');
 	// this.captureSelector('./_tmp/captchaImage.png','div#VerifyPart2');//img#captureImage');
 	//** 调试登录页面
@@ -209,10 +214,10 @@ casper.then(function() {
 	// this.echo(this.getHTML('div#main'));
 });
 
-// casper.then(function() {
-// 	this.checkCaptcha();
-// });
+casper.then(function() {
+	this.checkCaptcha();
+});
 
-// casper.then(neverendingWait);
+casper.then(neverendingWait);
 
 casper.run();

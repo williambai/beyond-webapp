@@ -18,10 +18,10 @@
 	<div id="itemTemplate">
 		<div class="item" id="<%= model._id %>">
 	 		<div class="pull-right">
-<!-- 				<% if(!model.login){ %>
+				<% if(!model.login){ %>
 					<button class="btn btn-primary login">登录</button>
 				<% } %>
- -->
+
  				<button class="btn btn-success edit">编辑</button>
 				<button class="btn btn-danger delete">删除</button>
 			</div>
