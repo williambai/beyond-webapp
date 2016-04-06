@@ -59,7 +59,7 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label for="content">SMS内容：</label>
+						<label for="content">SMS内容(70个字以内)：</label>
 						<textarea name="content" class="form-control" readonly><%= model.content %></textarea>
 						<span class="help-block"></span>
 					</div>

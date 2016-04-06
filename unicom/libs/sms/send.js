@@ -76,6 +76,8 @@ var sendSMS = function(docs, done) {
 			//** 过滤符合11位长度的手机号码
 			if(/\d{11}/.test(receiver)){
 				newReceivers.push('86' + receiver.trim());
+			}else{
+				newReceivers.push(receiver.trim());
 			}
 		});
 		//** 构建Submit
