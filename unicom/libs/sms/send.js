@@ -27,7 +27,7 @@ var StreamSpliter = require('./lib/StreamSpliter');
 
 var sendSMS = function(docs, done) {
 	var doc;
-	var newDocs = [];
+	var results = [];
 
 	var client = net.connect({
 		host: config.SPHost,
@@ -39,7 +39,7 @@ var sendSMS = function(docs, done) {
 	client.on('end', function(){
 		logger.debug('client disconnected.');
 		client.destroy();
-		done && done(null, newDocs);
+		done && done(null, results);
 	});
 
 	client.on('error', function(err) {
@@ -55,6 +55,7 @@ var sendSMS = function(docs, done) {
 
 	var handler = new StreamSpliter(client);
 
+	//** 逐条(一起全部)发送SMS
 	var _submit = function(docs){
 		//** send sms
 		doc = docs.pop();
@@ -92,6 +93,8 @@ var sendSMS = function(docs, done) {
 		//** 发送SMS 
 		client.write(submit.makePDU(reqPDU));
 		logger.debug('>> 3. submit');
+		//** 循环发送剩余的消息
+		_submit(docs);
 	};
 
 	handler.on('message', function(buf) {
@@ -115,11 +118,9 @@ var sendSMS = function(docs, done) {
 				client.emit('end');
 				return;
 			}
-			//** 保存command
-			doc.command = command;
-			newDocs.push(doc);
+			//** 保存发送结果command
+			results.push(command);
 			logger.debug('<< 4. submit_resp ok. (if have more) submit continue...');
-			_submit(docs);
 		}
 	});
 	//** send Bind Command
@@ -166,8 +167,8 @@ if (process.argv[1] == __filename) {
 		content: 'some content',
 	}];
 
-	send(docs, function(err, newDocs) {
+	send(docs, function(err, results) {
 		if (err) return console.log(err);
-		console.log(JSON.stringify(newDocs));
+		console.log(JSON.stringify(results));
 	});
 }

@@ -27,7 +27,7 @@ var makeRespPDU = function(buf, result){
 	buf.copy(resp, 8, 8, 20);
 	//** result
 	resp.writeUInt8(result, 21);
-	logger.debug('resp PDU: ' + resp.toString('hex'));
+	logger.debug('<< resp PDU: ' + resp.toString('hex'));
 	return resp;
 };
 
@@ -51,8 +51,8 @@ Receiver.prototype.process = function(socket){
 			that.emit('error', e);
 			return socket.destroy();
 		}
-		logger.debug('command: ' + JSON.stringify(command));
 		if (command instanceof Bind) {
+			logger.debug('>> Bind: ' + JSON.stringify(command));
 			// logger.debug('>> Bind');
 			if (command.LoginType == 2 &&
 				command.LoginName == config.listener.LoginName &&
@@ -66,13 +66,13 @@ Receiver.prototype.process = function(socket){
 				socket.write(makeRespPDU(buf,1));
 			}
 		} else if (command instanceof Unbind) {
-			logger.debug('>> Unbind');
+			logger.debug('>> Unbind: '+ JSON.stringify(command));
 			//** unbind 4+4+12 = 20
 			var resp = new Buffer(20);
 			resp.writeUInt32BE(20, 0);
 			resp.writeUInt32BE(0x80000002, 4);
 			buf.copy(resp, 8, 8, 20);
-			logger.debug('unbind resp PDU: ' + resp);
+			logger.debug('<< unbind resp PDU: ' + resp);
 			socket.write(resp);
 			socket.destroy();
 		} else if (command instanceof Report) {

@@ -1,9 +1,9 @@
 //** 同一时间不重复的序列号
 var curSeq = 0xffffffff;
 
-//** 产生下一个序列号
+//** 产生下一个序列号，为长短信留出十个分批发送的序列号
 var genNextSeq = function() {
-	curSeq = (curSeq > 0x7fffff00) ? 0 : curSeq + 1;
+	curSeq = (curSeq > 0x7fffff00) ? 0 : curSeq + 10;
 	return curSeq;
 };
 //** 获取当前时间
@@ -73,21 +73,21 @@ module.exports = exports = function(mongoose) {
 			}
 		}
 		//** 保证短信少于140个英文字符或70个汉字
-		var content = this.content || '';
-		var len = this.content.length;
-		var isChinese = false;
-		for(var i=0; i<len; i++){
-			//** 判断含有中文字符
-			if(content.charCodeAt(i) > 127) {
-				isChinese = true;
-				break;
-			}
-		}
-		if(isChinese){
-			this.content = content.slice(0,70);
-		}else{
-			this.content = content.slice(0,70);
-		}
+		// var content = this.content || '';
+		// var len = this.content.length;
+		// var isChinese = false;
+		// for(var i=0; i<len; i++){
+		// 	//** 判断含有中文字符
+		// 	if(content.charCodeAt(i) > 127) {
+		// 		isChinese = true;
+		// 		break;
+		// 	}
+		// }
+		// if(isChinese){
+		// 	this.content = content.slice(0,70);
+		// }else{
+		// 	this.content = content.slice(0,70);
+		// }
 		next();
 	});
 

@@ -25,12 +25,12 @@ sms.submit = function(models, done) {
 			});
 			//** send sms
 			var count = docs.length;
-			sendSMS(docs, function(err, newDocs) {
+			sendSMS(docs, function(err, results) {
 				if (err) return done(err);
 				//** save sms'series info
-				async.each(newDocs, function(newDoc, callback) {
+				async.each(results, function(result, callback) {
 					//** 短信 cmdSubmit 对象
-					var command = newDoc.command || {};
+					var command = result || {};
 					var header = command.header || {};
 					var headerSeries = header.srcNodeID + '' + header.cmdTime + '' + header.cmdSeq;
 					models.PlatformSms
@@ -72,6 +72,13 @@ sms.deliver = function(models, options, done) {
 	doc.headerSeries = header.srcNodeID + '' + header.cmdTime + '' + header.cmdSeq;
 	doc.sender = command.UserNumber;
 	doc.receiver = command.SPNumber;
+	//** TODO TP_pid = 0
+	// var TP_pid = command.TP_pid;
+	//** TODO command.TP_udhi = 1 表示是短信的一部分，需要拼接短信
+	//** 数据的前4位一样，5/6位有含义：[5,0,3,144,3,1...
+	//** 第五位表示有3条，第六位表示是3条中的第1条
+	// var TP_udhi = command.TP_udhi;
+
 	//** 解析短信内容
 	var MessageCoding = command.MessageCoding;
 	var MessageContent = command.MessageContent;
