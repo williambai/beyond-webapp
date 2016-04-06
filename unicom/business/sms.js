@@ -72,9 +72,21 @@ sms.deliver = function(models, options, done) {
 	doc.headerSeries = header.srcNodeID + '' + header.cmdTime + '' + header.cmdSeq;
 	doc.sender = command.UserNumber;
 	doc.receiver = command.SPNumber;
-	//** message content
-	var content = command.MessageContent.toString('utf8');
-	doc.content = content;
+	//** 解析短信内容
+	var MessageCoding = command.MessageCoding;
+	var MessageContent = command.MessageContent;
+	if(MessageCoding == 0 && MessageContent){
+		//** acsii
+		doc.content = new Buffer(MessageContent,'ascii').toString('utf8');
+	}else if(MessageCoding == 8 && MessageContent){
+		//** ucs2 
+		//** 注意：javascript是低位在前，短信协议是高位在前，要做转换
+		var newMessageContent = new Buffer(MessageContent.length);
+		for (var i = 0, len = MessageContent.length; i < len; i += 2) {
+			newMessageContent.writeUInt16LE(MessageContent.readUInt16BE(i), i);
+		};
+		doc.content = newMessageContent.toString('ucs2');
+	}
 	doc.status = '收到';
 	models.PlatformSms
 		.create(doc, function(err) {

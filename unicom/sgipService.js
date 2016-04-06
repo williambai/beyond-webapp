@@ -118,7 +118,7 @@ var sendSMSJob = new CronJob({
 });
 
 //** process uncaughtException
-process.on('uncaughtException', function(){
-	logger.warn('uncaughtException and process exit.');
+process.on('uncaughtException', function(err){
+	logger.error(err);
 	process.exit(1);
 });

@@ -78,18 +78,31 @@ CommandFactory.create = function(commandType) {
 							PDU.fill(0, sPtr + bytesWriten, sPtr + len);
 							//** 更新当前指针
 							sPtr += len;
-							// console.log(PDU.slice(sPtr, sPtr + len));
 						} else {
 							//*** 属性没有定义长度
-							// console.log('++++')
-							// console.log(val);
-							// console.log(sPtr);
 							// for attr that length is determined by its instance length, not by its type's fixed length
 							// for example MessageContent attr in Submit PDU
-							bytesWriten = val.copy(PDU, sPtr);
-							// bytesWriten = PDU.write(val,sPtr,val.length,'utf8');
+							//** 填入val 
+							if(val instanceof Buffer){
+								//** val 是 buffer类型
+								bytesWriten = val.copy(PDU, sPtr);
+								len = val.length;
+							}else{
+								//** val 是 字符串类型，
+								//** 注意：javascript 是等宽字符，一个中文和一个英文长度相等
+								len = new Buffer(val,'utf8').length;
+								bytesWriten = PDU.write(val,sPtr,len,'utf8');
+							}
+							// console.log('++++')
+							// console.log(attr.name + ': ');
+							// console.log(val.toString('utf8'));
+							// console.log(val);
+							// console.log(bytesWriten)
+							// console.log(PDU.length)
+							// console.log(sPtr)
+							// console.log(PDU.slice(sPtr, sPtr + 30).length);//???
 							//** 更新当前指针
-							sPtr += val.length;
+							sPtr += len;
 						}
 					})(attr.len);
 					break;
@@ -217,7 +230,9 @@ CommandFactory.parse = function(data) {
 				//** 取出字符串，并转化为UTF8格式？？？
 				// val = data.toString('utf8', ptr, ptr + varLen); // todo: encoding may not be utf8
 				val = new Buffer(data.slice(ptr, ptr + varLen));
-				// console.log('varLen', varLen, aname, val);
+				// console.log('+++++');
+				// console.log('hex: ', data.toString('hex',ptr,ptr + varLen));
+				// console.log('varLen: ', varLen, aname, val);
 				//** 更新指针
 				ptr += varLen;
 			}

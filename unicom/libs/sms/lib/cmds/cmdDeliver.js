@@ -23,7 +23,7 @@ function Deliver(UserNumber, MessageCoding, MessageContent, options) {
 
   this.UserNumber = UserNumber;
   this.MessageCoding = MessageCoding; // todo: for digit id only or automatic detected, default to what ??
-  this.MessageLength = (new Buffer(MessageContent, 'utf8')).length;
+  this.MessageLength = MessageContent.length;//(new Buffer(MessageContent, 'utf8')).length;
   this.MessageContent = MessageContent;
 }
 
@@ -41,10 +41,10 @@ if (process.argv[1] === __filename) {
   process.nextTick(function() {
     var CommandFactory = require('../commands');
     var Deliver = CommandFactory.create('Deliver');
-    var msg = new Deliver('8612345678901', 'kaven', new Buffer('我'));
+    var msg = new Deliver('8612345678901', 8, new Buffer('a我b'));
+    console.log(msg);
     var PDU = msg.makePDU();
     var msgEcho = msg.parse(PDU);
-    console.log(msg);
     console.log(PDU.slice(0, 20));
     console.log(PDU.slice(20));
     console.log(msgEcho);
