@@ -19,6 +19,10 @@ var Sms = Backbone.Model.extend({
 			required: true,
 			// pattern: /^(\d{11}\D+)*\d{11}$/,
 			msg: '11位手机号码，以;隔开',
+		},
+		content: {
+			maxLength: 70,
+			msg: '输入短信内容，最多70个字',
 		}
 	}
 });

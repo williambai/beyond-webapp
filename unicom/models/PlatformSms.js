@@ -72,6 +72,22 @@ module.exports = exports = function(mongoose) {
 				this.status = '新建';
 			}
 		}
+		//** 保证短信少于140个英文字符或70个汉字
+		var content = this.content || '';
+		var len = this.content.length;
+		var isChinese = false;
+		for(var i=0; i<len; i++){
+			//** 判断含有中文字符
+			if(content.charCodeAt(i) > 127) {
+				isChinese = true;
+				break;
+			}
+		}
+		if(isChinese){
+			this.content = content.slice(0,70);
+		}else{
+			this.content = content.slice(0,70);
+		}
 		next();
 	});
 
