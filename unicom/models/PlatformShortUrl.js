@@ -1,11 +1,13 @@
-module.exports = exports = function(mongoose) {
+var mongoose = require('mongoose');
 
+var schema = new mongoose.Schema({
+	original: String, //** 源链接
+	shortCode: String, //** 短连接地址，以/开头，不包含http://host:port
+});
 
-	var schema = new mongoose.Schema({
-		original: String, //** 源链接
-		shortCode: String, //** 短连接地址，以/开头，不包含http://host:port
-	});
+schema.set('collection', 'platform.shorturls');
 
-	schema.set('collection', 'platform.shorturls');
-	return mongoose.model('PlatformShortUrl', schema);
+module.exports = exports = function(connection){
+	connection = connection || mongoose;
+	return connection.model('PlatformShortUrl', schema);
 };

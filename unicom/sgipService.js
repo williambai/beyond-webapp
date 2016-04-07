@@ -30,7 +30,6 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 
 //** SGIP1.2 protocol
 var Receiver = require('./libs/sms').Receiver;
-var sms = require('./business/sms');
 
 //** TCP/IP server
 var sgipSerice = net.createServer();
@@ -62,7 +61,7 @@ sgipSerice.on('connection', function(socket) {
 	receiver.on('report', function(err, command) {
 		if (err) return logger.error(err);
 		logger.debug('>> report: ' + JSON.stringify(command));
-		sms.report(models, {
+		models.PlatformSms.report({
 			command: command,
 		}, function(err, result) {
 			if (err) return logger.error(err);
@@ -73,7 +72,7 @@ sgipSerice.on('connection', function(socket) {
 	receiver.on('deliver', function(err, command) {
 		if (err) return logger.error(err);
 		logger.debug('>> deliver: ' + JSON.stringify(command));
-		sms.deliver(models, {
+		models.PlatformSms.receiveSms({	
 			command: command,
 		}, function(err, result) {
 			if (err) return logger.error(err);
@@ -99,11 +98,10 @@ sgipSerice.listen(config.sp.listener.port, function() {
 var CronJob = require('cron').CronJob;
 
 //** send 'new' sms in database
-var submit = require('./business/sms').submit;
 var sendSMSJob = new CronJob({
 	cronTime: '*/10 * * * * *',
 	onTick: function(){
-		submit(models,function(err,result) {
+		models.PlatformSms.sendSms(function(err,result){
 			if(err || !result) return logger.error(err);
 			if (result.count > 0) {
 				logger.info('submit ' + (result.count ) + ' SMS successfully.');

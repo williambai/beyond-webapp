@@ -1,11 +1,14 @@
-module.exports = exports = function(mongoose) {
+var mongoose = require('mongoose');
 
-	var schema = new mongoose.Schema({
-		_id: String,
-		session: String,
-		expires: Date,
-	});
+var schema = new mongoose.Schema({
+	_id: String,
+	session: String,
+	expires: Date,
+});
 
-	schema.set('collection', 'sessions');
-	return mongoose.model('PlatformSession', schema);
+schema.set('collection', 'sessions');
+
+module.exports = exports = function(connection){
+	connection = connection || mongoose;
+	return connection.model('PlatformSession', schema);
 };

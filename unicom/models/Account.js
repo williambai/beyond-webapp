@@ -1,62 +1,64 @@
-module.exports = exports = function(mongoose) {
+var mongoose = require('mongoose');
 
-	var schema = new mongoose.Schema({
-		email: {
-			type: String,
-			unique: true
+var schema = new mongoose.Schema({
+	email: {
+		type: String,
+		unique: true
+	},
+	openid: String, //wechat openid
+	password: String,
+	username: String,
+	apps: [],
+	roles: [],
+	department: {
+		id: String, 
+		name: String,//** 营业厅
+		city: String, //** 城市名称
+		grid: String, //** 网格编码
+		district: String, //** 地区编码
+	},
+	birthday: {
+		day: {
+			type: Number,
+			min: 1,
+			max: 31,
+			required: false
 		},
-		openid: String, //wechat openid
-		password: String,
+		month: {
+			type: Number,
+			min: 1,
+			max: 12,
+			required: false
+		},
+		year: {
+			type: Number
+		}
+	},
+	avatar: String,
+	biography: String,
+	registerCode: String, //注册验证码
+	status: {
+		type: String,
+		enum: {
+			values: '未验证|正常|禁用'.split('|'),//账号的有效性；注册但不能登录；正常登陆；禁止登录
+			message: 'enum validator failed for path {PATH} with value {VALUE}',
+		}
+	},
+	creator: {
+		id: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Account',
+		},
 		username: String,
-		apps: [],
-		roles: [],
-		department: {
-			id: String, 
-			name: String,//** 营业厅
-			city: String, //** 城市名称
-			grid: String, //** 网格编码
-			district: String, //** 地区编码
-		},
-		birthday: {
-			day: {
-				type: Number,
-				min: 1,
-				max: 31,
-				required: false
-			},
-			month: {
-				type: Number,
-				min: 1,
-				max: 12,
-				required: false
-			},
-			year: {
-				type: Number
-			}
-		},
 		avatar: String,
-		biography: String,
-		registerCode: String, //注册验证码
-		status: {
-			type: String,
-			enum: {
-				values: '未验证|正常|禁用'.split('|'),//账号的有效性；注册但不能登录；正常登陆；禁止登录
-				message: 'enum validator failed for path {PATH} with value {VALUE}',
-			}
-		},
-		creator: {
-			id: {
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Account',
-			},
-			username: String,
-			avatar: String,
-		},
-		histories: [],
-		lastupdatetime: Date
-	});
+	},
+	histories: [],
+	lastupdatetime: Date
+});
 
-	schema.set('collection', 'accounts');
+schema.set('collection', 'accounts');
 
-	return mongoose.model('Account', schema);
+module.exports = exports = function(connection) {
+	connection = connection || mongoose;
+	return connection.model('Account', schema);
 };

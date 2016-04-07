@@ -1,3 +1,4 @@
+//@Deprecated!
 var _ = require('underscore');
 var async = require('async');
 var sp = require('../libs/sms');
