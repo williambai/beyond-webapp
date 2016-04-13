@@ -1,7 +1,5 @@
 //** send 'new' sms in database
-var submit = require('../business/sms').submit;
 
-//** send sms
 if (process.argv[1] === __filename) {
 	//** common packages
 	var path = require('path');
@@ -25,8 +23,7 @@ if (process.argv[1] === __filename) {
 			models[modelName] = require('../models/' + modelName)(mongoose);
 		}
 	});
-	// mongoose.disconnect();
-	submit(models, function(err, result) {
+	models.PlatformSms.sendSms(function(err, result) {
 		if (err) console.log(err);
 		console.log(result);
 		mongoose.disconnect();

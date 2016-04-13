@@ -59,13 +59,10 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 // });
 // 
 
-var processOrder = require('./business/order').process;
 var processOrderJob = new CronJob({
 	cronTime: '10 */2 * * * *',
 	onTick: function() {
-		processOrder(models,
-			config.sp.options,
-			function(err, result) {
+		models.Order.process2G_3G(function(err, result) {
 				if (err) return logger.error(err);
 				logger.info('call Order peroid job successfully.');
 			}

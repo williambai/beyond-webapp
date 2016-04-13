@@ -28,14 +28,21 @@ var getCurrentTime = function(){
 //*** Schema
 var schema = new mongoose.Schema({
 	header: { //** SMS 发送时的头。包括源节点，时间戳和序列号
-		srcNodeID: Number, 
-		cmdTime: Number, 
+		srcNodeID: Number,
+		cmdTime: Number,
 		cmdSeq: Number
 	},
 	headerSeries: String, //** srcNodeID + cmdTime + cmdSeq
 	sender: String,
 	receiver: String,
 	content: String,
+	category: { //** 新建/收到短信的业务类型，2G/3G/4G
+		type: String,
+		// enum: {
+		// 	values: '2G|3G|4G'.split('|'),
+		// 	message: 'enum validator failed for path {PATH} with value {VALUE}',
+		// }
+	},
 	status: {
 		type: String,
 		enum: {
@@ -50,15 +57,15 @@ var schema = new mongoose.Schema({
 	lastupdatetime: {
 		type: Date,
 		default: Date.now
-	},		
+	},
 });
 
 //** pre-save
-schema.pre('save', function(next){
+schema.pre('save', function(next) {
 	//** 收到的SMS直接存储，不做改动
-	if(this.status != '收到'){
+	if (this.status != '收到') {
 		//** 没有设置SMS头
-		if(!this.headerSeries){
+		if (!this.headerSeries) {
 			this.header = {};
 			this.header.srcNodeID = spConfig.NodeID;
 			this.header.cmdTime = getCurrentTime();
@@ -66,13 +73,13 @@ schema.pre('save', function(next){
 			this.headerSeries = this.header.srcNodeID + '' + this.header.cmdTime + '' + this.header.cmdSeq;
 		}
 		//** 没有设置sender, 采用默认的SPNumber作为发送方
-		if(!this.sender){
+		if (!this.sender) {
 			this.sender = spConfig.options.SPNumber;
-		}else{
+		} else {
 			this.sender = spConfig.options.SPNumber + '' + this.sender;
 		}
 		//** 没有设置status, 默认的status
-		if(!this.status){
+		if (!this.status) {
 			this.status = '新建';
 		}
 	}
@@ -161,6 +168,7 @@ module.exports = exports = function(connection) {
 	 */
 	schema.statics.receiveSms = function(options, done) {
 		var PlatformSms = connection.model('PlatformSms');
+		var Goods = connection.model('Goods');
 		//** 短信报告cmdDeliever对象
 		var command = options.command || {};
 		//** cmdDeliever.header对象
@@ -180,10 +188,10 @@ module.exports = exports = function(connection) {
 		//** 解析短信内容
 		var MessageCoding = command.MessageCoding;
 		var MessageContent = command.MessageContent;
-		if(MessageCoding == 0 && MessageContent){
+		if (MessageCoding == 0 && MessageContent) {
 			//** acsii
-			doc.content = new Buffer(MessageContent,'ascii').toString('utf8');
-		}else if(MessageCoding == 8 && MessageContent){
+			doc.content = new Buffer(MessageContent, 'ascii').toString('utf8');
+		} else if (MessageCoding == 8 && MessageContent) {
 			//** ucs2 
 			//** 注意：javascript是低位在前，短信协议是高位在前，要做转换
 			var newMessageContent = new Buffer(MessageContent.length);
@@ -193,11 +201,23 @@ module.exports = exports = function(connection) {
 			doc.content = newMessageContent.toString('ucs2');
 		}
 		doc.status = '收到';
-		PlatformSms
-			.create(doc, function(err) {
-				if (err) return done(err);
-				done(null);
-			});
+
+		var regex = new RegExp('^' + spConfig.options.SPNumber);
+		Goods.findOne({
+			smscode: (doc.sender || '').replace(regex, ''), //** 找到对应的goods
+		}, function(err, goods) {
+			if (err) console.error(err);
+			//** 无论找到与否，都继续保存sms
+			goods = goods || {};
+			//** 给sms的category赋值: 2G/3G/4G 之一
+			doc.category = goods.category || '';
+			PlatformSms
+				.create(doc, function(err) {
+					if (err) return done(err);
+					done(null);
+				});
+
+		});
 	};
 
 	/**

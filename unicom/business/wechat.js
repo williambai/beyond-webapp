@@ -1,4 +1,4 @@
-
+//** @Deprecated!
 var request = require('request');
 var wechat = {};
 

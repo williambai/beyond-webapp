@@ -1,3 +1,4 @@
+//** @Deprecated!
 exports = module.exports  = {};
 /**
  * 处理2G/3G/4G订单

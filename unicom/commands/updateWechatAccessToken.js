@@ -1,7 +1,5 @@
-
-var updateAccessToken = require('../business/wechat').updateAccessToken;
-
 //** refresh wechat token in database
+
 if (process.argv[1] === __filename) {
 	//** common packages
 	var path = require('path');
@@ -26,7 +24,7 @@ if (process.argv[1] === __filename) {
 		}
 	});
 	// mongoose.disconnect();
-	updateAccessToken(models, {}, function(err, result) {
+	models.PlatformWeChat.updateAccessToken(function(err, result) {
 		if (err) console.log(err);
 		console.log(result);
 		console.log('refresh Wechat AccessToken successfully.');

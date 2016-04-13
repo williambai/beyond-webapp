@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+//** SP配置文件
+var spConfig = require('../config/sp').SGIP12;
 
 var schema = new mongoose.Schema({
 	customer: { //** 客户
@@ -71,6 +73,113 @@ schema.set('collection', 'orders');
 
 module.exports = exports = function(connection){
 	connection = connection || mongoose;
+	/**
+	 * 处理2G/3G订单
+	 * SMS状态：由收到 转化为 已处理
+	 * Order状态：由新建 转化为 已处理
+	 * @param {Function} callback [description]
+	 */
+	schema.statics.process2G_3G = function(options,done){
+		if(arguments.length < 1) throw new Error('参数不足：function(options,done)');
+		if(options instanceof Function) {
+			done = options;
+			options = {};
+		}
+		var SPNumber = options.SPNumber || spConfig.options.SPNumber;
+		var PlatformSms = connection.model('PlatformSms');
+		var Order = connection.model('Order');
+		var _process = function(){
+				PlatformSms
+					.findOneAndUpdate({
+						status: '收到',
+						category: {
+							$in: ['2G','3G']
+						}
+					}, {
+						$set: {
+							status: '已处理',
+						}
+					}, {
+						'upsert': false,
+						'new': true,
+					}, function(err, doc) {
+						if (err || !doc) return done(err);
+						//** 提取客户号码，去除最前面的86
+						var mobile = (doc.sender || '').replace(/^86/, '');
+						//** 提取业务(短信)代码，去除SPNumber(10655836)部分
+						var regexSmscode = new RegExp('^' + SPNumber, 'i');
+						var smscode = (doc.receiver || '').replace(regexSmscode,'');
+						//** find the order
+						Order
+							.findOneAndUpdate({
+								'customer.mobile': mobile,
+								'goods.smscode': smscode,
+								'status': '新建',
+							}, {
+								$set: {
+									status: '已处理',
+								}
+							}, {
+								'upsert': false,
+								'new': true,
+							}, function(err, order) {
+								if (err || !order) return done(err);
+								//** TODO process 2G/3G order
+
+								_process(); //** 处理下一个
+							});
+					});	
+			};
+			_process();
+		};
+
+	/**
+	 * 2G/3G 订单确认检查
+	 * Order状态：由已处理转化为成功或失败
+	 * @param {Function} callback [description]
+	 */
+	schema.statics.confirm2G_3G = function(options,done){
+		if(arguments.length < 1) throw new Error('参数不足：function(options,done)');
+		if(options instanceof Function) {
+			done = options;
+			options = {};
+		}
+		var Order = connection.model('Order');
+		var _confirm = function() {
+			Order
+				.findOne({
+					category: {
+						$in: ['2G','3G']
+					},
+					status: '已处理',
+				})
+				.exec(function(err, order) {
+					if (err) return done(err);
+					if (!order) return done(null);
+					//** check 2G/3G order
+					VMSS.soap(function() {
+
+					});
+					var status = success ? '失败' : '成功';
+
+					Order
+						.findByIdAndUpdate(order._id, {
+								$set: {
+									status: status,
+								}
+							}, {
+								'upsert': false,
+								'new': true,
+							},
+							function(err, doc) {
+								if (err || !doc) return done(err);
+								_confirm();
+							});
+
+				});
+			};
+			_confirm();
+		};
 	return connection.model('Order', schema);
 };
 

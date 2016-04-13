@@ -1,9 +1,5 @@
-//** process 'new' order in database
-var processOrder = require('../business/order').process;
-//** confirm '' order in database
-var confirmOrder = require('../business/order').confirm;
+//** process and confirm 2G/3G Orders
 
-//** process and confirm
 if (process.argv[1] === __filename) {
 	//** common packages
 	var path = require('path');
@@ -27,10 +23,10 @@ if (process.argv[1] === __filename) {
 			models[modelName] = require('../models/' + modelName)(mongoose);
 		}
 	});
-	processOrder(models,{},function(err,result){
+	models.Order.process2G_3G(function(err,result){
 		if(err) return console.log(err);
 		console.log('process order ok.');
-		confirmOrder(models,{},function(err,result){
+		models.Order.confirm2G_3G(function(err,result){
 			if(err) return console.log(err);
 			console.log('confirm order ok.');
 			mongoose.disconnect();
