@@ -147,6 +147,10 @@
 							<input type="radio" name="method" value="全量">&nbsp;&nbsp;全量&nbsp;&nbsp;
 						</div>
 					</div>
+					<div style="color:red;">
+						<p>注意1：请慎重选择全量导入方式。全量导入将先删除当前数据表中现有的全部数据，然后导入新数据。</p>
+						<p>注意2：导入时，请先将表示列名称的首行删除，并且保证最后一行不要留空行。(即，文件只留数据，不留标题和空行)</p>
+					</div>
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
@@ -160,13 +164,12 @@
 					<input class="hidden" type="file" name="file"/>
 				</form>
 				<hr>
-				<h4>导入excel数据表格列格式如下：</h4>
-				<p></p>
+				<h4>导入csv数据表格列格式如下：</h4>
 				<table class="table table-striped">
 					<thead>
 						<tr>
 							<th>列序号</th>
-							<th>列名称(即：excel第一行名称)</th>
+							<th>列名称(即：csv第一行名称)</th>
 							<th>列含义</th>
 						</tr>
 					</thead>
@@ -211,13 +214,13 @@
 					</div>
 				</form>
 				<hr>				
-				<h4>导出excel数据表格列格式如下：</h4>
+				<h4>导出csv数据表格列格式如下：</h4>
 				<p></p>
 				<table class="table table-striped">
 					<thead>
 						<tr>
 							<th>列序号</th>
-							<th>列名称(即：excel第一行名称)</th>
+							<th>列名称(即：csv第一行名称)</th>
 							<th>列含义</th>
 						</tr>
 					</thead>
