@@ -1,4 +1,3 @@
-// require('newrelic');
 var log4js = require('log4js');
 var _ = require('underscore');
 var util = require('util');

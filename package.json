@@ -19,6 +19,7 @@
   "dependencies": {
     "alipay": "0.0.4",
     "async": "^1.5.0",
+    "banded": "0.0.0",
     "body-parser": "^1.14.1",
     "bson": "^0.4.19",
     "commander": "^2.9.0",
@@ -38,6 +39,7 @@
     "log4js": "^0.6.29",
     "mongodb": "^2.0.46",
     "mongoose": "^4.2.3",
+    "mongoose-to-csv": "^0.1.0",
     "mongoose-tree": "^0.2.2",
     "multer": "^0.1.8",
     "node-schedule": "^0.6.0",

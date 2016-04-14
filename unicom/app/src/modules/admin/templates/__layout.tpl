@@ -1,7 +1,7 @@
 <div class="sidebar sidebar-left">
 	<div class="scrollable" style="padding-top:70px;">
 		<div class="scrollable-header app-name">
-			<a href="#" onclick="window.location.reload();return false;">沃助手--后台管理</a>
+			<a href="#" onclick="window.location.reload();return false;">普德邦网络分销平台</a>
 		</div>
 		<div class="scrollable-content" id="menu">
 			<div class="list-group">
@@ -160,7 +160,7 @@
 </div>
 <div class="app">
 	<div class="navbar navbar-app navbar-absolute-top">
-		<div class="navbar-brand navbar-brand-center">贵州联通沃助手</div>
+		<div class="navbar-brand navbar-brand-center">普德邦网络分销平台</div>
 		<div class="btn-group pull-left">
 			<div class="btn sidebar-toggle" id="left-sidebar-toggle">
 				<i class="fa fa-bars fa-lg"></i>

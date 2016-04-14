@@ -134,7 +134,8 @@
 						<label>订单状态：</label>
 						<div style="padding-left:30px;">
 							<input type="radio" name="status" value="新建" checked>&nbsp;&nbsp;新建&nbsp;&nbsp;
-							<input type="radio" name="status" value="已处理">&nbsp;&nbsp;已处理&nbsp;&nbsp;
+							<input type="radio" name="status" value="已确认">&nbsp;&nbsp;客户已确认&nbsp;&nbsp;
+							<input type="radio" name="status" value="已处理">&nbsp;&nbsp;系统已处理&nbsp;&nbsp;
 							<input type="radio" name="status" value="成功">&nbsp;&nbsp;成功&nbsp;&nbsp;
 							<input type="radio" name="status" value="失败">&nbsp;&nbsp;失败&nbsp;&nbsp;
 						</div>

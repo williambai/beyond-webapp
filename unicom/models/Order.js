@@ -58,7 +58,7 @@ var schema = new mongoose.Schema({
 	status: { //** 订单状态
 		type: String,
 		enum: {
-			values: '新建|已处理|成功|失败'.split('|'),
+			values: '新建|已确认|已处理|成功|失败'.split('|'),
 			message: 'enum validator failed for path {PATH} with value {VALUE}',
 		}
 	},
@@ -114,7 +114,7 @@ module.exports = exports = function(connection){
 							.findOneAndUpdate({
 								'customer.mobile': mobile,
 								'goods.smscode': smscode,
-								'status': '新建',
+								'status': '已确认',
 							}, {
 								$set: {
 									status: '已处理',

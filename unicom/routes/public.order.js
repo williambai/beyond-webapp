@@ -14,77 +14,100 @@ exports = module.exports = function(app, models) {
 		var product = req.body.product || {};
 		var mobiles = req.body.mobile || [];
 		mobiles = _.without(mobiles, '');
-		async.waterfall(
-			[
-				function getProduct(callback) {
-					models.ProductDirect
-						.findById(product._id)
-						.exec(function(err, prod){
-							if(err || !prod) return callback(err);
-							var goods = prod.goods || {};
-							var orders = [];
-							_.each(mobiles, function(mobile) {
-								orders.push({
-									customer: {
-										mobile: mobile,
-									},
-									goods: goods,
-									thumbnail: prod.thumbnail_url,
-									quantity: 1,
-									total: goods.price, 
-									bonus: goods.bonus, 
-									createBy: {//** 创建订单的用户
-										id: req.session.accountId,
-										username: req.session.username,
-										mobile: req.session.email,
-										avatar: req.session.avatar,
-									},
-									department: req.session.department,//** 创建订单的用户营业厅
-									status: '新建',
+		//** 按单个手机执行
+		async.each(
+			mobiles,
+			function(mobile,done){
+				async.waterfall(
+					[
+						function getProduct(callback) {
+							models.ProductDirect
+								.findById(product._id)
+								.exec(function(err, prod){
+									if(err || !prod) return callback(err);
+									var goods = prod.goods || {};
+									var order = {
+											customer: {
+												mobile: mobile,
+											},
+											goods: goods,
+											thumbnail: prod.thumbnail_url,
+											quantity: 1,
+											total: goods.price, 
+											bonus: goods.bonus, 
+											createBy: {//** 创建订单的用户
+												id: req.session.accountId,
+												username: req.session.username,
+												mobile: req.session.email,
+												avatar: req.session.avatar,
+											},
+											department: req.session.department,//** 创建订单的用户营业厅
+											status: '新建',
+										};
+									callback(null,order);
 								});
-							});
-							callback(null,orders);
-						});
-				},
-				function createOrders(orders,callback) {
-					models.Order.create(orders, function(err){
-						if(err) return callback(err);
-						callback(null,orders);
-					});
-				},
-				function createSms(orders,callback){
-					var smses = [];
-					_.each(orders,function(order){
-						var sms = {};
-						//** sms业务代码部分
-						sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
-						sms.receiver = order.customer.mobile;
-						sms.content = '订购'+ order.goods.name + '，回复Y，确认订购。';
-						sms.status = '新建';
-						smses.push(sms);
-					});
-					models.PlatformSms.create(smses, function(err){
-						if(err) return callback(err);
-						callback(null);
-					});
-				},
-				function createActivity(callback) {
-					var activity = {
-						uid: req.session.accountId,
-						username: req.session.username,
-						avatar: req.session.avatar || '/images/avatar.jpg',
-						type: 'text',
-						content: {
-							body: '向朋友推荐了<u>' + product.name + '</u>产品',
+						},
+						function createOrder(order,callback) {
+							//** 查找3分钟前是否有类似订单，否则不创建
+							var lastOrderDate = new Date(Date.now()-180000);
+							models.Order
+								.findOne({
+									'customer.mobile': order.customer.mobile,
+									'goods.barcode': order.goods.barcode,
+									'lastupdatetime': {
+										'$gt': lastOrderDate
+									},
+								})
+								.exec(function(err,existOrder){
+									if(err) return callback(err);
+									//** 在3分钟内存在订单，则返回错误
+									if(existOrder){
+										return callback({code: 405123, errmsg: '同一客户、同一产品重复下单时间间隔不得小于3分钟'});
+									}
+									models.Order.create(order, function(err){
+										if(err) return callback(err);
+										callback(null,order);
+									});
+								});
+						},
+						function createSms(order,callback){
+							var sms = {};
+							//** sms业务代码部分
+							sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
+							sms.receiver = order.customer.mobile;
+							sms.content = '订购'+ order.goods.name + '，回复Y，确认订购。';
+							sms.status = '新建';
+							models.PlatformSms
+								.create(sms, function(err){
+									if(err) return callback(err);
+									callback(null);
+								});
+						},
+						function createActivity(callback) {
+							var activity = {
+								uid: req.session.accountId,
+								username: req.session.username,
+								avatar: req.session.avatar || '/images/avatar.jpg',
+								type: 'text',
+								content: {
+									body: '向朋友推荐了<u>' + product.name + '</u>产品',
+								}
+							};
+							models.AccountActivity
+								.create(activity, callback);
 						}
-					};
-					models.AccountActivity.create(activity, callback);
-				}
-			],
-			function(err, result) {
+					],
+					function(err, result) {
+						if (err) return done(err);
+						done(null);
+					});
+			},
+			function(err){
 				if (err) return res.send(err);
 				res.send({});
-			});
+			}
+		);
+
 	};
 	var getOne = function(req, res) {
 		var id = req.params.id;

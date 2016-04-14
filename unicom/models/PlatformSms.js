@@ -169,6 +169,7 @@ module.exports = exports = function(connection) {
 	schema.statics.receiveSms = function(options, done) {
 		var PlatformSms = connection.model('PlatformSms');
 		var Goods = connection.model('Goods');
+		var Order = connection.model('Order');
 		//** 短信报告cmdDeliever对象
 		var command = options.command || {};
 		//** cmdDeliever.header对象
@@ -203,6 +204,8 @@ module.exports = exports = function(connection) {
 		doc.status = '收到';
 
 		var regex = new RegExp('^' + spConfig.options.SPNumber);
+
+		//** 给短信添加分类信息
 		Goods.findOne({
 			smscode: (doc.sender || '').replace(regex, ''), //** 找到对应的goods
 		}, function(err, goods) {
@@ -214,7 +217,28 @@ module.exports = exports = function(connection) {
 			PlatformSms
 				.create(doc, function(err) {
 					if (err) return done(err);
-					done(null);
+					//** 提取客户号码，去除最前面的86
+					var mobile = (doc.sender || '').replace(/^86/, '');
+					//** 提取业务(短信)代码，去除SPNumber(10655836)部分
+					var regexSmscode = new RegExp('^' + spConfig.options.SPNumber, 'i');
+					var smscode = (doc.receiver || '').replace(regexSmscode,'');
+					//** 更新Order状态，由新建 -> 已确认
+					Order
+						.findOneAndUpdate({
+							'customer.mobile': mobile,
+							'goods.smscode': smscode,
+							'status': '新建',
+						}, {
+							$set: {
+								status: '已确认',
+							}
+						}, {
+							'upsert': false,
+							'new': true,
+						}, function(err, order) {
+							if (err || !order) return done(err);
+							done(null);
+						});
 				});
 
 		});
