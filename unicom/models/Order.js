@@ -104,30 +104,34 @@ module.exports = exports = function(connection){
 						'new': true,
 					}, function(err, doc) {
 						if (err || !doc) return done(err);
-						//** 提取客户号码，去除最前面的86
-						var mobile = (doc.sender || '').replace(/^86/, '');
-						//** 提取业务(短信)代码，去除SPNumber(10655836)部分
-						var regexSmscode = new RegExp('^' + SPNumber, 'i');
-						var smscode = (doc.receiver || '').replace(regexSmscode,'');
-						//** find the order
-						Order
-							.findOneAndUpdate({
-								'customer.mobile': mobile,
-								'goods.smscode': smscode,
-								'status': '已确认',
-							}, {
-								$set: {
-									status: '已处理',
-								}
-							}, {
-								'upsert': false,
-								'new': true,
-							}, function(err, order) {
-								if (err || !order) return done(err);
-								//** TODO process 2G/3G order
+						var content = doc.content || '';
+						//** 只要不是明确回复N（全角半角都算）或否，或不，或不回复，都订上
+						if(!/[N|n|Ｎ|ｎ|不|否]/.test(content)){
+							//** 提取客户号码，去除最前面的86
+							var mobile = (doc.sender || '').replace(/^86/, '');
+							//** 提取业务(短信)代码，去除SPNumber(10655836)部分
+							var regexSmscode = new RegExp('^' + SPNumber, 'i');
+							var smscode = (doc.receiver || '').replace(regexSmscode,'');
+							//** find the order
+							Order
+								.findOneAndUpdate({
+									'customer.mobile': mobile,
+									'goods.smscode': smscode,
+									'status': '已确认',
+								}, {
+									$set: {
+										status: '已处理',
+									}
+								}, {
+									'upsert': false,
+									'new': true,
+								}, function(err, order) {
+									if (err || !order) return done(err);
+									//** TODO process 2G/3G order
 
-								_process(); //** 处理下一个
-							});
+									_process(); //** 处理下一个
+								});
+						}
 					});	
 			};
 			_process();
