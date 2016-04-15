@@ -82,10 +82,11 @@
 				<form id="orderForm">
 					<div class="form-group">
 						<label></label>
-						<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
+						<input type="text" name="mobile[]" class="form-control" placeholder="客户手机号码">
 						<span class="help-block"></span>
 					</div>
-<!-- 					<div class="form-group">
+<!--
+ 					<div class="form-group">
 						<label></label>
 						<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
 						<span class="help-block"></span>
@@ -94,9 +95,17 @@
 						<label></label>
 						<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
 						<span class="help-block"></span>
-					</div> -->
+					</div>
 					<div id="insertItemBefore"></div>
+ -->
 					<div class="form-group">
+						<label>生效时间：</label>
+						<div style="padding-left:30px;">
+							<input type="radio" name="effect" value="次月生效" checked>&nbsp;&nbsp;次月生效&nbsp;&nbsp;
+							<input type="radio" name="effect" value="立即生效">&nbsp;&nbsp;立即生效
+						</div>
+					</div>
+ 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
 							<input type="submit" value="确定" class="btn btn-danger">

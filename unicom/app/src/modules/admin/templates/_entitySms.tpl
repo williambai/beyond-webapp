@@ -55,7 +55,12 @@
 					</div>
 					<div class="form-group">
 						<label for="receiver">接收方：</label>
-						<textarea name="receiver" class="form-control" placeholder="11位的手机号码。如果是多个，请用;分隔" readonly><%= model.receiver %></textarea> 
+						<textarea name="receiver" class="form-control" placeholder="11位的手机号码。如果是多个，请用;分隔，不能超过20个" readonly><%= model.receiver %></textarea> 
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>业务类型：</label>
+						<input type="text" name="category" value="<%= model.category %>" class="form-control" placeholder="" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

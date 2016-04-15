@@ -61,7 +61,6 @@ exports = module.exports = Backbone.View.extend({
 
 	saleView: function(evt){
 		this.$el.html(this.saleTemplate());
-		console.log(this.saleTemplate())
 		return false;
 	},
 

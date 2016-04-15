@@ -34,6 +34,8 @@
 				<select class="form-control" name="status">
 					<option value="">全部</option>
 					<option value="新建">新建</option>
+					<option value="已确认">用户已确认</option>
+					<option value="已处理">系统已处理</option>
 					<option value="成功">成功</option>
 					<option value="失败">失败</option>
 				</select>&nbsp;&nbsp;
@@ -74,6 +76,11 @@
 						<label>产品名称：</label>
 						<input type="text" class="form-control" value="<%= model.goods.name %>" readonly>
 						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>生效方式：</label>
+							<input type="text" value="<%= model.effect %>" class="form-control" readonly>
+							<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label>业务(短信)编码：</label>

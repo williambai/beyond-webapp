@@ -163,8 +163,9 @@ module.exports = exports = function(connection) {
 	};
 
 	/**
-	 * 接收客户上行短信deliver
-	 * 状态为收到
+	 * 接收客户上行短信deliver，更改订单状态
+	 * 短信状态为收到
+	 * 订单状态由新建 -> 已确认
 	 */
 	schema.statics.receiveSms = function(options, done) {
 		var PlatformSms = connection.model('PlatformSms');
@@ -217,28 +218,32 @@ module.exports = exports = function(connection) {
 			PlatformSms
 				.create(doc, function(err) {
 					if (err) return done(err);
-					//** 提取客户号码，去除最前面的86
-					var mobile = (doc.sender || '').replace(/^86/, '');
-					//** 提取业务(短信)代码，去除SPNumber(10655836)部分
-					var regexSmscode = new RegExp('^' + spConfig.options.SPNumber, 'i');
-					var smscode = (doc.receiver || '').replace(regexSmscode,'');
-					//** 更新Order状态，由新建 -> 已确认
-					Order
-						.findOneAndUpdate({
-							'customer.mobile': mobile,
-							'goods.smscode': smscode,
-							'status': '新建',
-						}, {
-							$set: {
-								status: '已确认',
-							}
-						}, {
-							'upsert': false,
-							'new': true,
-						}, function(err, order) {
-							if (err || !order) return done(err);
-							done(null);
-						});
+					var content = doc.content || '';
+					//** 只要不是明确回复N（全角半角都算）或否，或不，或不回复，都订上
+					if(!/[N|n|Ｎ|ｎ|不|否]/.test(content)){
+						//** 提取客户号码，去除最前面的86
+						var mobile = (doc.sender || '').replace(/^86/, '');
+						//** 提取业务(短信)代码，去除SPNumber(10655836)部分
+						var regexSmscode = new RegExp('^' + spConfig.options.SPNumber, 'i');
+						var smscode = (doc.receiver || '').replace(regexSmscode,'');
+						//** 更新Order状态，由新建 -> 已确认
+						Order
+							.findOneAndUpdate({
+								'customer.mobile': mobile,
+								'goods.smscode': smscode,
+								'status': '新建',
+							}, {
+								$set: {
+									status: '已确认',
+								}
+							}, {
+								'upsert': false,
+								'new': true,
+							}, function(err, order) {
+								if (err || !order) return done(err);
+								done(null);
+							});
+					}
 				});
 
 		});
