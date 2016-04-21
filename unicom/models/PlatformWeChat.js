@@ -7,6 +7,7 @@ var schema = new mongoose.Schema({
 	appname: String, //微信号
 	appid: String,
 	appsecret: String,
+	apptoken: String, //** mp接入验证token
 	token: {
 		access_token: String,
 		expired: Date

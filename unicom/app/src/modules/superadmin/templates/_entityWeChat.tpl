@@ -60,6 +60,11 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
+						<label for="apptoken">Token：</label>
+						<input type="text" name="apptoken" value="<%= model.apptoken %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
 							<input type="radio" name="status" value="有效" checked>&nbsp;&nbsp;有效&nbsp;&nbsp;

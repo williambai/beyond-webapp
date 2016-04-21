@@ -1,60 +1,24 @@
 var log4js = require('log4js');
 var path = require('path');
-log4js.configure(path.join(__dirname, '../../config/log4js.json'));
-var logger = log4js.getLogger('captcha');
+log4js.configure({
+		"type": "logLevelFilter",
+		"level": "ALL",
+		"appender": {
+			"type": "file",
+			"filename": "log/all.log",
+			"maxLogSize": 20480,
+			"backups": 3
+		}
+	});
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 
-
-var parser = {};
 var fs = require('fs');
 var _ = require('underscore');
 var async = require('async');
 var opencv = require('opencv');
+var util = require('./lib/util');
+var parser = {};
 
-/**
- * 判断像素是否是白色
- * @param  {[type]}  colorInt [description]
- * @return {Boolean}          [description]
- */
-var isWhite = function(rgb) {
-	if (rgb[0] + rgb[1] + rgb[2] > 330) {
-		return 1;
-	}
-	return 0;
-};
-parser.isWhite = isWhite;
-/**
- * 判断像素是否是黑色
- * @param  {[type]}  colorInt [description]
- * @return {Boolean}          [description]
- */
-var isBlack = function(rgb) {
-	if (rgb[0] + rgb[1] + rgb[2] <= 330) {
-		return 1;
-	}
-	return 0
-};
-parser.isBlack = isBlack;
-/**
- * 将图像设置为黑白图片
- * @param  {[type]} pic [description]
- * @return {[type]}     [description]
- */
-var removeBackground = function(mat) {
-	var width = mat.width();
-	var height = mat.height();
-	for (var x = 0; x < width; x++) {
-		for (var y = 0; y < height; y++) {
-			// console.log(mat.pixel(x,y))
-			// if (mat.pixel(x,y) > 200) {
-			// 	mat.set(x,y,255);
-			// } else {
-			// 	// mat.set(x,y,300);
-			// }
-			// console.log(mat.pixel(x,y))
-		}
-	}
-	return mat;
-};
 /**
  * 将输入的验证码图片切分成4个不同字母的图片
  * @param  {[type]} img [description]
@@ -113,7 +77,7 @@ var getSingleCharOcr = function(img, map) {
 			Label1: for (var x = 0; x < width; x++) {
 				for (var y = 0; y < height; y++) {
 					// if(img.pixel(x,y) != img_train.pixel(x,y)){
-					if (isWhite(img.pixel(x, y)) != isWhite(img_train.pixel(x, y))) {
+					if (util.isWhite(img.pixel(x, y)) != util.isWhite(img_train.pixel(x, y))) {
 						count++;
 						if (count >= min) break Label1;
 					}
