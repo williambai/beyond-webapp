@@ -139,7 +139,7 @@ exports.getOrders = function(options,done){
 	xmlmsg += '<HomeDomain>UCRM</HomeDomain>';//** 归属方应用域代码
 	xmlmsg += '<BIPCode>GZWXB001</BIPCode>';//** 业务功能代码
 	xmlmsg += '<BIPVer>0100</BIPVer>';//** 业务流程版本号
-	xmlmsg += '<ActivityCode>GZWXT001</ActivityCode>';//** 交易代码
+	xmlmsg += '<ActivityCode>GZWXT002</ActivityCode>';//** 交易代码
 	xmlmsg += '<ActionCode>0</ActionCode>';//** 交易动作代码
 	xmlmsg += '<ActionRelation>0</ActionRelation>';//** 交易关联性
 	xmlmsg += '<Routing>';//** 路由信息节点开始
@@ -252,9 +252,9 @@ exports.addOrder = function(options, done) {
 	xmlmsg = '<UniBSS>';
 	xmlmsg += '<OrigDomain>ECIP</OrigDomain>';
 	xmlmsg += '<HomeDomain>UCRM</HomeDomain>';
-	xmlmsg += '<BIPCode>GZWXB001</BIPCode>';
+	xmlmsg += '<BIPCode>GZWXB002</BIPCode>';//** 业务代码
 	xmlmsg += '<BIPVer>0100</BIPVer>';
-	xmlmsg += '<ActivityCode>GZWXT001</ActivityCode>';
+	xmlmsg += '<ActivityCode>GZWXT001</ActivityCode>';//** 交易代码
 	xmlmsg += '<ActionCode>0</ActionCode>';
 	xmlmsg += '<ActionRelation>0</ActionRelation>';
 	xmlmsg += '<Routing>';
@@ -284,8 +284,8 @@ exports.addOrder = function(options, done) {
 	xmlmsg += '<ProdcutId>99013000</ProdcutId>';
 	xmlmsg += '<ProductType>1</ProductType>';
 	xmlmsg += '<OperCode>0</OperCode>'; //** 0 开通业务
-	xmlmsg += '<StaffID></StaffID>';
-	xmlmsg += '<DepartID></DepartID>';
+	xmlmsg += '<StaffID>SUPERUSR</StaffID>';
+	xmlmsg += '<DepartID>Z0851</DepartID>';
 	xmlmsg += '<ProcTime>20151123121300059</ProcTime>';
 	xmlmsg += '<UserNumber>18508505402</UserNumber>';
 	xmlmsg += '</PackageChangeReq>';
@@ -293,6 +293,7 @@ exports.addOrder = function(options, done) {
 	xmlmsg += '</SvcCont>';
 	xmlmsg += '</UniBSS>';
 
+	console.log('xmlmsg=' + xmlmsg);
 	request({
 			url: options.url || 'http://130.85.50.34:7772/XMLReceiver',
 			method: 'POST',
@@ -307,8 +308,24 @@ exports.addOrder = function(options, done) {
 		},
 		function(err, httpResponse, body) {
 			if (err) return done(err);
-			console.log(body);
-			done(null, body);
+			try{
+				body = decodeURIComponent(body).replace(/\n/g,'');
+			}catch(e){
+				console.log(body);
+				return done({errmsg: '服务器错误。返回的格式不对，xml解析错误'});
+			}
+
+			//** 判断返回的是xml文件
+			if(!/^<\?xml.*>$/.test(body)) return done({errmsg: '服务器错误。返回的格式不对，xml解析错误'});
+
+			var result = {};
+			//** 客户号码
+			result.UserNumber = options.UserNumber || '';
+			//** 提取xml内容
+			var SvcCont = ''.match.call(body,/<SvcCont>(.*)<\/SvcCont>/);
+			console.log(SvcCont);
+			if(!SvcCont) return done({errmsg: 'xml中SvcCont节点不存在'});
+			done(err, result);
 		}
 	);
 };
@@ -324,7 +341,7 @@ exports.removeOrder = function(options, done) {
 	xmlmsg = '<UniBSS>';
 	xmlmsg += '<OrigDomain>ECIP</OrigDomain>';
 	xmlmsg += '<HomeDomain>UCRM</HomeDomain>';
-	xmlmsg += '<BIPCode>GZWXB001</BIPCode>';
+	xmlmsg += '<BIPCode>GZWXB002</BIPCode>';
 	xmlmsg += '<BIPVer>0100</BIPVer>';
 	xmlmsg += '<ActivityCode>GZWXT001</ActivityCode>';
 	xmlmsg += '<ActionCode>0</ActionCode>';
@@ -356,8 +373,8 @@ exports.removeOrder = function(options, done) {
 	xmlmsg += '<ProdcutId>99013000</ProdcutId>';
 	xmlmsg += '<ProductType>1</ProductType>';
 	xmlmsg += '<OperCode>1</OperCode>'; //** 1 取消业务
-	xmlmsg += '<StaffID></StaffID>';
-	xmlmsg += '<DepartID></DepartID>';
+	xmlmsg += '<StaffID>SUPERUSR</StaffID>'; //** 工号
+	xmlmsg += '<DepartID>Z0851</DepartID>';//** 渠道号
 	xmlmsg += '<ProcTime>20151123121300059</ProcTime>';
 	xmlmsg += '<UserNumber>18508505402</UserNumber>';
 	xmlmsg += '</PackageChangeReq>';
@@ -379,8 +396,24 @@ exports.removeOrder = function(options, done) {
 		},
 		function(err, httpResponse, body) {
 			if (err) return done(err);
-			console.log(body);
-			done(null, body);
+			try{
+				body = decodeURIComponent(body).replace(/\n/g,'');
+			}catch(e){
+				console.log(body);
+				return done({errmsg: '服务器错误。返回的格式不对，xml解析错误'});
+			}
+
+			//** 判断返回的是xml文件
+			if(!/^<\?xml.*>$/.test(body)) return done({errmsg: '服务器错误。返回的格式不对，xml解析错误'});
+
+			var result = {};
+			//** 客户号码
+			result.UserNumber = options.UserNumber || '';
+			//** 提取xml内容
+			var SvcCont = ''.match.call(body,/<SvcCont>(.*)<\/SvcCont>/);
+			console.log(SvcCont);
+			if(!SvcCont) return done({errmsg: 'xml中SvcCont节点不存在'});
+			done(err, result);
 		}
 	);
 };
@@ -392,7 +425,9 @@ module.exports = exports;
 if(process.argv[1] == __filename){
 	//** 测试 getUserInfo()
 	// exports.getUserInfo({
-	exports.getOrders({
+	// exports.getOrders({
+	exports.addOrder({
+	// exports.removeOrder({
 		UserNumber: '18508505402',
 	},function(err,result){
 		if(err) return console.log(err);

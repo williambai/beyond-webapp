@@ -1,14 +1,8 @@
 var sms = require('../index');
 
 var docs = [{
-	mobile: '15620001781',
+	mobile: '15692740700',
 	content: 'some content',
-},{
-	mobile: '15620001782',
-	content: 'some content',		
-},{
-	mobile: '15620001783',
-	content: 'some content',		
 }];
 
 sms.send(docs,function(err,newDocs){

@@ -1,3 +1,4 @@
+var config = require('../config/server');
  exports = module.exports = function(app, models) {
  	var _ = require('underscore');
 
@@ -24,53 +25,53 @@
 	 								sub_button: [{
 	 									type: 'view',
 	 									name: '同事圈',
-	 									url: 'http://wo.pdbang.cn/wechat.html#activity/index'
+	 									url: config.HOST + '/wechat.html#activity/index'
 	 								}, {
 	 									type: 'view',
 	 									name: '销售线索',
-	 									url: 'http://wo.pdbang.cn/wechat.html#sale/lead/index'
+	 									url: config.HOST + '/wechat.html#sale/lead/index'
 	 								}, {
 	 									type: 'view',
 	 									name: '意见反馈',
-	 									url: 'http://wo.pdbang.cn/wechat.html#feedback/index'
+	 									url: config.HOST + '/wechat.html#feedback/index'
 	 								},{
 	 									type: 'view',
 	 									name: '帮助中心',
-	 									url: 'http://wo.pdbang.cn/wechat.html#help/index'
+	 									url: config.HOST + '/wechat.html#help/index'
 	 								}]
 	 							}, {
 	 								name: 'Wo产品',
 	 								sub_button: [{
 	 									type: 'view',
 	 									name: '热门产品',
-	 									url: 'http://wo.pdbang.cn/wechat.html#product/hots'
+	 									url: config.HOST + '/wechat.html#product/hots'
 	 								}, {
 	 									type: 'view',
 	 									name: '全部产品',
-	 									url: 'http://wo.pdbang.cn/wechat.html#category/index'
+	 									url: config.HOST + '/wechat.html#category/index'
 	 								}]
 	 							}, {
 	 								name: '我的领地',
 	 								sub_button: [{
 	 									type: 'view',
 	 									name: '我的业绩',
-	 									url: 'http://wo.pdbang.cn/wechat.html#order/index'
+	 									url: config.HOST + '/wechat.html#order/index'
 	 								},{
 	 									type: 'view',
 	 									name: '我的收入',
-	 									url: 'http://wo.pdbang.cn/wechat.html#me/bonus'
+	 									url: config.HOST + '/wechat.html#me/bonus'
 	 								},{
 	 									type: 'view',
 	 									name: '我的客户',
-	 									url: 'http://wo.pdbang.cn/wechat.html#customer/index'
+	 									url: config.HOST + '/wechat.html#customer/index'
 	 								},{
 	 									type: 'view',
 	 									name: '个人中心',
-	 									url: 'http://wo.pdbang.cn/wechat.html#me/index'
+	 									url: config.HOST + '/wechat.html#me/index'
 	 								},{
 	 									type: 'view',
 	 									name: '我的资料',
-	 									url: 'http://wo.pdbang.cn/wechat.html#profile/me'
+	 									url: config.HOST + '/wechat.html#profile/me'
 	 								}]
 	 							}]
 

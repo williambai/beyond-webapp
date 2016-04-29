@@ -90,7 +90,7 @@ exports = module.exports = Backbone.View.extend({
 		var $item = this.$(evt.currentTarget).parent().parent();
 		var id = $item.attr('id');
 		if(window.confirm('您确信要删除吗？')){
-			var model = new WeChat({_id: id});
+			var model = new Wechat({_id: id});
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}

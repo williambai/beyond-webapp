@@ -534,7 +534,7 @@ module.exports = exports = function(app, models) {
 			if(!req.session.openid){
 				var appid = (!_.isEmpty(req.query.appid)) ? req.query.appid : 'wx0179baae6973c5e6';
 				//** 设置微信web oauth 2.0 的回调地址
-				var redirect_uri = 'http://wo.pdbang.cn/wechat/oauth2/authorized/' + appid;
+				var redirect_uri = config.server.HOST + '/wechat/oauth2/authorized/' + appid;
 				var state = Date.now();
 				logger.debug('微信自动登录，重定向到：https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect');
 				res.send({code: 30200, redirect: 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_base&state=' + state + '#wechat_redirect'});
@@ -586,7 +586,7 @@ module.exports = exports = function(app, models) {
 			.findOne({
 				appid: appid
 			}).exec(function(err, wechat) {
-				if(err || !wechat) return res.redirect('http://wo.pdbang.cn/wechat_error.html');
+				if(err || !wechat) return res.redirect(config.server.HOST + '/wechat_error.html');
 				var appsecret = wechat.appsecret || 'd4624c36b6795d1d99dcf0547af5443d';
 				request({
 					url: 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + appid + '&secret=' + appsecret + '&code=' + code + '&grant_type=authorization_code',
@@ -597,7 +597,7 @@ module.exports = exports = function(app, models) {
 					logger.debug('wechat authorized callback ' + JSON.stringify(body));
 					var openid = body.openid || '';
 					req.session.openid = openid;
-					res.redirect('http://wo.pdbang.cn/wechat.html#index');
+					res.redirect(config.server.HOST + '/wechat.html#index');
 				});
 			});
 	};

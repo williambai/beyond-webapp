@@ -141,29 +141,9 @@ if (process.argv[1] == __filename) {
 			cmdTime:123456,
 			cmdSeq:0,
 		},
-		headerSeries: '00011234560',
-		sender: '1065981',
-		reciever: '15620001781',
-		content: 'some content',
-	}, {
-		header: {
-			srcNodeID: 0001,
-			cmdTime:123456,
-			cmdSeq:1,
-		},
-		headerSeries: '00011234561',
-		sender: '1065981',
-		reciever: '15620001782',
-		content: 'some content',
-	}, {
-		header: {
-			srcNodeID: 0001,
-			cmdTime:123456,
-			cmdSeq:2,
-		},
-		headerSeries: '00011234562',
-		sender: '1065981',
-		mobile: '15620001783',
+		headerSeries: '106558364141259230',
+		sender: '10655836',
+		reciever: '15692740700',
 		content: 'some content',
 	}];
 

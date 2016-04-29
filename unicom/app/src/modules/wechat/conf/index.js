@@ -7,9 +7,6 @@ _.extend(config,{
 		name: '渠道销售微信端',
 		nickname: 'channel',
 		description: '',
-	},
-	wechat: {
-		appid: 'wx0179baae6973c5e6'
 	}
 });
 
