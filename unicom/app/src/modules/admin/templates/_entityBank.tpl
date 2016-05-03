@@ -101,12 +101,12 @@
 	<div id="exportTemplate">
 		<div class="panel panel-default" id="exportForm">
 			<div class="panel-heading">
-				<h3 class="panel-title text-center">导出订单</h3>
+				<h3 class="panel-title text-center">导出银行卡</h3>
 			</div>
 			<div class="panel-body">
 				<form>
 					<input type="hidden" name="action" value="export">
-					<div class="form-group">
+<!-- 					<div class="form-group">
 						<label>起始日期：</label>
 							<input type="date" name="starttime" value="" class="form-control">
 							<span class="help-block"></span>
@@ -116,7 +116,7 @@
 							<input type="date" name="endtime" value="" class="form-control">
 							<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+ -->					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
 							<input type="submit" value="导出" class="btn btn-danger">
@@ -128,17 +128,56 @@
 					</div>
 				</form>
 				<hr>				
-				<h4>导出excel数据表格列格式如下：</h4>
-				<p></p>
+				<h4>导入csv数据表格列格式如下：</h4>
 				<table class="table table-striped">
 					<thead>
 						<tr>
 							<th>列序号</th>
-							<th>列名称(即：excel第一行名称)</th>
+							<th>列名称(即：csv第一行名称)</th>
 							<th>列含义</th>
 						</tr>
 					</thead>
 					<tbody>
+						<tr>
+							<td>1</td>
+							<td>mobile</td>
+							<td>手机号码</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>bankName</td>
+							<td>银行名称</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>bankCode</td>
+							<td>银行代码</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>bankAddr</td>
+							<td>开户地址</td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td>accountName</td>
+							<td>银行卡主姓名</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>accountNo</td>
+							<td>银行卡号码</td>
+						</tr>
+						<tr>
+							<td>7</td>
+							<td>cardId</td>
+							<td>身份证号码</td>
+						</tr>
+						<tr>
+							<td>8</td>
+							<td>expired</td>
+							<td>有效期</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>

@@ -39,6 +39,15 @@
  						res.send(docs);
  					});
  				break;
+ 			case 'export': 
+				res.writeHead(200, {
+					'Content-Type': 'text/csv;charset=utf-8',
+					'Content-Disposition': 'attachment; filename=banks.csv'
+				});
+				models.FinanceBank
+					.findAndStreamCsv({})
+					.pipe(res);
+ 				break;
  			default:
  				models.FinanceBank
  					.find({})

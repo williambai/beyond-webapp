@@ -88,6 +88,7 @@ exports = module.exports = Backbone.View.extend({
 		'click .add': 'addView',
 		'click .edit': 'editView',
 		'click .delete': 'remove',
+		'click .export': 'exportBank',
 	},
 
 	load: function() {
@@ -130,6 +131,11 @@ exports = module.exports = Backbone.View.extend({
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}
+		return false;
+	},
+
+	exportBank: function(){
+		this.router.navigate('bank/export',{trigger: true});
 		return false;
 	},
 	

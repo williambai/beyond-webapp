@@ -61,18 +61,13 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>所在网格：</label>
-						<input type="text" name="grid" value="<%= model.grid %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
 						<label>所在地区：</label>
 						<input type="text" name="district" value="<%= model.district %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>组织描述：</label>
-						<textarea name="description" class="form-control"><%= model.description %></textarea>
+						<label>所在网格：</label>
+						<input type="text" name="grid" value="<%= model.grid %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -98,6 +93,11 @@
 					<div class="form-group">
 						<label>网站地址：</label>
 						<input type="text" name="website" value="<%= model.website %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>渠道描述：</label>
+						<textarea name="description" class="form-control"><%= model.description %></textarea>
 						<span class="help-block"></span>
 					</div>
 <!-- 					<div class="form-group">
@@ -146,6 +146,10 @@
 							<input type="radio" name="method" value="全量">&nbsp;&nbsp;全量&nbsp;&nbsp;
 						</div>
 					</div>
+					<div style="color:red;">
+						<p>注意1：请慎重选择全量导入方式。全量导入将先删除当前数据表中现有的全部数据，然后导入新数据。</p>
+						<p>注意2：导入时，请先将表示列名称的首行删除，并且保证最后一行不要留空行。(即，文件只留数据，不留标题和空行)</p>
+					</div>
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
@@ -159,13 +163,12 @@
 				<input class="hidden" type="file" name="file"/>
 				</form>
 				<hr>
-				<h4>导入excel数据表格列格式如下：</h4>
-				<p></p>
+				<h4>导入csv数据表格列格式如下：</h4>
 				<table class="table table-striped">
 					<thead>
 						<tr>
 							<th>列序号</th>
-							<th>列名称(即：excel第一行名称)</th>
+							<th>列名称(即：csv第一行名称)</th>
 							<th>列含义</th>
 						</tr>
 					</thead>
@@ -173,31 +176,31 @@
 						<tr>
 							<td>1</td>
 							<td>name</td>
-							<td>组织名称</td>
+							<td>渠道名称</td>
 						</tr>
 						<tr>
 							<td>2</td>
 							<td>nickname</td>
-							<td>组织编码</td>
+							<td>渠道编码</td>
 						</tr>
 						<tr>
 							<td>3</td>
-							<td>description</td>
-							<td>组织描述</td>
+							<td>city</td>
+							<td>所在城市</td>
 						</tr>
 						<tr>
 							<td>4</td>
-							<td>address</td>
-							<td>所在地址</td>
+							<td>district</td>
+							<td>所在地区</td>
 						</tr>
 						<tr>
 							<td>5</td>
-							<td>postcode</td>
-							<td>邮政编码</td>
+							<td>grid</td>
+							<td>所在网格</td>
 						</tr>
 						<tr>
 							<td>6</td>
-							<td>contact</td>
+							<td>manager</td>
 							<td>负责人</td>
 						</tr>
 						<tr>
@@ -207,13 +210,23 @@
 						</tr>
 						<tr>
 							<td>8</td>
+							<td>address</td>
+							<td>所在地址</td>
+						</tr>
+						<tr>
+							<td>9</td>
+							<td>zipcode</td>
+							<td>邮政编码</td>
+						</tr>
+						<tr>
+							<td>10</td>
 							<td>website</td>
 							<td>网站地址</td>
 						</tr>
 						<tr>
-							<td>9</td>
-							<td>path</td>
-							<td>组织关系路径，以"&gt;&gt;"分隔</td>
+							<td>11</td>
+							<td>description</td>
+							<td>渠道描述</td>
 						</tr>
 					</tbody>
 				</table>
@@ -238,13 +251,14 @@
 			<div class="panel-body">
 				<form>
 					<input type="hidden" name="type" value="export">
-					<div class="form-group">
+<!-- 					<div class="form-group">
 						<label>组织(路径)名称：</label>
 						<input type="text" name="path" class="form-control" placeholder="请输入组织名称，并从列表中选择；为空，则表示导出全部组织">
 						<div id="departments"></div>
 						<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+ -->
+ 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
 							<input type="submit" value="导出" class="btn btn-danger">
@@ -262,7 +276,7 @@
 					<thead>
 						<tr>
 							<th>列序号</th>
-							<th>列名称(即：excel第一行名称)</th>
+							<th>列名称(即：csv第一行名称)</th>
 							<th>列含义</th>
 						</tr>
 					</thead>
@@ -270,31 +284,31 @@
 						<tr>
 							<td>1</td>
 							<td>name</td>
-							<td>组织名称</td>
+							<td>渠道名称</td>
 						</tr>
 						<tr>
 							<td>2</td>
 							<td>nickname</td>
-							<td>组织编码</td>
+							<td>渠道编码</td>
 						</tr>
 						<tr>
 							<td>3</td>
-							<td>description</td>
-							<td>组织描述</td>
+							<td>city</td>
+							<td>所在城市</td>
 						</tr>
 						<tr>
 							<td>4</td>
-							<td>address</td>
-							<td>所在地址</td>
+							<td>district</td>
+							<td>所在地区</td>
 						</tr>
 						<tr>
 							<td>5</td>
-							<td>postcode</td>
-							<td>邮政编码</td>
+							<td>grid</td>
+							<td>所在网格</td>
 						</tr>
 						<tr>
 							<td>6</td>
-							<td>contact</td>
+							<td>manager</td>
 							<td>负责人</td>
 						</tr>
 						<tr>
@@ -304,42 +318,25 @@
 						</tr>
 						<tr>
 							<td>8</td>
+							<td>address</td>
+							<td>所在地址</td>
+						</tr>
+						<tr>
+							<td>9</td>
+							<td>zipcode</td>
+							<td>邮政编码</td>
+						</tr>
+						<tr>
+							<td>10</td>
 							<td>website</td>
 							<td>网站地址</td>
 						</tr>
 						<tr>
-							<td>9</td>
-							<td>path</td>
-							<td>组织关系路径，以"&gt;&gt;"分隔</td>
-						</tr>
-<!-- 					
-						<tr>
-							<td>9</td>
-							<td>department[0]</td>
-							<td>所属部门根层级名称</td>
-						</tr>
-						<tr>
-							<td>10</td>
-							<td>deparment[1]</td>
-							<td>所属部门第二层级名称</td>
-						</tr>
-						<tr>
 							<td>11</td>
-							<td>deparment[2]</td>
-							<td>所属部门第三层级名称</td>
+							<td>description</td>
+							<td>渠道描述</td>
 						</tr>
-						<tr>
-							<td>12</td>
-							<td>department[...]</td>
-							<td>所属部门第...层级名称</td>
-						</tr>
-						<tr>
-							<td>13</td>
-							<td>deparment[n]</td>
-							<td>所属部门第n层级名称</td>
-						</tr>
- -->
- 					</tbody>
+					</tbody>
 				</table>
 			</div>
 		</div>

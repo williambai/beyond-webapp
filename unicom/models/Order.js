@@ -3,6 +3,8 @@ var mongoose = require('mongoose');
 var spConfig = require('../config/sp').SGIP12;
 var _ = require('underscore');
 var async = require('async');
+var BSS = require('../libs/bss_gz');//** 贵州联通BSS系统
+var bssConfig = require('../config/cbss');
 
 var schema = new mongoose.Schema({
 	customer: { //** 客户
@@ -217,10 +219,23 @@ module.exports = exports = function(connection){
 						'new': true,
 					}, function(err, order) {
 						if (err || !order) return done(err);
-						//** TODO process 2G/3G order
-						
-						//** 发送业务“正在处理”短信
-						_process(); //** 处理下一个
+						//** process 2G/3G order
+						var bssAccount = bssConfig[0]; //** 取第一个， TODO 按城市取
+
+						BSS.addOrder({
+							requestId: String(order._id),//** 请求Id
+							ProductId: order.goods.barcode, //** 物料编码
+							ProductType: '2',//** 产品类型。1：优惠或资费; 2: 增值业务
+							StaffID: bssAccount.StaffID,//** 工号
+							DepartID: bssAccount.DepartID, //** 渠道代码
+							UserNumber: customer.mobile, //** 客户手机号码
+						},function(err, result){
+							if(err) console.log(err);
+							//** TODO 将状态改为“成功”？
+							
+							//** 发送业务“正在处理”短信
+							_process(); //** 处理下一个
+						});
 					});
 			};
 		_process();

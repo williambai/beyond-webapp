@@ -25,6 +25,7 @@ var GoodsImportView = require('./views/GoodsImport');
 var GoodsExportView = require('./views/GoodsExport');
 var BankIndexView = require('./views/BankIndex');
 var BankEditView = require('./views/BankEdit');
+var BankExportView = require('./views/BankExport');
 
 var BonusIndexView = require('./views/BonusIndex');
 var BonusEditView = require('./views/BonusEdit');
@@ -123,6 +124,7 @@ exports = module.exports = Backbone.Router.extend({
 		'bank/index': 'bankIndex',
 		'bank/add': 'bankEdit',
 		'bank/edit/:id': 'bankEdit',
+		'bank/export': 'bankExport',
 
 		'customer/index': 'customerIndex',
 		'customer/add': 'customerEdit',
@@ -473,6 +475,20 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(bankEditView);
 		bankEditView.trigger('load');
+	},	
+
+	bankExport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','导出银行卡');
+		var bankExportView = new BankExportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(bankExportView);
+		bankExportView.trigger('load');
 	},	
 
 	channelIndex: function(){
@@ -1195,7 +1211,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','组织设置');
+		this.appEvents.trigger('set:brand','组织管理');
 		var departmentIndexView = new DepartmentIndexView({
 			router: this,
 			el: '#content',
@@ -1224,7 +1240,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','客户导入');
+		this.appEvents.trigger('set:brand','组织导入');
 		var departmentImportView = new DepartmentImportView({
 			router: this,
 			el: '#content',
@@ -1238,7 +1254,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','客户导出');
+		this.appEvents.trigger('set:brand','组织导出');
 		var departmentExportView = new DepartmentExportView({
 			router: this,
 			el: '#content',

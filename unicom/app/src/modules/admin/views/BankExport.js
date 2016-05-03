@@ -2,15 +2,15 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    goodsTpl = require('../templates/_entityGoods.tpl');
+    bankTpl = require('../templates/_entityBank.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
 //** 模型
-var Goods = Backbone.Model.extend({
+var Bank = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/goods',	
+	urlRoot: config.api.host + '/protect/bank',	
 	defaults: {
 	},
 	validation: {
@@ -21,28 +21,23 @@ var Goods = Backbone.Model.extend({
 	    'barcode': {
 			required: true,
 			msg: '请输入运营商系统的物料号'
-	    },
-	    'smscode': {
-	    	min: 0,
-	    	max: 99999999,
-	    	msg:'请输入八位以内的数字'
-	    },
+	    }
 	},
 });
 
 //** 主页面
 exports = module.exports = FormView.extend({
 
-	el: '#goodsForm',
+	el: '#exportForm',
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Goods({_id: options.id});
-		var page = $(goodsTpl);
-		var editTemplate = $('#editTemplate', page).html();
-		this.template = _.template(_.unescape(editTemplate || ''));
+		this.model = new (Backbone.Model.extend({}));
+		var page = $(bankTpl);
+		var exportTemplate = $('#exportTemplate', page).html();
+		this.template = _.template(_.unescape(exportTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -52,8 +47,8 @@ exports = module.exports = FormView.extend({
 		'click .back': 'cancel',
 	},
 
-	load: function(){
-		if(this.model.isNew()){
+	load: function() {
+		if (this.model.isNew()) {
 			this.modelFilled = true;
 			return;
 		}
@@ -64,22 +59,23 @@ exports = module.exports = FormView.extend({
 		});
 	},
 
-	inputText: function(evt){
+	inputText: function(evt) {
 		var that = this;
 		//clear error
 		this.$(evt.currentTarget).parent().removeClass('has-error');
 		this.$(evt.currentTarget).parent().find('span.help-block').empty();
 		var arr = this.$(evt.currentTarget).serializeArray();
-		_.each(arr,function(obj){
-			var error = that.model.preValidate(obj.name,obj.value);
-			if(error){
+		_.each(arr, function(obj) {
+			var error = that.model.preValidate(obj.name, obj.value);
+			if (error) {
 				//set error
 				this.$(evt.currentTarget).parent().addClass('has-error');
-				this.$(evt.currentTarget).parent().find('span.help-block').text(error);				
+				this.$(evt.currentTarget).parent().find('span.help-block').text(error);
 			}
 		})
 		return false;
 	},
+
 
 	submit: function() {
 		var that = this;
@@ -88,58 +84,52 @@ exports = module.exports = FormView.extend({
 		this.$('.form-group').find('span.help-block').empty();
 		var arr = this.$('form').serializeArray();
 		var errors = [];
-		_.each(arr,function(obj){
-			var error = that.model.preValidate(obj.name,obj.value);
-			if(error){
+		_.each(arr, function(obj) {
+			var error = that.model.preValidate(obj.name, obj.value);
+			if (error) {
 				errors.push(error);
 				that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
 				that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
 			}
 		});
-		if(!_.isEmpty(errors)) return false;
+		if (!_.isEmpty(errors)) return false;
 		//validate finished.
 
-		var object = this.$('form').serializeJSON();
-		this.model.set(object);
-		// console.log(this.model.attributes);
-		this.model.save(null, {
-			xhrFields: {
-				withCredentials: true
-			},
+		var query = this.$('form').serialize();
+		//download file
+		window.location.href = config.api.host + '/protect/finance/banks?' + query;
+		return false;
+	},
+
+	cancel: function() {
+		this.router.navigate('bank/index', {
+			trigger: true,
+			replace: true
 		});
 		return false;
 	},
-	
-	cancel: function(){
-		this.router.navigate('goods/index',{trigger: true, replace: true});
-		return false;
-	},
-	
+
 	//fetch event: done
-	done: function(response){
+	done: function(response) {
 		var that = this;
-		if(!this.modelFilled){
+		if (!this.modelFilled) {
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
 
-		}else{
+		} else {
 			//second fetch: submit
-			this.router.navigate('goods/index',{trigger: true, replace: true});
+			this.router.navigate('bank/index', {
+				trigger: true,
+				replace: true
+			});
 		}
 	},
 
-	render: function(){
-		this.$el.html(this.template({model: this.model.toJSON()}));
-		if(this.model.isNew()){
-			this.$('.panel-title').text('新增物料');
-		}
-		var category = this.model.get('category');
-		this.$(('input[name=category][value='+ category +']')).attr('checked',true)
-		var status = this.model.get('status');
-		if(status){
-			this.$('input[name=status][value='+ status +']').attr('checked',true);
-		}
+	render: function() {
+		this.$el.html(this.template({
+			model: this.model.toJSON()
+		}));
 		return this;
 	},
 });

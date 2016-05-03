@@ -97,7 +97,7 @@ exports = module.exports = FormView.extend({
 
 	loadApps: function(callback){
 		var that = this;
-		var platformAppCollection = new PlatformAppCollection();
+		var platformAppCollection = new AppCollection();
 		platformAppCollection.fetch({
 			xhrFields: {
 				withCredentials: true

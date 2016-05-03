@@ -1,70 +1,49 @@
 var util = require('util');
 var path = require('path');
+var fs = require('fs');
+var _ = require('underscore');
+var async = require('async');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
 
 exports = module.exports = function(app, models) {
-	//** 导入csv 函数包
-	//** 注意：
-	//*** 文件编码格式为utf8
-	//*** 首行列名称要删除
-	//*** 最后一行不要空行
-	var band = require('banded');
-
-	var _ = require('underscore');
-	var async = require('async');
-
-	//** 导入csv
-	var importCSV = function(req, res) {
-		var attachments;
-		if (typeof req.body.attachment == 'string') {
-			attachments = [];
-			attachments.push(req.body.attachment);
-		} else {
-			attachments = req.body.attachment;
-		}
-		attachments = attachments || [];
-		logger.debug('attachments:' + attachments);
-		var docs = [];
-		async.each(attachments, function(attachment, cb) {
-			var file = path.join(__dirname, '../public', attachment);
-			if (!require('fs').existsSync(file)) {
-				return cb({
-					code: 40440,
-					msg: '文件不存在'
-				});
-			}
-			logger.debug('file: ' + file);
-			//** 导入csv
-			try {
-				band({
-					file: file,
-					model: models.Goods,
-					// columns: ['name','barcode'],
-					// types: [String,String],
-					columns: ['name', 'category', 'barcode', 'smscode', 'price', 'unit', 'bonus'],
-					types: [String, String, String, String, Number, String, Number],
-				}, function(err) {
-					cb(err);
-				});
-			} catch (e) {
-				return cb({
-					code: 500110,
-					errmsg: '导入数据格式不规范，请检查数据。'
-				});
-			}
-		}, function(err, result) {
-			if (err) return res.send(err);
-			res.send({});
-		});
-
-	};
 
 	var add = function(req, res) {
 		var action = req.body.action || '';
 		switch (action) {
 			case 'import':
-				importCSV(req, res);
+				var attachments;
+				if (typeof req.body.attachment == 'string') {
+					attachments = [];
+					attachments.push(req.body.attachment);
+				} else {
+					attachments = req.body.attachment;
+				}
+				attachments = attachments || [];
+				logger.debug('attachments:' + attachments);
+				var docs = [];
+				async.each(attachments, function(attachment, cb) {
+					var file = path.join(__dirname, '../public', attachment);
+					if (!fs.existsSync(file)) {
+						return cb({
+							code: 40440,
+							msg: '文件不存在'
+						});
+					}
+					logger.debug('file: ' + file);
+	 				//** 导入csv
+	 				var data = fs.readFileSync(file,{encoding: 'utf8'});
+	 				models.Goods.importCSV(data,function(err){
+	 					if(err) return cb({
+	 								code: 500110,
+	 								errmsg: '导入数据格式不规范，请检查数据。'
+	 							});
+	 					cb(null);
+	 				});
+				}, function(err, result) {
+					if (err) return res.send(err);
+					res.send({});
+				});
 				break;
 			default:
 				var doc = req.body;
@@ -206,6 +185,52 @@ exports = module.exports = function(app, models) {
 
 
 // var xlsx = require('xlsx');
+	//** 导入csv
+	// var importCSV = function(req, res) {
+	// 	var attachments;
+	// 	if (typeof req.body.attachment == 'string') {
+	// 		attachments = [];
+	// 		attachments.push(req.body.attachment);
+	// 	} else {
+	// 		attachments = req.body.attachment;
+	// 	}
+	// 	attachments = attachments || [];
+	// 	logger.debug('attachments:' + attachments);
+	// 	var docs = [];
+	// 	async.each(attachments, function(attachment, cb) {
+	// 		var file = path.join(__dirname, '../public', attachment);
+	// 		if (!require('fs').existsSync(file)) {
+	// 			return cb({
+	// 				code: 40440,
+	// 				msg: '文件不存在'
+	// 			});
+	// 		}
+	// 		logger.debug('file: ' + file);
+	// 		//** 导入csv
+	// 		try {
+	// 			band({
+	// 				file: file,
+	// 				model: models.Goods,
+	// 				// columns: ['name','barcode'],
+	// 				// types: [String,String],
+	// 				columns: ['name', 'category', 'barcode', 'smscode', 'price', 'unit', 'bonus'],
+	// 				types: [String, String, String, String, Number, String, Number],
+	// 			}, function(err) {
+	// 				cb(err);
+	// 			});
+	// 		} catch (e) {
+	// 			return cb({
+	// 				code: 500110,
+	// 				errmsg: '导入数据格式不规范，请检查数据。'
+	// 			});
+	// 		}
+	// 	}, function(err, result) {
+	// 		if (err) return res.send(err);
+	// 		res.send({});
+	// 	});
+
+	// };
+
 // var importData = function(req, res) {
 // 	var attachments;
 // 	if(typeof req.body.attachment == 'string'){

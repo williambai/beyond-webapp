@@ -105,8 +105,8 @@
 					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
-							<input type="radio" name="status" value="有效" checked>&nbsp;&nbsp;有效
-							<input type="radio" name="status" value="无效">&nbsp;&nbsp;无效
+							<input type="radio" name="status" value="有效">&nbsp;&nbsp;有效
+							<input type="radio" name="status" value="无效" checked>&nbsp;&nbsp;无效
 						</div>
 					</div>
 					<div class="form-group">
@@ -174,6 +174,56 @@
 						</tr>
 					</thead>
 					<tbody>
+						<tr>
+							<td>1</td>
+							<td>name</td>
+							<td>产品名称</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>category</td>
+							<td>产品分类(2G/3G/4G)</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>barcode</td>
+							<td>产品编码</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>smscode</td>
+							<td>业务编码</td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td>price</td>
+							<td>产品价格</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>unit</td>
+							<td>价格单位</td>
+						</tr>
+						<tr>
+							<td>7</td>
+							<td>quantity</td>
+							<td>产品库存数量</td>
+						</tr>
+						<tr>
+							<td>8</td>
+							<td>bonus</td>
+							<td>佣金</td>
+						</tr>
+						<tr>
+							<td>9</td>
+							<td>status</td>
+							<td>产品状态(有效/无效)</td>
+						</tr>
+						<tr>
+							<td>10</td>
+							<td>description</td>
+							<td>产品描述</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -225,6 +275,56 @@
 						</tr>
 					</thead>
 					<tbody>
+						<tr>
+							<td>1</td>
+							<td>name</td>
+							<td>产品名称</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>category</td>
+							<td>产品分类(2G/3G/4G)</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>barcode</td>
+							<td>产品编码</td>
+						</tr>
+						<tr>
+							<td>4</td>
+							<td>smscode</td>
+							<td>业务编码</td>
+						</tr>
+						<tr>
+							<td>5</td>
+							<td>price</td>
+							<td>产品价格</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>unit</td>
+							<td>价格单位</td>
+						</tr>
+						<tr>
+							<td>7</td>
+							<td>quantity</td>
+							<td>产品库存数量</td>
+						</tr>
+						<tr>
+							<td>8</td>
+							<td>bonus</td>
+							<td>佣金</td>
+						</tr>
+						<tr>
+							<td>9</td>
+							<td>status</td>
+							<td>产品状态(有效/无效)</td>
+						</tr>
+						<tr>
+							<td>10</td>
+							<td>description</td>
+							<td>产品描述</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
