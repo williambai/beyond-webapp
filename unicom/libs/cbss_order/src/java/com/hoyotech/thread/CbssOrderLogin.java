@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import com.hoyotech.bean.Account;
 import com.hoyotech.bean.VirtualBrowser;
-import com.hoyotech.db.DBService;
+import com.pdbang.DBService;
 import com.hoyotech.utils.RegexUtils;
 
 /**
@@ -80,11 +80,7 @@ public class CbssOrderLogin extends Thread
                             logger.error("登录页参数获取失败！");
                             if (!iscount)
                             {
-                                String adminPhone =
-                                    DBService.getPropertiesChuangfu()
-                                        .getProperty("adminPhone");
-                                DBService.sendSMS("自动化登录cbss系统失败用户名或者密码错误，请及时处理！",
-                                    adminPhone);
+                                DBService.sendSMS("自动化登录cbss系统失败用户名或者密码错误，请及时处理！");
                             }
                             iscount = true;
                             continue;

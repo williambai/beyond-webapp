@@ -74,6 +74,11 @@ var schema = new mongoose.Schema({
 	},
 });
 
+schema.pre('save', function(next){
+	//** 如果是4G业务，则需要在CbssOrder中添加一条记录
+	next();
+});
+
 schema.set('collection', 'orders');
 
 module.exports = exports = function(connection){

@@ -42,7 +42,7 @@ public class HttpService {
         VirtualBrowser vb = HttpsTool.get(url, header,encoding);
         Map<String,String> cookies = vb.getCookies();
         System.out.println(cookies);
-        String picUrl = "https://hq.cbss.10010.com/image?mode=validate&width=60&height=20";
+        String picUrl = "https://gz.cbss.10010.com/image?mode=validate&width=60&height=20";
         String savePath = "./pic/"+UUID.randomUUID().toString()+".jpg";
         Map<String,String> picHeader = new HashMap<String,String>();
         String cookie = HttpsTool.cookieMapToString(cookies);
@@ -51,13 +51,13 @@ public class HttpService {
         picHeader.put("Accept-Language", "zh-CN");
         picHeader.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
 //        picHeader.put("Accept-Encoding", "gzip, deflate");
-        picHeader.put("Host", "hb.cbss.10010.com");
+        picHeader.put("Host", "gz.cbss.10010.com");
         picHeader.put("Connection", "Keep-Alive");
         picHeader.put("Cache-Control", "no-cache");
         picHeader.put("Cookie", cookie);
         cookies = HttpsTool.downloadPicture(picUrl, picHeader, savePath);
         System.out.println(cookies);
-        picUrl = "https://hb.cbss.10010.com/image?mode=validate&width=60&height=20";
+        picUrl = "https://gz.cbss.10010.com/image?mode=validate&width=60&height=20";
         picHeader.put("Cookie", cookie);
         savePath = "./pic/"+UUID.randomUUID().toString()+".jpg";
         cookies = HttpsTool.downloadPicture(picUrl, picHeader, savePath);
@@ -72,7 +72,7 @@ public class HttpService {
         catch (Exception e) {
             e.printStackTrace();
         }
-        String redirectUrl = "https://hb.cbss.10010.com/essframe?service=page/LoginProxy&login_type=redirectLogin";
+        String redirectUrl = "https://gz.cbss.10010.com/essframe?service=page/LoginProxy&login_type=redirectLogin";
         Map<String,String> redirectHeader = new HashMap<String,String>();
         cookie = HttpsTool.cookieMapToString(cookies);
         redirectHeader.put("Accept", "text/html, application/xhtml+xml, * /*");
@@ -81,7 +81,7 @@ public class HttpService {
         redirectHeader.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         redirectHeader.put("Content-Type", "application/x-www-form-urlencoded");
 //        redirectHeader.put("Accept-Encoding", "gzip, deflate");
-        redirectHeader.put("Host", "hb.cbss.10010.com");
+        redirectHeader.put("Host", "gz.cbss.10010.com");
         redirectHeader.put("Connection", "Keep-Alive");
         redirectHeader.put("Cache-Control", "no-cache");
         redirectHeader.put("Cookie", cookie);
@@ -97,7 +97,7 @@ public class HttpService {
         redirectParam.put("$FormConditional$3", "F");
         redirectParam.put("$FormConditional$4", "F");
         redirectParam.put("$FormConditional$5", "F");
-        redirectParam.put("LOGIN_PROVINCE_REDIRECT_URL", "https://hb.cbss.10010.com/essframe");
+        redirectParam.put("LOGIN_PROVINCE_REDIRECT_URL", "https://gz.cbss.10010.com/essframe");
         redirectParam.put("AUTH_TYPE", "0");
         redirectParam.put("CAPTURE_URL", "/image?mode=validate");
         redirectParam.put("width", "60");
@@ -115,7 +115,7 @@ public class HttpService {
         redirectParam.put("VERIFY_CODE", verifyCode);
         vb = HttpsTool.post(redirectUrl, redirectHeader, redirectParam, "utf-8");
         cookies = vb.getCookies();
-        String loginUrl = "https://hb.cbss.10010.com/essframe";
+        String loginUrl = "https://gz.cbss.10010.com/essframe";
         cookie = HttpsTool.cookieMapToString(cookies);
         Map<String,String> loginHeader = new HashMap<String,String>();
         loginHeader.put("Accept", "text/html, application/xhtml+xml, */*");
@@ -124,7 +124,7 @@ public class HttpService {
         loginHeader.put("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         loginHeader.put("Content-Type","application/x-www-form-urlencoded");
 //        loginHeader.put("Accept-Encoding","gzip, deflate");
-        loginHeader.put("Host","hb.cbss.10010.com");
+        loginHeader.put("Host","gz.cbss.10010.com");
         loginHeader.put("Connection","Keep-Alive");
         loginHeader.put("Cache-Control","no-cache");
         loginHeader.put("Cookie",cookie);

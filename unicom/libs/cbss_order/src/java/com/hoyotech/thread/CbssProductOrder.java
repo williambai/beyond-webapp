@@ -30,10 +30,11 @@ import com.hoyotech.bean.ResTableInfo;
 import com.hoyotech.bean.ResourceInfo;
 import com.hoyotech.bean.SpProduct;
 import com.hoyotech.bean.VirtualBrowser;
-import com.hoyotech.db.DBService;
 import com.hoyotech.utils.HTMLDecoder;
 import com.hoyotech.utils.HttpsTool;
 import com.hoyotech.utils.RegexUtils;
+
+import com.pdbang.DBService;
 
 /**
  * Description: TODO(CBSS系统订购线程类)
@@ -129,9 +130,7 @@ public class CbssProductOrder extends Thread
             if (account == null)
             {
                 LOGGER.info("登录cbss系统失败失败用户名或者密码错误。");
-                String adminPhone =
-                    DBService.getPropertiesChuangfu().getProperty("adminPhone");
-                DBService.sendSMS("自动化登录cbss系统失败用户名或者密码错误，请及时处理！", adminPhone);
+                DBService.sendSMS("自动化登录cbss系统失败用户名或者密码错误，请及时处理！");
                 return;
             }
             OrderResult result = null;
@@ -153,9 +152,9 @@ public class CbssProductOrder extends Thread
                     result = this.orderSpProduct(account, info);
                     
                 }
-                else if (productName.contains("半年包"))
+                else if (productName.contains("流量"))
                 {
-                    LOGGER.info("开始订购半年包： " + productName + " "
+                    LOGGER.info("开始订购流量包： " + productName + " "
                         + info.getOrderId() + " " + info.getPhone());
                     result = this.orderFlux(account, info);
                 }
@@ -169,30 +168,28 @@ public class CbssProductOrder extends Thread
                 {
                     LOGGER.info("本产品不存在不支持自动化开通：" + productName
                         + info.getOrderId() + " " + info.getPhone());
-                    DBService.updateOrderStatus(info.getId(), new OrderResult(
+                    DBService.updateOrderStatus(info.getId(), info.getOrderId(), new OrderResult(
                         "1", "本产品暂不支持支持自动化订购业务"));
                     continue;
                 }
                 LOGGER.info("开始更新创富系统订单信息表");
-                DBService.updateOrderStatus(info.getId(), result);
-                Object[] obj =
-                    (Object[])DBService.check4GOrderRecordId(info.getOrderId(),
-                        "");
-                
-                if (obj != null && obj[5].equals("-1"))
-                {
-                    LOGGER.info(obj.toString());
-                    DBService.updateVmssGoddsResult(result.getOrderMessage(),
-                        info.getOrderId(),
-                        info.getPhone(),
-                        info.getProductName());
-                }
+                DBService.updateOrderStatus(info.getId(), info.getOrderId(), result);
+//                Object[] obj =
+//                    (Object[])DBService.check4GOrderRecordId(info.getOrderId(),
+//                        "");
+//                
+//                if (obj != null && obj[5].equals("-1"))
+//                {
+//                    LOGGER.info(obj.toString());
+//                    DBService.updateVmssGoddsResult(result.getOrderMessage(),
+//                        info.getOrderId(),
+//                        info.getPhone(),
+//                        info.getProductName());
+//                }
             }
             catch (Exception e)
             {
-                String adminPhone =
-                    DBService.getPropertiesChuangfu().getProperty("adminPhone");
-                DBService.sendSMS("自动化程序通过报文下发或者解析html过程异常，请及时处理！", adminPhone);
+                DBService.sendSMS("自动化程序通过报文下发或者解析html过程异常，请及时处理！");
                 LOGGER.error("自动化程序通过报文下发或者解析html过程异常：" + e);
             }
             
@@ -287,17 +284,17 @@ public class CbssProductOrder extends Thread
         String cookie = HttpService.cookieMapToString(cookies);
         Map<String, String> homePageParamMap = account.getMetaInfo();
         String navUrl =
-            "https://hb.cbss.10010.com/essframe?service=page/Nav&STAFF_ID="
+            "https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID="
                 + homePageParamMap.get("staffId");
         Map<String, String> navHeader = new HashMap<String, String>();
         navHeader.put("Accept", "text/html, application/xhtml+xml, */*");
-        navHeader.put("Referer", "https://hb.cbss.10010.com/essframe");
+        navHeader.put("Referer", "https://gz.cbss.10010.com/essframe");
         navHeader.put("Accept-Language", "zh-CN");
         navHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         navHeader.put("Content-Type", "application/x-www-form-urlencoded");
         // loginHeader.put("Accept-Encoding","gzip, deflate");
-        navHeader.put("Host", "hb.cbss.10010.com");
+        navHeader.put("Host", "gz.cbss.10010.com");
         navHeader.put("Connection", "Keep-Alive");
         navHeader.put("Cache-Control", "no-cache");
         navHeader.put("Cookie", cookie);
@@ -309,15 +306,15 @@ public class CbssProductOrder extends Thread
                 navHtml);
         // 左边框，用于获得下一步访问地址
         String headUrl =
-            "https://hb.cbss.10010.com/essframe?service=page/Sidebar";
+            "https://gz.cbss.10010.com/essframe?service=page/Sidebar";
         Map<String, String> headUrlHeader = new HashMap<String, String>();
         headUrlHeader.put("Accept", "text/html, application/xhtml+xml, */*");
-        headUrlHeader.put("Referer", "https://hb.cbss.10010.com/essframe");
+        headUrlHeader.put("Referer", "https://gz.cbss.10010.com/essframe");
         headUrlHeader.put("Accept-Language", "zh-CN");
         headUrlHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         headUrlHeader.put("Content-Type", "application/x-www-form-urlencoded");
-        headUrlHeader.put("Host", "hb.cbss.10010.com");
+        headUrlHeader.put("Host", "gz.cbss.10010.com");
         headUrlHeader.put("Connection", "Keep-Alive");
         headUrlHeader.put("Cache-Control", "no-cache");
         headUrlHeader.put("Cookie", cookie);
@@ -342,16 +339,16 @@ public class CbssProductOrder extends Thread
                 + "&departId=" + homePageParamMap.get("deptId")
                 + "&subSysCode=" + homePageParamMap.get("subSysCode")
                 + "&eparchyCode=" + homePageParamMap.get("epachyId");
-        custUrl = "https://hb.cbss.10010.com/" + custUrl;
+        custUrl = "https://gz.cbss.10010.com/" + custUrl;
         Map<String, String> custHeader = new HashMap<String, String>();
         custHeader.put("Accept", "text/html, application/xhtml+xml, */*");
         custHeader.put("Referer",
-            "https://hb.cbss.10010.com/essframe?service=page/Sidebar");
+            "https://gz.cbss.10010.com/essframe?service=page/Sidebar");
         custHeader.put("Accept-Language", "zh-CN");
         custHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         custHeader.put("Content-Type", "application/x-www-form-urlencoded");
-        custHeader.put("Host", "hb.cbss.10010.com");
+        custHeader.put("Host", "gz.cbss.10010.com");
         custHeader.put("Connection", "Keep-Alive");
         custHeader.put("Cache-Control", "no-cache");
         custHeader.put("Cookie", cookie);
@@ -361,7 +358,7 @@ public class CbssProductOrder extends Thread
         
         // 账务管理，流量包资源订购
         String packageUrl =
-            "https://hb.cbss.10010.com" + resourceUrl + "&staffId="
+            "https://gz.cbss.10010.com" + resourceUrl + "&staffId="
                 + homePageParamMap.get("staffId") + "&departId="
                 + homePageParamMap.get("deptId")
                 + "&subSysCode=BSS&eparchyCode="
@@ -373,7 +370,7 @@ public class CbssProductOrder extends Thread
         packageHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         packageHeader.put("Content-Type", "application/x-www-form-urlencoded");
-        packageHeader.put("Host", "hb.cbss.10010.com");
+        packageHeader.put("Host", "gz.cbss.10010.com");
         packageHeader.put("Connection", "Keep-Alive");
         packageHeader.put("Cache-Control", "no-cache");
         packageHeader.put("Cookie", cookie);
@@ -381,16 +378,16 @@ public class CbssProductOrder extends Thread
         cookies = vb.getCookies();
         cookie = HttpService.cookieMapToString(cookies);
         // 用户流量包信息查询
-        String acctUrl = "https://hb.cbss.10010.com/acctmanm";
+        String acctUrl = "https://gz.cbss.10010.com/acctmanm";
         Map<String, String> acctHeader = new HashMap<String, String>();
         acctHeader.put("Accept", "text/html, application/xhtml+xml, */*");
         acctHeader.put("Referer",
-            "https://hb.cbss.10010.com/essframe?service=page/Sidebar");
+            "https://gz.cbss.10010.com/essframe?service=page/Sidebar");
         acctHeader.put("Accept-Language", "zh-CN");
         acctHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         acctHeader.put("Content-Type", "application/x-www-form-urlencoded");
-        acctHeader.put("Host", "hb.cbss.10010.com");
+        acctHeader.put("Host", "gz.cbss.10010.com");
         acctHeader.put("Connection", "Keep-Alive");
         acctHeader.put("Cache-Control", "no-cache");
         acctHeader.put("Cookie", cookie);
@@ -502,7 +499,7 @@ public class CbssProductOrder extends Thread
         }
         // 选择流量包
         String amchargeUrl =
-            "https://hb.cbss.10010.com/acctmanm?service=ajaxDirect/1/amcharge.ordergprsresource.OrderGprsRes"
+            "https://gz.cbss.10010.com/acctmanm?service=ajaxDirect/1/amcharge.ordergprsresource.OrderGprsRes"
                 + "/amcharge.ordergprsresource.OrderGprsRes/javascript/refeshZK&pagename="
                 + "amcharge.ordergprsresource.OrderGprsRes"
                 + "&eventname=getResZKList&staffId="
@@ -517,14 +514,14 @@ public class CbssProductOrder extends Thread
         Map<String, String> amchargeHeader = new HashMap<String, String>();
         amchargeHeader.put("Accept",
             "text/javascript, text/html, application/xml, text/xml, */*");
-        amchargeHeader.put("Referer", "https://hb.cbss.10010.com/acctmanm");
+        amchargeHeader.put("Referer", "https://gz.cbss.10010.com/acctmanm");
         amchargeHeader.put("Accept-Language", "zh-CN");
         amchargeHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         amchargeHeader.put("Content-Type", "application/x-www-form-urlencoded");
         // amchargeHeader.put("Accept-Encoding","gzip, deflate");
         amchargeHeader.put("x-requested-with", "XMLHttpRequest");
-        amchargeHeader.put("Host", "hb.cbss.10010.com");
+        amchargeHeader.put("Host", "gz.cbss.10010.com");
         amchargeHeader.put("Connection", "Keep-Alive");
         amchargeHeader.put("Cache-Control", "no-cache");
         amchargeHeader.put("Cookie", cookie);
@@ -632,7 +629,7 @@ public class CbssProductOrder extends Thread
         }
         
         String refreshMoneyUrl =
-            "https://hb.cbss.10010.com/acctmanm?service=ajaxDirect/1/amcharge.ordergprsresource.OrderGprsRes/"
+            "https://gz.cbss.10010.com/acctmanm?service=ajaxDirect/1/amcharge.ordergprsresource.OrderGprsRes/"
                 + "amcharge.ordergprsresource.OrderGprsRes/javascript/refeshMoney&pagename="
                 + "amcharge.ordergprsresource.OrderGprsRes"
                 + "&eventname=getOrderResInfos&staffId="
@@ -647,7 +644,7 @@ public class CbssProductOrder extends Thread
         Map<String, String> refreshMoneyHeader = new HashMap<String, String>();
         refreshMoneyHeader.put("Accept",
             "text/javascript, text/html, application/xml, text/xml, */*");
-        refreshMoneyHeader.put("Referer", "https://hb.cbss.10010.com/acctmanm");
+        refreshMoneyHeader.put("Referer", "https://gz.cbss.10010.com/acctmanm");
         refreshMoneyHeader.put("Accept-Language", "zh-CN");
         refreshMoneyHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
@@ -655,7 +652,7 @@ public class CbssProductOrder extends Thread
             "application/x-www-form-urlencoded");
         // refreshMoneyHeader.put("Accept-Encoding","gzip, deflate");
         refreshMoneyHeader.put("x-requested-with", "XMLHttpRequest");
-        refreshMoneyHeader.put("Host", "hb.cbss.10010.com");
+        refreshMoneyHeader.put("Host", "gz.cbss.10010.com");
         refreshMoneyHeader.put("Connection", "Keep-Alive");
         refreshMoneyHeader.put("Cache-Control", "no-cache");
         refreshMoneyHeader.put("Cookie", cookie);
@@ -778,16 +775,16 @@ public class CbssProductOrder extends Thread
         }
         // LOGGER.info(rMap);
         // 订购提交
-        String acctManmUrl = "https://hb.cbss.10010.com/acctmanm";
+        String acctManmUrl = "https://gz.cbss.10010.com/acctmanm";
         Map<String, String> acctManmHeader = new HashMap<String, String>();
         acctManmHeader.put("Accept", "text/html, application/xhtml+xml, */*");
-        acctManmHeader.put("Referer", "https://hb.cbss.10010.com/acctmanm");
+        acctManmHeader.put("Referer", "https://gz.cbss.10010.com/acctmanm");
         acctManmHeader.put("Accept-Language", "zh-CN");
         acctManmHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         acctManmHeader.put("Content-Type", "application/x-www-form-urlencoded");
         // acctManmHeader.put("Accept-Encoding","gzip, deflate");
-        acctManmHeader.put("Host", "hb.cbss.10010.com");
+        acctManmHeader.put("Host", "gz.cbss.10010.com");
         acctManmHeader.put("Connection", "Keep-Alive");
         acctManmHeader.put("Cache-Control", "no-cache");
         acctManmHeader.put("Cookie", cookie);
@@ -884,7 +881,7 @@ public class CbssProductOrder extends Thread
         content =
             RegexUtils.regexMathes(".*<div class=\"content\">(.+?)</div>.*",
                 vb.getHtml());
-        LOGGER.info("半年包流量订购结果：" + content);
+        LOGGER.info("流量订购结果：" + content);
         if (content.trim().contains("成功"))
         {
             return new OrderResult("0", "成功");
@@ -911,15 +908,15 @@ public class CbssProductOrder extends Thread
         Map<String, String> homePageParamMap = account.getMetaInfo();
         String cookie = HttpService.cookieMapToString(cookies);
         String headUrl =
-            "https://hb.cbss.10010.com/essframe?service=page/Sidebar";
+            "https://gz.cbss.10010.com/essframe?service=page/Sidebar";
         Map<String, String> headUrlHeader = new HashMap<String, String>();
         headUrlHeader.put("Accept", "text/html, application/xhtml+xml, */*");
-        headUrlHeader.put("Referer", "https://hb.cbss.10010.com/essframe");
+        headUrlHeader.put("Referer", "https://gz.cbss.10010.com/essframe");
         headUrlHeader.put("Accept-Language", "zh-CN");
         headUrlHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         headUrlHeader.put("Content-Type", "application/x-www-form-urlencoded");
-        headUrlHeader.put("Host", "hb.cbss.10010.com");
+        headUrlHeader.put("Host", "gz.cbss.10010.com");
         headUrlHeader.put("Connection", "Keep-Alive");
         headUrlHeader.put("Cache-Control", "no-cache");
         headUrlHeader.put("Cookie", cookie);
@@ -943,18 +940,18 @@ public class CbssProductOrder extends Thread
                 + "&departId=" + homePageParamMap.get("deptId")
                 + "&subSysCode=" + homePageParamMap.get("subSysCode")
                 + "&eparchyCode=" + homePageParamMap.get("epachyId");
-        custUrl = "https://hb.cbss.10010.com/" + custUrl;
+        custUrl = "https://gz.cbss.10010.com/" + custUrl;
         // LOGGER.info(custUrl);
         Map<String, String> custHeader = new HashMap<String, String>();
         custHeader.put("Accept", "text/html, application/xhtml+xml, */*");
         custHeader.put("Referer",
-            "https://hb.cbss.10010.com/essframe?service=page/Sidebar");
+            "https://gz.cbss.10010.com/essframe?service=page/Sidebar");
         custHeader.put("Accept-Language", "zh-CN");
         custHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         custHeader.put("Content-Type", "application/x-www-form-urlencoded");
         // custHeader.put("Accept-Encoding","gzip, deflate");
-        custHeader.put("Host", "hb.cbss.10010.com");
+        custHeader.put("Host", "gz.cbss.10010.com");
         custHeader.put("Connection", "Keep-Alive");
         custHeader.put("Cache-Control", "no-cache");
         custHeader.put("Cookie", cookie);
@@ -964,9 +961,9 @@ public class CbssProductOrder extends Thread
         
         // 首页用户认证
         String authenticateUrl =
-            "https://hb.cbss.10010.com/custserv?service=swallow/pub.chkcust.MainChkCust/authenticate/1";
+            "https://gz.cbss.10010.com/custserv?service=swallow/pub.chkcust.MainChkCust/authenticate/1";
         String referUrl =
-            "https://hb.cbss.10010.com/custserv?service=page/pub.chkcust.MainChkCust&listener=&staffId="
+            "https://gz.cbss.10010.com/custserv?service=page/pub.chkcust.MainChkCust&listener=&staffId="
                 + homePageParamMap.get("staffId")
                 + "&departId="
                 + homePageParamMap.get("deptId")
@@ -984,7 +981,7 @@ public class CbssProductOrder extends Thread
         authenticateHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
         // authenticateHeader.put("Accept-Encoding","gzip, deflate");
-        authenticateHeader.put("Host", "hb.cbss.10010.com");
+        authenticateHeader.put("Host", "gz.cbss.10010.com");
         authenticateHeader.put("Connection", "Keep-Alive");
         authenticateHeader.put("Cache-Control", "no-cache");
         authenticateHeader.put("Cookie", cookie);
@@ -1058,7 +1055,7 @@ public class CbssProductOrder extends Thread
             return new OrderResult("1", "用户认证异常");
         }
         String userListUrl =
-            "https://hb.cbss.10010.com/custserv?service=swallow/pub.chkcust.MainChkCust/queryUserList/1";
+            "https://gz.cbss.10010.com/custserv?service=swallow/pub.chkcust.MainChkCust/queryUserList/1";
         Map<String, String> userListHeader = new HashMap<String, String>();
         userListHeader.put("Accept",
             "text/javascript, text/html, application/xml, text/xml, */*");
@@ -1070,7 +1067,7 @@ public class CbssProductOrder extends Thread
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         userListHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
-        userListHeader.put("Host", "hb.cbss.10010.com");
+        userListHeader.put("Host", "gz.cbss.10010.com");
         userListHeader.put("Connection", "Keep-Alive");
         userListHeader.put("Cache-Control", "no-cache");
         userListHeader.put("Cookie", cookie);
@@ -1105,7 +1102,7 @@ public class CbssProductOrder extends Thread
         // LOGGER.info("netTypeCode: "+netTypeCode + " prepayTag: "+ prepayTag
         // );
         String tradeInfoUrl =
-            "https://hb.cbss.10010.com/custserv?service=swallow/popupdialog.queryPreOrder.QueryPreOrder/queryTradeInfonum/1";
+            "https://gz.cbss.10010.com/custserv?service=swallow/popupdialog.queryPreOrder.QueryPreOrder/queryTradeInfonum/1";
         Map<String, String> tradeInfoHeader = new HashMap<String, String>();
         tradeInfoHeader.put("Accept",
             "text/javascript, text/html, application/xml, text/xml, */*");
@@ -1117,7 +1114,7 @@ public class CbssProductOrder extends Thread
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         tradeInfoHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
-        tradeInfoHeader.put("Host", "hb.cbss.10010.com");
+        tradeInfoHeader.put("Host", "gz.cbss.10010.com");
         tradeInfoHeader.put("Connection", "Keep-Alive");
         tradeInfoHeader.put("Cache-Control", "no-cache");
         tradeInfoHeader.put("Cookie", cookie);
@@ -1133,7 +1130,7 @@ public class CbssProductOrder extends Thread
         // LOGGER.info(vb.getHtml());
         
         String personalServUrl =
-            "https://hb.cbss.10010.com/custserv?service=page/personalserv.platformtrade.SpTrade&listener="
+            "https://gz.cbss.10010.com/custserv?service=page/personalserv.platformtrade.SpTrade&listener="
                 + "initMobTrade&RIGHT_CODE=csSpTrade&LOGIN_RANDOM_CODE="
                 + loginRandomCode
                 + "&LOGIN_CHECK_CODE="
@@ -1152,13 +1149,13 @@ public class CbssProductOrder extends Thread
         personalServHeader.put("Accept",
             "text/html, application/xhtml+xml, */*");
         personalServHeader.put("Referer",
-            "https://hb.cbss.10010.com/essframe?service=page/Sidebar");
+            "https://gz.cbss.10010.com/essframe?service=page/Sidebar");
         personalServHeader.put("Accept-Language", "zh-CN");
         personalServHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         personalServHeader.put("Content-Type",
             "application/x-www-form-urlencoded");
-        personalServHeader.put("Host", "hb.cbss.10010.com");
+        personalServHeader.put("Host", "gz.cbss.10010.com");
         personalServHeader.put("Connection", "Keep-Alive");
         personalServHeader.put("Cache-Control", "no-cache");
         personalServHeader.put("Cookie", cookie);
@@ -1170,7 +1167,7 @@ public class CbssProductOrder extends Thread
             RegexUtils.regexMathes("(?s).*name=\"_tradeBase\"\\s+value=\"(.+?)\"/>.*",
                 personalServHtml);
         String queryCustUrl =
-            "https://hb.cbss.10010.com/custserv?service=swallow/pub.chkcust.MainChkCust/queryCustAuth/1";
+            "https://gz.cbss.10010.com/custserv?service=swallow/pub.chkcust.MainChkCust/queryCustAuth/1";
         Map<String, String> queryCustHeader = new HashMap<String, String>();
         referUrl = personalServUrl;
         queryCustHeader.put("Accept",
@@ -1184,7 +1181,7 @@ public class CbssProductOrder extends Thread
         queryCustHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
         // queryCustHeader.put("Accept-Encoding","gzip, deflate");
-        queryCustHeader.put("Host", "hb.cbss.10010.com");
+        queryCustHeader.put("Host", "gz.cbss.10010.com");
         queryCustHeader.put("Connection", "Keep-Alive");
         queryCustHeader.put("Cache-Control", "no-cache");
         queryCustHeader.put("Cookie", cookie);
@@ -1201,7 +1198,7 @@ public class CbssProductOrder extends Thread
                 queryCustParams,
                 "utf-8");
         
-        String custServUrl = "https://hb.cbss.10010.com/custserv";
+        String custServUrl = "https://gz.cbss.10010.com/custserv";
         Map<String, String> custServHeader = new HashMap<String, String>();
         custServHeader.put("Accept",
             "text/javascript, text/html, application/xml, text/xml, */*");
@@ -1214,7 +1211,7 @@ public class CbssProductOrder extends Thread
         custServHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
         // custServHeader.put("Accept-Encoding","gzip, deflate");
-        custServHeader.put("Host", "hb.cbss.10010.com");
+        custServHeader.put("Host", "gz.cbss.10010.com");
         custServHeader.put("Connection", "Keep-Alive");
         custServHeader.put("Cache-Control", "no-cache");
         custServHeader.put("Cookie", cookie);
@@ -1322,20 +1319,20 @@ public class CbssProductOrder extends Thread
         }
         // LOGGER.info("userSpString: "+ userSpString);
         String queryProductUrl =
-            "https://hb.cbss.10010.com/custserv?service=direct/1/personalserv.platformtrade.SpTrade/querySpProducts";
+            "https://gz.cbss.10010.com/custserv?service=direct/1/personalserv.platformtrade.SpTrade/querySpProducts";
         Map<String, String> queryProductHeader = new HashMap<String, String>();
         queryProductHeader.put("Accept",
             "text/javascript, text/html, application/xml, text/xml, */*");
         queryProductHeader.put("Accept-Language", "zh-CN");
         queryProductHeader.put("x-prototype-version", "1.5.1");
-        queryProductHeader.put("Referer", "https://hb.cbss.10010.com/custserv");
+        queryProductHeader.put("Referer", "https://gz.cbss.10010.com/custserv");
         queryProductHeader.put("x-requested-with", "XMLHttpRequest");
         queryProductHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         queryProductHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
         // queryProductHeader.put("Accept-Encoding","gzip, deflate");
-        queryProductHeader.put("Host", "hb.cbss.10010.com");
+        queryProductHeader.put("Host", "gz.cbss.10010.com");
         queryProductHeader.put("Connection", "Keep-Alive");
         queryProductHeader.put("Cache-Control", "no-cache");
         queryProductHeader.put("Cookie", cookie);
@@ -1379,20 +1376,20 @@ public class CbssProductOrder extends Thread
             return new OrderResult("1", "未查到相应的产品");
         }
         String submitUrl =
-            "https://hb.cbss.10010.com/custserv?service=swallow/personalserv.platformtrade.SpTrade/submitMobTrade/1";
+            "https://gz.cbss.10010.com/custserv?service=swallow/personalserv.platformtrade.SpTrade/submitMobTrade/1";
         Map<String, String> submitHeader = new HashMap<String, String>();
         submitHeader.put("Accept",
             "text/javascript, text/html, application/xml, text/xml, */*");
         submitHeader.put("Accept-Language", "zh-CN");
         submitHeader.put("x-prototype-version", "1.5.1");
-        submitHeader.put("Referer", "https://hb.cbss.10010.com/custserv");
+        submitHeader.put("Referer", "https://gz.cbss.10010.com/custserv");
         submitHeader.put("x-requested-with", "XMLHttpRequest");
         submitHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         submitHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
         // submitHeader.put("Accept-Encoding","gzip, deflate");
-        submitHeader.put("Host", "hb.cbss.10010.com");
+        submitHeader.put("Host", "gz.cbss.10010.com");
         submitHeader.put("Connection", "Keep-Alive");
         submitHeader.put("Cache-Control", "no-cache");
         submitHeader.put("Cookie", cookie);
@@ -1486,10 +1483,10 @@ public class CbssProductOrder extends Thread
         }
         LOGGER.info("strisneedprint: " + strisneedprint);
         String continueTradeUrl =
-            "https://hb.cbss.10010.com/custserv?service=swallow/"
+            "https://gz.cbss.10010.com/custserv?service=swallow/"
                 + "personalserv.dealtradefee.DealTradeFee/continueTradeReg/1";
         referUrl =
-            "https://hb.cbss.10010.com/custserv?service=page/personalserv.dealtradefee.DealTradeFee"
+            "https://gz.cbss.10010.com/custserv?service=page/personalserv.dealtradefee.DealTradeFee"
                 + "&listener=init&TRADE_TYPE_CODE=tradeType&";
         // param=%7B%22SUBSCRIBE_ID%22%3A%20%227115051548867345%22%2C%20%22TRADE_ID
         // /%22%3A%20%227115051548867345%22%2C%20%22PROVINCE_ORDER_ID%22%3A%20%227115051548867345%22%7D
@@ -1525,7 +1522,7 @@ public class CbssProductOrder extends Thread
         continueHead.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
         // continueHead.put("Accept-Encoding","gzip, deflate");
-        continueHead.put("Host", "hb.cbss.10010.com");
+        continueHead.put("Host", "gz.cbss.10010.com");
         continueHead.put("Connection", "Keep-Alive");
         continueHead.put("Cache-Control", "no-cache");
         continueHead.put("Cookie", cookie);
@@ -1619,15 +1616,15 @@ public class CbssProductOrder extends Thread
         Map<String, String> homePageParamMap = account.getMetaInfo();
         String cookie = HttpService.cookieMapToString(cookies);
         String headUrl =
-            "https://hb.cbss.10010.com/essframe?service=page/Sidebar";
+            "https://gz.cbss.10010.com/essframe?service=page/Sidebar";
         Map<String, String> headUrlHeader = new HashMap<String, String>();
         headUrlHeader.put("Accept", "text/html, application/xhtml+xml, */*");
-        headUrlHeader.put("Referer", "https://hb.cbss.10010.com/essframe");
+        headUrlHeader.put("Referer", "https://gz.cbss.10010.com/essframe");
         headUrlHeader.put("Accept-Language", "zh-CN");
         headUrlHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         headUrlHeader.put("Content-Type", "application/x-www-form-urlencoded");
-        headUrlHeader.put("Host", "hb.cbss.10010.com");
+        headUrlHeader.put("Host", "gz.cbss.10010.com");
         headUrlHeader.put("Connection", "Keep-Alive");
         headUrlHeader.put("Cache-Control", "no-cache");
         headUrlHeader.put("Cookie", cookie);
@@ -1652,16 +1649,16 @@ public class CbssProductOrder extends Thread
                 + "&departId=" + homePageParamMap.get("deptId")
                 + "&subSysCode=" + homePageParamMap.get("subSysCode")
                 + "&eparchyCode=" + homePageParamMap.get("epachyId");
-        custUrl = "https://hb.cbss.10010.com/" + custUrl;
+        custUrl = "https://gz.cbss.10010.com/" + custUrl;
         Map<String, String> custHeader = new HashMap<String, String>();
         custHeader.put("Accept", "text/html, application/xhtml+xml, */*");
         custHeader.put("Referer",
-            "https://hb.cbss.10010.com/essframe?service=page/Sidebar");
+            "https://gz.cbss.10010.com/essframe?service=page/Sidebar");
         custHeader.put("Accept-Language", "zh-CN");
         custHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         custHeader.put("Content-Type", "application/x-www-form-urlencoded");
-        custHeader.put("Host", "hb.cbss.10010.com");
+        custHeader.put("Host", "gz.cbss.10010.com");
         custHeader.put("Connection", "Keep-Alive");
         custHeader.put("Cache-Control", "no-cache");
         custHeader.put("Cookie", cookie);
@@ -1673,9 +1670,9 @@ public class CbssProductOrder extends Thread
         
         // 首页用户认证
         String authenticateUrl =
-            "https://hb.cbss.10010.com/custserv?service=swallow/pub.chkcust.MainChkCust/authenticate/1";
+            "https://gz.cbss.10010.com/custserv?service=swallow/pub.chkcust.MainChkCust/authenticate/1";
         String referUrl =
-            "https://hb.cbss.10010.com/custserv?service=page/pub.chkcust.MainChkCust&listener=&staffId="
+            "https://gz.cbss.10010.com/custserv?service=page/pub.chkcust.MainChkCust&listener=&staffId="
                 + homePageParamMap.get("staffId")
                 + "&departId="
                 + homePageParamMap.get("deptId")
@@ -1692,7 +1689,7 @@ public class CbssProductOrder extends Thread
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         authenticateHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
-        authenticateHeader.put("Host", "hb.cbss.10010.com");
+        authenticateHeader.put("Host", "gz.cbss.10010.com");
         authenticateHeader.put("Connection", "Keep-Alive");
         authenticateHeader.put("Cache-Control", "no-cache");
         authenticateHeader.put("Cookie", cookie);
@@ -1735,7 +1732,7 @@ public class CbssProductOrder extends Thread
         }
         // 请求构造5
         String userListUrl =
-            "https://hb.cbss.10010.com/custserv?service=swallow/pub.chkcust.MainChkCust/queryUserList/1";
+            "https://gz.cbss.10010.com/custserv?service=swallow/pub.chkcust.MainChkCust/queryUserList/1";
         Map<String, String> userListHeader = new HashMap<String, String>();
         userListHeader.put("Accept",
             "text/javascript, text/html, application/xml, text/xml, */*");
@@ -1747,7 +1744,7 @@ public class CbssProductOrder extends Thread
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         userListHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
-        userListHeader.put("Host", "hb.cbss.10010.com");
+        userListHeader.put("Host", "gz.cbss.10010.com");
         userListHeader.put("Connection", "Keep-Alive");
         userListHeader.put("Cache-Control", "no-cache");
         userListHeader.put("Cookie", cookie);
@@ -1764,7 +1761,7 @@ public class CbssProductOrder extends Thread
             RegexUtils.regexMathes(".*prepayTag=\"(.+?)\".*", userListHtml);
         // 请求构造6
         String tradeInfoUrl =
-            "https://hb.cbss.10010.com/custserv?service="
+            "https://gz.cbss.10010.com/custserv?service="
                 + "swallow/popupdialog.queryPreOrder.QueryPreOrder/queryTradeInfonum/1";
         Map<String, String> tradeInfoHeader = new HashMap<String, String>();
         tradeInfoHeader.put("Accept",
@@ -1777,7 +1774,7 @@ public class CbssProductOrder extends Thread
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         tradeInfoHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
-        tradeInfoHeader.put("Host", "hb.cbss.10010.com");
+        tradeInfoHeader.put("Host", "gz.cbss.10010.com");
         tradeInfoHeader.put("Connection", "Keep-Alive");
         tradeInfoHeader.put("Cache-Control", "no-cache");
         tradeInfoHeader.put("Cookie", cookie);
@@ -1801,7 +1798,7 @@ public class CbssProductOrder extends Thread
          */
         // 请求构造7
         String personalServUrl =
-            "https://hb.cbss.10010.com/custserv?service=page/personalserv.changeelement.ChangeElement"
+            "https://gz.cbss.10010.com/custserv?service=page/personalserv.changeelement.ChangeElement"
                 + "&listener=initMobTrade&RIGHT_CODE=csChangeServiceTrade&LOGIN_RANDOM_CODE="
                 + loginRandomCode
                 + "&LOGIN_CHECK_CODE="
@@ -1820,13 +1817,13 @@ public class CbssProductOrder extends Thread
         personalServHeader.put("Accept",
             "text/html, application/xhtml+xml, */*");
         personalServHeader.put("Referer",
-            "https://hb.cbss.10010.com/essframe?service=page/Sidebar");
+            "https://gz.cbss.10010.com/essframe?service=page/Sidebar");
         personalServHeader.put("Accept-Language", "zh-CN");
         personalServHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         personalServHeader.put("Content-Type",
             "application/x-www-form-urlencoded");
-        personalServHeader.put("Host", "hb.cbss.10010.com");
+        personalServHeader.put("Host", "gz.cbss.10010.com");
         personalServHeader.put("Connection", "Keep-Alive");
         personalServHeader.put("Cache-Control", "no-cache");
         personalServHeader.put("Cookie", cookie);
@@ -1838,7 +1835,7 @@ public class CbssProductOrder extends Thread
             RegexUtils.regexMathes("(?s).*name=\"_tradeBase\"\\s+value=\"(.+?)\"/>.*",
                 personalServHtml);
         String queryCustUrl =
-            "https://hb.cbss.10010.com/custserv?service=swallow/pub.chkcust.MainChkCust/queryCustAuth/1";
+            "https://gz.cbss.10010.com/custserv?service=swallow/pub.chkcust.MainChkCust/queryCustAuth/1";
         Map<String, String> queryCustHeader = new HashMap<String, String>();
         
         referUrl = personalServUrl;
@@ -1852,7 +1849,7 @@ public class CbssProductOrder extends Thread
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         queryCustHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
-        queryCustHeader.put("Host", "hb.cbss.10010.com");
+        queryCustHeader.put("Host", "gz.cbss.10010.com");
         queryCustHeader.put("Connection", "Keep-Alive");
         queryCustHeader.put("Cache-Control", "no-cache");
         queryCustHeader.put("Cookie", cookie);
@@ -1870,7 +1867,7 @@ public class CbssProductOrder extends Thread
                 "utf-8");
         
         // 请求构造9
-        String custServUrl = "https://hb.cbss.10010.com/custserv";
+        String custServUrl = "https://gz.cbss.10010.com/custserv";
         Map<String, String> custServHeader = new HashMap<String, String>();
         custServHeader.put("Accept",
             "text/javascript, text/html, application/xml, text/xml, */*");
@@ -1882,7 +1879,7 @@ public class CbssProductOrder extends Thread
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         custServHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
-        custServHeader.put("Host", "hb.cbss.10010.com");
+        custServHeader.put("Host", "gz.cbss.10010.com");
         custServHeader.put("Connection", "Keep-Alive");
         custServHeader.put("Cache-Control", "no-cache");
         custServHeader.put("Cookie", cookie);
@@ -1997,19 +1994,19 @@ public class CbssProductOrder extends Thread
         // productId=89002148&modifyTag=9&userId=7115050831704135&productMode=00&curProductId=89002148
         // &onlyUserInfos=0&productInvalid=0&tradeTypeCode=120
         String queryProductUrl =
-            "https://hb.cbss.10010.com/custserv?service=swallow/common.product.ProductHelper/getPackageByPId/1";
+            "https://gz.cbss.10010.com/custserv?service=swallow/common.product.ProductHelper/getPackageByPId/1";
         Map<String, String> queryProductHeader = new HashMap<String, String>();
         queryProductHeader.put("Accept",
             "text/javascript, text/html, application/xml, text/xml, */*");
         queryProductHeader.put("Accept-Language", "zh-CN");
         queryProductHeader.put("x-prototype-version", "1.5.1");
-        queryProductHeader.put("Referer", "https://hb.cbss.10010.com/custserv");
+        queryProductHeader.put("Referer", "https://gz.cbss.10010.com/custserv");
         queryProductHeader.put("x-requested-with", "XMLHttpRequest");
         queryProductHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         queryProductHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
-        queryProductHeader.put("Host", "hb.cbss.10010.com");
+        queryProductHeader.put("Host", "gz.cbss.10010.com");
         queryProductHeader.put("Connection", "Keep-Alive");
         queryProductHeader.put("Cache-Control", "no-cache");
         queryProductHeader.put("Cookie", cookie);
@@ -2047,20 +2044,20 @@ public class CbssProductOrder extends Thread
         
         // 请求构造12
         String submitUrl =
-            "https://hb.cbss.10010.com/custserv?service=swallow"
+            "https://gz.cbss.10010.com/custserv?service=swallow"
                 + "/personalserv.changeelement.ChangeElement/submitMobTrade/1";
         Map<String, String> submitHeader = new HashMap<String, String>();
         submitHeader.put("Accept",
             "text/javascript, text/html, application/xml, text/xml, */*");
         submitHeader.put("Accept-Language", "zh-CN");
         submitHeader.put("x-prototype-version", "1.5.1");
-        submitHeader.put("Referer", "https://hb.cbss.10010.com/custserv");
+        submitHeader.put("Referer", "https://gz.cbss.10010.com/custserv");
         submitHeader.put("x-requested-with", "XMLHttpRequest");
         submitHeader.put("User-Agent",
             "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
         submitHeader.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
-        submitHeader.put("Host", "hb.cbss.10010.com");
+        submitHeader.put("Host", "gz.cbss.10010.com");
         submitHeader.put("Connection", "Keep-Alive");
         submitHeader.put("Cache-Control", "no-cache");
         submitHeader.put("Cookie", cookie);
@@ -2159,10 +2156,10 @@ public class CbssProductOrder extends Thread
         }
         LOGGER.info("strisneedprint: " + strisneedprint);
         String continueTradeUrl =
-            "https://hb.cbss.10010.com/custserv?service=swallow"
+            "https://gz.cbss.10010.com/custserv?service=swallow"
                 + "/personalserv.dealtradefee.DealTradeFee/continueTradeReg/1";
         referUrl =
-            "https://hb.cbss.10010.com/custserv?service=page/personalserv.dealtradefee.DealTradeFee"
+            "https://gz.cbss.10010.com/custserv?service=page/personalserv.dealtradefee.DealTradeFee"
                 + "&listener=init&TRADE_TYPE_CODE=tradeType&";
         String param =
             "param={\"SUBSCRIBE_ID\": \"" + subscribeId
@@ -2196,7 +2193,7 @@ public class CbssProductOrder extends Thread
         continueHead.put("Content-Type",
             "application/x-www-form-urlencoded; charset=UTF-8");
         // continueHead.put("Accept-Encoding","gzip, deflate");
-        continueHead.put("Host", "hb.cbss.10010.com");
+        continueHead.put("Host", "gz.cbss.10010.com");
         continueHead.put("Connection", "Keep-Alive");
         continueHead.put("Cache-Control", "no-cache");
         continueHead.put("Cookie", cookie);
