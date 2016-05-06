@@ -19,9 +19,9 @@ function date2str(x, y) {
       s: x.getSeconds()
    };
    return y.replace(/(y+|M+|d+|h+|m+|s+)/g, function(v) {
-      return ((v.length > 1 ? "0" : "") + eval('z.' + v.slice(-1))).slice(-(v.length > 2 ? v.length : 2))
+      return ((v.length > 1 ? "0" : "") + eval('z.' + v.slice(-1))).slice(-(v.length > 2 ? v.length : 2));
    });
-}
+};
 
 /**
  * 3.1	综合用户信息查询
@@ -103,42 +103,42 @@ exports.getUserInfo = function(options, done) {
 			//** 客户号码
 			result.UserNumber = options.UserNumber || '';
 			//** 提取xml内容
-			var SvcCont = ''.match.call(body,/<SvcCont>(.*)<\/SvcCont>/);
-			// console.log(SvcCont);
-			if(!SvcCont) return done({errmsg: 'xml中SvcCont节点不存在'});
-			var UserRsp = ''.match.call(SvcCont[1],/<UserRsp>(.*)<\/UserRsp>/) || [];
+			var SvcCont = ''.match.call(body,/<SvcCont>(.*)<\/SvcCont>/) || ['',''];
+			console.log(SvcCont[1]);
+			if(SvcCont == '') return done({errmsg: 'xml中SvcCont节点不存在'});
+			var UserRsp = ''.match.call(SvcCont[1],/<UserRsp>(.*)<\/UserRsp>/) || ['',''];
 			//** 提取客户姓名
-			var CustName = ''.match.call(UserRsp[1],/<CustName>(.*)<\/CustName>/) || [];
+			var CustName = ''.match.call(UserRsp[1],/<CustName>(.*)<\/CustName>/) || ['',''];
 			result.CustName = CustName[1] || '';
 			//** 客户状态编码
-			var SubscrbStat = ''.match.call(UserRsp[1],/<SubscrbStat>(.*)<\/SubscrbStat>/) || [];
+			var SubscrbStat = ''.match.call(UserRsp[1],/<SubscrbStat>(.*)<\/SubscrbStat>/) || ['',''];
 			result.SubscrbStat = SubscrbStat[1] || '';
 			//** 计费类型
-			var BillingType = ''.match.call(UserRsp[1],/<BillingType>(.*)<\/BillingType>/) || [];
+			var BillingType = ''.match.call(UserRsp[1],/<BillingType>(.*)<\/BillingType>/) || ['',''];
 			result.BillingType = BillingType[1] || '';
 			//** 品牌标识
-			var Brand = ''.match.call(UserRsp[1],/<Brand>(.*)<\/Brand>/) || [];
+			var Brand = ''.match.call(UserRsp[1],/<Brand>(.*)<\/Brand>/) || ['',''];
 			result.Brand = Brand[1] || '';
 			//** 城市代码
-			var CityCode = ''.match.call(UserRsp[1],/<CityCode>(.*)<\/CityCode>/) || [];
+			var CityCode = ''.match.call(UserRsp[1],/<CityCode>(.*)<\/CityCode>/) || ['',''];
 			result.CityCode = CityCode[1] || '';
 			//** 入网时间
-			var OpenDate = ''.match.call(UserRsp[1],/<OpenDate>(.*)<\/OpenDate>/) || [];
+			var OpenDate = ''.match.call(UserRsp[1],/<OpenDate>(.*)<\/OpenDate>/) || ['',''];
 			result.OpenDate = OpenDate[1] || '';
 			//** 通话级别
-			var LandLvl = ''.match.call(UserRsp[1],/<LandLvl>(.*)<\/LandLvl>/) || [];
+			var LandLvl = ''.match.call(UserRsp[1],/<LandLvl>(.*)<\/LandLvl>/) || ['',''];
 			result.LandLvl = LandLvl[1] || '';
 			//** SIM卡号
-			var SimCard = ''.match.call(UserRsp[1],/<SimCard>(.*)<\/SimCard>/) || [];
+			var SimCard = ''.match.call(UserRsp[1],/<SimCard>(.*)<\/SimCard>/) || ['',''];
 			result.SimCard = SimCard[1] || '';
 			//** 可用积分
-			var Useintegral = ''.match.call(UserRsp[1],/<Useintegral>(.*)<\/Useintegral>/) || [];
+			var Useintegral = ''.match.call(UserRsp[1],/<Useintegral>(.*)<\/Useintegral>/) || ['',''];
 			result.Useintegral = Useintegral[1] || '';
 			//** 可用余额
-			var Amount = ''.match.call(UserRsp[1],/<Amount>(.*)<\/Amount>/) || [];
+			var Amount = ''.match.call(UserRsp[1],/<Amount>(.*)<\/Amount>/) || ['',''];
 			result.Amount = Amount[1] || '';
 			//** VIP级别
-			var VIPLev = ''.match.call(UserRsp[1],/<VIPLev>(.*)<\/VIPLev>/) || [];
+			var VIPLev = ''.match.call(UserRsp[1],/<VIPLev>(.*)<\/VIPLev>/) || ['',''];
 			result.VIPLev = VIPLev[1] || '';
 			
 			done(err, result);
@@ -218,18 +218,18 @@ exports.getOrders = function(options,done){
 			//** 客户号码
 			result.UserNumber = options.UserNumber || '';
 			//** 提取xml内容
-			var SvcCont = ''.match.call(body,/<SvcCont>(.*)<\/SvcCont>/);
-			console.log(SvcCont);
-			if(!SvcCont) return done({errmsg: 'xml中SvcCont节点不存在'});
-			var BusinessRecordRsp = ''.match.call(SvcCont[1],/<BusinessRecordRsp>(.*)<\/BusinessRecordRsp>/) || [];
+			var SvcCont = ''.match.call(body,/<SvcCont>(.*)<\/SvcCont>/) || ['',''];
+			console.log(SvcCont[1]);
+			if(SvcCont == '') return done({errmsg: 'xml中SvcCont节点不存在'});
+			var BusinessRecordRsp = ''.match.call(SvcCont[1],/<BusinessRecordRsp>(.*)<\/BusinessRecordRsp>/) || ['',''];
 			//** 提取返回编码
-			var ResultCode = ''.match.call(BusinessRecordRsp[1],/<ResultCode>(.*)<\/ResultCode>/) || [];
+			var ResultCode = ''.match.call(BusinessRecordRsp[1],/<ResultCode>(.*)<\/ResultCode>/) || ['',''];
 			result.ResultCode = ResultCode[1] || '';
 			//** 返回描述
-			var ResultDESC = ''.match.call(BusinessRecordRsp[1],/<ResultDESC>(.*)<\/ResultDESC>/) || [];
+			var ResultDESC = ''.match.call(BusinessRecordRsp[1],/<ResultDESC>(.*)<\/ResultDESC>/) || ['',''];
 			result.ResultDESC = ResultDESC[1] || '';
 			//** 业务记录集合
-			var BusinessRecordList = ''.match.call(BusinessRecordRsp[1],/<BusinessRecordList>(.*)<\/BusinessRecordList>/) || [];
+			var BusinessRecordList = ''.match.call(BusinessRecordRsp[1],/<BusinessRecordList>(.*)<\/BusinessRecordList>/) || ['',''];
 			result.BusinessRecordList = BusinessRecordList[1] || '';
 
 			done(err, result);
@@ -317,16 +317,16 @@ exports.addOrder = function(options, done) {
 			//** 客户号码
 			result.UserNumber = options.UserNumber || '';
 			//** 提取xml内容
-			var SvcCont = ''.match.call(body,/<SvcCont>(.*)<\/SvcCont>/);
-			console.log(SvcCont);
-			if(!SvcCont) return done({errmsg: 'xml中SvcCont节点不存在'});
-			var PackageChangeRsp = ''.match.call(SvcCont[1],/<PackageChangeRsp>(.*)<\/PackageChangeRsp>/) || [];
+			var SvcCont = ''.match.call(body,/<SvcCont>(.*)<\/SvcCont>/) || ['',''];
+			console.log(SvcCont[1]);
+			if(SvcCont == '') return done({errmsg: 'xml中SvcCont节点不存在'});
+			var PackageChangeRsp = ''.match.call(SvcCont[1],/<PackageChangeRsp>(.*)<\/PackageChangeRsp>/) || ['',''];
 			//** 提取返回编码
-			var RespCode = ''.match.call(PackageChangeRsp[1],/<RespCode>(.*)<\/RespCode>/) || [];
-			result.RespCode = RespCode[1] || '';
+			var ResultCode = ''.match.call(PackageChangeRsp[1],/<ResultCode>(.*)<\/ResultCode>/) || ['',''];
+			result.ResultCode = ResultCode[1] || '';
 			//** 返回描述
-			var RespDesc = ''.match.call(PackageChangeRsp[1],/<RespDesc>(.*)<\/RespDesc>/) || [];
-			result.RespDesc = RespDesc[1] || '';
+			var ResultDESC = ''.match.call(PackageChangeRsp[1],/<ResultDESC>(.*)<\/ResultDESC>/) || ['',''];
+			result.ResultDESC = ResultDESC[1] || '';
 			done(err, result);
 		}
 	);
@@ -412,16 +412,16 @@ exports.removeOrder = function(options, done) {
 			//** 客户号码
 			result.UserNumber = options.UserNumber || '';
 			//** 提取xml内容
-			var SvcCont = ''.match.call(body,/<SvcCont>(.*)<\/SvcCont>/);
-			console.log(SvcCont);
-			if(!SvcCont) return done({errmsg: 'xml中SvcCont节点不存在'});
-			var PackageChangeRsp = ''.match.call(SvcCont[1],/<PackageChangeRsp>(.*)<\/PackageChangeRsp>/) || [];
+			var SvcCont = ''.match.call(body,/<SvcCont>(.*)<\/SvcCont>/) || ['',''];
+			console.log(SvcCont[1]);
+			if(SvcCont == '') return done({errmsg: 'xml中SvcCont节点不存在'});
+			var PackageChangeRsp = ''.match.call(SvcCont[1],/<PackageChangeRsp>(.*)<\/PackageChangeRsp>/) || ['',''];
 			//** 提取返回编码
-			var RespCode = ''.match.call(PackageChangeRsp[1],/<RespCode>(.*)<\/RespCode>/) || [];
-			result.RespCode = RespCode[1] || '';
+			var ResultCode = ''.match.call(PackageChangeRsp[1],/<ResultCode>(.*)<\/ResultCode>/) || ['',''];
+			result.ResultCode = ResultCode[1] || '';
 			//** 返回描述
-			var RespDesc = ''.match.call(PackageChangeRsp[1],/<RespDesc>(.*)<\/RespDesc>/) || [];
-			result.RespDesc = RespDesc[1] || '';
+			var ResultDESC = ''.match.call(PackageChangeRsp[1],/<ResultDESC>(.*)<\/ResultDESC>/) || ['',''];
+			result.ResultDESC = ResultDESC[1] || '';
 			done(err, result);
 		}
 	);
@@ -433,30 +433,31 @@ module.exports = exports;
 //** Unit Test
 if(process.argv[1] == __filename){
 	//** 测试 getUserInfo()
-	exports.getUserInfo({
-		requestId: 'ALUOP151123071351894382625439' + parseInt(Math.random()*10000),
-		AccProvince: '85',
-		AccCity: '850',
-		Code: '0851',
-		NetType: '02',
-		UserNumber: '18508505402',
-	},function(err,result){
-		if(err) return console.log(err);
-		console.log(JSON.stringify(result));
-	});
+	// exports.getUserInfo({
+	// 	requestId: 'ALUOP151123071351894382625439' + parseInt(Math.random()*10000),
+	// 	AccProvince: '85',
+	// 	AccCity: '850',
+	// 	Code: '0851',
+	// 	NetType: '02',
+	// 	UserNumber: '18508505402',
+	// },function(err,result){
+	// 	if(err) return console.log(err);
+	// 	console.log(JSON.stringify(result));
+	// });
 
 	//** 测试 getOrders()
-	exports.getOrders({
-		requestId: 'ALUOP151123071351894382625439' + parseInt(Math.random()*10000),
-		BusinessType: '00',
-		UserNumber: '18508505402',
-	},function(err,result){
-		if(err) return console.log(err);
-		console.log(JSON.stringify(result));
-	});
+	// exports.getOrders({
+	// 	requestId: 'ALUOP151123071351894382625439' + parseInt(Math.random()*10000),
+	// 	BusinessType: '00',
+	// 	UserNumber: '18508505402',
+	// },function(err,result){
+	// 	if(err) return console.log(err);
+	// 	console.log(JSON.stringify(result));
+	// });
 
 	//** 测试 addOrder()
 	exports.addOrder({
+		url: 'http://130.85.50.34:7772/XMLReceiver',
 		requestId: 'seq00001' + parseInt(Math.random()*10000),
 		ProductId: '99013000',
 		ProductType: '1',
@@ -469,16 +470,16 @@ if(process.argv[1] == __filename){
 	});
 
 	//** 测试 removeOrder()
-	exports.removeOrder({
-		requestId: 'seq00001' + parseInt(Math.random()*10000),
-		ProductId: '99013000',
-		ProductType: '1',
-		StaffID: 'SUPERUSR',
-		DepartID: 'Z0851',
-		UserNumber: '18508505402',
-	},function(err,result){
-		if(err) return console.log(err);
-		console.log(JSON.stringify(result));
-	});
+	// exports.removeOrder({
+	// 	requestId: 'seq00001' + parseInt(Math.random()*10000),
+	// 	ProductId: '99013000',
+	// 	ProductType: '1',
+	// 	StaffID: 'SUPERUSR',
+	// 	DepartID: 'Z0851',
+	// 	UserNumber: '18508505402',
+	// },function(err,result){
+	// 	if(err) return console.log(err);
+	// 	console.log(JSON.stringify(result));
+	// });
 
 }

@@ -48,7 +48,7 @@
 									<span class="help-block"></span>
 								</div>
 								<div class="form-group">
-									<label>营业厅：</label>
+									<label>渠道名称：</label>
 									<input type="hidden" name="department[id]">
 									<input type="hidden" name="department[city]">
 									<input type="hidden" name="department[grid]">
@@ -58,8 +58,8 @@
 									<span class="help-block"></span>
 								</div>
 								<div class="form-group">
-									<label>营业厅地址：</label>
-									<input type="text" name="department[address]" class="form-control input-sm" disabled>
+									<label>渠道编码：</label>
+									<input type="text" name="department[nickname]" class="form-control input-sm" disabled>
 									<span class="help-block"></span>
 								</div>
 		                        <div class="form-group">

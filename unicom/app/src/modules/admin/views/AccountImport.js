@@ -2,15 +2,15 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    departmentTpl = require('../templates/_entityDepartment.tpl');
+    accountTpl = require('../templates/_entityAccount.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
 //** 模型
-var Department = Backbone.Model.extend({
+var Account = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/departments',
+	urlRoot: config.api.host + '/protect/accounts',
 
 	validation: {
 		name: {
@@ -22,27 +22,29 @@ var Department = Backbone.Model.extend({
 
 //** 主视图
 exports = module.exports = FormView.extend({
-
-	el: '#departmentForm',
+	el: '#importForm',
 
 	modelFilled: false,
 
-	initialize: function(options) {
+	initialize: function(options){
 		this.router = options.router;
-		this.model = new Department({_id: options.id});
-		var page = $(departmentTpl);
-		var editTemplate = $('#editTemplate', page).html();
-		this.template = _.template(_.unescape(editTemplate || ''));
+		this.model = new Account();
+		var page = $(accountTpl);
+		var importTemplate = $('#importTemplate', page).html();
+		var reportTemplate = $('#importReportTemplate',page).html();
+		this.template = _.template(_.unescape(importTemplate || ''));
+		this.reportTemplate = _.template(_.unescape(reportTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
-		'keyup input[type=text]': 'inputText',
-		'keyup input[name=path]': 'getDepartments',
-		'click .department': 'selectDepartment',
+		'click .send-file': 'showFileExplorer',
+		'change input[name=file]': 'addAttachment',
+		'click .attachment': 'removeAttachment',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
+
 
 	load: function(){
 		if(this.model.isNew()){
@@ -73,38 +75,59 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	getDepartments: function(evt){
-		this.$('#departments').empty();
+	showFileExplorer: function() {
+		$('input[name=file]').click();
+		return false;
+	},
+
+	addAttachment: function(evt) {
 		var that = this;
-		var searchStr = this.$(evt.currentTarget).val() || '';
-		if(searchStr.length >1){
+		var formData = new FormData();
+		formData.append('files', evt.currentTarget.files[0]);
+		$.ajax({
+			url: config.api.host + '/public/attachments',
+			type: 'POST',
+			data: formData,
+			xhrFields: {
+				withCredentials: true
+			},
+			cache: false, //MUST be false
+			processData: false, //MUST be false
+			contentType: false, //MUST be false
+		}).done(function(data) {
+			if (data) {
+				that.$('.attachments').append('<span class="attachment"><input type="hidden" name="attachment" value="' + data.url + '"><img src="/images/excel.jpg" width="80px" height="80px">&nbsp;</span>');
+				that.$('input[name=file]').val('');
+			}
+		}).fail(function(err) {
+			console.log(err);
+		});
+		return false;
+	},
+
+	removeAttachment: function(evt) {
+		if (confirm('放弃上传它吗？')) {
+			var that = this;
+			var filename = $(evt.currentTarget).find('img').attr('src');
 			$.ajax({
-				url: config.api.host + '/protect/departments?type=search&searchStr=' + searchStr,
-				type: 'GET',
+				url: config.api.host + '/public/attachments',
+				type: 'DELETE',
+				data: {
+					filename: filename
+				},
 				xhrFields: {
 					withCredentials: true
 				},
-			}).done(function(data){
-				data = data || [];
-				var departmentsView = '<ul>';
-				data.forEach(function(item){
-					departmentsView += '<li class="department" id="'+ item._id +'">' + item.path + '</li>';
-				});
-				departmentsView += '</ul>';
-				that.$('#departments').html(departmentsView);
-			});				
+			}).done(function() {
+				//remove attatchment
+				$(evt.currentTarget).remove();
+			}).fail(function() {
+
+			});
 		}
 		return false;
 	},
 
-	selectDepartment: function(evt){
-		var id = this.$(evt.currentTarget).attr('id');
-		var path = this.$(evt.currentTarget).text();
-		this.$('input[name=parent]').val(id);
-		this.$('input[name=path]').val(path);
-		this.$('#departments').empty();
-		return false;
-	},
 
 	submit: function() {
 		var that = this;
@@ -134,12 +157,12 @@ exports = module.exports = FormView.extend({
 		});
 		return false;
 	},
-	
+
 	cancel: function(){
-		this.router.navigate('department/index',{trigger: true, replace: true});
+		this.router.navigate('account/index',{trigger: true, replace: true});
 		return false;
 	},
-	
+
 	//fetch event: done
 	done: function(response){
 		var that = this;
@@ -150,13 +173,15 @@ exports = module.exports = FormView.extend({
 
 		}else{
 			//second fetch: submit
-			this.router.navigate('department/index',{trigger: true, replace: true});
+			// this.router.navigate('account/index',{trigger: true, replace: true});
+			//reset form
+			// that.$('input[name=file]').val('');
+			// that.$('.attachments').empty();
+			that.$el.html(this.reportTemplate({}));
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		if(this.model.isNew()) this.$('.panel-title').text('新增渠道');
-		return this;
 	},
 });

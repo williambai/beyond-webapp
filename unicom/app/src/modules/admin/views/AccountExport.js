@@ -2,22 +2,15 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    departmentTpl = require('../templates/_entityDepartment.tpl');
+    accountTpl = require('../templates/_entityAccount.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
 //** 模型
-var Department = Backbone.Model.extend({
+var Account = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/departments',
-
-	validation: {
-		name: {
-			required : true,
-			msg: '请输入渠道名称'
-		},
-	},
+	urlRoot: config.api.host + '/protect/accounts',
 });
 
 //** 主视图
@@ -30,16 +23,13 @@ exports = module.exports = FormView.extend({
 	initialize: function(options) {
 		this.router = options.router;
 		this.model = new (Backbone.Model.extend({}));
-		var page = $(departmentTpl);
+		var page = $(accountTpl);
 		var exportTemplate = $('#exportTemplate', page).html();
 		this.template = _.template(_.unescape(exportTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
-		'keyup input[type=text]': 'inputText',
-		'keyup input[name="path"]': 'getDepartments',
-		'click .department': 'selectDepartment',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -73,38 +63,6 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
-	getDepartments: function(evt) {
-		this.$('#departments').empty();
-		var that = this;
-		var searchStr = this.$(evt.currentTarget).val() || '';
-		if (searchStr.length > 1) {
-			$.ajax({
-				url: config.api.host + '/protect/departments?type=search&searchStr=' + searchStr,
-				type: 'GET',
-				xhrFields: {
-					withCredentials: true
-				},
-			}).done(function(data) {
-				data = data || [];
-				var departmentsView = '<ul>';
-				data.forEach(function(item) {
-					departmentsView += '<li class="department" id="' + item._id + '">' + item.path + '</li>';
-				});
-				departmentsView += '</ul>';
-				that.$('#departments').html(departmentsView);
-			});
-		}
-		return false;
-	},
-
-	selectDepartment: function(evt) {
-		var id = this.$(evt.currentTarget).attr('id');
-		var path = this.$(evt.currentTarget).text();
-		this.$('input[name="path"]').val(path);
-		this.$('#departments').empty();
-		return false;
-	},
-
 	submit: function() {
 		var that = this;
 		//clear errors
@@ -125,12 +83,12 @@ exports = module.exports = FormView.extend({
 
 		var query = this.$('form').serialize();
 		//download file
-		window.location.href = config.api.host + '/protect/departments?' + query;
+		window.location.href = config.api.host + '/protect/accounts?' + query;
 		return false;
 	},
 
 	cancel: function() {
-		this.router.navigate('department/index', {
+		this.router.navigate('account/index', {
 			trigger: true,
 			replace: true
 		});
@@ -147,7 +105,7 @@ exports = module.exports = FormView.extend({
 
 		} else {
 			//second fetch: submit
-			this.router.navigate('department/index', {
+			this.router.navigate('account/index', {
 				trigger: true,
 				replace: true
 			});

@@ -15,6 +15,9 @@ var IndexView = require('./views/Index');
 
 var AccountIndexView = require('./views/AccountIndex');
 var AccountEditView = require('./views/AccountEdit');
+var AccountImportView = require('./views/AccountImport');
+var AccountExportView = require('./views/AccountExport');
+
 var ProductCategoryIndexView = require('./views/ProductCategoryIndex');
 var ProductCategoryEditView = require('./views/ProductCategoryEdit');
 var ProductDirectIndexView = require('./views/ProductDirectIndex');
@@ -116,6 +119,8 @@ exports = module.exports = Backbone.Router.extend({
 		'account/index': 'accountIndex',
 		'account/add': 'accountEdit',
 		'account/edit/:id': 'accountEdit',
+		'account/import': 'accountImport',
+		'account/export': 'accountExport',
 
 		'bonus/index': 'bonusIndex',
 		'bonus/add': 'bonusEdit',
@@ -394,7 +399,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','账号管理');
+		this.appEvents.trigger('set:brand','用户管理');
 		var accountIndexView = new AccountIndexView({
 			router: this,
 			el: '#content',
@@ -408,7 +413,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','修改账号');
+		this.appEvents.trigger('set:brand','修改用户');
 		var accountEditView = new AccountEditView({
 			router: this,
 			el: '#content',
@@ -416,6 +421,34 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(accountEditView);
 		accountEditView.trigger('load');
+	},	
+
+	accountImport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','用户导入');
+		var accountImportView = new AccountImportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(accountImportView);
+		accountImportView.trigger('load');
+	},	
+
+	accountExport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','导出用户');
+		var accountExportView = new AccountExportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(accountExportView);
+		accountExportView.trigger('load');
 	},	
 
 	bonusIndex: function(){
@@ -1211,7 +1244,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','组织管理');
+		this.appEvents.trigger('set:brand','渠道管理');
 		var departmentIndexView = new DepartmentIndexView({
 			router: this,
 			el: '#content',
@@ -1225,7 +1258,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','修改组织');
+		this.appEvents.trigger('set:brand','修改渠道');
 		var departmentEditView = new DepartmentEditView({
 			router: this,
 			el: '#content',
@@ -1240,7 +1273,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','组织导入');
+		this.appEvents.trigger('set:brand','渠道导入');
 		var departmentImportView = new DepartmentImportView({
 			router: this,
 			el: '#content',
@@ -1254,7 +1287,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		this.appEvents.trigger('set:brand','组织导出');
+		this.appEvents.trigger('set:brand','渠道导出');
 		var departmentExportView = new DepartmentExportView({
 			router: this,
 			el: '#content',

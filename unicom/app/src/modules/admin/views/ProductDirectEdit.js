@@ -213,7 +213,7 @@ exports = module.exports = FormView.extend({
 		var endtime = this.model.get('endtime');
 		this.$('input[name=endtime]').val(endtime);
 		var status = this.model.get('status');
-		this.$('input[name=status][value='+ status +']').attr('checked',true);
+		if(status) this.$('input[name=status][value='+ status +']').attr('checked',true);
 		if(this.model.isNew()) this.$('.panel-title').text('新增产品');
 		return this;
 	},

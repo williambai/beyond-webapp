@@ -13,30 +13,69 @@ exports = module.exports = function(app, models) {
 	var Account = models.Account;
 
 	var add = function(req, res) {
-		var account = req.body;
-		if(account.password){
-			account.password = crypto.createHash('sha256').update(account.password).digest('hex');
-		}
-		// app
-		var apps = account.apps;
-		if (!_.isArray(apps)) apps = [];
-		apps = _.without(apps, '');
-		// role
-		var roles = account.role;
-		if (!_.isArray(roles)) roles = [];
-		roles = _.without(roles, '');
-		//set creator
-		account.creator = {
-			id: req.session.accountId,
-			username: req.session.username,
-			avatar: req.session.avatar,
-		};
+ 		var type = req.body.type || '';
+ 		switch (type) {
+ 			case 'import':
+	 			var attachments;
+	 			if (typeof req.body.attachment == 'string') {
+	 				attachments = [];
+	 				attachments.push(req.body.attachment);
+	 			} else {
+	 				attachments = req.body.attachment;
+	 			}
+	 			attachments = attachments || [];
+	 			logger.debug('attachments:' + attachments);
+	 			var docs = [];
+	 			async.each(attachments, function(attachment, cb) {
+	 				var file = path.join(__dirname, '../public', attachment);
+	 				if (!fs.existsSync(file)) {
+	 					return cb({
+	 						code: 40440,
+	 						msg: '文件不存在'
+	 					});
+	 				}
+	 				logger.debug('file: ' + file);
+	 				//** 导入csv
+	 				var data = fs.readFileSync(file,{encoding: 'utf8'});
+	 				models.Account.importCSV(data,function(err){
+	 					if(err) return cb({
+	 								code: 500110,
+	 								errmsg: '导入数据格式不规范，请检查数据。'
+	 							});
+	 					cb(null);
+	 				});
+	 			}, function(err, result) {
+	 				if (err) return res.send(err);
+	 				res.send({});
+	 			}); 
+ 				break;
+ 			default:
+				var account = req.body;
+				if(account.password){
+					account.password = crypto.createHash('sha256').update(account.password).digest('hex');
+				}
+				// app
+				var apps = account.apps;
+				if (!_.isArray(apps)) apps = [];
+				apps = _.without(apps, '');
+				// role
+				var roles = account.role;
+				if (!_.isArray(roles)) roles = [];
+				roles = _.without(roles, '');
+				//set creator
+				account.creator = {
+					id: req.session.accountId,
+					username: req.session.username,
+					avatar: req.session.avatar,
+				};
 
-		models.Account.create(account, function(err) {
-			if (err) return res.send(err);
-			res.send({});
-		});
-	};
+				models.Account.create(account, function(err) {
+					if (err) return res.send(err);
+					res.send({});
+				});
+				break;
+			}
+		};
 	var remove = function(req, res) {
 		var id = req.params.id;
 		models.Account.findByIdAndRemove(id, function(err, doc) {
@@ -184,6 +223,15 @@ exports = module.exports = function(app, models) {
 						res.send(docs);
 					});
 				break;
+ 			case 'export': 
+				res.writeHead(200, {
+					'Content-Type': 'text/csv;charset=utf-8',
+					'Content-Disposition': 'attachment; filename=accounts.csv'
+				});
+				models.Account
+					.findAndStreamCsv({})
+					.pipe(res);
+ 				break;
 			default:
 				Account
 					.find({})

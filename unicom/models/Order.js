@@ -1,4 +1,8 @@
 var mongoose = require('mongoose');
+var mongooseToCsv = require('mongoose-to-csv');
+var CSV = require('comma-separated-values');
+var async = require('async');
+var utils = require('../libs/utils');
 //** SP配置文件
 var spConfig = require('../config/sp').SGIP12;
 var _ = require('underscore');
@@ -74,12 +78,61 @@ var schema = new mongoose.Schema({
 	},
 });
 
-schema.pre('save', function(next){
+schema.post('save', function(){
 	//** 如果是4G业务，则需要在CbssOrder中添加一条记录
-	next();
 });
 
 schema.set('collection', 'orders');
+
+//** 导出csv
+schema.plugin(mongooseToCsv, {
+	headers: '客户号码 产品名称 产品类别 产品编码 产品价格 推荐人姓名 推荐人号码 推荐人佣金 渠道名称 所在城市 所在地区 所在网格 发生时间 订单状态',
+	constraints: {
+		'订单状态': 'status',
+	},
+	virtuals: {
+		'客户号码': function(doc){
+			return doc.customer.mobile;
+		},
+		'产品名称': function(doc){
+			return doc.goods.name;
+		},
+		'产品编码': function(doc){
+			return doc.goods.barcode;
+		},
+		'产品类别': function(doc){
+			return doc.goods.category;
+		},
+		'产品价格': function(doc){
+			return doc.goods.price;
+		},
+		'推荐人姓名': function(doc){
+			return doc.createBy.username;
+		},
+		'推荐人号码': function(doc){
+			return doc.createBy.mobile;
+		},
+		'推荐人佣金': function(doc){
+			return doc.goods.bonus;
+		},
+		'渠道名称': function(doc){
+			return doc.department.name;
+		},
+		'所在城市': function(doc){
+			return doc.department.city;
+		},
+		'所在地区': function(doc){
+			return doc.department.district;
+		},
+		'所在网格': function(doc){
+			return doc.department.grid;
+		},
+		'发生时间': function(doc){
+			var date = doc.lastupdatetime;
+			return utils.dateFormat(date, 'yyyyMMddhhmmss');
+		}
+	}
+});
 
 module.exports = exports = function(connection){
 	connection = connection || mongoose;
@@ -236,10 +289,32 @@ module.exports = exports = function(connection){
 							UserNumber: customer.mobile, //** 客户手机号码
 						},function(err, result){
 							if(err) console.log(err);
-							//** TODO 将状态改为“成功”？
-							
-							//** 发送业务“正在处理”短信
-							_process(); //** 处理下一个
+							//** 将状态改为“成功”或“失败”
+							result = result || {};
+							var ResultCode = result.ResultCode || '8888';
+							var ResultDESC = result.ResultDESC || '未知错误';
+							var status = /^8/.test(ResultCode) ? '失败' : '成功';
+							Order.findByIdAndUpdate(
+								order._id,
+								{
+									$set: {
+										status: status
+									},
+									$push: {
+										'histories':  {
+											respCode: ResultCode,
+											respDesc: ResultDESC,
+											respTime: new Date(),
+										}
+									}
+								}, {
+									'upsert': false,
+									'new': true,
+								}, function(err){
+									if(err) return done(err);
+									//** TODO 发送业务“处理成功”或“处理失败短信”短信
+									_process(); //** 处理下一个
+								});
 						});
 					});
 			};
@@ -269,9 +344,6 @@ module.exports = exports = function(connection){
 						if (err) return done(err);
 						if (!order) return done(null);
 						//** check 2G/3G order
-						VMSS.soap(function() {
-
-						});
 						var status = success ? '失败' : '成功';
 
 						Order

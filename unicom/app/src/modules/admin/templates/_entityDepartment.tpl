@@ -7,7 +7,7 @@
 				<button class="btn btn-primary add">新增</button>
 			</div>
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">组织管理</h4>
+				<h4 class="panel-title text-center">渠道管理</h4>
 			</div>
 			<div class="panel-body">
 				<div id="search">
@@ -22,7 +22,7 @@
 			<div class="form-group">
 				<label>搜索：</label>
 				<input type="hidden" name="type" value="search">
-				<input type="text" name="searchStr" class="form-control" placeholder="组织名称">&nbsp;&nbsp;
+				<input type="text" name="searchStr" class="form-control" placeholder="渠道名称">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
 				<input type="submit" value="查询" class="btn btn-info btn-block">
@@ -41,17 +41,17 @@
 	<div id="editTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">修改组织</h4>
+				<h4 class="panel-title text-center">修改渠道</h4>
 			</div>
 			<div class="panel-body">
 				<form id="roleForm">
 					<div class="form-group">
-						<label>组织名称：</label>
+						<label>渠道名称：</label>
 						<input type="text" name="name" value="<%= model.name %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>组织编码：</label>
+						<label>渠道编码：</label>
 						<input type="text" name="nickname" value="<%= model.nickname %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
@@ -101,9 +101,9 @@
 						<span class="help-block"></span>
 					</div>
 <!-- 					<div class="form-group">
-						<label>归属(上级组织)：</label>
+						<label>归属(上级渠道)：</label>
 						<input type="hidden" name="parent" value="<%= model.parent %>">
-						<input type="text" name="path" value="<%= model.path %>" class="form-control" placeholder="请输入上一级组织名称">
+						<input type="text" name="path" value="<%= model.path %>" class="form-control" placeholder="请输入上一级渠道名称">
 						<div id="departments"></div>
 						<span class="help-block"></span>
 					</div>
@@ -125,7 +125,7 @@
 	<div id="importTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h4 class="panel-title text-center">导入组织</h4>
+				<h4 class="panel-title text-center">导入渠道</h4>
 			</div>
 			<div class="panel-body">
 				<p>请点击<i class="fa fa-plus-circle"></i>选择要上传的文件，点击已上传的文件，可以取消上传。</p>
@@ -246,14 +246,14 @@
 	<div id="exportTemplate">
 		<div class="panel panel-default" id="exportForm">
 			<div class="panel-heading">
-				<h3 class="panel-title text-center">导出组织</h3>
+				<h3 class="panel-title text-center">导出渠道</h3>
 			</div>
 			<div class="panel-body">
 				<form>
 					<input type="hidden" name="type" value="export">
 <!-- 					<div class="form-group">
-						<label>组织(路径)名称：</label>
-						<input type="text" name="path" class="form-control" placeholder="请输入组织名称，并从列表中选择；为空，则表示导出全部组织">
+						<label>渠道(路径)名称：</label>
+						<input type="text" name="path" class="form-control" placeholder="请输入渠道名称，并从列表中选择；为空，则表示导出全部渠道">
 						<div id="departments"></div>
 						<span class="help-block"></span>
 					</div>

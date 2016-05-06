@@ -17,7 +17,7 @@ var Department = Backbone.Model.extend({
 	validation: {
 		name: {
 			required : true,
-			msg: '请输入组织名称'
+			msg: '请输入渠道名称'
 		},
 	},
 });
@@ -92,8 +92,8 @@ exports = module.exports = Backbone.View.extend({
 		'click .add': 'addDepartment',
 		'click .edit': 'editDepartment',
 		'click .delete': 'removeDepartment',
-		'click .import': 'importCustomer',
-		'click .export': 'exportCustomer',
+		'click .import': 'importDepartment',
+		'click .export': 'exportDepartment',
 	},
 
 	load: function() {
@@ -140,12 +140,12 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 
-	importCustomer: function(){
+	importDepartment: function(){
 		this.router.navigate('department/import',{trigger: true});
 		return false;
 	},
 
-	exportCustomer: function(){
+	exportDepartment: function(){
 		this.router.navigate('department/export',{trigger: true});
 		return false;
 	},

@@ -1,14 +1,163 @@
 var util = require('util');
+var _ = require('underscore');
+var async = require('async');
 var path = require('path');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 
 exports = module.exports = function(app, models) {
- 	var _ = require('underscore');
- 	var async = require('async');
- 	var xlsx = require('xlsx');
- 	var path = require('path');
 
+ 	var add = function(req, res) {
+ 		var doc = new models.Order(req.body);
+ 		doc.save(function(err) {
+ 			if (err) return res.send(err);
+ 			res.send({});
+ 		});
+ 	};
+ 	var remove = function(req, res) {
+ 		var id = req.params.id;
+ 		models.Order.findByIdAndRemove(id, function(err, doc) {
+ 			if (err) return res.send(err);
+ 			res.send(doc);
+ 		});
+ 	};
+ 	var update = function(req, res) {
+ 		var id = req.params.id;
+ 		var set = req.body;
+ 		models.Order.findByIdAndUpdate(id, {
+ 				$set: set
+ 			}, {
+ 				'upsert': false,
+ 				'new': true,
+ 			},
+ 			function(err, doc) {
+ 				if (err) return res.send(err);
+ 				res.send(doc);
+ 			}
+ 		);
+ 	};
+ 	var getOne = function(req, res) {
+ 		var id = req.params.id;
+ 		models.Order
+ 			.findById(id)
+ 			.exec(function(err, doc) {
+ 				if (err) return res.send(err);
+ 				res.send(doc);
+ 			});
+ 	};
+
+ 	var getMore = function(req, res) {
+ 		var action = req.query.action || '';
+ 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
+ 		page = (!page || page < 0) ? 0 : page;
+ 		var per = 20;
+
+ 		switch (action) {
+ 			case 'search':
+ 				//** 查询起始时间
+ 				var from = new Date(req.query.from || 0);
+ 				//** 查询结束时间
+ 				var to = new Date(req.query.to || Date.now());
+ 				//** 搜索字符串
+ 				var searchStr = req.query.searchStr || '';
+ 				var searchRegex = new RegExp(searchStr, 'i');
+ 				var status = req.query.status;
+ 				var query = models.Order.find({
+ 					$or: [{
+ 						'customer.mobile': {
+ 							$regex: searchRegex
+ 						}
+ 					}, {
+ 						'createBy.mobile': {
+ 							$regex: searchRegex
+ 						}
+ 					}]
+ 				});
+ 				if (!_.isEmpty(status)) {
+ 					query.where({
+ 						status: status
+ 					});
+ 				}
+ 				query.sort({
+ 						_id: -1
+ 					})
+ 					.skip(per * page)
+ 					.limit(per)
+ 					.exec(function(err, docs) {
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 				break;
+
+ 			case 'export': 
+ 				//** 查询起始时间
+ 				var from = new Date(req.query.from || 0);
+ 				//** 查询结束时间
+ 				var to = new Date(req.query.to || Date.now());
+				res.writeHead(200, {
+					'Content-Type': 'text/csv;charset=utf-8',
+					'Content-Disposition': 'attachment; filename=orders.csv'
+				});
+				models.Order
+					.findAndStreamCsv({
+						'lastupdatetime': {
+							$gt: from,
+							$lte: to
+						}
+					})
+					.pipe(res);
+ 				break;
+ 			default:
+ 				models.Order
+ 					.find({})
+ 					.sort({
+ 						_id: -1
+ 					})
+ 					.skip(per * page)
+ 					.limit(per)
+ 					.exec(function(err, docs) {
+ 						if (err) return res.send(err);
+ 						res.send(docs);
+ 					});
+ 				break;
+ 		}
+ 	};
+ 	/**
+ 	 * router outline
+ 	 */
+ 	/**
+ 	 * add protect/orders
+ 	 * action:
+ 	 *     
+ 	 */
+ 	app.post('/protect/orders', app.grant, add);
+ 	/**
+ 	 * update protect/orders
+ 	 * action:
+ 	 *     
+ 	 */
+ 	app.put('/protect/orders/:id', app.grant, update);
+
+ 	/**
+ 	 * delete protect/orders
+ 	 * action:
+ 	 *     
+ 	 */
+ 	app.delete('/protect/orders/:id', app.grant, remove);
+ 	/**
+ 	 * get protect/orders
+ 	 */
+ 	app.get('/protect/orders/:id', app.grant, getOne);
+
+ 	/**
+ 	 * get protect/orders
+ 	 * action:
+ 	 */
+ 	app.get('/protect/orders',app.grant,  getMore);
+ };
+
+ /**
+ 
 	var _buildWorkSheet = function(workSheet, docs){
  		workSheet['!ref'] = 'A1:AA' + docs.length + 1;
  		//** build title
@@ -169,137 +318,4 @@ exports = module.exports = function(app, models) {
  			});
  	};
 
- 	var add = function(req, res) {
- 		var doc = new models.Order(req.body);
- 		doc.save(function(err) {
- 			if (err) return res.send(err);
- 			res.send({});
- 		});
- 	};
- 	var remove = function(req, res) {
- 		var id = req.params.id;
- 		models.Order.findByIdAndRemove(id, function(err, doc) {
- 			if (err) return res.send(err);
- 			res.send(doc);
- 		});
- 	};
- 	var update = function(req, res) {
- 		var id = req.params.id;
- 		var set = req.body;
- 		models.Order.findByIdAndUpdate(id, {
- 				$set: set
- 			}, {
- 				'upsert': false,
- 				'new': true,
- 			},
- 			function(err, doc) {
- 				if (err) return res.send(err);
- 				res.send(doc);
- 			}
- 		);
- 	};
- 	var getOne = function(req, res) {
- 		var id = req.params.id;
- 		models.Order
- 			.findById(id)
- 			.exec(function(err, doc) {
- 				if (err) return res.send(err);
- 				res.send(doc);
- 			});
- 	};
-
- 	var getMore = function(req, res) {
- 		var action = req.query.action || '';
- 		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
- 		page = (!page || page < 0) ? 0 : page;
- 		var per = 20;
-
- 		switch (action) {
- 			case 'search':
- 				//** 查询起始时间
- 				var from = new Date(req.query.from || 0);
- 				//** 查询结束时间
- 				var to = new Date(req.query.to || Date.now());
- 				//** 搜索字符串
- 				var searchStr = req.query.searchStr || '';
- 				var searchRegex = new RegExp(searchStr, 'i');
- 				var status = req.query.status;
- 				var query = models.Order.find({
- 					$or: [{
- 						'customer.mobile': {
- 							$regex: searchRegex
- 						}
- 					}, {
- 						'createBy.mobile': {
- 							$regex: searchRegex
- 						}
- 					}]
- 				});
- 				if (!_.isEmpty(status)) {
- 					query.where({
- 						status: status
- 					});
- 				}
- 				query.sort({
- 						_id: -1
- 					})
- 					.skip(per * page)
- 					.limit(per)
- 					.exec(function(err, docs) {
- 						if (err) return res.send(err);
- 						res.send(docs);
- 					});
- 				break;
-
- 			case 'export': 
- 				exportData(req,res);
- 				break;
-
- 			default:
- 				models.Order
- 					.find({})
- 					.sort({
- 						_id: -1
- 					})
- 					.skip(per * page)
- 					.limit(per)
- 					.exec(function(err, docs) {
- 						if (err) return res.send(err);
- 						res.send(docs);
- 					});
- 				break;
- 		}
- 	};
- 	/**
- 	 * router outline
- 	 */
- 	/**
- 	 * add protect/orders
- 	 * action:
- 	 *     
- 	 */
- 	app.post('/protect/orders', app.grant, add);
- 	/**
- 	 * update protect/orders
- 	 * action:
- 	 *     
- 	 */
- 	app.put('/protect/orders/:id', app.grant, update);
-
- 	/**
- 	 * delete protect/orders
- 	 * action:
- 	 *     
- 	 */
- 	app.delete('/protect/orders/:id', app.grant, remove);
- 	/**
- 	 * get protect/orders
- 	 */
- 	app.get('/protect/orders/:id', app.grant, getOne);
-
- 	/**
- 	 * get protect/orders
- 	 * action:
- 	 */
- 	app.get('/protect/orders',app.grant,  getMore);
- };
+  */

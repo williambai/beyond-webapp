@@ -172,8 +172,8 @@
  					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
-							<input type="radio" name="status" value="有效" checked>&nbsp;&nbsp;有效
-							<input type="radio" name="status" value="无效">&nbsp;&nbsp;无效
+							<input type="radio" name="status" value="有效">&nbsp;&nbsp;有效
+							<input type="radio" name="status" value="无效" checked>&nbsp;&nbsp;无效
 						</div>
 					</div>
 					<div class="form-group">

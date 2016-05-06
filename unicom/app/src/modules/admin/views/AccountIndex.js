@@ -104,6 +104,8 @@ exports = module.exports = Backbone.View.extend({
 		'click .add': 'addAccount',
 		'click .edit': 'editAccount',
 		'click .delete': 'removeAccount',
+		'click .import': 'importAccount',
+		'click .export': 'exportAccount',
 	},
 
 	load: function() {
@@ -146,6 +148,16 @@ exports = module.exports = Backbone.View.extend({
 			model.destroy({wait: true});
 			this.listView.trigger('refresh');
 		}
+		return false;
+	},
+
+	importAccount: function(){
+		this.router.navigate('account/import',{trigger: true});
+		return false;
+	},
+
+	exportAccount: function(){
+		this.router.navigate('account/export',{trigger: true});
 		return false;
 	},
 	

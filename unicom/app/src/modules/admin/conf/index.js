@@ -21,21 +21,6 @@ _.extend(config,{
 		"hash": "product/direct/index",
 		"features": ["protect_product_direct"],
 	}, {
-	// 	"id": 2,
-	// 	"name": "终端产品管理",
-	// 	"hash": "product/phone/index",
-	// 	"features": ["product_phone"],
-	// }, {
-	// 	"id": 2,
-	// 	"name": "号卡管理",
-	// 	"hash": "product/card/index",
-	// 	"features": ["product_card"],
-	// }, {
-		"id": 2,
-		"name": "客户管理",
-		"hash": "customer/index",
-		"features": ["protect_customer"],
-	}, {
 		"id": 2,
 		"name": "订单管理",
 		"hash": "order/index",
@@ -67,7 +52,7 @@ _.extend(config,{
 		"features": ["protect_goods"],
 	}, {
 		"id": 2,
-		"name": "营业厅管理",
+		"name": "渠道管理",
 		"hash": "department/index",
 		"features": ["protect_department"],
 	}, {
@@ -101,6 +86,21 @@ _.extend(config,{
 		"hash": "feedback/index",
 		"features": [],
 	}, {
+	// 	"id": 2,
+	// 	"name": "终端产品管理",
+	// 	"hash": "product/phone/index",
+	// 	"features": ["product_phone"],
+	// }, {
+	// 	"id": 2,
+	// 	"name": "号卡管理",
+	// 	"hash": "product/card/index",
+	// 	"features": ["product_card"],
+	// }, {
+	// 	"id": 2,
+	// 	"name": "客户管理",
+	// 	"hash": "customer/index",
+	// 	"features": ["protect_customer"],
+	// }, {
 		"id": 2,
 		"name": "我的资料",
 		"hash": "profile/me",
