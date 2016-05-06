@@ -1,16 +1,18 @@
+var _ = require('underscore');
 var util = require('util');
 var path = require('path');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 
  exports = module.exports = function(app, models) {
- 	var _ = require('underscore');
 
  	var add = function(req, res) {
  		var doc = req.body;
  		models.Goods
- 			.findById(
- 				doc.goods.id,
+ 			.findOne(
+ 				{
+ 					'barcode': doc.goods.barcode
+ 				},
  				function(err,goods){
  					if(err || !goods) return res.send(err || {code: 404112, errmsg: 'goods id 不存在。'});
  					//** 保存goods
@@ -33,12 +35,15 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  		var id = req.params.id;
  		var doc = req.body;
  		models.Goods
- 			.findById(
- 				doc.goods.id,
+ 			.findOne(
+ 				{
+ 					'barcode': doc.goods.barcode
+ 				},
  				function(err,goods){
  					if(err || !goods) return res.send(err || {code: 404112, errmsg: 'goods id 不存在。'});
  					//** 保存goods
  					doc.goods = goods;
+			 		doc = _.omit(doc,'_id');
  					models.ProductDirect.findByIdAndUpdate(id, {
  							$set: doc
  						}, {

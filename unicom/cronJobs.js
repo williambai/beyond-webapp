@@ -45,19 +45,7 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 // 	runOnInit: true,//** execute right now!
 // });
 
-// var updateCbssCookie = require('./commands/updateCbssCookie');
-// var refreshCbssCookieJob = new CronJob({
-// 	cronTime: '00 */5 * * * *',
-// 	onTick: function(){
-// 		updateCbssCookie(function() {
-// 			logger.info('call refresh CBSS Accounts Cookie job successfully.');
-// 		});
-// 	},
-// 	start: true,
-// 	runOnInit: true,//** execute right now!
-// });
-// 
-
+//** 2G/3G 订单处理
 var processOrderJob = new CronJob({
 	cronTime: '10 */2 * * * *',
 	onTick: function() {
@@ -73,7 +61,22 @@ var processOrderJob = new CronJob({
 logger.info('scheduleJobs is started.');
 
 //** process uncaughtException
-process.on('uncaughtException', function(){
-	logger.warn('uncaughtException and process exit.');
+process.on('uncaughtException', function(err){
+	logger.error('CronJob 异常退出，请及时处理！');
+	logger.error(err);
 	process.exit(1);
 });
+
+
+// var updateCbssCookie = require('./commands/updateCbssCookie');
+// var refreshCbssCookieJob = new CronJob({
+// 	cronTime: '00 */5 * * * *',
+// 	onTick: function(){
+// 		updateCbssCookie(function() {
+// 			logger.info('call refresh CBSS Accounts Cookie job successfully.');
+// 		});
+// 	},
+// 	start: true,
+// 	runOnInit: true,//** execute right now!
+// });
+// 

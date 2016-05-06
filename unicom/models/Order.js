@@ -278,21 +278,25 @@ module.exports = exports = function(connection){
 					}, function(err, order) {
 						if (err || !order) return done(err);
 						//** process 2G/3G order
-						var bssAccount = bssConfig[0]; //** 取第一个， TODO 按城市取
+						var bssAccount = bssConfig.accounts['test']; //** 测试账号
+						// var bssAccount = bssConfig.accounts['guiyang']; //** 按城市取
 
 						BSS.addOrder({
+							// url: bssConfig.url, //** 生产地址
+							url: bssConfig.test_url, //** 测试地址
 							requestId: String(order._id),//** 请求Id
 							ProductId: order.goods.barcode, //** 物料编码
-							ProductType: '2',//** 产品类型。1：优惠或资费; 2: 增值业务
+							ProductType: '1',//** 产品类型。1：优惠或资费; 2: 增值业务
 							StaffID: bssAccount.StaffID,//** 工号
 							DepartID: bssAccount.DepartID, //** 渠道代码
-							UserNumber: customer.mobile, //** 客户手机号码
+							UserNumber: order.customer.mobile, //** 客户手机号码
 						},function(err, result){
 							if(err) console.log(err);
 							//** 将状态改为“成功”或“失败”
 							result = result || {};
 							var ResultCode = result.ResultCode || '8888';
 							var ResultDESC = result.ResultDESC || '未知错误';
+							var tradeId = result.TradeId || '';
 							var status = /^8/.test(ResultCode) ? '失败' : '成功';
 							Order.findByIdAndUpdate(
 								order._id,
@@ -304,6 +308,7 @@ module.exports = exports = function(connection){
 										'histories':  {
 											respCode: ResultCode,
 											respDesc: ResultDESC,
+											tradeId: tradeId,
 											respTime: new Date(),
 										}
 									}

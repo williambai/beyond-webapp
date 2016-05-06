@@ -38,7 +38,7 @@
 		"filename": "logs/sms.log",
 		"maxLogSize": 20480,
 		"backups": 3,
-		"category": ["sgipService.js"]
+		"category": ["sgipService.js","libs/sms/send.js","libs/sms/receive.js"]
 	}, {
 		"type": "file",
 		"filename": "logs/wechat.log",
@@ -49,6 +49,8 @@
 	"levels": {
 		"access": "INFO",
 		"sgipService.js": "INFO",
+		"libs/sms/send.js": "DEBUG",
+		"libs/sms/receive.js": "DEBUG",
 		"routes/_platform.wechat.js": "DEBUG",
 		"routes/_platform.wechat.qrcode.js": "DEBUG",
 		"commands/updateWechatAccessToken.js": "DEBUG"

@@ -263,12 +263,12 @@ exports.addOrder = function(options, done) {
 	xmlmsg += '<TransIDC>201511230713519248570101408111</TransIDC>';
 	xmlmsg += '<CutOffDay>20151123</CutOffDay>';
 	xmlmsg += '<OSNDUNS>0002</OSNDUNS>';
-	xmlmsg += '<HSNDUNS>8500</HSNDUNS>';
+	xmlmsg += '<HSNDUNS>1100</HSNDUNS>';
 	xmlmsg += '<ConvID></ConvID>';
 	xmlmsg += '</SPReserve>';
 	xmlmsg += '<TestFlag>0</TestFlag>';
-	xmlmsg += '<MsgSender>9801</MsgSender>';
-	xmlmsg += '<MsgReceiver>9800</MsgReceiver>';
+	xmlmsg += '<MsgSender>1101</MsgSender>';
+	xmlmsg += '<MsgReceiver>1100</MsgReceiver>';
 	xmlmsg += '<SvcContVer>0100</SvcContVer>';
 	xmlmsg += '<SvcCont>';
 	xmlmsg += '<![CDATA[';
@@ -327,6 +327,9 @@ exports.addOrder = function(options, done) {
 			//** 返回描述
 			var ResultDESC = ''.match.call(PackageChangeRsp[1],/<ResultDESC>(.*)<\/ResultDESC>/) || ['',''];
 			result.ResultDESC = ResultDESC[1] || '';
+			//** 返回交易Id
+			var TradeId = ''.match.call(PackageChangeRsp[1],/<TradeId>(.*)<\/TradeId>/) || ['',''];
+			result.TradeId = TradeId[1] || '';
 			done(err, result);
 		}
 	);
@@ -359,12 +362,12 @@ exports.removeOrder = function(options, done) {
 	xmlmsg += '<TransIDC>201511230713519248570101408111</TransIDC>';
 	xmlmsg += '<CutOffDay>20151123</CutOffDay>';
 	xmlmsg += '<OSNDUNS>0002</OSNDUNS>';
-	xmlmsg += '<HSNDUNS>8500</HSNDUNS>';
+	xmlmsg += '<HSNDUNS>1100</HSNDUNS>';
 	xmlmsg += '<ConvID></ConvID>';
 	xmlmsg += '</SPReserve>';
 	xmlmsg += '<TestFlag>0</TestFlag>';
-	xmlmsg += '<MsgSender>9801</MsgSender>';
-	xmlmsg += '<MsgReceiver>9800</MsgReceiver>';
+	xmlmsg += '<MsgSender>1101</MsgSender>';
+	xmlmsg += '<MsgReceiver>1100</MsgReceiver>';
 	xmlmsg += '<SvcContVer>0100</SvcContVer>';
 	xmlmsg += '<SvcCont>';
 	xmlmsg += '<![CDATA[';
@@ -422,6 +425,9 @@ exports.removeOrder = function(options, done) {
 			//** 返回描述
 			var ResultDESC = ''.match.call(PackageChangeRsp[1],/<ResultDESC>(.*)<\/ResultDESC>/) || ['',''];
 			result.ResultDESC = ResultDESC[1] || '';
+			//** 返回交易Id
+			var TradeId = ''.match.call(PackageChangeRsp[1],/<TradeId>(.*)<\/TradeId>/) || ['',''];
+			result.TradeId = TradeId[1] || '';
 			done(err, result);
 		}
 	);
@@ -434,6 +440,7 @@ module.exports = exports;
 if(process.argv[1] == __filename){
 	//** 测试 getUserInfo()
 	// exports.getUserInfo({
+	// 	url: 'http://130.85.50.34:7772/XMLReceiver',
 	// 	requestId: 'ALUOP151123071351894382625439' + parseInt(Math.random()*10000),
 	// 	AccProvince: '85',
 	// 	AccCity: '850',
@@ -447,6 +454,7 @@ if(process.argv[1] == __filename){
 
 	//** 测试 getOrders()
 	// exports.getOrders({
+	// 	url: 'http://130.85.50.34:7772/XMLReceiver',
 	// 	requestId: 'ALUOP151123071351894382625439' + parseInt(Math.random()*10000),
 	// 	BusinessType: '00',
 	// 	UserNumber: '18508505402',
@@ -471,6 +479,7 @@ if(process.argv[1] == __filename){
 
 	//** 测试 removeOrder()
 	// exports.removeOrder({
+	// 	url: 'http://130.85.50.34:7772/XMLReceiver',
 	// 	requestId: 'seq00001' + parseInt(Math.random()*10000),
 	// 	ProductId: '99013000',
 	// 	ProductType: '1',

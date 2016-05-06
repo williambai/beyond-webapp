@@ -108,13 +108,65 @@ module.exports = exports = function(connection) {
 	connection = connection || mongoose;
 
 	/**
-	 * 发送新建的短信
+	 * 发送新建的短信(不带发送结果)
 	 * 由新建状态 转移到 已发送状态
 	 * @param  {Function} callback [description]
 	 * @return {[type]}            [description]
 	 */
 
 	schema.statics.sendSms = function(done) {
+		var PlatformSms = connection.model('PlatformSms');
+		PlatformSms
+			.find({
+				'status': '新建'
+			})
+			.limit(20)
+			.exec(function(err, docs) {
+				if (err) return done(err);
+				//** 没有可执行的新建SMS
+				if (_.isEmpty(docs)) return done(null, {
+					count: 0
+				});
+				//** send sms
+				var count = docs.length;
+
+				sendSMS(_.clone(docs), function(err) {
+					if (err) return done(err);
+					//** 更新短信状态
+					async.each(docs, function(doc, callback) {
+						PlatformSms
+							.findByIdAndUpdate(
+								doc._id
+								, {
+									$set: {
+										status: '已发送',
+									}
+								}, {
+									'upsert': false,
+									'new': true,
+								},
+								function(err) {
+									if (err) return callback(err);
+									callback();
+								});
+					}, function(err) {
+						if (err) return done(err);
+						done(null, {
+							count: count
+						});
+					});
+				});
+			});
+	};
+
+	/**
+	 * 发送新建的短信(带发送结果)
+	 * 由新建状态 转移到 已发送状态
+	 * @param  {Function} callback [description]
+	 * @return {[type]}            [description]
+	 */
+
+	schema.statics.sendSms1 = function(done) {
 		var PlatformSms = connection.model('PlatformSms');
 		PlatformSms
 			.find({
@@ -161,7 +213,6 @@ module.exports = exports = function(connection) {
 				});
 			});
 	};
-
 	/**
 	 * 接收客户上行短信deliver，更改订单状态
 	 * 短信状态为收到
@@ -229,6 +280,10 @@ module.exports = exports = function(connection) {
 						//** 更新Order状态，由新建 -> 已确认
 						Order
 							.findOneAndUpdate({
+								//** 在最近10分钟内的订单
+								'lastupdatetime': {
+									$gt: new Date(Date.now()-600000), 
+								},
 								'customer.mobile': mobile,
 								'goods.smscode': smscode,
 								'status': '新建',

@@ -26,7 +26,6 @@ var Submit = CommandFactory.create('Submit');
 var StreamSpliter = require('./lib/StreamSpliter');
 
 var sendSMS = function(docs, done) {
-	var doc;
 	var results = [];
 
 	var client = net.connect({
@@ -56,9 +55,9 @@ var sendSMS = function(docs, done) {
 	var handler = new StreamSpliter(client);
 
 	//** 逐条(一起全部)发送SMS
-	var _submit = function(docs){
+	var _submit = function(smses){
 		//** send sms
-		doc = docs.pop();
+		var doc = smses.pop();
 		if(!doc) {
 			logger.debug('<< 5. submit finished.');
 			//** send Unbind
@@ -93,8 +92,6 @@ var sendSMS = function(docs, done) {
 		//** 发送SMS 
 		client.write(submit.makePDU(reqPDU));
 		logger.debug('>> 3. submit');
-		//** 循环发送剩余的消息
-		_submit(docs);
 	};
 
 	handler.on('message', function(buf) {
@@ -121,6 +118,8 @@ var sendSMS = function(docs, done) {
 			//** 保存发送结果command
 			results.push(command);
 			logger.debug('<< 4. submit_resp ok. (if have more) submit continue...');
+			//** 循环发送剩余的消息
+			_submit(docs);
 		}
 	});
 	//** send Bind Command

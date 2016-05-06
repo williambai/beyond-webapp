@@ -117,6 +117,7 @@ var sendSMSJob = new CronJob({
 
 //** process uncaughtException
 process.on('uncaughtException', function(err){
+	logger.error('sgipService 服务异常退出，请及时处理!');
 	logger.error(err);
 	process.exit(1);
 });

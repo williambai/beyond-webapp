@@ -104,15 +104,16 @@
 					</div>
 					<div class="form-group">
 						<label>佣金：</label>
-							<input type="text" value="<%= model.bonus.cash %>" class="form-control"  readonly>
+							<input type="text" value="<%= model.bonus %>" class="form-control"  readonly>
 							<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+<!-- 					<div class="form-group">
 						<label>积分：</label>
 							<input type="text" value="<%= model.bonus.points %>" class="form-control" readonly>
 							<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+ -->
+ 					<div class="form-group">
 						<label>订单创建人：</label>
 							<input type="text" value="<%= model.createBy.mobile %>" class="form-control" readonly>
 							<span class="help-block"></span>
