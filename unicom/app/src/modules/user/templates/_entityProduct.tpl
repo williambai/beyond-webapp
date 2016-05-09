@@ -100,9 +100,7 @@
  -->
 					<div class="form-group">
 						<label>生效时间：</label>
-						<div style="padding-left:30px;">
-							<input type="radio" name="effect" value="次月生效" checked>&nbsp;&nbsp;次月生效&nbsp;&nbsp;
-							<input type="radio" name="effect" value="立即生效">&nbsp;&nbsp;立即生效
+						<div style="padding-left:30px;" id="effectMethod">
 						</div>
 					</div>
  					<div class="form-group">

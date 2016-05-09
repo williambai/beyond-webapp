@@ -13,6 +13,7 @@ var schema = new mongoose.Schema({
 	price: Number,
 	unit: String,
 	quantity: Number,
+	effectMethod: [String], //** 立即生效|次月生效
 	starttime: String,
 	endtime: String,
 	display_sort: {

@@ -23,7 +23,7 @@
 				<label>&nbsp;&nbsp;</label>
 				<input type="text" name="searchStr" class="form-control" placeholder="产品名称或物料名称">&nbsp;&nbsp;
 			</div>
-			<div class="form-group">
+<!-- 			<div class="form-group">
 				<label>&nbsp;产品分类：&nbsp;</label>
 				<select name="category" class="form-control">
 					<option value="">全部</option>
@@ -35,7 +35,8 @@
 					<option value="EVENT">活动推荐</option>
 				</select>&nbsp;&nbsp;
 			</div>
-			<div class="form-group">
+ -->
+ 			<div class="form-group">
 				<select name="status" class="form-control">
 					<option value="">全部</option>
 					<option value="有效">有效</option>
@@ -94,6 +95,14 @@
 					<div class="form-group">
 						<label>产品名称：</label>
 						<input type="text" name="name" value="<%= model.name %>" class="form-control">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>生效方式：</label>
+						<div style="padding-left:30px;">
+							<input type="checkbox" name="effectMethod[]" value="立即生效">&nbsp;立即生效&nbsp;
+							<input type="checkbox" name="effectMethod[]" value="次月生效">&nbsp;次月生效&nbsp;
+						</div>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

@@ -135,6 +135,21 @@ var OrderView = FormView.extend({
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		//** 当前产品的选择
+		var effectMethod = this.product.get('effectMethod') || [];
+		var html = '';
+		var rightNow = '';
+		var nextMonth = '';
+		_.each(effectMethod, function(method){
+			if(method == '立即生效'){
+				rightNow = '<input type="radio" name="effectMethod" value="立即生效" checked>&nbsp;&nbsp;立即生效&nbsp;&nbsp;';
+			}
+			if(method == '次月生效'){
+				nextMonth = '<input type="radio" name="effectMethod" value="次月生效">&nbsp;&nbsp;次月生效&nbsp;&nbsp;';
+			}			
+		});
+		html = rightNow + nextMonth;
+		this.$('#effectMethod').append(html);
 		return this;
 	},
 });

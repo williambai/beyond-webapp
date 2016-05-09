@@ -202,10 +202,15 @@ exports = module.exports = FormView.extend({
 	},
 
 	render: function(){
+		var that = this;
 		this.$el.html(this.template({model: this.model.toJSON()}));
 		//** 填充产品分类options
 		this.fillCategoryOptions();
 		//** 当前选择
+		var effectMethod = this.model.get('effectMethod') || [];
+		_.each(effectMethod, function(method){
+			that.$('input[name="effectMethod[]"][value='+ method +']').attr('checked',true);
+		});
 		var category = this.model.get('category');
 		this.$('select[name=category]').val(category);
 		var starttime = this.model.get('starttime');
