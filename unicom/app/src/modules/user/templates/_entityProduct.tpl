@@ -59,8 +59,8 @@
 						<h4 >
 							<%= model.name %>
 						</h4>
-						<p>佣金：<%= model.goods && model.goods.bonus %>&nbsp;元</p>
-						<p></p>
+						<p><%= model.tags %></p>
+						<p>&nbsp;</p>
 					</div>
 				</div>
 				<div class="col-xs-2">

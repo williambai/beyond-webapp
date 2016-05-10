@@ -94,7 +94,7 @@ exports = module.exports = Backbone.View.extend({
 		this.listView = new ProductListView({
 			el: '#list',
 		});
-		this.listView.collection.url = config.api.host + '/public/products?action=category&category=' + this.model.get('name');
+		this.listView.collection.url = config.api.host + '/public/products?action=category&category=' + encodeURIComponent(this.model.get('name'));
 		this.listView.trigger('load');
 	},
 

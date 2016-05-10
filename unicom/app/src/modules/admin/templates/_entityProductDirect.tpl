@@ -121,9 +121,10 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>产品类别：</label>
-						<select name="category" class="form-control">
-						</select>
+						<label>产品所属类别：</label>
+						<div style="padding-left:30px;">
+							<div id="categories"></div>
+						</div>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

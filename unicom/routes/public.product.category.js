@@ -16,7 +16,9 @@
  		page = (!page || page < 0) ? 0 : page;
 
  		models.ProductCategory
- 			.find({})
+ 			.find({
+ 				'status': '有效'
+ 			})
  			.skip(per * page)
  			.limit(per)
  			.exec(function(err, docs) {

@@ -98,12 +98,12 @@ exports = module.exports = FormView.extend({
 	
 	fillCategoryOptions: function(){
 		var that = this;
-		var optionsHtml = '<options>';
+		var html = '';
 		_.each(that.categories,function(option){
-			optionsHtml += '<option value="' + option.name + '">' +option.name + '</option>';
+			html += '<input type="checkbox" name="category[]" value="' + option.name + '">&nbsp;&nbsp;' + option.name + '&nbsp;&nbsp;';
 		});
-		optionsHtml += '</options>';
-		that.$('select[name=category]').html(optionsHtml);
+		html += '';
+		that.$('#categories').html(html);
 	},
 
 	getGoods: function(evt){
@@ -123,7 +123,9 @@ exports = module.exports = FormView.extend({
 				data.forEach(function(item){
 					goods += '<li class="list-group-item" id="' +
 							item._id + '" price="'+ 
-							item.price + '" quantity="'+ 
+							item.price + '" unit="'+ 
+							item.unit + '" description="'+ 
+							item.description + '" quantity="'+ 
 							(item.quantity || '') +'">'+ 
 							item.smscode + '|' +
 							item.barcode + '|' + 
@@ -140,13 +142,17 @@ exports = module.exports = FormView.extend({
 	selectGoods: function(evt){
 		var id= $(evt.currentTarget).attr('id');
 		var price = $(evt.currentTarget).attr('price');
+		var unit = $(evt.currentTarget).attr('unit');
+		var description = $(evt.currentTarget).attr('description');
 		var quantity = $(evt.currentTarget).attr('quantity');
 		var goods = $(evt.currentTarget).text().split('|');
+		this.$('input[name="goods[id]"]').val(id);
 		this.$('input[name="goods[barcode]"]').val(goods[1]);
 		this.$('input[name="goods[name]"]').val(goods[2]);
 		this.$('input[name=name]').val(goods[2]);
-		this.$('input[name="goods[id]"]').val(id);
 		this.$('input[name=price]').val(price);
+		this.$('input[name=unit]').val(unit);
+		this.$('textarea[name=description]').val(description);
 		this.$('input[name=quantity]').val(quantity);
 		this.$('#goods').empty();
 		return false;
@@ -211,8 +217,11 @@ exports = module.exports = FormView.extend({
 		_.each(effectMethod, function(method){
 			that.$('input[name="effectMethod[]"][value='+ method +']').attr('checked',true);
 		});
-		var category = this.model.get('category');
-		this.$('select[name=category]').val(category);
+		//** 设置当前产品的分类
+		var categories = String.prototype.split.call(this.model.get('category') || '',',');
+		_.each(categories, function(category){
+			this.$('input[name="category[]"][value="' + category + '"]').attr('checked', true);
+		});
 		var starttime = this.model.get('starttime');
 		this.$('input[name=starttime]').val(starttime);
 		var endtime = this.model.get('endtime');

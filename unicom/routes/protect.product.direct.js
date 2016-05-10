@@ -17,6 +17,8 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  					if(err || !goods) return res.send(err || {code: 404112, errmsg: 'goods id 不存在。'});
  					//** 保存goods
  					doc.goods = goods;
+			 		//** 将所属分类按字符串保存
+			 		doc.category = (doc.category || '').join(',');
  					models.ProductDirect
  						.create(doc, function(err) {
 	 						if (err) return res.send(err);
@@ -44,6 +46,8 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  					//** 保存goods
  					doc.goods = goods;
 			 		doc = _.omit(doc,'_id');
+			 		//** 将所属分类按字符串保存
+			 		doc.category = (doc.category || '').join(',');
  					models.ProductDirect.findByIdAndUpdate(id, {
  							$set: doc
  						}, {

@@ -85,8 +85,8 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  		page = (!page || page < 0) ? 0 : page;
  		switch(action){
  			case 'category':
-				var category = req.query.category || '';
-				var searchRegex = new RegExp(category, 'i');
+				var category = decodeURIComponent(req.query.category) || '';
+				var searchRegex = new RegExp(String.prototype.replace.call(category,'+','.'), 'i');
  				models.ProductDirect
  					.find({
  						category: {

@@ -119,6 +119,8 @@ exports = module.exports = FormView.extend({
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		var status = this.model.get('status');
+		if(status) this.$('input[name=status][value='+ status +']').attr('checked',true);
 		if(this.model.isNew()) this.$('.panel-title').text('新增分类');
 		return this;
 	},

@@ -53,6 +53,13 @@
 						<input type="text" name="thumbnail" value="<%= model.thumbnail %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
+ 					<div class="form-group">
+						<label>状态：</label>
+						<div style="padding-left:30px;">
+							<input type="radio" name="status" value="有效">&nbsp;&nbsp;有效
+							<input type="radio" name="status" value="无效" checked>&nbsp;&nbsp;无效
+						</div>
+					</div>
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
