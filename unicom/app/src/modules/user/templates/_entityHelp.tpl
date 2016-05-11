@@ -45,11 +45,12 @@
 			</div>
 		</div>
 	</div>
-	<div id="policyTemplate">
+ 	<div id="policyTemplate">
 		<div>
 			<div class="nav-back">
 				<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
 			</div>
+<!-- 		
 			<h4>佣金政策</h4>
 			<p>1、销售记录对账</p>
 			<p>
@@ -65,10 +66,11 @@
 			<p>5、后期稽核</p>
 			<p>
 				每个月营业员可根据佣金界面显示的个人佣金金额与自身发展量进行对比。如果出现偏差，则可通过QQ群、电话等渠道进行反馈。沃助手后台会根据反馈意见及时和代理商、营业员沟通。
-			</p>
+			</p> -->
 		</div>
 	</div>
-	<div id="saleTemplate">
+
+ 	<div id="saleTemplate">
 		<div>
 			<div class="nav-back">
 				<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
@@ -144,6 +146,7 @@
 			<div class="nav-back">
 				<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
 			</div>
+<!-- 
 			<p></p>
 			<p>1、“联通沃助手”是什么？</p>
 			<p></p>
@@ -208,5 +211,6 @@
 			<p>沃助手营销讨论群：</p>
 			<p></p>
 		</div>
-	</div>
+ -->
+ 	</div>
 </div>

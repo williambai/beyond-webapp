@@ -99,7 +99,8 @@ var CronJob = require('cron').CronJob;
 
 //** send 'new' sms in database
 var sendSMSJob = new CronJob({
-	cronTime: '*/10 * * * * *',
+	//** 每过5秒钟检查并发送短信
+	cronTime: '*/5 * * * * *',
 	onTick: function(){
 		models.PlatformSms.sendSms(function(err,result){
 			if(err || !result) return logger.error(err);

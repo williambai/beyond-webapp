@@ -187,7 +187,7 @@ module.exports = exports = function(connection){
 								});
 						},
 						function createOrder(order,callback) {
-							//** 查找3分钟前是否有类似订单，否则不创建
+							//** 查找3分钟内是否有类似订单，否则不创建
 							var lastOrderDate = new Date(Date.now()-180000);
 							Order
 								.findOne({
@@ -214,7 +214,7 @@ module.exports = exports = function(connection){
 							//** sms业务代码部分
 							sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
 							sms.receiver = order.customer.mobile;
-							sms.content = '订购'+ order.goods.name + '，回复Y，确认订购。';
+							sms.content = '感谢您订购' + order.goods.name + '产品，请回复Y，确认订购。';
 							sms.status = '新建';
 							PlatformSms
 								.create(sms, function(err){
@@ -282,8 +282,8 @@ module.exports = exports = function(connection){
 						// var bssAccount = bssConfig.accounts['guiyang']; //** 按城市取
 
 						BSS.addOrder({
-							// url: bssConfig.url, //** 生产地址
 							url: bssConfig.test_url, //** 测试地址
+							// url: bssConfig.url, //** 生产地址
 							requestId: String(order._id),//** 请求Id
 							ProductId: order.goods.barcode, //** 物料编码
 							ProductType: '1',//** 产品类型。1：优惠或资费; 2: 增值业务
@@ -291,6 +291,7 @@ module.exports = exports = function(connection){
 							DepartID: bssAccount.DepartID, //** 渠道代码
 							UserNumber: order.customer.mobile, //** 客户手机号码
 						},function(err, result){
+							//** BSS 接口返回错误
 							if(err) console.log(err);
 							//** 将状态改为“成功”或“失败”
 							result = result || {};
@@ -317,12 +318,26 @@ module.exports = exports = function(connection){
 									'new': true,
 								}, function(err){
 									if(err) return done(err);
-									//** TODO 发送业务“处理成功”或“处理失败短信”短信
-									_process(); //** 处理下一个
+									//** 发送业务“处理成功”或“处理失败短信”短信
+									var sms = {};
+									//** sms业务代码部分
+									sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
+									sms.receiver = order.customer.mobile;
+									sms.content = (status == '成功'  
+											? '您成功订购了' + order.goods.name + '产品。' 
+											: '很抱歉，您订购的' + order.goods.name + '产品失败。');
+									sms.status = '新建';
+									PlatformSms
+										.create(sms, function(err){
+											if(err) return done(err);
+											//** 处理下一个
+											_process();
+										});
 								});
 						});
 					});
 			};
+		//** 启动第一个
 		_process();
 	};
 	/**

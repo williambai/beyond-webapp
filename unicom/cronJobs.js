@@ -47,7 +47,8 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 
 //** 2G/3G 订单处理
 var processOrderJob = new CronJob({
-	cronTime: '10 */2 * * * *',
+	//** 每过7秒钟检查一次订单
+	cronTime: '*/7 * * * * *',
 	onTick: function() {
 		models.Order.process2G_3G(function(err, result) {
 				if (err) return logger.error(err);

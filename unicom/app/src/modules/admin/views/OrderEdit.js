@@ -161,6 +161,7 @@ exports = module.exports = FormView.extend({
 	},
 
 	render: function(){
+		var that = this;
 		this.$el.html(this.template({model: this.model.toJSON()}));
 		// var itemsView = '<table class="table table-striped">';
 		// itemsView += '<thead><tr><td>名称</td><td>单价</td><td>数量</td><td>小计</td></tr></thead>';
@@ -178,6 +179,15 @@ exports = module.exports = FormView.extend({
 		// this.$('#items').html(itemsView);
 		var status = this.model.get('status');
 		this.$('input[name=status][value='+ status +']').attr('checked',true);
+		var histories = this.model.get('histories');
+		if(histories){
+			histories = _.sortBy(histories,'respTime');
+			var historyView = '';
+			_.each(histories,function(history){
+				historyView += '<p>' + history.respTime + ': (' + history.respCode + ') ' + history.respDesc + '</p>';
+			});
+			that.$('#history').html(historyView);
+		}
 		return this;
 	},
 });

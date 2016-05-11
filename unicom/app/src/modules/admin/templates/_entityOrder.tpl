@@ -162,6 +162,13 @@
 				</div>
 			</div>
 		</form>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title text-center">更新历史</h4>
+			</div>
+			<div class="panel-body" id="history">
+			</div>
+		</div>
 	</div>
 	<div id="exportTemplate">
 		<div class="panel panel-default" id="exportForm">
