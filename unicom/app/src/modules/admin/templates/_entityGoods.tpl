@@ -22,7 +22,7 @@
 			<input type="hidden" name="action" value="search">
 			<div class="form-group">
 				<label>&nbsp;&nbsp;</label>
-				<input type="text" name="searchStr" class="form-control" placeholder="物料名称或物料类型">&nbsp;&nbsp;
+				<input type="text" name="searchStr" class="form-control" placeholder="物料名称或编码">&nbsp;&nbsp;
 			</div>
 			<div class="form-group">
 				<select class="form-control" name="status">
@@ -56,7 +56,7 @@
 				<form id="goodsForm">
 					<div class="form-group">
 						<label>业务(短信)唯一编码：</label>
-						<input type="text" name="smscode" value="<%= model.smscode %>" class="form-control" placeholder="六位以内数字，不可重复">
+						<input type="text" name="smscode" value="<%= model.smscode %>" class="form-control" placeholder="八位以内数字，不可重复">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

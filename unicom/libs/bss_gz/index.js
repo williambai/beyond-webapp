@@ -238,7 +238,7 @@ exports.getOrders = function(options,done){
 };
 
 /**
- * 3.6	业务开通
+ * 4.12	产品(套餐)变更
  * @param {[type]}   options [description]
  * @param {Function} done    [description]
  */
@@ -247,9 +247,9 @@ exports.addOrder = function(options, done) {
 	xmlmsg = '<UniBSS>';
 	xmlmsg += '<OrigDomain>ECIP</OrigDomain>';
 	xmlmsg += '<HomeDomain>UCRM</HomeDomain>';
-	xmlmsg += '<BIPCode>GZWXB002</BIPCode>';//** 业务代码
+	xmlmsg += '<BIPCode>GZSFB002</BIPCode>';//** 业务代码
 	xmlmsg += '<BIPVer>0100</BIPVer>';
-	xmlmsg += '<ActivityCode>GZWXT001</ActivityCode>';//** 交易代码
+	xmlmsg += '<ActivityCode>GZSFT002</ActivityCode>';//** 交易代码
 	xmlmsg += '<ActionCode>0</ActionCode>';
 	xmlmsg += '<ActionRelation>0</ActionRelation>';
 	xmlmsg += '<Routing>';
@@ -274,13 +274,12 @@ exports.addOrder = function(options, done) {
 	xmlmsg += '<![CDATA[';
 	xmlmsg += '<?xml version="1.0" encoding="UTF-8"?>';
 	xmlmsg += '<PackageChangeReq>';
-	xmlmsg += '<ProdcutId>'+ options.ProductId +'</ProdcutId>';
-	xmlmsg += '<ProductType>'+ options.ProductType +'</ProductType>';
-	xmlmsg += '<OperCode>0</OperCode>'; //** 0 开通业务
-	xmlmsg += '<StaffID>'+ options.StaffID +'</StaffID>';
-	xmlmsg += '<DepartID>'+ options.DepartID+'</DepartID>';
-	xmlmsg += '<ProcTime>'+ date2str(new Date(), 'yyyyMMddhhmmss') +'</ProcTime>';
 	xmlmsg += '<UserNumber>'+ options.UserNumber +'</UserNumber>';
+	xmlmsg += '<PackageCode>'+ options.ProductId +'</PackageCode>';
+	xmlmsg += '<OperCode>0</OperCode>'; //** 0 开通业务
+	xmlmsg += '<ProcTime>'+ date2str(new Date(), 'yyyyMMddhhmmss') +'</ProcTime>';
+	xmlmsg += '<StaffId>'+ options.StaffID +'</StaffId>';
+	xmlmsg += '<DepartId>'+ options.DepartID+'</DepartId>';
 	xmlmsg += '<Para1></Para1>';
 	xmlmsg += '<Para2></Para2>';
 	xmlmsg += '</PackageChangeReq>';
@@ -322,14 +321,14 @@ exports.addOrder = function(options, done) {
 			if(SvcCont == '') return done({errmsg: 'xml中SvcCont节点不存在'});
 			var PackageChangeRsp = ''.match.call(SvcCont[1],/<PackageChangeRsp>(.*)<\/PackageChangeRsp>/) || ['',''];
 			//** 提取返回编码
-			var ResultCode = ''.match.call(PackageChangeRsp[1],/<ResultCode>(.*)<\/ResultCode>/) || ['',''];
-			result.ResultCode = ResultCode[1] || '';
+			var RespCode = ''.match.call(PackageChangeRsp[1],/<RespCode>(.*)<\/RespCode>/) || ['',''];
+			result.RespCode = RespCode[1] || '';
 			//** 返回描述
-			var ResultDESC = ''.match.call(PackageChangeRsp[1],/<ResultDESC>(.*)<\/ResultDESC>/) || ['',''];
-			result.ResultDESC = ResultDESC[1] || '';
-			//** 返回交易Id
-			var TradeId = ''.match.call(PackageChangeRsp[1],/<TradeId>(.*)<\/TradeId>/) || ['',''];
-			result.TradeId = TradeId[1] || '';
+			var RespDesc = ''.match.call(PackageChangeRsp[1],/<RespDesc>(.*)<\/RespDesc>/) || ['',''];
+			result.RespDesc = RespDesc[1] || '';
+			//** 返回生效时间
+			var EffectTime = ''.match.call(PackageChangeRsp[1],/<EffectTime>(.*)<\/EffectTime>/) || ['',''];
+			result.EffectTime = EffectTime[1] || '';
 			done(err, result);
 		}
 	);
@@ -346,18 +345,18 @@ exports.removeOrder = function(options, done) {
 	xmlmsg = '<UniBSS>';
 	xmlmsg += '<OrigDomain>ECIP</OrigDomain>';
 	xmlmsg += '<HomeDomain>UCRM</HomeDomain>';
-	xmlmsg += '<BIPCode>GZWXB002</BIPCode>';
+	xmlmsg += '<BIPCode>GZSFB002</BIPCode>';//** 业务代码
 	xmlmsg += '<BIPVer>0100</BIPVer>';
-	xmlmsg += '<ActivityCode>GZWXT001</ActivityCode>';
+	xmlmsg += '<ActivityCode>GZSFT002</ActivityCode>';//** 交易代码
 	xmlmsg += '<ActionCode>0</ActionCode>';
 	xmlmsg += '<ActionRelation>0</ActionRelation>';
 	xmlmsg += '<Routing>';
-	xmlmsg += '<RouteType>04</RouteType>';
-	xmlmsg += '<RouteValue>0851</RouteValue>';
+	xmlmsg += '<RouteType>01</RouteType>';
+	xmlmsg += '<RouteValue>'+ options.UserNumber +'</RouteValue>';
 	xmlmsg += '</Routing>';
 	xmlmsg += '<ProcID>'+ options.requestId +'</ProcID>';
 	xmlmsg += '<TransIDO>'+ options.requestId +'</TransIDO>';
-	xmlmsg += '<ProcessTime>'+ date2str(new Date(), 'yyyyMMddhhmmss') +'</ProcessTime>';
+	xmlmsg += '<ProcessTime>'+ date2str(new Date(),'yyyyMMddhhmmss') +'</ProcessTime>';
 	xmlmsg += '<SPReserve>';
 	xmlmsg += '<TransIDC>201511230713519248570101408111</TransIDC>';
 	xmlmsg += '<CutOffDay>20151123</CutOffDay>';
@@ -373,13 +372,12 @@ exports.removeOrder = function(options, done) {
 	xmlmsg += '<![CDATA[';
 	xmlmsg += '<?xml version="1.0" encoding="UTF-8"?>';
 	xmlmsg += '<PackageChangeReq>';
-	xmlmsg += '<ProdcutId>'+ options.ProductId +'</ProdcutId>';
-	xmlmsg += '<ProductType>'+ options.ProductType +'</ProductType>';
-	xmlmsg += '<OperCode>1</OperCode>'; //** 1 取消业务
-	xmlmsg += '<StaffID>'+ options.StaffID +'</StaffID>'; //** 工号
-	xmlmsg += '<DepartID>'+ options.DepartID +'</DepartID>';//** 渠道号
-	xmlmsg += '<ProcTime>'+ date2str(new Date(), 'yyyyMMddhhmmss') +'</ProcTime>';
 	xmlmsg += '<UserNumber>'+ options.UserNumber +'</UserNumber>';
+	xmlmsg += '<PackageCode>'+ options.ProductId +'</PackageCode>';
+	xmlmsg += '<OperCode>1</OperCode>'; //** 1 取消业务
+	xmlmsg += '<ProcTime>'+ date2str(new Date(), 'yyyyMMddhhmmss') +'</ProcTime>';
+	xmlmsg += '<StaffId>'+ options.StaffID +'</StaffId>';
+	xmlmsg += '<DepartId>'+ options.DepartID+'</DepartId>';
 	xmlmsg += '<Para1></Para1>';
 	xmlmsg += '<Para2></Para2>';
 	xmlmsg += '</PackageChangeReq>';
@@ -420,14 +418,14 @@ exports.removeOrder = function(options, done) {
 			if(SvcCont == '') return done({errmsg: 'xml中SvcCont节点不存在'});
 			var PackageChangeRsp = ''.match.call(SvcCont[1],/<PackageChangeRsp>(.*)<\/PackageChangeRsp>/) || ['',''];
 			//** 提取返回编码
-			var ResultCode = ''.match.call(PackageChangeRsp[1],/<ResultCode>(.*)<\/ResultCode>/) || ['',''];
-			result.ResultCode = ResultCode[1] || '';
+			var RespCode = ''.match.call(PackageChangeRsp[1],/<RespCode>(.*)<\/RespCode>/) || ['',''];
+			result.RespCode = RespCode[1] || '';
 			//** 返回描述
-			var ResultDESC = ''.match.call(PackageChangeRsp[1],/<ResultDESC>(.*)<\/ResultDESC>/) || ['',''];
-			result.ResultDESC = ResultDESC[1] || '';
-			//** 返回交易Id
-			var TradeId = ''.match.call(PackageChangeRsp[1],/<TradeId>(.*)<\/TradeId>/) || ['',''];
-			result.TradeId = TradeId[1] || '';
+			var RespDesc = ''.match.call(PackageChangeRsp[1],/<RespDesc>(.*)<\/RespDesc>/) || ['',''];
+			result.RespDesc = RespDesc[1] || '';
+			//** 返回生效时间
+			var EffectTime = ''.match.call(PackageChangeRsp[1],/<EffectTime>(.*)<\/EffectTime>/) || ['',''];
+			result.EffectTime = EffectTime[1] || '';
 			done(err, result);
 		}
 	);
@@ -467,8 +465,7 @@ if(process.argv[1] == __filename){
 	exports.addOrder({
 		url: 'http://130.85.50.34:7772/XMLReceiver',
 		requestId: 'seq00001' + parseInt(Math.random()*10000),
-		ProductId: '99013000',
-		ProductType: '1',
+		ProductId: '9085037900',
 		StaffID: 'SUPERUSR',
 		DepartID: 'Z0851',
 		UserNumber: '18508505402',

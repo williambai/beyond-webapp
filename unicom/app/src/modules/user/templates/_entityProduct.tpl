@@ -98,7 +98,7 @@
 					</div>
 					<div id="insertItemBefore"></div>
  -->
-					<div class="form-group">
+					<div class="form-group hidden">
 						<label>生效时间：</label>
 						<div style="padding-left:30px;" id="effectMethod">
 						</div>

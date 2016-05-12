@@ -184,7 +184,7 @@ exports = module.exports = FormView.extend({
 			histories = _.sortBy(histories,'respTime');
 			var historyView = '';
 			_.each(histories,function(history){
-				historyView += '<p>' + history.respTime + ': (' + history.respCode + ') ' + history.respDesc + '</p>';
+				historyView += '<p>' + history.respTime + '(' + history.respCode + ')[' + history.effectTime + ']: ' + history.respDesc + '</p>';
 			});
 			that.$('#history').html(historyView);
 		}

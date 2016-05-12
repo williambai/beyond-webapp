@@ -103,6 +103,14 @@ exports = module.exports = function(app, models) {
 							'name': {
 								$regex: searchRegex
 							}
+						},{
+							'barcode': {
+								$regex: searchRegex
+							}
+						},{
+							'smscode': {
+								$regex: searchRegex
+							}
 						}]
 					});
 					if (!_.isEmpty(status)) {

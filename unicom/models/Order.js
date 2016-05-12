@@ -281,12 +281,15 @@ module.exports = exports = function(connection){
 						var bssAccount = bssConfig.accounts['test']; //** 测试账号
 						// var bssAccount = bssConfig.accounts['guiyang']; //** 按城市取
 
+						//** 生效方式
+						var ValidTag = order.effect == '次月生效' ? '2' : '1';
 						BSS.addOrder({
 							url: bssConfig.test_url, //** 测试地址
 							// url: bssConfig.url, //** 生产地址
 							requestId: String(order._id),//** 请求Id
 							ProductId: order.goods.barcode, //** 物料编码
 							ProductType: '1',//** 产品类型。1：优惠或资费; 2: 增值业务
+							VaildTag: ValidTag,
 							StaffID: bssAccount.StaffID,//** 工号
 							DepartID: bssAccount.DepartID, //** 渠道代码
 							UserNumber: order.customer.mobile, //** 客户手机号码
@@ -295,10 +298,10 @@ module.exports = exports = function(connection){
 							if(err) console.log(err);
 							//** 将状态改为“成功”或“失败”
 							result = result || {};
-							var ResultCode = result.ResultCode || '8888';
-							var ResultDESC = result.ResultDESC || '未知错误';
-							var tradeId = result.TradeId || '';
-							var status = /^8/.test(ResultCode) ? '失败' : '成功';
+							var RespCode = result.RespCode || '88';
+							var RespDesc = result.RespDesc || '未知错误';
+							var EffectTime = result.EffectTime || '';
+							var status = /^00/.test(RespCode) ? '失败' : '成功';
 							Order.findByIdAndUpdate(
 								order._id,
 								{
@@ -307,9 +310,9 @@ module.exports = exports = function(connection){
 									},
 									$push: {
 										'histories':  {
-											respCode: ResultCode,
-											respDesc: ResultDESC,
-											tradeId: tradeId,
+											respCode: RespCode,
+											respDesc: RespDesc,
+											effectTime: EffectTime,
 											respTime: new Date(),
 										}
 									}

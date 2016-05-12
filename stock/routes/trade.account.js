@@ -15,7 +15,8 @@ exports = module.exports = function(app, models) {
 		//** 账户id
 		var id = req.body.id;
 		//** 设置captcha图片上传POST回调，由casperjs调用
-		var callback_url = req.header('origin') + '/trade/accounts';
+		// var callback_url = req.header('origin') + '/trade/accounts';
+		var callback_url = 'http://localhost:8091' + '/trade/accounts';
 		//** 预设希望captcha图片文件的存储路径
 		var captcha_file = path.join(__dirname, '../public/_tmp/captcha_' + id + '.png');
 		//** 预设希望login页面截图文件的存储路径(调试有用，生产无用)
