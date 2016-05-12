@@ -86,7 +86,7 @@ sgipSerice.on('connection', function(socket) {
  */
 
 sgipSerice.listen(config.sp.listener.port, function() {
-	logger.info('SGIP短信接收服务启动在 port:' + config.sp.listener.port);
+	logger.info('SGIP短信接收服务以开启。端口号:' + config.sp.listener.port);
 });
 
 /**
@@ -115,6 +115,7 @@ var sendSMSJob = new CronJob({
 	start: true,
 	runOnInit: true,//** execute right now!
 });
+logger.info('SGIP短信定时发送服务已开启。');
 
 //** process uncaughtException
 process.on('uncaughtException', function(err){

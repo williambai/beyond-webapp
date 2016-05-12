@@ -1,4 +1,8 @@
-//** @Deprecated!
+/**
+ * 
+ * 处理联通2G/3G订单服务
+ * 
+ */
 
 //** common packages
 var path = require('path');
@@ -33,20 +37,6 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 	}
 });
 
-//** schedule Jobs
-// var refreshWechatAccessTokenJob = new CronJob({
-// 	cronTime: '00 */59 * * * *',
-// 	onTick: function() {
-// 		models.PlatformWeChat.updateAccessToken(function(err,result) {
-// 			if(err) return logger.error(err);
-// 			logger.debug('Wechat AccessToken: ' + JSON.stringify(result));
-// 			logger.info('call Wechat AccessToken peroid job successfully.');
-// 		});
-// 	},
-// 	start: true,
-// 	runOnInit: true,//** execute right now!
-// });
-
 //** 2G/3G 订单处理
 var processOrderJob = new CronJob({
 	//** 每过7秒钟检查一次订单
@@ -61,7 +51,6 @@ var processOrderJob = new CronJob({
 	start: true,
 	runOnInit: true, //** execute right now!
 });
-logger.info('scheduleJobs is started.');
 
 //** process uncaughtException
 process.on('uncaughtException', function(err){
@@ -69,17 +58,4 @@ process.on('uncaughtException', function(err){
 	logger.error(err);
 	process.exit(1);
 });
-
-
-// var updateCbssCookie = require('./commands/updateCbssCookie');
-// var refreshCbssCookieJob = new CronJob({
-// 	cronTime: '00 */5 * * * *',
-// 	onTick: function(){
-// 		updateCbssCookie(function() {
-// 			logger.info('call refresh CBSS Accounts Cookie job successfully.');
-// 		});
-// 	},
-// 	start: true,
-// 	runOnInit: true,//** execute right now!
-// });
-// 
+logger.info('联通BSS处理2G/3G订单服务已开启。');

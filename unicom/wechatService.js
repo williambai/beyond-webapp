@@ -1,5 +1,3 @@
-//** @Deprecated!
-
 //** common packages
 var path = require('path');
 var fs = require('fs');
@@ -47,39 +45,10 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 // 	runOnInit: true,//** execute right now!
 // });
 
-//** 2G/3G 订单处理
-var processOrderJob = new CronJob({
-	//** 每过7秒钟检查一次订单
-	cronTime: '*/7 * * * * *',
-	onTick: function() {
-		models.Order.process2G_3G(function(err, result) {
-				if (err) return logger.error(err);
-				logger.info('call Order peroid job successfully.');
-			}
-		);
-	},
-	start: true,
-	runOnInit: true, //** execute right now!
-});
-logger.info('scheduleJobs is started.');
-
 //** process uncaughtException
 process.on('uncaughtException', function(err){
 	logger.error('CronJob 异常退出，请及时处理！');
 	logger.error(err);
 	process.exit(1);
 });
-
-
-// var updateCbssCookie = require('./commands/updateCbssCookie');
-// var refreshCbssCookieJob = new CronJob({
-// 	cronTime: '00 */5 * * * *',
-// 	onTick: function(){
-// 		updateCbssCookie(function() {
-// 			logger.info('call refresh CBSS Accounts Cookie job successfully.');
-// 		});
-// 	},
-// 	start: true,
-// 	runOnInit: true,//** execute right now!
-// });
-// 
+logger.info('微信定时服务已开启。');

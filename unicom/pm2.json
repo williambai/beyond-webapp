@@ -1,0 +1,23 @@
+{
+	"apps": [
+		{
+			"name": "WebServer",
+			"script": "server.js",
+			"cwd": "",
+			"watch": true,
+			"ignore-watch": "./_app ./_dest ./app ./commands ./public ./logs ./libs/cbss/_tmp ./test"
+		},{
+			"name": "SgipService",
+			"script": "sgipService.js",
+			"cwd": ""
+		},{
+			"name": "WechatService",
+			"script": "wechatService.js",
+			"cwd": ""
+		},{
+			"name": "BssService",
+			"script": "bssService.js",
+			"cwd": ""
+		}
+	]
+}
