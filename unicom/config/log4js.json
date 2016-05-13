@@ -29,10 +29,10 @@
 		"format": ":remote-addr :response-time - [:date] ':method :url HTTP/:http-version' :status :content-length ':referrer' ':user-agent'"
 	}, {
 		"type": "file",
-		"filename": "logs/cron.log",
+		"filename": "logs/bss.log",
 		"maxLogSize": 20480,
 		"backups": 3,
-		"category": ["cronJobs.js"]
+		"category": ["bssService.js"]
 	}, {
 		"type": "file",
 		"filename": "logs/sms.log",
@@ -44,7 +44,7 @@
 		"filename": "logs/wechat.log",
 		"maxLogSize": 20480,
 		"backups": 3,
-		"category": ["routes/protect.platform.wechat.js","routes/protect.platform.wechat.qrcode.js"]
+		"category": ["wechatService.js","routes/protect.platform.wechat.js","routes/protect.platform.wechat.qrcode.js"]
 	}],
 	"levels": {
 		"access": "INFO",

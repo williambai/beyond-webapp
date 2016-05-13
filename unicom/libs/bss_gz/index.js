@@ -444,7 +444,7 @@ if(process.argv[1] == __filename){
 	// 	AccCity: '850',
 	// 	Code: '0851',
 	// 	NetType: '02',
-	// 	UserNumber: '18508505402',
+	// 	UserNumber: '15692740700',
 	// },function(err,result){
 	// 	if(err) return console.log(err);
 	// 	console.log(JSON.stringify(result));
@@ -455,7 +455,7 @@ if(process.argv[1] == __filename){
 	// 	url: 'http://130.85.50.34:7772/XMLReceiver',
 	// 	requestId: 'ALUOP151123071351894382625439' + parseInt(Math.random()*10000),
 	// 	BusinessType: '00',
-	// 	UserNumber: '18508505402',
+	// 	UserNumber: '15692740700',
 	// },function(err,result){
 	// 	if(err) return console.log(err);
 	// 	console.log(JSON.stringify(result));
@@ -468,7 +468,7 @@ if(process.argv[1] == __filename){
 		ProductId: '9085037900',
 		StaffID: 'SUPERUSR',
 		DepartID: 'Z0851',
-		UserNumber: '18508505402',
+		UserNumber: '15692740700',
 	},function(err,result){
 		if(err) return console.log(err);
 		console.log(JSON.stringify(result));
@@ -482,7 +482,7 @@ if(process.argv[1] == __filename){
 	// 	ProductType: '1',
 	// 	StaffID: 'SUPERUSR',
 	// 	DepartID: 'Z0851',
-	// 	UserNumber: '18508505402',
+	// 	UserNumber: '15692740700',
 	// },function(err,result){
 	// 	if(err) return console.log(err);
 	// 	console.log(JSON.stringify(result));

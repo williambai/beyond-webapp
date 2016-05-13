@@ -29,6 +29,7 @@ var schema = new mongoose.Schema({
 		barcode: String, //** 产品编码(goods.barcode)
 		smscode: String, //** 业务(SMS)编码(goods.smscode)
 		price: Number, //** 产品单价(product.price)
+		unit: String, //** 产品单位(product.unit)
 		bonus: Number, //** 单个产品佣金
 	},
 	effect: { //** 生效方式
@@ -164,6 +165,7 @@ module.exports = exports = function(connection){
 								.exec(function(err, prod){
 									if(err || !prod) return callback(err);
 									var goods = prod.goods || {};
+									goods.unit = goods.unit || prod.unit || '';
 									var order = {
 											customer: {
 												mobile: mobile,
@@ -214,7 +216,7 @@ module.exports = exports = function(connection){
 							//** sms业务代码部分
 							sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
 							sms.receiver = order.customer.mobile;
-							sms.content = '感谢您订购' + order.goods.name + '产品，请回复Y，确认订购。';
+							sms.content = '尊敬的用户您好，欢迎订购(' + order.goods.name + ')，资费:(' + order.goods.price + ' ' + order.goods.unit +')，回复“Y”确认订购。';
 							sms.status = '新建';
 							PlatformSms
 								.create(sms, function(err){
@@ -278,18 +280,14 @@ module.exports = exports = function(connection){
 					}, function(err, order) {
 						if (err || !order) return done(err);
 						//** process 2G/3G order
-						var bssAccount = bssConfig.accounts['test']; //** 测试账号
-						// var bssAccount = bssConfig.accounts['guiyang']; //** 按城市取
+						// var bssAccount = bssConfig.accounts['test']; //** 测试账号
+						var bssAccount = bssConfig.accounts['guiyang']; //** 按城市取
 
-						//** 生效方式
-						var ValidTag = order.effect == '次月生效' ? '2' : '1';
 						BSS.addOrder({
-							url: bssConfig.test_url, //** 测试地址
-							// url: bssConfig.url, //** 生产地址
+							// url: bssConfig.test_url, //** 测试地址
+							url: bssConfig.url, //** 生产地址
 							requestId: String(order._id),//** 请求Id
 							ProductId: order.goods.barcode, //** 物料编码
-							ProductType: '1',//** 产品类型。1：优惠或资费; 2: 增值业务
-							VaildTag: ValidTag,
 							StaffID: bssAccount.StaffID,//** 工号
 							DepartID: bssAccount.DepartID, //** 渠道代码
 							UserNumber: order.customer.mobile, //** 客户手机号码
@@ -301,7 +299,7 @@ module.exports = exports = function(connection){
 							var RespCode = result.RespCode || '88';
 							var RespDesc = result.RespDesc || '未知错误';
 							var EffectTime = result.EffectTime || '';
-							var status = /^00/.test(RespCode) ? '失败' : '成功';
+							var status = /^00/.test(RespCode) ? '成功' : '失败';
 							Order.findByIdAndUpdate(
 								order._id,
 								{
@@ -322,13 +320,14 @@ module.exports = exports = function(connection){
 								}, function(err){
 									if(err) return done(err);
 									//** 发送业务“处理成功”或“处理失败短信”短信
+									//** 尊敬的用户您好，您订购的（产品名称）系统已受理，请耐心等待，订购结果将短信告知。
 									var sms = {};
 									//** sms业务代码部分
 									sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
 									sms.receiver = order.customer.mobile;
 									sms.content = (status == '成功'  
-											? '您成功订购了' + order.goods.name + '产品。' 
-											: '很抱歉，您订购的' + order.goods.name + '产品失败。');
+											? '恭喜您，您订购的(' + order.goods.name + ')已订购成功。' 
+											: '(' + order.goods.name + ')订购失败，详情请咨询10010，或到就近营业厅咨询办理。');
 									sms.status = '新建';
 									PlatformSms
 										.create(sms, function(err){

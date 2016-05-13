@@ -50,11 +50,11 @@ mongoose.connect(config.db.URI, function onMongooseError(err) {
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/views');
 
-//show origin cookie
-// app.use(function(req,res,next){
-// 	logger.info('req.cookies:' + JSON.stringify(req.headers.cookie));
-// 	next();
-// });
+//** show origin cookie
+app.use(function(req,res,next){
+	logger.info('req.cookies:' + JSON.stringify(req.headers.cookie));
+	next();
+});
 
 app.use(log4js.connectLogger(log4js.getLogger('access')));
 app.use(express.static(__dirname + '/public'));
