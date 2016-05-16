@@ -52,7 +52,7 @@ app.set('views', __dirname + '/views');
 
 //** show origin cookie
 app.use(function(req,res,next){
-	logger.info('req.cookies:' + JSON.stringify(req.headers.cookie));
+	// logger.debug('req.headers:' + JSON.stringify(req.headers));
 	next();
 });
 
@@ -72,12 +72,20 @@ app.sessionStore = new mongoStore({
 	collection: 'sessions'
 });
 app.use(session({
-	secret: app.sessionSecret,
+	cookie: { path: '/', httpOnly: true, secure: false, maxAge: 1000*60*60*24*365 },
+  	secret: app.sessionSecret,
 	key: 'beyond.sid',
 	store: app.sessionStore,
 	saveUninitialized: false,
 	resave: true
 }));
+
+//** show origin session
+app.use(function(req,res,next){
+	// logger.debug('req.session.id: ' + JSON.stringify(req.session.id));
+	// logger.debug('req.session: ' + JSON.stringify(req.session));
+	next();
+});
 
 app.get('/', function(req, res) {
 	res.render('index.jade', {
