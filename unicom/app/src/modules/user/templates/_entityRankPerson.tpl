@@ -39,22 +39,17 @@
 	<div id="itemTemplate">
 		<div>
 			<div class="row item" id="<%= model._id %>">
-				<div class="col-xs-1">
+				<div class="col-xs-2">
 					<h4><span class="badge"><%= model.series %></span></h4>
 				</div>
-				<div class="col-xs-7">
+				<div class="col-xs-6">
 					<h4><%= model.username %></h4>
 					<h5><%= model.department && model.department.name %></h5>
 				</div>
-				<div class="col-xs-2">
-					<h4>
-						<span class="badge" style="background-color:#EA5119"><%= model.quantity %></span>&nbsp;笔
-					</h4>
-				</div>
-				<div class="col-xs-2">
-					<h4>
-						￥<%= model.total %>&nbsp;元
-					</h4>
+				<div class="col-xs-4">
+					<h5>
+						<span class="badge" style="background-color:#EA5119"><%= model.quantity %></span>&nbsp;笔&nbsp;<span style="text-align:right;"><%= model.total %>&nbsp;元</span>
+					</h5>
 				</div>
 			</div>
 			<hr/>

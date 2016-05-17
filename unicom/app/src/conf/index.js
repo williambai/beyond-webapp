@@ -1,7 +1,7 @@
 exports = module.exports = {
 	api: {
-		// host: 'http://localhost:8092',
-		host: 'http://192.168.1.100:8092',
+		host: 'http://localhost:8092',
+		// host: 'http://192.168.1.100:8092',
 		// host: 'http://wo.pdbang.cn',
 		// host: 'http://gzwo.pdbang.cn',
 	},

@@ -428,6 +428,7 @@ module.exports = exports = function(connection){
 							// $lt: endDate,
 						},
 						'department.city': city,
+						'status': '成功',
 					}
 				});
 				break;
@@ -441,6 +442,7 @@ module.exports = exports = function(connection){
 							// $lt: endDate,
 						},
 						'department.grid': grid,
+						'status': '成功',
 					}
 				});
 				break;
@@ -454,6 +456,7 @@ module.exports = exports = function(connection){
 							// $lt: endDate,
 						},
 						'department.district': district,
+						'status': '成功',
 					}
 				});
 				break;
@@ -468,6 +471,7 @@ module.exports = exports = function(connection){
 							// $lt: endDate,
 						},
 						'department.name': departmentName,
+						'status': '成功',
 					}
 				});
 				break;
@@ -590,6 +594,7 @@ module.exports = exports = function(connection){
 							// $lt: endDate,
 						},
 						'department.city': city,
+						'status': '成功',
 					}
 				});
 				break;
@@ -603,6 +608,7 @@ module.exports = exports = function(connection){
 							// $lt: endDate,
 						},
 						'department.district': district,
+						'status': '成功',
 					}
 				});
 				break;
@@ -618,6 +624,7 @@ module.exports = exports = function(connection){
 							// $lt: endDate,
 						},
 						'department.grid': grid,
+						'status': '成功',
 					}
 				});
 				break;

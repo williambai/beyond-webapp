@@ -51,7 +51,7 @@
 			</div>
 			<br/>
 			<div class="row">
-				<div class="col-xs-10">
+				<div class="col-xs-8">
 					<div class="pull-left">
 						<img width="50px" height="50px">
 					</div>
@@ -63,8 +63,9 @@
 						<p>&nbsp;</p>
 					</div>
 				</div>
-				<div class="col-xs-2">
-					<h4><%= model.price %>&nbsp;<%= model.unit %></h4>
+				<div class="col-xs-4">
+					<h4 style="text-align:right;"><%= model.price %>&nbsp;<%= model.unit %>
+					</h4>
 				</div>
 			</div>
 			<div id="orderView"></div>
