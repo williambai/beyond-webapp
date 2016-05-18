@@ -1,4 +1,7 @@
- exports = module.exports = function(app, models) {
+var path = require('path');
+var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
+
+exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
  		var doc = new models.TradeOrder(req.body);

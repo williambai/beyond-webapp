@@ -1,5 +1,3 @@
-var log4js = require('log4js');
-var worker = require('child_process').fork('./worker');
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
@@ -10,8 +8,11 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var app = express();
 var nodemailer = require('nodemailer');
+var worker = require('child_process').fork(path.resolve(__dirname,'./worker'));
 
-log4js.configure(path.join(__dirname,'config', 'log4js.json'));
+//** 启动log4js配置
+var log4js = require('log4js');
+log4js.configure(path.resolve(__dirname,'../config/log4js.json'), {cwd: path.resolve(__dirname, '..')});
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 
 var workerStatus = {
@@ -25,17 +26,17 @@ app.server = http.createServer(app);
 //import the data layer
 var mongoose = require('mongoose');
 var config = {
-	server: require('./config/server'),
-	mail: require('./config/mail'),
-	db: require('./config/db')
+	server: require('../config/server'),
+	mail: require('../config/mail'),
+	db: require('../config/db')
 };
 
 //import the models
 var models = {};
-fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
+fs.readdirSync(path.resolve(__dirname, '../models')).forEach(function(file) {
 	if (/\.js$/.test(file)) {
 		var modelName = file.substr(0, file.length - 3);
-		models[modelName] = require('./models/' + modelName)(mongoose);
+		models[modelName] = require('../models/' + modelName)(mongoose);
 	}
 });
 
@@ -45,12 +46,17 @@ mongoose.connect(config.db.URI, function onMongooseError(err) {
 		throw err;
 	}
 });
+//** show origin cookie
+app.use(function(req,res,next){
+	// logger.info('req.cookies:' + JSON.stringify(req.headers.cookie));
+	next();
+});
 
 //express configure
 app.set('view engine', 'jade');
-app.set('views', __dirname + '/views');
+app.set('views', path.resolve(__dirname, '../views'));
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.resolve(__dirname, '../public')));
 // app.use(express.limit('1mb'));
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({
@@ -93,10 +99,10 @@ app.all('*', function(req, res, next) {
 });
 
 //import the routes
-fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file) {
+fs.readdirSync(path.resolve(__dirname, '../routes')).forEach(function(file) {
 	if (/\.js$/.test(file)) {
 		var routeName = file.substr(0, file.length - 3);
-		require('./routes/' + routeName)(app, models);
+		require('../routes/' + routeName)(app, models);
 	}
 });
 
@@ -113,7 +119,7 @@ app.server.listen(config.server.PORT, function() {
 
 	worker.on('exit', function() {
 		logger.info('worker exit');
-		worker = require('child_process').fork('./worker');
+		worker = require('child_process').fork(path.resolve(__dirname,'./worker'));
 		logger.info('worker restart');
 		worker.send({
 			command: 'start'
@@ -157,21 +163,3 @@ app.server.listen(config.server.PORT, function() {
 		res.send({});
 	});
 });
-
-//** schedule Jobs
-var CronJob = require('cron').CronJob;
-var updateCiticCookie = require('./commands/refreshCiticCookie1');
-var refreshCiticCookie = function() {
-	updateCiticCookie(function(err) {
-		if (err) return logger.error(err);
-		logger.info('refresh CITIC Accounts Cookie successfully.');
-	});
-};
-var refreshCiticCookieJob = new CronJob({
-	cronTime: '00 */5 * * * *',
-	onTick: refreshCiticCookie,
-	start: true,
-	runOnInit: true, //** execute right now!
-});
-
-logger.info('scheduleJobs is started.');

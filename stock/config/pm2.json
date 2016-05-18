@@ -1,0 +1,31 @@
+{
+	"apps": [
+		{
+			"name": "StockWebServer",
+			"script": "./startup/server.js",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/stock/",
+			"watch": [
+				"startup/server.js",
+				"startup/worker.js",
+				"models",
+				"routes",
+				"libs"
+			],
+			"ignore_watch": [
+				"libs/_tmp"
+			]
+		},{
+			"name": "CITICService",
+			"script": "./startup/CITICService.js",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/stock/",
+			"watch": [
+				"startup/CITICService.js",
+				"models",
+				"libs"
+			],
+			"ignore_watch": [
+				"libs/_tmp"
+			]
+		}
+	]
+}

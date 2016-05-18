@@ -1,3 +1,6 @@
+var path = require('path');
+var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
+
 var quote = require('../libs/trading').quote;
 var _ = require('underscore');
 

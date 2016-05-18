@@ -1,13 +1,14 @@
-var log4js = require('log4js');
 var _ = require('underscore');
 var async = require('async');
 var fs = require('fs');
 var path = require('path');
-var cst = require('./config/constant');
-var Trading = require('./libs/trading').stock;
-var citic = require('./libs/citic');
+var cst = require('../config/constant');
+var Trading = require('../libs/trading').stock;
+var citic = require('../libs/citic');
 
-log4js.configure(path.join(__dirname, 'config', 'log4js.json'));
+//** 启动log4js配置
+var log4js = require('log4js');
+log4js.configure(path.join(__dirname,'../config/log4js.json'), {cwd: path.join(__dirname, '..')});
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 
 var status = {
@@ -19,17 +20,17 @@ var intervalObject;
 
 var mongoose = require('mongoose');
 var config = {
-	mail: require('./config/mail'),
-	db: require('./config/db')
+	mail: require('../config/mail'),
+	db: require('../config/db')
 };
 
 
 //import the models
 var models = {};
-fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
+fs.readdirSync(path.join(__dirname, '../models')).forEach(function(file) {
 	if (/\.js$/.test(file)) {
 		var modelName = file.substr(0, file.length - 3);
-		models[modelName] = require('./models/' + modelName)(mongoose);
+		models[modelName] = require('../models/' + modelName)(mongoose);
 	}
 });
 

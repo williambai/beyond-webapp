@@ -11,7 +11,7 @@
   "scripts": {
     "setup": "node setup",
     "test": "mocha --recursive test",
-    "dev": "pm2 start server.js --watch ./ --ignore-watch='./_app ./_dest ./app ./commands ./public ./logs ./libs/_tmp'"
+    "start": "pm2 start ./config/pm2.json"
   },
   "dependencies": {
     "node-tesseract": "^0.2.7",

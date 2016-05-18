@@ -1,3 +1,6 @@
+var path = require('path');
+var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
+
  exports = module.exports = function(app, models) {
  	var async = require('async');
  	var path = require('path');

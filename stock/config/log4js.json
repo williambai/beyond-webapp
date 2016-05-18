@@ -21,6 +21,12 @@
 		}
 	}, {
 		"type": "file",
+		"filename": "logs/tradeAccount.log",
+		"maxLogSize": 20480,
+		"backups": 3,
+		"category": ["tradeAccount", "routes/trade.account.js","models/TradeAccount.js"]
+	}, {
+		"type": "file",
 		"filename": "logs/work.log",
 		"maxLogSize": 20480,
 		"backups": 3,

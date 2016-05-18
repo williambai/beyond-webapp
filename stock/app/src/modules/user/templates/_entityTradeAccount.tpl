@@ -20,6 +20,8 @@
 	 		<div class="pull-right">
 				<% if(!model.login){ %>
 					<button class="btn btn-primary login">登录</button>
+				<% }else{ %>
+					<button class="btn btn-danger logout">登出</button>
 				<% } %>
 				<button class="btn btn-success edit">编辑</button>
 				<button class="btn btn-danger delete">删除</button>

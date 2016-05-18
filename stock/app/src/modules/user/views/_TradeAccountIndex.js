@@ -27,6 +27,7 @@ exports = module.exports = Backbone.View.extend({
 	events: {
 		'scroll': 'scroll',
 		'click .login': 'loginAccount',
+		'click .logout': 'logoutAccount',
 		'click .captcha': 'submitCaptchaText',
 		'click .add': 'addAccount',
 		'click .edit': 'editAccount',
@@ -50,7 +51,7 @@ exports = module.exports = Backbone.View.extend({
 	
 	loginAccount: function(evt){
 		var that = this;
-		var $item = this.$(evt.currentTarget).parent().parent();
+		var $item = this.$(evt.currentTarget).closest('.item');
 		var id = $item.attr('id');
 		$item.find('.login').addClass('disabled');
 		$item.append('<div class="captchaForm"><p>登录中。。。，请稍后</p></div>');
@@ -97,9 +98,33 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
+	logoutAccount: function(evt){
+		var that = this;
+		var $item = this.$(evt.currentTarget).closest('.item');
+		var id = $item.attr('id');
+		if(window.confirm('您确信要登出吗？')){
+			$.ajax({
+				url: config.api.host + '/trade/accounts',
+				type: 'POST',
+				xhrFields: {
+					withCredentials: true
+				},
+				data: {
+					action: 'logout',
+					id: id,
+				},
+				crossDomain: true,
+			}).done(function(data) {
+				$item.find('.logout').before('<button class="btn btn-primary login">登录</button>');
+				$item.find('.logout').remove();
+			});
+		}
+		return false;
+	},
+
 	submitCaptchaText: function(evt){
 		var that = this;
-		var $item = this.$(evt.currentTarget).parent().parent();
+		var $item = this.$(evt.currentTarget).closest('.item');
 		var id = $item.attr('id');
 		var captchaText = this.$('input[name=captcha]').val();
 		$item.find('.captchaForm').html('<p>正在验证...</p>');
@@ -131,14 +156,14 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	editAccount: function(evt){
-		var $item = this.$(evt.currentTarget).parent().parent();
+		var $item = this.$(evt.currentTarget).closest('.item');
 		var id = $item.attr('id');
 		this.router.navigate('trade/account/edit/'+ id,{trigger: true});
 		return false;
 	},
 
 	removeAccount: function(evt){
-		var $item = this.$(evt.currentTarget).parent().parent();
+		var $item = this.$(evt.currentTarget).closest('.item');
 		var id = $item.attr('id');
 		if(window.confirm('您确信要删除吗？')){
 			var model = new Account({_id: id});

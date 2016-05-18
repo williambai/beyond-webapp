@@ -1,23 +1,26 @@
 {
 	"apps": [
 		{
-			"name": "WebServer",
+			"name": "WoWebServer",
 			"script": "server.js",
 			"cwd": "",
 			"watch": true,
-			"ignore-watch": "./_app ./_dest ./app ./build ./commands ./public ./logs ./libs/cbss/_tmp ./test"
+			"ignore_watch": "./_app ./_dest ./app ./build ./commands ./public ./logs ./libs/cbss/_tmp ./test"
 		},{
 			"name": "SgipService",
 			"script": "sgipService.js",
-			"cwd": ""
+			"cwd": "",
+			"watch": false
 		},{
 			"name": "WechatService",
 			"script": "wechatService.js",
-			"cwd": ""
+			"cwd": "",
+			"watch": false
 		},{
 			"name": "BssService",
 			"script": "bssService.js",
-			"cwd": ""
+			"cwd": "",
+			"watch": false
 		}
 	]
 }

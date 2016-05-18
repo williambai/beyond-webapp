@@ -1,3 +1,6 @@
+var path = require('path');
+var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
+
 module.exports = exports = function(app, models) {
 	var _ = require('underscore');
 	var crypto = require('crypto');

@@ -90,7 +90,7 @@
 		</div>
 		<div class="btn-group pull-right">
 			<div class="btn" id="right-sidebar-toggle">
-				<i class="fa fa-comment fa-lg"></i>
+				<i class="fa fa-home fa-lg"></i>
 				&nbsp;主页
 			</div>
 		</div>

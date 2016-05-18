@@ -1,7 +1,6 @@
-var log4js = require('log4js');
 var path = require('path');
 var _ = require('underscore');
-var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
+var logger = require('log4js').getLogger(path.relative(process.cwd(),__filename));
 
 var isTradingTime = function(time) {
 	var hhmmss = time.split(':');

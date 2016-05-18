@@ -32,7 +32,7 @@
 					<div class="col-sm-7 col-xs-7 menu-block-left">
 						<div class="text-center menu-block-2x" style="background-color:red;">
 							<a href="#order/index">
-								<h4> <i class="fa fa-user fa-lg"></i>
+								<h4> <i class="fa fa-bar-chart fa-lg"></i>
 									&nbsp;我的业绩
 								</h4>
 							</a>
@@ -49,7 +49,7 @@
 						<div class="text-center menu-block-1x" style="background-color:green;">
 							<a href="#category/index">
 								<h4>
-									<i class="fa fa-sun-o fa-lg"></i>
+									<i class="fa fa-book fa-lg"></i>
 									&nbsp;所有产品
 								</h4>
 							</a>
@@ -61,7 +61,7 @@
 						<div class="text-center menu-block-1x" style="background-color:red;">
 							<a href="#sale/lead/index">
 								<h4>
-									<i class="fa fa-book fa-lg"></i>
+									<i class="fa fa-road fa-lg"></i>
 									&nbsp;销售线索
 								</h4>
 							</a>
@@ -71,7 +71,7 @@
 						<div class="text-center menu-block-1x" style="background-color:green;">
 							<a href="#customer/index">
 								<h4>
-									<i class="fa fa-user fa-lg"></i>
+									<i class="fa fa-group fa-lg"></i>
 									&nbsp;客户关怀
 								</h4>
 							</a>
@@ -83,8 +83,8 @@
 						<div class="text-center menu-block-1x" style="background-color:red;">
 							<a href="#activity/index">
 								<h4>
-									<i class="fa fa-star-o fa-lg"></i>
-									&nbsp;同事圈
+									<i class="fa fa-film fa-lg"></i>
+									&nbsp;同事圈&nbsp;&nbsp;
 								</h4>
 							</a>
 						</div>
@@ -93,7 +93,7 @@
 						<div class="text-center menu-block-1x" style="background-color:green;">
 							<a href="#me/index">
 								<h4>
-									<i class="fa fa-star-o fa-lg"></i>
+									<i class="fa fa-user fa-lg"></i>
 									&nbsp;个人中心
 								</h4>
 							</a>
