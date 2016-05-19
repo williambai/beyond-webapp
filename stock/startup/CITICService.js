@@ -56,9 +56,10 @@ var processOrderJob = new CronJob({
 	//** 每过7秒钟检查一次订单
 	cronTime: '*/7 * * * * *',
 	onTick: function() {
+		logger.info('发送指令: process CITIC Order.');
 		models.TradeOrder.process(function(err, result) {
 				if (err) return logger.error(err);
-				logger.info('成功发送指令: process CITIC Order.');
+				logger.info('成功处理指令: process CITIC Order.');
 			}
 		);
 	},

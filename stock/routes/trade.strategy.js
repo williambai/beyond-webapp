@@ -1,5 +1,6 @@
 var path = require('path');
 var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
+var _ = require('underscore');
 
  exports = module.exports = function(app, models) {
 
@@ -20,6 +21,7 @@ var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
+ 		set = _.omit(set, '_id');
  		models.TradeStrategy.findByIdAndUpdate(id, {
  				$set: set
  			}, {

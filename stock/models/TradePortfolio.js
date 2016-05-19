@@ -1,5 +1,10 @@
 var path = require('path');
 var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
+var _ = require('underscore');
+var async = require('async');
+var Trading = require('../libs/trading').stock;
+var citic = require('../libs/citic');
+
 var mongoose = require('mongoose');
 var schema = new mongoose.Schema({
 	account: {//** StockAccount 交易账号信息
@@ -137,6 +142,219 @@ var schema = new mongoose.Schema({
 });
 
 schema.set('collection','trade.portfolios');
+
+/**
+ * 询价处理
+ */
+schema.statics.processStock = function(options,done){
+	if(typeof options == 'function'){
+		done = options;
+		options = {};
+	}
+	connnection.models.TradePortfolio
+		.find({
+		})
+		.select({transactions: 0})// ** 忽略 transactions
+		.exec(function(err, strategies) {
+			if (err) return logger.error(err);
+			if (_.isEmpty(strategies)) return logger.debug('没有可执行的股票投资组合。');
+			trading = new Trading();
+
+			//** 将报价保存到数据库
+			trading.on('quote', function(stock) {
+				// logger.debug('quote: ' + JSON.stringify(stock.symbol));
+				// if (stock.price != '0.00') {
+				// 	connnection.models.TradeQuote
+				// 		.findOneAndUpdate({
+				// 				'symbol': stock.symbol,
+				// 				'date': stock.date,
+				// 				'time': stock.time,
+				// 			}, {
+				// 				$set: stock
+				// 			}, {
+				// 				upsert: true
+				// 			},
+				// 			function(err, doc) {
+				// 				if (err) return logger.error(err);
+				// 			}
+				// 		);
+				// }
+			});
+			trading.on('bid', function(trade) {
+				trade = trade || {};
+				var stock = trade.stock;
+				var transaction = trade.transaction;
+				transaction.symbol = stock.symbol;
+				logger.info('bid transaction: ' + JSON.stringify(transaction));
+				connnection.models.TradePortfolio.findOneAndUpdate({
+						'symbol': stock.symbol
+					}, {
+						$set: {
+							bid: {
+								direction: transaction.direction,
+								price: transaction.price,
+							}
+						}
+					}, {
+						upsert: false,
+					},
+					function(err, result) {
+						if (err) return logger.error(err);
+					});
+
+			});
+			trading.on('sell', function(trade) {
+				trade = trade || {};
+				var stock = trade.stock;
+				var strategy = trade.strategy;
+				var transaction = trade.transaction;
+				transaction.symbol = stock.symbol;
+				var debt = transaction.price * transaction.quantity;
+				logger.info('sell transaction: ' + JSON.stringify(transaction));
+				async.waterfall(
+					[
+						function pushTransaction(callback) {
+							//** 当前交易
+							var currentTransaction = {
+								price: transaction.price,
+								quantity: transaction.quantity,
+								direction: transaction.direction,
+								date: stock.date,
+								time: stock.time,
+							};
+							connnection.models.TradePortfolio
+								.findOneAndUpdate({
+										'symbol': stock.symbol
+									}, {
+										$set: {
+											lastTransaction: currentTransaction,//** 设置最后一次交易
+											bid: {
+												direction: '待定',
+												price: transaction.price
+											}
+										},
+										$push: {
+											transactions: currentTransaction
+										},
+										$inc: {
+											'times.sell': 1, //** 增加交易次数
+											'debt': debt, //** 减少债务(趋向正数方向)
+											'quantity': -transaction.quantity, //** 减少持有数量
+										}
+									}, {
+										upsert: false,
+									},
+									function(err, result) {
+										if (err) return callback(err);
+										callback(null);
+									}
+								);
+						},
+						function saveTransaction(callback) {
+							var newTrade = {
+								account: strategy.account,
+								symbol: stock.symbol,
+								name: strategy.name,
+								nickname: strategy.nickname,
+								price: transaction.price,
+								quantity: transaction.quantity,
+								direction: transaction.direction,
+								status: '未成交',
+								tax: 0,
+								date: stock.date,
+								time: stock.time,
+							};
+							connnection.models.TradeTransaction.create(newTrade, function(err, doc) {
+								if (err) return callback(err);
+								callback(null);
+							});
+						},
+					],
+					function(err, result) {
+						if (err) return logger.error(err);
+					}
+				);
+			});
+			trading.on('buy', function(trade) {
+				trade = trade || {};
+				var stock = trade.stock;
+				var strategy = trade.strategy;
+				var transaction = trade.transaction;
+				var debt = transaction.price * transaction.quantity;
+				transaction.symbol = stock.symbol;
+				logger.info('buy transaction: ' + JSON.stringify(transaction));
+
+				async.waterfall(
+					[
+						function pushTransaction(callback) {
+							//** 当前交易
+							var currentTransaction = {
+								price: transaction.price,
+								quantity: transaction.quantity,
+								direction: transaction.direction,
+								date: stock.date,
+								time: stock.time,
+							};
+							connnection.models.TradePortfolio
+								.findOneAndUpdate({
+										'symbol': stock.symbol
+									}, {
+										$set: {
+											lastTransaction: currentTransaction,
+											bid: {
+												direction: '待定',
+												price: transaction.price
+											}
+										},
+										$push: {
+											'transactions': currentTransaction
+										},
+										$inc: {
+											'times.buy': 1, //** 增加交易次数
+											'debt': -debt, //** 增加债务(趋向负数方向)
+											'quantity': transaction.quantity, //** 增加持有数量
+										}
+									}, {
+										upsert: false,
+									},
+									function(err, result) {
+										if (err) return callback(err);
+										callback(null);
+									}
+								);
+						},
+						function saveTransaction(callback) {
+							var newTrade = {
+								account: strategy.account,
+								symbol: stock.symbol,
+								name: strategy.name,
+								nickname: strategy.nickname,
+								price: transaction.price,
+								quantity: transaction.quantity,
+								direction: transaction.direction,
+								status: '未成交',
+								tax: 0,
+								date: stock.date,
+								time: stock.time,
+							};
+							connnection.models.TradeTransaction.create(newTrade, function(err, doc) {
+								if (err) return callback(err);
+								callback(null);
+							});
+						},
+					],
+					function(err, result) {
+						if (err) return logger.error(err);
+					}
+				);
+
+			});
+			trading.run(strategies, function(err, result) {
+				if (err) return done(err);
+				done();
+			});
+		});
+};
 
 module.exports = exports = function(connection){
 	connection = connection || mongoose;

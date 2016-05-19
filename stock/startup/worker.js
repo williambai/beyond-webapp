@@ -1,3 +1,7 @@
+/**
+ * @Depreciated!
+ * replaced by stockService.js
+ */
 var _ = require('underscore');
 var async = require('async');
 var fs = require('fs');

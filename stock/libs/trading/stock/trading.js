@@ -1,7 +1,9 @@
+var path = require('path');
+var _ = require('underscore');
+var logger = require('log4js').getLogger(path.relative(process.cwd(),__filename));
 var request = require('request');
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
-var _ = require('underscore');
 var async = require('async');
 
 var quote = require('./quote');
@@ -55,7 +57,6 @@ StockTrading.prototype.run = function(strategies, done) {
 	var symbols = _.pluck(strategies, 'symbol');
 	quote.getQuotes(symbols, function(err, stocks) {
 		if (err) return done(err);
-		console.log('----  trading run at: '+ (new Date()).toLocaleString() +'  ----');
 		async.eachSeries(strategies, that.executeStrategy(stocks), done);
 	}, done);
 };

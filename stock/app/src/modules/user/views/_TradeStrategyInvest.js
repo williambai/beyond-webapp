@@ -57,7 +57,7 @@ exports = module.exports = FormView.extend({
 
 
 	submit: function() {
-		// if(window.confirm('将该品种创建或更新到投资组合，您确信要实施吗？')){
+		if(window.confirm('将该品种创建或更新到投资组合，您确信要实施吗？')){
 			var that = this;
 			//clear errors
 			this.$('.form-group').removeClass('has-error');
@@ -85,8 +85,9 @@ exports = module.exports = FormView.extend({
 					withCredentials: true
 				},
 			});
+			that.router.navigate('trade/strategy/index',{trigger: true, replace: true});
 			return false;
-		// }
+		}
 	},
 	
 	cancel: function(){

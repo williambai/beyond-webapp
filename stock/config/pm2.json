@@ -2,11 +2,23 @@
 	"apps": [
 		{
 			"name": "StockWebServer",
-			"script": "./startup/server.js",
+			"script": "./startup/webServer.js",
 			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/stock/",
 			"watch": [
-				"startup/server.js",
-				"startup/worker.js",
+				"startup/webServer.js",
+				"models",
+				"routes",
+				"libs"
+			],
+			"ignore_watch": [
+				"libs/_tmp"
+			]
+		},{
+			"name": "StockService",
+			"script": "./startup/stockService.js",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/stock/",
+			"watch": [
+				"startup/stockService.js",
 				"models",
 				"routes",
 				"libs"

@@ -40,7 +40,7 @@ exports = module.exports = function(app, models) {
 							//** 复位初始债务
 							strategy.debt = 0;
 							//** 设置初始资产单价
-							strategy.price = Number(stock.price);
+							strategy.price = Number(stock.price || 0);
 							//** 计算初始资产
 							var quantity = strategy.quantity || 0;
 							strategy.asset = Number(quantity) * Number(stock.price);

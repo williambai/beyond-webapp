@@ -1,8 +1,3 @@
-/**
- * @Depreciated!
- * replaced by webServer.js
- */
-
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
@@ -13,17 +8,11 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var app = express();
 var nodemailer = require('nodemailer');
-var worker = require('child_process').fork(path.resolve(__dirname,'./worker'));
 
 //** 启动log4js配置
 var log4js = require('log4js');
 log4js.configure(path.resolve(__dirname,'../config/log4js.json'), {cwd: path.resolve(__dirname, '..')});
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
-
-var workerStatus = {
-	platform: false,
-	trade: false,
-};
 
 //create an http server
 app.server = http.createServer(app);
@@ -113,58 +102,17 @@ fs.readdirSync(path.resolve(__dirname, '../routes')).forEach(function(file) {
 
 app.server.listen(config.server.PORT, function() {
 	logger.info(config.server.NAME + ' App is running at ' + config.server.PORT + ' now.');
+});
 
-	//kill child_process
-	process.on('SIGTERM', function() {
-		logger.info('Master Got a SIGTERM, exiting...');
-		worker.kill('SIGTERM');
-		process.exit(1);
-		logger.info(config.server.NAME + ' App is shutdowned at ' + config.server.PORT + ' gracefully.');
-	});
+//** process kill signal
+process.on('SIGTERM', function() {
+	logger.warn(config.server.NAME + ' App is shutdowned at ' + config.server.PORT + ' because of kill signal.');
+	process.exit(1);
+});
 
-	worker.on('exit', function() {
-		logger.info('worker exit');
-		worker = require('child_process').fork(path.resolve(__dirname,'./worker'));
-		logger.info('worker restart');
-		worker.send({
-			command: 'start'
-		});
-	});
-
-	worker.on('message', function(msg) {
-		logger.info(msg);
-		workerStatus = msg;
-	});
-	worker.send({
-		command: 'start'
-	});
-
-	app.post('/captcha', function(req, res) {
-		var captcha = req.body.captcha;
-		worker.send({
-			command: 'captcha',
-			captcha: captcha
-		});
-		res.send({});
-	});
-
-	app.get('/platform/status', function(req, res) {
-		res.send(workerStatus);
-	});
-
-	app.post('/platform/start', function(req, res) {
-		logger.info('start platform');
-		worker.send({
-			command: 'start'
-		});
-		res.send({});
-	});
-
-	app.post('/platform/stop', function(req, res) {
-		logger.info('stop platform');
-		worker.send({
-			command: 'stop'
-		});
-		res.send({});
-	});
+//** process uncaughtException
+process.on('uncaughtException', function(e){
+	logger.warn(config.server.NAME + ' App is shutdowned at ' + config.server.PORT + ' because of uncaughtException.');
+	logger.debug(e);
+	process.exit(1);
 });

@@ -1,5 +1,7 @@
-var request = require('request');
+var path = require('path');
 var _ = require('underscore');
+var logger = require('log4js').getLogger(path.relative(process.cwd(),__filename));
+var request = require('request');
 
 var Quote = {};
 
