@@ -27,7 +27,6 @@ var cookie = casper.cli.options['cookie'] || '';
 var sale_code = casper.cli.options['sale_code'] || '';
 var sale_price = casper.cli.options['sale_price'] || '';
 var sale_quantity = casper.cli.options['sale_quantity'] || '';
-var callback_url = casper.cli.options['callback_url'] || '';
 
 var cookies = [];
 try {
@@ -94,21 +93,15 @@ casper.withFrame('mainFrame',function(){
 
 casper.wait(2000);
 
+//** 检查是否卖出下单成功，并输出成功/失败标志
 casper.then(function() {
-	//** notification success or not
-	var success = false;
 	if (casper.exists('#menuTD')) {
-		success = true;
+		//** 成功
+		this.echo('order_sale:true');
+	}else{
+		//** 失败
+		this.echo('order_sale:false');
 	}
-	casper.evaluate(function(url, id, cookies, success) {
-		__utils__.sendAJAX(url, 'POST', {
-			action: 'updateOrder',
-			type: 'sale',
-			id: id,
-			cookies: cookies,
-			success: success
-		}, false);
-	}, callback_url, id, JSON.stringify(phantom.cookies || []), success);
 });
 
 casper.run();

@@ -1,1 +1,0 @@
-confirm.buy.capser.js

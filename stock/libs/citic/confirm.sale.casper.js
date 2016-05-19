@@ -1,1 +1,0 @@
-confirm.sale.casper.js

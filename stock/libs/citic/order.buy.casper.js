@@ -23,7 +23,6 @@ var cookie = casper.cli.options['cookie'] || '';
 var buy_code = casper.cli.options['buy_code'] || '';
 var buy_price = casper.cli.options['buy_price'] || '';
 var buy_quantity = casper.cli.options['buy_quantity'] || '';
-var callback_url = casper.cli.options['callback_url'] || '';
 
 var cookies = [];
 try {
@@ -54,6 +53,7 @@ casper.then(function clickBuy(){
 	this.click('#gp_buy');
 });
 
+//** 填充购买表单并提交
 casper.withFrame('mainFrame',function(){
 	casper.then(function buyForm(){
 		this.capture('../_tmp/buyForm.png');
@@ -96,20 +96,16 @@ casper.withFrame('mainFrame',function(){
 
 casper.wait(2000);
 
+//** 检查是否买入下单成功，并输出成功/失败标志
+//** <div id="message" class="error" style="display: block; opacity: 1;"><ul><li>HsErrCode(-59)_HsErrMsg([120147][当前时间不允许委托] and  and [curr_time;163425] )</li></ul></div>
 casper.then(function() {
-	//** notification success or not
-	var success = false;
 	if (casper.exists('#menuTD')) {
-		success = true;
+		//** 成功
+		this.echo('order_buy:true');
+	}else{
+		//** 失败
+		this.echo('order_buy:false');
 	}
-	casper.evaluate(function(url, id, cookies, success) {
-		__utils__.sendAJAX(url, 'POST', {
-			action: 'updateOrder',
-			id: id,
-			cookies: cookies,
-			success: success
-		}, false);
-	}, callback_url, id, JSON.stringify(phantom.cookies || []), success);
 });
 
 casper.run();
