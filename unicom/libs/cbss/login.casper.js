@@ -197,7 +197,7 @@ var neverendingWait = function() {
 
 casper.checkCaptcha = function() {
 	//** 下载验证码图片
-	this.download('https://hb.cbss.10010.com/image?mode=validate&width=60&height=20', captchaFile);
+	this.download('https://gz.cbss.10010.com/image?mode=validate&width=60&height=20', captchaFile);
 	//** 查看登录界面是否正确显示
 	this.capture(loginFile);
 

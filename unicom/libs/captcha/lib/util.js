@@ -3,7 +3,7 @@
  * @param  {[type]}  colorInt [description]
  * @return {Boolean}          [description]
  */
-exports.isWhite = isWhite = function(rgb) {
+exports.isWhite = function(rgb) {
 	if (rgb[0] + rgb[1] + rgb[2] > 330) {
 		return 1;
 	}

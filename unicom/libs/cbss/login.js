@@ -20,13 +20,42 @@ var async = require('async');
 
 // return;
 
-// var https = require('https');
+var https = require('https');
+var options = {
+	// key: fs.readFileSync(keyFile),
+	// cert: fs.readFileSync(certFile),
+	// ca: fs.readFileSync(caFile),
+	rejectUnauthorized: false,
+	family: 4,
+	hostname: 'cbss.10010.com',
+	port: 443,
+	path: '/essframe',
+	method: 'GET',
+	headers: {
+		'Accept-Language': 'zh-CN',
+		'Accept': 'text/html, application/xhtml+xml, */*',
+		'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko',
+		'Connection': 'Keep-Alive',		
+	}
+};
+
+options.agent = new https.Agent(options);
 // process.debug = true;
-// https.get('https://www.12306.cn', function(res){
-// 	console.log('++++');
-// });
-// console.log('----')
-// return;
+var req = https.request(
+	options, function(res){
+  console.log('statusCode: ', res.statusCode);
+  console.log('headers: ', res.headers);
+
+  res.on('data', function(d){
+    process.stdout.write(d);
+  });
+});
+req.end();
+req.on('error', function(e){
+  console.error(e);
+});
+console.log('----')
+return;
 
 request.debug = true;
 
@@ -54,7 +83,7 @@ async.waterfall(
 		function getCookies(callback) {
 			request({
 				// url: 'https://localhost:8000',
-				url: 'http://cbss.10010.com/essframe',
+				url: 'https://cbss.10010.com/essframe',
 				// agent: false,
 				// agentOptions: {
 					// cert: fs.readFileSync(certFile),
