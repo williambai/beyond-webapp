@@ -12,7 +12,8 @@ var casper = require('casper').create({
 		loadImages: true,
 		loadPlugins: false
 	},
-	timeout: 100000,
+	timeout: 120000,
+	waitTimeout: 10000,
 	logLevel: "debug",
 	verbose: true
 });
@@ -66,15 +67,17 @@ casper.then(function inputCaptcha() {
 	while (confirm != 'yes') {
 		this.echo('please input account username: ', 'INFO');
 		account.username = system.stdin.readLine();
-		this.echo(account.username, 'INFO');
 		this.echo('please input "' + account.username + '" password: ', 'INFO');
 		account.password = system.stdin.readLine();
-		this.echo(account.password, 'INFO');
 		this.echo('captcha.png has been download, please open ../_tmp/captcha.png and read the code.','INFO');
 		this.echo('please input captcha code: ','INFO');
 		code = system.stdin.readLine();
-		this.echo('captcha code is "' + code + '"', 'INFO');
-		this.echo('yes or no?', 'WARNING');
+		this.echo('-------- inputs ------');
+		this.echo('account: ' + account.username, 'INFO');
+		this.echo('password: ' + account.password, 'INFO');
+		this.echo('captcha code: ' + code, 'INFO');
+		this.echo('----------------------');
+		this.echo('do you confirm, yes or no?', 'WARNING');
 		confirm = system.stdin.readLine();
 	}
 });
@@ -93,21 +96,24 @@ casper.then(function loginSubmit(){
 	this.click('input#submit_btn');
 });
 
-casper.then(function checkLogin2(){
-	this.waitFor(
-		function(){
-			return this.exists('#menuTD');
-		},function signin2(){
-			response.status = '已登录';
-			response.login = true;
-		},function signout2(){
-			//** 未登录，退出
-			response.status = '未登录';
-			response.login = false;
-			this.echo(JSON.stringify(response));
-			this.exit();
-		},2000);
+casper.waitFor(function(){
+	return casper.exists('#menuTD');
 });
+
+//** TODO why not running?
+// casper.then(function checkLogin2(){
+// 	this.waitFor(
+// 		function(){
+// 			return this.exists('#menuTD');
+// 		},function signin2(){
+// 			response.status = '已登录';
+// 			response.login = true;
+// 		},function signout2(){
+// 			//** 未登录，退出
+// 			response.status = '未登录';
+// 			response.login = false;
+// 		},10000);
+// });
 
 //** save cookies
 casper.then(function saveCookie(){
