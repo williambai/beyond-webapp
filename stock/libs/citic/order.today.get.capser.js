@@ -1,9 +1,8 @@
 /**
- * 检查当天委托是否成功
+ * 获取当天全部委托订单
  */
 var fs = require('fs');
 var system = require('system');
-var server = require('webserver').create();
 var casper = require('casper').create({
 	// clientScripts: ['jquery.js'],
 	pageSettings: {

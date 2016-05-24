@@ -11,7 +11,7 @@
 				"libs"
 			],
 			"ignore_watch": [
-				"libs/_tmp"
+				"libs/citic/test"
 			]
 		},{
 			"name": "StockService",
@@ -24,7 +24,7 @@
 				"libs"
 			],
 			"ignore_watch": [
-				"libs/_tmp"
+				"libs/citic/test"
 			]
 		},{
 			"name": "CITICService",
@@ -36,7 +36,7 @@
 				"libs"
 			],
 			"ignore_watch": [
-				"libs/_tmp"
+				"libs/citic/test"
 			]
 		}
 	]
