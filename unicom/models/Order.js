@@ -388,6 +388,16 @@ module.exports = exports = function(connection){
 		};
 
 	/**
+	 * 处理4G订单
+	 * @param  {[type]}   options [description]
+	 * @param  {Function} done    [description]
+	 * @return {[type]}           [description]
+	 */
+	schema.statics.process4G = function(options, done){
+		done(null);
+	};
+
+	/**
 	 * 订单按人排名
 	 * @param  {[type]}   options [description]
 	 * @param  {Function} done    [description]

@@ -80,7 +80,8 @@ casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + ac
 casper.then(function checkLogin(){
 	var navHtml = this.getHTML();
 	var homePageMeta = RegexUtils.regexMatch(/<meta.*provinceId.*?>/i,navHtml);
-	if(homePageMeta){
+	// console.log('homePageMeta:' + JSON.stringify(homePageMeta));
+	if(homePageMeta.length > 0){
 		//** 已登录
 		response.meta = homePageMeta;
 		response.status = '已登录';
