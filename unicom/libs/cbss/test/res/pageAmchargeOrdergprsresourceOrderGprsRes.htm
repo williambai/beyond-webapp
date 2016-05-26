@@ -1,0 +1,442 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--规范-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<!--头组件-->
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=7" />
+<base href="https://hb.cbss.10010.com/"/>
+<script language="JavaScript" src="component/scripts/public.js"></script>
+<script language="JavaScript" src="component/scripts/validate.js"></script>
+<script language="JavaScript" src="component/scripts/dragiframe.js"></script>
+<link href="component/styles/public.css" rel="stylesheet" type="text/css" media="screen"/>
+<link href="component/styles/calendar.css" rel="stylesheet" type="text/css" media="screen"/>
+<link href="component/styles/tabset.css" rel="stylesheet" type="text/css" media="screen"/>
+<link href="component/styles/editor.css" rel="stylesheet" type="text/css" media="screen"/>
+<link href="component/styles/combobox.css" rel="stylesheet" type="text/css" media="screen"/>
+<script language="JavaScript" src="component/scripts/tabset.js"></script>
+<script language="JavaScript" src="component/scripts/tableedit.js"></script>
+<script language="JavaScript" src="component/scripts/print.js"></script>
+<script language="JavaScript" src="component/scripts/file.js"></script>
+<script language="JavaScript" src="component/scripts/lib/prototype.js"></script>
+<script language="JavaScript" src="component/scripts/lib/json.js"></script>
+<script language="JavaScript" src="component/scripts/ajax.js"></script>
+<meta id="pagecontext" pagename="amcharge.ordergprsresource.OrderGprsRes" productMode='true' staffId='KXGCFJH2' staffName='孙茜兰' deptId='71b1hyi' deptCode='71b1hyi' deptName='江苏天智互联科技股份有限公司' cityId='712058' cityName='孝南区' areaCode='712058' areaName='孝南区' epachyId='0712' epachyName='孝感' loginEpachyId='0712' version='BSS2plus' provinceId='71' subSysCode='acctmanm' loginCheckCode='201605257180039193' loginProvinceId='71'  />
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+		<title>&#27969;&#37327;&#36164;&#28304;&#35746;&#36141;	</title>
+		<!--样式文件-->
+<script src="scripts-acctmanm/tableeditacctcore.js" language="JavaScript"></script>
+
+<script src="scripts-acctmanm/commonacctcore.js" language="JavaScript"></script>
+
+<script src="scripts-acctmanm/common/strtable.js" language="JavaScript"></script>
+
+<script src="scripts-acctmanm/common/tradectrl.js" language="JavaScript"></script>
+
+<script src="scripts-acctmanm/common/tradefee.js" language="JavaScript"></script>
+
+<script src="scripts-acctmanm/common/tradewin.js" language="JavaScript"></script>
+
+<script src="scripts-acctmanm/common/lookupcombo.js" language="JavaScript"></script>
+
+<script src="scripts-acctmanm/public/LodopFuncs.js" language="JavaScript"></script>
+	<object id="LODOP" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" codebase="lodop.inf" width="0" height="0"> 
+		    <embed id="LODOP_EM" type="application/x-print-lodop" width="0" height="0" pluginspage="install_lodop.exe"></embed>
+		</object>
+<link href="styles-acctmanm/lookupcombo.css" rel="stylesheet" type="text/css" media="screen"/>
+
+<link href="component/styles/styles_base.css" rel="stylesheet" type="text/css" media="screen"/>
+	<!-- 下面是copy长沙的样式，如果不需要，可以去掉 -->
+<link href="styles-acctmanm/acctmaintrade.css" rel="stylesheet" type="text/css" media="screen"/>
+
+<link href="styles-acctmanm/tradestyle.css" rel="stylesheet" type="text/css" media="screen"/>
+	<script>
+			Event.observe(window, 'load', initAcctInterface);
+			Event.observe(window, 'load', dealTradeMsg);
+			
+		</script>
+<script src="scripts-acctmanm/lib/webprinter.js" language="JavaScript"></script>
+<script src="scripts-acctmanm/app/amcharge/ordergprsresource/OrderGprsRes.js" language="JavaScript"></script>
+<link href="styles-acctmanm/essNew.css" rel="stylesheet" type="text/css" media="screen"/>
+
+<script language="JavaScript" type="text/JavaScript">
+	function onKeyPressEventByDefault() {onKeyPressEvent(null);}
+	addObjEventListener("document", "keypress", onKeyPressEventByDefault);
+	function onContextMenuEventByDefault() {window.event.returnValue = false;}
+	addObjEventListener("document", "contextmenu", onContextMenuEventByDefault);
+	var pagevisit = getPageVisit();
+	completePageLoad();</script></head>	<!--Body组件-->
+
+<body ondrag="return false" onkeydown="enter2Tab(event);">
+<script language="JavaScript" type="text/javascript"><!--
+
+
+
+window.onload = function (){
+
+showAllUserForAcct();
+
+}
+// --></script>
+<iframe id="wade_sbtframe" name="wade_sbtframe" class="c_sbtframe" frameborder="no" scrolling="no" style="display:none"></iframe> <span id="_tradeGlobal" style="display:none">
+<input value="/acctmanm" id="_tradeGlobal_SERVLET_PATH" type="hidden"></input>
+<input value="amcharge.ordergprsresource.OrderGprsRes" id="_tradeGlobal_PAGE_NAME" type="hidden"></input>
+<input value="" id="_tradeGlobal_TRADE_STATUS" type="hidden"></input>
+<input value="false" id="_tradeGlobal_ERROR" type="hidden"></input> </span>	<!-- ajax刷新后提示信息存放地 -->
+<span id="_messageGlobalAcct" style="display:none">
+
+
+
+</span>	<div id="errorMsg" class="popNote" style="width:280px; display:none;top:155px;"></div>
+		<a id="lodopinstall" href='scripts-acctmanm/public/install_lodop.exe' style="display:none;">执行安装</a>
+<form method="post" name="Form0" action="/acctmanm;BSS_ACCTMANM_JSESSIONID=FinmXb_CEIrCS45fDWfbGLxXqpB-tuZFqOYtubGPvElwanunJR2n!2075037725!118749556">
+<input type="hidden" id="service" name="service" value="direct/1/amcharge.ordergprsresource.OrderGprsRes/$Form"/>
+<input type="hidden" id="sp" name="sp" value="S0"/>
+<input type="hidden" id="Form0" name="Form0" value="cond_SERIAL_NUMBER,cond_NET_TYPE_CODE,bquerytop,cond_DL_NAME,cond_DL_SNUMBER,data_DL_ZJ,cond_DL_NUMBER,data_RESOURCE_TAG,data_RESOURCE_ZK,data_PACKAGE_CODE,data_RESOURCE_CODE,data_ZK_NAME,data_RESOURCE_NAME,data_LONG,data_MONEY,data_RES_MONEY,data_UNIT,data_VALID_TIME_UNIT,data_VALID_TIME,data_RESOURCE_COUNT,bsubmit1,userinfoback_PREPAY_TAG"/>
+<input value="1" id="cond_ID_TYPE" style="display:none" name="cond_ID_TYPE"></input>	<div class="c_content">
+			<div class="c_search">
+				<div class="e_title">查找条件</div>
+				<table border="0" cellspacing="0" cellpadding="0" class="threeCol">
+					<!--tr表示一行，td表示一列-->
+					<td class="label">
+						业务号码：
+					</td>
+					<td><input type="text" id="cond_SERIAL_NUMBER" name="cond_SERIAL_NUMBER" checkdata="checkspec,maxlength=40" class="txt" nullable="no" maxsize="40" desc="&#21495;&#30721;" onblur="changeNetCodeAfterSerialNumber(this)"/>	</td>
+					<td class="label">
+						电信类型：
+					</td>
+					<td><select id="cond_NET_TYPE_CODE" name="cond_NET_TYPE_CODE" class="sel" maxsize="4" desc="&#30005;&#20449;&#31867;&#22411;" whenWatch="querySuccess">
+<option value=""></option>
+<option value="XN">&#34394;&#25311;&#29992;&#25143;</option>
+<option value="50">4G</option>
+<option value="WV">&#38598;&#22242;&#19994;&#21153;</option>
+<option value="33">WCDMA</option>
+<option value="40">&#20114;&#32852;&#32593;&#25509;&#20837;&#19994;&#21153;</option>
+<option value="41">&#20114;&#32852;&#32593;&#24212;&#29992;&#19994;&#21153;</option>
+<option value="CP">&#32452;&#21512;&#19994;&#21153;</option>
+<option value="30">&#22266;&#35805;&#19994;&#21153;</option>
+</select>	</td>
+					<td> <input type="submit" id="bquerytop" name="bquerytop" value=" &#26597; &#35810; " onclick="return queryParentTable(this);" class="btn2" onmouseout="this.className='btn2 btnOff'" onmouseover="this.className='btn2 btnOver'"/> 
+
+	</td>
+					<td>
+					</td>
+				</table><!-- 为了处理多用户弹出，增加一个隐藏区域 -->
+<input value="" id="cond_X_USER_COUNT" type="hidden" name="cond_X_USER_COUNT"></input>
+	<div class="e_title">
+		用户明细信息
+	</div>
+<table cellpadding="0" class="threeCol" border="0" style="display:block" cellspacing="0">	<tr>
+	<td class="label">
+				账户标识：
+			</td>
+			<td>
+	</td>
+
+	<td class="label">客户名称： 
+			</td>
+			<td>
+	</td>
+			<td class="label">用户状态： 
+			</td>
+			<td>
+	</td>
+		</tr>
+		<tr>
+			<td class="label">
+				付费类型：
+			</td>
+			<td>
+	</td>
+			<td class="label">
+				产品名称：
+			</td>
+			<td>
+	</td>
+			<td class="label">
+				用户积分：
+			</td>
+			<td>
+	</td>
+		</tr>
+		<tr>
+			<td class="label">
+				客户市县：
+			</td>
+			<td>
+	</td>
+	<td class="label">
+				信用额度：
+			</td>
+			<td>
+	</td>
+	<td class="label">
+			    设备数：
+			</td>
+			<td>
+	</td>
+	</tr>
+	<tr>
+			<td class="label">
+				往月欠费：
+			</td>
+			<td>
+	</td>
+			<td class="label">
+				实时话费：
+			</td>
+			<td>
+	</td>
+			<td class="label">
+				<div style="color:red">
+					实时结余：
+				</div>
+			</td>
+			<td>
+	</td>
+		</tr>
+		<tr>
+			<td class="label">
+				<div style="color:red">
+				一般纳税人：
+				</div>
+			</td>
+			<td>
+	</td>
+
+	<td class="label">
+			</td>
+			<td>
+			</td>
+			<td class="label">
+			</td>
+			<td>
+			</td>
+	</tr>
+	<!-- 
+		<span jwcid="@Conditional" condition='ognl:withFee&&(!"0".equals(page.userInfo.PREPAY_TAG) && !"1".equals(page.userInfo.PREPAY_TAG) && !"".equals(page.userInfo.PREPAY_TAG) && page.userInfo.PREPAY_TAG != null)'>
+		<tr>
+			<td class="label">
+				账户余额：
+			</td>
+			<td>
+				<input type="text" jwcid="@Insert"
+					value="ognl:page.acctBalanceInfo.TOTAL_FEE" />
+			</td>
+			<td class="label">
+			</td>
+			<td>
+				
+				<input type="hidden" name="cond_PRE_TOTAL_FEE" id="cond_PRE_TOTAL_FEE" jwcid="@Any" value="ognl:page.acctBalanceInfo.TOTAL_FEE" />
+				
+			</td>
+			<td class="label">
+			</td>
+			<td>
+			</td>
+		</tr>
+		</span>
+		-->
+</table>	</div>
+			
+       <div class="UITableBox topSpace">
+	     	  <div class="e_title">已办理资源包</div>
+					<div class="UITable" style="height: 150px;">
+								<table id="QryOrderGprsResTable">
+									<thead>
+										<tr style="position:relative; top:expression(this.offsetParent.scrollTop)">
+											<th id="col_FILTER_TAG" style="display:none">											
+											</th>
+											<th id="col_RESOURCE_INS_ID">
+												资源账本实例
+											</th>
+											<th id="col_MONEY">
+												金额(单位:元)
+											</th>
+											<th id="col_RESOURCE_COUNT">
+												资源量
+											</th>
+											<th id="col_UNIT">
+												资源单位
+											</th>
+											<th id="col_RESOURCE_TYPE">
+												资源类型
+											</th>
+											<th id="col_RECEIVE_TIME">
+												购买到账时间
+											</th>
+											<th id="col_INVALID_TIME">
+												资源失效时间
+											</th>
+											<th id="col_DEAL_TAG" style="display:none">
+												处理状态
+											</th>
+											<th id="col_DEAL_TAG1">
+												处理状态
+											</th>
+											<th id="col_RECV_DEPART_ID">
+												受理渠道编码
+											</th>
+											<th id="col_RECV_DEPART_NAME">
+												受理渠道名称
+											</th>
+											<th id="col_RECV_STAFF_ID">
+												受理工号
+											</th>
+										</tr>
+									</thead>
+									<tbody>	</tbody>
+								</table>
+					</div>
+			 </div>
+		<div class="c_operate topSpace">
+	     	  <div class="e_title">代理信息</div>
+				<table border="0" cellspacing="0" cellpadding="0" class="threeCol">
+					<tr>
+					      <td class="label">
+						   代理人姓名：
+					      </td>
+					      <td><input type="text" id="cond_DL_NAME" name="cond_DL_NAME" checkdata="checkspec,maxlength=40" class="txt" maxsize="40" desc="&#20195;&#29702;&#20154;&#22995;&#21517;"/> </td>
+					      <td class="label">
+						   代理人联系电话：
+					      </td>
+					      <td><input type="text" id="cond_DL_SNUMBER" name="cond_DL_SNUMBER" checkdata="checkspec,maxlength=40" class="txt" maxsize="40" desc="&#20195;&#29702;&#20154;&#32852;&#31995;&#30005;&#35805;"/> </td>
+	                </tr>
+	                <tr>
+					      <td class="label">
+							代理人证件类型：
+						</td>
+						<td><select id="data_DL_ZJ" name="data_DL_ZJ" class="&#36755;&#20837;&#26694;&#38271;&#24230;_&#26631;&#20934;" datatype="text" desc="&#35777;&#20214;&#31867;&#22411;" onchange="changeZJ(this);">
+<option value="">-----&#36873;&#25321;-----</option>
+<option value="3">&#20891;&#23448;&#65288;&#22763;&#20853;&#65289;&#35777;</option>
+<option value="4">&#33829;&#19994;&#25191;&#29031;(&#32452;&#32455;&#26426;&#26500;&#20195;&#30721;)</option>
+<option value="7">&#21488;&#28286;&#23621;&#27665;&#26469;&#24448;&#22823;&#38470;&#36890;&#34892;&#35777;</option>
+<option value="8">&#20854;&#20182;</option>
+<option value="9">&#23398;&#29983;&#35777;</option>
+<option value="C">&#25143;&#21475;&#26412;</option>
+<option value="A">&#25945;&#24072;&#35777;</option>
+<option value="B">&#39550;&#39542;&#35777;</option>
+<option value="F">&#32452;&#32455;&#26426;&#26500;&#20195;&#30721;&#35777;</option>
+<option value="O">&#20107;&#19994;&#21333;&#20301;&#27861;&#20154;&#35777;&#20070;</option>
+<option value="P">&#20010;&#20154;&#35777;&#20214;</option>
+<option value="Q">&#21333;&#20301;&#20844;&#31456; </option>
+<option value="5">&#27494;&#35013;&#35686;&#23519;&#36523;&#20221;&#35777;&#20214;</option>
+<option value="6">&#28207;&#28595;&#23621;&#27665;&#24448;&#26469;&#20869;&#22320;&#36890;&#34892;&#35777;</option>
+<option value="G">&#22763;&#20853;&#35777; </option>
+<option value="H">&#25143;&#21475;&#26412; </option>
+<option value="I">&#39550;&#29031; </option>
+<option value="J">&#22806;&#22269;&#25252;&#29031; </option>
+<option value="K">&#20171;&#32461;&#20449;(&#20010;&#20154;) </option>
+<option value="L">&#27966;&#20986;&#25152;&#35777;&#26126; </option>
+<option value="M">&#27515;&#20129;&#35777;&#26126; </option>
+<option value="N">&#20171;&#32461;&#20449;(&#21333;&#20301;) </option>
+<option value="0">15&#20301;&#36523;&#20221;&#35777;</option>
+<option value="D">&#31246;&#21495;</option>
+<option value="E">&#20445;&#30041;</option>
+<option value="1">18&#20301;&#36523;&#20221;&#35777;</option>
+<option value="2">&#25252;&#29031;</option>
+<option value="Y">&#32463;&#33829;&#25191;&#29031;&#32534;&#21495;</option>
+<option value="S">&#32452;&#32455;&#26426;&#26500;&#20195;&#30721;&#35777;</option>
+<option value="R">&#20107;&#19994;&#21333;&#20301;&#27861;&#20154;&#35777;&#20070;</option>
+</select>	</td>
+					      <td class="label">
+						   代理人证件号码：
+					      </td>
+					      <td><input type="text" id="cond_DL_NUMBER" name="cond_DL_NUMBER" checkdata="checkspec,maxlength=40" class="txt" maxsize="40" desc="&#20195;&#29702;&#20154;&#35777;&#20214;&#21495;&#30721;"/> </td>
+	                </tr>
+				</table>
+			</div>
+			<div class="c_operate topSpace">
+	     	  <div class="e_title">资源包办理</div>
+				<table border="0" cellspacing="0" cellpadding="0" class="threeCol">
+					<tr>
+						<td class="label">
+							资源包：
+						</td>
+						<td><select id="data_RESOURCE_TAG" name="data_RESOURCE_TAG" class="&#36755;&#20837;&#26694;&#38271;&#24230;_&#26631;&#20934;" nullable="yes" datatype="text" desc="&#21306;&#22495;" onchange="changeResource(this);">
+<option value="">-----&#36873;&#25321;-----</option>
+</select>	</td>
+						
+						<td class="label">
+							折扣率：
+						</td>
+						<td><span id="refeshZK"><select id="data_RESOURCE_ZK" name="data_RESOURCE_ZK" class="&#36755;&#20837;&#26694;&#38271;&#24230;_&#26631;&#20934;" nullable="yes" datatype="text" desc="&#21306;&#22495;" onchange="changeMoney(this);">
+<option value="">-----&#36873;&#25321;-----</option>
+</select></span>	</td>
+					   <td class="label" style="display:none" >
+						   所需金额：
+						</td>
+						<td style="display:none" ><span id="refeshMoney"><input type="text" id="data_PACKAGE_CODE" name="data_PACKAGE_CODE" desc="package_code" readonly="true"/> <input type="text" id="data_RESOURCE_CODE" name="data_RESOURCE_CODE" desc="resource_code" readonly="true"/> <input type="text" id="data_ZK_NAME" name="data_ZK_NAME" desc="&#25240;&#25187;&#29575;&#21517;&#31216;" readonly="true"/> <input type="text" id="data_RESOURCE_NAME" name="data_RESOURCE_NAME" desc="&#27969;&#37327;&#21253;&#21517;&#31216;" readonly="true"/><input type="text" id="data_LONG" name="data_LONG" desc="&#27969;&#37327;&#21253;&#26102;&#38271;" readonly="true"/> <input type="text" id="data_MONEY" name="data_MONEY" desc="&#37329;&#39069;" readonly="true"/> <!-- <input type="text" jwcid="@Insert"value="ognl:cond.MONEY" />  --><input type="text" id="data_RES_MONEY" name="data_RES_MONEY" datatype="text" desc="&#24212;&#32564;&#37329;&#39069;" style="display:none;"/><input type="text" id="data_UNIT" name="data_UNIT" desc="&#21333;&#20301;" readonly="true"/> <input type="text" id="data_VALID_TIME_UNIT" name="data_VALID_TIME_UNIT" desc="&#26377;&#25928;&#26102;&#38388;&#21333;&#20301;" readonly="true"/> <input type="text" id="data_VALID_TIME" name="data_VALID_TIME" desc="&#26377;&#25928;&#26102;&#38388;" readonly="true"/> <input type="text" id="data_RESOURCE_COUNT" name="data_RESOURCE_COUNT" desc="&#36164;&#28304;&#37327;" readonly="true"/> </span>	<td class="label" style="display:none" >
+						   打印标识：
+						</td>
+						<td style="display:none" ><span id="refeshFlag"><input value="" id="cond_PRINT_FLAG" type="hidden" name="cond_PRINT_FLAG"></input></span>	</td>	
+						<td class="label" style="display:none" >
+						   证件类型：
+						</td>
+						<td style="display:none" ><span id="refeshZJ"><input value="" id="cond_DL_ZJ_NAME" type="hidden" name="cond_DL_ZJ_NAME"></input></span>	</td>	
+						<td class="label nonbgLabel">
+							<input type="button"  value="打印免填单"  class="btn5" 
+							    listener="ognl:listeners.printMTD"
+								onmouseover="this.className='btn5 btnOver'" onmouseout="this.className='btn5 btnOff'"
+								onclick="return dispatchToMarketPrint(this)" />
+						</td>
+						<td>&nbsp;</td>
+						<td class="label nonbgLabel"><input type="submit" id="bsubmit1" name="bsubmit1" value="&#25552; &#20132;" class="btn2" onclick="return submitGenerals(this)" onmouseout="this.className='btn2 btnOff'" onmouseover="this.className='btn2 btnOver'"/>	</td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+			</div>
+			
+		</div>
+		<!-- 用户信息 user组 --><input value="" id="userinfoback_ACCT_ID" type="hidden" name="userinfoback_ACCT_ID"></input><input value="" id="userinfoback_SERIAL_NUMBER" type="hidden" name="userinfoback_SERIAL_NUMBER"></input><input value="" id="userinfoback_PAY_NAME" type="hidden" name="userinfoback_PAY_NAME"></input>	<input value="" id="userinfoback_NET_TYPE_CODE" type="hidden" name="userinfoback_NET_TYPE_CODE"></input> <input value="" id="userinfoback_SERVICE_CLASS_CODE" type="hidden" name="userinfoback_SERVICE_CLASS_CODE"></input> <input value="" id="userinfoback_USER_ID" type="hidden" name="userinfoback_USER_ID"></input><input value="" id="userinfoback_PAY_MODE_CODE" type="hidden" name="userinfoback_PAY_MODE_CODE"></input><input value="" id="userinfoback_ROUTE_EPARCHY_CODE" type="hidden" name="userinfoback_ROUTE_EPARCHY_CODE"></input><input value="" id="userinfoback_ROUTE_PROVINCE_CODE" type="hidden" name="userinfoback_ROUTE_PROVINCE_CODE"></input><input type="text" id="userinfoback_PREPAY_TAG" name="userinfoback_PREPAY_TAG" id="userinfoback_PREPAY_TAG" style="display:none;"/><input value="" id="userinfoback_CITY_CODE" type="hidden" name="userinfoback_CITY_CODE"></input>	<input value="" id="userinfoback_PRODUCT_ID" type="hidden" name="userinfoback_PRODUCT_ID"></input>	<input value="" id="userinfoback_BRAND_CODE" type="hidden" name="userinfoback_BRAND_CODE"></input>	<input value="" id="cond_CREDIT_VALUE" type="hidden" name="cond_CREDIT_VALUE"></input><input value="" id="cond_DEPOSIT_MONEY" type="hidden" name="cond_DEPOSIT_MONEY"></input><!-- 后付费的余额和信用度 --><input value="" id="cond_TOTAL_FEE" type="hidden" name="cond_TOTAL_FEE"></input><!-- 预付费的余额 -->
+		
+		<input type="hidden" name="X_CODING_STR" />
+		<!-- 资源包信息 -->
+		<div id="resinfos" style="display:none" >
+			<table id="resInfosTable" style="display:none" >
+				<thead>
+					<tr>
+						<th id="col_X_TAG" style="display:none">											
+						</th>
+						<th id="col_RESOURCE_TAG" style="display:none" >
+							资源包
+						</th>
+						<th id="col_PACKAGE_CODE" style="display:none" >
+							资源包编码
+						</th>
+						<th id="col_RESOURCE_CODE" style="display:none" >
+							资源类型
+						</th>
+						<th id="col_RESOURCE_COUNT" style="display:none" >
+							资源量
+						</th>
+						<th id="col_MONEY" style="display:none" >
+							金额
+						</th>
+						<th id="col_UNIT" style="display:none" >
+							金额单位
+						</th>
+						<th id="col_VALID_TIME" style="display:none" >
+							有效时间
+						</th>
+						<th id="col_VALID_TIME_UNIT" style="display:none" >
+							有效时间单位
+						</th>
+						<th id="col_DEPOSIT_RATE" style="display:none" >
+							折扣
+						</th>
+						<th id="col_RESOURCE_NAME" style="display:none" >
+							资源名称
+						</th>
+					</tr>
+				</thead>
+				<tbody>	</tbody>
+			</table>
+		</div>
+		
+		<!-- 免填单数据 -->
+		<!-- 
+		<input type="hidden" name="cond_CHARGE_ID" id="cond_CHARGE_ID" jwcid="@Any" value="ognl:userInfo.CHARGE_ID" />
+		 --><input value="" id="cond_DATE" type="hidden" name="cond_DATE"></input><input value="" id="cond_DATE1" type="hidden" name="cond_DATE1"></input><input value="" id="cond_DATE2" type="hidden" name="cond_DATE2"></input><input value="" id="cond_DATE3" type="hidden" name="cond_DATE3"></input><input value="" id="cond_STAFF_ID1" type="hidden" name="cond_STAFF_ID1"></input><input value="" id="cond_STAFF_NAME1" type="hidden" name="cond_STAFF_NAME1"></input><input value="" id="cond_DEPART_NAME1" type="hidden" name="cond_DEPART_NAME1"></input><input value="" id="cond_ENDDATE" type="hidden" name="cond_ENDDATE"></input><input value="" id="cond_CUST_NAME" type="hidden" name="cond_CUST_NAME"></input><input value="" id="cond_PSPT_TYPE_CODE" type="hidden" name="cond_PSPT_TYPE_CODE"></input><input value="" id="cond_PSPT_ID" type="hidden" name="cond_PSPT_ID"></input><input value="" id="cond_PSPT_ADDR" type="hidden" name="cond_PSPT_ADDR"></input><input value="" id="cond_POST_ADDRESS" type="hidden" name="cond_POST_ADDRESS"></input><input value="" id="cond_CONTACT" type="hidden" name="cond_CONTACT"></input><input value="" id="cond_CONTACT_PHONE" type="hidden" name="cond_CONTACT_PHONE"></input><input value="" id="cond_EMAIL" type="hidden" name="cond_EMAIL"></input><input value="" id="cond_SHOWLIST" type="hidden" name="cond_SHOWLIST"></input><input value="" id="cond_PSPT_END_DATE" type="hidden" name="cond_PSPT_END_DATE"></input><input value="" id="cond_NET_TYPE_CODE1" type="hidden" name="cond_NET_TYPE_CODE1"></input><input value="" id="cond_INFORMATION" type="hidden" name="cond_INFORMATION"></input></form> 	<script>Ajax.Responders.register(myGlobalHandlers);</script>
+</body>
+</html>
+

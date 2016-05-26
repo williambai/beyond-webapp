@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><parts><part id="refeshZK">&lt;select id="data_RESOURCE_ZK" name="data_RESOURCE_ZK" class="&amp;#36755;&amp;#20837;&amp;#26694;&amp;#38271;&amp;#24230;_&amp;#26631;&amp;#20934;" nullable="yes" datatype="text" desc="&amp;#21306;&amp;#22495;" onchange="changeMoney(this);"&gt;
+&lt;option value=""&gt;-----&amp;#36873;&amp;#25321;-----&lt;/option&gt;
+&lt;option value="100"&gt;&amp;#21407;&amp;#20215;&lt;/option&gt;
+&lt;option value="60"&gt;6&amp;#25240;&lt;/option&gt;
+&lt;option value="30"&gt;3&amp;#25240;&lt;/option&gt;
+&lt;/select&gt;</part><JSONDATA id="json"></JSONDATA></parts>

@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="X-UA-Compatible" content="IE=7" />
+<base href="https://hb.cbss.10010.com/"/>
+<script language="JavaScript" src="component/scripts/public.js"></script>
+<script language="JavaScript" src="component/scripts/validate.js"></script>
+<script language="JavaScript" src="component/scripts/dragiframe.js"></script>
+<link href="component/styles/public.css" rel="stylesheet" type="text/css" media="screen"/>
+<meta id="pagecontext" pagename="Main" productMode='true' staffId='KXGCFJH2' staffName='孙茜兰' deptId='71b1hyi' deptCode='71b1hyi' deptName='江苏天智互联科技股份有限公司' cityId='712058' cityName='孝南区' areaCode='712058' areaName='孝南区' epachyId='0712' epachyName='孝感' loginEpachyId='0712' version='BSS2PLUS' provinceId='71' subSysCode='BSS' contextName='essframe' loginCheckCode='201605257180039193' loginProvinceId='71'  />
+
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+
+<title>中国联通cBSS支撑系统</title>
+<link href="./styles/jquery.showMessage.css" rel="stylesheet" type="text/css"/><script src="./scripts/pubjs/jquery.js" language="JavaScript"></script>
+<script src="./scripts/pubjs/jquery.showMessage.js" language="JavaScript"></script>
+
+<script>
+      /*退单提醒*/
+          var tradenums = 0;
+          //var showmsg="<a href="javascript:void(0)" parameters="" title="&#28857;&#20987;&#36339;&#36716;" value="&#28857;&#20987;&#36339;&#36716;" onclick="redirectTo(page, listener, params, " listener="queryInfo" params="" page="component.info.BulletinEdit">&#28857;&#20987;&#36339;&#36716;</a>";
+ 
+          var timedesc="你好";
+          var now = new Date(); var hour = now.getHours();
+          if(hour < 6){timedesc="凌晨好"} 
+           else if (hour < 9){timedesc="早上好"} 
+           else if (hour < 12){timedesc="上午好"} 
+           else if (hour < 14){timedesc="中午好"} 
+           else if (hour < 17){timedesc="下午好"} 
+           else if (hour < 19){timedesc="傍晚好"} 
+           else if (hour < 22){timedesc="晚上好"} 
+           else {timedesc="夜里好"} 
+
+         function init(){
+	        getFrame("contentframe").location.href = getSysAddr(getContextName() + "?service=page/component.Navigation&listener=init&needNotify=true");
+	
+	        if(tradenums>0){
+		       $.messageBox({timeout:null,msg:'<BR>'+timedesc+'，您有<font color="red">'+tradenums+'</font>个退单！'});  
+	           }
+	
+           }
+</script><script language="JavaScript" type="text/JavaScript">
+	function onKeyPressEventByDefault() {onKeyPressEvent(null);}
+	addObjEventListener("document", "keypress", onKeyPressEventByDefault);
+	function onContextMenuEventByDefault() {window.event.returnValue = false;}
+	addObjEventListener("document", "contextmenu", onContextMenuEventByDefault);
+	var pagevisit = getPageVisit();
+	completePageLoad();</script></head>
+<frameset id="aset" rows="55,56,*,30" framespacing="0" frameborder="no" border="0" onload="init();"><frame id="headerframe" src="essframe?service=page/Header&amp;LOGIN_LOG_ID=null" noresize="noresize" scrolling="no" name="headerframe"></frame><frame id="navframe" src="essframe?service=page/Nav&amp;STAFF_ID=null" noresize="noresize" scrolling="no" name="navframe"></frame>	<frameset id="fset" cols="180,8,*,0"><frame src="/essframe?service=page/Sidebar" id="sidebarframe" noresize="noresize" scrolling="no" name="sidebarframe"/><frame src="/essframe?service=page/Slip" id="slipframe" noresize="noresize" scrolling="no" name="slipframe"/>	<frame id="contentframe" name="contentframe" scrolling="auto" noresize="noresize"/>
+		<frame id="printframe" name="printframe" scrolling="no"/>
+	</frameset><frame id="notice" src="essframe?service=page/Notice&amp;listener=init" noresize="noresize" scrolling="no" name="notice"></frame>
+</frameset>
+
+<noframes><body>
+</body></noframes>
+
+
+
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--规范-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<!--头组件-->
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=7" />
+<base href="https://hb.cbss.10010.com/"/>
+<script language="JavaScript" src="component/scripts/public.js"></script>
+<script language="JavaScript" src="component/scripts/validate.js"></script>
+<script language="JavaScript" src="component/scripts/dragiframe.js"></script>
+<link href="component/styles/public.css" rel="stylesheet" type="text/css" media="screen"/>
+<link href="component/styles/calendar.css" rel="stylesheet" type="text/css" media="screen"/>
+<link href="component/styles/tabset.css" rel="stylesheet" type="text/css" media="screen"/>
+<link href="component/styles/editor.css" rel="stylesheet" type="text/css" media="screen"/>
+<link href="component/styles/combobox.css" rel="stylesheet" type="text/css" media="screen"/>
+<script language="JavaScript" src="component/scripts/tabset.js"></script>
+<script language="JavaScript" src="component/scripts/tableedit.js"></script>
+<script language="JavaScript" src="component/scripts/print.js"></script>
+<script language="JavaScript" src="component/scripts/file.js"></script>
+<script language="JavaScript" src="component/scripts/lib/prototype.js"></script>
+<script language="JavaScript" src="component/scripts/lib/json.js"></script>
+<script language="JavaScript" src="component/scripts/ajax.js"></script>
+<meta id="pagecontext" pagename="amcharge.ordergprsresource.OrderGprsRes" productMode='true' staffId='KXGCFJH2' staffName='孙茜兰' deptId='71b1hyi' deptCode='71b1hyi' deptName='江苏天智互联科技股份有限公司' cityId='712058' cityName='孝南区' areaCode='712058' areaName='孝南区' epachyId='0712' epachyName='孝感' loginEpachyId='0712' version='BSS2plus' provinceId='71' subSysCode='acctmanm' loginCheckCode='201605257180039193' loginProvinceId='71'  />
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+		<title>&#27969;&#3743;(&#21518;&#20184;&#36153;)	</td>
+			<td class="label">用户状态： 
+			</td>
+			<td>
+&#24320;&#36890;	</td>
+		</tr>
+		<tr>
+			<td class="label">
+				付费类型：
+			</td>
+			<td>
+&#29616;&#37329;	</td>
+			<td clamaxsize="40" desc="&#20195;&#29702;&#20154;&#22995;&#21517;"/> </td>
+					      <td class="label">
+						   代理人联系电话：
+					      </td>
+					      <td><input type="text" id="cond_DL_SNUMBER" name="cond_DL_SNUMBER" value="" checkdata="checkspec,maxlength=40" class="txt" maxsize="40" desc="&#20195;&#29702;&#20154;&#32852;&#31995;&#30005;&#35805;"/> </td>
+	                </tr>
+	                <tr>
+					      <td class="label">
+							代理人证件类型：
+						</td>
+						<td><select id="data_DL_ZJ" name="data_DL_ZJ" class="&#36755;&#20837;&#26694;&#38271;&#24230;_&#26631;&#20934;" datatype="text" desc="&#35777;&#20214;&#31867;&#22411;" onchange="changeZJ(this);">
+<option value="">-----&#36873;&#25321;-----</option>
+<option value="3">&#20891;&#23448;&#65288;&#22763;&#20853;&#65289;&#35777;</option>
+<option value="4">&#33829;&#19994;&#25191;&#29031;(&#32452;&#32455;&#26426;&#26500;&#20195;&#30721;)</option>
+<option value="7">&#21488;&#28286;&#23621;&#27665;&#26469;&#24448;&#22823;&#38470;&#36890;&#34892;&#35777;</option>
+<option value="8">&#20854;&#20182;</option>
+<option value="9">&#23398;&#29983;&#35777;</option>
+<option value="C">&#25143;&#21475;&#26412;</option>
+<option value="A">&#25945;&#24072;&#35777;</option>
+<option value="B">&#39550;&#39542;&#35777;</option>
+<option value="F">&#32452;&#32455;&#26426;&#26500;&#20195;&#30721;&#35777;</option>
+<option value="O">&#20107;&#19994;&#21333;&#20301;&#27861;&#20154;&#35777;&#20070;</option>
+<option value="P">&#20010;&#20154;&#35777;&#20214;</option>
+<option value="Q">&#21333;&#20301;&#20844;&#31456; </option>
+<option value="5">&#27494;&#35013;&#35686;&#23519;&#36523;&#20221;&#35777;&#20214;</option>
+<option value="6">&#28207;&#28595;&#23621;&#27665;&#24448;&#26469;&#20869;&#22320;&#36890;&#34892;&#35777;</option>
+<option value="G">&#22763;&#20853;&#35777; </option>
+<option value="H">&#25143;&#21475;&#26412; </option>
+<option value="I">&#39550;&#29031; </option>
+<option value="J">&#22806;&#22269;&#25252;&#29031; </option>
+<option value="K">&#20171;&#32461;&#20449;(&#20010;&#20154;) </option>
+<option value="L">&#27966;&#20986;&#25152;&#35777;&#26126; </option>
+<option value="M">&#27515;&#20129;&#35777;&#26126; </option>
+<option value="N">&#20171;&#32461;&#20449;(&#21333;&#20301;) </option>
+<option value="0">15&#20301;&#36523;&#20221;&#35777;</option>
+<option value="D">&#31246;&#21495;</option>
+<option value="E">&#20445;&#30041;</option>
+<option value="1">18&#20301;&#36523;&#20221;&#35777;</option>
+<option value="2">&#25252;&#29031;</option>
+<option value="Y">&#32463;&#33829;&#25191;&#29031;&#32534;&#21495;</option>
+<option value="S">&#32452;&#32455;&#26426;&#26500;&#20195;&#30721;&#35777;</option>
+<option value="R">&#20107;&#19994;&#21333;&#20301;&#27861;&#20154;&#35777;&#20070;</option>
+</select>	</td>
+					      <td class="label">
+						   代理人证件号码：
+					      </td>
+					      <td><input type="text" id="cond_DL_NUMBER" name="cond_DL_NUMBER" value="" checkdata="checkspec,maxlength=40" class="txt" maxsize="40" desc="&#20195;&#29702;&#20154;&#35777;&#20214;&#21495;&#30721;"/> </td>
+	                </tr>
+				</table>
+			</div>
+			<div class="c_operate topSpace">
+	     	  <div class="e_title">资源包办理</div>
+				<table border="0" cellspacing="0" cellpadding="0" class="threeCol">
+					<tr>
+						<td class="label">
+							资源包：
+						</td>
+						<td><select id="data_RESOURCE_TAG" name="data_RESOURCE_TAG" class="&#36755;&#20837;&#26694;&#38271;&#24230;_&#26631;&#20934;" nullable="yes" datatype="text" desc="&#21306;&#22495;" onchange="changeResource(this);">
+<option value="">-----&#36873;&#25321;-----</option>
+<option value="3001_100_1024_0">&#20840;&#22269;&#27969;&#37327;&#21253;(100&#20803;/1G)</option>
+<option value="3001_200_3072_0">&#20840;&#22269;&#27969;&#37327;&#21253;(200&#20803;/3G)</option>
+<option value="3001_50_500_0">&#20840;&#22269;&#27969;&#37327;&#21253;(50&#20803;/500M)</option>
+<option value="3002_100_1536_0">&#30465;&#20869;&#27969;&#37327;&#21253;(100&#20803;/1.5G)</option>
+</select>	</td>
+						
+						<td class="label">
+							折扣率：
+						</td>
+						<td><span id="refeshZK"><select id="data_RESOURCE_ZK" name="data_RESOURCE_ZK" class="&#36755;&#20837;&#26694;&#38271;&#24230;_&#26631;&#20934;" nullable="yes" datatype="text" desc="&#21306;&#22495;" onchange="changeMoney(this);">
+<option value="">-----&#36873;&#25321;-----</option>
+</select></span>	</td>
+					   <td class="label" style="display:none" >
+						   所需金额：
+						</td>
+						<td style="display:none" ><span id="refeshMoney"><input type="text" id="data_PACKAGE_CODE" name="data_PACKAGE_CODE" desc="package_code" readonly="true"/> <input type="text" id="data_RESOURCE_CODE" name="data_RESOURCE_CODE" desc="resource_code" readonly="true"/> <input type="text" id="data_ZK_NAME" name="data_ZK_NAME" desc="&#25240;&#25187;&#29575;&#21517;&#31216;" readonly="true"/> <input type="text" id="data_RESOURCE_NAME" name="data_RESOURCE_NAME" desc="&#27969;&#37327;&#21253;&#21517;&#31216;" readonly="true"/><input type="text" id="data_LONG" name="data_LONG" desc="&#27969;&#37327;&#21253;&#26102;&#38271;" readonly="true"/> <input type="text" id="data_MONEY" name="data_MONEY" desc="&#37329;&#39069;" readonly="true"/> <!-- <input type="text" jwcid="@Insert"value="ognl:cond.MONEY" />  --><input type="text" id="data_RES_MONEY" name="data_RES_MONEY" datatype="text" desc="&#24212;&#32564;&#37329;&#39069;" style="display:none;"/><input type="text" id="data_UNIT" name="data_UNIT" desc="&#21333;&#20301;" readonly="true"/> <input type="text" id="data_VALID_TIME_UNIT" name="data_VALID_TIME_UNIT" desc="&#26377;&#25928;&#26102;&#38388;&#21333;&#20301;" readonly="true"/> <input type="text" id="data_VALID_TIME" name="data_VALID_TIME" desc="&#26377;&#25928;&#26102;&#38388;" readonly="true"/> <input type="text" id="data_RESOURCE_COUNT" name="data_RESOURCE_COUNT" desc="&#36164;&#28304;&#37327;" readonly="true"/> </span>	<td class="label" style="display:none" >
+						   打印标识：
+						</td>
+						<td style="display:none" ><span id="refeshFlag"><input value="" id="cond_PRINT_FLAG" type="hidden" name="cond_PRINT_FLAG"></input></span>	</td>	
+						<td class="label" style="display:none" >
+						   证件类型：
+						</td>
+						<td style="display:none" ><span id="refeshZJ"><input value="" id="cond_DL_ZJ_NAME" type="hidden" name="cond_DL_ZJ_NAME"></input></span>	</td>	
+						<td class="label nonbgLabel">
+							<input type="button"  value="打印免填单"  class="btn5" 
+							    listener="ognl:listeners.printMTD"
+								onmouseover="this.className='btn5 btnOver'" onmouseout="this.className='btn5 btnOff'"
+								onclick="return dispatchToMarketPrint(this)" />
+						</td>
+						<td>&nbsp;</td>
+						<td class="label nonbgLabel"><input type="submit" id="bsubmit1" name="bsubmit1" value="&#25552; &#20132;" class="btn2" onclick="return submitGenerals(this)" onmouseout="this.className='btn2 btnOff'" onmouseover="this.className='btn2 btnOver'"/>	</td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+			</div>
+			
+		</div>
+		<!-- 用户信息 user组 --><input value="7115083151553276" id="userinfoback_ACCT_ID" type="hidden" name="userinfoback_ACCT_ID"></input><input value="13227182028" id="userinfoback_SERIAL_NUMBER" type="hidden" name="userinfoback_SERIAL_NUMBER"></input><input value="&#39640;&#32736;&#23043;" id="userinfoback_PAY_NAME" type="hidden" name="userinfoback_PAY_NAME"></input>	<input value="50" id="userinfoback_NET_TYPE_CODE" type="hidden" name="userinfoback_NET_TYPE_CODE"></input> <input value="50" id="userinfoback_SERVICE_CLASS_CODE" type="hidden" name="userinfoback_SERVICE_CLASS_CODE"></input> <input value="7115083140529113" id="userinfoback_USER_ID" type="hidden" name="userinfoback_USER_ID"></input><input value="0" id="userinfoback_PAY_MODE_CODE" type="hidden" name="userinfoback_PAY_MODE_CODE"></input><input value="0712" id="userinfoback_ROUTE_EPARCHY_CODE" type="hidden" name="userinfoback_ROUTE_EPARCHY_CODE"></input><input value="71" id="userinfoback_ROUTE_PROVINCE_CODE" type="hidden" name="userinfoback_ROUTE_PROVINCE_CODE"></input><input type="text" id="userinfoback_PREPAY_TAG" name="userinfoback_PREPAY_TAG" value="1" id="userinfoback_PREPAY_TAG" style="display:none;"/><input value="712064" id="userinfoback_CITY_CODE" type="hidden" name="userinfoback_CITY_CODE"></input>	<input value="89016253" id="userinfoback_PRODUCT_ID" type="hidden" name="userinfoback_PRODUCT_ID"></input>	<input value="4G00" id="userinfoback_BRAND_CODE" type="hidden" name="userinfoback_BRAND_CODE"></input>	<input value="0.00" id="cond_CREDIT_VALUE" type="hidden" name="cond_CREDIT_VALUE"></input><input value="10.49" id="cond_DEPOSIT_MONEY" type="hidden" name="cond_DEPOSIT_MONEY"></input><!-- 后付费的余额和信用度 --><input value="" id="cond_TOTAL_FEE" type="hidden" name="cond_TOTAL_FEE"></input><!-- 预付费的余额 -->
+		
+		<input type="hidden" name="X_CODING_STR" />
+		<!-- 资源包信息 -->
+		<div id="resinfos" style="display:none" >
+			<table id="resInfosTable" style="display:none" >
+				<thead>
+					<tr>
+						<th id="col_X_TAG" style="display:none">											
+						</th>
+						<th id="col_RESOURCE_TAG" style="display:none" >
+							资源包
+						</th>
+						<th id="col_PACKAGE_CODE" style="display:none" >
+							资源包编码
+						</th>
+						<th id="col_RESOURCE_CODE" style="display:none" >
+							资源类型
+						</th>
+						<th id="col_RESOURCE_COUNT" style="display:none" >
+							资源量
+						</th>
+						<th id="col_MONEY" style="display:none" >
+							金额
+						</th>
+						<th id="col_UNIT" style="display:none" >
+							金额单位
+						</th>
+						<th id="col_VALID_TIME" style="display:none" >
+							有效时间
+						</th>
+						<th id="col_VALID_TIME_UNIT" style="display:none" >
+							有效时间单位
+						</th>
+						<th id="col_DEPOSIT_RATE" style="display:none" >
+							折扣
+						</th>
+						<th id="col_RESOURCE_NAME" style="display:none" >
+							资源名称
+						</th>
+					</tr>
+				</thead>
+				<tbody><tr class="row_odd">	<td style="display:none"><input value="" type="checkbox" name="ses"></input>	</td>
+						<td style="display:none" >3001_100_1024_0	</td>
+						<td style="display:none" >	</td>
+						<td style="display:none" >3001	</td>
+						<td style="display:none" >1024	</td>
+						<td style="display:none" >100	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >6	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >100	</td>
+						<td style="display:none" >全国流量包(100元/1G)	</td></tr><tr class="row_even">	<td style="display:none"><input value="" type="checkbox" name="ses"></input>	</td>
+						<td style="display:none" >3001_100_1024_0	</td>
+						<td style="display:none" >	</td>
+						<td style="display:none" >3001	</td>
+						<td style="display:none" >1024	</td>
+						<td style="display:none" >100	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >6	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >30	</td>
+						<td style="display:none" >全国流量包(100元/1G)	</td></tr><tr class="row_odd">	<td style="display:none"><input value="" type="checkbox" name="ses"></input>	</td>
+						<td style="display:none" >3001_100_1024_0	</td>
+						<td style="display:none" >	</td>
+						<td style="display:none" >3001	</td>
+						<td style="display:none" >1024	</td>
+						<td style="display:none" >100	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >6	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >60	</td>
+						<td style="display:none" >全国流量半年包(100元/1G)	</td></tr><tr class="row_even">	<td style="display:none"><input value="" type="checkbox" name="ses"></input>	</td>
+						<td style="display:none" >3001_200_3072_0	</td>
+						<td style="display:none" >	</td>
+						<td style="display:none" >3001	</td>
+						<td style="display:none" >3072	</td>
+						<td style="display:none" >200	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >6	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >100	</td>
+						<td style="display:none" >全国流量包(200元/3G)	</td></tr><tr class="row_odd">	<td style="display:none"><input value="" type="checkbox" name="ses"></input>	</td>
+						<td style="display:none" >3001_200_3072_0	</td>
+						<td style="display:none" >	</td>
+						<td style="display:none" >3001	</td>
+						<td style="display:none" >3072	</td>
+						<td style="display:none" >200	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >6	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >100	</td>
+						<td style="display:none" >全国流量半年包(200元/3G)	</td></tr><tr class="row_even">	<td style="display:none"><input value="" type="checkbox" name="ses"></input>	</td>
+						<td style="display:none" >3001_50_500_0	</td>
+						<td style="display:none" >	</td>
+						<td style="display:none" >3001	</td>
+						<td style="display:none" >500	</td>
+						<td style="display:none" >50	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >6	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >100	</td>
+						<td style="display:none" >全国流量包(50元/500M)	</td></tr><tr class="row_odd">	<td style="display:none"><input value="" type="checkbox" name="ses"></input>	</td>
+						<td style="display:none" >3001_50_500_0	</td>
+						<td style="display:none" >	</td>
+						<td style="display:none" >3001	</td>
+						<td style="display:none" >500	</td>
+						<td style="display:none" >50	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >6	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >50	</td>
+						<td style="display:none" >全国流量半年包(50元/500M)	</td></tr><tr class="row_even">	<td style="display:none"><input value="" type="checkbox" name="ses"></input>	</td>
+						<td style="display:none" >3002_100_1536_0	</td>
+						<td style="display:none" >	</td>
+						<td style="display:none" >3002	</td>
+						<td style="display:none" >1536	</td>
+						<td style="display:none" >100	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >6	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >100	</td>
+						<td style="display:none" >省内流量包(100元/1.5G)	</td></tr><tr class="row_odd">	<td style="display:none"><input value="" type="checkbox" name="ses"></input>	</td>
+						<td style="display:none" >3002_100_1536_0	</td>
+						<td style="display:none" >	</td>
+						<td style="display:none" >3002	</td>
+						<td style="display:none" >1536	</td>
+						<td style="display:none" >100	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >6	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >40	</td>
+						<td style="display:none" >省内流量半年包(100元/1.5G)	</td></tr><tr class="row_even">	<td style="display:none"><input value="" type="checkbox" name="ses"></input>	</td>
+						<td style="display:none" >3002_100_1536_0	</td>
+						<td style="display:none" >	</td>
+						<td style="display:none" >3002	</td>
+						<td style="display:none" >1536	</td>
+						<td style="display:none" >100	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >6	</td>
+						<td style="display:none" >0	</td>
+						<td style="display:none" >20	</td>
+						<td style="display:none" >省内流量半年包(100元/1.5G)	</td></tr>	</tbody>
+			</table>
+		</div>
+		
+		<!-- 免填单数据 -->
+		<!-- 
+		<input type="hidden" name="cond_CHARGE_ID" id="cond_CHARGE_ID" jwcid="@Any" value="ognl:userInfo.CHARGE_ID" />
+		 --><input value="2016-05-25" id="cond_DATE" type="hidden" name="cond_DATE"></input><input value="2016" id="cond_DATE1" type="hidden" name="cond_DATE1"></input><input value="05" id="cond_DATE2" type="hidden" name="cond_DATE2"></input><input value="25" id="cond_DATE3" type="hidden" name="cond_DATE3"></input><input value="KXGCFJH2" id="cond_STAFF_ID1" type="hidden" name="cond_STAFF_ID1"></input><input value="&#23385;&#33564;&#20848;" id="cond_STAFF_NAME1" type="hidden" name="cond_STAFF_NAME1"></input><input value="&#27743;&#33487;&#22825;&#26234;&#20114;&#32852;&#31185;&#25216;&#32929;&#20221;&#26377;&#38480;&#20844;&#21496;" id="cond_DEPART_NAME1" type="hidden" name="cond_DEPART_NAME1"></input><input value="2016-11-30" id="cond_ENDDATE" type="hidden" name="cond_ENDDATE"></input><input value="&#39640;&#32736;&#23043;" id="cond_CUST_NAME" type="hidden" name="cond_CUST_NAME"></input><input value="18&#20301;&#36523;&#20221;&#35777;" id="cond_PSPT_TYPE_CODE" type="hidden" name="cond_PSPT_TYPE_CODE"></input><input value="422228194802013029" id="cond_PSPT_ID" type="hidden" name="cond_PSPT_ID"></input><input value="&#28246;&#21271;&#30465;&#27721;&#24029;&#24066;&#26032;&#22576;&#38215;&#26472;&#19994;&#26449;&#26472;&#19994;&#38466;66&#21495;" id="cond_PSPT_ADDR" type="hidden" name="cond_PSPT_ADDR"></input><input value="&#28246;&#21271;&#30465;&#27721;&#24029;&#24066;&#26032;&#22576;&#38215;&#26472;&#19994;&#26449;&#26472;&#19994;&#38466;66&#21495;" id="cond_POST_ADDRESS" type="hidden" name="cond_POST_ADDRESS"></input><input value="&#39640;&#32736;&#23043;" id="cond_CONTACT" type="hidden" name="cond_CONTACT"></input><input value="13227182028" id="cond_CONTACT_PHONE" type="hidden" name="cond_CONTACT_PHONE"></input><input value="" id="cond_EMAIL" type="hidden" name="cond_EMAIL"></input><input value="1" id="cond_SHOWLIST" type="hidden" name="cond_SHOWLIST"></input><input value="2050-12-31 00:00:00.0" id="cond_PSPT_END_DATE" type="hidden" name="cond_PSPT_END_DATE"></input><input value="4G" id="cond_NET_TYPE_CODE1" type="hidden" name="cond_NET_TYPE_CODE1"></input><input value="1.&#26412;&#19994;&#21153;&#36890;&#36807;&#26381;&#21153;&#23494;&#30721;&#35748;&#35777;,&#25110;&#23458;&#25143;&#20449;&#24687;&#24050;&#36890;&#36807;&#20844;&#23433;&#37096;&#20844;&#27665;&#36523;&#20221;&#20449;&#24687;&#24211;&#26680;&#26597;&#12290;&lt;br /&gt;2.&#27969;&#37327;&#21322;&#24180;&#21253;&#35746;&#36141;&#25104;&#21151;&#21518;&#31435;&#21363;&#29983;&#25928;&#65292;&#29983;&#25928;&#21518;&#19981;&#21487;&#36864;&#12290;" id="cond_INFORMATION" type="hidden" name="cond_INFORMATION"></input></form> 	<script>Ajax.Responders.register(myGlobalHandlers);</script>
+</body>
+</html>
+
