@@ -73,6 +73,10 @@ describe('pageNav.htm页面正则测试', function() {
 		var result = util.regexMatch(/<meta.*provinceId.*?>/i,html);
 		// console.log(result);
 		expect(result).to.have.length(1);
+		var resourceUrl = util.regexMatch(/.*clickMenuItem\(this\);openmenu\('(.+?OrderGprsRes.+?)'\).*/i,
+                html);
+		// console.log(resourceUrl[1]);
+		expect(resourceUrl).to.have.length(2);
 	});
 	xit('异常情况下-1', function() {
 		//** 不含指定正则数据
@@ -192,4 +196,8 @@ describe('ajaxDirectOrderGprsRes2.xml页面正则测试', function() {
 		// console.log(result);
 		expect(result).to.be.an(Object);
 	});
+});
+
+describe('flux订单POST结果页面正则测试', function() {
+	
 });

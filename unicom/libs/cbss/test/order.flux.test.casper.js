@@ -3,7 +3,7 @@
  * 
  * > casperjs order.flux.test.casper.js --ignore-ssl-errors=true 
  */
-
+var RegexUtils = require('../../lib/util.js');
 var fs = require('fs');
 var system = require('system');
 var casper = require('casper').create({
@@ -33,6 +33,13 @@ var account = {
 	departId: '',
 	subSysCode: '',
 	epachyId: '',
+	resourceParam: {},
+	resTableList: {},
+	rMap: {},
+};
+
+var homePageParams = {
+
 };
 
 var urls = {
@@ -42,20 +49,23 @@ var urls = {
 
 var order = {
 	phone: '',
-	price: 0.0,
-
+	product: {
+		name: '',
+		price: 0.0,
+		resourceCode: '',
+	},
 };
 
 var response = {};
 
 casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 
-casper.start();
+casper.start('https://cbss.10010.com/essframe');
 
 casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + account.staffId, {
 	method: 'get',
 	headers: {
-		"Accept": "text/html, application/xhtml+xml, */*",
+		"Accept": 'text/html, application/xhtml+xml, */*',
 		"Referer": "https://gz.cbss.10010.com/essframe",
 		"Accept-Language": "zh-CN",
 		"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
@@ -64,12 +74,12 @@ casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + ac
 		"Connection": "Keep-Alive",
 		"Cache-Control": "no-cache",
 	},
-	ecoding: 'utf8',
+	encoding: 'utf8',
 });
 
 casper.then(function checkLogin(){
-	var homePageHtml = this.getHTML();
-	var homePageMeta = RegexUtils.regexMatchOne(/<meta.*provinceId.*?>/i,homePageHtml);
+	var navHtml = this.getHTML();
+	var homePageMeta = RegexUtils.regexMatch(/<meta.*provinceId.*?>/i,navHtml);
 	if(homePageMeta){
 		//** 已登录
 		response.meta = homePageMeta;
@@ -83,8 +93,9 @@ casper.then(function checkLogin(){
 });
 
 casper.then(function checkMenu(){
-	var homePageHtml = this.getHTML();
-	account.resourceUrl = RegexUtils.regexMatchOne(/clickMenuItem\(this\);openmenu\('(.+?OrderGprsRes.+?)'/i, homePageHtml);
+	var navHtml = this.getHTML();
+	urls.resourceUrl = RegexUtils.regexMatch(/.*clickMenuItem\(this\);openmenu\('(.+?OrderGprsRes.+?)'\).*/i,
+                navHtml);
 });
 
 //** 左边框，用于获得下一步访问地址
@@ -100,21 +111,21 @@ casper.open('https://gz.cbss.10010.com/essframe?service=page/Sidebar',{
 		"Connection": "Keep-Alive",
 		"Cache-Control": "no-cache",
 	},
-	ecoding: 'utf8',
+	encoding: 'utf8',
 });
 
 casper.then(function custUrl(){
 	var sideBarHtml = this.getHTML();
-	var custUrl = sideBarHtml.match(/menuaddr="(.+?)".*/i) || ['',''];
-	if(custUrl[1] == ''){
+	var custUrl = RegexUtils.regexMatch(/menuaddr="(.+?)"/i, sideBarHtml);
+	if(custUrl[1] == undefined){
 		console.log('没取到url');
 		response.status = '用户认证异常';
 		this.echo(JSON.stringify(response));
 		this.exit(1);
 	}
-	var loginRandomCode = sideBarHtml.match(/LOGIN_RANDOM_CODE=(\d+)/i) || ['',''];
-	var loginCheckCode = sideBarHtml.match(/LOGIN_CHECK_CODE=(\d+)/i) || ['',''];
-	custUrl = custUrl.replace('&amp', '&');
+	var loginRandomCode = RegexUtils.regexMatch(/LOGIN_RANDOM_CODE=(\d+)/i, sideBarHtml);
+	var loginCheckCode = RegexUtils.regexMatch(/LOGIN_CHECK_CODE=(\d+)/i, sideBarHtml);
+	custUrl = custUrl.replace('&amp;', '&');
 	custUrl += "&staffId=" + account.staffId
             + "&departId=" + account.deptId
             + "&subSysCode=" + account.subSysCode
@@ -131,23 +142,23 @@ casper.then(function custUrl(){
     		"Connection": "Keep-Alive",
     		"Cache-Control": "no-cache",
     	},
-    	ecoding: 'utf8',
+    	encoding: 'utf8',
     });
-    account.custUrl = custUrl;
+    urls.custUrl = custUrl;
 });
 
 //** 账务管理，流量包资源订购
 casper.then(function getPackageUrl(){
-	var packageUrl = account.resourceUrl + "&staffId="
+	var packageUrl = "https://gz.cbss.10010.com" + urls.resourceUrl + "&staffId="
                 + account.staffId + "&departId="
                 + account.deptId
                 + "&subSysCode=BSS&eparchyCode="
                 + account.epachyId;
-    casper.open("https://gz.cbss.10010.com" + packageUrl,{
+    casper.open(packageUrl,{
     	method: 'get',
     	headers: {
     		"Accept": "text/html, application/xhtml+xml, */*",
-    		"Referer": account.custUrl,
+    		"Referer": urls.custUrl,
     		"Accept-Language": "zh-CN",
     		"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
     		"Content-Type": "application/x-www-form-urlencoded",
@@ -155,7 +166,7 @@ casper.then(function getPackageUrl(){
     		"Connection": "Keep-Alive",
     		"Cache-Control": "no-cache",
     	},
-    	ecoding: 'utf8',
+    	encoding: 'utf8',
     });
 });
 
@@ -172,7 +183,7 @@ casper.open('"https://gz.cbss.10010.com/acctmanm',{
 		"Connection": "Keep-Alive",
 		"Cache-Control": "no-cache",
 	},
-	ecoding: 'gbk',
+	encoding: 'gbk',
 	data: {
 		"service": "direct/1/amcharge.ordergprsresource.OrderGprsRes/$Form",
 		"sp": "S0",
@@ -244,8 +255,8 @@ casper.then(function parseResourceHtml(){
 
 	//** 用户不能订购
 	//TODO ?
-	var content = resourceHtml.match(/<div class="content">(.+?)<\/div>/i);
-	if(content){
+	var content = RegexUtils.regexMatch(/<div class="content">(.+?)<\/div>/i, resourceHtml);
+	if(content[1].length > 0){
 		response.status = '用户不能订购';
 		response.content = content;
 		casper.echo(JSON.stringify(response));
@@ -253,10 +264,10 @@ casper.then(function parseResourceHtml(){
 	}
 	//** 获得已订购列表
 	//TODO ?
-	var resourceList = resourceHtml.match(/<>/ig);
+	var resourceList = RegexUtils.extractResourceInfo(resourceHtml);
 	//** 是否有正在“处理中”的业务
 	resourceList.forEach(function(resource){
-		if(/'处理中'/test(resource)){
+		if(/'处理中'/test(resource.dealTag)){
 			console.log('用户有业务尚在处理中！');
 			response.status = '用户有业务尚在处理中';
 			response.content = JSON.stringify(resource);
@@ -266,9 +277,9 @@ casper.then(function parseResourceHtml(){
 	});
 	//** 可选择流量包
 	//TODO ?
-	var resTableList = resourceHtml.match(/<>/ig);
+	var resTableList = RegexUtils.extractResTableInfo(resourceHtml);
 	//** form表单参数
-	var resourceParam = resourceHtml.match(/<>/ig);
+	var resourceParam = RegexUtils.getResourceParam(resourceHtml);
 	var xCodingString = RegexUtils.getXcodingString(resTableList);
 	//** 信用额度
 	var creditMoney = parseFloat(resourceParam.cond_CREDIT_VALUE);
@@ -279,6 +290,9 @@ casper.then(function parseResourceHtml(){
 		casper.echo(JSON.stringify(response));
 		casper.exit();
 	}
+	account.resourceParam = resourceParam;
+	account.resTableList = resTableList;
+	account.xCodingString = xCodingString;
 });
 
 casper.then(function(){
@@ -307,72 +321,72 @@ casper.then(function(){
 			"Connection": "Keep-Alive",
 			"Cache-Control": "no-cache",
 		},
-		ecoding: 'gbk',
+		encoding: 'gbk',
 		data: {
-			"Form0": resourceParam.get("Form0"),
-			"cond_ID_TYPE": resourceParam.get("cond_ID_TYPE"),
-			"cond_SERIAL_NUMBER", phone,
+			"Form0": account.resourceParam["Form0"],
+			"cond_ID_TYPE": account.resourceParam["cond_ID_TYPE"],
+			"cond_SERIAL_NUMBER": order.phone,
 			"cond_NET_TYPE_CODE": "50",
 			"bquerytop": " 查 询 ",
-			"cond_X_USER_COUNT": resourceParam.get("cond_X_USER_COUNT"),
-			"cond_DL_NAME": resourceParam.get("cond_DL_NAME"),
-			"cond_DL_SNUMBER": resourceParam.get("cond_DL_SNUMBER"),
+			"cond_X_USER_COUNT": account.resourceParam["cond_X_USER_COUNT"],
+			"cond_DL_NAME": account.resourceParam["cond_DL_NAME"],
+			"cond_DL_SNUMBER": account.resourceParam["cond_DL_SNUMBER"],
 			"data_DL_ZJ": "",
 			"cond_DL_NUMBER": "",
-			"data_RESOURCE_TAG": resourceCode,// 流量包编码
+			"data_RESOURCE_TAG": order.product.resourceCode,// 流量包编码
 			"data_RESOURCE_ZK": "",
-			"data_PACKAGE_CODE": resourceParam.get("data_PACKAGE_CODE"),
-			"data_RESOURCE_CODE": resourceParam.get("data_RESOURCE_CODE"),
-			"data_ZK_NAME": resourceParam.get("data_ZK_NAME"),
-			"data_RESOURCE_NAME": resourceParam.get("data_RESOURCE_NAME"),
-			"data_LONG": resourceParam.get("data_LONG"),
-			"data_MONEY": resourceParam.get("data_MONEY"),
-			"data_RES_MONEY": resourceParam.get("data_RES_MONEY"),
-			"data_UNIT": resourceParam.get("data_UNIT"),
-			"data_VALID_TIME_UNIT": resourceParam.get("data_VALID_TIME_UNIT"),
-			"data_VALID_TIME": resourceParam.get("data_VALID_TIME"),
-			"data_RESOURCE_COUNT": resourceParam.get("data_RESOURCE_COUNT"),
-			"cond_PRINT_FLAG": resourceParam.get("cond_PRINT_FLAG"),
-			"cond_DL_ZJ_NAME": resourceParam.get("cond_DL_ZJ_NAME"),
+			"data_PACKAGE_CODE": account.resourceParam["data_PACKAGE_CODE"],
+			"data_RESOURCE_CODE": account.resourceParam["data_RESOURCE_CODE"],
+			"data_ZK_NAME": account.resourceParam["data_ZK_NAME"],
+			"data_RESOURCE_NAME": account.resourceParam["data_RESOURCE_NAME"],
+			"data_LONG": account.resourceParam["data_LONG"],
+			"data_MONEY": account.resourceParam["data_MONEY"],
+			"data_RES_MONEY": account.resourceParam["data_RES_MONEY"],
+			"data_UNIT": account.resourceParam["data_UNIT"],
+			"data_VALID_TIME_UNIT": account.resourceParam["data_VALID_TIME_UNIT"],
+			"data_VALID_TIME": account.resourceParam["data_VALID_TIME"],
+			"data_RESOURCE_COUNT": account.resourceParam["data_RESOURCE_COUNT"],
+			"cond_PRINT_FLAG": account.resourceParam["cond_PRINT_FLAG"],
+			"cond_DL_ZJ_NAME": account.resourceParam["cond_DL_ZJ_NAME"],
 			"bsubmit1": "提 交",
-			"userinfoback_ACCT_ID": resourceParam.get("userinfoback_ACCT_ID"),
-			"userinfoback_SERIAL_NUMBER", phone,
-			"userinfoback_PAY_NAME": resourceParam.get("userinfoback_PAY_NAME"),
-			"userinfoback_NET_TYPE_CODE": resourceParam.get("userinfoback_NET_TYPE_CODE"),
-			"userinfoback_SERVICE_CLASS_CODE": resourceParam.get("userinfoback_SERVICE_CLASS_CODE"),
-			"userinfoback_USER_ID": resourceParam.get("userinfoback_USER_ID"),
-			"userinfoback_PAY_MODE_CODE": resourceParam.get("userinfoback_PAY_MODE_CODE"),
-			"userinfoback_ROUTE_EPARCHY_CODE": resourceParam.get("userinfoback_ROUTE_EPARCHY_CODE"),
-			"userinfoback_PREPAY_TAG": resourceParam.get("userinfoback_PREPAY_TAG"),
-			"userinfoback_CITY_CODE": resourceParam.get("userinfoback_CITY_CODE"),
-			"userinfoback_PRODUCT_ID": resourceParam.get("userinfoback_PRODUCT_ID"),
-			"userinfoback_BRAND_CODE": resourceParam.get("userinfoback_BRAND_CODE"),
-			"cond_CREDIT_VALUE": resourceParam.get("cond_CREDIT_VALUE"),
-			"cond_DEPOSIT_MONEY": resourceParam.get("cond_DEPOSIT_MONEY"),
-			"cond_TOTAL_FEE": resourceParam.get("cond_TOTAL_FEE"),
-			"X_CODING_STR", xCodingString,
-			"cond_DATE": resourceParam.get("cond_DATE"),
-			"cond_DATE1": resourceParam.get("cond_DATE1"),
-			"cond_DATE2": resourceParam.get("cond_DATE2"),
-			"cond_DATE3": resourceParam.get("cond_DATE3"),
-			"cond_STAFF_ID1": resourceParam.get("cond_STAFF_ID1"),
-			"cond_STAFF_NAME1": resourceParam.get("cond_STAFF_NAME1"),
-			"cond_DEPART_NAME1": resourceParam.get("cond_DEPART_NAME1"),
-			"cond_ENDDATE": resourceParam.get("cond_ENDDATE"),
-			"cond_CUST_NAME": resourceParam.get("cond_CUST_NAME"),
-			"cond_PSPT_TYPE_CODE": resourceParam.get("cond_PSPT_TYPE_CODE"),
-			"cond_PSPT_ID": resourceParam.get("cond_PSPT_ID"),
-			"cond_PSPT_ADDR": resourceParam.get("cond_PSPT_ADDR"),
-			"cond_POST_ADDRESS": resourceParam.get("cond_POST_ADDRESS"),
-			"cond_CONTACT": resourceParam.get("cond_CONTACT"),
-			"cond_CONTACT_PHONE": resourceParam.get("cond_CONTACT_PHONE"),
-			"cond_EMAIL": resourceParam.get("cond_EMAIL"),
-			"cond_SHOWLIST": resourceParam.get("cond_SHOWLIST"),
-			"cond_PSPT_END_DATE": resourceParam.get("cond_PSPT_END_DATE"),
-			"cond_NET_TYPE_CODE1": resourceParam.get("cond_NET_TYPE_CODE1"),
-			"RESOURCE_TAG": resourceCode,
+			"userinfoback_ACCT_ID": account.resourceParam["userinfoback_ACCT_ID"],
+			"userinfoback_SERIAL_NUMBER": order.phone,
+			"userinfoback_PAY_NAME": account.resourceParam["userinfoback_PAY_NAME"],
+			"userinfoback_NET_TYPE_CODE": account.resourceParam["userinfoback_NET_TYPE_CODE"],
+			"userinfoback_SERVICE_CLASS_CODE": account.resourceParam["userinfoback_SERVICE_CLASS_CODE"],
+			"userinfoback_USER_ID": account.resourceParam["userinfoback_USER_ID"],
+			"userinfoback_PAY_MODE_CODE": account.resourceParam["userinfoback_PAY_MODE_CODE"],
+			"userinfoback_ROUTE_EPARCHY_CODE": account.resourceParam["userinfoback_ROUTE_EPARCHY_CODE"],
+			"userinfoback_PREPAY_TAG": account.resourceParam["userinfoback_PREPAY_TAG"],
+			"userinfoback_CITY_CODE": account.resourceParam["userinfoback_CITY_CODE"],
+			"userinfoback_PRODUCT_ID": account.resourceParam["userinfoback_PRODUCT_ID"],
+			"userinfoback_BRAND_CODE": account.resourceParam["userinfoback_BRAND_CODE"],
+			"cond_CREDIT_VALUE": account.resourceParam["cond_CREDIT_VALUE"],
+			"cond_DEPOSIT_MONEY": account.resourceParam["cond_DEPOSIT_MONEY"],
+			"cond_TOTAL_FEE": account.resourceParam["cond_TOTAL_FEE"],
+			"X_CODING_STR": account.xCodingString,
+			"cond_DATE": account.resourceParam["cond_DATE"],
+			"cond_DATE1": account.resourceParam["cond_DATE1"],
+			"cond_DATE2": account.resourceParam["cond_DATE2"],
+			"cond_DATE3": account.resourceParam["cond_DATE3"],
+			"cond_STAFF_ID1": account.resourceParam["cond_STAFF_ID1"],
+			"cond_STAFF_NAME1": account.resourceParam["cond_STAFF_NAME1"],
+			"cond_DEPART_NAME1": account.resourceParam["cond_DEPART_NAME1"],
+			"cond_ENDDATE": account.resourceParam["cond_ENDDATE"],
+			"cond_CUST_NAME": account.resourceParam["cond_CUST_NAME"],
+			"cond_PSPT_TYPE_CODE": account.resourceParam["cond_PSPT_TYPE_CODE"],
+			"cond_PSPT_ID": account.resourceParam["cond_PSPT_ID"],
+			"cond_PSPT_ADDR": account.resourceParam["cond_PSPT_ADDR"],
+			"cond_POST_ADDRESS": account.resourceParam["cond_POST_ADDRESS"],
+			"cond_CONTACT": account.resourceParam["cond_CONTACT"],
+			"cond_CONTACT_PHONE": account.resourceParam["cond_CONTACT_PHONE"],
+			"cond_EMAIL": account.resourceParam["cond_EMAIL"],
+			"cond_SHOWLIST": account.resourceParam["cond_SHOWLIST"],
+			"cond_PSPT_END_DATE": account.resourceParam["cond_PSPT_END_DATE"],
+			"cond_NET_TYPE_CODE1": account.resourceParam["cond_NET_TYPE_CODE1"],
+			"RESOURCE_TAG": order.product.resourceCode,
     	}
-    );
+    });
 });
 
 casper.then(function(){
@@ -414,84 +428,85 @@ casper.then(function(){
 			"Connection": "Keep-Alive",
 			"Cache-Control": "no-cache",
 		},
-		ecoding: 'gbk',
+		encoding: 'gbk',
 		data: {
-			"Form0": resourceParam.get("Form0"),
-			"cond_ID_TYPE": resourceParam.get("cond_ID_TYPE"),
-			"cond_SERIAL_NUMBER", phone,
-			"cond_NET_TYPE_CODE": resourceParam.get("userinfoback_NET_TYPE_CODE"),
+			"Form0": account.resourceParam["Form0"],
+			"cond_ID_TYPE": account.resourceParam["cond_ID_TYPE"],
+			"cond_SERIAL_NUMBER": order.phone,
+			"cond_NET_TYPE_CODE": account.resourceParam["userinfoback_NET_TYPE_CODE"],
 			"bquerytop": " 查 询 ",
-			"cond_X_USER_COUNT": resourceParam.get("cond_X_USER_COUNT"),
-			"cond_DL_NAME": resourceParam.get("cond_DL_NAME"),
-			"cond_DL_SNUMBER": resourceParam.get("cond_DL_SNUMBER"),
+			"cond_X_USER_COUNT": account.resourceParam["cond_X_USER_COUNT"],
+			"cond_DL_NAME": account.resourceParam["cond_DL_NAME"],
+			"cond_DL_SNUMBER": account.resourceParam["cond_DL_SNUMBER"],
 			"data_DL_ZJ": "",
 			"cond_DL_NUMBER": "",
-			"data_RESOURCE_TAG": resourceCode,// 流量包编码
-			"data_RESOURCE_ZK", order.price,
-			"data_PACKAGE_CODE": resourceParam.get("data_PACKAGE_CODE"),
-			"data_RESOURCE_CODE": resourceParam.get("data_RESOURCE_CODE"),
-			"data_ZK_NAME": resourceParam.get("data_ZK_NAME"),
-			"data_RESOURCE_NAME": resourceParam.get("data_RESOURCE_NAME"),
-			"data_LONG": resourceParam.get("data_LONG"),
-			"data_MONEY": resourceParam.get("data_MONEY"),
-			"data_RES_MONEY": resourceParam.get("data_RES_MONEY"),
-			"data_UNIT": resourceParam.get("data_UNIT"),
-			"data_VALID_TIME_UNIT": resourceParam.get("data_VALID_TIME_UNIT"),
-			"data_VALID_TIME": resourceParam.get("data_VALID_TIME"),
-			"data_RESOURCE_COUNT": resourceParam.get("data_RESOURCE_COUNT"),
-			"cond_PRINT_FLAG": resourceParam.get("cond_PRINT_FLAG"),
-			"cond_DL_ZJ_NAME": resourceParam.get("cond_DL_ZJ_NAME"),
+			"data_RESOURCE_TAG": order.product.resourceCode,// 流量包编码
+			"data_RESOURCE_ZK": order.price,
+			"data_PACKAGE_CODE": account.resourceParam["data_PACKAGE_CODE"],
+			"data_RESOURCE_CODE": account.resourceParam["data_RESOURCE_CODE"],
+			"data_ZK_NAME": account.resourceParam["data_ZK_NAME"],
+			"data_RESOURCE_NAME": account.resourceParam["data_RESOURCE_NAME"],
+			"data_LONG": account.resourceParam["data_LONG"],
+			"data_MONEY": account.resourceParam["data_MONEY"],
+			"data_RES_MONEY": account.resourceParam["data_RES_MONEY"],
+			"data_UNIT": account.resourceParam["data_UNIT"],
+			"data_VALID_TIME_UNIT": account.resourceParam["data_VALID_TIME_UNIT"],
+			"data_VALID_TIME": account.resourceParam["data_VALID_TIME"],
+			"data_RESOURCE_COUNT": account.resourceParam["data_RESOURCE_COUNT"],
+			"cond_PRINT_FLAG": account.resourceParam["cond_PRINT_FLAG"],
+			"cond_DL_ZJ_NAME": account.resourceParam["cond_DL_ZJ_NAME"],
 			"bsubmit1": "提 交",
-			"userinfoback_ACCT_ID": resourceParam.get("userinfoback_ACCT_ID"),
+			"userinfoback_ACCT_ID": account.resourceParam["userinfoback_ACCT_ID"],
 			"userinfoback_SERIAL_NUMBER": order.phone,
-			"userinfoback_PAY_NAME": resourceParam.get("userinfoback_PAY_NAME"),
-			"userinfoback_NET_TYPE_CODE": resourceParam.get("userinfoback_NET_TYPE_CODE"),
-			"userinfoback_SERVICE_CLASS_CODE": resourceParam.get("userinfoback_SERVICE_CLASS_CODE"),
-			"userinfoback_USER_ID": resourceParam.get("userinfoback_USER_ID"),
-			"userinfoback_PAY_MODE_CODE": resourceParam.get("userinfoback_PAY_MODE_CODE"),
-			"userinfoback_ROUTE_EPARCHY_CODE": resourceParam.get("userinfoback_ROUTE_EPARCHY_CODE"),
-			"userinfoback_PREPAY_TAG": resourceParam.get("userinfoback_PREPAY_TAG"),
-			"userinfoback_CITY_CODE": resourceParam.get("userinfoback_CITY_CODE"),
-			"userinfoback_PRODUCT_ID": resourceParam.get("userinfoback_PRODUCT_ID"),
-			"userinfoback_BRAND_CODE": resourceParam.get("userinfoback_BRAND_CODE"),
-			"cond_CREDIT_VALUE": resourceParam.get("cond_CREDIT_VALUE"),
-			"cond_DEPOSIT_MONEY": resourceParam.get("cond_DEPOSIT_MONEY"),
-			"cond_TOTAL_FEE": resourceParam.get("cond_TOTAL_FEE"),
-			"X_CODING_STR": xCodingString,
-			"cond_DATE": resourceParam.get("cond_DATE"),
-			"cond_DATE1": resourceParam.get("cond_DATE1"),
-			"cond_DATE2": resourceParam.get("cond_DATE2"),
-			"cond_DATE3": resourceParam.get("cond_DATE3"),
-			"cond_STAFF_ID1": resourceParam.get("cond_STAFF_ID1"),
-			"cond_STAFF_NAME1": resourceParam.get("cond_STAFF_NAME1"),
-			"cond_DEPART_NAME1": resourceParam.get("cond_DEPART_NAME1"),
-			"cond_ENDDATE": resourceParam.get("cond_ENDDATE"),
-			"cond_CUST_NAME": resourceParam.get("cond_CUST_NAME"),
-			"cond_PSPT_TYPE_CODE": resourceParam.get("cond_PSPT_TYPE_CODE"),
-			"cond_PSPT_ID": resourceParam.get("cond_PSPT_ID"),
-			"cond_PSPT_ADDR": resourceParam.get("cond_PSPT_ADDR"),
-			"cond_POST_ADDRESS": resourceParam.get("cond_POST_ADDRESS"),
-			"cond_CONTACT": resourceParam.get("cond_CONTACT"),
-			"cond_CONTACT_PHONE": resourceParam.get("cond_CONTACT_PHONE"),
-			"cond_EMAIL": resourceParam.get("cond_EMAIL"),
-			"cond_SHOWLIST": resourceParam.get("cond_SHOWLIST"),
-			"cond_PSPT_END_DATE": resourceParam.get("cond_PSPT_END_DATE"),
-			"cond_NET_TYPE_CODE1": resourceParam.get("cond_NET_TYPE_CODE1"),
-			"RESOURCE_TAG": resourceCode,
+			"userinfoback_PAY_NAME": account.resourceParam["userinfoback_PAY_NAME"],
+			"userinfoback_NET_TYPE_CODE": account.resourceParam["userinfoback_NET_TYPE_CODE"],
+			"userinfoback_SERVICE_CLASS_CODE": account.resourceParam["userinfoback_SERVICE_CLASS_CODE"],
+			"userinfoback_USER_ID": account.resourceParam["userinfoback_USER_ID"],
+			"userinfoback_PAY_MODE_CODE": account.resourceParam["userinfoback_PAY_MODE_CODE"],
+			"userinfoback_ROUTE_EPARCHY_CODE": account.resourceParam["userinfoback_ROUTE_EPARCHY_CODE"],
+			"userinfoback_PREPAY_TAG": account.resourceParam["userinfoback_PREPAY_TAG"],
+			"userinfoback_CITY_CODE": account.resourceParam["userinfoback_CITY_CODE"],
+			"userinfoback_PRODUCT_ID": account.resourceParam["userinfoback_PRODUCT_ID"],
+			"userinfoback_BRAND_CODE": account.resourceParam["userinfoback_BRAND_CODE"],
+			"cond_CREDIT_VALUE": account.resourceParam["cond_CREDIT_VALUE"],
+			"cond_DEPOSIT_MONEY": account.resourceParam["cond_DEPOSIT_MONEY"],
+			"cond_TOTAL_FEE": account.resourceParam["cond_TOTAL_FEE"],
+			"X_CODING_STR": account.xCodingString,
+			"cond_DATE": account.resourceParam["cond_DATE"],
+			"cond_DATE1": account.resourceParam["cond_DATE1"],
+			"cond_DATE2": account.resourceParam["cond_DATE2"],
+			"cond_DATE3": account.resourceParam["cond_DATE3"],
+			"cond_STAFF_ID1": account.resourceParam["cond_STAFF_ID1"],
+			"cond_STAFF_NAME1": account.resourceParam["cond_STAFF_NAME1"],
+			"cond_DEPART_NAME1": account.resourceParam["cond_DEPART_NAME1"],
+			"cond_ENDDATE": account.resourceParam["cond_ENDDATE"],
+			"cond_CUST_NAME": account.resourceParam["cond_CUST_NAME"],
+			"cond_PSPT_TYPE_CODE": account.resourceParam["cond_PSPT_TYPE_CODE"],
+			"cond_PSPT_ID": account.resourceParam["cond_PSPT_ID"],
+			"cond_PSPT_ADDR": account.resourceParam["cond_PSPT_ADDR"],
+			"cond_POST_ADDRESS": account.resourceParam["cond_POST_ADDRESS"],
+			"cond_CONTACT": account.resourceParam["cond_CONTACT"],
+			"cond_CONTACT_PHONE": account.resourceParam["cond_CONTACT_PHONE"],
+			"cond_EMAIL": account.resourceParam["cond_EMAIL"],
+			"cond_SHOWLIST": account.resourceParam["cond_SHOWLIST"],
+			"cond_PSPT_END_DATE": account.resourceParam["cond_PSPT_END_DATE"],
+			"cond_NET_TYPE_CODE1": account.resourceParam["cond_NET_TYPE_CODE1"],
+			"RESOURCE_TAG": order.product.resourceCode,
 			"ZK_CODE": order.price,
 		}
-	);
+	});
 });
 
 casper.then(function(){
 	var chargeInfo = this.getHTML();
 	var rMap = RegexUtils.getResourceParam(chargeInfo);
-	forEach(resTableList, function(li){
+	account.resTableList.forEach(function(li){
 		if(li.resourceCode == rMap.data_RESOURCE_CODE){
-			rMap.data_RESOURCE_NAME = li.resourceName;
+			rMap['data_RESOURCE_NAME'] = li.resourceName;
 		}
 	});
 	console.log('rMap:' + JSON.stringify(rMap));
+	account.rMap = rMap;
 });
 
 //** 订购提交
@@ -507,89 +522,91 @@ casper.open('https://gz.cbss.10010.com/acctmanm',{
 		"Connection": "Keep-Alive",
 		"Cache-Control": "no-cache",
 	},
-	ecoding: 'gbk',
+	encoding: 'gbk',
 	data: {
         "service": "direct/1/amcharge.ordergprsresource.OrderGprsRes/$Form",
         "sp": "S0",
-        "Form0": resourceParam.get("Form0"),
-        "cond_ID_TYPE": resourceParam.get("cond_ID_TYPE"),
-        "cond_SERIAL_NUMBER", phone,
-        "cond_NET_TYPE_CODE": resourceParam.get("userinfoback_NET_TYPE_CODE"),
+        "Form0": account.resourceParam["Form0"],
+        "cond_ID_TYPE": account.resourceParam["cond_ID_TYPE"],
+        "cond_SERIAL_NUMBER": order.phone,
+        "cond_NET_TYPE_CODE": account.resourceParam["userinfoback_NET_TYPE_CODE"],
         "cond_X_USER_COUNT": "",
         "cond_DL_NAME": "",
         "cond_DL_SNUMBER": "",
         "data_DL_ZJ": "",
         "cond_DL_NUMBER": "",
-        "data_RESOURCE_TAG": resourceCode,
-        "data_RESOURCE_ZK", order.price,
-        "data_PACKAGE_CODE": resourceParam.get("data_PACKAGE_CODE"),
-        "data_RESOURCE_CODE": rMap.get("data_RESOURCE_CODE"),
-        "data_ZK_NAME": rMap.get("data_ZK_NAME"),
-        "data_RESOURCE_NAME": rMap.get("data_RESOURCE_NAME"),
-        "data_LONG": rMap.get("data_LONG"),
-        "data_MONEY": rMap.get("data_MONEY"),
-        "data_RES_MONEY": rMap.get("data_RES_MONEY"),
-        "data_UNIT": rMap.get("data_UNIT"),
-        "data_VALID_TIME_UNIT": rMap.get("data_VALID_TIME_UNIT"),
-        "data_VALID_TIME": rMap.get("data_VALID_TIME"),
-        "data_RESOURCE_COUNT": rMap.get("data_RESOURCE_COUNT"),
+        "data_RESOURCE_TAG": order.product.resourceCode,
+        "data_RESOURCE_ZK": order.price,
+        "data_PACKAGE_CODE": account.resourceParam["data_PACKAGE_CODE"],
+        "data_RESOURCE_CODE": account.rMap["data_RESOURCE_CODE"],
+        "data_ZK_NAME": account.rMap["data_ZK_NAME"],
+        "data_RESOURCE_NAME": account.rMap["data_RESOURCE_NAME"],
+        "data_LONG": account.rMap["data_LONG"],
+        "data_MONEY": account.rMap["data_MONEY"],
+        "data_RES_MONEY": account.rMap["data_RES_MONEY"],
+        "data_UNIT": account.rMap["data_UNIT"],
+        "data_VALID_TIME_UNIT": account.rMap["data_VALID_TIME_UNIT"],
+        "data_VALID_TIME": account.rMap["data_VALID_TIME"],
+        "data_RESOURCE_COUNT": account.rMap["data_RESOURCE_COUNT"],
         "cond_PRINT_FLAG": "",
         "cond_DL_ZJ_NAME": "",
         "bsubmit1": "提 交",
-        "userinfoback_ACCT_ID": resourceParam.get("userinfoback_ACCT_ID"),
-        "userinfoback_SERIAL_NUMBER", phone,
-        "userinfoback_PAY_NAME": resourceParam.get("userinfoback_PAY_NAME"),
-        "userinfoback_NET_TYPE_CODE": resourceParam.get("userinfoback_NET_TYPE_CODE"),
-        "userinfoback_SERVICE_CLASS_CODE": resourceParam.get("userinfoback_SERVICE_CLASS_CODE"),
-        "userinfoback_USER_ID": resourceParam.get("userinfoback_USER_ID"),
-        "userinfoback_PAY_MODE_CODE": resourceParam.get("userinfoback_PAY_MODE_CODE"),
-        "userinfoback_ROUTE_EPARCHY_CODE": resourceParam.get("userinfoback_ROUTE_EPARCHY_CODE"),
-        "userinfoback_PREPAY_TAG": resourceParam.get("userinfoback_PREPAY_TAG"),
-        "userinfoback_CITY_CODE": resourceParam.get("userinfoback_CITY_CODE"),
-        "userinfoback_PRODUCT_ID": resourceParam.get("userinfoback_PRODUCT_ID"),
-        "userinfoback_BRAND_CODE": resourceParam.get("userinfoback_BRAND_CODE"),
-        "cond_CREDIT_VALUE": resourceParam.get("cond_CREDIT_VALUE"),
-        "cond_DEPOSIT_MONEY": resourceParam.get("cond_DEPOSIT_MONEY"),
+        "userinfoback_ACCT_ID": account.resourceParam["userinfoback_ACCT_ID"],
+        "userinfoback_SERIAL_NUMBER": order.phone,
+        "userinfoback_PAY_NAME": account.resourceParam["userinfoback_PAY_NAME"],
+        "userinfoback_NET_TYPE_CODE": account.resourceParam["userinfoback_NET_TYPE_CODE"],
+        "userinfoback_SERVICE_CLASS_CODE": account.resourceParam["userinfoback_SERVICE_CLASS_CODE"],
+        "userinfoback_USER_ID": account.resourceParam["userinfoback_USER_ID"],
+        "userinfoback_PAY_MODE_CODE": account.resourceParam["userinfoback_PAY_MODE_CODE"],
+        "userinfoback_ROUTE_EPARCHY_CODE": account.resourceParam["userinfoback_ROUTE_EPARCHY_CODE"],
+        "userinfoback_PREPAY_TAG": account.resourceParam["userinfoback_PREPAY_TAG"],
+        "userinfoback_CITY_CODE": account.resourceParam["userinfoback_CITY_CODE"],
+        "userinfoback_PRODUCT_ID": account.resourceParam["userinfoback_PRODUCT_ID"],
+        "userinfoback_BRAND_CODE": account.resourceParam["userinfoback_BRAND_CODE"],
+        "cond_CREDIT_VALUE": account.resourceParam["cond_CREDIT_VALUE"],
+        "cond_DEPOSIT_MONEY": account.resourceParam["cond_DEPOSIT_MONEY"],
         "cond_TOTAL_FEE": "",
-        "X_CODING_STR", xCodingString,
-        "cond_DATE": resourceParam.get("cond_DATE"),
-        "cond_DATE1": resourceParam.get("cond_DATE1"),
-        "cond_DATE2": resourceParam.get("cond_DATE2"),
-        "cond_DATE3": resourceParam.get("cond_DATE3"),
-        "cond_STAFF_ID1": resourceParam.get("cond_STAFF_ID1"),
-        "cond_STAFF_NAME1": resourceParam.get("cond_STAFF_NAME1"),
-        "cond_DEPART_NAME1": resourceParam.get("cond_DEPART_NAME1"),
-        "cond_ENDDATE": resourceParam.get("cond_ENDDATE"),
-        "cond_CUST_NAME": resourceParam.get("cond_CUST_NAME"),
-        "cond_PSPT_TYPE_CODE": resourceParam.get("cond_PSPT_TYPE_CODE"),
-        "cond_PSPT_ID": resourceParam.get("cond_PSPT_ID"),
-        "cond_PSPT_ADDR": resourceParam.get("cond_PSPT_ADDR"),
-        "cond_POST_ADDRESS": resourceParam.get("cond_POST_ADDRESS"),
-        "cond_CONTACT": resourceParam.get("cond_CONTACT"),
-        "cond_CONTACT_PHONE": resourceParam.get("cond_CONTACT_PHONE"),
-        "cond_EMAIL": resourceParam.get("cond_EMAIL"),
-        "cond_SHOWLIST": resourceParam.get("cond_SHOWLIST"),
-        "cond_PSPT_END_DATE": resourceParam.get("cond_PSPT_END_DATE"),
-        "cond_NET_TYPE_CODE1": resourceParam.get("cond_NET_TYPE_CODE1"),
+        "X_CODING_STR": account.xCodingString,
+        "cond_DATE": account.resourceParam["cond_DATE"],
+        "cond_DATE1": account.resourceParam["cond_DATE1"],
+        "cond_DATE2": account.resourceParam["cond_DATE2"],
+        "cond_DATE3": account.resourceParam["cond_DATE3"],
+        "cond_STAFF_ID1": account.resourceParam["cond_STAFF_ID1"],
+        "cond_STAFF_NAME1": account.resourceParam["cond_STAFF_NAME1"],
+        "cond_DEPART_NAME1": account.resourceParam["cond_DEPART_NAME1"],
+        "cond_ENDDATE": account.resourceParam["cond_ENDDATE"],
+        "cond_CUST_NAME": account.resourceParam["cond_CUST_NAME"],
+        "cond_PSPT_TYPE_CODE": account.resourceParam["cond_PSPT_TYPE_CODE"],
+        "cond_PSPT_ID": account.resourceParam["cond_PSPT_ID"],
+        "cond_PSPT_ADDR": account.resourceParam["cond_PSPT_ADDR"],
+        "cond_POST_ADDRESS": account.resourceParam["cond_POST_ADDRESS"],
+        "cond_CONTACT": account.resourceParam["cond_CONTACT"],
+        "cond_CONTACT_PHONE": account.resourceParam["cond_CONTACT_PHONE"],
+        "cond_EMAIL": account.resourceParam["cond_EMAIL"],
+        "cond_SHOWLIST": account.resourceParam["cond_SHOWLIST"],
+        "cond_PSPT_END_DATE": account.resourceParam["cond_PSPT_END_DATE"],
+        "cond_NET_TYPE_CODE1": account.resourceParam["cond_NET_TYPE_CODE1"],
+    }
 });
 
 casper.then(function(){
 	var contentHtml = this.getHTML();
-	var content = contentHtml.match(/<div class=\"content\">(.+?)</div>/i);
-	if(/成功/.test(content)){
+	var content = contentHtml.match(/.*<div class="content">(.+?)<\/div>.*/i);
+	if(/成功/.test(content[1])){
 		response.status = '成功';
+		response.content = content;
 	}else{
 		response.status = '失败';
 		response.content = content;
 	}
 });
 
-//** save cookies
-casper.then(function saveCookie(){
-	var cookies = JSON.stringify(phantom.cookies);
-	// this.echo(JSON.stringify(phantom.cookies));
-	fs.write('./_tmp/_cookie.txt', cookies, 644);
-});
+// //** save cookies
+// casper.then(function saveCookie(){
+// 	var cookies = JSON.stringify(phantom.cookies);
+// 	// this.echo(JSON.stringify(phantom.cookies));
+// 	fs.write('./_tmp/_cookie.txt', cookies, 644);
+// });
 
 casper.run(function(){
 	this.echo(JSON.stringify(response));
