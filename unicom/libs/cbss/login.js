@@ -54,8 +54,8 @@ req.end();
 req.on('error', function(e){
   console.error(e);
 });
-console.log('----')
-return;
+console.log('----');
+// return;
 
 request.debug = true;
 

@@ -31,7 +31,7 @@ try {
 //** !WARNING only for testing
 var stock = {
 	symbol: '600218',
-	price: '8.21',
+	price: '1.21',
 	quantity: '100',
 };
 

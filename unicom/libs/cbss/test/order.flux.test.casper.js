@@ -268,7 +268,7 @@ casper.then(function parseResourceHtml(){
 	var resourceList = RegexUtils.extractResourceInfo(resourceHtml);
 	//** 是否有正在“处理中”的业务
 	resourceList.forEach(function(resource){
-		if(/'处理中'/test(resource.dealTag)){
+		if(/处理中/.test(resource.dealTag)){
 			console.log('用户有业务尚在处理中！');
 			response.status = '用户有业务尚在处理中';
 			response.content = JSON.stringify(resource);
