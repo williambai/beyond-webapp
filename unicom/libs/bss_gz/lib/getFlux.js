@@ -1,20 +1,36 @@
 /**
- * 3.1	综合用户信息查询
- * @param  {[type]}   options [description]
- * @param  {Function} done    [description]
- * @return {[type]}           [description]
+ * 4.5	流量查询
+ * 
+ * 用户通过电子渠道短信和网上营业厅查询手机上网流量使用情况或3G后付费上网卡流量情况。
+ *
+ * 返回 RespCode 节点含义：
+ * 0000：成功
+ * 0001：非联通用户
+ * 0002：用户不存在
+ * 0003：用户欠费
+ * 0004：黑名单用户
+ * 0005：用户资信等级不够
+ * 0010：无该业务类型
+ * 0011：不支持该业务
+ * 0012：用户不能使用该业务
+ * 0013：用户状态不正确
+ * 9999：系统故障
+ * 其他错误情况：2位业务类型+2位错误码（可扩展）
+ * 0201：用户非3G后付费上网卡用户
+ * 
+ * 8888 xml没有这个节点(自定义的)
  */
 var request = require('request');
 var util = require('./util');
 
-exports.getUserInfo = function(options, done) {
+exports.getFlux = function(options, done) {
 	var xmlmsg = '<?xml version="1.0" encoding="UTF-8"?>';
 	xmlmsg = '<UniBSS>';//** 根节点开始
 	xmlmsg += '<OrigDomain>ECIP</OrigDomain>';//** 发起方应用域代码
 	xmlmsg += '<HomeDomain>UCRM</HomeDomain>';//** 归属方应用域代码
 	xmlmsg += '<BIPCode>GZWXB001</BIPCode>';//** 业务功能代码
 	xmlmsg += '<BIPVer>0100</BIPVer>';//** 业务流程版本号
-	xmlmsg += '<ActivityCode>GZWXT001</ActivityCode>';//** 交易代码
+	xmlmsg += '<ActivityCode>GZWXT004</ActivityCode>';//** 交易代码
 	xmlmsg += '<ActionCode>0</ActionCode>';//** 交易动作代码
 	xmlmsg += '<ActionRelation>0</ActionRelation>';//** 交易关联性
 	xmlmsg += '<Routing>';//** 路由信息节点开始
@@ -38,17 +54,14 @@ exports.getUserInfo = function(options, done) {
 	xmlmsg += '<SvcCont>';//** 请求/应答内容节点开始
 	xmlmsg += '<![CDATA[';
 	xmlmsg += '<?xml version="1.0" encoding="UTF-8"?>';
-	xmlmsg += '<UserReq>';
-	xmlmsg += '<AccProvince>'+ options.AccProvince +'</AccProvince>';//** 省份
-	xmlmsg += '<AccCity>'+ options.AccCity +'</AccCity>';//** 地市
-	xmlmsg += '<Code>'+ options.Code +'</Code>';//** 区号
-	xmlmsg += '<NetType>'+ options.NetType +'</NetType>';//** 网别，01:2G,02:3G
+	xmlmsg += '<FlowSearchReq>';
 	xmlmsg += '<UserNumber>'+ options.UserNumber +'</UserNumber>';//**客户号码
+	xmlmsg += '<BizType>01</BizType>';//**业务类型（可扩展）01：手机上网流量 02：3G后付费上网卡短信提醒
 	xmlmsg += '<Para>';
 	xmlmsg += '<ParaID></ParaID>';
 	xmlmsg += '<ParaValue></ParaValue>';
 	xmlmsg += '</Para>';
-	xmlmsg += '</UserReq>';
+	xmlmsg += '</FlowSearchReq>';
 	xmlmsg += ']]>';
 	xmlmsg += '</SvcCont>';//** 请求/应答内容节点结束
 	xmlmsg += '</UniBSS>';//** 根节点结束
@@ -68,7 +81,7 @@ exports.getUserInfo = function(options, done) {
 		function(err, httpResponse, body) {
 			if (err) return done(err);
 			try{
-				body = decodeURIComponent(body).replace(/\n/g,'');
+				body = decodeURIComponent(body).replace(/(\r|\n)/g,'');
 			}catch(e){
 				console.log(body);
 				return done({errmsg: '服务器错误。返回的格式不对，xml解析错误'});
@@ -84,60 +97,42 @@ exports.getUserInfo = function(options, done) {
 			//** SvcCont 节点
 			var SvcCont = body.match(/<SvcCont>.*<\/SvcCont>/);
 			if(SvcCont == null) return done({errmsg: 'xml中SvcCont节点不存在'});
-			console.log('SvcCont 节点内容：' + SvcCont[0]);
+			// console.log('SvcCont 节点内容：' + SvcCont[0]);
 
-			//** UserRsp 节点
-			var UserRsp = (SvcCont[0].match(/<UserRsp>.*?<\/UserRsp>/) || [''])[0];
-			var SubscrbId = UserRsp.match(/<SubscrbId>(.*?)<\/SubscrbId>/) || [];
-			result.SubscrbId = SubscrbId[1] || '';
-			var SubscrbStat = UserRsp.match(/<SubscrbStat>(.*?)<\/SubscrbStat>/) || [];
-			result.SubscrbStat = SubscrbStat[1] || '';
-			var BillingType = UserRsp.match(/<BillingType>(.*?)<\/BillingType>/) || [];
-			result.BillingType = BillingType[1] || '';
-			var Brand = UserRsp.match(/<Brand>(.*?)<\/Brand>/) || [];
-			result.Brand = Brand[1] || '';
-			var CityCode = UserRsp.match(/<CityCode>(.*?)<\/CityCode>/) || [];
-			result.CityCode = CityCode[1] || '';
-			var OpenDate = UserRsp.match(/<OpenDate>(.*?)<\/OpenDate>/) || [];
-			result.OpenDate = OpenDate[1] || '';
-			var LandLvl = UserRsp.match(/<LandLvl>(.*?)<\/LandLvl>/) || [];
-			result.LandLvl = LandLvl[1] || '';
-			var RoamStat = UserRsp.match(/<RoamStat>(.*?)<\/RoamStat>/) || [];
-			result.RoamStat = RoamStat[1] || '';
-			var ProductId = UserRsp.match(/<ProductId>(.*?)<\/ProductId>/) || [];
-			result.ProductId = ProductId[1] || '';
-			var ProductName = UserRsp.match(/<ProductName>(.*?)<\/ProductName>/) || [];
-			result.ProductName = ProductName[1] || '';
-			var SimCard = UserRsp.match(/<SimCard>(.*?)<\/SimCard>/) || [];
-			result.SimCard = SimCard[1] || '';
-			var VpnName = UserRsp.match(/<VpnName>(.*?)<\/VpnName>/) || [];
-			result.VpnName = VpnName[1] || '';
-			var CreditVale = UserRsp.match(/<CreditVale>(.*?)<\/CreditVale>/) || [];
-			result.CreditVale = CreditVale[1] || '';
-			var LastStatDate = UserRsp.match(/<LastStatDate>(.*?)<\/LastStatDate>/) || [];
-			result.LastStatDate = LastStatDate[1] || '';
-			var Useintegral = UserRsp.match(/<Useintegral>(.*?)<\/Useintegral>/) || [];
-			result.Useintegral = Useintegral[1] || '';
-			var Amount = UserRsp.match(/<Amount>(.*?)<\/Amount>/) || [];
-			result.Amount = Amount[1] || '';
-			var CustName = UserRsp.match(/<CustName>(.*?)<\/CustName>/) || [];
-			result.CustName = CustName[1] || '';
-			var VIPLev = UserRsp.match(/<VIPLev>(.*?)<\/VIPLev>/) || [];
-			result.VIPLev = VIPLev[1] || '';
-			var BroadbandCode = UserRsp.match(/<BroadbandCode>(.*?)<\/BroadbandCode>/) || [];
-			result.BroadbandCode = BroadbandCode[1] || '';
-			var Paras = UserRsp.match(/<Para>.*?<\/Para>/g) || [];
-			result.Para = [];
+			//** FlowSearchRsp 节点
+			var FlowSearchRsp = (SvcCont[0].match(/<FlowSearchRsp>.*?<\/FlowSearchRsp>/) || [''])[0];
+			var RespCode = FlowSearchRsp.match(/<RespCode>(.*?)<\/RespCode>/) || [];
+			result.RespCode = RespCode[1] || '8888';
+			var RespDesc = FlowSearchRsp.match(/<RespDesc>(.*?)<\/RespDesc>/) || [];
+			result.RespDesc = RespDesc[1] || '';
+			var FlowInfs = FlowSearchRsp.match(/<FlowInf>.*?<\/FlowInf>/g) || [];
+			result.FlowInf = [];
 
-			//** Para 节点集
-			Paras.forEach(function(Para){
+			//** FlowInf 节点集
+			FlowInfs.forEach(function(FlowInf){
 				var obj = {};
-				//** Para 节点
-				var ParaID = Para.match(/<ParaID>(.*?)<\/ParaID>/) || [];
-				obj['ParaID'] = ParaID[1] || '';
-				var ParaValue = Para.match(/<ParaValue>(.*?)<\/ParaValue>/) || [];
-				obj['ParaValue'] = ParaValue[1] || '';
-				result.Para.push(obj);
+				//** FlowInf 节点
+				var TotalFlow = FlowInf.match(/<TotalFlow>(.*?)<\/TotalFlow>/) || [];
+				obj['TotalFlow'] = TotalFlow[1] || '';
+				var ChargedFlow = FlowInf.match(/<ChargedFlow>(.*?)<\/ChargedFlow>/) || [];
+				obj['ChargedFlow'] = ChargedFlow[1] || '';
+				var PackageExceedFlag = FlowInf.match(/<PackageExceedFlag>(.*?)<\/PackageExceedFlag>/) || [];
+				obj['PackageExceedFlag'] = PackageExceedFlag[1] || '';
+				var PackageUsedFlow = FlowInf.match(/<PackageUsedFlow>(.*?)<\/PackageUsedFlow>/) || [];
+				obj['PackageUsedFlow'] = PackageUsedFlow[1] || '';
+				var PackageLeavingsFlow = FlowInf.match(/<PackageLeavingsFlow>(.*?)<\/PackageLeavingsFlow>/) || [];
+				obj['PackageLeavingsFlow'] = PackageLeavingsFlow[1] || '';
+				var InheritExceedFlag = FlowInf.match(/<InheritExceedFlag>(.*?)<\/InheritExceedFlag>/) || [];
+				obj['InheritExceedFlag'] = InheritExceedFlag[1] || '';
+				var InheritUsedFlow = FlowInf.match(/<InheritUsedFlow>(.*?)<\/InheritUsedFlow>/) || [];
+				obj['InheritUsedFlow'] = InheritUsedFlow[1] || '';
+				var InheritLeavingsFlow = FlowInf.match(/<InheritLeavingsFlow>(.*?)<\/InheritLeavingsFlow>/) || [];
+				obj['InheritLeavingsFlow'] = InheritLeavingsFlow[1] || '';
+				var Para1 = FlowInf.match(/<Para1>(.*?)<\/Para1>/) || [];
+				obj['Para1'] = Para1[1] || '';
+				var Para2 = FlowInf.match(/<Para2>(.*?)<\/Para2>/) || [];
+				obj['Para2'] = Para2[1] || '';
+				result.FlowInf.push(obj);
 			});
 
 			done(err, result);

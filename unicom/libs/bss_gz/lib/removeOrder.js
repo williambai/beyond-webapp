@@ -1,5 +1,8 @@
 /**
- * 3.6	业务取消
+ * 4.12	产品(套餐)变更
+ * 
+ * 业务取消
+ * 
  * @param  {[type]}   options [description]
  * @param  {Function} done    [description]
  * @return {[type]}           [description]
@@ -79,20 +82,21 @@ exports.removeOrder = function(options, done) {
 			var result = {};
 			//** 客户号码
 			result.UserNumber = options.UserNumber || '';
-			//** 提取xml内容
-			var SvcCont = ''.match.call(body,/<SvcCont>(.*)<\/SvcCont>/) || ['',''];
-			console.log(SvcCont[1]);
-			if(SvcCont == '') return done({errmsg: 'xml中SvcCont节点不存在'});
-			var PackageChangeRsp = ''.match.call(SvcCont[1],/<PackageChangeRsp>(.*)<\/PackageChangeRsp>/) || ['',''];
-			//** 提取返回编码
-			var RespCode = ''.match.call(PackageChangeRsp[1],/<RespCode>(.*)<\/RespCode>/) || ['',''];
-			result.RespCode = RespCode[1] || '';
-			//** 返回描述
-			var RespDesc = ''.match.call(PackageChangeRsp[1],/<RespDesc>(.*)<\/RespDesc>/) || ['',''];
+
+			//** SvcCont 节点
+			var SvcCont = body.match(/<SvcCont>.*<\/SvcCont>/);
+			if(SvcCont == null) return done({errmsg: 'xml中SvcCont节点不存在'});
+			// console.log('SvcCont 节点内容：' + SvcCont[0]);
+
+			//** PackageChangeRsp 节点
+			var PackageChangeRsp = (SvcCont[0].match(/<PackageChangeRsp>.*?<\/PackageChangeRsp>/) || [''])[0];
+			var RespCode = PackageChangeRsp.match(/<RespCode>(.*?)<\/RespCode>/) || [];
+			result.RespCode = RespCode[1] || '8888';
+			var RespDesc = PackageChangeRsp.match(/<RespDesc>(.*?)<\/RespDesc>/) || [];
 			result.RespDesc = RespDesc[1] || '';
-			//** 返回生效时间
-			var EffectTime = ''.match.call(PackageChangeRsp[1],/<EffectTime>(.*)<\/EffectTime>/) || ['',''];
+			var EffectTime = PackageChangeRsp.match(/<EffectTime>(.*?)<\/EffectTime>/) || [];
 			result.EffectTime = EffectTime[1] || '';
+
 			done(err, result);
 		}
 	);

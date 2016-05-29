@@ -6,18 +6,14 @@
  * > node __filename 15692740700 http://130.85.50.34:7772/XMLReceiver
  * 
  */
-var BSS = require('../lib/getUserInfo');
+var BSS = require('../lib/getFlux');
 
 //** Unit Test
 if(process.argv[1] == __filename){
-	//** 测试 getUserInfo()
-	BSS.getUserInfo({
+	//** 测试 getFluxBalance()
+	BSS.getFlux({
 		url: process.argv[3] || 'http://130.85.50.34:7772/XMLReceiver',
 		requestId: 'ALUOP151123071351894382625439' + parseInt(Math.random()*10000),
-		AccProvince: '85',
-		AccCity: '850',
-		Code: '0851',
-		NetType: '02',
 		UserNumber: process.argv[2] || '15692740700',
 	},function(err,result){
 		if(err) return console.log(err);

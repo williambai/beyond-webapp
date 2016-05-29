@@ -75,3 +75,31 @@ xmlmsg=<UniBSS><OrigDomain>ECIP</OrigDomain><HomeDomain>UCRM</HomeDomain><BIPCod
 
 {"UserNumber":"18508505402","CustName":"秦锡娟","SubscrbStat":"15","BillingType":"00","Brand":"8","CityCode":"850","OpenDate":"20140316160456","LandLvl":"1","SimCard":"8986011388503492849","Useintegral":"100","Amount":"","VIPLev":"世界风银级"} 
  */
+
+/**
+ * 2016/5/28
+ */
+
+// getUserInfo
+/**
+ * SvcCont 节点内容：<SvcCont><![CDATA[<?xml+version="1.0"+encoding="UTF-8"?><UserRsp>++++<SubscrbId>9116051784648903</SubscrbId>++++<SubscrbStat>10</SubscrbStat>++++<BillingType>00</BillingType>++++<Brand>8</Brand>++++<CityCode>850</CityCode>++++<OpenDate>20160517091454</OpenDate>++++<LandLvl>1</LandLvl>++++<RoamStat>1</RoamStat>++++<ProductId>99005044</ProductId>++++<ProductName>3G基本套餐A-46元档</ProductName>++++<SimCard>89860116885007626191</SimCard>++++<VpnName>WCDMA</VpnName>++++<CreditVale>0</CreditVale>++++<Useintegral>0</Useintegral>++++<Amount></Amount>++++<CustName>吴文宇</CustName>++++<VIPLev></VIPLev>++++<BroadbandCode></BroadbandCode></UserRsp>]]></SvcCont>
+ * {"UserNumber":"15597726984","SubscrbId":"9116051784648903","SubscrbStat":"10","BillingType":"00","Brand":"8","CityCode":"850","OpenDate":"20160517091454","LandLvl":"1","RoamStat":"1","ProductId":"99005044","ProductName":"3G基本套餐A-46元档","SimCard":"89860116885007626191","VpnName":"WCDMA","CreditVale":"0","LastStatDate":"","Useintegral":"0","Amount":"","CustName":"吴文宇","VIPLev":"","BroadbandCode":"","Para":[]}
+ */
+
+//getFlux
+/**
+ * {"UserNumber":"15597726984","RespCode":"0000","RespDesc":"成功","FlowInf":[{"TotalFlow":"1427","ChargedFlow":"1427","PackageExceedFlag":"0","PackageUsedFlow":"1427","PackageLeavingsFlow":"152173","InheritExceedFlag":"1","InheritUsedFlow":"0","InheritLeavingsFlow":"0","Para1":"","Para2":""}]}
+ */
+
+//getBalance
+/**
+ * {"UserNumber":"15597726984","AnswerCode":"0000","Desc":"%E6%88%90%E5%8A%9F","FlowInf":[{"FlowType":"01","FreeTotle":"150.00","FreeUsed":"1.39","FreeLeavings":"148.61","FreeOvers":"","FreeOverFee":""},{"FlowType":"15","FreeTotle":"1800","FreeUsed":"0","FreeLeavings":"1800","FreeOvers":"","FreeOverFee":""},{"FlowType":"05","FreeTotle":"3","FreeUsed":"0","FreeLeavings":"3","FreeOvers":"","FreeOverFee":""},{"FlowType":"03","FreeTotle":"5","FreeUsed":"0","FreeLeavings":"5","FreeOvers":"","FreeOverFee":""},{"FlowType":"02","FreeTotle":"50","FreeUsed":"0","FreeLeavings":"50","FreeOvers":"","FreeOverFee":""},{"FlowType":"06","FreeTotle":"5","FreeUsed":"0","FreeLeavings":"5","FreeOvers":"","FreeOverFee":""},{"FlowType":"01","FreeTotle":"150.00","FreeUsed":"0.00","FreeLeavings":"150.00","FreeOvers":"","FreeOverFee":""},{"FlowType":"01","FreeTotle":"100.00","FreeUsed":"0.00","FreeLeavings":"100.00","FreeOvers":"","FreeOverFee":""}]}
+ */
+
+
+//getOrders
+/**
+ * SvcCont 节点内容：<SvcCont><![CDATA[<?xml+version="1.0"+encoding="UTF-8"?><BusinessRecordRsp>++++<ResultCode>0000</ResultCode>++++<ResultDESC>成功</ResultDESC>++++<BusinessRecordList>++++++++<ProductID>20160329</ProductID>++++++++<ProductName>基础流量包</ProductName>++++++++<BrandName>WCDMA</BrandName>++++++++<ProductExplain>基础流量包</ProductExplain>++++++++<StartTime>2016-05-17+10:59:08</StartTime>++++++++<EndTime>2049-12-31+23:59:59</EndTime>++++</BusinessRecordList>++++<BusinessRecordList>++++++++<ProductID>67001000</ProductID>++++++++<ProductName>3G-国内流量包</ProductName>++++++++<BrandName>WCDMA</BrandName>++++++++<ProductExplain>3G-国内流量包</ProductExplain>++++++++<StartTime>2016-05-17+10:27:19</StartTime>++++++++<EndTime>2049-12-31+23:59:59</EndTime>++++</BusinessRecordList>++++<BusinessRecordList>++++++++<ProductID>99005044</ProductID>++++++++<ProductName>3G基本套餐A-46元档</ProductName>++++++++<BrandName>WCDMA</BrandName>++++++++<ProductExplain>套餐月费46元，包国内语音拨打50分钟、国内流量150MB、国内接听免费（含可视电话），国内语音拨打0.25元/分钟、国内流量0.003元/KB、国内可视电话拨打0.60元/分钟，并赠送3个M、5个T、5分钟国内可视电话拨打、手机邮箱,套餐及叠加包内包含的业务量仅限当月使用，不能延续至下月使用</ProductExplain>++++++++<StartTime>2016-05-17+09:14:54</StartTime>++++++++<EndTime>2050-12-30+00:00:00</EndTime>++++</BusinessRecordList></BusinessRecordRsp>]]></SvcCont>
+{"UserNumber":"15597726984","ResultCode":"0000","ResultDESC":"成功","BusinessRecordList":[{"ProductID":"20160329","ProductName":"基础流量包","BrandName":"WCDMA","ProductExplain":"基础流量包","StartTime":"2016-05-17+10:59:08","EndTime":"2049-12-31+23:59:59"},{"ProductID":"67001000","ProductName":"3G-国内流量包","BrandName":"WCDMA","ProductExplain":"3G-国内流量包","StartTime":"2016-05-17+10:27:19","EndTime":"2049-12-31+23:59:59"},{"ProductID":"99005044","ProductName":"3G基本套餐A-46元档","BrandName":"WCDMA","ProductExplain":"套餐月费46元，包国内语音拨打50分钟、国内流量150MB、国内接听免费（含可视电话），国内语音拨打0.25元/分钟、国内流量0.003元/KB、国内可视电话拨打0.60元/分钟，并赠送3个M、5个T、5分钟国内可视电话拨打、手机邮箱,套餐及叠加包内包含的业务量仅限当月使用，不能延续至下月使用","StartTime":"2016-05-17+09:14:54","EndTime":"2050-12-30+00:00:00"}]}
+ */
+
