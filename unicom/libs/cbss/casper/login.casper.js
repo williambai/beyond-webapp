@@ -22,19 +22,23 @@ var casper = require('casper').create({
 phantom.ignoreSslErrors = true;
 phantom.cookiesEnabled = true;
 
+//** setup params
+console.log(JSON.stringify(casper.cli.options));
+var tempdir = casper.cli.options['tempdir'] || './_tmp';
+var account = {
+	username: casper.cli.options['user'] || '',
+	password: casper.cli.options['pass'] || '',
+	provinceId: casper.cli.options['provid'] || '',
+};
+
 //load cookie
-var data = fs.read('./_tmp/_cookie.txt') || "[]";
+var data = fs.read(tempdir + '/_cookie.txt') || "[]";
 try {
 	phantom.cookies = JSON.parse(data);
 } catch (e) {
 }
 // console.log(JSON.stringify(phantom.cookies));
 
-var account = {
-	username: 'B90WZSLP',//** 六盘水
-	password: 'Lq19880625',
-	provinceId: '85',
-};
 //** captcha
 var verifyCode = '';
 
@@ -64,7 +68,7 @@ casper.then(function openLoginPage(){
 });
 
 casper.then(function downloadCaptchaImage() {
-	this.download('https://gz.cbss.10010.com/image?mode=validate&width=60&height=20', './_tmp/captcha.jpg');
+	this.download('https://gz.cbss.10010.com/image?mode=validate&width=60&height=20', tempdir + '/captcha.jpg');
 });
 
 casper.then(function inputCaptcha() {
@@ -185,7 +189,7 @@ casper.then(function loginSubmit(){
 
 casper.then(function checkLogin(){
 	var homePageHtml = this.getHTML();
-	fs.write('./_tmp/home.html', homePageHtml, 644);
+	fs.write(tempdir + '/home.html', homePageHtml, 644);
 	// homePageMeta =
 	//     RegexUtils.regexMathes(".*(<meta.*provinceId.*?>).*",
 	//         homePageHtml);
@@ -195,7 +199,7 @@ casper.then(function checkLogin(){
 	    response.login = true;
 	    response.message = '登录页参数获取成功！';
 	    response.meta = homePageMeta;
-		fs.write('./_tmp/_homeMeta.txt', homePageMeta, 644);
+		fs.write(tempdir + '/_homeMeta.txt', homePageMeta, 644);
 	}else{
 		//** 未登录
 	    response.login = false;
@@ -206,7 +210,7 @@ casper.then(function checkLogin(){
 //** save cookies
 casper.then(function saveCookie(){
 	var cookies = JSON.stringify(phantom.cookies);
-	fs.write('./_tmp/_cookie.txt', cookies, 644);
+	fs.write(tempdir + '/_cookie.txt', cookies, 644);
 });
 
 casper.run(function(){

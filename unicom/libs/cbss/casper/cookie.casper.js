@@ -19,9 +19,18 @@ var casper = require('casper').create({
 	logLevel: "debug",
 	verbose: true
 });
+
 phantom.cookiesEnabled = true;
+
+//** setup params
+console.log(JSON.stringify(casper.cli.options));
+var tempdir = casper.cli.options['tempdir'] || './_tmp';
+var account = {
+	staffId: casper.cli.options['staffId'] || '',
+};
+
 //** load cookie
-var data = fs.read('./_tmp/_cookie.txt') || "[]";
+var data = fs.read(tempdir + '/_cookie.txt') || "[]";
 
 try {
 	phantom.cookies = JSON.parse(data);
@@ -30,9 +39,6 @@ try {
 }
 // console.log(JSON.stringify(phantom.cookies));
 
-var account = {
-	staffId: 'B90WZSLP',
-};
 var response = {};
 
 casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
@@ -55,7 +61,7 @@ casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + ac
 
 casper.then(function checkLogin(){
 	var homePageHtml = this.getHTML();
-	fs.write('./_tmp/home_cookie.html', homePageHtml, 644);
+	fs.write(tempdir + '/home_cookie.html', homePageHtml, 644);
 	var homePageMeta = homePageHtml.match(/<meta.*provinceId.*?>/i);
 	if(homePageMeta){
 		//** 已登录
@@ -71,7 +77,7 @@ casper.then(function checkLogin(){
 casper.then(function saveCookie(){
 	var cookies = JSON.stringify(phantom.cookies);
 	// this.echo(JSON.stringify(phantom.cookies));
-	fs.write('./_tmp/_cookie.txt', cookies, 644);
+	fs.write(tempdir + '/_cookie.txt', cookies, 644);
 });
 
 casper.run(function(){

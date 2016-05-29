@@ -3,7 +3,7 @@
  * 
  * > casperjs order.flux.test.casper.js --ignore-ssl-errors=true 
  */
-var RegexUtils = require('../../lib/util.js');
+var RegexUtils = require('../lib/util.js');
 var fs = require('fs');
 var system = require('system');
 var casper = require('casper').create({
@@ -18,8 +18,23 @@ var casper = require('casper').create({
 	verbose: true
 });
 phantom.cookiesEnabled = true;
+
+//** setup params
+console.log(JSON.stringify(casper.cli.options));
+var tempdir = casper.cli.options['tempdir'] || './_tmp';
+var account = {
+	staffId: casper.cli.options['staffId'] || '',
+	departId: casper.cli.options['departId'] || '',
+	provinceId: casper.cli.options['provid'] || '',
+	subSysCode: '',
+	epachyId: '',
+	resourceParam: {},
+	resTableList: {},
+	rMap: {},
+};
+
 //** load cookie
-var data = fs.read('./_tmp/_cookie.txt') || "[]";
+var data = fs.read(tempdir + '/_cookie.txt') || "[]";
 
 try {
 	phantom.cookies = JSON.parse(data);
@@ -27,16 +42,6 @@ try {
 	console.error(e);
 }
 // console.log(JSON.stringify(phantom.cookies));
-
-var account = {
-	staffId: 'B90WZSLP',
-	departId: '',
-	subSysCode: '',
-	epachyId: '',
-	resourceParam: {},
-	resTableList: {},
-	rMap: {},
-};
 
 var homePageParams = {
 
@@ -606,7 +611,7 @@ casper.then(function(){
 // casper.then(function saveCookie(){
 // 	var cookies = JSON.stringify(phantom.cookies);
 // 	// this.echo(JSON.stringify(phantom.cookies));
-// 	fs.write('./_tmp/_cookie.txt', cookies, 644);
+// 	fs.write(tempdir + '/_cookie.txt', cookies, 644);
 // });
 
 casper.run(function(){
