@@ -8,6 +8,7 @@ var spConfig = require('../config/sp').SGIP12;
 var _ = require('underscore');
 var async = require('async');
 var BSS = require('../libs/bss_gz');//** 贵州联通BSS系统
+var CBSS = require('../libs/cbss');//** 联通CBSS系统
 var bssConfig = require('../config/cbss');
 
 var schema = new mongoose.Schema({
@@ -719,109 +720,3 @@ module.exports = exports = function(connection){
 
 	return connection.model('Order', schema);
 };
-
-
-// //Deprecated!!
-// customerInfo: { //** 客户其他信息
-// 	name: String,
-// 	idNo: String, //** 客户身份证号码
-// 	idType: String, //** 客户身份证类型
-// 	idAddress: String, //** 客户身份证地址
-// 	address: String, //** 客户通讯地址
-// 	phone: String,//** 客户备用联系电话
-// 	location: String, //** 客户地理位置
-// },
-// //Deprecated!!
-// name: String, //** 订单编码
-// description: String, //** 订单描述
-// category: { //** 订单分类
-// 	type: String,
-// 	enum: {
-// 		values: '数据订购|传统增值|内容推荐|活动推荐|号卡|终端|金币兑换'.split('|'),
-// 		message: 'enum validator failed for path {PATH} with value {VALUE}',
-// 	}
-// },
-// bonus: { //** 佣金情况
-// income: Number,
-// times: Number,
-// points: {
-// 	type: Number,
-// 	default: 0
-// },
-// cash: {
-// 	type: Number,
-// 	default: 0
-// },
-// cashStatus: {
-// 	type: String,
-// 	enum: {
-// 		values: '冻结|一次解冻|二次解冻|三次解冻|全部解冻'.split('|'),
-// 		message: 'enum validator failed for path {PATH} with value {VALUE}',
-// 	},
-// 	default: '冻结',
-// },			
-// },
-// place: {
-// 	name: String,//** 订单发生地
-// },
-// dispatch: { //** 订单配送
-// 	method: {
-// 		type: String,
-// 		enum: {
-// 			values: '自提|物流'.split('|'),
-// 			message: 'enum validator failed for path {PATH} with value {VALUE}',
-// 		}
-// 	},
-// 	phone: String,
-// 	address: String,
-// },
-
-// 	PlatformSms
-// 		.findOneAndUpdate({
-// 			status: '收到',
-// 			category: {
-// 				$in: ['2G','3G']
-// 			}
-// 		}, {
-// 			$set: {
-// 				status: '已处理',
-// 			}
-// 		}, {
-// 			'upsert': false,
-// 			'new': true,
-// 		}, function(err, doc) {
-// 			if (err || !doc) return done(err);
-// 			var content = doc.content || '';
-// 			//** 只要不是明确回复N（全角半角都算）或否，或不，或不回复，都订上
-// 			if(!/[N|n|Ｎ|ｎ|不|否]/.test(content)){
-// 				//** 提取客户号码，去除最前面的86
-// 				var mobile = (doc.sender || '').replace(/^86/, '');
-// 				//** 提取业务(短信)代码，去除SPNumber(10655836)部分
-// 				var regexSmscode = new RegExp('^' + SPNumber, 'i');
-// 				var smscode = (doc.receiver || '').replace(regexSmscode,'');
-// 				//** find the order
-// 				Order
-// 					.findOneAndUpdate({
-// 						'customer.mobile': mobile,
-// 						'goods.smscode': smscode,
-// 						'goods.category': {
-// 							$in: ['2G','3G']
-// 						},
-// 						'status': '已确认',
-// 					}, {
-// 						$set: {
-// 							status: '已处理',
-// 						}
-// 					}, {
-// 						'upsert': false,
-// 						'new': true,
-// 					}, function(err, order) {
-// 						if (err || !order) return done(err);
-// 						//** TODO process 2G/3G order
-						
-// 						//** 发送业务“正在处理”短信
-// 						_process(); //** 处理下一个
-// 					});
-// 			}
-// 		});	
-// };

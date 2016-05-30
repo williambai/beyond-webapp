@@ -30,14 +30,15 @@ var account = {
 };
 
 //** load cookie
-var data = fs.read(tempdir + '/_cookie.txt') || "[]";
-
-try {
-	phantom.cookies = JSON.parse(data);
-} catch (e) {
-	console.error(e);
+var cookie_file = tempdir + '/' + account.staffId + '_cookie.txt';
+if(fs.exists(cookie_file)){
+	var data = fs.read(cookie_file) || "[]";
+	try {
+		phantom.cookies = JSON.parse(data);
+	} catch (e) {
+	}
+	// console.log(JSON.stringify(phantom.cookies));
 }
-// console.log(JSON.stringify(phantom.cookies));
 
 var response = {};
 
@@ -77,10 +78,10 @@ casper.then(function checkLogin(){
 casper.then(function saveCookie(){
 	var cookies = JSON.stringify(phantom.cookies);
 	// this.echo(JSON.stringify(phantom.cookies));
-	fs.write(tempdir + '/_cookie.txt', cookies, 644);
+	fs.write(cookie_file, cookies, 644);
 });
 
 casper.run(function(){
-	this.echo(JSON.stringify(response));
+	this.echo('<response>' + JSON.stringify(response) + '</response>');
 	casper.exit();
 });

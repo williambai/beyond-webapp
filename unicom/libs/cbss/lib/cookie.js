@@ -9,22 +9,16 @@ var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename
 
 module.exports = exports = function(options, done){
 	options = options || {};
-	var commandExt = '';
-	for(var key in options){
-		if(key != 'cwd'){
-			commandExt += ' --' + key + '=' + options[key];
-		}
-	}
-	console.log(commandExt);
 	var trunks = [];
 	var child = spawn(
 			'casperjs',
 			[
 				'../casper/cookie.casper.js',
 				'--ignore-ssl-errors=true',
-				commandExt,
+				'--tempdir=' + path.resolve(options['cwd'], options['tempdir']),
+				'--staffId=' + options['staffId'],
 			],{
-				cwd: options.cwd || __dirname,
+				cwd: __dirname,
 			}
 		);
 
@@ -46,15 +40,11 @@ module.exports = exports = function(options, done){
 		if(code != 0) return done('cookie.casper.js 非正常退出 code: ' + code);
 		var data = trunks.join('').toString().replace(/\n/g,'');
 		logger.debug('刷新cookie程序返回内容: ' + data);
-		// if(/login:true/.test(data)){
-		// 	logger.debug('刷新cookie成功。')
-		// 	done(null,true);
-		// }else if(/login:false/.test(data)){
-		// 	logger.debug('刷新cookie失败。')
-		// 	done(null,false);
-		// }else{
-		// 	logger.debug('程序异常：刷新cookie业务执行异常。');
-		// 	done(null,false);
-		// }
+		var responseJson = (data.match(/<response>(.*?)<\/response>/) || [])[1];
+		var response = {};
+		try{
+			response = JSON.parse(responseJson || '{}');
+		}catch(e){};
+		done(null, response);
 	});	
 }

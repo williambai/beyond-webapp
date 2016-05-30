@@ -11,6 +11,7 @@ var net = require('net');
 var request = require('request');
 var config = {
 	db: require('./config/db'),
+	cbss: require('./config/cbss_1'),
 };
 //** logger packages
 var log4js = require('log4js');
@@ -36,12 +37,15 @@ fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 	}
 });
 
+var city = process.argv[2] || 'xiaogan';//** 城市编码
+var options = config.cbss.accounts[city] || {};
+
 var account = {};
 //** 4G 账户登录
 var login = function(options){
 	models.CbssAccount.login(options, function(err, doc){
 		//** 登录失败，重新登录，直至成功
-		if(err){
+		if(err || !doc){
 			logger.warn('尝试重新登录：' + JSON.stringify(options));
 			setTimeout(function(){
 				login(options);
@@ -51,8 +55,8 @@ var login = function(options){
 		account = doc;
 		//** 定时刷新Cookie，保持登录状态，每过7分钟刷新一次
 		var refreshCookieJob = function(){
-				models.CbssAccount.refreshCookie(account, function(err, result) {
-					if (err){
+				models.CbssAccount.refreshCookie(account, function(err, success) {
+					if (err || !success){
 						logger.error(err);
 						setTimeout(function(){
 							login(options);
@@ -86,12 +90,13 @@ var login = function(options){
 	});
 };
 //** 启动
-login({});
+login(options);
 
 //** process uncaughtException
 process.on('uncaughtException', function(err){
-	logger.error('cbssService 异常退出，请及时处理！');
+	logger.error('城市(' + options.city_id + ') cbssService 异常退出，请及时处理！');
 	logger.error(err);
+	mongoose.disconnect();
 	process.exit(1);
 });
-logger.info('联通CBSS处理4G订单服务已开启。');
+logger.info('贵州省联通CBSS城市(' + options.city_id + ')处理4G订单服务已开启。');

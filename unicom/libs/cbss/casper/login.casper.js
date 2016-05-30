@@ -32,12 +32,15 @@ var account = {
 };
 
 //load cookie
-var data = fs.read(tempdir + '/_cookie.txt') || "[]";
-try {
-	phantom.cookies = JSON.parse(data);
-} catch (e) {
+var cookie_file = tempdir + '/' + account.username + '_cookie.txt';
+if(fs.exists(cookie_file)){
+	var data = fs.read(cookie_file) || "[]";
+	try {
+		phantom.cookies = JSON.parse(data);
+	} catch (e) {
+	}
+	// console.log(JSON.stringify(phantom.cookies));
 }
-// console.log(JSON.stringify(phantom.cookies));
 
 //** captcha
 var verifyCode = '';
@@ -55,7 +58,7 @@ casper.then(function checkLogin(){
 			return this.exists('#menuTD');
 		},function signin(){
 			response.status = '已登录';
-			this.echo(JSON.stringify(response));
+			this.echo('<response>' + JSON.stringify(response) + '</response>');
 			this.exit();
 		},function signout(){
 			//** 未登录，退出
@@ -68,7 +71,7 @@ casper.then(function openLoginPage(){
 });
 
 casper.then(function downloadCaptchaImage() {
-	this.download('https://gz.cbss.10010.com/image?mode=validate&width=60&height=20', tempdir + '/captcha.jpg');
+	this.download('https://gz.cbss.10010.com/image?mode=validate&width=60&height=20', tempdir + '/'+ account.username + '_captcha.jpg');
 });
 
 casper.then(function inputCaptcha() {
@@ -80,7 +83,7 @@ casper.then(function inputCaptcha() {
 		// account.password = system.stdin.readLine();
 		// this.echo('please input "' + account.username + '" province id: ', 'INFO');
 		// account.provinceId = system.stdin.readLine();
-		this.echo('captcha.png has been download, please open ../_tmp/captcha.png and read the verifyCode.','INFO');
+		this.echo('captcha.png has been download, please open ../_tmp/'+ account.username + '_captcha.png and read the verifyCode.','INFO');
 		this.echo('please input captcha verifyCode: ','INFO');
 		verifyCode = system.stdin.readLine();
 		this.echo('-------- inputs ------');
@@ -210,10 +213,10 @@ casper.then(function checkLogin(){
 //** save cookies
 casper.then(function saveCookie(){
 	var cookies = JSON.stringify(phantom.cookies);
-	fs.write(tempdir + '/_cookie.txt', cookies, 644);
+	fs.write(cookie_file, cookies, 644);
 });
 
 casper.run(function(){
-	this.echo(JSON.stringify(response));
+	this.echo('<response>' + JSON.stringify(response) + '</response>');
 	casper.exit();
 });

@@ -107,7 +107,7 @@ parser.getAllOcr = function(buf,map,callback) {
 			result += getSingleCharOcr(img,map);
 		});
 		mat.save(path.join(__dirname, '../../test/captcha/_output/result.jpg'));
-		callback && callback(null,result);
+		if(callback) return callback && callback(null,result);
 	});
 };
 
