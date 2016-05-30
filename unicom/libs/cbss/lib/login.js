@@ -3,6 +3,7 @@
  */
 
 var path = require('path');
+var fs = require('fs');
 var spawn = require('child_process').spawn;
 var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
 var captchaParser = require('../../captcha');
@@ -40,12 +41,17 @@ module.exports = exports = function(options, done){
 		if(/please input captcha verifyCode/.test(data.toString())){
 			console.log(data.toString());
 			//** 解析验证码
-			captchaParser.getAllOcr(path.join(options.cwd, options.tempdir, '/' + options['user'] + '_captcha.jpg'), trainDataMap, function(err, result){
-				console.log('captcha text: ' + result);
-				//** 输入验证码
-				child.stdin.write(result);
-				child.stdin.write('\n');
-			});
+			var captchaImageFile = path.join(options.cwd, options.tempdir, '/' + options['user'] + '_captcha.jpg');
+			if(fs.existsSync(captchaImageFile)){
+				captchaParser.getAllOcr(captchaImageFile, trainDataMap, function(err, result){
+					console.log('captcha text: ' + result);
+					//** 输入验证码
+					child.stdin.write(result);
+					child.stdin.write('\n');
+				});
+			}else{
+				done('验证码文件不存在，分析验证码不能执行。');
+			}
 		}else if(/do you confirm, yes or no/.test(data.toString())){
 			console.log(data.toString());
 			//** 确认输入验证码

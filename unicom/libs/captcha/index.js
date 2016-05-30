@@ -99,6 +99,7 @@ parser.getSingleCharOcr = getSingleCharOcr;
  * @return {[type]}     [description]
  */
 parser.getAllOcr = function(buf,map,callback) {
+	//** TODO 如果buf == undefined?
 	opencv.readImage(buf, function(err, mat) {
 		if (err) return logger.error(err);
 		var result = '';

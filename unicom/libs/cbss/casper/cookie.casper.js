@@ -83,5 +83,6 @@ casper.then(function saveCookie(){
 
 casper.run(function(){
 	this.echo('<response>' + JSON.stringify(response) + '</response>');
-	casper.exit();
+	casper.exit(0);
+	casper.bypass(99);
 });

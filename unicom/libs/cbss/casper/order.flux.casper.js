@@ -616,5 +616,6 @@ casper.then(function(){
 
 casper.run(function(){
 	this.echo(JSON.stringify(response));
-	casper.exit();
+	casper.exit(0);
+	casper.bypass(99);
 });

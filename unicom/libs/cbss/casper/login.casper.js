@@ -83,7 +83,7 @@ casper.then(function inputCaptcha() {
 		// account.password = system.stdin.readLine();
 		// this.echo('please input "' + account.username + '" province id: ', 'INFO');
 		// account.provinceId = system.stdin.readLine();
-		this.echo('captcha.png has been download, please open ../_tmp/'+ account.username + '_captcha.png and read the verifyCode.','INFO');
+		this.echo('captcha.png has been download, please open ../_tmp/'+ account.username + '_captcha.jpg and read the verifyCode.','INFO');
 		this.echo('please input captcha verifyCode: ','INFO');
 		verifyCode = system.stdin.readLine();
 		this.echo('-------- inputs ------');
@@ -218,5 +218,6 @@ casper.then(function saveCookie(){
 
 casper.run(function(){
 	this.echo('<response>' + JSON.stringify(response) + '</response>');
-	casper.exit();
+	casper.exit(0);
+	casper.bypass(99);
 });
