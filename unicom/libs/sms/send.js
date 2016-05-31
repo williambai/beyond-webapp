@@ -26,13 +26,20 @@ var Submit = CommandFactory.create('Submit');
 var StreamSpliter = require('./lib/StreamSpliter');
 
 var sendSMS = function(docs, done) {
+	var endFlag = false;
+	docs = docs || [];
+	var docsLength = docs.length || 0;
 	var results = [];
 
 	var client = net.connect({
 		host: config.SPHost,
 		port: config.SPPort,
 	}, function() {
-		logger.info('client connected.');
+		logger.debug('client connected.');
+		//** send Bind Command
+		var bind = new Bind(1, config.SPUser, config.SPPass);
+		client.write(bind.makePDU(null,config['NodeID']));
+		logger.debug('>> 1.bind');
 	});
 
 	client.on('end', function(){
@@ -55,20 +62,22 @@ var sendSMS = function(docs, done) {
 	var handler = new StreamSpliter(client);
 
 	//** 逐条(一起全部)发送SMS
-	var _submit = function(smses){
-		//** send sms
-		var doc = smses.pop();
-		if(!doc) {
+	var _submit = function(){
+		logger.debug('docs left: ' + docsLength);
+		if(docsLength < 1) {
 			logger.debug('<< 5. submit finished.');
 			//** send Unbind
 			var unbind = new Unbind();
-			var PDU = unbind.makePDU().slice(0,20);
+			var PDU = unbind.makePDU(null, config['NodeID']).slice(0,20);
 			//** unbind只有20个字节
 			PDU.writeUInt32BE(20, 0);
 			client.write(PDU);
 			logger.debug('>> 6. unbind');
 			return;
 		}
+		//** send sms
+		docsLength--;
+		var doc = docs[docsLength] || {};
 		var receivers = (doc.receiver || '').split(';');
 		var newReceivers = [];
 		//** 短信号码前要加86
@@ -92,6 +101,7 @@ var sendSMS = function(docs, done) {
 		//** 发送SMS 
 		client.write(submit.makePDU(reqPDU));
 		logger.debug('>> 3. submit');
+		_submit();
 	};
 
 	handler.on('message', function(buf) {
@@ -100,32 +110,31 @@ var sendSMS = function(docs, done) {
 		if (command instanceof Bind.Resp) {
 			if (command.Result != 0) {
 				logger.debug('<< 2. resp error: ' + JSON.stringify(command));
-				client.emit('end');
+				if(!endFlag)client.emit('end');
+				endFlag = true;
 				return;
 			}
 			logger.debug('<< 2. bind_resp ok.');
-			_submit(docs);
+			_submit();
 		} else if (command instanceof Unbind.Resp) {
 			//** unbind
 			logger.debug('<< 7. unbind_resp ok.');
-			client.emit('end');
+			if(!endFlag)client.emit('end');
+			endFlag = true;
 		} else if (command instanceof Submit.Resp) {
 			if (command.Result != 0) {
 				logger.debug('<< 2. resp error: ' + JSON.stringify(command));
-				client.emit('end');
+				if(!endFlag)client.emit('end');
+				endFlag = true;
 				return;
 			}
 			//** 保存发送结果command
 			results.push(command);
 			logger.debug('<< 4. submit_resp ok. (if have more) submit continue...');
 			//** 循环发送剩余的消息
-			_submit(docs);
+			// _submit();
 		}
 	});
-	//** send Bind Command
-	var bind = new Bind(1, config.SPUser, config.SPPass);
-	client.write(bind.makePDU());
-	logger.debug('>> 1.bind');
 };
 
 exports = module.exports = sendSMS;

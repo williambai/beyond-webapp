@@ -94,27 +94,26 @@ sgipSerice.listen(config.sp.listener.port, function() {
  * 
  */
 
-//** CronJob package
-var CronJob = require('cron').CronJob;
 
-//** send 'new' sms in database
-var sendSMSJob = new CronJob({
-	//** 每过5秒钟检查并发送短信
-	cronTime: '*/5 * * * * *',
-	onTick: function(){
+//** 每过5秒钟检查并发送短信
+var sendSMSJob = function(){
 		models.PlatformSms.sendSms(function(err,result){
-			if(err || !result) return logger.error(err);
+			if(err || !result) {
+				logger.error(err);
+				setTimeout(sendSMSJob,7000);
+				return;
+			}
 			if (result.count > 0) {
 				logger.info('submit ' + (result.count ) + ' SMS successfully.');
 			} else {
 				logger.info('none SMS need submit till now.');
 			}
-
+			setTimeout(sendSMSJob,5000);
 		});
-	},
-	start: true,
-	runOnInit: true,//** execute right now!
-});
+	};
+//** 立即发送短信
+setTimeout(sendSMSJob,100);
+
 logger.info('SGIP短信定时发送服务已开启。');
 
 //** process uncaughtException

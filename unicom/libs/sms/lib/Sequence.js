@@ -1,5 +1,6 @@
 var time = 'mmddhhmmss';
-var curSeq = 0xffffffff;
+// var curSeq = 0xffffffff;
+var curSeq = 0x7fffff00;
 
 function genNextSeq(buf, NodeID) {
 	var d = new Date();
@@ -11,7 +12,8 @@ function genNextSeq(buf, NodeID) {
 	mTime = mTime * 100 + d.getSeconds();
 	buf.writeUInt32BE(NodeID, 8);
 	buf.writeUInt32BE(mTime, 12);
-	curSeq = (curSeq > 0x7fffff00) ? 0 : curSeq + 1;
+	// curSeq = (curSeq > 0x7fffff00) ? 0 : curSeq + 1;
+	curSeq = (curSeq < 0x00000f00) ? 0x7fffff00 : curSeq - 1;
 	buf.writeUInt32BE(curSeq, 16);
 	return buf;
 };
