@@ -1,6 +1,6 @@
 var path = require('path');
 var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
-var CBSS = require('../libs/cbss');
+// var CBSS = require('../libs/cbss');
 
 var mongoose = require('mongoose');
 var connection = mongoose;
@@ -107,7 +107,7 @@ schema.statics.login = function(account, done){
  */
 schema.statics.refreshCookie = function(options, done){
 	logger.debug(options.staffId + '正在刷新cookie...');
-	CBSS.cookieRefresh({
+	CBSS.refreshCookie({
 		cwd: path.resolve(__dirname,'..'),
 		tempdir: './_tmp',
 		staffId: options.staffId,

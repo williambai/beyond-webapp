@@ -15,7 +15,7 @@ var config = {
 };
 //** logger packages
 var log4js = require('log4js');
-log4js.configure(path.join(__dirname, '../config/log4js.json'));
+log4js.configure(path.join(__dirname,'../config/log4js.json'), {cwd: path.resolve(__dirname, '..')});
 var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
 //** CronJob package
 var CronJob = require('cron').CronJob;
@@ -30,7 +30,7 @@ mongoose.connect(config.db.URI, function onMongooseError(err) {
 });
 //** import MongoDB's models
 var models = {};
-fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
+fs.readdirSync(path.join(__dirname, '../models')).forEach(function(file) {
 	if (/\.js$/.test(file)) {
 		var modelName = file.substr(0, file.length - 3);
 		models[modelName] = require('../models/' + modelName)(mongoose);
@@ -82,7 +82,7 @@ var login = function(options){
 					}
 					logger.info('call 4G Order peroid job successfully.');
 					setTimeout(function(){
-						refreshCookieJob();
+						processOrderJob();
 					},7000);
 				});
 			};
@@ -94,9 +94,9 @@ login(options);
 
 //** process uncaughtException
 process.on('uncaughtException', function(err){
-	logger.error('城市(' + options.city_id + ') cbssService 异常退出，请及时处理！');
+	logger.error('城市(' + options['city'] + ') cbssService 异常退出，请及时处理！');
 	logger.error(err);
 	mongoose.disconnect();
 	process.exit(1);
 });
-logger.info('贵州省联通CBSS城市(' + options.city_id + ')处理4G订单服务已开启。');
+logger.info('贵州省联通CBSS城市(' + options['city'] + ')处理4G订单服务已开启。');

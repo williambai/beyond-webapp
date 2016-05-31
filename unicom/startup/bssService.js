@@ -15,7 +15,7 @@ var config = {
 };
 //** logger packages
 var log4js = require('log4js');
-log4js.configure(path.join(__dirname, '../config/log4js.json'));
+log4js.configure(path.join(__dirname,'../config/log4js.json'), {cwd: path.resolve(__dirname, '..')});
 var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
 //** CronJob package
 var CronJob = require('cron').CronJob;

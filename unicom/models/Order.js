@@ -8,8 +8,8 @@ var spConfig = require('../config/sp').SGIP12;
 var _ = require('underscore');
 var async = require('async');
 var BSS = require('../libs/bss_gz');//** 贵州联通BSS系统
-var CBSS = require('../libs/cbss');//** 联通CBSS系统
-var bssConfig = require('../config/cbss');
+// var CBSS = require('../libs/cbss');//** 联通CBSS系统
+var bssConfig = require('../config/bss');
 
 var schema = new mongoose.Schema({
 	customer: { //** 客户

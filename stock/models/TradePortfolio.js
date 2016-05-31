@@ -3,7 +3,7 @@ var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename
 var _ = require('underscore');
 var async = require('async');
 var Trading = require('../libs/trading').stock;
-var citic = require('../libs/citic');
+// var citic = require('../libs/citic');
 
 var mongoose = require('mongoose');
 var schema = new mongoose.Schema({

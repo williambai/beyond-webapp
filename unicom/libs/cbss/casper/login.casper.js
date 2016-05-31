@@ -72,6 +72,7 @@ casper.then(function checkLogin(){
 	var homePageMeta = homePageHtml.match(/<meta.*provinceId.*?>/i);
 	if(homePageMeta){
 		//** 已登录
+	    response.login = true;
 		response.meta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
 		response.status = '已登录';
 		casper.echo('<response>' + JSON.stringify(response) + '</response>');
