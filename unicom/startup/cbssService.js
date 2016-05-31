@@ -10,12 +10,12 @@ var fs = require('fs');
 var net = require('net');
 var request = require('request');
 var config = {
-	db: require('./config/db'),
-	cbss: require('./config/cbss_1'),
+	db: require('../config/db'),
+	cbss: require('../config/cbss_1'),
 };
 //** logger packages
 var log4js = require('log4js');
-log4js.configure(path.join(__dirname, 'config/log4js.json'));
+log4js.configure(path.join(__dirname, '../config/log4js.json'));
 var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
 //** CronJob package
 var CronJob = require('cron').CronJob;
@@ -33,7 +33,7 @@ var models = {};
 fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
 	if (/\.js$/.test(file)) {
 		var modelName = file.substr(0, file.length - 3);
-		models[modelName] = require('./models/' + modelName)(mongoose);
+		models[modelName] = require('../models/' + modelName)(mongoose);
 	}
 });
 

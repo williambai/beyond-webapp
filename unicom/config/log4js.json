@@ -22,7 +22,7 @@
 		}
 	}, {
 		"type": "file",
-		"filename": "logs/access.log",
+		"filename": "./logs/access.log",
 		"maxLogSize": 20480,
 		"backups": 3,
 		"category": "access",
@@ -32,27 +32,26 @@
 		"filename": "logs/bss.log",
 		"maxLogSize": 20480,
 		"backups": 3,
-		"category": ["bssService.js"]
+		"category": ["startup/bssService.js"]
 	}, {
 		"type": "file",
 		"filename": "logs/sms.log",
 		"maxLogSize": 20480,
 		"backups": 3,
-		"category": ["sgipService.js","libs/sms/send.js","libs/sms/receive.js"]
+		"category": ["startup/sgipService.js","libs/sms/send.js","libs/sms/receive.js"]
 	}, {
 		"type": "file",
 		"filename": "logs/wechat.log",
 		"maxLogSize": 20480,
 		"backups": 3,
-		"category": ["wechatService.js","routes/protect.platform.wechat.js","routes/protect.platform.wechat.qrcode.js"]
+		"category": ["startup/wechatService.js","routes/protect.platform.wechat.js","routes/protect.platform.wechat.qrcode.js"]
 	}],
 	"levels": {
 		"access": "INFO",
-		"sgipService.js": "INFO",
+		"startup/sgipService.js": "INFO",
 		"libs/sms/send.js": "DEBUG",
 		"libs/sms/receive.js": "DEBUG",
 		"routes/_platform.wechat.js": "DEBUG",
-		"routes/_platform.wechat.qrcode.js": "DEBUG",
-		"commands/updateWechatAccessToken.js": "DEBUG"
+		"routes/_platform.wechat.qrcode.js": "DEBUG"
 	}
 }

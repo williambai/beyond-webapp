@@ -4,6 +4,7 @@ var CBSS = require('../libs/cbss');
 
 var mongoose = require('mongoose');
 var connection = mongoose;
+
 var schema = new mongoose.Schema({
 	staffId: String,//** cbss账号
 	password: String,//** cbss密码

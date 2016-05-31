@@ -1,4 +1,3 @@
-var log4js = require('log4js');
 var _ = require('underscore');
 var util = require('util');
 var fs = require('fs');
@@ -12,9 +11,10 @@ var multer = require('multer');
 var app = express();
 var nodemailer = require('nodemailer');
 
-
-log4js.configure(path.join(__dirname, 'config/log4js.json'));
+var log4js = require('log4js');
+log4js.configure(path.join(__dirname,'../config/log4js.json'), {cwd: path.resolve(__dirname, '..')});
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
+
 //** create an http server
 app.server = http.createServer(app);
 app.randomHex = function() {
@@ -25,17 +25,17 @@ app.randomHex = function() {
 var mongoose = require('mongoose');
 
 var config = {
-	server: require('./config/server'),
-	mail: require('./config/mail'),
-	db: require('./config/db')
+	server: require('../config/server'),
+	mail: require('../config/mail'),
+	db: require('../config/db')
 };
 
 //import the models
 var models = {};
-fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
+fs.readdirSync(path.resolve(__dirname, '../models')).forEach(function(file) {
 	if (/\.js$/.test(file)) {
 		var modelName = file.substr(0, file.length - 3);
-		models[modelName] = require('./models/' + modelName)(mongoose);
+		models[modelName] = require('../models/' + modelName)(mongoose);
 	}
 });
 
@@ -48,7 +48,7 @@ mongoose.connect(config.db.URI, function onMongooseError(err) {
 
 //express configure
 app.set('view engine', 'jade');
-app.set('views', __dirname + '/views');
+app.set('views', path.resolve(__dirname,'../views'));
 
 //** show origin cookie
 app.use(function(req,res,next){
@@ -57,7 +57,7 @@ app.use(function(req,res,next){
 });
 
 app.use(log4js.connectLogger(log4js.getLogger('access')));
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.resolve(__dirname, '../public')));
 // app.use(express.limit('1mb'));
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({
@@ -159,10 +159,10 @@ app.all('*', function(req, res, next) {
 });
 
 //import the routes
-fs.readdirSync(path.join(__dirname, 'routes')).forEach(function(file) {
+fs.readdirSync(path.join(__dirname, '../routes')).forEach(function(file) {
 	if (/\.js$/.test(file)) {
 		var routeName = file.substr(0, file.length - 3);
-		require('./routes/' + routeName)(app, models);
+		require('../routes/' + routeName)(app, models);
 	}
 });
 

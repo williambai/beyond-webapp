@@ -1,0 +1,64 @@
+{
+	"apps": [
+		{
+			"name": "WoWebServer",
+			"script": "./startup/webServer.js",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/unicom/",
+			"watch": [
+				"startup/webServer.js",
+				"models",
+				"routes",
+				"libs"
+			],
+			"ignore_watch": [
+				"./_app",
+				"./_dest",
+				"./_tmp",
+				"./app",
+				"./build",
+				"./commands",
+				"./public",
+				"./logs",
+				"./test",
+				"./libs/cbss/_tmp"
+			]
+		},{
+			"name": "SgipService",
+			"script": "./startup/sgipService.js",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/unicom/",
+			"watch": [
+				"./startup/sgipService.js",
+				"./models",
+				"./routes",
+				"./libs/sms"
+			],
+			"ignore_watch": [
+				"./libs/sms/test"
+			]
+		},{
+			"name": "WechatService",
+			"script": "./startup/wechatService.js",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/unicom/",
+			"watch": [
+				"startup/wechatService.js",
+				"models",
+				"routes",
+			],
+			"ignore_watch": [
+			]
+		},{
+			"name": "BssService",
+			"script": "./startup/bssService.js",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/unicom/",
+			"watch": [
+				"startup/bssService.js",
+				"models",
+				"routes",
+				"libs/bss_gz"
+			],
+			"ignore_watch": [
+				"./libs/bss_gz/test"
+			]
+		}
+	]
+}

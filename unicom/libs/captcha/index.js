@@ -1,15 +1,5 @@
 var log4js = require('log4js');
 var path = require('path');
-log4js.configure({
-		"type": "logLevelFilter",
-		"level": "ALL",
-		"appender": {
-			"type": "file",
-			"filename": "log/all.log",
-			"maxLogSize": 20480,
-			"backups": 3
-		}
-	});
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 
 var fs = require('fs');

@@ -8,6 +8,7 @@
   "scripts": {
     "setup": "node setup",
     "test": "mocha test",
+    "dev": "pm2 start ./config/pm2_dev.json",
     "start": "pm2 start ./config/pm2.json"
   }
 }

@@ -2,25 +2,20 @@
 	"apps": [
 		{
 			"name": "WoWebServer",
-			"script": "server.js",
-			"cwd": "",
-			"watch": true,
-			"ignore_watch": "./_app ./_dest ./app ./build ./commands ./public ./logs ./libs/cbss/_tmp ./test"
+			"script": "./startup/webServer.js",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/unicom/"
 		},{
 			"name": "SgipService",
-			"script": "sgipService.js",
-			"cwd": "",
-			"watch": false
+			"script": "./startup/sgipService.js",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/unicom/"
 		},{
 			"name": "WechatService",
-			"script": "wechatService.js",
-			"cwd": "",
-			"watch": false
+			"script": "./startup/wechatService.js",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/unicom/"
 		},{
 			"name": "BssService",
-			"script": "bssService.js",
-			"cwd": "",
-			"watch": false
+			"script": "./startup/bssService.js",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/unicom/"
 		}
 	]
 }

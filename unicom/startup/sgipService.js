@@ -4,12 +4,12 @@ var fs = require('fs');
 var net = require('net');
 var request = require('request');
 var config = {
-	db: require('./config/db'),
-	sp: require('./config/sp').SGIP12,
+	db: require('../config/db'),
+	sp: require('../config/sp').SGIP12,
 };
 //** logger packages
 var log4js = require('log4js');
-log4js.configure(path.join(__dirname, 'config/log4js.json'));
+log4js.configure(path.join(__dirname, '../config/log4js.json'));
 var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
 //** MongoDB packages
 var mongoose = require('mongoose');
@@ -21,15 +21,15 @@ mongoose.connect(config.db.URI, function onMongooseError(err) {
 });
 //** import MongoDB's models
 var models = {};
-fs.readdirSync(path.join(__dirname, 'models')).forEach(function(file) {
+fs.readdirSync(path.join(__dirname, '../models')).forEach(function(file) {
 	if (/\.js$/.test(file)) {
 		var modelName = file.substr(0, file.length - 3);
-		models[modelName] = require('./models/' + modelName)(mongoose);
+		models[modelName] = require('../models/' + modelName)(mongoose);
 	}
 });
 
 //** SGIP1.2 protocol
-var Receiver = require('./libs/sms').Receiver;
+var Receiver = require('../libs/sms').Receiver;
 
 //** TCP/IP server
 var sgipSerice = net.createServer();
