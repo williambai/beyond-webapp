@@ -5,6 +5,7 @@
  * 
  * > casperjs cookie.test.casper.js --ignore-ssl-errors=true 
  */
+var RegexUtils = require('../lib/util.js');
 var fs = require('fs');
 var system = require('system');
 var casper = require('casper').create({
@@ -16,7 +17,7 @@ var casper = require('casper').create({
 		loadPlugins: false
 	},
 	timeout: 100000,
-	logLevel: "debug",
+	// logLevel: "debug",
 	verbose: true
 });
 
@@ -66,7 +67,7 @@ casper.then(function checkLogin(){
 	var homePageMeta = homePageHtml.match(/<meta.*provinceId.*?>/i);
 	if(homePageMeta){
 		//** 已登录
-		response.meta = homePageMeta;
+		response.meta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
 		response.status = '已登录';
 	}else{
 		//** 未登录

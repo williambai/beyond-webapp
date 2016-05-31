@@ -22,52 +22,69 @@ phantom.cookiesEnabled = true;
 //** setup params
 console.log(JSON.stringify(casper.cli.options));
 var tempdir = casper.cli.options['tempdir'] || './_tmp';
-var account = {
-	staffId: casper.cli.options['staffId'] || '',
-	departId: casper.cli.options['departId'] || '',
-	provinceId: casper.cli.options['provid'] || '',
-	subSysCode: '',
-	epachyId: '',
-	resourceParam: {},
-	resTableList: {},
-	rMap: {},
+
+var staffId = casper.cli.options['staffId'] || '';
+
+var order = {
+	phone: casper.cli.options['phone'] || '',
+	product: {
+		name: casper.cli.options['prod_name'] || '',
+		price: casper.cli.options['prod_price'] || '',
+		resourceCode: casper.cli.options['prod_code'] || '',
+	},
 };
-
-//** load cookie
-var data = fs.read(tempdir + '/_cookie.txt') || "[]";
-
-try {
-	phantom.cookies = JSON.parse(data);
-} catch (e) {
-	console.error(e);
-}
-// console.log(JSON.stringify(phantom.cookies));
 
 var homePageParams = {
 
 };
 
+//** load cookie
+var cookie_file = tempdir + '/' + staffId + '_cookie.txt';
+if(fs.exists(cookie_file)){
+	var data = fs.read(cookie_file) || "[]";
+	try {
+		phantom.cookies = JSON.parse(data);
+	} catch (e) {
+	}
+	// console.log(JSON.stringify(phantom.cookies));
+}
+
+//** load homePageParams
+var homeMeta = tempdir + '/' + staffId + '_homeMeta.txt';
+if(fs.exists(homeMeta)){
+	var data = fs.read(homeMeta) || "[]";
+	try {
+		homePageParams = JSON.parse(data);
+	} catch (e) {
+	}
+	// console.log(JSON.stringify(homePageParams));
+}
+
+//****  内部中间变量 begin ******/
 var urls = {
 	custUrl: '',
 	resourceUrl: '',
+	packageUrl: '',
 };
-
-var order = {
-	phone: '',
-	product: {
-		name: '',
-		price: 0.0,
-		resourceCode: '',
-	},
-};
+var loginRandomCode = '';
+var loginCheckCode = '';
+//** 可选流量包
+var resTableList = [];
+//** 可选流量包对应的form表单参数
+var resourceParam = {};
+//** 
+var xCodingString = '';
+//**
+var rMap = {};
+//****  内部中间变量 end ******/
 
 var response = {};
 
 casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 
-casper.start('https://cbss.10010.com/essframe');
+casper.start();
 
-casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + account.staffId, {
+casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + staffId, {
 	method: 'get',
 	headers: {
 		"Accept": 'text/html, application/xhtml+xml, */*',
@@ -83,25 +100,25 @@ casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + ac
 });
 
 casper.then(function checkLogin(){
-	var navHtml = this.getHTML();
-	var homePageMeta = RegexUtils.regexMatch(/<meta.*provinceId.*?>/i,navHtml);
-	// console.log('homePageMeta:' + JSON.stringify(homePageMeta));
-	if(homePageMeta.length > 0){
+	var homePageHtml = this.getHTML();
+	var homePageMeta = homePageHtml.match(/<meta.*provinceId.*?>/i);
+	if(homePageMeta){
 		//** 已登录
-		response.meta = homePageMeta;
+		response.meta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
 		response.status = '已登录';
 	}else{
 		//** 未登录
 		response.status = '未登录';
-		this.echo(JSON.stringify(response));
+		casper.echo('<response>' + JSON.stringify(response) + '</response>');
 		casper.exit();
+		casper.bypass(99);
 	}
 });
 
-casper.then(function checkMenu(){
+casper.then(function getResourceUrl(){
 	var navHtml = this.getHTML();
-	urls.resourceUrl = RegexUtils.regexMatch(/.*clickMenuItem\(this\);openmenu\('(.+?OrderGprsRes.+?)'\).*/i,
-                navHtml);
+	var resourceUrlMatched = RegexUtils.regexMatch(/.*clickMenuItem\(this\);openmenu\('(.+?OrderGprsRes.+?)'\).*/i, navHtml) || [];
+	urls.resourceUrl = resourceUrlMatched[1] || '';
 });
 
 //** 左边框，用于获得下一步访问地址
@@ -120,22 +137,30 @@ casper.open('https://gz.cbss.10010.com/essframe?service=page/Sidebar',{
 	encoding: 'utf8',
 });
 
-casper.then(function custUrl(){
+casper.then(function getCustUrl(){
 	var sideBarHtml = this.getHTML();
-	var custUrl = RegexUtils.regexMatch(/menuaddr="(.+?)"/i, sideBarHtml);
-	if(custUrl[1] == undefined){
+	var custUrlMatched = RegexUtils.regexMatch(/menuaddr="(.+?)"/i, sideBarHtml);
+	if(custUrlMatched[1] == undefined){
 		console.log('没取到url');
-		response.status = '用户认证异常';
-		this.echo(JSON.stringify(response));
-		this.exit(1);
+		rspcasper.status = '用户认证异常';
+		
+		this.exit(0);
+		casper.bypass(99);
+		return;
 	}
-	var loginRandomCode = RegexUtils.regexMatch(/LOGIN_RANDOM_CODE=(\d+)/i, sideBarHtml);
-	var loginCheckCode = RegexUtils.regexMatch(/LOGIN_CHECK_CODE=(\d+)/i, sideBarHtml);
+	var loginRandomCodeMatched = RegexUtils.regexMatch(/LOGIN_RANDOM_CODE=(\d+)/i, sideBarHtml);
+	loginRandomCode = loginRandomCodeMatched[1] || '';
+	var loginCheckCodeMatched = RegexUtils.regexMatch(/LOGIN_CHECK_CODE=(\d+)/i, sideBarHtml);
+	loginCheckCode = loginCheckCodeMatched[1] || '';
+
+	var custUrl = custUrlMatched[1] || '';
 	custUrl = custUrl.replace('&amp;', '&');
-	custUrl += "&staffId=" + account.staffId
-            + "&departId=" + account.deptId
-            + "&subSysCode=" + account.subSysCode
-            + "&eparchyCode=" + account.epachyId;
+	custUrl += "&staffId=" + homePageParams['staffId']
+            + "&departId=" + homePageParams['deptId']
+            + "&subSysCode=" + homePageParams['subSysCode']
+            + "&eparchyCode=" + homePageParams['epachyId'];
+    urls.custUrl = custUrl;
+
     casper.open("https://gz.cbss.10010.com/" + custUrl,{
     	method: 'get',
     	headers: {
@@ -150,16 +175,17 @@ casper.then(function custUrl(){
     	},
     	encoding: 'utf8',
     });
-    urls.custUrl = custUrl;
 });
 
 //** 账务管理，流量包资源订购
 casper.then(function getPackageUrl(){
 	var packageUrl = "https://gz.cbss.10010.com" + urls.resourceUrl + "&staffId="
-                + account.staffId + "&departId="
-                + account.deptId
+                + homePageParams['staffId'] + "&departId="
+                + homePageParams['deptId']
                 + "&subSysCode=BSS&eparchyCode="
-                + account.epachyId;
+                + homePageParams['epachyId'];
+    urls.packageUrl = packageUrl;
+
     casper.open(packageUrl,{
     	method: 'get',
     	headers: {
@@ -262,55 +288,56 @@ casper.then(function parseResourceHtml(){
 	//** 用户不能订购
 	//TODO ?
 	var content = RegexUtils.regexMatch(/<div class="content">(.+?)<\/div>/i, resourceHtml);
-	if(content[1].length > 0){
+	if(content[1] && content[1].length > 0){
 		response.status = '用户不能订购';
 		response.content = content;
-		casper.echo(JSON.stringify(response));
-		casper.exit(1);
+		casper.echo('<response>' + JSON.stringify(response) + '</response>');
+		casper.exit(0);
+		casper.bypass(99);
+		return;
 	}
 	//** 获得已订购列表
 	//TODO ?
-	var resourceList = RegexUtils.extractResourceInfo(resourceHtml);
+	var resourceList = RegexUtils.extractResourceInfo(resourceHtml) || [];
 	//** 是否有正在“处理中”的业务
 	resourceList.forEach(function(resource){
 		if(/处理中/.test(resource.dealTag)){
 			console.log('用户有业务尚在处理中！');
 			response.status = '用户有业务尚在处理中';
 			response.content = JSON.stringify(resource);
-			casper.echo(JSON.stringify(response));
-			casper.exit();
+			casper.echo('<response>' + JSON.stringify(response) + '</response>');
+			casper.exit(0);
+			casper.bypass(99);
 		}
 	});
 	//** 可选择流量包
-	//TODO ?
-	var resTableList = RegexUtils.extractResTableInfo(resourceHtml);
+	resTableList = RegexUtils.extractResTableInfo(resourceHtml) || [];
 	//** form表单参数
-	var resourceParam = RegexUtils.getResourceParam(resourceHtml);
-	var xCodingString = RegexUtils.getXcodingString(resTableList);
+	resourceParam = RegexUtils.getResourceParam(resourceHtml) || {};
+	xCodingString = RegexUtils.getXcodingString(resTableList);
 	//** 信用额度
-	var creditMoney = parseFloat(resourceParam.cond_CREDIT_VALUE);
+	var creditMoney = parseFloat(resourceParam.cond_CREDIT_VALUE) || 0;
 	//** 话费余额
-	var dePostMoney = parseFloat(resourceParam.cond_DEPOSIT_MONEY);
-	if( creditMoney + dePostMoney < parseFloat(order.price)){
+	var dePostMoney = parseFloat(resourceParam.cond_DEPOSIT_MONEY) || 0;
+	if( creditMoney + dePostMoney < parseFloat(order.product.price)){
 		response.status = '用户余额不足';
-		casper.echo(JSON.stringify(response));
-		casper.exit();
+		casper.echo('<response>' + JSON.stringify(response) + '</response>');
+		casper.exit(0);
+		casper.bypass(99);
+		return;
 	}
-	account.resourceParam = resourceParam;
-	account.resTableList = resTableList;
-	account.xCodingString = xCodingString;
 });
 
-casper.then(function(){
+casper.then(function getAmchargeXml(){
 	var amchargeUrl = "https://gz.cbss.10010.com/acctmanm?service=ajaxDirect/1/amcharge.ordergprsresource.OrderGprsRes"
                 + "/amcharge.ordergprsresource.OrderGprsRes/javascript/refeshZK&pagename="
                 + "amcharge.ordergprsresource.OrderGprsRes"
                 + "&eventname=getResZKList&staffId="
-                + account.staffId
+                + homePageParams['staffId']
                 + "&departId="
-                + account.deptId
+                + homePageParams['deptId']
                 + "&subSysCode=acctmanm&eparchyCode="
-                + account.epachyId
+                + homePageParams['epachyId']
                 + "&partids=refeshZK&random="
                 + RegexUtils.getRandomParam()
                 + "&ajaxSubmitType=post";
@@ -329,94 +356,95 @@ casper.then(function(){
 		},
 		encoding: 'gbk',
 		data: {
-			"Form0": account.resourceParam["Form0"],
-			"cond_ID_TYPE": account.resourceParam["cond_ID_TYPE"],
+			"Form0": resourceParam["Form0"],
+			"cond_ID_TYPE": resourceParam["cond_ID_TYPE"],
 			"cond_SERIAL_NUMBER": order.phone,
 			"cond_NET_TYPE_CODE": "50",
 			"bquerytop": " 查 询 ",
-			"cond_X_USER_COUNT": account.resourceParam["cond_X_USER_COUNT"],
-			"cond_DL_NAME": account.resourceParam["cond_DL_NAME"],
-			"cond_DL_SNUMBER": account.resourceParam["cond_DL_SNUMBER"],
+			"cond_X_USER_COUNT": resourceParam["cond_X_USER_COUNT"],
+			"cond_DL_NAME": resourceParam["cond_DL_NAME"],
+			"cond_DL_SNUMBER": resourceParam["cond_DL_SNUMBER"],
 			"data_DL_ZJ": "",
 			"cond_DL_NUMBER": "",
 			"data_RESOURCE_TAG": order.product.resourceCode,// 流量包编码
 			"data_RESOURCE_ZK": "",
-			"data_PACKAGE_CODE": account.resourceParam["data_PACKAGE_CODE"],
-			"data_RESOURCE_CODE": account.resourceParam["data_RESOURCE_CODE"],
-			"data_ZK_NAME": account.resourceParam["data_ZK_NAME"],
-			"data_RESOURCE_NAME": account.resourceParam["data_RESOURCE_NAME"],
-			"data_LONG": account.resourceParam["data_LONG"],
-			"data_MONEY": account.resourceParam["data_MONEY"],
-			"data_RES_MONEY": account.resourceParam["data_RES_MONEY"],
-			"data_UNIT": account.resourceParam["data_UNIT"],
-			"data_VALID_TIME_UNIT": account.resourceParam["data_VALID_TIME_UNIT"],
-			"data_VALID_TIME": account.resourceParam["data_VALID_TIME"],
-			"data_RESOURCE_COUNT": account.resourceParam["data_RESOURCE_COUNT"],
-			"cond_PRINT_FLAG": account.resourceParam["cond_PRINT_FLAG"],
-			"cond_DL_ZJ_NAME": account.resourceParam["cond_DL_ZJ_NAME"],
+			"data_PACKAGE_CODE": resourceParam["data_PACKAGE_CODE"],
+			"data_RESOURCE_CODE": resourceParam["data_RESOURCE_CODE"],
+			"data_ZK_NAME": resourceParam["data_ZK_NAME"],
+			"data_RESOURCE_NAME": resourceParam["data_RESOURCE_NAME"],
+			"data_LONG": resourceParam["data_LONG"],
+			"data_MONEY": resourceParam["data_MONEY"],
+			"data_RES_MONEY": resourceParam["data_RES_MONEY"],
+			"data_UNIT": resourceParam["data_UNIT"],
+			"data_VALID_TIME_UNIT": resourceParam["data_VALID_TIME_UNIT"],
+			"data_VALID_TIME": resourceParam["data_VALID_TIME"],
+			"data_RESOURCE_COUNT": resourceParam["data_RESOURCE_COUNT"],
+			"cond_PRINT_FLAG": resourceParam["cond_PRINT_FLAG"],
+			"cond_DL_ZJ_NAME": resourceParam["cond_DL_ZJ_NAME"],
 			"bsubmit1": "提 交",
-			"userinfoback_ACCT_ID": account.resourceParam["userinfoback_ACCT_ID"],
+			"userinfoback_ACCT_ID": resourceParam["userinfoback_ACCT_ID"],
 			"userinfoback_SERIAL_NUMBER": order.phone,
-			"userinfoback_PAY_NAME": account.resourceParam["userinfoback_PAY_NAME"],
-			"userinfoback_NET_TYPE_CODE": account.resourceParam["userinfoback_NET_TYPE_CODE"],
-			"userinfoback_SERVICE_CLASS_CODE": account.resourceParam["userinfoback_SERVICE_CLASS_CODE"],
-			"userinfoback_USER_ID": account.resourceParam["userinfoback_USER_ID"],
-			"userinfoback_PAY_MODE_CODE": account.resourceParam["userinfoback_PAY_MODE_CODE"],
-			"userinfoback_ROUTE_EPARCHY_CODE": account.resourceParam["userinfoback_ROUTE_EPARCHY_CODE"],
-			"userinfoback_PREPAY_TAG": account.resourceParam["userinfoback_PREPAY_TAG"],
-			"userinfoback_CITY_CODE": account.resourceParam["userinfoback_CITY_CODE"],
-			"userinfoback_PRODUCT_ID": account.resourceParam["userinfoback_PRODUCT_ID"],
-			"userinfoback_BRAND_CODE": account.resourceParam["userinfoback_BRAND_CODE"],
-			"cond_CREDIT_VALUE": account.resourceParam["cond_CREDIT_VALUE"],
-			"cond_DEPOSIT_MONEY": account.resourceParam["cond_DEPOSIT_MONEY"],
-			"cond_TOTAL_FEE": account.resourceParam["cond_TOTAL_FEE"],
-			"X_CODING_STR": account.xCodingString,
-			"cond_DATE": account.resourceParam["cond_DATE"],
-			"cond_DATE1": account.resourceParam["cond_DATE1"],
-			"cond_DATE2": account.resourceParam["cond_DATE2"],
-			"cond_DATE3": account.resourceParam["cond_DATE3"],
-			"cond_STAFF_ID1": account.resourceParam["cond_STAFF_ID1"],
-			"cond_STAFF_NAME1": account.resourceParam["cond_STAFF_NAME1"],
-			"cond_DEPART_NAME1": account.resourceParam["cond_DEPART_NAME1"],
-			"cond_ENDDATE": account.resourceParam["cond_ENDDATE"],
-			"cond_CUST_NAME": account.resourceParam["cond_CUST_NAME"],
-			"cond_PSPT_TYPE_CODE": account.resourceParam["cond_PSPT_TYPE_CODE"],
-			"cond_PSPT_ID": account.resourceParam["cond_PSPT_ID"],
-			"cond_PSPT_ADDR": account.resourceParam["cond_PSPT_ADDR"],
-			"cond_POST_ADDRESS": account.resourceParam["cond_POST_ADDRESS"],
-			"cond_CONTACT": account.resourceParam["cond_CONTACT"],
-			"cond_CONTACT_PHONE": account.resourceParam["cond_CONTACT_PHONE"],
-			"cond_EMAIL": account.resourceParam["cond_EMAIL"],
-			"cond_SHOWLIST": account.resourceParam["cond_SHOWLIST"],
-			"cond_PSPT_END_DATE": account.resourceParam["cond_PSPT_END_DATE"],
-			"cond_NET_TYPE_CODE1": account.resourceParam["cond_NET_TYPE_CODE1"],
+			"userinfoback_PAY_NAME": resourceParam["userinfoback_PAY_NAME"],
+			"userinfoback_NET_TYPE_CODE": resourceParam["userinfoback_NET_TYPE_CODE"],
+			"userinfoback_SERVICE_CLASS_CODE": resourceParam["userinfoback_SERVICE_CLASS_CODE"],
+			"userinfoback_USER_ID": resourceParam["userinfoback_USER_ID"],
+			"userinfoback_PAY_MODE_CODE": resourceParam["userinfoback_PAY_MODE_CODE"],
+			"userinfoback_ROUTE_EPARCHY_CODE": resourceParam["userinfoback_ROUTE_EPARCHY_CODE"],
+			"userinfoback_PREPAY_TAG": resourceParam["userinfoback_PREPAY_TAG"],
+			"userinfoback_CITY_CODE": resourceParam["userinfoback_CITY_CODE"],
+			"userinfoback_PRODUCT_ID": resourceParam["userinfoback_PRODUCT_ID"],
+			"userinfoback_BRAND_CODE": resourceParam["userinfoback_BRAND_CODE"],
+			"cond_CREDIT_VALUE": resourceParam["cond_CREDIT_VALUE"],
+			"cond_DEPOSIT_MONEY": resourceParam["cond_DEPOSIT_MONEY"],
+			"cond_TOTAL_FEE": resourceParam["cond_TOTAL_FEE"],
+			"X_CODING_STR": xCodingString,
+			"cond_DATE": resourceParam["cond_DATE"],
+			"cond_DATE1": resourceParam["cond_DATE1"],
+			"cond_DATE2": resourceParam["cond_DATE2"],
+			"cond_DATE3": resourceParam["cond_DATE3"],
+			"cond_STAFF_ID1": resourceParam["cond_STAFF_ID1"],
+			"cond_STAFF_NAME1": resourceParam["cond_STAFF_NAME1"],
+			"cond_DEPART_NAME1": resourceParam["cond_DEPART_NAME1"],
+			"cond_ENDDATE": resourceParam["cond_ENDDATE"],
+			"cond_CUST_NAME": resourceParam["cond_CUST_NAME"],
+			"cond_PSPT_TYPE_CODE": resourceParam["cond_PSPT_TYPE_CODE"],
+			"cond_PSPT_ID": resourceParam["cond_PSPT_ID"],
+			"cond_PSPT_ADDR": resourceParam["cond_PSPT_ADDR"],
+			"cond_POST_ADDRESS": resourceParam["cond_POST_ADDRESS"],
+			"cond_CONTACT": resourceParam["cond_CONTACT"],
+			"cond_CONTACT_PHONE": resourceParam["cond_CONTACT_PHONE"],
+			"cond_EMAIL": resourceParam["cond_EMAIL"],
+			"cond_SHOWLIST": resourceParam["cond_SHOWLIST"],
+			"cond_PSPT_END_DATE": resourceParam["cond_PSPT_END_DATE"],
+			"cond_NET_TYPE_CODE1": resourceParam["cond_NET_TYPE_CODE1"],
 			"RESOURCE_TAG": order.product.resourceCode,
     	}
     });
 });
 
-casper.then(function(){
+casper.then(function parseAmchargeXml(){
 	var packageHtml = this.getHTML();
-	var priceList = RegexUtils.queryPrice(packageHtml);
-	if(!priceList.contain(order.price)){
+	var priceList = RegexUtils.queryPrice(packageHtml) || [];
+	if(!priceList.contain(order.product.price)){
 		console.log('价格不对，不能订');
 		response.status = '价格不对，不能订';
-		casper.echo(JSON.stringify(response));
-		casper.exit();
+		casper.echo('<response>' + JSON.stringify(response) + '</response>');
+		casper.exit(0);
+		casper.bypass(99);
 	}
 });
 
-casper.then(function(){
+casper.then(function getRefreshMoneyXml(){
 	var refreshMoneyUrl =
             "https://gz.cbss.10010.com/acctmanm?service=ajaxDirect/1/amcharge.ordergprsresource.OrderGprsRes/"
                 + "amcharge.ordergprsresource.OrderGprsRes/javascript/refeshMoney&pagename="
                 + "amcharge.ordergprsresource.OrderGprsRes"
                 + "&eventname=getOrderResInfos&staffId="
-                + account.staffId
+                + homePageParams['staffId']
                 + "&departId="
-                + account.deptId
+                + homePageParams['deptId']
                 + "&subSysCode=acctmanm&eparchyCode="
-                + account.epachyId
+                + homePageParams['epachyId']
                 + "&partids=refeshMoney&random="
                 + RegexUtils.getRandomParam()
                 + "&ajaxSubmitType=post";
@@ -436,83 +464,83 @@ casper.then(function(){
 		},
 		encoding: 'gbk',
 		data: {
-			"Form0": account.resourceParam["Form0"],
-			"cond_ID_TYPE": account.resourceParam["cond_ID_TYPE"],
+			"Form0": resourceParam["Form0"],
+			"cond_ID_TYPE": resourceParam["cond_ID_TYPE"],
 			"cond_SERIAL_NUMBER": order.phone,
-			"cond_NET_TYPE_CODE": account.resourceParam["userinfoback_NET_TYPE_CODE"],
+			"cond_NET_TYPE_CODE": resourceParam["userinfoback_NET_TYPE_CODE"],
 			"bquerytop": " 查 询 ",
-			"cond_X_USER_COUNT": account.resourceParam["cond_X_USER_COUNT"],
-			"cond_DL_NAME": account.resourceParam["cond_DL_NAME"],
-			"cond_DL_SNUMBER": account.resourceParam["cond_DL_SNUMBER"],
+			"cond_X_USER_COUNT": resourceParam["cond_X_USER_COUNT"],
+			"cond_DL_NAME": resourceParam["cond_DL_NAME"],
+			"cond_DL_SNUMBER": resourceParam["cond_DL_SNUMBER"],
 			"data_DL_ZJ": "",
 			"cond_DL_NUMBER": "",
 			"data_RESOURCE_TAG": order.product.resourceCode,// 流量包编码
-			"data_RESOURCE_ZK": order.price,
-			"data_PACKAGE_CODE": account.resourceParam["data_PACKAGE_CODE"],
-			"data_RESOURCE_CODE": account.resourceParam["data_RESOURCE_CODE"],
-			"data_ZK_NAME": account.resourceParam["data_ZK_NAME"],
-			"data_RESOURCE_NAME": account.resourceParam["data_RESOURCE_NAME"],
-			"data_LONG": account.resourceParam["data_LONG"],
-			"data_MONEY": account.resourceParam["data_MONEY"],
-			"data_RES_MONEY": account.resourceParam["data_RES_MONEY"],
-			"data_UNIT": account.resourceParam["data_UNIT"],
-			"data_VALID_TIME_UNIT": account.resourceParam["data_VALID_TIME_UNIT"],
-			"data_VALID_TIME": account.resourceParam["data_VALID_TIME"],
-			"data_RESOURCE_COUNT": account.resourceParam["data_RESOURCE_COUNT"],
-			"cond_PRINT_FLAG": account.resourceParam["cond_PRINT_FLAG"],
-			"cond_DL_ZJ_NAME": account.resourceParam["cond_DL_ZJ_NAME"],
+			"data_RESOURCE_ZK": order.product.price,
+			"data_PACKAGE_CODE": resourceParam["data_PACKAGE_CODE"],
+			"data_RESOURCE_CODE": resourceParam["data_RESOURCE_CODE"],
+			"data_ZK_NAME": resourceParam["data_ZK_NAME"],
+			"data_RESOURCE_NAME": resourceParam["data_RESOURCE_NAME"],
+			"data_LONG": resourceParam["data_LONG"],
+			"data_MONEY": resourceParam["data_MONEY"],
+			"data_RES_MONEY": resourceParam["data_RES_MONEY"],
+			"data_UNIT": resourceParam["data_UNIT"],
+			"data_VALID_TIME_UNIT": resourceParam["data_VALID_TIME_UNIT"],
+			"data_VALID_TIME": resourceParam["data_VALID_TIME"],
+			"data_RESOURCE_COUNT": resourceParam["data_RESOURCE_COUNT"],
+			"cond_PRINT_FLAG": resourceParam["cond_PRINT_FLAG"],
+			"cond_DL_ZJ_NAME": resourceParam["cond_DL_ZJ_NAME"],
 			"bsubmit1": "提 交",
-			"userinfoback_ACCT_ID": account.resourceParam["userinfoback_ACCT_ID"],
+			"userinfoback_ACCT_ID": resourceParam["userinfoback_ACCT_ID"],
 			"userinfoback_SERIAL_NUMBER": order.phone,
-			"userinfoback_PAY_NAME": account.resourceParam["userinfoback_PAY_NAME"],
-			"userinfoback_NET_TYPE_CODE": account.resourceParam["userinfoback_NET_TYPE_CODE"],
-			"userinfoback_SERVICE_CLASS_CODE": account.resourceParam["userinfoback_SERVICE_CLASS_CODE"],
-			"userinfoback_USER_ID": account.resourceParam["userinfoback_USER_ID"],
-			"userinfoback_PAY_MODE_CODE": account.resourceParam["userinfoback_PAY_MODE_CODE"],
-			"userinfoback_ROUTE_EPARCHY_CODE": account.resourceParam["userinfoback_ROUTE_EPARCHY_CODE"],
-			"userinfoback_PREPAY_TAG": account.resourceParam["userinfoback_PREPAY_TAG"],
-			"userinfoback_CITY_CODE": account.resourceParam["userinfoback_CITY_CODE"],
-			"userinfoback_PRODUCT_ID": account.resourceParam["userinfoback_PRODUCT_ID"],
-			"userinfoback_BRAND_CODE": account.resourceParam["userinfoback_BRAND_CODE"],
-			"cond_CREDIT_VALUE": account.resourceParam["cond_CREDIT_VALUE"],
-			"cond_DEPOSIT_MONEY": account.resourceParam["cond_DEPOSIT_MONEY"],
-			"cond_TOTAL_FEE": account.resourceParam["cond_TOTAL_FEE"],
-			"X_CODING_STR": account.xCodingString,
-			"cond_DATE": account.resourceParam["cond_DATE"],
-			"cond_DATE1": account.resourceParam["cond_DATE1"],
-			"cond_DATE2": account.resourceParam["cond_DATE2"],
-			"cond_DATE3": account.resourceParam["cond_DATE3"],
-			"cond_STAFF_ID1": account.resourceParam["cond_STAFF_ID1"],
-			"cond_STAFF_NAME1": account.resourceParam["cond_STAFF_NAME1"],
-			"cond_DEPART_NAME1": account.resourceParam["cond_DEPART_NAME1"],
-			"cond_ENDDATE": account.resourceParam["cond_ENDDATE"],
-			"cond_CUST_NAME": account.resourceParam["cond_CUST_NAME"],
-			"cond_PSPT_TYPE_CODE": account.resourceParam["cond_PSPT_TYPE_CODE"],
-			"cond_PSPT_ID": account.resourceParam["cond_PSPT_ID"],
-			"cond_PSPT_ADDR": account.resourceParam["cond_PSPT_ADDR"],
-			"cond_POST_ADDRESS": account.resourceParam["cond_POST_ADDRESS"],
-			"cond_CONTACT": account.resourceParam["cond_CONTACT"],
-			"cond_CONTACT_PHONE": account.resourceParam["cond_CONTACT_PHONE"],
-			"cond_EMAIL": account.resourceParam["cond_EMAIL"],
-			"cond_SHOWLIST": account.resourceParam["cond_SHOWLIST"],
-			"cond_PSPT_END_DATE": account.resourceParam["cond_PSPT_END_DATE"],
-			"cond_NET_TYPE_CODE1": account.resourceParam["cond_NET_TYPE_CODE1"],
+			"userinfoback_PAY_NAME": resourceParam["userinfoback_PAY_NAME"],
+			"userinfoback_NET_TYPE_CODE": resourceParam["userinfoback_NET_TYPE_CODE"],
+			"userinfoback_SERVICE_CLASS_CODE": resourceParam["userinfoback_SERVICE_CLASS_CODE"],
+			"userinfoback_USER_ID": resourceParam["userinfoback_USER_ID"],
+			"userinfoback_PAY_MODE_CODE": resourceParam["userinfoback_PAY_MODE_CODE"],
+			"userinfoback_ROUTE_EPARCHY_CODE": resourceParam["userinfoback_ROUTE_EPARCHY_CODE"],
+			"userinfoback_PREPAY_TAG": resourceParam["userinfoback_PREPAY_TAG"],
+			"userinfoback_CITY_CODE": resourceParam["userinfoback_CITY_CODE"],
+			"userinfoback_PRODUCT_ID": resourceParam["userinfoback_PRODUCT_ID"],
+			"userinfoback_BRAND_CODE": resourceParam["userinfoback_BRAND_CODE"],
+			"cond_CREDIT_VALUE": resourceParam["cond_CREDIT_VALUE"],
+			"cond_DEPOSIT_MONEY": resourceParam["cond_DEPOSIT_MONEY"],
+			"cond_TOTAL_FEE": resourceParam["cond_TOTAL_FEE"],
+			"X_CODING_STR": xCodingString,
+			"cond_DATE": resourceParam["cond_DATE"],
+			"cond_DATE1": resourceParam["cond_DATE1"],
+			"cond_DATE2": resourceParam["cond_DATE2"],
+			"cond_DATE3": resourceParam["cond_DATE3"],
+			"cond_STAFF_ID1": resourceParam["cond_STAFF_ID1"],
+			"cond_STAFF_NAME1": resourceParam["cond_STAFF_NAME1"],
+			"cond_DEPART_NAME1": resourceParam["cond_DEPART_NAME1"],
+			"cond_ENDDATE": resourceParam["cond_ENDDATE"],
+			"cond_CUST_NAME": resourceParam["cond_CUST_NAME"],
+			"cond_PSPT_TYPE_CODE": resourceParam["cond_PSPT_TYPE_CODE"],
+			"cond_PSPT_ID": resourceParam["cond_PSPT_ID"],
+			"cond_PSPT_ADDR": resourceParam["cond_PSPT_ADDR"],
+			"cond_POST_ADDRESS": resourceParam["cond_POST_ADDRESS"],
+			"cond_CONTACT": resourceParam["cond_CONTACT"],
+			"cond_CONTACT_PHONE": resourceParam["cond_CONTACT_PHONE"],
+			"cond_EMAIL": resourceParam["cond_EMAIL"],
+			"cond_SHOWLIST": resourceParam["cond_SHOWLIST"],
+			"cond_PSPT_END_DATE": resourceParam["cond_PSPT_END_DATE"],
+			"cond_NET_TYPE_CODE1": resourceParam["cond_NET_TYPE_CODE1"],
 			"RESOURCE_TAG": order.product.resourceCode,
-			"ZK_CODE": order.price,
+			"ZK_CODE": order.product.price,
 		}
 	});
 });
 
-casper.then(function(){
+casper.then(function parseRefreshMoneyXml(){
 	var chargeInfo = this.getHTML();
-	var rMap = RegexUtils.getResourceParam(chargeInfo);
-	account.resTableList.forEach(function(li){
-		if(li.resourceCode == rMap.data_RESOURCE_CODE){
+	rMap = RegexUtils.getResourceParam(chargeInfo) || {};
+	
+	resTableList.forEach(function(li){
+		if(li.resourceCode == rMap['data_RESOURCE_CODE']){
 			rMap['data_RESOURCE_NAME'] = li.resourceName;
 		}
 	});
 	console.log('rMap:' + JSON.stringify(rMap));
-	account.rMap = rMap;
 });
 
 //** 订购提交
@@ -532,73 +560,73 @@ casper.open('https://gz.cbss.10010.com/acctmanm',{
 	data: {
         "service": "direct/1/amcharge.ordergprsresource.OrderGprsRes/$Form",
         "sp": "S0",
-        "Form0": account.resourceParam["Form0"],
-        "cond_ID_TYPE": account.resourceParam["cond_ID_TYPE"],
+        "Form0": resourceParam["Form0"],
+        "cond_ID_TYPE": resourceParam["cond_ID_TYPE"],
         "cond_SERIAL_NUMBER": order.phone,
-        "cond_NET_TYPE_CODE": account.resourceParam["userinfoback_NET_TYPE_CODE"],
+        "cond_NET_TYPE_CODE": resourceParam["userinfoback_NET_TYPE_CODE"],
         "cond_X_USER_COUNT": "",
         "cond_DL_NAME": "",
         "cond_DL_SNUMBER": "",
         "data_DL_ZJ": "",
         "cond_DL_NUMBER": "",
         "data_RESOURCE_TAG": order.product.resourceCode,
-        "data_RESOURCE_ZK": order.price,
-        "data_PACKAGE_CODE": account.resourceParam["data_PACKAGE_CODE"],
-        "data_RESOURCE_CODE": account.rMap["data_RESOURCE_CODE"],
-        "data_ZK_NAME": account.rMap["data_ZK_NAME"],
-        "data_RESOURCE_NAME": account.rMap["data_RESOURCE_NAME"],
-        "data_LONG": account.rMap["data_LONG"],
-        "data_MONEY": account.rMap["data_MONEY"],
-        "data_RES_MONEY": account.rMap["data_RES_MONEY"],
-        "data_UNIT": account.rMap["data_UNIT"],
-        "data_VALID_TIME_UNIT": account.rMap["data_VALID_TIME_UNIT"],
-        "data_VALID_TIME": account.rMap["data_VALID_TIME"],
-        "data_RESOURCE_COUNT": account.rMap["data_RESOURCE_COUNT"],
+        "data_RESOURCE_ZK": order.product.price,
+        "data_PACKAGE_CODE": resourceParam["data_PACKAGE_CODE"],
+        "data_RESOURCE_CODE": rMap["data_RESOURCE_CODE"],
+        "data_ZK_NAME": rMap["data_ZK_NAME"],
+        "data_RESOURCE_NAME": rMap["data_RESOURCE_NAME"],
+        "data_LONG": rMap["data_LONG"],
+        "data_MONEY": rMap["data_MONEY"],
+        "data_RES_MONEY": rMap["data_RES_MONEY"],
+        "data_UNIT": rMap["data_UNIT"],
+        "data_VALID_TIME_UNIT": rMap["data_VALID_TIME_UNIT"],
+        "data_VALID_TIME": rMap["data_VALID_TIME"],
+        "data_RESOURCE_COUNT": rMap["data_RESOURCE_COUNT"],
         "cond_PRINT_FLAG": "",
         "cond_DL_ZJ_NAME": "",
         "bsubmit1": "提 交",
-        "userinfoback_ACCT_ID": account.resourceParam["userinfoback_ACCT_ID"],
+        "userinfoback_ACCT_ID": resourceParam["userinfoback_ACCT_ID"],
         "userinfoback_SERIAL_NUMBER": order.phone,
-        "userinfoback_PAY_NAME": account.resourceParam["userinfoback_PAY_NAME"],
-        "userinfoback_NET_TYPE_CODE": account.resourceParam["userinfoback_NET_TYPE_CODE"],
-        "userinfoback_SERVICE_CLASS_CODE": account.resourceParam["userinfoback_SERVICE_CLASS_CODE"],
-        "userinfoback_USER_ID": account.resourceParam["userinfoback_USER_ID"],
-        "userinfoback_PAY_MODE_CODE": account.resourceParam["userinfoback_PAY_MODE_CODE"],
-        "userinfoback_ROUTE_EPARCHY_CODE": account.resourceParam["userinfoback_ROUTE_EPARCHY_CODE"],
-        "userinfoback_PREPAY_TAG": account.resourceParam["userinfoback_PREPAY_TAG"],
-        "userinfoback_CITY_CODE": account.resourceParam["userinfoback_CITY_CODE"],
-        "userinfoback_PRODUCT_ID": account.resourceParam["userinfoback_PRODUCT_ID"],
-        "userinfoback_BRAND_CODE": account.resourceParam["userinfoback_BRAND_CODE"],
-        "cond_CREDIT_VALUE": account.resourceParam["cond_CREDIT_VALUE"],
-        "cond_DEPOSIT_MONEY": account.resourceParam["cond_DEPOSIT_MONEY"],
+        "userinfoback_PAY_NAME": resourceParam["userinfoback_PAY_NAME"],
+        "userinfoback_NET_TYPE_CODE": resourceParam["userinfoback_NET_TYPE_CODE"],
+        "userinfoback_SERVICE_CLASS_CODE": resourceParam["userinfoback_SERVICE_CLASS_CODE"],
+        "userinfoback_USER_ID": resourceParam["userinfoback_USER_ID"],
+        "userinfoback_PAY_MODE_CODE": resourceParam["userinfoback_PAY_MODE_CODE"],
+        "userinfoback_ROUTE_EPARCHY_CODE": resourceParam["userinfoback_ROUTE_EPARCHY_CODE"],
+        "userinfoback_PREPAY_TAG": resourceParam["userinfoback_PREPAY_TAG"],
+        "userinfoback_CITY_CODE": resourceParam["userinfoback_CITY_CODE"],
+        "userinfoback_PRODUCT_ID": resourceParam["userinfoback_PRODUCT_ID"],
+        "userinfoback_BRAND_CODE": resourceParam["userinfoback_BRAND_CODE"],
+        "cond_CREDIT_VALUE": resourceParam["cond_CREDIT_VALUE"],
+        "cond_DEPOSIT_MONEY": resourceParam["cond_DEPOSIT_MONEY"],
         "cond_TOTAL_FEE": "",
-        "X_CODING_STR": account.xCodingString,
-        "cond_DATE": account.resourceParam["cond_DATE"],
-        "cond_DATE1": account.resourceParam["cond_DATE1"],
-        "cond_DATE2": account.resourceParam["cond_DATE2"],
-        "cond_DATE3": account.resourceParam["cond_DATE3"],
-        "cond_STAFF_ID1": account.resourceParam["cond_STAFF_ID1"],
-        "cond_STAFF_NAME1": account.resourceParam["cond_STAFF_NAME1"],
-        "cond_DEPART_NAME1": account.resourceParam["cond_DEPART_NAME1"],
-        "cond_ENDDATE": account.resourceParam["cond_ENDDATE"],
-        "cond_CUST_NAME": account.resourceParam["cond_CUST_NAME"],
-        "cond_PSPT_TYPE_CODE": account.resourceParam["cond_PSPT_TYPE_CODE"],
-        "cond_PSPT_ID": account.resourceParam["cond_PSPT_ID"],
-        "cond_PSPT_ADDR": account.resourceParam["cond_PSPT_ADDR"],
-        "cond_POST_ADDRESS": account.resourceParam["cond_POST_ADDRESS"],
-        "cond_CONTACT": account.resourceParam["cond_CONTACT"],
-        "cond_CONTACT_PHONE": account.resourceParam["cond_CONTACT_PHONE"],
-        "cond_EMAIL": account.resourceParam["cond_EMAIL"],
-        "cond_SHOWLIST": account.resourceParam["cond_SHOWLIST"],
-        "cond_PSPT_END_DATE": account.resourceParam["cond_PSPT_END_DATE"],
-        "cond_NET_TYPE_CODE1": account.resourceParam["cond_NET_TYPE_CODE1"],
+        "X_CODING_STR": xCodingString,
+        "cond_DATE": resourceParam["cond_DATE"],
+        "cond_DATE1": resourceParam["cond_DATE1"],
+        "cond_DATE2": resourceParam["cond_DATE2"],
+        "cond_DATE3": resourceParam["cond_DATE3"],
+        "cond_STAFF_ID1": resourceParam["cond_STAFF_ID1"],
+        "cond_STAFF_NAME1": resourceParam["cond_STAFF_NAME1"],
+        "cond_DEPART_NAME1": resourceParam["cond_DEPART_NAME1"],
+        "cond_ENDDATE": resourceParam["cond_ENDDATE"],
+        "cond_CUST_NAME": resourceParam["cond_CUST_NAME"],
+        "cond_PSPT_TYPE_CODE": resourceParam["cond_PSPT_TYPE_CODE"],
+        "cond_PSPT_ID": resourceParam["cond_PSPT_ID"],
+        "cond_PSPT_ADDR": resourceParam["cond_PSPT_ADDR"],
+        "cond_POST_ADDRESS": resourceParam["cond_POST_ADDRESS"],
+        "cond_CONTACT": resourceParam["cond_CONTACT"],
+        "cond_CONTACT_PHONE": resourceParam["cond_CONTACT_PHONE"],
+        "cond_EMAIL": resourceParam["cond_EMAIL"],
+        "cond_SHOWLIST": resourceParam["cond_SHOWLIST"],
+        "cond_PSPT_END_DATE": resourceParam["cond_PSPT_END_DATE"],
+        "cond_NET_TYPE_CODE1": resourceParam["cond_NET_TYPE_CODE1"],
     }
 });
 
-casper.then(function(){
+casper.then(function getSubmitResult(){
 	var contentHtml = this.getHTML();
-	var content = contentHtml.match(/.*<div class="content">(.+?)<\/div>.*/i);
-	if(/成功/.test(content[1])){
+	var content = contentHtml.match(/.*<div class="content">(.+?)<\/div>.*/i) || [];
+	if(/成功/.test(content[1] || '')){
 		response.status = '成功';
 		response.content = content;
 	}else{
@@ -615,7 +643,7 @@ casper.then(function(){
 // });
 
 casper.run(function(){
-	this.echo(JSON.stringify(response));
+	casper.echo('<response>' + JSON.stringify(response) + '</response>');
 	casper.exit(0);
 	casper.bypass(99);
 });

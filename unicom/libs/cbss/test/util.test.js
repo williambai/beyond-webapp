@@ -62,6 +62,18 @@ describe('util.getRandomParam()功能测试', function() {
 	});
 });
 
+describe('登录成功后，获取homePageMeta信息测试', function() {
+	it('正常情况下', function() {
+		//** 含指定正则数据
+		var fs = require('fs');
+		var path = require('path');
+		var html = fs.readFileSync(path.resolve(__dirname,'res/pageNav.htm'),{
+			encoding: 'utf8'
+		});
+		var result = util.extractHomePageMeta(html);
+		expect(result.provinceId).to.not.be(undefined);
+	});
+});
 describe('pageNav.htm页面正则测试', function() {
 	it('正常情况下', function() {
 		//** 含指定正则数据

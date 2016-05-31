@@ -3,6 +3,7 @@
  * > casperjs login.test.casper.js --ignore-ssl-errors=true 
  * 
  */
+var RegexUtils = require('../lib/util.js');
 var fs = require('fs');
 var system = require('system');
 var casper = require('casper').create({
@@ -24,6 +25,7 @@ phantom.cookiesEnabled = true;
 
 //** setup params
 console.log(JSON.stringify(casper.cli.options));
+var debug = casper.cli.options['debug'] || false;
 var tempdir = casper.cli.options['tempdir'] || './_tmp';
 var account = {
 	username: casper.cli.options['user'] || '',
@@ -49,21 +51,36 @@ var response = {};
 
 casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 
-casper.start('https://cbss.10010.com/essframe');
+casper.start();
 
+casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + account.username, {
+	method: 'get',
+	headers: {
+		"Accept": "text/html, application/xhtml+xml, */*",
+		"Referer": "https://gz.cbss.10010.com/essframe",
+		"Accept-Language": "zh-CN",
+		"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
+		"Content-Type": "application/x-www-form-urlencoded",
+		"Host": "gz.cbss.10010.com",
+		"Connection": "Keep-Alive",
+		"Cache-Control": "no-cache",
+	},
+});
 
 casper.then(function checkLogin(){
-	this.waitFor(
-		function(){
-			return this.exists('#menuTD');
-		},function signin(){
-			response.status = '已登录';
-			this.echo('<response>' + JSON.stringify(response) + '</response>');
-			this.exit();
-		},function signout(){
-			//** 未登录，退出
-			response.status = '未登录';
-		},2000);
+	var homePageHtml = this.getHTML();
+	var homePageMeta = homePageHtml.match(/<meta.*provinceId.*?>/i);
+	if(homePageMeta){
+		//** 已登录
+		response.meta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
+		response.status = '已登录';
+		casper.echo('<response>' + JSON.stringify(response) + '</response>');
+		casper.exit(0);
+		casper.bypass(99);
+	}else{
+		//** 未登录
+		response.status = '未登录';
+	}
 });
 
 casper.then(function openLoginPage(){
@@ -190,19 +207,16 @@ casper.then(function loginSubmit(){
 	});
 });
 
-casper.then(function checkLogin(){
+casper.then(function saveHomePageMeta(){
 	var homePageHtml = this.getHTML();
 	fs.write(tempdir + '/home.html', homePageHtml, 644);
-	// homePageMeta =
-	//     RegexUtils.regexMathes(".*(<meta.*provinceId.*?>).*",
-	//         homePageHtml);
-	var homePageMeta = homePageHtml.match(/<meta.*provinceId.*?>/i);
-	if(homePageMeta){
+	var homePageMeta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
+	if(homePageMeta['provinceid']){
 		//** 已登录
 	    response.login = true;
 	    response.message = '登录页参数获取成功！';
 	    response.meta = homePageMeta;
-		fs.write(tempdir + '/_homeMeta.txt', homePageMeta, 644);
+		fs.write(tempdir + '/' + account.username + '_homeMeta.txt', JSON.stringify(homePageMeta), 644);
 	}else{
 		//** 未登录
 	    response.login = false;

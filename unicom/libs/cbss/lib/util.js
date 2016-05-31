@@ -19,6 +19,31 @@ util.regexMatch = function(regex,html){
     return result;
 };
 
+//** 提取homePage的meta信息
+util.extractHomePageMeta = function(html){
+	if(typeof html != 'string') html = '';
+	var result = {};
+	//** 规范化html，去除\r\n\t
+	html = html.replace(/(\n|\t|\r)/g, '');
+	var metaMatched = html.match(/<meta.*?provinceId.*?>/i) || [];
+	var meta = (metaMatched[0] || '').toLowerCase();
+	// console.log(meta);
+	var arr = meta.split(/\s/);
+	// console.log(arr);
+	arr.forEach(function(attr){
+		if(/=/.test(attr)){
+			attr = attr.replace(/("|')/g,'');
+			// console.log(attr);
+			var attrs = attr.split('=');
+			if(attrs[0] != ''){
+				result[attrs[0]] = attrs[1] || '';
+			}
+		}
+	});
+	// console.log(JSON.stringify(result));
+	return result;
+};
+
 util.extractResourceInfo = function(html){
 	if(typeof html != 'string') html = '';
 	var result = [];
