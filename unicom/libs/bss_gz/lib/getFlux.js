@@ -23,7 +23,7 @@
 var request = require('request');
 var util = require('./util');
 
-exports.getFlux = function(options, done) {
+module.exports = exports = function(options, done) {
 	var xmlmsg = '<?xml version="1.0" encoding="UTF-8"?>';
 	xmlmsg = '<UniBSS>';//** 根节点开始
 	xmlmsg += '<OrigDomain>ECIP</OrigDomain>';//** 发起方应用域代码
@@ -140,4 +140,3 @@ exports.getFlux = function(options, done) {
 	);
 };
 
-module.exports = exports;

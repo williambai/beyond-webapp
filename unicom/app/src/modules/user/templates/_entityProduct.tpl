@@ -34,10 +34,11 @@
 						<!-- <p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：<%= model.bonus.income %>&nbsp;元&nbsp;&nbsp;积分：<%= model.bonus.points %></p> -->
 					</div>
 				</div>
-				<p style="text-align:right"><% if(/MicroMessenger/.test(navigator.userAgent)){ %>
-				<button class="btn btn-danger promote wechat">微信推广</button>
-				<% } %>
-				<button class="btn btn-danger sms">短信推广</button>
+				<p style="text-align:right">
+				<!-- <% if(/MicroMessenger/.test(navigator.userAgent)){ %> -->
+				<!-- <button class="btn btn-danger promote wechat">微信推广</button> -->
+				<!-- <% } %> -->
+				<!-- <button class="btn btn-danger sms">短信推广</button> -->
 				<button class="btn btn-success view">订购推荐</button>
 				</p>
 				<hr/>

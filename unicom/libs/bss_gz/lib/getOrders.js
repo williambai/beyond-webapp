@@ -7,7 +7,7 @@
 var request = require('request');
 var util = require('./util');
 
-exports.getOrders = function(options,done){
+module.exports = exports = function(options,done){
 	xmlmsg = '<UniBSS>';//** 根节点开始
 	xmlmsg += '<OrigDomain>GZKF</OrigDomain>';//** 发起方应用域代码
 	xmlmsg += '<HomeDomain>UCRM</HomeDomain>';//** 归属方应用域代码
@@ -110,5 +110,3 @@ exports.getOrders = function(options,done){
 		}
 	);
 };
-
-module.exports = exports;

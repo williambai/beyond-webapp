@@ -39,11 +39,11 @@ _.extend(config,{
 	// 	"hash": "order/index",
 	// 	"features": [],
 	// },{
-		"id": 7,
-		"name": "销售线索",
-		"hash": "sale/lead/index",
-		"features": [],
-	},{
+	// 	"id": 7,
+	// 	"name": "销售线索",
+	// 	"hash": "sale/lead/index",
+	// 	"features": [],
+	// },{
 		"id": 8,
 		"name": "我的客户",
 		"hash": "customer/index",

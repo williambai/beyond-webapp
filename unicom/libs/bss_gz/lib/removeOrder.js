@@ -10,7 +10,7 @@
 var request = require('request');
 var util = require('./util');
 
-exports.removeOrder = function(options, done) {
+module.exports = exports = function(options, done) {
 	var xmlmsg = '';
 	xmlmsg = '<UniBSS>';
 	xmlmsg += '<OrigDomain>ECIP</OrigDomain>';
