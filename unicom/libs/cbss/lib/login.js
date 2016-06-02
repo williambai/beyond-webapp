@@ -7,7 +7,7 @@ var fs = require('fs');
 var spawn = require('child_process').spawn;
 var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
 var captchaParser = require('../../captcha');
-var trainDataMap = captchaParser.loadTrainData();
+// var trainDataMap = captchaParser.loadTrainDataSync();
 
 module.exports = exports = function(options, done){
 	options = options || {};
@@ -43,7 +43,8 @@ module.exports = exports = function(options, done){
 			//** 解析验证码
 			var captchaImageFile = path.join(options.cwd, options.tempdir, '/' + options['user'] + '_captcha.jpg');
 			if(fs.existsSync(captchaImageFile)){
-				captchaParser.getAllOcr(captchaImageFile, trainDataMap, function(err, result){
+				// captchaParser.getAllOcr(captchaImageFile, trainDataMap, function(err, result){
+				captchaParser.getAllOcrSimple(captchaImageFile, function(err, result){
 					console.log('captcha text: ' + result);
 					//** 输入验证码
 					child.stdin.write(result);

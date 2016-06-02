@@ -1,6 +1,6 @@
 var path = require('path');
 var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
-// var CBSS = require('../libs/cbss');
+var CBSS = require('../libs/cbss');
 
 var mongoose = require('mongoose');
 var connection = mongoose;
