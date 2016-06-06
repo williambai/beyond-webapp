@@ -47,4 +47,6 @@ module.exports = exports = function(options, done){
 		}catch(e){};
 		done(null, response);
 	});	
+
+	child.stdout.pipe(process.stdout);
 }

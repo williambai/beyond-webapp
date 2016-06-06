@@ -7,4 +7,4 @@
 # --pass
 # --provid
 #
-casperjs ../casper/login.casper.js --ignore-ssl-errors=true --tempdir=./_tmp --user=B90WZSLP --pass=Lq19880625 --provid=85
+casperjs ../casper/login.casper.js --ignore-ssl-errors=true --tempdir=./_tmp --user=B90WZSLP --pass=xxxxx --provid=85

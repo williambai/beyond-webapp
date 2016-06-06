@@ -17,7 +17,7 @@ var casper = require('casper').create({
 		loadPlugins: false
 	},
 	timeout: 100000,
-	// logLevel: "debug",
+	logLevel: "debug",
 	verbose: true
 });
 
@@ -25,6 +25,7 @@ phantom.cookiesEnabled = true;
 
 //** setup params
 console.log(JSON.stringify(casper.cli.options));
+var debug = casper.cli.options['debug'] || false;
 var tempdir = casper.cli.options['tempdir'] || './_tmp';
 var account = {
 	staffId: casper.cli.options['staffId'] || '',
@@ -67,10 +68,12 @@ casper.then(function checkLogin(){
 	var homePageMeta = homePageHtml.match(/<meta.*provinceId.*?>/i);
 	if(homePageMeta){
 		//** 已登录
-		response.meta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
+	    response.login = true;
 		response.status = '已登录';
+		// response.meta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
 	}else{
 		//** 未登录
+	    response.login = false;
 		response.status = '未登录';
 	}
 });

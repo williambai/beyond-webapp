@@ -1,18 +1,17 @@
-var orderFlux = require('../lib/order.flux');
-// var orderFlux = require('../lib/order.flux.curl');
+var orderYiwang = require('../lib/order.yiwang');
 
-orderFlux({
+orderYiwang({
 	cwd: __dirname,//** 当前工作路径
 	tempdir: './_tmp',
 	staffId: 'ASCBWZS1', //** 贵阳
 	// staffId: 'B90WZSLP',//** 六盘水
 	phone: '15692740700',
 	product: {
-		name: '全国流量包(100元/1G)',
-		price: '100',
+		name: '联通秘书',
+		price: '5',
 		barcode: '',
 	}
 }, function(err, result){
-	if(err) return console.log(err);
+	if(err) console.log(err);
 	console.log(result);
 });

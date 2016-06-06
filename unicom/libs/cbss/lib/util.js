@@ -26,7 +26,7 @@ util.extractHomePageMeta = function(html){
 	//** 规范化html，去除\r\n\t
 	html = html.replace(/(\n|\t|\r)/g, '');
 	var metaMatched = html.match(/<meta.*?provinceId.*?>/i) || [];
-	var meta = (metaMatched[0] || '').toLowerCase();
+	var meta = (metaMatched[0] || '');
 	// console.log(meta);
 	var arr = meta.split(/\s/);
 	// console.log(arr);
@@ -36,7 +36,7 @@ util.extractHomePageMeta = function(html){
 			// console.log(attr);
 			var attrs = attr.split('=');
 			if(attrs[0] != ''){
-				result[attrs[0]] = attrs[1] || '';
+				result[(attrs[0]).toLowerCase()] = attrs[1] || '';
 			}
 		}
 	});
@@ -49,7 +49,7 @@ util.extractResourceInfo = function(html){
 	var result = [];
 	//** 规范化html，去除\r\n\t
 	html = html.replace(/(\n|\t|\r)/g, '');
-	var productMatcher = html.match(/<tr class="(row_odd|row_even)".+?<\/tr>/ig);
+	var productMatcher = html.match(/<tr class="(row_odd|row_even)".+?<\/tr>/ig) || [];
 	// console.log(productMatcher);
 	productMatcher.forEach(function(matcher){
 		var productDetail = matcher.match(/<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>/i);
@@ -117,7 +117,7 @@ util.extractResTableInfo = function(html){
 	var result = [];
 	//** 规范化html，去除\r\n\t
 	html = html.replace(/(\n|\t|\r)/g, '');
-	var productMatcher = html.match(/<tr class="(row_odd|row_even).+?<\/tr>/igm);
+	var productMatcher = html.match(/<tr class="(row_odd|row_even).+?<\/tr>/igm) || [];
 	// console.log(productMatcher);
 	productMatcher.forEach(function(matcher){
 		var productDetail = matcher.match(/input value="(.*?)".+?<\/input>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>/i) || [];
@@ -159,11 +159,12 @@ util.getResourceParam = function(html){
 	matcher.forEach(function(div){
 		var name = div.match(/name="(.+?)"/i) || ['',''];
 		var value = div.match(/value="(.*?)"/i) || ['',''];
-		if(name[1] != ''){
-			if(result[name[1]] == undefined){
-				result[name[1]] = value[1];
-			}else if(result[name[1]] ==''){
-				result[name[1]] = value[1];
+		var nameLowerCase = name[1]; //(name[1]).toLowerCase();
+		if(nameLowerCase != ''){
+			if(result[nameLowerCase] == undefined){
+				result[nameLowerCase] = value[1];
+			}else if(result[nameLowerCase] ==''){
+				result[nameLowerCase] = value[1];
 			}
 		}
 	});
@@ -231,7 +232,7 @@ util.queryPrice = function(html){
 	productMatcher.forEach(function(option){
 		var price = option.match(/value="(\d+)"/i) || [];
 		// console.log(price);
-		result.push(price[1]);
+		result.push(price[1] || -1);
 	});
 	// console.log(result);
 	return result;

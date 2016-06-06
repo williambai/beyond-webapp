@@ -35,14 +35,14 @@ var account = {
 
 //load cookie
 var cookie_file = tempdir + '/' + account.username + '_cookie.txt';
-if(fs.exists(cookie_file)){
-	var data = fs.read(cookie_file) || "[]";
-	try {
-		phantom.cookies = JSON.parse(data);
-	} catch (e) {
-	}
-	// console.log(JSON.stringify(phantom.cookies));
-}
+// if(fs.exists(cookie_file)){
+// 	var data = fs.read(cookie_file) || "[]";
+// 	try {
+// 		phantom.cookies = JSON.parse(data);
+// 	} catch (e) {
+// 	}
+// 	// console.log(JSON.stringify(phantom.cookies));
+// }
 
 //** captcha
 var verifyCode = '';
@@ -73,7 +73,7 @@ casper.then(function checkLogin(){
 	if(homePageMeta){
 		//** 已登录
 	    response.login = true;
-		response.meta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
+		// response.meta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
 		response.status = '已登录';
 		casper.echo('<response>' + JSON.stringify(response) + '</response>');
 		casper.exit(0);

@@ -6,7 +6,6 @@ var fs = require('fs');
 var _ = require('underscore');
 var async = require('async');
 var util = require('./util');
-// var ndarray = require("ndarray");
 var getPixels = require('get-pixels');
 var savePixels = require('save-pixels');
 
@@ -94,7 +93,6 @@ var loadTrainDataSync = function() {
  */
 
 var getSingleCharOcr = function(img, map, done) {
-	// if(!(img instanceof ndarray)) return done('img is not instanceof ndarray.');
 	// img.convertGrayscale();
 	var result = '';
 	var width = (img && img.shape[0]) || 0;
