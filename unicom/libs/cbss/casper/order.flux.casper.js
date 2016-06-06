@@ -3,6 +3,7 @@
  * 
  * > casperjs order.flux.test.casper.js --ignore-ssl-errors=true 
  */
+var outputDebug = true;
 var RegexUtils = require('../lib/util.js');
 var fs = require('fs');
 var system = require('system');
@@ -20,15 +21,13 @@ var casper = require('casper').create({
 });
 
 casper.on('resource.requested',function(resource){
-	// console.log('resource: ' + resource.url);
 	if(!/\.(js|css|gif)$/.test(resource.url)){
-		fs.write(tempdir + '/' + staffId + '_flux_request.txt', '['+ resource.id + '] '+ resource.url + ': ' + JSON.stringify(resource) + '\n', 'a');
+		if(false) fs.write(tempdir + '/' + staffId + '_flux_request.txt', '['+ resource.id + '] '+ resource.url + ': ' + JSON.stringify(resource) + '\n', 'a');
 	}
 });
 
 casper.on('page.resource.requested',function(requestData,request){
-	// console.log('resource: ' + resource.url);
-	fs.write(tempdir + '/' + staffId + '_flux_request.txt', '['+ requestData.url + '] '+ ': ' + JSON.stringify(requestData) + '\n', 'a');
+	if(false) fs.write(tempdir + '/' + staffId + '_flux_request.txt', '['+ requestData.url + '] '+ ': ' + JSON.stringify(requestData) + '\n', 'a');
 });
 
 phantom.cookiesEnabled = true;
@@ -119,7 +118,6 @@ casper.then(function nav(){
 	});
 	casper.then(function checkLogin(){
 		var navHtml = this.getHTML();
-		fs.write(tempdir + '/' + staffId + '_nav.html', navHtml, 644);
 		var homePageMeta = navHtml.match(/<meta.*provinceId.*?>/i);
 		console.log(homePageMeta);
 		if(homePageMeta){
@@ -143,9 +141,8 @@ casper.then(function nav(){
 		var resourceUrl = resourceUrlMatched[1] || '';
 		resourceUrl = resourceUrl.replace(/&amp;/g,'&');
 		urls.resourceUrl = resourceUrl;
-		fs.write(tempdir + '/' + staffId + '_resource_url.txt', urls.resourceUrl, 644);
-		fs.write(tempdir + '/' + staffId + '_flux_frameNav.html', navHtml, 644);
-		casper.capture(tempdir + '/' + staffId + '_flux_frameNav.jpg');
+		if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_frameNav.html', navHtml, 644);
+		if(outputDebug) casper.capture(tempdir + '/' + staffId + '_flux_frameNav.jpg');
 	});
 });
 
@@ -170,8 +167,7 @@ casper.then(function sideBar(){
 	});
 	casper.then(function parserSideBarHtml(){
 			var sideBarHtml = this.getHTML();
-			fs.write(tempdir + '/' + staffId + '_side_bar.html', sideBarHtml, 644);
-			casper.capture(tempdir + '/' + staffId + '_sidebar.jpg');
+			if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_frameSidebar.html', sideBarHtml, 644);
 			var custUrlMatched = RegexUtils.regexMatch(/menuaddr="(.+?)"/i, sideBarHtml) || [];
 			if(custUrlMatched[1] == undefined){
 				rspcasper.status = '没取到url，用户认证异常';		
@@ -179,10 +175,6 @@ casper.then(function sideBar(){
 				casper.bypass(99);
 				return;
 			}
-			var loginRandomCodeMatched = RegexUtils.regexMatch(/LOGIN_RANDOM_CODE=(\d+)/i, sideBarHtml) || [];
-			loginRandomCode = loginRandomCodeMatched[1] || '';
-			var loginCheckCodeMatched = RegexUtils.regexMatch(/LOGIN_CHECK_CODE=(\d+)/i, sideBarHtml) || [];
-			loginCheckCode = loginCheckCodeMatched[1] || '';
 
 			var custUrl = custUrlMatched[1] || '';
 			console.log('custUrl(raw): ' + custUrl);
@@ -192,8 +184,6 @@ casper.then(function sideBar(){
 		            + "&subSysCode=" + homePageParams['subsyscode']
 		            + "&eparchyCode=" + homePageParams['epachyid'];
 		    urls.custUrl = custUrl;
-			fs.write(tempdir + '/' + staffId + '_cust_url.txt', custUrl, 644);
-			fs.write(tempdir + '/' + staffId + '_flux_frameSidebar.html', sideBarHtml, 644);
 	});
 });
 
@@ -203,8 +193,7 @@ casper.then(function custAuthMain(){
 			method: 'get',
 			headers: {
 				"Accept": "text/html, application/xhtml+xml, */*",
-				"Referer": "https://gz.cbss.10010.com/essframe?service=page/Sidebar",//??
-				//"Referer": "https://gz.cbss.10010.com/essframe?service=page/component.Navigation&listener=init&needNotify=true&staffId=..."
+				"Referer": "https://gz.cbss.10010.com/essframe?service=page/Sidebar",
 				"Accept-Language": "zh-CN",
 				"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
 				"Content-Type": "application/x-www-form-urlencoded",
@@ -219,38 +208,9 @@ casper.then(function custAuthMain(){
     casper.then(function parseCustAuthMainHtml(){
     	//** 客户统一认证
     	var custAuthMainHtml = this.getHTML();
-    	fs.write(tempdir + '/' + staffId + '_cust_auth_main.html', custAuthMainHtml, 644);
-		casper.capture(tempdir + '/' + staffId + '_cust_auth_main.jpg');
+    	if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_custAuthMain.html', custAuthMainHtml, 644);
     });
 });
-
-// casper.then(function(){
-// 		var BSS_CUSTSERV_JSESSIONID = '';
-// 		phantom.cookies.forEach(function(cookie){
-// 			if(cookie.name == 'BSS_CUSTSERV_JSESSIONID') BSS_CUSTSERV_JSESSIONID = cookie.value;
-// 		});
-// 		console.log('++++++');
-// 		console.log('BSS_CUSTSERV_JSESSIONID: ' + BSS_CUSTSERV_JSESSIONID);
-// 		var custUrlNew = 'custserv;BSS_CUSTSERV_JSESSIONID=' + BSS_CUSTSERV_JSESSIONID 
-// 						+ '?service=page/pub.chkcust.MainChkCust'
-// 						+ '&listener=init'
-// 						+ '&RIGHT_CODE=csCreateCustTrade'
-//  						+ "&staffId=" + homePageParams['staffid']
-// 			            + "&departId=" + homePageParams['deptid']
-// 			            + "&subSysCode=custserv"
-// 			            + "&eparchyCode=" + homePageParams['epachyid'];
-
-// 		console.log(custUrlNew);
-// 		// casper.page.switchToChildFrame('contentframe');
-// 		casper.evaluate(function(custUrlNew){
-// 			document.querySelector('#chkcustframe').setAttribute('src', 'https://gz.cbss.10010.com/' + custUrlNew);
-// 		},custUrlNew);
-// 		casper.wait(10000);
-// 		casper.withFrame('chkcustframe', function(){		
-// 			var frameChkcust = this.getHTML();
-// 		});
-// });
-
 
 //** 到达账务管理，流量包资源订购页面 模式一
 
@@ -279,10 +239,8 @@ casper.then(function acctmanm(){
 	});
 	casper.then(function parseAcctmanmHtml(){
 		var acctmanmHtml = this.getHTML();
-		fs.write(tempdir + '/' + staffId + '_flux_acctmanm.html', acctmanmHtml, 644);
-		casper.capture(tempdir + '/' + staffId + '_acctmanm.jpg');
-		console.log('+++++++')
-		console.log('cookies: ' + JSON.stringify(phantom.cookies));
+		if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_acctmanm.html', acctmanmHtml, 644);
+		if(outputDebug) casper.capture(tempdir + '/' + staffId + '_flux_acctmanm.jpg');
 	});
 });
 
@@ -314,11 +272,10 @@ casper.then(function updateAcctmanm(){
 	casper.then(function parseUpdatedAcctmanmHtml(){
 		casper.then(function(){
 			var resourceHtml = this.getHTML();
-			fs.write(tempdir + '/' + staffId + '_flux_acctmanm_updated.html', resourceHtml, 644);
-			casper.capture(tempdir + '/' + staffId + '_acctmanm_updated.jpg');
+			if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_acctmanmUpdated.html', resourceHtml, 644);
+			if(outputDebug) casper.capture(tempdir + '/' + staffId + '_flux_acctmanmUpdated.jpg');
 
 			//** 用户不能订购
-			//TODO ?
 			var content = RegexUtils.regexMatch(/<div class="content">(.+?)<\/div>/i, resourceHtml) || [];
 			if(content[1] && content[1].length > 0){
 				response.status = '用户不能订购';
@@ -331,7 +288,7 @@ casper.then(function updateAcctmanm(){
 			//** 获得已订购列表
 			//TODO ?
 			var resourceList = RegexUtils.extractResourceInfo(resourceHtml) || [];
-			fs.write(tempdir + '/' + staffId + '_resource_list.txt', JSON.stringify(resourceList), 644);
+			if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_resourceList.txt', JSON.stringify(resourceList), 644);
 			//** 是否有正在“处理中”的业务
 			resourceList.forEach(function(resource){
 				if(/处理中/.test(resource.dealTag)){
@@ -344,12 +301,12 @@ casper.then(function updateAcctmanm(){
 			});
 			//** 可选择流量包
 			resTableList = RegexUtils.extractResTableInfo(resourceHtml) || [];
-			fs.write(tempdir + '/' + staffId + '_resource_table_list.txt', JSON.stringify(resTableList), 644);
+			if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_resourceTableList.txt', JSON.stringify(resTableList), 644);
 			//** form表单参数
 			resourceParam = RegexUtils.getResourceParam(resourceHtml) || {};
-			fs.write(tempdir + '/' + staffId + '_resource_param.txt', JSON.stringify(resourceParam), 644);
+			if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_resourceParam.txt', JSON.stringify(resourceParam), 644);
 			xCodingString = RegexUtils.getXcodingString(resTableList);
-			fs.write(tempdir + '/' + staffId + '_xcoding_string.txt', JSON.stringify(xCodingString), 644);
+			if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_xcodingString.txt', JSON.stringify(xCodingString), 644);
 			//** 信用额度
 			var creditMoney = parseFloat(resourceParam.cond_CREDIT_VALUE) || 0;
 			//** 话费余额
@@ -365,11 +322,14 @@ casper.then(function updateAcctmanm(){
 	});
 });
 
+// casper.then(function submit(){
+
+// });
 
 // casper.then(function getSubmitResult(){
 // 	var contentHtml = this.getHTML();
 // 	var content = contentHtml.match(/.*<div class="content">(.+?)<\/div>.*/i) || [];
-// 	fs.write(tempdir + '/' + staffId + '_submit_result.html', contentHtml, 644);
+// 	if(outputDebug) fs.write(tempdir + '/' + staffId + '_submit_result.html', contentHtml, 644);
 // 	if(/成功/.test(content[1] || '')){
 // 		response.status = '成功';
 // 		response.content = content[1] || '';
@@ -377,13 +337,6 @@ casper.then(function updateAcctmanm(){
 // 		response.status = '失败';
 // 		response.content = content[1] || '';
 // 	}
-// });
-
-// //** save cookies
-// casper.then(function saveCookie(){
-// 	var cookies = JSON.stringify(phantom.cookies);
-// 	// this.echo(JSON.stringify(phantom.cookies));
-// 	fs.write(tempdir + '/_cookie.txt', cookies, 644);
 // });
 
 casper.run(function(){
@@ -394,6 +347,12 @@ casper.run(function(){
 
 
 
+// //** save cookies
+// casper.then(function saveCookie(){
+// 	var cookies = JSON.stringify(phantom.cookies);
+// 	// this.echo(JSON.stringify(phantom.cookies));
+// 	if(outputDebug) fs.write(tempdir + '/_cookie.txt', cookies, 644);
+// });
 
 //** 到达账务管理，流量包资源订购页面 模式二
 
@@ -417,8 +376,8 @@ casper.run(function(){
 // 	});
 // 	casper.withFrame('chkcustframe', function parseAcctmanmHtml(){
 // 		var acctmanmHtml = this.getHTML();
-// 		fs.write(tempdir + '/' + staffId + '_flux_acctmanm.html', acctmanmHtml, 644);
-// 		casper.capture(tempdir + '/' + staffId + '_acctmanm.jpg');
+// 		if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_acctmanm.html', acctmanmHtml, 644);
+// 		if(outputDebug) casper.capture(tempdir + '/' + staffId + '_acctmanm.jpg');
 // 		console.log('+++++++')
 // 		console.log('cookies: ' + JSON.stringify(phantom.cookies));
 // 	});
@@ -455,8 +414,8 @@ casper.run(function(){
 // 		casper.then(function parseUpdatedAcctmanmHtml(){
 // 			casper.withFrame('chkcustframe',function(){
 // 				var resourceHtml = this.getHTML();
-// 				fs.write(tempdir + '/' + staffId + '_flux_acctmanm_updated.html', resourceHtml, 644);
-// 				casper.capture(tempdir + '/' + staffId + '_acctmanm_updated.jpg');
+// 				if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_acctmanm_updated.html', resourceHtml, 644);
+// 				if(outputDebug) casper.capture(tempdir + '/' + staffId + '_acctmanm_updated.jpg');
 
 // 				//** 用户不能订购
 // 				//TODO ?
@@ -472,7 +431,7 @@ casper.run(function(){
 // 				//** 获得已订购列表
 // 				//TODO ?
 // 				var resourceList = RegexUtils.extractResourceInfo(resourceHtml) || [];
-// 				fs.write(tempdir + '/' + staffId + '_resource_list.txt', JSON.stringify(resourceList), 644);
+// 				if(outputDebug) fs.write(tempdir + '/' + staffId + '_resource_list.txt', JSON.stringify(resourceList), 644);
 // 				//** 是否有正在“处理中”的业务
 // 				resourceList.forEach(function(resource){
 // 					if(/处理中/.test(resource.dealTag)){
@@ -485,12 +444,12 @@ casper.run(function(){
 // 				});
 // 				//** 可选择流量包
 // 				resTableList = RegexUtils.extractResTableInfo(resourceHtml) || [];
-// 				fs.write(tempdir + '/' + staffId + '_resource_table_list.txt', JSON.stringify(resTableList), 644);
+// 				if(outputDebug) fs.write(tempdir + '/' + staffId + '_resource_table_list.txt', JSON.stringify(resTableList), 644);
 // 				//** form表单参数
 // 				resourceParam = RegexUtils.getResourceParam(resourceHtml) || {};
-// 				fs.write(tempdir + '/' + staffId + '_resource_param.txt', JSON.stringify(resourceParam), 644);
+// 				if(outputDebug) fs.write(tempdir + '/' + staffId + '_resource_param.txt', JSON.stringify(resourceParam), 644);
 // 				xCodingString = RegexUtils.getXcodingString(resTableList);
-// 				fs.write(tempdir + '/' + staffId + '_xcoding_string.txt', JSON.stringify(xCodingString), 644);
+// 				if(outputDebug) fs.write(tempdir + '/' + staffId + '_xcoding_string.txt', JSON.stringify(xCodingString), 644);
 // 				//** 信用额度
 // 				var creditMoney = parseFloat(resourceParam.cond_CREDIT_VALUE) || 0;
 // 				//** 话费余额
@@ -533,7 +492,7 @@ casper.run(function(){
 // 	});
 // 	casper.then(function checkLogin(){
 // 		var navHtml = this.getHTML();
-// 		fs.write(tempdir + '/' + staffId + '_nav.html', navHtml, 644);
+// 		if(outputDebug) fs.write(tempdir + '/' + staffId + '_nav.html', navHtml, 644);
 // 		var homePageMeta = navHtml.match(/<meta.*provinceId.*?>/i);
 // 		console.log(homePageMeta);
 // 		if(homePageMeta){
@@ -551,8 +510,8 @@ casper.run(function(){
 // 	});
 // 	casper.then(function parseNavHtml(){
 // 		var navHtml = this.getHTML();
-// 		fs.write(tempdir + '/' + staffId + '_flux_frameHeader.html', navHtml, 644);
-// 		casper.capture(tempdir + '/' + staffId + '_flux_frameHeader.jpg');
+// 		if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_frameHeader.html', navHtml, 644);
+// 		if(outputDebug) casper.capture(tempdir + '/' + staffId + '_flux_frameHeader.jpg');
 // 	});
 // });
 
@@ -842,8 +801,8 @@ casper.run(function(){
 // 	// });
 // 	casper.then(function parseAmchargeXml(){
 // 		var packageHtml = ajaxAmchargeResult;
-// 		fs.write(tempdir + '/' + staffId + '_amcharge.xml', packageHtml, 644);
-// 		casper.capture(tempdir + '/' + staffId + '_amcharge.jpg');
+// 		if(outputDebug) fs.write(tempdir + '/' + staffId + '_amcharge.xml', packageHtml, 644);
+// 		if(outputDebug) casper.capture(tempdir + '/' + staffId + '_amcharge.jpg');
 // 		var priceList = RegexUtils.queryPrice(packageHtml) || [];
 // 		// if(![].contain.call(priceList, order.product.price)){
 // 			response.status = '价格不对，不能订';
@@ -952,8 +911,8 @@ casper.run(function(){
 // //     });
 // // 	casper.then(function parseRefreshMoneyXml(){
 // // 		var chargeInfo = this.getHTML();
-// // 		fs.write(tempdir + '/' + staffId + '_refresh_money.xml', chargeInfo, 644);
-// // 		casper.capture(tempdir + '/' + staffId + '_refresh_money.jpg');
+// // 		if(outputDebug) fs.write(tempdir + '/' + staffId + '_refresh_money.xml', chargeInfo, 644);
+// // 		if(outputDebug) casper.capture(tempdir + '/' + staffId + '_refresh_money.jpg');
 // // 		rMap = RegexUtils.getResourceParam(chargeInfo) || {};
 		
 // // 		resTableList.forEach(function(li){
@@ -961,7 +920,7 @@ casper.run(function(){
 // // 				rMap['data_RESOURCE_NAME'] = li.resourceName;
 // // 			}
 // // 		});
-// // 		fs.write(tempdir + '/' + staffId + '_rMap.txt', JSON.stringify(rMap), 644);
+// // 		if(outputDebug) fs.write(tempdir + '/' + staffId + '_rMap.txt', JSON.stringify(rMap), 644);
 // // 	});
 // // });
 
