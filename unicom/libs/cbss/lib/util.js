@@ -52,7 +52,7 @@ util.extractResourceInfo = function(html){
 	var productMatcher = html.match(/<tr class="(row_odd|row_even)".+?<\/tr>/ig) || [];
 	// console.log(productMatcher);
 	productMatcher.forEach(function(matcher){
-		var productDetail = matcher.match(/<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>/i);
+		var productDetail = matcher.match(/<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?style="display:none">(.*?)<\/td>.*?<td.*?>(.*?)<\/td>/i);
 		// console.log(productDetail);
 		var resourceInfo = {};
 		//** <th id="col_RESOURCE_INS_ID">
@@ -83,23 +83,23 @@ util.extractResourceInfo = function(html){
 		//**     处理状态
 		//** </th>
 		//** 资源账本实例
-		resourceInfo['resourceInsId'] = productDetail[1];
+		resourceInfo['resourceInsId'] = productDetail[1].trim();
 		//** 额(单位:元)
-		resourceInfo['money'] = productDetail[2];
+		resourceInfo['money'] = productDetail[2].trim();
 		//** 资源量
-		resourceInfo['resourceCount'] = productDetail[3];
+		resourceInfo['resourceCount'] = productDetail[3].trim();
 		//** 资源单位
-		resourceInfo['unit'] = productDetail[4];
+		resourceInfo['unit'] = productDetail[4].trim();
 		//** 资源类型
-		resourceInfo['resourceType'] = productDetail[5];
+		resourceInfo['resourceType'] = productDetail[5].trim();
 		//** 购买到账时间
-		resourceInfo['receiveTime'] = productDetail[6];
+		resourceInfo['receiveTime'] = productDetail[6].trim();
 		//** 资源失效时间
-		resourceInfo['invalidTime'] = productDetail[7];
+		resourceInfo['invalidTime'] = productDetail[7].trim();
 		//** 处理状态
-		resourceInfo['dealIntTag'] = productDetail[8];
+		resourceInfo['dealIntTag'] = productDetail[8].trim();
 		//** 处理状态
-		resourceInfo['dealTag'] = productDetail[9];
+		resourceInfo['dealTag'] = productDetail[9].trim();
 
 		// console.log(resourceInfo);
 		result.push(resourceInfo);
@@ -117,23 +117,25 @@ util.extractResTableInfo = function(html){
 	var result = [];
 	//** 规范化html，去除\r\n\t
 	html = html.replace(/(\n|\t|\r)/g, '');
-	var productMatcher = html.match(/<tr class="(row_odd|row_even).+?<\/tr>/igm) || [];
+	var resTableInfo = html.match(/<table id=\"resInfosTable\".*?<\/table>/i) || [];
+	resTableInfo = resTableInfo[0] || '';
+	var productMatcher = resTableInfo.match(/<tr class="(row_odd|row_even).+?<\/tr>/ig) || [];
 	// console.log(productMatcher);
 	productMatcher.forEach(function(matcher){
-		var productDetail = matcher.match(/input value="(.*?)".+?<\/input>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>/i) || [];
+		var productDetail = matcher.match(/input value="(.*?)".+?>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>.*?<td.*?>(.*?)<\/td>/i) || [];
 		// console.log(productDetail);
 		var info = {};
-		info['xTag'] = productDetail[1];
-		info['resourceTag'] = productDetail[2];
-		info['packageCode'] = productDetail[3];
-		info['resourceCode'] = productDetail[4];
-		info['resourceCount'] = productDetail[5];
-		info['money'] = productDetail[6];
-		info['unit'] = productDetail[7];
-		info['validTime'] = productDetail[8];
-		info['validTimeUnit'] = productDetail[9];
-		info['depositRate'] = productDetail[10];
-		info['resourceName'] = productDetail[11];
+		info['xTag'] = productDetail[1].trim();
+		info['resourceTag'] = productDetail[2].trim();
+		info['packageCode'] = productDetail[3].trim();
+		info['resourceCode'] = productDetail[4].trim();
+		info['resourceCount'] = productDetail[5].trim();
+		info['money'] = productDetail[6].trim();
+		info['unit'] = productDetail[7].trim();
+		info['validTime'] = productDetail[8].trim();
+		info['validTimeUnit'] = productDetail[9].trim();
+		info['depositRate'] = productDetail[10].trim();
+		info['resourceName'] = productDetail[11].trim();
 
 		// console.log(info);
 		result.push(info);
@@ -153,9 +155,7 @@ util.getResourceParam = function(html){
 	//** 规范化html，去除\r\n\t
 	html = html.replace(/(\n|\t|\r)/g, '');
 	html = html.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
-
-	var matcher = html.match(/<input.+?(<\/input>|\/>)/ig) || [];
-	// console.log(matcher);
+	var matcher = html.match(/<input.+?>/ig) || [];
 	matcher.forEach(function(div){
 		var name = div.match(/name="(.+?)"/i) || ['',''];
 		var value = div.match(/value="(.*?)"/i) || ['',''];
@@ -212,6 +212,7 @@ util.getXcodingString = function(resTableList){
 		str += getStrByPadLength(li.validTimeUnit);
 		str += getStrByPadLength(li.depositRate);
 		str += getStrByPadLength(li.resourceName);
+		str += ' ';
 	});
 	str = '' + getStrByPadPrefix(11) + getStrByPadPrefix(resTableList.length) + str; 
 	// console.log(str);

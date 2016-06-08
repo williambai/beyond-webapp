@@ -10,10 +10,8 @@ var captchaParser = require('../../captcha');
 
 module.exports = exports = function(options, done){
 	options = options || {};
-
-	options.user = 'ASCBWZS1';
-
 	var trunks = [];
+
 	var child = spawn(
 			'casperjs',
 			[

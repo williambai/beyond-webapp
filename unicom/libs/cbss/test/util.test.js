@@ -62,7 +62,7 @@ describe('util.getRandomParam()功能测试', function() {
 	});
 });
 
-describe('登录成功后，获取homePageMeta信息测试', function() {
+xdescribe('登录成功后，获取homePageMeta信息测试', function() {
 	it('正常情况下', function() {
 		//** 含指定正则数据
 		var fs = require('fs');
@@ -148,9 +148,10 @@ describe('pageAcctmanm_*.htm页面正则测试', function() {
 		// console.log(resourceList);
 		expect(resourceList).to.be.an(Array);
 		var resTableList = util.extractResTableInfo(html);
-		// console.log(resTableList);
+		console.log(resTableList);
 		expect(resTableList).to.be.an(Array);
 		var resourceParam = util.getResourceParam(html);
+		// console.log(html);
 		// console.log(resourceParam);
 		expect(resourceParam).to.be.an(Object);
 		var xCodingString = util.getXcodingString(resTableList);
@@ -189,7 +190,7 @@ describe('ajaxDirectOrderGprsRes1.xml页面正则测试', function() {
 	});
 });
 
-describe('ajaxDirectOrderGprsRes2.xml页面正则测试', function() {
+xdescribe('ajaxDirectOrderGprsRes2.xml页面正则测试', function() {
 	it('正常情况下', function() {
 		//** 含指定正则数据
 		var fs = require('fs');

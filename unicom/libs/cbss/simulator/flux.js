@@ -11,7 +11,7 @@ var server = http.createServer(function(req,res){
 	req.on('end', function(){
 		console.log(trunks.join('').toString());
 	})
-	res.end();
+	res.end('ok!');
 });
 
 server.listen(9200, function(){

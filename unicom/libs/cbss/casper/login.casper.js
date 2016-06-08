@@ -20,7 +20,6 @@ var casper = require('casper').create({
 	verbose: true
 });
 
-phantom.ignoreSslErrors = true;
 phantom.cookiesEnabled = true;
 
 //** setup params

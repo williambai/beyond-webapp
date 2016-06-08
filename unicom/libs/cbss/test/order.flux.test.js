@@ -10,7 +10,7 @@ orderFlux({
 	product: {
 		name: '全国流量包(100元/1G)',
 		price: '100',
-		barcode: '',
+		barcode: '3001_100_1024_0',
 	}
 }, function(err, result){
 	if(err) return console.log(err);

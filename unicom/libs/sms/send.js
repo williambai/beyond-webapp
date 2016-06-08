@@ -42,22 +42,37 @@ var sendSMS = function(docs, done) {
 		logger.debug('>> 1.bind');
 	});
 
+	client.on('close', function(err){
+		logger.debug('client close: ' + (err ? '异常': '正常'));
+	});
+
 	client.on('end', function(){
-		logger.debug('client disconnected.');
-		client.destroy();
-		done && done(null, results);
+		logger.debug('client end.');
+		if(!endFlag){
+			client.destroy();
+			endFlag = true;
+			done && done(null, results);
+		}
 	});
 
 	client.on('error', function(err) {
 		logger.error(err);
-		client.destroy();
-		done && done(err);
+		if(!endFlag){
+			client.destroy();
+			endFlag = true;
+			done && done(err);
+		}
 	});
 
-	client.on('timeout', function(err) {
-		logger.error(err);
-		client.destroy();
-	});
+	// client.setTimeout(10000);
+	// client.on('timeout', function(err) {
+	// 	logger.error('client timeout.');
+	// 	if(!endFlag){
+	// 		client.destroy();
+	// 		endFlag = true;
+	// 		done && done('client timeout.');
+	// 	}
+	// });
 
 	var handler = new StreamSpliter(client);
 
@@ -110,8 +125,7 @@ var sendSMS = function(docs, done) {
 		if (command instanceof Bind.Resp) {
 			if (command.Result != 0) {
 				logger.debug('<< 2. resp error: ' + JSON.stringify(command));
-				if(!endFlag)client.emit('end');
-				endFlag = true;
+				client.emit('error','bind resp error.');
 				return;
 			}
 			logger.debug('<< 2. bind_resp ok.');
@@ -119,20 +133,17 @@ var sendSMS = function(docs, done) {
 		} else if (command instanceof Unbind.Resp) {
 			//** unbind
 			logger.debug('<< 7. unbind_resp ok.');
-			if(!endFlag)client.emit('end');
-			endFlag = true;
+			//** 结束发送
+			client.emit('end');
 		} else if (command instanceof Submit.Resp) {
 			if (command.Result != 0) {
 				logger.debug('<< 2. resp error: ' + JSON.stringify(command));
-				if(!endFlag)client.emit('end');
-				endFlag = true;
+				client.emit('error','submit resp error.');
 				return;
 			}
 			//** 保存发送结果command
 			results.push(command);
 			logger.debug('<< 4. submit_resp ok. (if have more) submit continue...');
-			//** 循环发送剩余的消息
-			// _submit();
 		}
 	});
 };
