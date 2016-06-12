@@ -1,6 +1,8 @@
 var Browser = {
 	isFF : window.navigator.appName.indexOf("Netscape") != -1 ? true : false
 };
+
+
 /** firefox transition */
 if (Browser.isFF) {
 	/** search event */
@@ -444,7 +446,7 @@ function containKey(array, key) {
 }
 /** hidden obj */
 function hidden(obj, ishidden) {
-	obj.style.display = ishidden ? "none" : "";
+	if(obj){obj.style.display = ishidden ? "none" : "";}
 }
 /** mouse over */
 function mouseOver(obj) {
@@ -666,7 +668,19 @@ function getDialogHeight(height) {
 }
 /** open dialog */
 function openDialog(url, width, height, arg) {
-	var returnValue = window.showModalDialog(url, arg, "dialogWidth: " + width + "px; resizable: no; help: no; status: no; scroll: no;");
+	var returnValue;
+	//通过父窗体的位置距离判断，窗体等级,设置当前窗体的位置。
+	if(typeof window.dialogLeft=='undefined'&&typeof window.dialogTop=='undefined'){
+		
+		returnValue = window.showModalDialog(url, arg, "dialogWidth: " + width + "px; dialogLeft: 205px; dialogTop: 260px; resizable: no; help: no; status: no; scroll: no;");
+	}else{
+		var dialogLeft=window.dialogLeft.substring(0,window.dialogLeft.lastIndexOf("p"))*1.1;
+		var dialogTop=window.dialogTop.substring(0,window.dialogTop.lastIndexOf("p"))*1.1;
+		returnValue = window.showModalDialog(url, arg, "dialogWidth: " + width + "px; dialogLeft: " + dialogLeft + "px; dialogTop: " + dialogTop + "px;   resizable: no; help: no; status: no; scroll: no;");
+	
+	}
+	
+	//var returnValue = window.showModalDialog(url, arg, "dialogWidth: " + width + "px; resizable: no; help: no; status: no; scroll: no;");
 	if (Browser.isFF) {
 		alert("请在打开的弹出窗口进行相关操作，待操作完成并关闭弹出窗口后，点【确认】继续进行后续操作！");
 		returnValue = window.returnValue;
@@ -675,10 +689,13 @@ function openDialog(url, width, height, arg) {
 	//return window.showModalDialog(url, arg, "dialogWidth: " + width + "px; dialogHeight: " + getDialogHeight(height) + "px; resizable: no; help: no; status: no; scroll: no;");
 }
 /** popup dialog */
-function popupDialog(page, listener, params, title, width, height, subsyscode, subsysaddr) {
+function popupDialog(page, listener, params, title, width, height, subsyscode, subsysaddr,isShow) {
 	if (title == null) title = "弹出窗口";
-	if (width == null) width = 400;
-	if (height == null) height = 300;
+	//20110816
+	if(!isShow){//还是放开吧。。。。。。
+	if (width == null||width>780)  width = 780;
+	if (height == null||height>300) height = 300;
+	}
 	
 	var url = getContextName() + "?service=page/" + page;
 	if (listener != null) url += "&listener=" + listener;
@@ -725,6 +742,61 @@ function popupPage(page, listener, params, title, width, height) {
 	}
 	return returnValue;
 }
+
+function popupPageCRM(page, listener, params, title, width, height) {
+	var imgobj = getElementBySrc();
+	var fieldName = imgobj.getAttribute("fieldName");
+	var textName = imgobj.getAttribute("textName");
+	var returnValue = popupDialogCRM(page, listener, params, title, width, height, imgobj.getAttribute("subsyscode"), imgobj.getAttribute("subsysaddr"));	
+	if (returnValue != null) {
+		getElement(fieldName).value = returnValue.value;
+		getElement(textName).value = returnValue.text;
+		var paramNames = returnValue.paramNames;
+		var paramValues = returnValue.paramValues;
+		if (paramNames != null && paramValues != null) {
+			for (var i=0; i<paramNames.length; i++) {
+				var field = getElement(paramNames[i]);
+				if (field == null) {
+					//alert("field " + paramNames[i] + " not exist!");
+				} else {
+					field.value = paramValues[i];
+				}
+			}
+		}
+	}
+	return returnValue;
+}
+
+function popupDialogCRM(page, listener, params, title, width, height, subsyscode, subsysaddr,isShow) {
+	if (title == null) title = "弹出窗口";
+	//20110816
+	if(!isShow){//还是放开吧。。。。。。
+	if (width == null||width>780)  width = 780;
+	if (height == null||height>300) height = 300;
+	}
+	
+	var url = "?service=page/" + page;
+	if (listener != null) url += "&listener=" + listener;
+	if (params != null) url += params;
+	url = getSysAddr(url, subsyscode, subsysaddr);
+	if (url.indexOf("&%72andom=") == -1) url += "&random=" + getRandomParam();
+	
+	var obj = new Object();
+	obj.title = title;
+	obj.width = width;
+	obj.height = height;
+	obj.url = url;
+	obj.parentwindow = window;
+	var returnValue = openDialog(getSysAddr("custserv" + "?service=page/component.Agent&random=" + getRandomParam()), width, height, obj);
+	if (returnValue != null) {
+		var pageName = returnValue.$pageName;
+		if (pageName != null) {
+			redirectTo(pageName, returnValue.$listener, returnValue.$parameters, returnValue.$target);
+		}
+	}
+	return returnValue;
+}
+
 /** set return obj */
 function setReturnObj(obj) {
 	if (Browser.isFF) {
@@ -860,7 +932,8 @@ function getContextName() {
 	return contextName;
 }
 /** redirect to, target for example: 'custframe'、'custframe.subframe'、['custframe',parent] */
-function redirectTo(page, listener, params, target, israw) {
+/** redirect to, target for example: 'custframe'、'custframe.subframe'、['custframe',parent] */
+function redirectTo(page, listener, params, target, israw, method) {
 	var subsyscode = null, subsysaddr = null, contextname = null;
 	var obj = getElementBySrc();
 	if (obj != null) {
@@ -876,19 +949,64 @@ function redirectTo(page, listener, params, target, israw) {
 	if (listener != null) url += "&listener=" + listener;
 	if (params != null) url += params;
 	
-	redirectToByUrl(url, target, israw, subsysaddr);
+	redirectToByUrl(url, target, israw, subsysaddr, method);
 }
 /** redirect to by url */
-function redirectToByUrl(url, target, israw, subsysaddr) {
+function requestPatchURL(getFunc, postFunc, method)
+{	
+	if(!method || method === "GET")
+	{
+		getFunc();
+	}
+	else if(method === "POST")
+	{
+	    var ___fm = document.getElementById("___fm");
+	    if(!___fm)
+	    {
+	    	___fm = document.createElement("form");
+	    	___fm.method='post';
+	    	___fm.id='___fm';
+	    	document.body.appendChild(___fm);
+	    }
+	    if(postFunc(___fm))
+	    {
+	        
+	    	___fm.submit();
+	    }
+	    else
+	    {
+	        
+	    	getFunc();
+	    }
+	    ___fm = null;
+	}
+	else
+	{
+		throw new Error("non support rt!");
+	}
+}
+function PostFunc(fm, target, url)
+{	
+	if(target && typeof target == "string")
+	{
+		fm.target = target;
+		fm.action=url;
+		return true;
+	}
+	return false;
+	
+}
+//fix too long request for GET method
+function redirectToByUrl(url, target, israw, subsysaddr, method) {
 	var obj = getElementBySrc();
 	if (israw == null || !israw) url = getSysAddr(url, obj == null ? null : obj.getAttribute("subsyscode"), subsysaddr == null ? (obj == null ? null : obj.getAttribute("subsysaddr")) : subsysaddr);
 	if (target != null && target != "" && target != "contentframe" && target != "currentframe") {
 		var object = getElement(target);
 		if (object != null && object.tagName == "IFRAME") {
-			if (document.readyState == "complete") beginPageLoading();
-			object.src = url;
+			if (document.readyState == "complete") beginPageLoading();	
+			requestPatchURL(function(){object.src = url},function(fm){return PostFunc(fm, getFrame(target).name, url)}, method);
 		} else {
-			getFrame(target).window.location.href = url;
+			requestPatchURL(function(){getFrame(target).window.location.href = url},function(fm){return PostFunc(fm, getFrame(target).name, url);}, method);
 		}
 	} else {
 		var linkobj = obj == null ? null : getElementByTag(obj, "a");
@@ -1771,6 +1889,12 @@ function isSameDomain(target) {
 function completePageLoad() {
 	document.onreadystatechange = function() {
 		if (document.readyState == "complete") {
+           
+            //added by zhangxiaoping当输入框和选择框获取焦点后背景颜色变成柠檬黄，失去焦点后回复到之前的样式		    
+		   // focusInput('orangebg','txt'); 
+		   // focusSelect('orangebg', 'sel');
+		   // focusTextarea('orangebg', 'textarea');  		
+		
 			if (isSameDomain(parent)) {
 				if (parent.document.getElementById("navframeset") != null) {
 					var navframe = getNavFrameByLocation();
@@ -2132,6 +2256,87 @@ function endPageOverlay() {
 		pagelay.style.display = "none";    //document.body.removeChild(pagelay);  modify by tangz@2010-4-7 10:52:04
 	}
 }
+/** open new page add by zhangyangshuo 2011-9-15**/
+function redirectToNavOpenNew(page, listener, params, target,caption) {
+	var url = getContextName() + "?service=page/" + page;	
+	if (listener != null) url += "&listener=" + listener;
+	if (params != null) url += params;
+	
+	redirectToByUrlOpenNew(url, target,caption);
+}
+/** open new page add by zhangyangshuo 2011-9-15**/
+function redirectToByUrlOpenNew(url, target,caption, israw, subsysaddr) {
+	var obj = getElementBySrc();
+	if (israw == null || !israw) url = getSysAddr(url, obj == null ? null : obj.getAttribute("subsyscode"), subsysaddr == null ? (obj == null ? null : obj.getAttribute("subsysaddr")) : subsysaddr);
+	if (target != null && target != "" && target != "contentframe" && target != "currentframe") {
+		var object = getElement(target);
+		if (object != null && object.tagName == "IFRAME") {
+			if (document.readyState == "complete") beginPageLoading();
+			object.src = url;
+		} else {
+			getFrame(target).window.location.href = url;
+		}
+	} else {
+		var linkobj = obj == null ? null : getElementByTag(obj, "a");
+		if (caption != null) {
+			if (target != "currentframe") {
+				if (addNavFrameOpenNew(target == null ? parent : target, url, caption)) return;
+			}
+		}
+		if (linkobj != null) {
+			linkobj.href = url;
+		} else {
+			location.href = url;
+		}
+	}
+}
+/** add new page add by zhangyangshuo 2011-9-15**/
+function addNavFrameOpenNew(target, url, title) {
+	if (target == "contentframe") {
+		target = getFrame("contentframe");
+		if (target == null) target = top;
+	}
+	if (target.menuframe == null) return false;
+	
+	var navmenus = target.menuframe.document.getElementById("navmenus");
+	var navmenuidx = target.menuframe.NAV_MENU_CURSOR ++;
+	var navmenuid = "navmenu_" + navmenuidx;
+	
+	if(url.include("pub.chkcust.MainChkCust")){
+		navmenuidx = 0;
+		navmenuid = "navmenu_" + navmenuidx;
+	}
+	
+	var navframe = getNavFrame(target, navmenuidx);
+	if (navframe == null) {
+		alert("打开页面数已超过最大限制，请先关闭部分页面后再操作！");
+		return true;
+	}
+	
+	var closeNavMethod = "closeOnEsc", searchKeyWord = "&closeNavMethod=";
+	if (url.indexOf(searchKeyWord) != -1) {
+		closeNavMethod = url.substring(url.indexOf(searchKeyWord) + searchKeyWord.length);
+		if (closeNavMethod.indexOf("&") != -1) closeNavMethod = closeNavMethod.substring(0, closeNavMethod.indexOf("&"));
+	}
+	
+	var navframeid = navframe.name;
+	
+	var navmenucont = "<a href=\"javascript:void(0)\" class=\"li\" title=\"" + title + "\" onclick=\"switchNavFrame(parent, '" + navmenuid + "');\" ondblclick=\"return closeNavFrame(parent, '" + navmenuid + "', '" + closeNavMethod + "');\"><span class=\"left\"></span><span class=\"text\"><span id=\"" + navframeid + "_loading\" class=\"loading\">" + getPartStr(title, 20) + "</span></span><span class=\"right\"></span></a>";
+	navmenucont += "<a href=\"javascript:void(0)\" class=\"closeTab\" id=\"" + navframeid + "_close\" onclick=\"return closeNavFrame(parent, '" + navmenuid + "', '" + closeNavMethod + "');\"/></a>";
+	
+	var navmenu = target.menuframe.document.createElement("LI");
+	navmenu.className = "open";
+	navmenu.id = navmenuid;
+	navmenu.setAttribute("relaframe", navframeid);
+	navmenu.innerHTML = navmenucont;
+	navmenus.appendChild(navmenu);
+	
+	switchNavFrame(target, navmenuid);
+	
+	navframe.location.href = url;
+	
+	return true;
+}
 /** private end */
 /** deprecated begin */
 /** starts with */
@@ -2140,7 +2345,11 @@ function startsWith(str1, str2) {
 }
 /** trim str */
 function trim(str) {
-	return str.trim();
+	if(typeof str =='string'){
+		return str.trim();
+	}else{
+		return str;
+	}
 }
 /** get request parameter by name **/
 function getReqParamByName(url, name) {
@@ -2155,3 +2364,66 @@ function getLoginCheckCode() {
 
 	return ""+checkCode;
 }
+
+
+// 说明：文本框(input)获取焦点(onfocus)时样式改变的实现方法 
+// focusClass : 获取焦点时的样式 
+// normalClass : 正常状态下的样式
+function focusInput(focusClass,normalClass) {	
+	 var elements = document.getElementsByTagName("INPUT");
+	 for (var i=0; i < elements.length; i++) {        
+		 	if (elements[i].type != "button" && elements[i].type != "submit" && elements[i].type != "reset" && elements[i].type != "radio" && elements[i].type != "checkbox") {
+ 		 	  elements[i].onfocus = function() { 
+				  this.className = currClass+' '+focusClass;
+			  };             
+			  elements[i].onblur = function() { 
+				  this.className = currClass; 
+			  };         
+		   }     
+	   }	   
+ }
+ //SELECT
+function focusSelect(focusClass, normalClass) {	
+	 var elements = document.getElementsByTagName("SELECT");
+	 for (var i=0; i < elements.length; i++) {                    
+		  elements[i].onfocus = function() { 
+			  this.className = this.className+' '+focusClass;
+		  };             
+		  elements[i].onblur = function() { 
+			  this.className = normalClass; 
+		  };         
+	   }	   
+ }
+ //Textarea
+ function focusTextarea(focusClass, normalClass) {	
+	 var elements = document.getElementsByTagName("TEXTAREA");
+	 for (var i=0; i < elements.length; i++) {                    
+		  elements[i].onfocus = function() { 
+			  this.className = this.className+' '+focusClass;
+		  };             
+		  elements[i].onblur = function() { 
+			  this.className = normalClass; 
+		  };         
+	   }	   
+ };
+ /*屏蔽Backspace，输入内容不屏蔽 add by zhangyangshuo*/
+document.onkeydown = function()  { 
+    if(
+    	(window.event.altKey && (window.event.keyCode == 37 || window.event.keyCode == 39||window.event.keyCode == 115)) //屏蔽 Alt+ 方向键 ←  →   Alt+F4  
+      ||(window.event.ctrlKey && (window.event.keyCode == 82||window.event.keyCode == 78||window.event.keyCode == 121))//Ctrl + r  Ctrl+n Ctrl+F10
+      ||(window.event.keyCode == 116 || window.event.keyCode == 112)//屏蔽 F5、F1
+      ||(window.event.srcElement.tagName == "A" && window.event.shiftKey)//屏蔽 shift 加鼠标左键新开一网页
+      ||(((document.activeElement.type != "text"&&document.activeElement.type !="textarea"&&document.activeElement.type !="password")
+      ||((document.activeElement.type == "text"||document.activeElement.type =="textarea"||document.activeElement.type =="password")
+         &&document.activeElement.readOnly))&&(window.event.keyCode==8))//屏蔽退格删除键
+     )
+    {  
+    	event.keyCode = 0;　
+        event.returnValue = false;
+    }
+}
+
+function closeOnEsc(){
+	
+}
+
