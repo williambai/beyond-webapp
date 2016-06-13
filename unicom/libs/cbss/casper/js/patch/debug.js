@@ -49,4 +49,14 @@ console.log('\n\n========debug pre begin ========\n');
 // 	console.log('=-------5------=')
 // 	//ajaxSubmit(this, 'getOrderResInfos', param, 'refeshMoney');
 // }
+// 
+// 
+// console.log(Cs.ctrl.Web.init)
+// console.log(Cs.ctrl.Trade.QueryTrade)
+// console.log(Cs.util.XML)
+// console.log(Cs.util.XML.prototype.loadXML)
+// var xml = new Cs.util.XML();
+// console.log(xml)
+// console.log(xml.loadXML)
+
 console.log('\n\n========debug pre end ========\n');

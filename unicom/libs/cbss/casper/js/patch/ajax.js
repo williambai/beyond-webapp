@@ -75,6 +75,7 @@ Ajax.Request.prototype.request = function(url) {
 
     this.body = this.method == 'post' ? (this.options.postBody || params) : null;
     console.log('\n\n========request body begin ========\n');
+    console.log(this.url + '\n\n');
     console.log(this.body)
     console.log('\n\n========request body end ========\n');
     this.transport.send(this.body);

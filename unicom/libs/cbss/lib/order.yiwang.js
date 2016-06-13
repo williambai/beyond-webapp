@@ -68,7 +68,7 @@ module.exports = exports = function(options, done){
 	child.on('close', function(code){
 		if(code != 0) return done('order.yiwang.casper.js 非正常退出 code: ' + code);
 		var data = trunks.join('').toString().replace(/\n/g,'');
-		logger.debug('流量订购程序返回内容: ' + data);
+		// logger.debug('流量订购程序返回内容: ' + data);
 		var responseJson = (data.match(/<response>(.*?)<\/response>/) || [])[1];
 		var response = {};
 		try{

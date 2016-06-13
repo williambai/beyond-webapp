@@ -18,12 +18,24 @@ var casper = require('casper').create({
 	logLevel: "debug",
 	verbose: true,
 });
-casper.on('resource.received',function(resource){
-	// console.log('resource: ' + resource.url);
-	if(!/\.(js|css|gif|jpg|png)$/.test(resource.url)){
-		fs.write(tempdir + '/' + staffId + '_yiwang_request.txt', '['+ resource.id + '] '+ resource.url + ': ' + JSON.stringify(resource) + '\n', 'a');
+
+casper.on('resource.requested',function(resource){
+	if(!/\.(css|gif|png|jpg)$/.test(resource.url)){
+		if(true) fs.write(tempdir + '/' + staffId + '_yiwang_request.txt', '['+ resource.id + '] '+ resource.url + ': ' + JSON.stringify(resource) + '\n', 'a');
 	}
 });
+
+casper.on('resource.error',function(resource){
+	if(true) fs.write(tempdir + '/' + staffId + '_yiwang_resource_error.txt', resource.url,'a');
+});
+
+casper.on('remote.message', function(message){
+	if(true) fs.write(tempdir + '/' + staffId + '_yiwang_remote_message.txt', message,'a');
+});
+casper.on('remote.alert', function(message){
+	if(true) fs.write(tempdir + '/' + staffId + '_yiwang_remote_message.txt', message,'a');
+});
+
 
 phantom.cookiesEnabled = true;
 
