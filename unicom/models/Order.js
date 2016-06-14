@@ -458,6 +458,8 @@ module.exports = exports = function(connection){
 								if(err) console.log(err);
 								//** 将状态改为“成功”或“失败”
 								result = result || {};
+								//** 如果不是登陆状态
+								if(!result.login) return done(null,{logout: true});
 								var RespCode = result.code || '88';
 								var RespDesc = (result.status || '') + (result.message || '未知错误');
 								var EffectTime = '';

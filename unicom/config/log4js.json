@@ -35,6 +35,12 @@
 		"category": ["startup/bssService.js"]
 	}, {
 		"type": "file",
+		"filename": "logs/cbss.log",
+		"maxLogSize": 20480,
+		"backups": 3,
+		"category": ["startup/cbssService.js","libs/cbss/lib/login.js","libs/cbss/lib/cookie.js","libs/cbss/lib/order.flux.js"]
+	}, {
+		"type": "file",
 		"filename": "logs/sms.log",
 		"maxLogSize": 20480,
 		"backups": 3,

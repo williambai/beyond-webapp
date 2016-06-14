@@ -60,7 +60,7 @@ var login = function(options){
 						logger.error(err);
 						setTimeout(function(){
 							login(options);
-						},50);
+						},5000);
 						return;
 					}
 					logger.info('refresh 4G Account cookie peroid job successfully.');
@@ -72,12 +72,15 @@ var login = function(options){
 		setTimeout(refreshCookieJob,420000);
 		//** 定时处理 4G 订单处理,每过7秒钟检查一次订单
 		var processOrderJob = function(){
-				models.Order.process4G(account, function(err) {
+				models.Order.process4G(account, function(err,result) {
 					if (err){
 						logger.error(err);
+					}
+					result = result || {};
+					if(result.logout){
 						setTimeout(function(){
 							login(options);
-						},50);
+						},5000);
 						return;
 					}
 					logger.info('call 4G Order peroid job successfully.');
