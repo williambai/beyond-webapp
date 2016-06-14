@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var mongooseToCsv = require('mongoose-to-csv');
 var CSV = require('comma-separated-values');
 var async = require('async');
+var path = require('path');
 var utils = require('../libs/utils');
 //** SP配置文件
 var spConfig = require('../config/sp').SGIP12;
@@ -10,6 +11,7 @@ var async = require('async');
 var BSS = require('../libs/bss_gz');//** 贵州联通BSS系统
 var CBSS = require('../libs/cbss');//** 联通CBSS系统
 var bssConfig = require('../config/bss');
+var cbssConfig = require('../config/cbss');
 
 var schema = new mongoose.Schema({
 	customer: { //** 客户
@@ -395,7 +397,113 @@ module.exports = exports = function(connection){
 	 * @return {[type]}           [description]
 	 */
 	schema.statics.process4G = function(options, done){
-		done(null);
+		//** 处理4G订单的账号，分城市
+		var staffAccount = options;
+		//** 处理程序的城市名称，仅处理该城市的订单
+		var city = staffAccount.city || '贵阳';
+		var cityRegex = new RegExp(city);
+		var Order = connection.model('Order');
+		var PlatformSms = connection.model('PlatformSms');
+		var _process = function(){
+				//** find the order
+				Order
+					.findOneAndUpdate({
+						'goods.category': {
+							$in: ['4G'],
+						},
+						'department.city': {
+							$regex: cityRegex,
+						},
+						'status': '已确认',
+					}, {
+						$set: {
+							status: '已处理',
+						}
+					}, {
+						'upsert': false,
+						'new': true,
+					}, function(err, order) {
+						if (err || !order) return done(err);
+						var productName  = order.goods.name || '';
+						var productPrice = order.goods.price;
+						var productBarcode = order.goods.barcode;
+						var productZk = 100; //** 原价
+						if(/五折/.test(productName)){
+							productName = productName.replace('[五折]','');
+							productZk = 50;
+						}else if(/六折/.test(productName)){
+							productName = productName.replace('[六折]','');
+							productZk = 60;
+						}
+						//** process 4G order
+						if(productBarcode == '3001_100_1024_0' || //** 全国流量包(100元/1G)
+							productBarcode == '3001_200_3072_0' || //** 全国流量半年包(200元/3G)
+							productBarcode == '3001_50_500_0' || //** 全国流量包(50元/500M)
+							productBarcode == '3002_100_1536_0'){ //** 省内流量包(100元/1.5G)
+							//** 第一部分：账务管理，流量包资源订购
+							CBSS.orderFlux({
+								cwd: path.resolve(__dirname,'..'),//** 当前工作路径
+								tempdir: './_tmp',
+								release: staffAccont.release,//** 是否是产品环境
+								staffId: staffAccount.staffId,//** 工号
+								phone: order.customer.mobile,//** 订购业务的客户手机号码
+								product: {
+									name: productName,
+									price: productPrice,
+									barcode: productBarcode,
+									zk: productZk,
+								}
+							},function(err, result){
+								//** CBSS 接口返回错误
+								if(err) console.log(err);
+								//** 将状态改为“成功”或“失败”
+								result = result || {};
+								var RespCode = result.code || '88';
+								var RespDesc = (result.status || '') + (result.message || '未知错误');
+								var EffectTime = '';
+								var status = (RespCode == 200) ? '成功' : '失败';
+								Order.findByIdAndUpdate(
+									order._id,
+									{
+										$set: {
+											status: status
+										},
+										$push: {
+											'histories':  {
+												respCode: RespCode,
+												respDesc: RespDesc,
+												effectTime: EffectTime,
+												respTime: new Date(),
+											}
+										}
+									}, {
+										'upsert': false,
+										'new': true,
+									}, function(err){
+										if(err) return done(err);
+										//** 发送业务“处理成功”或“处理失败短信”短信
+										//** 尊敬的用户您好，您订购的（产品名称）系统已受理，请耐心等待，订购结果将短信告知。
+										var sms = {};
+										//** sms业务代码部分
+										sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
+										sms.receiver = order.customer.mobile;
+										sms.content = (status == '成功'  
+												? '恭喜您，您订购的(' + order.goods.name + ')已订购成功。' 
+												: '(' + order.goods.name + ')订购失败，详情请咨询10010，或到就近营业厅咨询办理。');
+										sms.status = '新建';
+										PlatformSms
+											.create(sms, function(err){
+												if(err) return done(err);
+												//** 处理下一个
+												_process();
+											});
+									});
+							});
+						}
+					});
+			};
+		//** 启动第一个
+		_process();
 	};
 
 	/**

@@ -16,7 +16,7 @@ var casper = require('casper').create({
 	},
 	timeout: 120000,
 	waitTimeout: 10000,
-	logLevel: "debug",
+	// logLevel: "debug",
 	verbose: true
 });
 
@@ -34,14 +34,14 @@ var account = {
 
 //load cookie
 var cookie_file = tempdir + '/' + account.username + '_cookie.txt';
-// if(fs.exists(cookie_file)){
-// 	var data = fs.read(cookie_file) || "[]";
-// 	try {
-// 		phantom.cookies = JSON.parse(data);
-// 	} catch (e) {
-// 	}
-// 	// console.log(JSON.stringify(phantom.cookies));
-// }
+if(fs.exists(cookie_file)){
+	var data = fs.read(cookie_file) || "[]";
+	try {
+		phantom.cookies = JSON.parse(data);
+	} catch (e) {
+	}
+	// console.log(JSON.stringify(phantom.cookies));
+}
 
 //** captcha
 var verifyCode = '';
@@ -72,14 +72,18 @@ casper.then(function checkLogin(){
 	if(homePageMeta){
 		//** 已登录
 	    response.login = true;
+	    response.code = 200;
 		// response.meta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
-		response.status = '已登录';
+		response.status = 'ok';
+		response.message = '已登录';
 		casper.echo('<response>' + JSON.stringify(response) + '</response>');
 		casper.exit(0);
 		casper.bypass(99);
 	}else{
 		//** 未登录
-		response.status = '未登录';
+		response.status = 'error';
+	    response.code = 40100;
+		response.message = '未登录';
 	}
 });
 
@@ -214,12 +218,16 @@ casper.then(function saveHomePageMeta(){
 	if(homePageMeta['provinceid']){
 		//** 已登录
 	    response.login = true;
+	    response.code = 200;
+	    response.status = 'ok';
 	    response.message = '登录页参数获取成功！';
-	    response.meta = homePageMeta;
+	    // response.meta = homePageMeta;
 		fs.write(tempdir + '/' + account.username + '_homeMeta.txt', JSON.stringify(homePageMeta), 644);
 	}else{
 		//** 未登录
 	    response.login = false;
+	    response.code = 40120;
+	    response.status = 'error';
 	    response.message = '登录页参数获取失败！';
 	}
 });

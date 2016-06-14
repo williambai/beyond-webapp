@@ -17,7 +17,7 @@ var casper = require('casper').create({
 		loadPlugins: false
 	},
 	timeout: 100000,
-	logLevel: "debug",
+	// logLevel: "debug",
 	verbose: true
 });
 
@@ -69,12 +69,16 @@ casper.then(function checkLogin(){
 	if(homePageMeta){
 		//** 已登录
 	    response.login = true;
-		response.status = '已登录';
+	    response.code = 200;
+		response.status = 'ok';
+		response.message = '已登录';
 		// response.meta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
 	}else{
 		//** 未登录
 	    response.login = false;
-		response.status = '未登录';
+	    response.code = 40130;
+		response.status = 'error';
+		response.message =  '未登录';
 	}
 });
 

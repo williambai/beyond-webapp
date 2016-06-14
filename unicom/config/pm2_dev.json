@@ -59,6 +59,20 @@
 			"ignore_watch": [
 				"./libs/bss_gz/test"
 			]
+		},{
+			"name": "CbssService",
+			"script": "./startup/cbssService.js",
+			"args": "guiyang",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/unicom/",
+			"watch": [
+				"startup/cbssService.js",
+				"models",
+				"routes",
+				"libs/cbss"
+			],
+			"ignore_watch": [
+				"./libs/cbss/test"
+			]
 		}
 	]
 }

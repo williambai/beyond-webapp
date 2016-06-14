@@ -115,7 +115,7 @@ schema.statics.refreshCookie = function(options, done){
 		if(err) return done(err);
 		//** { meta: [ '<meta id="pagecontext" pagename="Nav" productmode="true" staffid="B90WZSLP" staffname="李奇" deptid="85b26xf" deptcode="85b26xf" deptname="沃助手六盘水运营渠道" cityid="0858" cityname="六盘水" areacode="0858" areaname="六盘水" epachyid="0858" epachyname="六盘水" loginepachyid="0858" version="BSS2PLUS" provinceid="85" subsyscode="BSS" contextname="essframe" logincheckcode="201605308524341354" loginprovinceid="85">' ], status: '已登录' }
 		logger.debug(options.staffId + ' refreshCookie response: ' + JSON.stringify(response));
-		if(response.status == '已登录'){
+		if(response.login){
 			//** 在登录状态
 			logger.info(options.staffId + '在登录状态。');
 			done(null,true);

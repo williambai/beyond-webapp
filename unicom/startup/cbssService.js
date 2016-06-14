@@ -11,7 +11,7 @@ var net = require('net');
 var request = require('request');
 var config = {
 	db: require('../config/db'),
-	cbss: require('../config/cbss_1'),
+	cbss: require('../config/cbss'),
 };
 //** logger packages
 var log4js = require('log4js');

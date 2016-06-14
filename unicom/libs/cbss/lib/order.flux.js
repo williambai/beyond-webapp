@@ -16,11 +16,13 @@ module.exports = exports = function(options, done){
 				'../casper/order.flux.casper.js',
 				'--ignore-ssl-errors=true',
 				'--tempdir=' + path.resolve(options['cwd'], options['tempdir']),
+				'--release=' + (options['release'] || false), //** 默认按开发模式运行
 				'--staffId=' + options.staffId,
 				'--phone=' + options.phone,
 				'--prod_name=' + options.product.name,
 				'--prod_price=' + options.product.price,
 				'--prod_code=' + options.product.barcode,
+				'--prod_zk=' + (options.product.zk || 100), //** 折扣 如 100,50
 			],{
 				cwd: __dirname,
 			}

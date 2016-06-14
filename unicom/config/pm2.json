@@ -16,6 +16,11 @@
 			"name": "BssService",
 			"script": "./startup/bssService.js",
 			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/unicom/"
+		},{
+			"name": "CbssService_guiyang",
+			"script": "./startup/cbssService.js",
+			"args": "guiyang",
+			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/unicom/"
 		}
 	]
 }

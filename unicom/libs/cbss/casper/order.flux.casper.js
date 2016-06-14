@@ -3,7 +3,6 @@
  * 
  * > casperjs order.flux.test.casper.js --ignore-ssl-errors=true 
  */
-var outputDebug = true;
 var RegexUtils = require('../lib/util.js');
 var fs = require('fs');
 var system = require('system');
@@ -23,19 +22,25 @@ var casper = require('casper').create({
 
 casper.on('resource.requested',function(resource){
 	if(!/\.(css|gif|png|jpg)$/.test(resource.url)){
-		if(true) fs.write(tempdir + '/' + staffId + '_flux_request.txt', '['+ resource.id + '] '+ resource.url + ': ' + JSON.stringify(resource) + '\n', 'a');
+		if(devMode) fs.write(tempdir + '/' + staffId + '_flux_request.txt', '['+ resource.id + '] '+ resource.url + ': ' + JSON.stringify(resource) + '\n', 'a');
 	}
 });
 
 casper.on('resource.error',function(resource){
-	if(true) fs.write(tempdir + '/' + staffId + '_flux_resource_error.txt', resource.url,'a');
+	if(devMode) fs.write(tempdir + '/' + staffId + '_flux_resource_error.txt', resource.url,'a');
 });
 
 casper.on('remote.message', function(message){
-	if(true) fs.write(tempdir + '/' + staffId + '_flux_remote_message.txt', message,'a');
+	if(devMode) fs.write(tempdir + '/' + staffId + '_flux_remote_message.txt', message,'a');
 });
 casper.on('remote.alert', function(message){
-	if(true) fs.write(tempdir + '/' + staffId + '_flux_remote_message.txt', message,'a');
+	if(deveMode) fs.write(tempdir + '/' + staffId + '_flux_remote_message.txt', message,'a');
+	response.code = 40501;
+	response.status = 'alert';
+	response.message = message;
+	casper.echo('<response>' + JSON.stringify(response) + '</response>');
+	casper.exit(0);
+	casper.bypass(99);
 });
 
 phantom.cookiesEnabled = true;
@@ -44,6 +49,8 @@ phantom.cookiesEnabled = true;
 console.log(JSON.stringify(casper.cli.options));
 var debug = casper.cli.options['debug'] || false;
 var tempdir = casper.cli.options['tempdir'] || './_tmp';
+//** 是否是开发模式
+var devMode = (!!casper.cli.options['release'] || casper.cli.options['release'] == 'true') ? false : true; //** 是否是开发模式
 
 var staffId = casper.cli.options['staffId'] || '';
 
@@ -53,6 +60,7 @@ var order = {
 		name: casper.cli.options['prod_name'] || '',
 		price: casper.cli.options['prod_price'] || '',
 		resourceTag: casper.cli.options['prod_code'] || '',
+		zk: casper.cli.options['prod_zk'] || 100,
 	},
 };
 
@@ -131,11 +139,13 @@ casper.then(function nav(){
 		if(homePageMeta){
 			//** 已登录
 		    response.login = true;
-			response.status = '已登录';
+			response.status = 'login';
+			response.message = '已登录';
 		}else{
 			//** 未登录
 		    response.login = false;
-			response.status = '未登录';
+			response.status = 'logout';
+			response.message = '未登录';
 			casper.echo('<response>' + JSON.stringify(response) + '</response>');
 			casper.exit(0);
 			casper.bypass(99);
@@ -149,8 +159,8 @@ casper.then(function nav(){
 		var resourceUrl = resourceUrlMatched[1] || '';
 		resourceUrl = resourceUrl.replace(/&amp;/g,'&');
 		urls.resourceUrl = resourceUrl;
-		if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_frameNav.html', navHtml, 644);
-		if(outputDebug) casper.capture(tempdir + '/' + staffId + '_flux_frameNav.jpg');
+		if(devMode) fs.write(tempdir + '/' + staffId + '_flux_frameNav.html', navHtml, 644);
+		if(devMode) casper.capture(tempdir + '/' + staffId + '_flux_frameNav.jpg');
 	});
 });
 
@@ -175,11 +185,14 @@ casper.then(function sideBar(){
 	});
 	casper.then(function parserSideBarHtml(){
 			var sideBarHtml = this.getHTML();
-			if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_frameSidebar.html', sideBarHtml, 644);
+			if(devMode) fs.write(tempdir + '/' + staffId + '_flux_frameSidebar.html', sideBarHtml, 644);
 			var custUrlMatched = RegexUtils.regexMatch(/menuaddr="(.+?)"/i, sideBarHtml) || [];
 			if(custUrlMatched[1] == undefined){
-				rspcasper.status = '没取到url，用户认证异常';		
-				this.exit(0);
+				response.code = 40100;
+				response.status = 'error';
+				response.message = '没取到url，用户认证异常';
+				casper.echo('<response>' + JSON.stringify(response) + '</response>');
+				casper.exit(0);
 				casper.bypass(99);
 				return;
 			}
@@ -216,7 +229,7 @@ casper.then(function custAuthMain(){
     casper.then(function parseCustAuthMainHtml(){
     	//** 客户统一认证
     	var custAuthMainHtml = this.getHTML();
-    	if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_custAuthMain.html', custAuthMainHtml, 644);
+    	if(devMode) fs.write(tempdir + '/' + staffId + '_flux_custAuthMain.html', custAuthMainHtml, 644);
     });
 });
 
@@ -248,8 +261,8 @@ casper.then(function acctmanm(){
 
 	casper.then(function parseAcctmanmHtml(){
 		var acctmanmHtml = this.getHTML();
-		if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_acctmanm.html', acctmanmHtml, 644);
-		if(outputDebug) casper.capture(tempdir + '/' + staffId + '_flux_acctmanm.jpg');
+		if(devMode) fs.write(tempdir + '/' + staffId + '_flux_acctmanm.html', acctmanmHtml, 644);
+		if(devMode) casper.capture(tempdir + '/' + staffId + '_flux_acctmanm.jpg');
 	});
 });
 
@@ -263,12 +276,7 @@ casper.then(function updateAcctmanm(){
 	//** 通过号码获取用户已办理资源包和可办理资源包
 	casper.then(function postAcctmanmForm(){
 		casper.thenEvaluate(function(phone){
-			// document.querySelector('form[name="Form0"]').setAttribute('action','http://localhost:9200');
-			// document.querySelector('input[name=bquerytop]').setAttribute('value', ' 查询 ');
 			document.querySelector('input[name=cond_SERIAL_NUMBER]').setAttribute('value', phone);
-			// document.querySelector('select[name="cond_NET_TYPE_CODE"]').setAttribute('value','4G');
-			// document.querySelector('input[name="bquerytop"]').setAttribute('onclick','');
-			// __utils__.click('input[name="bquerytop"]');
 		},order.phone);
 
 		casper.then(function(){
@@ -276,6 +284,23 @@ casper.then(function updateAcctmanm(){
 				__utils__.click('input[name="bquerytop"]');
 			});
 		});
+	});
+
+	casper.then(function getAcctmanmSearch(){
+		var resourceHtml = this.getHTML();
+		//** 用户不能订购
+		var content = RegexUtils.regexMatch(/<div class="content">(.+?)<\/div>/i, resourceHtml) || [];
+		if(content[1] && content[1].length > 0){
+			if(devMode) fs.write(tempdir + '/' + staffId + '_flux_acctmanmUpdatedError.html', resourceHtml, 644);
+			if(devMode) casper.capture(tempdir + '/' + staffId + '_flux_acctmanmUpdatedError.jpg');
+			response.code = 40400;
+			response.status = 'error';
+			response.message = '用户不存在或不能订购: ' + content[1];
+			casper.echo('<response>' + JSON.stringify(response) + '</response>');
+			casper.exit(0);
+			casper.bypass(99);
+			return;
+		}
 	});
 
 	casper.then(function patchScipts(){
@@ -298,23 +323,14 @@ casper.then(function updateAcctmanm(){
 	casper.then(function parseUpdatedAcctmanmHtml(){
 		var resourceHtml = this.getHTML();
 		casper.then(function judge(){
-			//** 用户不能订购
-			var content = RegexUtils.regexMatch(/<div class="content">(.+?)<\/div>/i, resourceHtml) || [];
-			if(content[1] && content[1].length > 0){
-				response.status = '用户不能订购';
-				response.content = content[1];
-				casper.echo('<response>' + JSON.stringify(response) + '</response>');
-				casper.exit(0);
-				casper.bypass(99);
-				return;
-			}
 			//** 获得已订购列表
 			var resourceListTable = resourceHtml.match(/<table id="QryOrderGprsResTable">.*?<\/table>/i) || '';
-			if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_resourceList.txt', JSON.stringify(resourceListTable), 644);
+			if(devMode) fs.write(tempdir + '/' + staffId + '_flux_resourceList.txt', JSON.stringify(resourceListTable), 644);
 			//** 判断用户是否有正在处理的业务
 			if(/处理中/.test(resourceListTable)){
-				response.status = '用户有业务尚在处理中';
-				response.content = JSON.stringify(resource);
+				response.code = 40101;
+				response.status = 'error';
+				response.message = '用户有业务尚在处理中，稍后再尝试: ' + JSON.stringify(resource);
 				casper.echo('<response>' + JSON.stringify(response) + '</response>');
 				casper.exit(0);
 				casper.bypass(99);
@@ -323,12 +339,12 @@ casper.then(function updateAcctmanm(){
 							// //** 获得已订购列表
 							// //TODO ?
 							// var resourceList = RegexUtils.extractResourceInfo(resourceHtml) || [];
-							// if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_resourceList.txt', JSON.stringify(resourceList), 644);
+							// if(devMode) fs.write(tempdir + '/' + staffId + '_flux_resourceList.txt', JSON.stringify(resourceList), 644);
 							// //** 是否有正在“处理中”的业务
 							// resourceList.forEach(function(resource){
 							// 	if(/处理中/.test(resource.dealTag)){
 							// 		response.status = '用户有业务尚在处理中';
-							// 		response.content = JSON.stringify(resource);
+							// 		response.message = JSON.stringify(resource);
 							// 		casper.echo('<response>' + JSON.stringify(response) + '</response>');
 							// 		casper.exit(0);
 							// 		casper.bypass(99);
@@ -337,7 +353,7 @@ casper.then(function updateAcctmanm(){
 
 			//** 分析可选择流量包，判断产品是否存在
 			resTableList = RegexUtils.extractResTableInfo(resourceHtml) || [];
-			if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_resourceTableList.txt', JSON.stringify(resTableList), 644);
+			if(devMode) fs.write(tempdir + '/' + staffId + '_flux_resourceTableList.txt', JSON.stringify(resTableList), 644);
 			var product;
 			resTableList.forEach(function(res){
 				if(res.resourceTag == order.product.resourceTag 
@@ -347,23 +363,27 @@ casper.then(function updateAcctmanm(){
 			if(!(product 
 					&& product.resourceTag == order.product.resourceTag 
 					&& product.money == order.product.price)){
-				response.status = '产品不存在';
+				response.code = 40102;
+				response.status = 'error';
+				response.message =  '产品不存在';
 				casper.echo('<response>' + JSON.stringify(response) + '</response>');
 				casper.exit(0);
 				casper.bypass(99);
 				return;
 			}
 			xCodingString = RegexUtils.getXcodingString(resTableList);
-			if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_xcodingString.txt', JSON.stringify(xCodingString), 644);
+			if(devMode) fs.write(tempdir + '/' + staffId + '_flux_xcodingString.txt', JSON.stringify(xCodingString), 644);
 			//** 分析表单参数，根据余额判断用户是否可以订购
 			resourceParam = RegexUtils.getResourceParam(resourceHtml) || {};
-			if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_resourceParam.txt', JSON.stringify(resourceParam), 644);
+			if(devMode) fs.write(tempdir + '/' + staffId + '_flux_resourceParam.txt', JSON.stringify(resourceParam), 644);
 			//** 信用额度
 			var creditMoney = parseFloat(resourceParam.cond_CREDIT_VALUE) || 0;
 			//** 话费余额
 			var dePostMoney = parseFloat(resourceParam.cond_DEPOSIT_MONEY) || 0;
 			if( creditMoney + dePostMoney < parseFloat(order.product.price)){
-				response.status = '用户余额不足';
+				response.code = 40103;
+				response.status = 'error';
+				response.message = '用户余额不足';
 				casper.echo('<response>' + JSON.stringify(response) + '</response>');
 				casper.exit(0);
 				casper.bypass(99);
@@ -372,7 +392,7 @@ casper.then(function updateAcctmanm(){
 
 		});
 
-		casper.then(function(){
+		casper.then(function patch(){
 			casper.evaluate(function patchXCodingStrId(){
 				//** 设置 id=X_CODING_STR 补丁
 				document.querySelector('input[name="X_CODING_STR"]').setAttribute('id','X_CODING_STR');
@@ -383,8 +403,8 @@ casper.then(function updateAcctmanm(){
 			casper.evaluate(function(resourceTag){
 				var select = document.querySelector('select[name="data_RESOURCE_TAG"]');
 				select.value = resourceTag;
-				var event = document.createEvent("UIEvents"); // See update below
-				event.initUIEvent("change", true, true);      // See update below
+				var event = document.createEvent("UIEvents"); 
+				event.initUIEvent("change", true, true);      
 				select.dispatchEvent(event);
 			}, order.product.resourceTag);
 		});
@@ -394,7 +414,7 @@ casper.then(function updateAcctmanm(){
 		// 	   'data_RESOURCE_TAG': order.product.resourceTag,
 		// 	});
 		// });
-		var resourceZK = '100';
+
 		casper.waitFor(function checkResourceZKReady(){
 			return casper.evaluate(function(){
 				var select = document.querySelector('select[name="data_RESOURCE_ZK"]');
@@ -410,7 +430,7 @@ casper.then(function updateAcctmanm(){
 				var event = document.createEvent('UIEvents');
 				event.initUIEvent('change',true,true);
 				select.dispatchEvent(event);
-			},resourceZK);
+			},order.product.zk);
 		});
 
 		// casper.then(function fillResourceZK() {
@@ -422,10 +442,10 @@ casper.then(function updateAcctmanm(){
 		casper.wait(5000);
 		casper.then(function review(){
 			var resourceHtml = this.getHTML();
-			console.log('+++++')
-			require('utils').dump(this.getElementInfo('#data_RESOURCE_ZK'));
-			if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_acctmanmUpdated.html', resourceHtml, 644);
-			if(outputDebug) casper.capture(tempdir + '/' + staffId + '_flux_acctmanmUpdated.jpg');
+			// console.log('+++++')
+			// require('utils').dump(this.getElementInfo('#data_RESOURCE_ZK'));
+			if(devMode) fs.write(tempdir + '/' + staffId + '_flux_acctmanmUpdated.html', resourceHtml, 644);
+			if(devMode) casper.capture(tempdir + '/' + staffId + '_flux_acctmanmUpdated.jpg');
 		});
 	});
 });
@@ -433,9 +453,11 @@ casper.then(function updateAcctmanm(){
 casper.then(function submit(){
 	//** 开发阶段，设置提交到测试地址。
 	//注意：正式上线时，注释掉该流程
-	casper.evaluate(function setDevelopmentUrl(){
-		document.querySelector('form[name="Form0"]').setAttribute('action','http://localhost:9200/post');
-	});
+	if(devMode){
+		casper.evaluate(function setDevelopmentUrl(){
+			document.querySelector('form[name="Form0"]').setAttribute('action','http://localhost:9200/post');
+		});
+	}
 	//** 提交表单
 	casper.then(function clickSubmit(){
 		casper.evaluate(function(){
@@ -447,17 +469,18 @@ casper.then(function submit(){
 
 casper.then(function getSubmitResult(){
 	var contentHtml = this.getHTML();
-	if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_acctmanResult.html', contentHtml, 644);
-	if(outputDebug) casper.capture(tempdir + '/' + staffId + '_flux_acctmanResult.jpg');
+	if(devMode) fs.write(tempdir + '/' + staffId + '_flux_acctmanResult.html', contentHtml, 644);
+	if(devMode) casper.capture(tempdir + '/' + staffId + '_flux_acctmanResult.jpg');
 
 	var content = contentHtml.match(/.*<div class="content">(.+?)<\/div>.*/i) || [];
-	if(outputDebug) fs.write(tempdir + '/' + staffId + '_submit_result.html', contentHtml, 644);
 	if(/成功/.test(content[1] || '')){
-		response.status = '成功';
-		response.content = content[1] || '';
+		response.code = 200;
+		response.status = 'ok';
+		response.message = '成功: ' + (content[1] || '');
 	}else{
-		response.status = '失败';
-		response.content = content[1] || '';
+		response.code = 40500;
+		response.status = 'error';
+		response.message = '失败: ' + (content[1] || '');
 	}
 });
 
@@ -472,7 +495,7 @@ casper.run(function(){
 // casper.then(function saveCookie(){
 // 	var cookies = JSON.stringify(phantom.cookies);
 // 	// this.echo(JSON.stringify(phantom.cookies));
-// 	if(outputDebug) fs.write(tempdir + '/_cookie.txt', cookies, 644);
+// 	if(devMode) fs.write(tempdir + '/_cookie.txt', cookies, 644);
 // });
 
 //** 到达账务管理，流量包资源订购页面 模式二
@@ -497,8 +520,8 @@ casper.run(function(){
 // 	});
 // 	casper.withFrame('chkcustframe', function parseAcctmanmHtml(){
 // 		var acctmanmHtml = this.getHTML();
-// 		if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_acctmanm.html', acctmanmHtml, 644);
-// 		if(outputDebug) casper.capture(tempdir + '/' + staffId + '_acctmanm.jpg');
+// 		if(devMode) fs.write(tempdir + '/' + staffId + '_flux_acctmanm.html', acctmanmHtml, 644);
+// 		if(devMode) casper.capture(tempdir + '/' + staffId + '_acctmanm.jpg');
 // 		console.log('+++++++')
 // 		console.log('cookies: ' + JSON.stringify(phantom.cookies));
 // 	});
@@ -535,15 +558,15 @@ casper.run(function(){
 // 		casper.then(function parseUpdatedAcctmanmHtml(){
 // 			casper.withFrame('chkcustframe',function(){
 // 				var resourceHtml = this.getHTML();
-// 				if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_acctmanm_updated.html', resourceHtml, 644);
-// 				if(outputDebug) casper.capture(tempdir + '/' + staffId + '_acctmanm_updated.jpg');
+// 				if(devMode) fs.write(tempdir + '/' + staffId + '_flux_acctmanm_updated.html', resourceHtml, 644);
+// 				if(devMode) casper.capture(tempdir + '/' + staffId + '_acctmanm_updated.jpg');
 
 // 				//** 用户不能订购
 // 				//TODO ?
 // 				var content = RegexUtils.regexMatch(/<div class="content">(.+?)<\/div>/i, resourceHtml) || [];
 // 				if(content[1] && content[1].length > 0){
 // 					response.status = '用户不能订购';
-// 					response.content = content[1];
+// 					response.message = content[1];
 // 					casper.echo('<response>' + JSON.stringify(response) + '</response>');
 // 					casper.exit(0);
 // 					casper.bypass(99);
@@ -552,12 +575,12 @@ casper.run(function(){
 // 				//** 获得已订购列表
 // 				//TODO ?
 // 				var resourceList = RegexUtils.extractResourceInfo(resourceHtml) || [];
-// 				if(outputDebug) fs.write(tempdir + '/' + staffId + '_resource_list.txt', JSON.stringify(resourceList), 644);
+// 				if(devMode) fs.write(tempdir + '/' + staffId + '_resource_list.txt', JSON.stringify(resourceList), 644);
 // 				//** 是否有正在“处理中”的业务
 // 				resourceList.forEach(function(resource){
 // 					if(/处理中/.test(resource.dealTag)){
 // 						response.status = '用户有业务尚在处理中';
-// 						response.content = JSON.stringify(resource);
+// 						response.message = JSON.stringify(resource);
 // 						casper.echo('<response>' + JSON.stringify(response) + '</response>');
 // 						casper.exit(0);
 // 						casper.bypass(99);
@@ -565,12 +588,12 @@ casper.run(function(){
 // 				});
 // 				//** 可选择流量包
 // 				resTableList = RegexUtils.extractResTableInfo(resourceHtml) || [];
-// 				if(outputDebug) fs.write(tempdir + '/' + staffId + '_resource_table_list.txt', JSON.stringify(resTableList), 644);
+// 				if(devMode) fs.write(tempdir + '/' + staffId + '_resource_table_list.txt', JSON.stringify(resTableList), 644);
 // 				//** form表单参数
 // 				resourceParam = RegexUtils.getResourceParam(resourceHtml) || {};
-// 				if(outputDebug) fs.write(tempdir + '/' + staffId + '_resource_param.txt', JSON.stringify(resourceParam), 644);
+// 				if(devMode) fs.write(tempdir + '/' + staffId + '_resource_param.txt', JSON.stringify(resourceParam), 644);
 // 				xCodingString = RegexUtils.getXcodingString(resTableList);
-// 				if(outputDebug) fs.write(tempdir + '/' + staffId + '_xcoding_string.txt', JSON.stringify(xCodingString), 644);
+// 				if(devMode) fs.write(tempdir + '/' + staffId + '_xcoding_string.txt', JSON.stringify(xCodingString), 644);
 // 				//** 信用额度
 // 				var creditMoney = parseFloat(resourceParam.cond_CREDIT_VALUE) || 0;
 // 				//** 话费余额
@@ -613,7 +636,7 @@ casper.run(function(){
 // 	});
 // 	casper.then(function checkLogin(){
 // 		var navHtml = this.getHTML();
-// 		if(outputDebug) fs.write(tempdir + '/' + staffId + '_nav.html', navHtml, 644);
+// 		if(devMode) fs.write(tempdir + '/' + staffId + '_nav.html', navHtml, 644);
 // 		var homePageMeta = navHtml.match(/<meta.*provinceId.*?>/i);
 // 		console.log(homePageMeta);
 // 		if(homePageMeta){
@@ -631,8 +654,8 @@ casper.run(function(){
 // 	});
 // 	casper.then(function parseNavHtml(){
 // 		var navHtml = this.getHTML();
-// 		if(outputDebug) fs.write(tempdir + '/' + staffId + '_flux_frameHeader.html', navHtml, 644);
-// 		if(outputDebug) casper.capture(tempdir + '/' + staffId + '_flux_frameHeader.jpg');
+// 		if(devMode) fs.write(tempdir + '/' + staffId + '_flux_frameHeader.html', navHtml, 644);
+// 		if(devMode) casper.capture(tempdir + '/' + staffId + '_flux_frameHeader.jpg');
 // 	});
 // });
 
@@ -922,8 +945,8 @@ casper.run(function(){
 // 	// });
 // 	casper.then(function parseAmchargeXml(){
 // 		var packageHtml = ajaxAmchargeResult;
-// 		if(outputDebug) fs.write(tempdir + '/' + staffId + '_amcharge.xml', packageHtml, 644);
-// 		if(outputDebug) casper.capture(tempdir + '/' + staffId + '_amcharge.jpg');
+// 		if(devMode) fs.write(tempdir + '/' + staffId + '_amcharge.xml', packageHtml, 644);
+// 		if(devMode) casper.capture(tempdir + '/' + staffId + '_amcharge.jpg');
 // 		var priceList = RegexUtils.queryPrice(packageHtml) || [];
 // 		// if(![].contain.call(priceList, order.product.price)){
 // 			response.status = '价格不对，不能订';
@@ -1032,8 +1055,8 @@ casper.run(function(){
 // //     });
 // // 	casper.then(function parseRefreshMoneyXml(){
 // // 		var chargeInfo = this.getHTML();
-// // 		if(outputDebug) fs.write(tempdir + '/' + staffId + '_refresh_money.xml', chargeInfo, 644);
-// // 		if(outputDebug) casper.capture(tempdir + '/' + staffId + '_refresh_money.jpg');
+// // 		if(devMode) fs.write(tempdir + '/' + staffId + '_refresh_money.xml', chargeInfo, 644);
+// // 		if(devMode) casper.capture(tempdir + '/' + staffId + '_refresh_money.jpg');
 // // 		rMap = RegexUtils.getResourceParam(chargeInfo) || {};
 		
 // // 		resTableList.forEach(function(li){
@@ -1041,7 +1064,7 @@ casper.run(function(){
 // // 				rMap['data_RESOURCE_NAME'] = li.resourceName;
 // // 			}
 // // 		});
-// // 		if(outputDebug) fs.write(tempdir + '/' + staffId + '_rMap.txt', JSON.stringify(rMap), 644);
+// // 		if(devMode) fs.write(tempdir + '/' + staffId + '_rMap.txt', JSON.stringify(rMap), 644);
 // // 	});
 // // });
 
