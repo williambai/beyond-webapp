@@ -12,6 +12,7 @@ var BSS = require('../libs/bss_gz');//** 贵州联通BSS系统
 var CBSS = require('../libs/cbss');//** 联通CBSS系统
 var bssConfig = require('../config/bss');
 var cbssConfig = require('../config/cbss');
+var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
 
 var schema = new mongoose.Schema({
 	customer: { //** 客户
@@ -430,11 +431,15 @@ module.exports = exports = function(connection){
 						var productZk = 100; //** 原价
 						if(/五折/.test(productName)){
 							productName = productName.replace('[五折]','');
+							productBarcode = productBarcode.slice(0,-3);
 							productZk = 50;
 						}else if(/六折/.test(productName)){
 							productName = productName.replace('[六折]','');
+							productBarcode = productBarcode.slice(0,-3);
 							productZk = 60;
 						}
+						//** 去掉最前面的4G标志
+						productName = productName.replace(/^4G/,'');
 						//** process 4G order
 						if(productBarcode == '3001_100_1024_0' || //** 全国流量包(100元/1G)
 							productBarcode == '3001_200_3072_0' || //** 全国流量半年包(200元/3G)
@@ -444,7 +449,7 @@ module.exports = exports = function(connection){
 							CBSS.orderFlux({
 								cwd: path.resolve(__dirname,'..'),//** 当前工作路径
 								tempdir: './_tmp',
-								release: staffAccont.release,//** 是否是产品环境
+								release: staffAccount.release,//** 是否是产品环境
 								staffId: staffAccount.staffId,//** 工号
 								phone: order.customer.mobile,//** 订购业务的客户手机号码
 								product: {
@@ -461,7 +466,7 @@ module.exports = exports = function(connection){
 								//** 如果不是登陆状态
 								if(!result.login) return done(null,{logout: true});
 								var RespCode = result.code || '88';
-								var RespDesc = (result.status || '') + (result.message || '未知错误');
+								var RespDesc = (result.status || '') + ': ' + (result.message || '未知错误');
 								var EffectTime = '';
 								var status = (RespCode == 200) ? '成功' : '失败';
 								Order.findByIdAndUpdate(
@@ -501,6 +506,9 @@ module.exports = exports = function(connection){
 											});
 									});
 							});
+						}else{
+							//** 处理下一个
+							_process();
 						}
 					});
 			};

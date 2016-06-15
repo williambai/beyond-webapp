@@ -64,7 +64,6 @@ casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + ac
 
 casper.then(function checkLogin(){
 	var homePageHtml = this.getHTML();
-	fs.write(tempdir + '/home_cookie.html', homePageHtml, 644);
 	var homePageMeta = homePageHtml.match(/<meta.*provinceId.*?>/i);
 	if(homePageMeta){
 		//** 已登录

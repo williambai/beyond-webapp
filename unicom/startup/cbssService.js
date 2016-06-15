@@ -37,6 +37,7 @@ fs.readdirSync(path.join(__dirname, '../models')).forEach(function(file) {
 	}
 });
 
+var refreshPeroid = 427000;
 var city = process.argv[2] || 'xiaogan';//** 城市编码
 var options = config.cbss.accounts[city] || {};
 
@@ -66,34 +67,35 @@ var login = function(options){
 					logger.info('refresh 4G Account cookie peroid job successfully.');
 					setTimeout(function(){
 						refreshCookieJob();
-					},420000);
+					},refreshPeroid);
 				});
 			};
-		setTimeout(refreshCookieJob,420000);
-		//** 定时处理 4G 订单处理,每过7秒钟检查一次订单
-		var processOrderJob = function(){
-				models.Order.process4G(account, function(err,result) {
-					if (err){
-						logger.error(err);
-					}
-					result = result || {};
-					if(result.logout){
-						setTimeout(function(){
-							login(options);
-						},5000);
-						return;
-					}
-					logger.info('call 4G Order peroid job successfully.');
-					setTimeout(function(){
-						processOrderJob();
-					},7000);
-				});
-			};
-		setTimeout(processOrderJob, 7000);
+		setTimeout(refreshCookieJob,refreshPeroid);
 	});
 };
+//** 定时处理 4G 订单处理,每过7秒钟检查一次订单
+var processOrderJob = function(){
+		models.Order.process4G(account, function(err,result) {
+			if (err){
+				logger.error(err);
+			}
+			result = result || {};
+			if(result.logout){
+				setTimeout(function(){
+					login(options);
+				},5000);
+				return;
+			}
+			logger.info('call 4G Order peroid job successfully.');
+			setTimeout(function(){
+				processOrderJob();
+			},7000);
+		});
+	};
+
 //** 启动
 login(options);
+setTimeout(processOrderJob, 7000);
 
 //** process uncaughtException
 process.on('uncaughtException', function(err){

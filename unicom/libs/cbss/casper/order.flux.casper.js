@@ -16,6 +16,7 @@ var casper = require('casper').create({
 		loadPlugins: false,
 	},
 	timeout: 100000,
+	waitTimeout: 15000,
 	logLevel: "debug",
 	verbose: true,
 });
@@ -189,7 +190,7 @@ casper.then(function sideBar(){
 			var custUrlMatched = RegexUtils.regexMatch(/menuaddr="(.+?)"/i, sideBarHtml) || [];
 			if(custUrlMatched[1] == undefined){
 				response.code = 40100;
-				response.status = 'error';
+				response.status = 'judge';
 				response.message = '没取到url，用户认证异常';
 				casper.echo('<response>' + JSON.stringify(response) + '</response>');
 				casper.exit(0);
@@ -288,13 +289,15 @@ casper.then(function updateAcctmanm(){
 
 	casper.then(function getAcctmanmSearch(){
 		var resourceHtml = this.getHTML();
+		if(devMode) fs.write(tempdir + '/' + staffId + '_flux_acctmanmSearch.html', resourceHtml, 644);
+		if(devMode) casper.capture(tempdir + '/' + staffId + '_flux_acctmanmSearch.jpg');
 		//** 用户不能订购
 		var content = RegexUtils.regexMatch(/<div class="content">(.+?)<\/div>/i, resourceHtml) || [];
 		if(content[1] && content[1].length > 0){
 			if(devMode) fs.write(tempdir + '/' + staffId + '_flux_acctmanmUpdatedError.html', resourceHtml, 644);
 			if(devMode) casper.capture(tempdir + '/' + staffId + '_flux_acctmanmUpdatedError.jpg');
 			response.code = 40400;
-			response.status = 'error';
+			response.status = 'judge';
 			response.message = '用户不存在或不能订购: ' + content[1];
 			casper.echo('<response>' + JSON.stringify(response) + '</response>');
 			casper.exit(0);
@@ -329,7 +332,7 @@ casper.then(function updateAcctmanm(){
 			//** 判断用户是否有正在处理的业务
 			if(/处理中/.test(resourceListTable)){
 				response.code = 40101;
-				response.status = 'error';
+				response.status = 'judge';
 				response.message = '用户有业务尚在处理中，稍后再尝试: ' + JSON.stringify(resource);
 				casper.echo('<response>' + JSON.stringify(response) + '</response>');
 				casper.exit(0);
@@ -364,7 +367,7 @@ casper.then(function updateAcctmanm(){
 					&& product.resourceTag == order.product.resourceTag 
 					&& product.money == order.product.price)){
 				response.code = 40102;
-				response.status = 'error';
+				response.status = 'judge';
 				response.message =  '产品不存在';
 				casper.echo('<response>' + JSON.stringify(response) + '</response>');
 				casper.exit(0);
@@ -382,7 +385,7 @@ casper.then(function updateAcctmanm(){
 			var dePostMoney = parseFloat(resourceParam.cond_DEPOSIT_MONEY) || 0;
 			if( creditMoney + dePostMoney < parseFloat(order.product.price)){
 				response.code = 40103;
-				response.status = 'error';
+				response.status = 'judge';
 				response.message = '用户余额不足';
 				casper.echo('<response>' + JSON.stringify(response) + '</response>');
 				casper.exit(0);
@@ -469,18 +472,18 @@ casper.then(function submit(){
 
 casper.then(function getSubmitResult(){
 	var contentHtml = this.getHTML();
-	if(devMode) fs.write(tempdir + '/' + staffId + '_flux_acctmanResult.html', contentHtml, 644);
-	if(devMode) casper.capture(tempdir + '/' + staffId + '_flux_acctmanResult.jpg');
+	fs.write(tempdir + '/' + staffId + '_flux_acctmanResult.html', contentHtml, 644);
+	casper.capture(tempdir + '/' + staffId + '_flux_acctmanResult.jpg');
 
 	var content = contentHtml.match(/.*<div class="content">(.+?)<\/div>.*/i) || [];
 	if(/成功/.test(content[1] || '')){
 		response.code = 200;
-		response.status = 'ok';
-		response.message = '成功: ' + (content[1] || '');
+		response.status = 'submit';
+		response.message = '(成功) ' + (content[1] || '');
 	}else{
 		response.code = 40500;
-		response.status = 'error';
-		response.message = '失败: ' + (content[1] || '');
+		response.status = 'submit';
+		response.message = '(失败) ' + (content[1] || '');
 	}
 });
 
