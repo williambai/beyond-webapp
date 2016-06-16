@@ -7,8 +7,6 @@
 //** common packages
 var path = require('path');
 var fs = require('fs');
-var net = require('net');
-var request = require('request');
 var config = {
 	db: require('../config/db'),
 	cbss: require('../config/cbss'),
@@ -17,8 +15,6 @@ var config = {
 var log4js = require('log4js');
 log4js.configure(path.join(__dirname,'../config/log4js.json'), {cwd: path.resolve(__dirname, '..')});
 var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
-//** CronJob package
-var CronJob = require('cron').CronJob;
 
 //** MongoDB packages
 var mongoose = require('mongoose');
@@ -38,70 +34,106 @@ fs.readdirSync(path.join(__dirname, '../models')).forEach(function(file) {
 });
 
 var refreshPeroid = 427000;
-var city = process.argv[2] || 'xiaogan';//** 城市编码
-var options = config.cbss.accounts[city] || {};
 
-var account = {};
 //** 4G 账户登录
-var login = function(options){
-	models.CbssAccount.login(options, function(err, doc){
+var async = require('async');
+var accounts = config.cbss.accounts || [];
+var accountsEnable = {};
+var _login = function(account, done){
+	models.CbssAccount.login(account, function(err, doc){
 		//** 登录失败，重新登录，直至成功
 		if(err || !doc){
-			logger.warn('尝试重新登录：' + JSON.stringify(options));
+			logger.warn('尝试重新登录：' + JSON.stringify(account));
 			setTimeout(function(){
-				login(options);
+				_login(account);
 			},5000);
 			return;
 		} 
-		account = doc;
-		//** 定时刷新Cookie，保持登录状态，每过7分钟刷新一次
-		var refreshCookieJob = function(){
-				models.CbssAccount.refreshCookie(account, function(err, success) {
-					if (err || !success){
-						logger.error(err);
-						setTimeout(function(){
-							login(options);
-						},5000);
-						return;
-					}
-					logger.info('refresh 4G Account cookie peroid job successfully.');
-					setTimeout(function(){
-						refreshCookieJob();
-					},refreshPeroid);
-				});
-			};
-		setTimeout(refreshCookieJob,refreshPeroid);
+		accountsEnable[doc.id] = doc;
+		done && done(null);
 	});
 };
+
+var login = function(accounts, done){
+	async.eachSeries(accounts, function(account,callback){
+		account = account || {};
+		if(account.status == '有效'){
+			_login(account, callback);
+			logger.info('登录：' + JSON.stringify(account));
+		}else{
+			callback(null);
+		} 
+	},function(err){
+		if(err) return done(err);
+		done && done(null);
+	});
+};
+
+//** 定时刷新Cookie，保持登录状态，每过7分钟刷新一次
+var refreshCookieJob = function(accounts){
+		async.eachSeries(accounts, function(account,callback){
+			account = account || {};
+			if(account.status == '有效'){
+				_login(account, callback);
+				logger.info('重新登录：' + JSON.stringify(account));
+			}else{
+				callback(null);
+			} 
+		},function(err){
+			if(err) logger.error(err);
+			setTimeout(function(){
+				refreshCookieJob(accounts);
+				logger.info('refresh 4G Account cookie peroid job successfully.');
+			},refreshPeroid);
+		});
+	};
+
 //** 定时处理 4G 订单处理,每过7秒钟检查一次订单
-var processOrderJob = function(){
-		models.Order.process4G(account, function(err,result) {
-			if (err){
-				logger.error(err);
-			}
+var processOrderJob = function(accountsByCity){
+		var accountsT = [];
+		for(var city in accountsByCity){
+			accountsT.push(accountsByCity[city]);
+		}
+		models.Order.process4G(accountsT, function(err,result) {
+			if (err)logger.error(err);
+
 			result = result || {};
 			if(result.logout){
+				logger.info('call 4G Order peroid job fail, bacause of account logout.');
 				setTimeout(function(){
-					login(options);
+					login([result.account || {}]);
 				},5000);
-				return;
+			}else{
+				logger.info('call 4G Order peroid job successfully.');
 			}
-			logger.info('call 4G Order peroid job successfully.');
 			setTimeout(function(){
-				processOrderJob();
+				processOrderJob(accountsT);
 			},7000);
 		});
 	};
 
 //** 启动
-login(options);
-setTimeout(processOrderJob, 7000);
+login(accounts,function(err){
+	if(err) return logger.error(err);
+	setTimeout(function(){
+		refreshCookieJob(accounts);
+	},refreshPeroid);
+	setTimeout(function(){
+		processOrderJob(accountsEnable);
+	}, 7000);
+});
 
+var cities = [];
+accounts.forEach(function(acc){
+	if(acc.status == '有效') cities.push(acc.city);
+});
 //** process uncaughtException
 process.on('uncaughtException', function(err){
-	logger.error('城市(' + options['city'] + ') cbssService 异常退出，请及时处理！');
+	logger.error('贵州省 cbssService 异常退出，请及时处理！');
 	logger.error(err);
 	mongoose.disconnect();
 	process.exit(1);
 });
-logger.info('贵州省联通CBSS城市(' + options['city'] + ')处理4G订单服务已开启。');
+logger.info('贵州省联通CBSS城市(' + cities.join(' | ') + ') 处理4G订单服务已开启。');
+
+

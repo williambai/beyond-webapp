@@ -10,8 +10,6 @@ var _ = require('underscore');
 var async = require('async');
 var BSS = require('../libs/bss_gz');//** 贵州联通BSS系统
 var CBSS = require('../libs/cbss');//** 联通CBSS系统
-var bssConfig = require('../config/bss');
-var cbssConfig = require('../config/cbss');
 var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
 
 var schema = new mongoose.Schema({
@@ -263,6 +261,10 @@ module.exports = exports = function(connection){
 			done = options;
 			options = {};
 		}
+		//** 取出2G_3G程序可处理的城市名称集合，仅处理这些城市的订单
+		var cities = BSS.getAccountCities();
+		var cityRegex = new RegExp('(' + cities.join('|') + ')');
+
 		var SPNumber = options.SPNumber || spConfig.options.SPNumber;
 		var PlatformSms = connection.model('PlatformSms');
 		var Order = connection.model('Order');
@@ -272,6 +274,9 @@ module.exports = exports = function(connection){
 					.findOneAndUpdate({
 						'goods.category': {
 							$in: ['2G','3G']
+						},
+						'department.city': {
+							$regex: cityRegex,
 						},
 						'status': '已确认',
 					}, {
@@ -283,32 +288,23 @@ module.exports = exports = function(connection){
 						'new': true,
 					}, function(err, order) {
 						if (err || !order) return done(err);
+						//** 没有设置城市，则默认不能订购，或者取贵阳??
+						var city = (order.department && order.department.city) || '未知';
 						//** process 2G/3G order
-						// var bssAccount = bssConfig.accounts['test']; //** 测试账号
-						var bssAccount = bssConfig.accounts['guiyang']; //** 按城市取
-
-						BSS.addOrder({
-							// url: bssConfig.test_url, //** 测试地址
-							url: bssConfig.url, //** 生产地址
-							requestId: String(order._id),//** 请求Id
-							ProductId: order.goods.barcode, //** 物料编码
-							StaffID: bssAccount.StaffID,//** 工号
-							DepartID: bssAccount.DepartID, //** 渠道代码
-							UserNumber: order.customer.mobile, //** 客户手机号码
-						},function(err, result){
-							//** BSS 接口返回错误
-							if(err) console.log(err);
-							//** 将状态改为“成功”或“失败”
-							result = result || {};
-							var RespCode = result.RespCode || '88';
-							var RespDesc = result.RespDesc || '未知错误';
-							var EffectTime = result.EffectTime || '';
-							var status = /^00/.test(RespCode) ? '成功' : '失败';
+						// var bssAccount = BSS.getAccountByCity('测试'); //** 测试账号
+						var bssAccount = BSS.getAccountByCity(city); //** 按城市取
+						//** 如果没设置城市
+						if(!bssAccount.StaffID){
+							//** 将状态改为“失败”
+							var result = result || {};
+							var RespCode = '88';
+							var RespDesc = '营业员未设置城市，无法下订单';
+							var EffectTime = '';
 							Order.findByIdAndUpdate(
 								order._id,
 								{
 									$set: {
-										status: status
+										status: '失败'
 									},
 									$push: {
 										'histories':  {
@@ -323,15 +319,18 @@ module.exports = exports = function(connection){
 									'new': true,
 								}, function(err){
 									if(err) return done(err);
-									//** 发送业务“处理成功”或“处理失败短信”短信
-									//** 尊敬的用户您好，您订购的（产品名称）系统已受理，请耐心等待，订购结果将短信告知。
+									//** 给营业员发送业务“处理失败”短信
 									var sms = {};
 									//** sms业务代码部分
+									var mobile = order.createBy.mobile || '';
+									//** 不是有效的手机号码
+									if(!/^\d+$/.test(mobile)){
+										//** 处理下一个
+										return _process();										
+									}
 									sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
-									sms.receiver = order.customer.mobile;
-									sms.content = (status == '成功'  
-											? '恭喜您，您订购的(' + order.goods.name + ')已订购成功。' 
-											: '(' + order.goods.name + ')订购失败，详情请咨询10010，或到就近营业厅咨询办理。');
+									sms.receiver = mobile;
+									sms.content = '您的账号渠道信息设置不正确(未设置城市)，请联系沃助手客服人员解决后再使用。';
 									sms.status = '新建';
 									PlatformSms
 										.create(sms, function(err){
@@ -340,7 +339,63 @@ module.exports = exports = function(connection){
 											_process();
 										});
 								});
-						});
+						}else{
+							//** 正常，下订单
+							BSS.addOrder({
+								// url: BSS.getBssUrl('test'), //** 测试地址
+								url: BSS.getBssUrl('prod'), //** 生产地址
+								requestId: String(order._id),//** 请求Id
+								ProductId: order.goods.barcode, //** 物料编码
+								StaffID: bssAccount.StaffID,//** 工号
+								DepartID: bssAccount.DepartID, //** 渠道代码
+								UserNumber: order.customer.mobile, //** 客户手机号码
+							},function(err, result){
+								//** BSS 接口返回错误
+								if(err) console.log(err);
+								//** 将状态改为“成功”或“失败”
+								result = result || {};
+								var RespCode = result.RespCode || '88';
+								var RespDesc = result.RespDesc || '未知错误';
+								var EffectTime = result.EffectTime || '';
+								var status = /^00/.test(RespCode) ? '成功' : '失败';
+								Order.findByIdAndUpdate(
+									order._id,
+									{
+										$set: {
+											status: status
+										},
+										$push: {
+											'histories':  {
+												respCode: RespCode,
+												respDesc: RespDesc,
+												effectTime: EffectTime,
+												respTime: new Date(),
+											}
+										}
+									}, {
+										'upsert': false,
+										'new': true,
+									}, function(err){
+										if(err) return done(err);
+										//** 发送业务“处理成功”或“处理失败短信”短信
+										//** 尊敬的用户您好，您订购的（产品名称）系统已受理，请耐心等待，订购结果将短信告知。
+										var sms = {};
+										//** sms业务代码部分
+										sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
+										sms.receiver = order.customer.mobile;
+										sms.content = (status == '成功'  
+												? '恭喜您，您订购的(' + order.goods.name + ')已订购成功。' 
+												: '(' + order.goods.name + ')订购失败，详情请咨询10010，或到就近营业厅咨询办理。');
+										sms.status = '新建';
+										PlatformSms
+											.create(sms, function(err){
+												if(err) return done(err);
+												//** 处理下一个
+												_process();
+											});
+									});
+							});
+						}
 					});
 			};
 		//** 启动第一个
@@ -393,16 +448,15 @@ module.exports = exports = function(connection){
 
 	/**
 	 * 处理4G订单
-	 * @param  {[type]}   options [description]
+	 * @param  {[type]}   accountsEnable [description]
 	 * @param  {Function} done    [description]
 	 * @return {[type]}           [description]
 	 */
-	schema.statics.process4G = function(options, done){
-		//** 处理4G订单的账号，分城市
-		var staffAccount = options;
-		//** 处理程序的城市名称，仅处理该城市的订单
-		var city = staffAccount.city || '贵阳';
-		var cityRegex = new RegExp(city);
+	schema.statics.process4G = function(accountsEnable, done){
+		//** 取出4G程序可处理的城市名称集合，仅处理这些城市的订单
+		var cities = CBSS.getAccountCities(accountsEnable);
+		var cityRegex = new RegExp('(' + cities.join('|') + ')');
+
 		var Order = connection.model('Order');
 		var PlatformSms = connection.model('PlatformSms');
 		var _process = function(){
@@ -425,6 +479,8 @@ module.exports = exports = function(connection){
 						'new': true,
 					}, function(err, order) {
 						if (err || !order) return done(err);
+						//** 处理4G订单的账号，分城市
+						var staffAccount = CBSS.getAccountByCity(accountsEnable, order.department.city) || {};
 						var productName  = order.goods.name || '';
 						var productPrice = order.goods.price;
 						var productBarcode = order.goods.barcode;
