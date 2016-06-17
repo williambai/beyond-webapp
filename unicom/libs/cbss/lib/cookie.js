@@ -16,6 +16,7 @@ module.exports = exports = function(options, done){
 				'../casper/cookie.casper.js',
 				'--ignore-ssl-errors=true',
 				'--tempdir=' + path.resolve(options['cwd'], options['tempdir']),
+				'--release=' + (options['release'] || false), //** 默认按开发模式运行
 				'--staffId=' + options['staffId'],
 			],{
 				cwd: __dirname,

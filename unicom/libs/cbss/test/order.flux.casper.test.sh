@@ -9,4 +9,4 @@
 # --prod_price
 # --prod_code
 #
-casperjs ../casper/order.flux.casper.js --ignore-ssl-errors=true --tempdir=./_tmp --staffId=B90WZSLP
+casperjs ../casper/order.flux.casper.js --ignore-ssl-errors=true --tempdir=./_tmp --staffId=xxx

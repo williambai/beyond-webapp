@@ -18,6 +18,7 @@ module.exports = exports = function(options, done){
 				'../casper/order.yiwang.casper.js',
 				'--ignore-ssl-errors=true',
 				'--tempdir=' + path.resolve(options['cwd'], options['tempdir']),
+				'--release=' + (options.release || false), //** 默认按开发模式运行
 				'--staffId=' + options.staffId,
 				'--phone=' + options.phone,
 				'--prod_name=' + options.product.name,

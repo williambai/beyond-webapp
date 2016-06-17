@@ -33,6 +33,7 @@ var schema = new mongoose.Schema({
 schema.set('collection','cbss.accounts');
 
 /**
+ * @Depreciated
  * 自动登录
  * @param  {[type]}   options [description]
  * @param  {Function} done    [description]
@@ -50,6 +51,7 @@ schema.statics.login1 = function(options, done){
 			CBSS.login({
 				cwd: path.resolve(__dirname,'..'),//** 当前工作路径
 				tempdir: './_tmp',
+				release: (account.release || false), //** 默认按开发模式运行
 				user: account.staffId,//** 六盘水
 				pass: account.password,
 				provid: account.provinceId,//** 省份id
@@ -81,6 +83,7 @@ schema.statics.login = function(account, done){
 	CBSS.login({
 		cwd: path.resolve(__dirname,'..'),//** 当前工作路径
 		tempdir: './_tmp',
+		release: (account.release || false), //** 默认按开发模式运行
 		user: account.staffId,//** 六盘水
 		pass: account.password,
 		provid: account.provinceId,//** 省份id
@@ -100,6 +103,7 @@ schema.statics.login = function(account, done){
 	});			
 };
 /**
+ * @Depreciated
  * 刷新Cookie
  * @param  {[type]}   options [description]
  * @param  {Function} done    [description]
@@ -110,6 +114,7 @@ schema.statics.refreshCookie = function(options, done){
 	CBSS.refreshCookie({
 		cwd: path.resolve(__dirname,'..'),
 		tempdir: './_tmp',
+		release: (options.release || false), //** 默认按开发模式运行
 		staffId: options.staffId,
 	}, function(err, response){
 		if(err) return done(err);

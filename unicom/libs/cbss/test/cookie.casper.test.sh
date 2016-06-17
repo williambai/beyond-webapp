@@ -5,4 +5,4 @@
 # --tempdir
 # --staffId
 #
-casperjs ../casper/cookie.casper.js --ignore-ssl-errors=true --tempdir=./_tmp --staffId=B90WZSLP
+casperjs ../casper/cookie.casper.js --ignore-ssl-errors=true --tempdir=./_tmp --staffId=xxx

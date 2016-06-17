@@ -27,6 +27,9 @@ phantom.cookiesEnabled = true;
 console.log(JSON.stringify(casper.cli.options));
 var debug = casper.cli.options['debug'] || false;
 var tempdir = casper.cli.options['tempdir'] || './_tmp';
+//** 是否是开发模式
+var devMode = (!!casper.cli.options['release'] || casper.cli.options['release'] == 'true') ? false : true; //** 是否是开发模式
+
 var account = {
 	staffId: casper.cli.options['staffId'] || '',
 };

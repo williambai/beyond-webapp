@@ -1,12 +1,11 @@
 var orderFlux = require('../lib/order.flux');
-// var orderFlux = require('../lib/order.flux.curl');
-
+var account = (require('../../../config/cbss').accounts)[1];//** 贵阳
+console.log(account);
 orderFlux({
 	cwd: __dirname,//** 当前工作路径
 	tempdir: './_tmp',
 	release: false,//** 开发模式
-	staffId: 'ASCBWZS1', //** 贵阳
-	// staffId: 'B90WZSLP',//** 六盘水
+	staffId: account.staffId, 
 	phone: '15692740700',
 	product: {
 		name: '全国流量包(50元/500M)',
