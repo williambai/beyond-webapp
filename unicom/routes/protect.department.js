@@ -5,6 +5,7 @@ var _ = require('underscore');
 var async = require('async');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
+var regexp = require('../libs/regexp');
 
 exports = module.exports = function(app, models) {
 
@@ -73,7 +74,7 @@ exports = module.exports = function(app, models) {
  		var doc = req.body;
  		//transform doc
  		if (_.isEmpty(doc.parent)) doc = _.omit(doc, 'parent');
- 		var regex = new RegExp(doc.name, 'i');
+ 		var regex = new RegExp(regexp.escape(doc.name), 'i');
  		if (_.isEmpty(doc.path)) {
  			doc.path += doc.name;
  		} else {
@@ -111,7 +112,7 @@ exports = module.exports = function(app, models) {
  		switch (action) {
  			case 'search':
  				var searchStr = req.query.searchStr || '';
- 				var searchRegex = new RegExp(searchStr, 'i');
+ 				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
  				var status = req.query.status;
  				var query = models.Department.find({
  					$or: [{

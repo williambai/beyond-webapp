@@ -4,6 +4,7 @@ var async = require('async');
 var path = require('path');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
+var regexp = require('../libs/regexp');
 
 exports = module.exports = function(app, models) {
 
@@ -60,7 +61,7 @@ exports = module.exports = function(app, models) {
  				var to = new Date(req.query.to || Date.now());
  				//** 搜索字符串
  				var searchStr = req.query.searchStr || '';
- 				var searchRegex = new RegExp(searchStr, 'i');
+ 				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
  				var status = req.query.status;
  				var query = models.Order.find({
  					$or: [{

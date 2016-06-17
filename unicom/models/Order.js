@@ -11,6 +11,7 @@ var async = require('async');
 var BSS = require('../libs/bss_gz');//** 贵州联通BSS系统
 var CBSS = require('../libs/cbss');//** 联通CBSS系统
 var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
+var regexp = require('../libs/regexp');
 
 var schema = new mongoose.Schema({
 	customer: { //** 客户

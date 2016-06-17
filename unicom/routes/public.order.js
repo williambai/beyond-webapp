@@ -2,6 +2,7 @@ var util = require('util');
 var path = require('path');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
+var regexp = require('../libs/regexp');
 
 //** SP 短信配置
 var configSp = require('../config/sp').SGIP12;
@@ -70,7 +71,7 @@ exports = module.exports = function(app, models) {
 				break;
 			case 'search':
 				var searchStr = req.query.searchStr || '';
-				var searchRegex = new RegExp(searchStr, 'i');
+				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
 				var status = req.query.status;
 				var query = models.Order.find({
 					$or: [{

@@ -1,5 +1,7 @@
 var config = require('../config/server');
- exports = module.exports = function(app, models) {
+var regexp = require('../libs/regexp');
+
+exports = module.exports = function(app, models) {
  	var _ = require('underscore');
 
  	var request = require('request');
@@ -167,7 +169,7 @@ var config = require('../config/server');
  				var menu = req.body;
  				//transform doc
  				if (_.isEmpty(menu.parent)) menu = _.omit(menu, 'parent');
- 				var regex = new RegExp(menu.name, 'i');
+ 				var regex = new RegExp(regexp.excape(menu.name), 'i');
  				if (_.isEmpty(menu.path)) {
  					menu.path += menu.name;
  				} else {

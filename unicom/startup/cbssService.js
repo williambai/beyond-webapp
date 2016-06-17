@@ -45,7 +45,7 @@ var _login = function(account, done){
 		if(err || !doc){
 			logger.warn('尝试重新登录：' + JSON.stringify(account));
 			setTimeout(function(){
-				_login(account);
+				_login(account,done);
 			},5000);
 			return;
 		} 

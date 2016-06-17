@@ -1,3 +1,4 @@
+var regexp = require('../libs/regexp');
  exports = module.exports = function(app, models) {
 
  	var getOne = function(req, res) {
@@ -17,7 +18,7 @@
  		switch (action) {
  			case 'search':
  				var searchStr = req.query.searchStr || '';
- 				var searchRegex = new RegExp(searchStr, 'i');
+ 				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
  				var query = models.FinanceBank.find({
  					$or: [{
  						'accountName': {

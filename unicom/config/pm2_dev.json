@@ -62,7 +62,6 @@
 		},{
 			"name": "CbssService",
 			"script": "./startup/cbssService.js",
-			"args": "guiyang",
 			"cwd": "/Users/williambai/eclipse/webspace/beyond-webapp/unicom/",
 			"watch": [
 				"startup/cbssService.js",

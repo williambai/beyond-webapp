@@ -5,6 +5,7 @@ var _ = require('underscore');
 var async = require('async');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
+var regexp = require('../libs/regexp');
 
 exports = module.exports = function(app, models) {
 
@@ -96,7 +97,7 @@ exports = module.exports = function(app, models) {
 			case 'search':
 				var searchStr = req.query.searchStr || '';
 				try {
-					var searchRegex = new RegExp(searchStr, 'i');
+					var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
 					var status = req.query.status;
 					var query = models.Goods.find({
 						$or: [{

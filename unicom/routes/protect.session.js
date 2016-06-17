@@ -1,4 +1,6 @@
- exports = module.exports = function(app, models) {
+var regexp = require('../libs/regexp');
+
+exports = module.exports = function(app, models) {
 
  	var add = function(req, res) {
  		res.send({});
@@ -43,7 +45,7 @@
  		switch (type) {
  			case 'search':
  				var searchStr = req.query.searchStr || '';
- 				var searchRegex = new RegExp(searchStr, 'i');
+ 				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
  				models.PlatformSession.find({
 						'_id': {
 							$regex: searchRegex

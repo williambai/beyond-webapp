@@ -9,6 +9,9 @@ exports.removeOrder = require('./lib/removeOrder');
 
 var _ = require('underscore');
 
+var escapeRegExp = function(str) { 
+	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"); 
+};
 /**
  * 获取BSS访问URL地址
  * @param  {String} mode 运行模式
@@ -29,7 +32,7 @@ exports.getAccountByCity = function(city){
 	var bssAccounts = require('../../config/bss').accounts || [];
 	var account = _.find(bssAccounts, function(acc){
 			if(acc.status == '有效'){
-				var regex = new RegExp((acc.city).trim() || '未知');
+				var regex = new RegExp(escapeRegExp((acc.city).trim()) || '未知');
 				return regex.test(city);
 			}else{
 				return false;

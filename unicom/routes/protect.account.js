@@ -2,6 +2,7 @@ var util = require('util');
 var path = require('path');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
+var regexp = require('../libs/regexp');
 
 exports = module.exports = function(app, models) {
 	var _ = require('underscore');
@@ -195,7 +196,7 @@ exports = module.exports = function(app, models) {
 		switch (type) {
 			case 'search':
 				var searchStr = req.query.searchStr || '';
-				var searchRegex = new RegExp(searchStr, 'i');
+				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
 				logger.debug('search status: ' + req.query.status);
 				var status = req.query.status;
 				var query = Account.find({

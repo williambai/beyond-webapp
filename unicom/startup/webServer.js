@@ -135,7 +135,11 @@ app.grant = function(req, res, next) {
 	if (_.isUndefined(feature)) return res.status(401).end();
 	// logger.debug('current feature(grant):' + JSON.stringify(feature));
 
-	var regexp_path = new RegExp(path, 'i');
+	var escapeRegExp = function(str) { 
+		return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"); 
+	};
+
+	var regexp_path = new RegExp(escapeRegExp(path), 'i');
 	// logger.debug('regexp_path(grant):' + regexp_path);
 	if (regexp_path.test(feature.route)) {
 		if (req.method == 'POST' && feature.add) return next();

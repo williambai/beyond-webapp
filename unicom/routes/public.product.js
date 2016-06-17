@@ -2,6 +2,7 @@ var util = require('util');
 var path = require('path');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
+var regexp = require('../libs/regexp');
 
  exports = module.exports = function(app, models) {
 	var _ = require('underscore');
@@ -85,8 +86,8 @@ var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
  		page = (!page || page < 0) ? 0 : page;
  		switch(action){
  			case 'category':
-				var category = decodeURIComponent(req.query.category) || '';
-				var searchRegex = new RegExp(String.prototype.replace.call(category,'+','.'), 'i');
+				var searchStr = decodeURIComponent(req.query.category) || '';
+				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
  				models.ProductDirect
  					.find({
  						category: {

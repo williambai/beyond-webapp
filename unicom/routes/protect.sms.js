@@ -1,3 +1,5 @@
+var regexp = require('../libs/regexp');
+
 exports = module.exports = function(app, models) {
   	var add = function(req, res) {
 		var doc = req.body;
@@ -64,7 +66,7 @@ exports = module.exports = function(app, models) {
 		switch (action) {
 			case 'search':
 				var searchStr = req.query.searchStr || '';
-				var searchRegex = new RegExp(searchStr, 'i');
+				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
 				var query = models.PlatformSms.find({
 					$or: [{
 						'sender': {

@@ -1,5 +1,9 @@
 var util = {};
 
+var escapeRegExp = function(str) { 
+	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"); 
+};
+
 /**
  * 正则表达式匹配
  * @param  {[type]} regex   [description]
@@ -13,7 +17,7 @@ util.regexMatch = function(regex,html){
 	html = html.replace(/(\n|\t|\r)/g, '');
 
     var regExp = regex;
-    if(typeof regex == 'string') regExp = new RegExp(regex,pattern);
+    if(typeof regex == 'string') regExp = new RegExp(escapeRegExp(regex),pattern);
     var matcher = html.match(regExp);
     var result = (matcher && matcher.slice(0)) || [];
     return result;
