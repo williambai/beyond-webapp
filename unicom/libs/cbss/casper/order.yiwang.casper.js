@@ -250,6 +250,9 @@ casper.then(function yiwangPage(){
 		casper.page.injectJs('../casper/js/scripts-custserv/core/LayoutHelper.js');
 		casper.page.injectJs('../casper/js/scripts-custserv/core/Product.js');
 		casper.page.injectJs('../casper/js/patch/Product.js');
+		casper.page.injectJs('../casper/js/app/popupdialog/PopMobileInfo.js');
+		casper.page.injectJs('../casper/js/app/personalserv/changeelement/ChangeElement.js');
+		casper.page.injectJs('../casper/js/app/personalserv/createuser/CreateUserOther.js');
 		casper.page.injectJs('../casper/js/patch/debug.js');
 
 		casper.then(function init(){
@@ -306,6 +309,9 @@ casper.then(function updateYiwangForm(){
 		casper.page.injectJs('../casper/js/scripts-custserv/core/LayoutHelper.js');
 		casper.page.injectJs('../casper/js/scripts-custserv/core/Product.js');
 		casper.page.injectJs('../casper/js/patch/Product.js');
+		casper.page.injectJs('../casper/js/app/popupdialog/PopMobileInfo.js');
+		casper.page.injectJs('../casper/js/app/personalserv/changeelement/ChangeElement.js');
+		casper.page.injectJs('../casper/js/app/personalserv/createuser/CreateUserOther.js');
 		casper.page.injectJs('../casper/js/patch/debug.js');
 
 		casper.then(function init(){
@@ -336,7 +342,7 @@ casper.then(function updateYiwangForm(){
 
 });
 
-casper.then(function expandProductList(){
+casper.then(function expandPackageList(){
 	casper.evaluate(function(productCode){
 		var productInputNode = document.querySelector('input#_p' + productCode);
 		console.log('productInputNode: ' + '\n\n');
@@ -344,19 +350,30 @@ casper.then(function expandProductList(){
 		var productExpandNode = document.querySelector('img#closeopen' + productCode);
 		console.log('productExpandNode: ' + '\n\n');
 		console.log(productExpandNode.outerHTML + '\n\n');
-		//** 点击展开产品
+		//** 点击展开产品包
 		__utils__.click('img#closeopen' + productCode);
+	},order.product.code);
+
+});
+
+casper.then(function expandProductList(){
+	casper.evaluate(function(productCode){
+		var productExpand1 = document.querySelector('div#p' + productCode);
+		console.log('productExpand1: ' + '\n\n');
+		console.log(productExpand1.outerHTML + '\n\n');
+		//** 点击展开产品
+		__utils__.click('img#closeopen' + productCode + 'k' + '51708887');
 	},order.product.code);
 
 });
 
 casper.then(function setProduct(){
 	casper.evaluate(function(productCode){
-		var productExpand = document.querySelector('div#p' + productCode);
-		console.log('productExpand: ' + '\n\n');
-		console.log(productExpand.outerHTML + '\n\n');
+		var productExpand2 = document.querySelector('div#p' + productCode + 'k' + '51708887');
+		console.log('productExpand2: ' + '\n\n');
+		console.log(productExpand2.outerHTML + '\n\n');
 		//** 点击产品包
-		__utils__.click('input#_p' + productCode + 'k' + '51708887');
+		__utils__.click('input#_p' + productCode + 'k' + '51708887' + 'e' + '8101109' + 'TD');
 		var packageClicked = document.querySelector('div#p' + productCode);
 		console.log('packageClicked: ' + '\n\n');
 		console.log(packageClicked.outerHTML + '\n\n');
@@ -395,8 +412,10 @@ casper.then(function submit(){
 			Cs.ctrl.Trade.doSubmitTrade= function(){
 			    console.log('++++++++555555++++++\n');			    
 		        var pagename = $('pagecontext').pagename;
+			    console.log('++++++++555555 -a ++++++\n');			    
 		        try{
 		            this.clearInfo();
+				    console.log('++++++++555555 -b ++++++\n');			    
 		            var info = Cs.ctrl.Trade.createObject("ACTOR_NAME","ACTOR_PHONE","ACTOR_CERTTYPEID","ACTOR_CERTNUM","REMARK");
 		            
 		            // QC:15329 BEGIN开户业务备注被mobtrade里的覆盖  统一版本合并
@@ -417,10 +436,13 @@ casper.then(function submit(){
 		        	
 		                   
 		        	// qc 81558 end     
+				    console.log('++++++++555555 -c ++++++\n');			    
 		            //子类业务界面其他操作
-		            if (typeof finishChildSave != 'undefined' && finishChildSave instanceof Function)
-		                if(finishChildSave()===false)
-		                    throw $TradeExit;
+
+
+		            // if (typeof finishChildSave != 'undefined' && finishChildSave instanceof Function)
+		            //     if(finishChildSave()===false)
+		            //         throw $TradeExit;
 		            
 		         	// 业务须知    
 		            var b_HintFlag = true;
@@ -438,6 +460,7 @@ casper.then(function submit(){
 		            }
 		            var info =   Cs.ctrl.Trade.getObject("Common")||{};
 		            
+				    console.log('++++++++555555 -d++++++\n');			    
 		           
 		            if($P("RES_PRE_ORDER")&&$P("RES_PRE_ORDER").value=="1"){
 		            	info.RES_PRE_ORDER = "1";
@@ -453,6 +476,7 @@ casper.then(function submit(){
 		                    Cs.ctrl.Trade.appendItemArry("TF_B_TRADE_OTHER",ja);           
 		                }
 		            }
+				    console.log('++++++++555555 -e ++++++\n');			    
 		            //用于特殊批量业务
 		            var okeys = Object.keys(_otherInfosNew);
 		            for(i=0;i<okeys.length;++i)
@@ -464,6 +488,7 @@ casper.then(function submit(){
 		                }
 		            }
 		           
+				    console.log('++++++++555555 -f ++++++\n');			    
 		            //生成purchase表的数据        
 		            var purchasekeys = Object.keys(_purchaseInfos);
 		            for(i=0;i<purchasekeys.length;++i)
@@ -474,6 +499,7 @@ casper.then(function submit(){
 		                    Cs.ctrl.Trade.appendItemArry("TF_B_TRADE_PURCHASE",ja);           
 		                }
 		            } 
+				    console.log('++++++++555555 -g ++++++\n');			    
 		            //生成purchase的属性表数据
 		            var purchaseitemkeys = Object.keys(_purchaseItemInfos);
 		            for(i=0;i<purchaseitemkeys.length;++i)
@@ -484,6 +510,7 @@ casper.then(function submit(){
 		                    Cs.ctrl.Trade.appendItemArry("TF_B_TRADE_SUB_ITEM",ja);       
 		                }
 		            }
+				    console.log('++++++++555555 - h ++++++\n');			    
 		            //生成purchase的tradefee_sub表的数据        
 		            var purchasefeekeys = Object.keys(_purchaseFeeInfos);
 		            for(i=0;i<purchasefeekeys.length;++i)
@@ -495,6 +522,7 @@ casper.then(function submit(){
 		                }
 		            }          
 		            
+				    console.log('++++++++555555 - i ++++++\n');			    
 		            var uuKeys = Object.keys(_uuInfos);
 		            var uArray = new Array;
 		            for(i=0;i<uuKeys.length;++i)
@@ -516,6 +544,7 @@ casper.then(function submit(){
 		            	Cs.ctrl.Trade.saveObject("GTRADE_GROUP", {INFOS:uArray});
 		            }       
 		              
+				    console.log('++++++++555555 -j ++++++\n');			    
 		            //保存台帐数据
 		            if($("baseItems")!=null)
 		            {
@@ -563,6 +592,7 @@ casper.then(function submit(){
 		                win.alert(ex.message);
 		        	}
 		        	Cs.ctrl.Web.hideInfo();
+			        console.log('++++++++555555 -exception ++++++\n');			    
 		        	return
 		        }
 		        
@@ -618,7 +648,8 @@ casper.then(function submit(){
 			  console.log('++++++++7777777++++++\n');			    
 			     
 		        var str ="Base="+encodeURIComponent($F("_tradeBase"))+"&Ext="+encodeURIComponent(Object.toJSON(this._tradeInfo));
-		        // Cs.Ajax.swallowXml(pagename, "submitMobTrade", str);
+		        // console.log(str);
+		        Cs.Ajax.swallowXml(pagename, "submitMobTrade", str);
 		        console.log('++++++++8888888+++++\n');			    
 		    };
 		});

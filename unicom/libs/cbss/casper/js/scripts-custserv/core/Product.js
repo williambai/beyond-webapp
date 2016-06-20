@@ -2737,7 +2737,6 @@ function geneAttrString(src, attrs) {
 			_attrs += s+'="'+src[s]+'" ';
 		}
 	});
-	
 	return _attrs.replace(/undefined/g, '');
 }
 
@@ -3928,9 +3927,9 @@ function compElemDate(product, element) {
       
 			//优惠的失效时间以优惠的生效时间为计算起点
 			//优惠绝对失效时间
-			if(element.endEnableTag == '0')
+			if(element.endEnableTag == '0'){
 				dtElem._endDate = element.endAbsoluteDate>dtElem._startDate ? element.endAbsoluteDate : dtElem._startDate;
-			//优惠相对失效时间
+			}//优惠相对失效时间
 			else {
 				dtElem._endDate = Cs.util.Utility.computeDate(dtElem._startDate, element.endUnit, element.endOffset);
 				dtElem._endDate = Cs.util.Utility.computeDate(dtElem._endDate, '6', -1);
@@ -3962,6 +3961,7 @@ function compElemDate(product, element) {
 			if(tradeTypeCode != "12"&&tradeTypeCode != "124"){
 				dtElem._endDate = dtElem._endDate>product._endDate ? product._endDate : dtElem._endDate;	
 			}	
+
 			dtElem._endDate = dtElem._endDate.substring(0,10)+" 23:59:59";
 		}
 		//SP服务
@@ -4058,7 +4058,6 @@ function compElemDate(product, element) {
 		 //tfs:151580  guagua end
 			
 	}
-
 	return dtElem;
 }
 

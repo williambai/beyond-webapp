@@ -571,8 +571,8 @@ Cs.Ajax = {
             asynchronous: asyn===undefined?true:asyn,
             onComplete:function(transport){
                             try{                  
-                                // console.log('====22222====')
-                                // console.log(transport.responseText)              
+                                // console.log('====22222swallowXml response: ====\n');
+                                // console.log(transport.responseText);
                                 var root = transport.responseXML.documentElement;
                                 Cs.ctrl.Web.hideInfo();
                               
@@ -631,8 +631,8 @@ Cs.Ajax = {
             asynchronous: asyn===undefined?true:asyn,
             onComplete:function(transport){
                             try{                                
-                                // console.log('====333333====')
-                                // console.log(transport.responseText)              
+                                console.log('====333333 swallowCache() response: ====\n');
+                                console.log(transport.responseText)              
                                 var root = transport.responseXML.documentElement;
                                 //** add by williambai
                                 root.xml = transport.responseText || '';

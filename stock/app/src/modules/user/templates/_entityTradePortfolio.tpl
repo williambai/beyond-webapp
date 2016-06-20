@@ -32,7 +32,7 @@
 					&nbsp;&nbsp;
 					<span style="background-color: green; color: white;"><%= model.status %>状态</span>
 				</h4>
-				<p>盈亏：<span style="color:red">￥<%= model.times == 0 ? 0 : (model.currentPrice * model.quantity + model.debt - model.asset).toFixed(2) %></span>&nbsp;&nbsp;最后交易：<span style="color:red">￥<%= model.bid.price %>(<%= model.bid.direction %>)</span>&nbsp;&nbsp;当前价格：<%= model.currentPrice %></p>
+				<p>盈亏：<span style="color:red">￥<%= (model.debt - (model.asset - model.currentPrice * model.quantity )).toFixed(2) %></span>&nbsp;&nbsp;最后交易：<span style="color:red">￥<%= model.bid.price %>(<%= model.bid.direction %>)</span>&nbsp;&nbsp;当前价格：<%= model.currentPrice %></p>
 				<p>开始时间：<%= date.getFullYear() +'-' + (1+date.getMonth()) + '-' + (date.getDate()) + ' '+ date.getHours() + ':'+ date.getMinutes() + ':'+ date.getSeconds() %>
 					&nbsp;&nbsp;交易次数：
 					<%= model.times.buy + model.times.sell %></p>
