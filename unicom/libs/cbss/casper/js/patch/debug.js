@@ -58,5 +58,6 @@ console.log('\n\n========debug pre begin ========\n');
 // var xml = new Cs.util.XML();
 // console.log(xml)
 // console.log(xml.loadXML)
+// console.log(finishChildSave)
 
 console.log('\n\n========debug pre end ========\n');
