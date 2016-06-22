@@ -1460,7 +1460,7 @@ function queryProductinfo(){
 			'deviceType': deviceType,
 			'deviceBrand': deviceBrand,
 			'deviceNumber': deviceNumber,
-			'baseSaleProductId': prodInfo.productId,
+			'baseSaleProductId': prodInfo.getAttribute('productId'),
 			'root': 'SALE',
 			'isCheckRight': isCheckRight,
 			'isOtherExchange': isOtherExchange,
@@ -2027,7 +2027,7 @@ function afterCheckIphoneFormula(node){
 function initPtypeArea(productId){
 	
 	var pId = $('_p'+productId);
-	if (pId.productMode =="00"){
+	if (pId.getAttribute('productMode') =="00"){
 		//qc:4673 begin
   		isOtherExchange = "0";
   		//qc:4673 end
@@ -2052,23 +2052,23 @@ function initPtypeArea(productId){
 		}
 		
 		//某些产品必须参加营销活动,再刷回来
-		if ($('deviceAgreeArea') && pId.modifyTag =='0') {
+		if ($('deviceAgreeArea') && pId.getAttribute('modifyTag') =='0') {
 			if($('nojoin'))
 			$('nojoin').enable();
 			var isMustJoinSale = false;
-			if (pId.checked && pId.itemSaleLimitTradetype) {
+			if (pId.checked && pId.getAttribute('itemSaleLimitTradetype')) {
 				var tradeTypeCode = '';
 				try {
 					tradeTypeCode = $F('_TRADE_TYPE_CODE');
 				} catch (e) {
 				}
-				if (pId.itemSaleLimitTradetype && tradeTypeCode != '') {
-					if (pId.itemSaleLimitTradetype.indexOf('|' + tradeTypeCode + '|') > -1) {
+				if (pId.getAttribute('itemSaleLimitTradetype') && tradeTypeCode != '') {
+					if (pId.getAttribute('itemSaleLimitTradetype').indexOf('|' + tradeTypeCode + '|') > -1) {
 						isMustJoinSale = true;
 					}
 					//tfs 241827 begin 山东允许全国套餐开户不选合约-开户/集客开户/验证移网产品服务变更/验证23转4
 					// 0 可以不参加 
-					if(pId.itemSaleLimitTradetypeExc && pId.itemSaleLimitTradetypeExc=='0')
+					if(pId.getAttribute('itemSaleLimitTradetypeExc') && pId.getAttribute('itemSaleLimitTradetypeExc')=='0')
 					{
 						isMustJoinSale = false;
 						$('join').click();
@@ -2082,7 +2082,7 @@ function initPtypeArea(productId){
 			}
 		}
 		// tfs:232032  add by zyj begin 
-		if ($("devicePtypeArea") && pId.modifyTag == "0" && getRightCode() == "csCreateWilePerUserTrade4G"){
+		if ($("devicePtypeArea") && pId.getAttribute('modifyTag') == "0" && getRightCode() == "csCreateWilePerUserTrade4G"){
 			  var cache = new Cs.flower.DataCache();
 			  if(cache){
 			      var custInfo = cache.get("custInfo");
@@ -2092,7 +2092,7 @@ function initPtypeArea(productId){
 			             $('nobuy').click();
 			             $('buy').disable(); 
 			    	 }
-			         if (custInfo.psptTypeCode != "J" && pId.itemIsMustBuyTerminal && pId.itemIsMustBuyTerminal == "1" && ($("_TRADE_TYPE_CODE") && $F('_TRADE_TYPE_CODE') == "10")){
+			         if (custInfo.psptTypeCode != "J" && pId.getAttribute('itemIsMustBuyTerminal') && pId.getAttribute('itemIsMustBuyTerminal') == "1" && ($("_TRADE_TYPE_CODE") && $F('_TRADE_TYPE_CODE') == "10")){
 			        	 $('buy').enable();
 			        	 $("buy").click();
 						 $("nobuy").disable();
@@ -2103,7 +2103,7 @@ function initPtypeArea(productId){
 	  //tfs:232032 add by zyj end 
 		
 	
-	}else if (pId.productMode =="50" && pId.checked &&(selectTypeStr=="0"||selectTypeStr=="1"||selectTypeStr=="3")){	
+	}else if (pId.getAttribute('productMode') =="50" && pId.checked &&(selectTypeStr=="0"||selectTypeStr=="1"||selectTypeStr=="3")){	
 		myDeviceAllInfo ="";	
 		Cs.Ajax.register("tradeInfo", dealAllInfo);
 		Cs.Ajax.register("tradeFee", afterDealTradeFee);
@@ -2372,7 +2372,7 @@ function checkedMustProduct(){
 		if(productCountSelf == 1){//如果只有一个基础产品 默认勾选上，不允许删除
 			$("_p"+productSelf.productId).checked = true;
 			$("_p"+productSelf.productId).disabled = true;
-			queryPackageInfo(productSelf.productId);
+			queryPackageInfo(productSelf.getAttribute('productId'));
 		}
 	}
 }
@@ -2570,7 +2570,7 @@ function showPackageInfo(node){
 					if(s.tagName.toUpperCase() == 'INPUT' && s.type.toUpperCase() == 'CHECKBOX'
 						&& s.getAttribute('_thisType') != 'undefined' && s.getAttribute('_thisType').toUpperCase() == 'PACKAGE'
 						&& s.checked) {
-						queryElementByPkgId(s.packageId,prod.getAttribute('productId'));
+						queryElementByPkgId(s.getAttribute('packageId'),prod.getAttribute('productId'));
 					}
 				});
 			 }
@@ -2942,7 +2942,7 @@ function ifShowAcctInfo(checked){
 //获取无线上网卡附加产品的费用信息
 function getFeeInfoIfJoinPlan(productId){
 	var pId = $('_p'+productId);
-	if (pId.productMode =="50"){
+	if (pId.getAttribute('productMode') =="50"){
 		var subProductId = productId;//活动产品编码
 		var mainProdId = "";//主产品编码
 		var productCount=0;
@@ -3281,7 +3281,7 @@ function onPackageClick(productId, packageId, checked, bubble) {
 **/
 function autoCancelClick(productId, packageId, elementId,elementType, checked, bubble) {
 	var pkg = $('_p'+productId+'k'+packageId);
-    if (pkg && pkg.maxNumber == "1") {
+    if (pkg && pkg.getAttribute('maxNumber') == "1") {
     	//判断包下是否所有元素被选中
 		var allCancel = false;
 		$A($('p'+productId+'k'+packageId).all).each(function (s) {
@@ -3289,7 +3289,7 @@ function autoCancelClick(productId, packageId, elementId,elementType, checked, b
 			if($('pagecontext').provinceId=='0011'){
 				if(s.tagName.toUpperCase() == 'INPUT' && s.type.toUpperCase() == 'CHECKBOX'
 					&& s.getAttribute('_thisType') != 'undefined' && s.getAttribute('_thisType').toUpperCase() == 'ELEMENT'
-					&& s.checked && s.forceTag!='1') {
+					&& s.checked && s.getAttribute('forceTag')!='1') {
 					s.checked = false;
 					allCancel = true;
 				}
@@ -3405,7 +3405,7 @@ onElementClick = function(productId, packageId, elementId,elementType, checked, 
         var pMode = $(pId).productMode;
         if(pMode == "00" && elementType == "D" && (ntc == "33" || ntc == "50" || ntc == "CP")){
             var elem = $(eId);
-            if(elem.firstmonthpaytype == '01' || elem.firstmonthpaytype == '03'){
+            if(elem.getAttribute('firstmonthpaytype') == '01' || elem.getAttribute('firstmonthpaytype') == '03'){
                 elem.checked = false;
                 win.alert("在网用户转套餐时不允许选择半月或套外套餐只能选择全月套餐！");
                 checked = false;
@@ -3608,32 +3608,32 @@ function checkMutexElements(o, isEleClick)
 		{
 			var ret1 = true
 			mutexEles.each(function(xe){
-				var sstart = s._startDate;
-				var send = s._endDate;
+				var sstart = s.getAttribute('_startDate');
+				var send = s.getAttribute('_endDate');
 				var ostart = o._startDate;
 				var oend = o._endDate;				
-				if(s.id.split("e")[1]==xe&&((sstart <= ostart && ostart < send)
+				if(s.getAttribute('id').split("e")[1]==xe&&((sstart <= ostart && ostart < send)
 						||(oend > sstart && send >= oend)))
 				{
-					var productName = $(s.id.split("k")[0]).productName;					
-					var packageName = $(s.id.split("e")[0]).packageName;					
+					var productName = $(s.getAttribute('id').split("k")[0]).productName;					
+					var packageName = $(s.getAttribute('id').split("e")[0]).packageName;					
 					//qc:97823 Modify by ruanyr Begin
-					if((o.modifyTag == '9') && (s.modifyTag == '0' && s.forceTag != '1')){//如果用户原有服务和新产品中的默认选中服务互斥，则新产品中对应的服务处理成不默认选中
+					if((o.modifyTag == '9') && (s.getAttribute('modifyTag') == '0' && s.getAttribute('forceTag') != '1')){//如果用户原有服务和新产品中的默认选中服务互斥，则新产品中对应的服务处理成不默认选中
 						s.checked = false;
-					}else if((s.modifyTag == '9') && (o.modifyTag == '0' && o.forceTag != '1')){
+					}else if((s.getAttribute('modifyTag') == '9') && (o.modifyTag == '0' && o.forceTag != '1')){
 						//alert("11--"+isEleClick);
-						if(isEleClick===true && s.forceTag != '1'){
+						if(isEleClick===true && s.getAttribute('forceTag') != '1'){
 							//alert(22);
 							s.checked = false;
 						}else{
 							//alert(33);
 							o.checked = false;
 						}
-					}else if(s.modifyTag == '0' && s.forceTag == '1'){//如果用户原有服务和新产品中的必选服务互斥，则用户原有服务自动取消，保留新产品中的必选内容
+					}else if(s.getAttribute('modifyTag') == '0' && s.getAttribute('forceTag') == '1'){//如果用户原有服务和新产品中的必选服务互斥，则用户原有服务自动取消，保留新产品中的必选内容
 					o.checked = false;
 					}else if(o.modifyTag == '0' && o.forceTag == '1'){
 						s.checked = false;
-					}else if(s.modifyTag == '0' && o.modifyTag == '0'){
+					}else if(s.getAttribute('modifyTag') == '0' && o.modifyTag == '0'){
 						if(s.forceTag == '1') {
 					o.checked = false;
 						}else if(o.forceTag == '1'){
@@ -3675,16 +3675,16 @@ function checkRelyElements(o)
 		    && !s.checked) 
 		{
 			relyEles.each(function(xe){
-				var sstart = s._startDate;
-				var send = s._endDate;
+				var sstart = s.getAttribute('_startDate');
+				var send = s.getAttribute('_endDate');
 				var ostart = o._startDate;
 				var oend = o._endDate;				
-				if(s.id.split("e")[1]==xe&&((sstart>=ostart&&sstart<=oend)
+				if(s.getAttribute('id').split("e")[1]==xe&&((sstart>=ostart&&sstart<=oend)
 					||(send<=oend&&send>ostart)))
 				{
 					s.checked = true;
-					var eId = s.id;
-					onElementClick(eId.split("k")[0].substr(2), s.getAttribute('packageId'), s.elementId,eId.split("T")[1], true, true);
+					var eId = s.getAttribute('id');
+					onElementClick(eId.split("k")[0].substr(2), s.getAttribute('packageId'), s.getAttribute('elementId'),eId.split("T")[1], true, true);
 					return;
 				}
 			});    		    
@@ -3708,7 +3708,7 @@ function checkOperator(productId, packageId) {
     needCheckPdt=needCheckPkg=false;
     if (pdt.maxNumber!="-1"||pdt.minNumber!="-1")
         needCheckPdt=true;
-    if ($('p'+productId+'k'+packageId).getAttribute('first').toUpperCase()=="FALSE"||(pkg.maxNumber!="-1"||pkg.minNumber!="-1"))
+    if ($('p'+productId+'k'+packageId).getAttribute('first').toUpperCase()=="FALSE"||(pkg.getAttribute('maxNumber')!="-1"||pkg.getAttribute('minNumber')!="-1"))
         needCheckPkg=true;
         
     if (!needCheckPdt&&!needCheckPkg) return true;   
@@ -3725,11 +3725,11 @@ function checkOperator(productId, packageId) {
 			}
         });
         
-        if (pkg.maxNumber!="-1"&&parseInt(pkg.maxNumber,10)<cnt){
-            win.alert("<b style='color:red'>不能做此操作!</b>此操作将导致，<br>选择的元素总数超过包内最大选择数:"+pkg.maxNumber);
+        if (pkg.getAttribute('maxNumber')!="-1"&&parseInt(pkg.getAttribute('maxNumber'),10)<cnt){
+            win.alert("<b style='color:red'>不能做此操作!</b>此操作将导致，<br>选择的元素总数超过包内最大选择数:"+pkg.getAttribute('maxNumber'));
             return false;
-        }else if (pkg.minNumber!="-1"&&parseInt(pkg.minNumber,10)>cnt){
-            win.alert("<b style='color:red'>不能做此操作!</b>此操作将导致，<br>选择的元素总数少于包内最小选择数:"+pkg.minNumber);
+        }else if (pkg.getAttribute('minNumber')!="-1"&&parseInt(pkg.getAttribute('minNumber'),10)>cnt){
+            win.alert("<b style='color:red'>不能做此操作!</b>此操作将导致，<br>选择的元素总数少于包内最小选择数:"+pkg.getAttribute('minNumber'));
             return false;
         }
     }
@@ -3756,11 +3756,11 @@ function checkOperator(productId, packageId) {
 	    		
         });
         
-        if (needCheckPkg&&pkg.maxNumber!="-1"&&parseInt(pkg.maxNumber,10)<cntElm){
-            win.alert("<b style='color:red'>不能做此操作!</b>此操作将导致，<br>选择的元素总数超过包内最大选择数:"+pkg.maxNumber);
+        if (needCheckPkg&&pkg.getAttribute('maxNumber')!="-1"&&parseInt(pkg.getAttribute('maxNumber'),10)<cntElm){
+            win.alert("<b style='color:red'>不能做此操作!</b>此操作将导致，<br>选择的元素总数超过包内最大选择数:"+pkg.getAttribute('maxNumber'));
             return false;
-        }else if (needCheckPkg&&pkg.minNumber!="-1"&&parseInt(pkg.minNumber,10)>cntElm){
-            win.alert("<b style='color:red'>不能做此操作!</b>此操作将导致，<br>选择的元素总数少于包内最小选择数:"+pkg.minNumber);
+        }else if (needCheckPkg&&pkg.getAttribute('minNumber')!="-1"&&parseInt(pkg.getAttribute('minNumber'),10)>cntElm){
+            win.alert("<b style='color:red'>不能做此操作!</b>此操作将导致，<br>选择的元素总数少于包内最小选择数:"+pkg.getAttribute('minNumber'));
             return false;
         }else if (pdt.maxNumber!="-1"&&parseInt(pdt.maxNumber,10)<cntPkg){
             win.alert("<b style='color:red'>不能做此操作!</b>此操作将导致，<br>选择的包总数超过产品内包的最大选择数:"+pdt.maxNumber);
@@ -4366,55 +4366,55 @@ function checkBeforeGeneTrade() {
 					var elementConut = 0;
 					$A($('p'+s.getAttribute('productId')).all).each(function (m) {
 			    	    if(m.tagName.toUpperCase() == 'INPUT' && m.type.toUpperCase() == 'CHECKBOX'
-			    	        && m.packageId == s.getAttribute('packageId')
-					        && m._thisType != 'undefined' && m._thisType.toUpperCase() == 'ELEMENT' && m.checked) {
+			    	        && m.getAttribute('packageId') == s.getAttribute('packageId')
+					        && m.getAttribute('_thisType') != 'undefined' && m.getAttribute('_thisType').toUpperCase() == 'ELEMENT' && m.checked) {
 					     	elementConut++;
 					     	
-					     	var ele = $("_p"+s.getAttribute('productId')+"k"+s.packageId+"e"+m.elementId+"T"+"D");
+					     	var ele = $("_p"+s.getAttribute('productId')+"k"+s.getAttribute('packageId')+"e"+m.getAttribute('elementId')+"T"+"D");
 					     	if (ele == null)
-					     		ele = $("_p"+s.getAttribute('productId')+"k"+s.packageId+"e"+m.elementId+"T"+"S");
+					     		ele = $("_p"+s.getAttribute('productId')+"k"+s.getAttribute('packageId')+"e"+m.getAttribute('elementId')+"T"+"S");
 					     	if (ele == null)
-					     		ele = $("_p"+s.getAttribute('productId')+"k"+s.packageId+"e"+m.elementId+"T"+"X");
+					     		ele = $("_p"+s.getAttribute('productId')+"k"+s.getAttribute('packageId')+"e"+m.getAttribute('elementId')+"T"+"X");
 							if (ele == null)
-					     		ele = $("_p"+s.getAttribute('productId')+"k"+s.packageId+"e"+m.elementId+"T"+"C");
+					     		ele = $("_p"+s.getAttribute('productId')+"k"+s.getAttribute('packageId')+"e"+m.getAttribute('elementId')+"T"+"C");
 					     		
 					     	if(ele && typeof(ele.hasAttr)!='undefined' && !ele.hasAttr.blank()&&ele.hasAttr!="0"){
 					     		var tempEle ={};
-					     		tempEle.elementId = ele.elementId;
-					     		tempEle.elementTypeCode = ele.elementTypeCode;
-					     		tempEle.elementName = ele.elementName;
-					     		if(typeof m.itemObjNew=="undefined")
+					     		tempEle.elementId = ele.getAttribute('elementId');
+					     		tempEle.elementTypeCode = ele.getAttribute('elementTypeCode');
+					     		tempEle.elementName = ele.getAttribute('elementName');
+					     		if(typeof m.getAttribute('itemObjNew')=="undefined")
 					     			tempEle.itemObjNew = "N";
 					     		else
-					     			tempEle.itemObjNew = m.itemObjNew;
+					     			tempEle.itemObjNew = m.getAttribute('itemObjNew');
 					     		tradeAttr.push(tempEle);
 					     		
 					     	}
 					     	
 					    }    		 
         			});	
-        			var pkg = $('_p'+s.getAttribute('productId')+'k'+s.packageId);
-        			if(elementConut == 0  && $("p"+s.productId+"k"+s.packageId).getAttribute('first').toUpperCase() != 'TRUE') throw new Error('业务包：\"' + pkg.packageName + '\"至少选择1个元素，业务无法继续！');
-        			if (pkg.maxNumber !="-1" && parseInt(pkg.maxNumber,10) <elementConut)
-						throw new Error('业务包：\"' + pkg.packageName + '\"最多选择'+pkg.maxNumber+'个元素，业务无法继续！');
-					if (pkg.minNumber !="-1" && parseInt(pkg.minNumber,10) >elementConut)
-						throw new Error('业务包：\"' + pkg.packageName + '\"最少选择'+pkg.minNumber+'个元素，业务无法继续！');
+        			var pkg = $('_p'+s.getAttribute('productId')+'k'+s.getAttribute('packageId'));
+        			if(elementConut == 0  && $("p"+s.getAttribute('productId')+"k"+s.getAttribute('packageId')).getAttribute('first').toUpperCase() != 'TRUE') throw new Error('业务包：\"' + pkg.getAttribute('packageName') + '\"至少选择1个元素，业务无法继续！');
+        			if (pkg.getAttribute('maxNumber') !="-1" && parseInt(pkg.getAttribute('maxNumber'),10) <elementConut)
+						throw new Error('业务包：\"' + pkg.getAttribute('packageName') + '\"最多选择'+pkg.getAttribute('maxNumber')+'个元素，业务无法继续！');
+					if (pkg.getAttribute('minNumber') !="-1" && parseInt(pkg.getAttribute('minNumber'),10) >elementConut)
+						throw new Error('业务包：\"' + pkg.getAttribute('packageName') + '\"最少选择'+pkg.getAttribute('minNumber')+'个元素，业务无法继续！');
 					
 				}
 			});
 						
-			if ($('_p'+prod.getAttribute('productId')).maxNumber !="-1" && parseInt($('_p'+prod.getAttribute('productId')).maxNumber,10) <packageCount)
-				throw new Error('产品：\"' + prod.getAttribute('productName') + '\"最多选择'+$('_p'+prod.getAttribute('productId')).maxNumber+'个业务包，业务无法继续！');
+			if ($('_p'+prod.getAttribute('productId')).getAttribute('maxNumber') !="-1" && parseInt($('_p'+prod.getAttribute('productId')).getAttribute('maxNumber'),10) <packageCount)
+				throw new Error('产品：\"' + prod.getAttribute('productName') + '\"最多选择'+$('_p'+prod.getAttribute('productId')).getAttribute('maxNumber')+'个业务包，业务无法继续！');
 						
-			if ($('_p'+prod.getAttribute('productId')).minNumber !="-1" && parseInt($('_p'+prod.getAttribute('productId')).minNumber,10) >packageCount)
-				throw new Error('产品：\"' + prod.getAttribute('productName') + '\"最少选择'+$('_p'+prod.getAttribute('productId')).minNumber+'个业务包，业务无法继续！');
+			if ($('_p'+prod.getAttribute('productId')).getAttribute('minNumber') !="-1" && parseInt($('_p'+prod.getAttribute('productId')).getAttribute('minNumber'),10) >packageCount)
+				throw new Error('产品：\"' + prod.getAttribute('productName') + '\"最少选择'+$('_p'+prod.getAttribute('productId')).getAttribute('minNumber')+'个业务包，业务无法继续！');
 			
 			
 			$A($('p'+prod.getAttribute('productId')).all).each(function(elem) {
 				if(elem.tagName.toUpperCase() == 'INPUT' && elem.type.toUpperCase() == 'CHECKBOX'
-					&& elem.getAttribute('_thisType') != 'undefined' && elem.getAttribute('_thisType').toUpperCase() == 'PACKAGE' && elem.needExp == '1'
+					&& elem.getAttribute('_thisType') != 'undefined' && elem.getAttribute('_thisType').toUpperCase() == 'PACKAGE' && elem.getAttribute('needExp') == '1'
 					&& elem.checked && $("p"+elem.getAttribute('productId')+"k"+elem.getAttribute('packageId')).getAttribute('first').toUpperCase() == 'TRUE') {
-						throw new Error('请展开产品：\"' + prod.getAttribute('productName') + '\"的业务包：\"' + elem.packageName + '\"进行选择操作！');
+						throw new Error('请展开产品：\"' + prod.getAttribute('productName') + '\"的业务包：\"' + elem.getAttribute('packageName') + '\"进行选择操作！');
 				}
 			});
 		}
@@ -4435,36 +4435,36 @@ function checkBeforeGeneTrade() {
 					&& s.checked) {
 					packageCount ++
 					var elementConut = 0;
-					$A($('p'+s.productId).all).each(function (m) {
+					$A($('p'+s.getAttribute('productId')).all).each(function (m) {
 			    	    if(m.tagName.toUpperCase() == 'INPUT' && m.type.toUpperCase() == 'CHECKBOX'
-			    	        && m.packageId == s.getAttribute('packageId')
-					        && m._thisType != 'undefined' && m._thisType.toUpperCase() == 'ELEMENT' && m.checked) {
+			    	        && m.getAttribute('packageId') == s.getAttribute('packageId')
+					        && m.getAttribute('_thisType') != 'undefined' && m.getAttribute('_thisType').toUpperCase() == 'ELEMENT' && m.checked) {
 					     	elementConut++;
 					     	
 					    }    		
         			});	
-        			var pkg = $('_p'+s.productId+'k'+s.packageId);
-        			if(elementConut == 0 && $("p"+s.productId+"k"+s.packageId).getAttribute('first').toUpperCase() != 'TRUE') throw new Error('业务包：\"' + pkg.packageName + '\"至少选择1个元素，业务无法继续！');
-        			if (pkg.maxNumber !="-1" && parseInt(pkg.maxNumber,10) <elementConut)
-						throw new Error('业务包：\"' + pkg.packageName + '\"最多选择'+pkg.maxNumber+'个元素，业务无法继续！');
-					if (pkg.minNumber !="-1" && parseInt(pkg.minNumber,10) >elementConut)
-						throw new Error('业务包：\"' + pkg.packageName + '\"最少选择'+pkg.minNumber+'个元素，业务无法继续！');
+        			var pkg = $('_p'+s.getAttribute('productId')+'k'+s.getAttribute('packageId'));
+        			if(elementConut == 0 && $("p"+s.getAttribute('productId')+"k"+s.getAttribute('packageId')).getAttribute('first').toUpperCase() != 'TRUE') throw new Error('业务包：\"' + pkg.getAttribute('packageName') + '\"至少选择1个元素，业务无法继续！');
+        			if (pkg.getAttribute('maxNumber') !="-1" && parseInt(pkg.getAttribute('maxNumber'),10) <elementConut)
+						throw new Error('业务包：\"' + pkg.getAttribute('packageName') + '\"最多选择'+pkg.getAttribute('maxNumber')+'个元素，业务无法继续！');
+					if (pkg.getAttribute('minNumber') !="-1" && parseInt(pkg.getAttribute('minNumber'),10) >elementConut)
+						throw new Error('业务包：\"' + pkg.getAttribute('packageName') + '\"最少选择'+pkg.getAttribute('minNumber')+'个元素，业务无法继续！');
 				}
 			});
 			
 
-		    if ($('_p'+prod.getAttribute('productId')).maxNumber !="-1" && parseInt($('_p'+prod.getAttribute('productId')).maxNumber,10) <packageCount)
-				throw new Error('产品：\"' + prod.getAttribute('productName') + '\"最多选择'+$('_p'+prod.getAttribute('productId')).maxNumber+'个业务包，业务无法继续！');
+		    if ($('_p'+prod.getAttribute('productId')).getAttribute('maxNumber') !="-1" && parseInt($('_p'+prod.getAttribute('productId')).getAttribute('maxNumber'),10) <packageCount)
+				throw new Error('产品：\"' + prod.getAttribute('productName') + '\"最多选择'+$('_p'+prod.getAttribute('productId')).getAttribute('maxNumber')+'个业务包，业务无法继续！');
 						
-			if ($('_p'+prod.getAttribute('productId')).minNumber !="-1" && parseInt($('_p'+prod.getAttribute('productId')).minNumber,10) >packageCount)
-				throw new Error('产品：\"' + prod.getAttribute('productName') + '\"最少选择'+$('_p'+prod.getAttribute('productId')).minNumber+'个业务包，业务无法继续！');
+			if ($('_p'+prod.getAttribute('productId')).getAttribute('minNumber') !="-1" && parseInt($('_p'+prod.getAttribute('productId')).getAttribute('minNumber'),10) >packageCount)
+				throw new Error('产品：\"' + prod.getAttribute('productName') + '\"最少选择'+$('_p'+prod.getAttribute('productId')).getAttribute('minNumber')+'个业务包，业务无法继续！');
 			
 					
 			$A($('p'+prod.getAttribute('productId')).all).each(function(elem) {
 				if(elem.tagName.toUpperCase() == 'INPUT' && elem.type.toUpperCase() == 'CHECKBOX'
-					&& elem.getAttribute('_thisType') != 'undefined' && elem.getAttribute('_thisType').toUpperCase() == 'PACKAGE' && elem.needExp == '1'
+					&& elem.getAttribute('_thisType') != 'undefined' && elem.getAttribute('_thisType').toUpperCase() == 'PACKAGE' && elem.getAttribute('needExp') == '1'
 					&& elem.checked && $("p"+elem.getAttribute('productId')+"k"+elem.getAttribute('packageId')).getAttribute('first').toUpperCase() == 'TRUE') {
-						throw new Error('请展开产品：\"' + prod.getAttribute('productName') + '\"的业务包：\"' + elem.packageName + '\"进行选择操作！');
+						throw new Error('请展开产品：\"' + prod.getAttribute('productName') + '\"的业务包：\"' + elem.getAttribute('packageName') + '\"进行选择操作！');
 				}
 			});
 		}
@@ -4528,10 +4528,10 @@ function geneTradeInfo() {
 	 */
 	 
 	$A($(productArea).all).each(function(prod) {
-		console.log('++++ genTradeInfo 4 ++++');
 
 		if(prod.tagName.toUpperCase() == 'INPUT' && prod.type.toUpperCase() == 'CHECKBOX'
 			&& prod.getAttribute('_thisType') != 'undefined' && prod.getAttribute('_thisType').toUpperCase() == 'PRODUCT') {
+			console.log('++++ genTradeInfo 4 ++++');
 						
 			//新增产品
 			if(prod.getAttribute('modifyTag') == '0') {
@@ -4556,17 +4556,14 @@ function geneTradeInfo() {
 					// console.log(prod.getAttribute('productId'))
 					// console.log($('p'+ prod.getAttribute('productId')).outerHTML + '\n');
 					$A($('p' + prod.getAttribute('productId')).all).each(function(elem) {
-						console.log('++++ genTradeInfo 4-4-a ++++');
-						// console.log(elem.outerHTML)
 						//包是否展开处理(处理包已选择的)
 						if(elem.tagName.toUpperCase() == 'INPUT' && elem.type.toUpperCase() == 'CHECKBOX'
 							&& elem.getAttribute('_thisType') != 'undefined' && elem.getAttribute('_thisType').toUpperCase() == 'PACKAGE'
 							&& elem.checked && $("p"+elem.getAttribute('productId')+"k"+elem.getAttribute('packageId')).getAttribute('first').toUpperCase() == 'TRUE') {
 							//生成包未展开台帐
-							console.log('++++ genTradeInfo 4-4-1 ++++');
+							console.log('++++ genTradeInfo 4-5 ++++');
 							tradeNoExp.push(geneNoExpInfo(elem.getAttribute('productId'), elem.getAttribute('packageId'), '0', prod.getAttribute('_submitStartDate'), prod.getAttribute('_submitEndDate'), prod.getAttribute('productMode'), prod.getAttribute('brandCode')));
 						}
-						console.log('++++ genTradeInfo 4-5 ++++');
 												
 						if(elem.tagName.toUpperCase() == 'INPUT' && elem.type.toUpperCase() == 'CHECKBOX'
 							&& elem.getAttribute('_thisType') != 'undefined' && elem.getAttribute('_thisType').toUpperCase() == 'ELEMENT'
@@ -4575,7 +4572,7 @@ function geneTradeInfo() {
 							console.log('++++ genTradeInfo 4-6 ++++\n');
 							//新增优惠台帐
 							if(elem.getAttribute('elementTypeCode').toUpperCase() == 'D') {
-								console.log('++++ genTradeInfo 5 ++++');
+								console.log('++++ genTradeInfo 5 ++++\n');
 								tradeDiscnt.push(geneDiscntInfo(elem, '0'));
 								//生成属性台帐子表
 								tradeSubItem = tradeSubItem.concat(geneTradeSubItemInfo('3', elem));				
@@ -4646,8 +4643,8 @@ function geneTradeInfo() {
 							else if(elem.getAttribute('elementTypeCode').toUpperCase() == 'I'){								
 								if(score<elem.score)
 									throw new Error('用户积分不够！');
-								tradeScore.push(geneTradeScore(score,elem.score));	
-								tradeScoresub.push(geneTradeScoresub(elem, elem.score));
+								tradeScore.push(geneTradeScore(score,elem.getAttribute('score')));	
+								tradeScoresub.push(geneTradeScoresub(elem, elem.getAttribute('score')));
 								tradeElement.push(geneElementInfo(elem, '0'));
 							}
 						}
@@ -4728,18 +4725,18 @@ function geneTradeInfo() {
 							&& $("p"+elem.getAttribute('productId')+"k"+elem.getAttribute('packageId')).getAttribute('first').toUpperCase() == 'TRUE') {
 							
 							//用户原有包(modifyTag='9')，选中时不处理，取消选中时生成删除未展开台帐
-							if(!elem.checked && elem.modifyTag == '9') {
+							if(!elem.checked && elem.getAttribute('modifyTag') == '9') {
 								//生成包未展开台帐
-								tradeNoExp.push(geneNoExpInfo(elem.getAttribute('productId'), elem.getAttribute('packageId'), '1', prod.startDate, mOldProdEndDate, prod.getAttribute('productMode'), prod.getAttribute('brandCode')));
+								tradeNoExp.push(geneNoExpInfo(elem.getAttribute('productId'), elem.getAttribute('packageId'), '1', prod.getAttribute('startDate'), mOldProdEndDate, prod.getAttribute('productMode'), prod.getAttribute('brandCode')));
 								
 								//生成用户原有包完全删除台帐信息
-								tradeNoExp.push(geneDelPackInfo(elem.getAttribute('productId'), elem.getAttribute('packageId'), '1', prod.startDate, mOldProdEndDate, prod.getAttribute('productMode'), prod.getAttribute('brandCode')));
+								tradeNoExp.push(geneDelPackInfo(elem.getAttribute('productId'), elem.getAttribute('packageId'), '1', prod.getAttribute('startDate'), mOldProdEndDate, prod.getAttribute('productMode'), prod.getAttribute('brandCode')));
 							}
 							
 							//新增包(modifyTag='0')，选中时生成新增未展开台帐，取消选中时不处理
-							if(elem.checked && elem.modifyTag == '0') {
+							if(elem.checked && elem.getAttribute('modifyTag') == '0') {
 								//生成包未展开台帐
-								tradeNoExp.push(geneNoExpInfo(elem.getAttribute('productId'), elem.getAttribute('packageId'), '0', mProdStartDate, prod.endDate, prod.getAttribute('productMode'), prod.getAttribute('brandCode')));
+								tradeNoExp.push(geneNoExpInfo(elem.getAttribute('productId'), elem.getAttribute('packageId'), '0', mProdStartDate, prod.getAttribute('endDate'), prod.getAttribute('productMode'), prod.getAttribute('brandCode')));
 							}
 						}
 						
@@ -4747,7 +4744,7 @@ function geneTradeInfo() {
 							&& elem.getAttribute('_thisType') != 'undefined' && elem.getAttribute('_thisType').toUpperCase() == 'ELEMENT') {
 							
 							//用户原有元素(modifyTag='9')，选中不处理，取消选中时生成删除台帐
-							if(!elem.checked && elem.modifyTag == '9') {
+							if(!elem.checked && elem.getAttribute('modifyTag') == '9') {
 
 								//删除优惠台帐
 								if(elem.getAttribute('elementTypeCode').toUpperCase() == 'D') {
@@ -4775,7 +4772,7 @@ function geneTradeInfo() {
 							}
 							
 							//用户原有元素选中时修改属性
-							if(elem.checked && elem.modifyTag == '9') {
+							if(elem.checked && elem.getAttribute('modifyTag') == '9') {
 								if(elem.getAttribute('elementTypeCode').toUpperCase() == 'D') {									
 									tradeSubItem = tradeSubItem.concat(geneTradeSubItemInfo('3', elem));
 								}
@@ -4791,7 +4788,7 @@ function geneTradeInfo() {
 							}
 							
 							//新增元素(modifyTag='0')，选中时生成新增台帐，取消选中时不处理
-							if(elem.checked && elem.modifyTag == '0') {
+							if(elem.checked && elem.getAttribute('modifyTag') == '0') {
 								
 								//新增优惠台帐
 								if(elem.getAttribute('elementTypeCode').toUpperCase() == 'D') {
@@ -4863,7 +4860,7 @@ function geneTradeInfo() {
 						
 						if(elem.tagName.toUpperCase() == 'INPUT' && elem.type.toUpperCase() == 'CHECKBOX'
 							&& elem.getAttribute('_thisType') != 'undefined' && elem.getAttribute('_thisType').toUpperCase() == 'ELEMENT'
-							&& elem.modifyTag == '9') {
+							&& elem.getAttribute('modifyTag') == '9') {
 							
 							//删除优惠台帐
 							if(elem.getAttribute('elementTypeCode').toUpperCase() == 'D') {
@@ -4995,7 +4992,7 @@ function geneTradeInfo() {
 							}	
 						}
 						if(activeEndDate != "")
-							prod._endDate = activeEndDate;
+							prod.setAttribute('_endDate',activeEndDate);
 					   //qc:95752 end
 						tradeProduct.push(geneProdInfo(prod, '0'));
 						//begin zhangzc 149279
@@ -5327,7 +5324,7 @@ function geneTradeInfo() {
 								else if(elem.getAttribute('elementTypeCode').toUpperCase() == 'A') {
 									isHasElement = true;
 									tradeElement.push(geneElementInfo(elem, '0'));
-									elem.isPartActive = isPartActive;
+									elem.setAttribute('isPartActive',isPartActive);
 									//qc:95764 校验礼品属性 add by xiexc start
 									if((typeof elem.itemObjNew=="undefined")&&(elem.hasAttr&&!elem.hasAttr.blank()&&elem.hasAttr!="0")){
 									    throw new Error('请设置礼品'+elem.elementName+'属性之后再保存！');
@@ -5462,7 +5459,7 @@ function geneTradeInfo() {
 						if(elem.tagName.toUpperCase() == 'INPUT' && elem.type.toUpperCase() == 'CHECKBOX'
 							&& elem.getAttribute('_thisType') != 'undefined' && elem.getAttribute('_thisType').toUpperCase() == 'ELEMENT') {
 							
-							if(elem.checked && elem.modifyTag == '0') {
+							if(elem.checked && elem.getAttribute('modifyTag') == '0') {
 								if(elem.getAttribute('elementTypeCode').toUpperCase() == 'D') {
 									hasDiscntAdd = true;
 								}
@@ -5531,6 +5528,7 @@ function geneTradeInfo() {
 	
 	if(tradeAssure.length > 0) Cs.ctrl.Trade.saveObject("TF_B_TRADE_ASSURE", {ITEM: tradeAssure});
 	
+	console.log('++++ genTradeInfo end ++++');
 	return true;
 }
 
@@ -5559,17 +5557,17 @@ function geneTradeSubItemInfo(attrTypeCode, srcObject) {
 	var startDate = '';
 	var endDate = '';
 	
-	if(srcObject.modifyTag == '0') {
-		startDate = srcObject._submitStartDate;
-		endDate = srcObject._submitEndDate;
+	if(srcObject.getAttribute('modifyTag') == '0') {
+		startDate = srcObject.getAttribute('_submitStartDate');
+		endDate = srcObject.getAttribute('_submitEndDate');
 	}
-	else if(srcObject.modifyTag == '9') {
+	else if(srcObject.getAttribute('modifyTag') == '9') {
 		startDate = Cs.ctrl.Trade.getSysDate();
-		endDate = srcObject.endDate;
+		endDate = srcObject.getAttribute('endDate');
 	}
-	else if(srcObject.modifyTag == '1') {
-		startDate = srcObject._submitStartDate;
-		endDate = srcObject._submitEndDate;
+	else if(srcObject.getAttribute('modifyTag') == '1') {
+		startDate = srcObject.getAttribute('_submitStartDate');
+		endDate = srcObject.getAttribute('_submitEndDate');
 	}
 
 	
@@ -5623,21 +5621,21 @@ function geneProdInfo(prod, modifyTag) {
 	
 	if(modifyTag == '0') {
 		//附加产品生效时间：取附加产品与基本产品的大值
-		startDate = prod.getAttribute('_startDate') > mProdStartDate ? prod._startDate : mProdStartDate;
+		startDate = prod.getAttribute('_startDate') > mProdStartDate ? prod.getAttribute('_startDate') : mProdStartDate;
 		endDate = prod.getAttribute('_endDate');		
 	} else if(modifyTag == '1') {
-		startDate = prod.startDate;
+		startDate = prod.getAttribute('startDate');
 		endDate = mOldProdEndDate;
 	}else if (modifyTag == '4')//begin tfs:291295  add by qinjl
 	{
-		startDate = prod.startDate;
+		startDate = prod.getAttribute('startDate');
 		endDate = mOldProdEndDate;
 	}//end
 	//记录提交时间
-	prod._submitStartDate = startDate;
-	prod._submitEndDate = endDate;
+	prod.setAttribute('_submitStartDate', startDate);
+	prod.setAttribute('_submitEndDate', endDate);
 	params += 'PRODUCT_ID='+prod.getAttribute('productId') + '&PRODUCT_MODE='+prod.getAttribute('productMode') + '&START_DATE='+startDate + '&END_DATE='+endDate;
-	params += '&MODIFY_TAG=' + modifyTag + '&USER_ID_A=' + userIdA + '&ITEM_ID='+prod.itemId + '&BRAND_CODE='+prod.brandCode + '&X_DATATYPE=NULL';
+	params += '&MODIFY_TAG=' + modifyTag + '&USER_ID_A=' + userIdA + '&ITEM_ID='+prod.getAttribute('itemId') + '&BRAND_CODE='+prod.getAttribute('brandCode') + '&X_DATATYPE=NULL';
 	
 	return params.toQueryParams();
 }
@@ -5657,20 +5655,20 @@ function geneProType(prod, modifyTag,productTypeCodeIn) {
 	    return;
 	if(modifyTag == '0') {
 		//附加产品生效时间：取附加产品与基本产品的大值
-		startDate = prod.getAttribute('_startDate') > mProdStartDate ? prod._startDate : mProdStartDate;
+		startDate = prod.getAttribute('_startDate') > mProdStartDate ? prod.getAttribute('_startDate') : mProdStartDate;
 		endDate = prod.getAttribute('_endDate');		
 	} else if(modifyTag == '1') {
-		startDate = prod.startDate;
+		startDate = prod.getAttribute('startDate');
 		endDate = mOldProdEndDate;
 	}else if (modifyTag == '4')//begin tfs:291295  add by qinjl
 	{
-		startDate = prod.startDate;
+		startDate = prod.getAttribute('startDate');
 		endDate = mOldProdEndDate;
 	}//end
 	
 	//记录提交时间
-	prod._submitStartDate = startDate;
-	prod._submitEndDate = endDate;
+	prod.setAttribute('_submitStartDate', startDate);
+	prod.setAttribute('_submitEndDate', endDate);
 	params += 'PRODUCT_ID='+prod.getAttribute('productId') + '&PRODUCT_MODE='+prod.getAttribute('productMode') + '&START_DATE='+startDate + '&END_DATE='+endDate;
 	params += '&MODIFY_TAG=' + modifyTag +"&X_DATATYPE=NULL" ;
 	
@@ -5719,26 +5717,26 @@ function geneDiscntInfo(discnt, modifyTag) {
 	
 	if(modifyTag == '0') {
 		if(tradeTypeCode=="12"){//用户资料反档生失效时间：按页面中计算时间 add by xuyh@20090604
-			startDate = discnt._startDate;
-			endDate = discnt._endDate;
+			startDate = discnt.getAttribute('_startDate');
+			endDate = discnt.getAttribute('_endDate');
 		}else{
 			//附加产品中优惠生效时间：取元素生效时间与基本产品的大值
-			startDate = discnt._startDate > mProdStartDate ? discnt._startDate : mProdStartDate;
-			endDate = discnt._endDate;
+			startDate = discnt.getAttribute('_startDate') > mProdStartDate ? discnt.getAttribute('_startDate') : mProdStartDate;
+			endDate = discnt.getAttribute('_endDate');
 		}
 	} else if(modifyTag == '1') {
 		if(tradeTypeCode=="12"){//用户资料反档生失效时间：按页面中计算时间 add by xuyh@20090604
-			startDate = discnt._startDate;
-			endDate = discnt._endDate;
+			startDate = discnt.getAttribute('_startDate');
+			endDate = discnt.getAttribute('_endDate');
 		}else{
-			startDate = discnt.startDate;
+			startDate = discnt.getAttribute('startDate');
 			//endDate = mOldProdEndDate;
-			endDate = mOldProdEndDate > discnt._endDate ? discnt._endDate : mOldProdEndDate;//老优惠处理
+			endDate = mOldProdEndDate > discnt.getAttribute('_endDate') ? discnt.getAttribute('_endDate') : mOldProdEndDate;//老优惠处理
 		}
 	}else if (modifyTag == '4')//begin tfs:291295  add by qinjl
 	{
-		startDate = discnt.startDate;
-		endDate = mOldProdEndDate > discnt._endDate ? discnt._endDate : mOldProdEndDate;//老优惠处理
+		startDate = discnt.getAttribute('startDate');
+		endDate = mOldProdEndDate > discnt.getAttribute('_endDate') ? discnt.getAttribute('_endDate') : mOldProdEndDate;//老优惠处理
 	}//end
 
 	if(modifyTag == '0'){
@@ -5761,12 +5759,12 @@ function geneDiscntInfo(discnt, modifyTag) {
 	}
 	
 	//记录提交时间
-	discnt._submitStartDate = startDate;
-	discnt._submitEndDate = endDate;
+	discnt.setAttribute('_submitStartDate', startDate);
+	discnt.setAttribute('_submitEndDate', endDate);
 
-	params += 'ID='+userId + '&ID_TYPE='+idType + '&PRODUCT_ID='+discnt.productId + '&PACKAGE_ID='+discnt.packageId;
-	params += '&DISCNT_CODE='+discnt.elementId + '&SPEC_TAG='+specTag + '&MODIFY_TAG='+modifyTag + '&START_DATE='+startDate;
-	params += '&END_DATE='+endDate + '&RELATION_TYPE_CODE='+relationTypeCode + '&USER_ID_A=' + userIdA + '&ITEM_ID='+discnt.itemId + '&X_DATATYPE=NULL';
+	params += 'ID='+userId + '&ID_TYPE='+idType + '&PRODUCT_ID='+discnt.getAttribute('productId') + '&PACKAGE_ID='+discnt.getAttribute('packageId');
+	params += '&DISCNT_CODE='+discnt.getAttribute('elementId') + '&SPEC_TAG='+specTag + '&MODIFY_TAG='+modifyTag + '&START_DATE='+startDate;
+	params += '&END_DATE='+endDate + '&RELATION_TYPE_CODE='+relationTypeCode + '&USER_ID_A=' + userIdA + '&ITEM_ID='+discnt.getAttribute('itemId') + '&X_DATATYPE=NULL';
 	
 	return params.toQueryParams();
 }
@@ -5788,46 +5786,46 @@ function geneSvcInfo(svc, modifyTag) {
 		/*if($('_p'+svc.productId).modifyTag == '9')
 			startDate = mProdStartDate;
 		else
-			startDate = svc._startDate;*/
+			startDate = svc.getAttribute('_startDate');*/
 		
 		
 		if(tradeTypeCode=="12"){//用户资料反档生失效时间：按页面中计算时间 add by xuyh@20090604
-			startDate = svc._startDate;
-			endDate = svc._endDate;
+			startDate = svc.getAttribute('_startDate');
+			endDate = svc.getAttribute('_endDate');
 			// 81561 begin
-					}else if(svc.svcStartMode && svc.svcStartMode == "1"){
+					}else if(svc.getAttribute('svcStartMode') && svc.getAttribute('svcStartMode') == "1"){
 			//alert("取消手机上网流量封顶服务月末失效特殊处理");
-			if(compSvcDate(svc.elementId))
+			if(compSvcDate(svc.getAttribute('elementId')))
 				startDate	= Cs.ctrl.Trade.getSysDate();
 			else
 				startDate = Cs.util.Utility.computeDate(Cs.ctrl.Trade.getSysDate(),"3",1);
-			endDate= svc._endDate;
+			endDate= svc.getAttribute('_endDate');
 			// 81561 end
 		}else{
 			//附加产品中服务生效时间：取元素生效时间与基本产品的大值
-			startDate = svc._startDate > mProdStartDate ? svc._startDate : mProdStartDate
-			endDate = svc._endDate;
+			startDate = svc.getAttribute('_startDate') > mProdStartDate ? svc.getAttribute('_startDate') : mProdStartDate
+			endDate = svc.getAttribute('_endDate');
 			
 		}
 		
 	} else if(modifyTag == '1') {
 		if(tradeTypeCode=="12"){//用户资料反档生失效时间：按页面中计算时间 add by xuyh@20090604
-			startDate = svc._startDate;
-			endDate = svc._endDate;
-		}else if(svc.svcEndMode && svc.svcEndMode == "1"){//"取消手机上网流量封顶"服务月末失效特殊处理。 modified by jiaxl@2012-03-30
+			startDate = svc.getAttribute('_startDate');
+			endDate = svc.getAttribute('_endDate');
+		}else if(svc.getAttribute('svcEndMode') && svc.getAttribute('svcEndMode') == "1"){//"取消手机上网流量封顶"服务月末失效特殊处理。 modified by jiaxl@2012-03-30
 			//alert("取消手机上网流量封顶服务月末失效特殊处理");
-			startDate = svc.startDate;
+			startDate = svc.getAttribute('startDate');
 		//	endDate=Cs.util.Utility.computeDate(Cs.util.Utility.computeDate(startDate,"3",1),"6",-1);
 		  
 		  // 18561 begin		
-			if(compSvcDate(svc.elementId))
+			if(compSvcDate(svc.getAttribute('elementId')))
 				endDate = mOldProdEndDate;
 			else
 				endDate=Cs.util.Utility.computeDate(Cs.util.Utility.computeDate(Cs.ctrl.Trade.getSysDate(),"3",1),"6",-1);
      // 18561 end
      
 		}else{
-			startDate = svc.startDate;
+			startDate = svc.getAttribute('startDate');
 		    //qc 11065 begin
 			if($('pagecontext').provinceId=='0011'){
 				endDate = Cs.util.Utility.computeDate(mOldProdEndDate, '6', -1);
@@ -5835,22 +5833,22 @@ function geneSvcInfo(svc, modifyTag) {
 			//qc 33698  begin 
 			else if ($("N1_33698_TAG_CODE") && $("N1_33698_TAG_CODE").value=="1")
 			{
-				if(svc.discntSel!=""&&svc.discntSel=="-1")
+				if(svc.getAttribute('discntSel')!=""&&svc.getAttribute('discntSel')=="-1")
 				{
 					var pElement = null;
 					for (pElement=svc.parentNode; pElement!=window.document; pElement=pElement.parentNode)
 					{
 						if(pElement.tagName.toUpperCase() == 'INPUT' && pElement.type.toUpperCase() == 'CHECKBOX'
-							&& pElement._thisType != 'undefined' && pElement._thisType.toUpperCase() == 'PRODUCT')
+							&& pElement.getAttribute('_thisType') != 'undefined' && pElement.getAttribute('_thisType').toUpperCase() == 'PRODUCT')
 						{
 							break;
 						}
 					}
-					if ( pElement!=null && (svc._endDate>pElement._endDate) )
+					if ( pElement!=null && (svc.getAttribute('_endDate')>pElement.getAttribute('_endDate')) )
 					{
 						throw new Error("预约取消时间不能大于产品失效时间!");
 					}
-					endDate = svc._endDate;
+					endDate = svc.getAttribute('_endDate');
 				}
 				else
 				{
@@ -5865,7 +5863,7 @@ function geneSvcInfo(svc, modifyTag) {
 		}
 	}else if (modifyTag == '4')//begin tfs:291295  add by qinjl
 	{
-		startDate = svc.startDate;
+		startDate = svc.getAttribute('startDate');
 		endDate = mOldProdEndDate;
 	}//end
 	if(modifyTag == '0'){
@@ -5886,16 +5884,16 @@ function geneSvcInfo(svc, modifyTag) {
 	}
 	//取消特服时若前台加载了失效时间选择场景并且营业员进行了选择就取_endDate为台账失效时间
 	if(modifyTag == '1'){
-		if(svc.discntEndSel!=undefined&&svc.discntEndSel!='-1')
-			endDate = svc._endDate;
+		if(svc.getAttribute('discntEndSel')!=undefined&&svc.getAttribute('discntEndSel')!='-1')
+			endDate = svc.getAttribute('_endDate');
 	}
 		
 	//记录提交时间
-	svc._submitStartDate = startDate;
-	svc._submitEndDate = endDate;
+	svc.setAttribute('_submitStartDate', startDate);
+	svc.setAttribute('_submitEndDate', endDate);
 
-	params += 'SERVICE_ID='+svc.elementId + '&PRODUCT_ID='+svc.productId + '&PACKAGE_ID='+svc.packageId + '&MODIFY_TAG='+modifyTag;
-	params += '&START_DATE='+startDate + '&END_DATE='+endDate + '&USER_ID_A=' + userIdA + '&ITEM_ID='+svc.itemId + '&X_DATATYPE=NULL';
+	params += 'SERVICE_ID='+svc.getAttribute('elementId') + '&PRODUCT_ID='+svc.getAttribute('productId') + '&PACKAGE_ID='+svc.getAttribute('packageId') + '&MODIFY_TAG='+modifyTag;
+	params += '&START_DATE='+startDate + '&END_DATE='+endDate + '&USER_ID_A=' + userIdA + '&ITEM_ID='+svc.getAttribute('itemId') + '&X_DATATYPE=NULL';
 	
 	return params.toQueryParams();
 }
@@ -5961,15 +5959,15 @@ function geneSpInfo(sp, modifyTag) {
 	
 	if(modifyTag == '0') {
 		//附加产品中服务生效时间：取元素生效时间与基本产品的大值
-		startDate = sp._startDate > mProdStartDate ? sp._startDate : mProdStartDate
+		startDate = sp.getAttribute('_startDate') > mProdStartDate ? sp.getAttribute('_startDate') : mProdStartDate
 		
-		endDate = sp._endDate;
+		endDate = sp.getAttribute('_endDate');
 	} else if(modifyTag == '1') {
-		startDate = sp.startDate;
+		startDate = sp.getAttribute('startDate');
 		endDate = mOldProdEndDate;
 	}else if (modifyTag == '4')//begin tfs:291295  add by qinjl
 	{
-		startDate = sp.startDate;
+		startDate = sp.getAttribute('startDate');
 		endDate = mOldProdEndDate;
 	}//end
 	
@@ -5991,11 +5989,11 @@ function geneSpInfo(sp, modifyTag) {
 	}	
 	
 	//记录提交时间
-	sp._submitStartDate = startDate;
-	sp._submitEndDate = endDate;	
+	sp.setAttribute('_submitStartDate', startDate);
+	sp.setAttribute('_submitEndDate', endDate);	
 
-	params += 'SP_ID='+sp.spId + '&PRODUCT_ID='+sp.productId + '&PACKAGE_ID='+sp.packageId + '&MODIFY_TAG='+modifyTag + '&SP_SERVICE_ID='+sp.elementId + '&ITEM_ID='+sp.itemId;
-	params += '&FIRST_BUY_TIME='+startDate + '&START_DATE='+startDate + '&END_DATE='+endDate +'&PARTY_ID='+sp.partyId + '&SP_PRODUCT_ID='+sp.spProductId + '&X_DATATYPE=NULL&REMARK=';
+	params += 'SP_ID='+sp.getAttribute('spId') + '&PRODUCT_ID='+sp.getAttribute('productId') + '&PACKAGE_ID='+sp.getAttribute('packageId') + '&MODIFY_TAG='+modifyTag + '&SP_SERVICE_ID='+sp.getAttribute('elementId') + '&ITEM_ID='+sp.getAttribute('itemId');
+	params += '&FIRST_BUY_TIME='+startDate + '&START_DATE='+startDate + '&END_DATE='+endDate +'&PARTY_ID='+sp.getAttribute('partyId') + '&SP_PRODUCT_ID='+sp.getAttribute('spProductId') + '&X_DATATYPE=NULL&REMARK=';
 	
 	return params.toQueryParams();
 }
@@ -6013,27 +6011,27 @@ function geneElementInfo(element, modifyTag) {
 	
 	if(modifyTag == '0') {
 		//附加产品中服务生效时间：取元素生效时间与基本产品的大值
-		startDate = element._startDate > mProdStartDate ? element._startDate : mProdStartDate
+		startDate = element.getAttribute('_startDate') > mProdStartDate ? element.getAttribute('_startDate') : mProdStartDate
 		
-		endDate = element._endDate;
+		endDate = element.getAttribute('_endDate');
 	} else if(modifyTag == '1') {
-		startDate = element.startDate;
+		startDate = element.getAttribute('startDate');
 		endDate = mOldProdEndDate;
 	}
 
 	//记录提交时间
-	element._submitStartDate = startDate;
-	element._submitEndDate = endDate;
+	element.setAttribute('_submitStartDate', startDate);
+	element.setAttribute('_submitEndDate', endDate);
 	if (element.spId !="-1")
-		params += 'ID='+element.spId;
+		params += 'ID='+element.getAttribute('spId');
 	else
-		params += 'ID='+element.elementId;
+		params += 'ID='+element.getAttribute('elementId');
 	
-	params += '&PRODUCT_ID='+element.productId + '&PACKAGE_ID='+element.packageId + '&MODIFY_TAG='+modifyTag+'&ITEM_ID='+element.itemId;
+	params += '&PRODUCT_ID='+element.getAttribute('productId') + '&PACKAGE_ID='+element.getAttribute('packageId') + '&MODIFY_TAG='+modifyTag+'&ITEM_ID='+element.getAttribute('itemId');
 	if(userId!=""){
-		params += '&START_DATE='+startDate + '&END_DATE='+endDate +'&ID_TYPE='+element.elementTypeCode + '&USER_ID='+userId + '&X_DATATYPE=NULL';		
+		params += '&START_DATE='+startDate + '&END_DATE='+endDate +'&ID_TYPE='+element.getAttribute('elementTypeCode') + '&USER_ID='+userId + '&X_DATATYPE=NULL';		
 	}else{
-		params += '&START_DATE='+startDate + '&END_DATE='+endDate +'&ID_TYPE='+element.elementTypeCode + '&X_DATATYPE=NULL';
+		params += '&START_DATE='+startDate + '&END_DATE='+endDate +'&ID_TYPE='+element.getAttribute('elementTypeCode') + '&X_DATATYPE=NULL';
 	}	
 	
 	return params.toQueryParams();
@@ -6055,17 +6053,17 @@ function geneTradeBook(attrTypeCode, srcObject) {
 	var expMode= '';
 	var enableTag ='';
 	var expLimitMonth='';
-	if(srcObject.modifyTag == '0') {
-		startDate = srcObject._submitStartDate;
-		endDate = srcObject._submitEndDate;
+	if(srcObject.getAttribute('modifyTag') == '0') {
+		startDate = srcObject.getAttribute('_submitStartDate');
+		endDate = srcObject.getAttribute('_submitEndDate');
 	}
-	else if(srcObject.modifyTag == '9') {
+	else if(srcObject.getAttribute('modifyTag') == '9') {
 		startDate = Cs.ctrl.Trade.getSysDate();
-		endDate = srcObject._submitEndDate;
+		endDate = srcObject.getAttribute('_submitEndDate');
 	}
-	else if(srcObject.modifyTag == '1') {
-		startDate = srcObject._submitStartDate;
-		endDate = srcObject._submitEndDate;
+	else if(srcObject.getAttribute('modifyTag') == '1') {
+		startDate = srcObject.getAttribute('_submitStartDate');
+		endDate = srcObject.getAttribute('_submitEndDate');
 	}
 	
 	for (var property in srcObject.itemObjNew) {
@@ -6093,7 +6091,7 @@ function geneTradeBook(attrTypeCode, srcObject) {
 	}
 //	if(params!=""&&enableTag=="1"){
 //		params +="&ID_TYPE="+attrTypeCode+"&ID="+srcObject.elementId+"&USER_ID="+userId+"&ACCEPT_DATE="+Cs.ctrl.Trade.getSysDate();
-//		params +="&DEAL_STATE=0&X_DATATYPE=NULL&BOOK_TIME="+startDate+"&MODIFY_TAG="+srcObject.modifyTag+"&ITEM_ID="+srcObject.itemId;		
+//		params +="&DEAL_STATE=0&X_DATATYPE=NULL&BOOK_TIME="+startDate+"&MODIFY_TAG="+srcObject.getAttribute('modifyTag')+"&ITEM_ID="+srcObject.itemId;		
 //		tradeBook.push(params.toQueryParams());
 //	}
 	//到期截至
@@ -6118,8 +6116,8 @@ function genePurchaseInfo(purchase,tmp){
 	
 	//qc 95752 begin
 	var startDate = Cs.ctrl.Trade.getSysDate();
-	if(typeof purchase._startDate !="undefined")
-		startDate = purchase._startDate > mProdStartDate ? purchase._startDate : mProdStartDate;
+	if(typeof purchase.getAttribute('_startDate') !="undefined")
+		startDate = purchase.getAttribute('_startDate') > mProdStartDate ? purchase.getAttribute('_startDate') : mProdStartDate;
 	
 	if(spePurchaseTimeStr&&spePurchaseTimeStr!=null&&spePurchaseTimeStr!="")
 		startDate = spePurchaseTimeStr; //续约指定生效时间
@@ -6135,7 +6133,7 @@ function genePurchaseInfo(purchase,tmp){
 	//qc 95752 end
 
 	//QC:16114 End
-	params += 'BINDSALE_ATTR='+purchase.elementId + '&PRODUCT_ID='+purchase.productId　+ '&PACKAGE_ID='+purchase.packageId +'&ITEM_ID='+purchase.itemId+'&AGREEMENT_MONTHS='+tmp.months;	
+	params += 'BINDSALE_ATTR='+purchase.getAttribute('elementId') + '&PRODUCT_ID='+purchase.getAttribute('productId')　+ '&PACKAGE_ID='+purchase.getAttribute('packageId') +'&ITEM_ID='+purchase.getAttribute('itemId')+'&AGREEMENT_MONTHS='+tmp.months;	
 	params += '&MPFEE='+parseFloat((tmp.extraFee==""?0:tmp.extraFee))*100+'&FEEITEM_CODE='+(tmp.extraFee==""?-1:tmp.feeitem);	
 	params += '&END_MODE=0&DEVICE_TYPE='+tmp.deviceno+'&MOBILE_COST='+parseFloat(tmp.mobilecost)*100+'&DEVICE_NAME='+tmp.mobileinfo+'&DEVICE_BRAND=' +tmp.devicebrand + '&IMEI='+tmp.imei;		
 	params += '&START_DATE='+startDate+'&END_DATE='+endDateTime+'&X_DATATYPE=NULL';
@@ -6202,9 +6200,9 @@ function geneBindDiscntInfo(purchase,tmp){
 		var startDateTime = Cs.util.Utility.computeDate(curSysdate, "3", 1);
 		var endDateTime = Cs.util.Utility.computeDate(Cs.util.Utility.computeDate(curSysdate,"3",iMonths).substring(0,10),"1",-1).substring(0,10)+" 23:59:59";
                   
-		params += 'ID='+userId+'&ID_TYPE=1&PRODUCT_ID='+purchase.productId + '&PACKAGE_ID='+purchase.packageId;
+		params += 'ID='+userId+'&ID_TYPE=1&PRODUCT_ID='+purchase.getAttribute('productId') + '&PACKAGE_ID='+purchase.getAttribute('packageId');
 		params += '&DISCNT_CODE='+tmp.discntcode + '&SPEC_TAG='+specTag + '&MODIFY_TAG=0&START_DATE='+startDateTime;
-		params += '&END_DATE='+endDateTime + '&RELATION_TYPE_CODE='+relationTypeCode + '&USER_ID_A=' + userIdA + '&ITEM_ID='+purchase.itemId;
+		params += '&END_DATE='+endDateTime + '&RELATION_TYPE_CODE='+relationTypeCode + '&USER_ID_A=' + userIdA + '&ITEM_ID='+purchase.getAttribute('itemId');
 	
 		return params.toQueryParams();
     }
@@ -6236,7 +6234,7 @@ function geneTradeScoresub(scoresub,scorechg)
 {
 	if(scorechg!='' && typeof scorechg!="undefined"){			
 		var params = '';
-		params += 'ACTION_CODE='+scoresub.elementId + '&SCORE_TYPE_CODE=*&SCORE_CHANGED_SUB='+(-1)*parseInt(scorechg) ;	
+		params += 'ACTION_CODE='+scoresub.getAttribute('elementId') + '&SCORE_TYPE_CODE=*&SCORE_CHANGED_SUB='+(-1)*parseInt(scorechg) ;	
 		params += '&VALUE_CHANGED_SUB=-1&REMARK=积分兑换&ACTION_COUNT=1&X_DATATYPE=NULL';
 		return params.toQueryParams();		
 	}	
@@ -6250,10 +6248,10 @@ function geneTradeScoresub(scoresub,scorechg)
  */
 function geneGiftFee(giftFee){
 
-	if(giftFee.scoremoney!=null && typeof giftFee.scoremoney!="undefined"){
+	if(giftFee.getAttribute('scoremoney')!=null && typeof giftFee.getAttribute('scoremoney')!="undefined"){
 		
 		var params = '';
-		params += 'FEE='+giftFee.scoremoney + '&OLDFEE='+giftFee.scoremoney + '&LIMIT_FEE=-1';
+		params += 'FEE='+giftFee.getAttribute('scoremoney') + '&OLDFEE='+giftFee.getAttribute('scoremoney') + '&LIMIT_FEE=-1';
 		params += '&MONTHS=-1&FEE_TYPE_CODE=1000&FEE_MODE=0&RULE_ID=-1&DEPOSIT_PRIOR_RULE_ID=-1';
 		params += '&CHARGE_SOURCE_CODE=2&CALCULATE_ID=0&CALCULATE_TAG=0&PAY_TAG=0&STAFF_ID=0000&CALCULATE_DATE=2050-12-31&X_DATATYPE=NULL';	
 		return params.toQueryParams();		
@@ -6300,7 +6298,7 @@ function geneSubItem1(subItem,purInfo,attrTypeCode, startDate, endDate){
 		if (purInfo[property] instanceof Function || purInfo[property]=="") continue;
 		o={};
 		o["ATTR_TYPE_CODE"]=attrTypeCode;		
-		o["ITEM_ID"]=subItem.itemId;
+		o["ITEM_ID"]=subItem.getAttribute('itemId');
 		o["ATTR_CODE"]=Cs.util.Utility.unCamelize(property);
 		o["ATTR_CODE"]=property;
 		o["ATTR_VALUE"]=purInfo[property];
@@ -6322,18 +6320,18 @@ function geneSubItem1(subItem,purInfo,attrTypeCode, startDate, endDate){
 function geneSubItem(subItem,purInfo,attrTypeCode, startDate, endDate){
 	// add by huangwy qc:95934 start
 	try{
-		if (typeof subItem.modifyTag != 'undefined'){
-			if(subItem.modifyTag == '0') {
-				startDate = subItem._startDate > mProdStartDate ? subItem._startDate : mProdStartDate;
-				endDate = subItem._endDate;
+		if (typeof subItem.getAttribute('modifyTag') != 'undefined'){
+			if(subItem.getAttribute('modifyTag') == '0') {
+				startDate = subItem.getAttribute('_startDate') > mProdStartDate ? subItem.getAttribute('_startDate') : mProdStartDate;
+				endDate = subItem.getAttribute('_endDate');
 			}
-			else if(subItem.modifyTag == '9') {
+			else if(subItem.getAttribute('modifyTag') == '9') {
 				startDate = Cs.ctrl.Trade.getSysDate();
-				endDate = subItem._endDate;
+				endDate = subItem.getAttribute('_endDate');
 			}
-			else if(subItem.modifyTag == '1') {
-				startDate = subItem.startDate;
-				endDate = mOldProdEndDate > subItem._endDate ? subItem._endDate : mOldProdEndDate;//老优惠处理
+			else if(subItem.getAttribute('modifyTag') == '1') {
+				startDate = subItem.getAttribute('startDate');
+				endDate = mOldProdEndDate > subItem.getAttribute('_endDate') ? subItem.getAttribute('_endDate') : mOldProdEndDate;//老优惠处理
 			}
 		}else{
 			startDate = Cs.ctrl.Trade.getSysDate();
@@ -6353,7 +6351,7 @@ function geneSubItem(subItem,purInfo,attrTypeCode, startDate, endDate){
 		if (purInfo[property] instanceof Function || purInfo[property]=="") continue;
 		o={};
 		o["ATTR_TYPE_CODE"]=attrTypeCode;		
-		o["ITEM_ID"]=subItem.itemId;
+		o["ITEM_ID"]=subItem.getAttribute('itemId');
 		o["ATTR_CODE"]=Cs.util.Utility.unCamelize(property);
 		o["ATTR_CODE"]=property;
 		o["ATTR_VALUE"]=purInfo[property];
@@ -6388,7 +6386,7 @@ function setAttr1(param){
 	}
 	//used for attrwin d context
 	curAttrObject = inputNode;
-	inputNode.isDate = "false";
+	inputNode.setAttribute('isDate',"false");
  	var attr = new Cs.Product.AttrMgr(inputNode);
 }
 /**
@@ -6405,7 +6403,7 @@ function setDateAttr(obj){
 	});
 	
 	curAttrObject = inputNode;
-	inputNode.isDate = "true";
+	inputNode.setAttribute('isDate',"true");
 	var attr = new Cs.Product.AttrMgr(inputNode);
 }
 /**
@@ -6417,7 +6415,7 @@ var sysDate = Cs.ctrl.Trade.getSysDate();
 
 //guagua
 //漏话提醒需求 440 和 续约不让选择立即。
-if(curAttrObject.elementId=='52017'&&(tradeTypeCode ==440 ||specialTimeStr&&specialTimeStr!=null&&specialTimeStr!=""&&tradeTypeCode == "120" ))
+if(curAttrObject.getAttribute('elementId')=='52017'&&(tradeTypeCode ==440 ||specialTimeStr&&specialTimeStr!=null&&specialTimeStr!=""&&tradeTypeCode == "120" ))
 	{
 	win.alert("23转4,续约业务不能选择立即。只能次月!");
     Cs.flower.LookupCombo.setValue($("discntSel"), "2");
@@ -6463,12 +6461,12 @@ function changeDatePlus(obj) {
 
     
     //zhangmq45 tfs 275853 begin
-    if(curAttrObject.modifyTag=="0"&&sel=="0"){
+    if(curAttrObject.getAttribute('modifyTag')=="0"&&sel=="0"){
     	win.alert("新开服务时,失效时间禁止选为立即!");
     	Cs.flower.LookupCombo.setValue($("discntEndSel"), "-1");
     	return;
     }
-    if(curAttrObject.modifyTag=="9"&&sel=="0"&&curAttrObject.checked){
+    if(curAttrObject.getAttribute('modifyTag')=="9"&&sel=="0"&&curAttrObject.checked){
     	win.alert("新开服务时,失效时间禁止选为立即!");
     	Cs.flower.LookupCombo.setValue($("discntEndSel"), "-1");
     	return;
@@ -6522,7 +6520,7 @@ var sysDate = Cs.ctrl.Trade.getSysDate();
 if(sel=="0"){
     $(_startDate).value = sysDate;
    
-    $(_endDate).value = Cs.util.Utility.computeDate(sysDate, curAttrObject.endUnit, curAttrObject.endOffset);
+    $(_endDate).value = Cs.util.Utility.computeDate(sysDate, curAttrObject.getAttribute('endUnit'), curAttrObject.getAttribute('endOffset'));
 	$(_endDate).value = Cs.util.Utility.computeDate($(_endDate).value, '6', -1);
     $("IMG_CAL__startDate").disabled = true;
     $("IMG_CAL__endDate").disabled = true;
@@ -6536,7 +6534,7 @@ else if(sel=="2") {
     $(_startDate).value = Cs.util.Utility.computeDate(sysDate,"3",1);
     
     //计算优惠失效时间
-		$(_endDate).value = Cs.util.Utility.computeDate(Cs.util.Utility.computeDate(sysDate,"3",1), curAttrObject.endUnit, curAttrObject.endOffset);
+		$(_endDate).value = Cs.util.Utility.computeDate(Cs.util.Utility.computeDate(sysDate,"3",1), curAttrObject.getAttribute('endUnit'), curAttrObject.getAttribute('endOffset'));
 		$(_endDate).value = Cs.util.Utility.computeDate($(_endDate).value, '6', -1);
 	
     $("IMG_CAL__startDate").disabled = true;
@@ -6564,7 +6562,7 @@ function chkLTE4SerialNumber(chkSerialNumber){
 							&& elem.checked && elem.getAttribute('elementTypeCode').toUpperCase() == 'S') 
 				{
 					if ($("ISNEED_LET_CHECK") && $("ISNEED_LET_CHECK").value =="1"){ //总开关
-						if ($("IS_LTE_SERVICE") && $("IS_LTE_SERVICE").value == elem.elementId){ //判断是否是LTE服务
+						if ($("IS_LTE_SERVICE") && $("IS_LTE_SERVICE").value == elem.getAttribute('elementId')){ //判断是否是LTE服务
 
 						    //$("LTE_SER_BEGIN").value="10000000000";
 						    //$("LTE_SER_END").value="10000000100";

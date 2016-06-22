@@ -356,36 +356,45 @@ casper.then(function updateYiwangForm(){
 
 casper.then(function expandPackageList(){
 	casper.evaluate(function(productCode){
-		var productInputNode = document.querySelector('input#_p' + productCode);
+		var kId = productCode.indexOf('k');
+		var productId = productCode.slice(0,kId);
+		var productInputNode = document.querySelector('input#_p' + productId);
 		console.log('productInputNode: ' + '\n\n');
 		console.log(productInputNode.outerHTML + '\n\n');
-		var productExpandNode = document.querySelector('img#closeopen' + productCode);
+		var productExpandNode = document.querySelector('img#closeopen' + productId);
 		console.log('productExpandNode: ' + '\n\n');
 		console.log(productExpandNode.outerHTML + '\n\n');
 		//** 点击展开产品包
-		__utils__.click('img#closeopen' + productCode);
+		__utils__.click('img#closeopen' + productId);
 	},order.product.code);
 
 });
 
 casper.then(function expandProductList(){
 	casper.evaluate(function(productCode){
-		var productExpand1 = document.querySelector('div#p' + productCode);
+		var kId = productCode.indexOf('k');
+		var productId = productCode.slice(0,kId);
+		var productExpand1 = document.querySelector('div#p' + productId);
 		console.log('productExpand1: ' + '\n\n');
 		console.log(productExpand1.outerHTML + '\n\n');
+		var eId = productCode.indexOf('e');
+		var packageId = productCode.slice(0,eId);
 		//** 点击展开产品
-		__utils__.click('img#closeopen' + productCode + 'k' + '51708887');
+		__utils__.click('img#closeopen' + packageId);
 	},order.product.code);
 
 });
 
 casper.then(function setProduct(){
 	casper.evaluate(function(productCode){
-		var productExpand2 = document.querySelector('div#p' + productCode + 'k' + '51708887');
+		var eId = productCode.indexOf('e');
+		var packageId = productCode.slice(0,eId);
+		var productExpand2 = document.querySelector('div#p' + packageId);
 		console.log('productExpand2: ' + '\n\n');
 		console.log(productExpand2.outerHTML + '\n\n');
 		//** 点击产品包
-		__utils__.click('input#_p' + productCode + 'k' + '51708887' + 'e' + '8101109' + 'TD');
+		// __utils__.click('input#_p' + productCode + 'k' + '51708887' + 'e' + '8101109' + 'TD');
+		__utils__.click('input#_p' + productCode);
 		var packageClicked = document.querySelector('div#p' + productCode);
 		console.log('packageClicked: ' + '\n\n');
 		console.log(packageClicked.outerHTML + '\n\n');
@@ -1035,7 +1044,25 @@ casper.then(function submit(){
 			// Cs.ctrl.Trade.doSubmitTrade();
 		});
 	});
-	casper.wait(10000);
+	// casper.wait(10000);
+});
+
+casper.then(function waitSubmitProcessing(){
+	casper.waitFor(function processing(){
+		return casper.evaluate(function(){
+			var waitNode = document.querySelector('#_waitInfoContent');
+			return (!/请稍候/.test(waitNode.innerText || ''));
+		});
+	},null,function(){
+		var contentHtml = this.getHTML();
+		fs.write(tempdir + '/' + staffId + '_yiwang_SubmitTimeout.html', contentHtml, 644);
+		casper.capture(tempdir + '/' + staffId + '_yiwang_SubmitTimeout.jpg');
+		response.status = '失败';
+		response.content = '超时错误：正在处理，请稍候...';
+		// casper.echo('<response>' + JSON.stringify(response) + '</response>');
+		// casper.exit(0);
+		// casper.bypass(99);	
+	},10000);
 });
 
 casper.then(function getSubmitResult(){
@@ -1043,14 +1070,26 @@ casper.then(function getSubmitResult(){
 	fs.write(tempdir + '/' + staffId + '_yiwang_SubmitResult.html', contentHtml, 644);
 	casper.capture(tempdir + '/' + staffId + '_yiwang_SubmitResult.jpg');
 
-	var content = contentHtml.match(/.?IS_NEED_OCCUPY=\'(.+?)\'.*/i) || [];
-	if(/true/.test(content[1] || '')){
+	var resultText = casper.evaluate(function(){
+		var resultNode = document.querySelector('#showTabIdRow');
+		return resultNode.innerText;
+	});
+	if(/成功/.test(resultText || '')){
 		response.status = '成功';
-		response.content = content[1] || '';
+		response.content = resultText || '';
 	}else{
 		response.status = '失败';
-		response.content = content[1] || '';
+		response.content = resultText || '';
 	}
+
+	// var content = contentHtml.match(/.?IS_NEED_OCCUPY=\'(.+?)\'.*/i) || [];
+	// if(/true/.test(content[1] || '')){
+	// 	response.status = '成功';
+	// 	response.content = content[1] || '';
+	// }else{
+	// 	response.status = '失败';
+	// 	response.content = content[1] || '';
+	// }
 });
 
 casper.run(function(){
