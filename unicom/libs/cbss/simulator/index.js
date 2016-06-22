@@ -30,6 +30,23 @@ app.use('/post', function(req,res){
 	res.end('ok!');
 });
 
+app.use('/custserv', function(req,res){
+	var trunks = [];
+	console.log('\n\n------headers-------\n\n');
+	console.log(req.headers);
+	console.log('\n\n------query-------\n\n');
+	console.log(req.query);
+	req.on('data', function(trunk){
+		// console.log(trunk);
+		trunks.push(trunk);
+	});
+	req.on('end', function(){
+		console.log('\n\n------body-------\n\n');
+		console.log(trunks.join('').toString());
+	})
+	res.end('ok!');
+});
+
 app.server.listen(9200, function() {
  console.log('---- start at port 9200 -----');
 });

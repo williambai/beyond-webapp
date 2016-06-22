@@ -343,17 +343,6 @@ casper.then(function updateYiwangForm(){
 
 });
 
-
-// casper.then(function clickProduct(){
-// 	casper.evaluate(function(productCode){
-// 		//** 点击展开产品包
-// 		__utils__.click('input#_p' + productCode);
-// 	},order.product.code);
-
-// });
-
-
-
 casper.then(function expandPackageList(){
 	casper.evaluate(function(productCode){
 		var kId = productCode.indexOf('k');
@@ -404,12 +393,12 @@ casper.then(function setProduct(){
 casper.then(function submit(){
 	var devServer = '';
 	if(devMode){
+		console.log('++++++++setDevelopmentUrl ++++++\n');
 		//** 开发阶段，设置提交到测试地址。
 		//注意：正式上线时，设置devMode = false
 		devServer = 'http://localhost:9200/post';
 	}
 	casper.evaluate(function setDevelopmentUrl(devServer){
-		console.log('++++++++setDevelopmentUrl ++++++\n');
 		Cs.Ajax._swallow =function(page, listener ,options, msg){
 		    var g = Cs.ctrl.Web.getTradeGlobal();
 		    servletPath = g.servletPath;   
@@ -422,17 +411,90 @@ casper.then(function submit(){
 		    Cs.ctrl.Web.showInfo(msg||"正在处理，请稍候...");
 		    
 		    var u = servletPath+"?service=swallow/"+pageName+"/"+listener+"/1";
+
 		    console.log('--Cs.Ajax._swallow 请求url = ');
 		    console.log(u + '\n\n');
 		    u = devServer + u;
 		    options.onComplete = function(transport){
-			    	//<?xml version="1.0" encoding="UTF-8"?><root><message></message><TradeSubmitOk tradeId='8516062231226597' RIGHT_CODE='csChangeServiceTrade' subscribeId='8516062231226597' proviceOrderId='8516062231226597'><Fee feenum='0'></Fee><TradeData prepayTag="1" tradeTypeCode="0120" strisneedprint="1" serialNumber="15692740700" tradeReceiptInfo="[{&quot;RECEIPT_INFO5&quot;:&quot;&quot;,&quot;RECEIPT_INFO2&quot;:&quot;&quot;,&quot;RECEIPT_INFO1&quot;:&quot;&quot;,&quot;RECEIPT_INFO4&quot;:&quot;&quot;,&quot;RECEIPT_INFO3&quot;:&quot;&quot;}]" netTypeCode="0050"/></TradeSubmitOk></root>
+		    		//<?xml version="1.0" encoding="UTF-8"?><root><message></message><TradeSubmitOk tradeId='8516062231226597' RIGHT_CODE='csChangeServiceTrade' subscribeId='8516062231226597' proviceOrderId='8516062231226597'><Fee feenum='0'></Fee><TradeData prepayTag="1" tradeTypeCode="0120" strisneedprint="1" serialNumber="15692740700" tradeReceiptInfo="[{&quot;RECEIPT_INFO5&quot;:&quot;&quot;,&quot;RECEIPT_INFO2&quot;:&quot;&quot;,&quot;RECEIPT_INFO1&quot;:&quot;&quot;,&quot;RECEIPT_INFO4&quot;:&quot;&quot;,&quot;RECEIPT_INFO3&quot;:&quot;&quot;}]" netTypeCode="0050"/></TradeSubmitOk></root>
 		    	    console.log('==== doSubmitTrade 响应: ====\n');
 		    	    console.log(transport.responseText);
+		    	    var body = transport.responseText || '';
+			    	//** for development
+			    	//** 开发用假数据
+			    	body = '<?xml version="1.0" encoding="UTF-8"?><root><message></message><TradeSubmitOk tradeId="8516062231226597" RIGHT_CODE="csChangeServiceTrade" subscribeId="8516062231226597" proviceOrderId="8516062231226597"><Fee feenum="0"></Fee><TradeData prepayTag="1" tradeTypeCode="0120" strisneedprint="1" serialNumber="15692740700" tradeReceiptInfo="[{&quot;RECEIPT_INFO5&quot;:&quot;&quot;,&quot;RECEIPT_INFO2&quot;:&quot;&quot;,&quot;RECEIPT_INFO1&quot;:&quot;&quot;,&quot;RECEIPT_INFO4&quot;:&quot;&quot;,&quot;RECEIPT_INFO3&quot;:&quot;&quot;}]" netTypeCode="0050"/></TradeSubmitOk></root>';
+			    	var tradeId = (body.match(/tradeId=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	console.log('tradeId: ' + tradeId);
+			    	var serialNumber = (body.match(/serialNumber=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	var netTypeCode = (body.match(/netTypeCode=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	var tradeTypeCode = (body.match(/tradeTypeCode=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	var prepayTag = (body.match(/prepayTag=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	var strisneedprint = (body.match(/strisneedprint=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	var tradeReceiptInfo = (body.match(/tradeReceiptInfo=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	var custName = (document.querySelector('#CUST_NAME')).getAttribute('value') || '';
+			    	var custId = '';
+			    	var userId = '';
+			    	var acctId = '';
+			    	var netTypeCodeAll = '';
 
+				    var params = '';
+				    params += 'cancelTag=false' + '&';
+				    params += 'funcType=0' + '&';
+				    params += 'dataType=0' + '&';
+				    var tradeMain =  {};
+				    tradeMain.TRADE_ID = tradeId;
+				    tradeMain.TRADE_TYPE = '移网产品/服务变更';
+				    tradeMain.SERIAL_NUMBER = serialNumber;
+				    tradeMain.TRADE_FEE = '0.00';
+				    tradeMain.CUST_NAME = custName;
+				    tradeMain.CUST_ID = custId;
+		            tradeMain.USER_ID = userId;
+		            tradeMain.ACCT_ID = acctId;
+		            tradeMain.NET_TYPE_CODE = netTypeCode;
+		            tradeMain.TRADE_TYPE_CODE = tradeTypeCode;
+		            params += 'tradeMain=' + encodeURIComponent(JSON.stringify(tradeMain)) + '&';
+		            params += 'unChargedfees=' + encodeURIComponent('[]') + '&';
+		            params += 'feePayMoney=' + encodeURIComponent('[]') + '&';
+		            params += 'feeCheck=' + encodeURIComponent('[]') + '&';
+		            params += 'feePos=' + encodeURIComponent('[]') + '&';
+		            var base = {};
+		            base.preayTag = prepayTag;
+		            base.tradeTypeCode = tradeTypeCode;
+		            base.strisneedprint = strisneedprint;
+		            base.serialNumber = serialNumber;
+		            base.tradeReceiptInfo = tradeReceiptInfo;
+		            base.netTypeCode = netTypeCodeAll;
+		            params += 'base=' + encodeURIComponent(JSON.stringify(base)) + '&';
+		            params += 'CASH=' + encodeURIComponent('0.00') + '&'; 
+		            params += 'SEND_TYPE=0' + '&';
+		            params += 'TRADE_ID=' + tradeId + '&';
+		            params += 'TRADE_ID_MORE_STR=' + tradeId + '&';
+		            params += 'SERIAL_NUMBER_STR=' + serialNumber + '&';
+		            params += 'TRADE_TYPE_CODE_STR=' + tradeTypeCode + '&';
+		            params += 'NET_TYPE_CODE_STR=' + netTypeCode + '&';
+		            params += 'DEBUTY_CODE='  + '&';
+		            params += 'IS_NEED_WRITE_CARD=false' + '&';
+		            params += 'WRAP_TRADE_TYPE=tradeType' + '&';
+		            params += 'CUR_TRADE_IDS=' + '&';
+		            params += 'CUR_TRADE_TYPE_CODES=' + '&';
+		            params += 'CUR_SERIAL_NUMBERS=' + '&';
+		            params += 'CUR_NET_TYPE_CODES=' + '&';
+		            params += 'isAfterFee=' + '&';
+		            params += 'globalPageName=personalserv.dealtradefee.DealTradeFee';
+		            console.log('continueTrade POST params:' + params);
+		            var continueTradeUrl = devServer + '/custserv?service=swallow/personalserv.dealtradefee.DealTradeFee/continueTradeReg/1';
+				    new Ajax.Request(continueTradeUrl,{
+			            parameters: params,            
+			            method: 'post',        
+			            asynchronous: true,            
+			            onComplete: function(transport){
+			            	console.log('==== continueTrade 响应: ====\n');
+			            	console.log(transport.responseText);
 
-			    	Cs.ctrl.Web.showInfo("处理成功");
-		    };
+			            	Cs.ctrl.Web.showInfo("处理成功");
+			            }
+			        });
+			    };
 		    new Ajax.Request(u,options);
 		};
 	},devServer);
