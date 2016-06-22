@@ -4531,7 +4531,6 @@ function geneTradeInfo() {
 
 		if(prod.tagName.toUpperCase() == 'INPUT' && prod.type.toUpperCase() == 'CHECKBOX'
 			&& prod.getAttribute('_thisType') != 'undefined' && prod.getAttribute('_thisType').toUpperCase() == 'PRODUCT') {
-			console.log('++++ genTradeInfo 4 ++++');
 						
 			//新增产品
 			if(prod.getAttribute('modifyTag') == '0') {
@@ -4546,10 +4545,11 @@ function geneTradeInfo() {
 						//生成产品未展开台帐
 						tradeNoExp.push(geneNoExpInfo(prod.getAttribute('productId'), '-9', '0', prod.getAttribute('_submitStartDate'), prod.getAttribute('_submitEndDate'), prod.getAttribute('productMode'), prod.getAttribute('brandCode')));
 					}
-					console.log('++++ genTradeInfo 4-3 ++++');
+					console.log('++++ genTradeInfo 4-3 ++++\n');
 					
 					//新增活动台帐
 					tradeProType.push(geneProType(prod, '0'));
+					console.log('tradeProType:' + JSON.stringify(tradeProType));
 					//生成属性台帐子表
 					tradeSubItem = tradeSubItem.concat(geneTradeSubItemInfo('1', prod));
 					console.log('++++ genTradeInfo 4-4 ++++');
@@ -4578,7 +4578,7 @@ function geneTradeInfo() {
 								tradeSubItem = tradeSubItem.concat(geneTradeSubItemInfo('3', elem));				
 								//捆绑减免优惠								
 								tradeDiscnt.push(geneExpDiscntInfo(elem));														
-								console.log(JSON.stringify(tradeDiscnt))	
+								console.log('tradeDiscnt: ' + JSON.stringify(tradeDiscnt))	
 							}
 							//新增服务台帐
 							else if(elem.getAttribute('elementTypeCode').toUpperCase() == 'S') {

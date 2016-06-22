@@ -571,8 +571,8 @@ Cs.Ajax = {
             asynchronous: asyn===undefined?true:asyn,
             onComplete:function(transport){
                             try{                  
-                                // console.log('====22222swallowXml response: ====\n');
-                                // console.log(transport.responseText);
+                                console.log('====22222swallowXml response: ====\n');
+                                console.log(transport.responseText);
                                 var root = transport.responseXML.documentElement;
                                 Cs.ctrl.Web.hideInfo();
                               
