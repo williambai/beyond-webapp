@@ -7,8 +7,9 @@ orderYiwang({
 	tempdir: './_tmp',
 	staffId: account.staffId,
 	phone: '15692740700',
+	// phone: '18685106847', //** 李奇
 	product: {
-		name: '贵州省流量风暴杯10元流量包-立即生效【贵州】',
+		name: '贵州省流量风暴杯10元流量包-次月生效【贵州】',
 		price: '10',
 		// barcode: '89990196' + 'k' + '51708887' + 'e' + '8101109' + 'TD', //10元包立即生效
 		barcode: '89992192k51708887e8101109TD', //10元包次月生效

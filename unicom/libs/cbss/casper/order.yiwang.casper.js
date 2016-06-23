@@ -331,7 +331,24 @@ casper.then(function updateYiwangForm(){
 		});
 	});	
 
-	casper.wait(2000);
+	casper.then(function waitUser(){
+		casper.waitFor(function processing(){
+			return casper.evaluate(function(){
+				var userNameNode = document.querySelector('#CUST_NAME');
+				var userName = userNameNode && userNameNode.getAttribute('value') || '';
+				return ((userName == '') ? false : true);
+			});
+		},null,function(){
+			var contentHtml = this.getHTML();
+			fs.write(tempdir + '/' + staffId + '_yiwang_pageFormUpdatedTimeout.html', contentHtml, 644);
+			casper.capture(tempdir + '/' + staffId + '_yiwang_pageFormUpdatedTimeout.jpg');
+			response.status = '失败';
+			response.content = '该用户不能办理业务';
+			casper.echo('<response>' + JSON.stringify(response) + '</response>');
+			casper.exit(0);
+			casper.bypass(99);	
+		},10000);
+	});
 
 	casper.then(function parseUpdatedYiwangHtml(){
 		casper.then(function(){
@@ -422,20 +439,29 @@ casper.then(function submit(){
 		    	    var body = transport.responseText || '';
 			    	//** for development
 			    	//** 开发用假数据
-			    	body = '<?xml version="1.0" encoding="UTF-8"?><root><message></message><TradeSubmitOk tradeId="8516062231226597" RIGHT_CODE="csChangeServiceTrade" subscribeId="8516062231226597" proviceOrderId="8516062231226597"><Fee feenum="0"></Fee><TradeData prepayTag="1" tradeTypeCode="0120" strisneedprint="1" serialNumber="15692740700" tradeReceiptInfo="[{&quot;RECEIPT_INFO5&quot;:&quot;&quot;,&quot;RECEIPT_INFO2&quot;:&quot;&quot;,&quot;RECEIPT_INFO1&quot;:&quot;&quot;,&quot;RECEIPT_INFO4&quot;:&quot;&quot;,&quot;RECEIPT_INFO3&quot;:&quot;&quot;}]" netTypeCode="0050"/></TradeSubmitOk></root>';
+			    	//** body = '<?xml version="1.0" encoding="UTF-8"?><root><message></message><TradeSubmitOk tradeId="8516062231226597" RIGHT_CODE="csChangeServiceTrade" subscribeId="8516062231226597" proviceOrderId="8516062231226597"><Fee feenum="0"></Fee><TradeData prepayTag="1" tradeTypeCode="0120" strisneedprint="1" serialNumber="15692740700" tradeReceiptInfo="[{&quot;RECEIPT_INFO5&quot;:&quot;&quot;,&quot;RECEIPT_INFO2&quot;:&quot;&quot;,&quot;RECEIPT_INFO1&quot;:&quot;&quot;,&quot;RECEIPT_INFO4&quot;:&quot;&quot;,&quot;RECEIPT_INFO3&quot;:&quot;&quot;}]" netTypeCode="0050"/></TradeSubmitOk></root>';
 			    	var tradeId = (body.match(/tradeId=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
-			    	console.log('tradeId: ' + tradeId);
+			    	console.log('\ntradeId: ' + tradeId);
+			    	// if(tradeId == ''){
+			    	// 	Cs.ctrl.Web.showInfo("处理失败: doSubmitTrade响应错误");
+			    	// 	return;
+			    	// }
 			    	var serialNumber = (body.match(/serialNumber=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
-			    	var netTypeCode = (body.match(/netTypeCode=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	var netTypeCodeAll = (body.match(/netTypeCode=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
 			    	var tradeTypeCode = (body.match(/tradeTypeCode=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
 			    	var prepayTag = (body.match(/prepayTag=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
 			    	var strisneedprint = (body.match(/strisneedprint=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
-			    	var tradeReceiptInfo = (body.match(/tradeReceiptInfo=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
-			    	var custName = (document.querySelector('#CUST_NAME')).getAttribute('value') || '';
-			    	var custId = '';
-			    	var userId = '';
-			    	var acctId = '';
-			    	var netTypeCodeAll = '';
+			    	var tradeReceiptInfo = ((body.match(/tradeReceiptInfo=(\'|\")(.*?)(\'|\")/i) || [])[2] || '').replace(/&quot;/ig,'"');
+			    	var custNameNode = document.querySelector('#CUST_NAME');
+			    	var custName = (custNameNode && custNameNode.getAttribute('value')) || '';
+			    	var custIdNode = document.querySelector('#_CUST_ID');
+			    	var custId = (custIdNode && custIdNode.getAttribute('value')) || '';
+			    	var userIdNode = document.querySelector('#USER_ID_HIDEN');
+			    	var userId = (userIdNode && userIdNode.getAttribute('value')) || '';
+			    	var acctIdNode = document.querySelector('#ACCT_ID');
+			    	var acctId = (acctIdNode && acctIdNode.getAttribute('value')) || '';
+			    	var netTypeCodeNode = document.querySelector('#NET_TYPE_CODE');
+			    	var netTypeCode = (netTypeCodeNode && netTypeCodeNode.getAttribute('value')) || '';
 
 				    var params = '';
 				    params += 'cancelTag=false' + '&';
@@ -451,20 +477,22 @@ casper.then(function submit(){
 		            tradeMain.USER_ID = userId;
 		            tradeMain.ACCT_ID = acctId;
 		            tradeMain.NET_TYPE_CODE = netTypeCode;
-		            tradeMain.TRADE_TYPE_CODE = tradeTypeCode;
-		            params += 'tradeMain=' + encodeURIComponent(JSON.stringify(tradeMain)) + '&';
+		            tradeMain.TRADE_TYPE_CODE = encodeURIComponent(tradeTypeCode || '');
+		            params += 'tradeMain=' + encodeURIComponent('[' + JSON.stringify(tradeMain) + ']') + '&';
+		            params += 'fees=' + encodeURIComponent('[]') + '&';
 		            params += 'unChargedfees=' + encodeURIComponent('[]') + '&';
 		            params += 'feePayMoney=' + encodeURIComponent('[]') + '&';
 		            params += 'feeCheck=' + encodeURIComponent('[]') + '&';
 		            params += 'feePos=' + encodeURIComponent('[]') + '&';
+				    params += 'DerateFee=false' + '&';
 		            var base = {};
 		            base.preayTag = prepayTag;
-		            base.tradeTypeCode = tradeTypeCode;
+		            base.tradeTypeCode = encodeURIComponent(tradeTypeCode || '');
 		            base.strisneedprint = strisneedprint;
 		            base.serialNumber = serialNumber;
 		            base.tradeReceiptInfo = tradeReceiptInfo;
 		            base.netTypeCode = netTypeCodeAll;
-		            params += 'base=' + encodeURIComponent(JSON.stringify(base)) + '&';
+		            params += 'base=' + encodeURIComponent(JSON.stringify(base) || '') + '&';
 		            params += 'CASH=' + encodeURIComponent('0.00') + '&'; 
 		            params += 'SEND_TYPE=0' + '&';
 		            params += 'TRADE_ID=' + tradeId + '&';
@@ -481,7 +509,7 @@ casper.then(function submit(){
 		            params += 'CUR_NET_TYPE_CODES=' + '&';
 		            params += 'isAfterFee=' + '&';
 		            params += 'globalPageName=personalserv.dealtradefee.DealTradeFee';
-		            console.log('continueTrade POST params:' + params);
+		            console.log('\n----continueTrade POST params:' + params);
 		            var continueTradeUrl = devServer + '/custserv?service=swallow/personalserv.dealtradefee.DealTradeFee/continueTradeReg/1';
 				    new Ajax.Request(continueTradeUrl,{
 			            parameters: params,            
@@ -490,8 +518,15 @@ casper.then(function submit(){
 			            onComplete: function(transport){
 			            	console.log('==== continueTrade 响应: ====\n');
 			            	console.log(transport.responseText);
-
-			            	Cs.ctrl.Web.showInfo("处理成功");
+			            	//** <?xml version="1.0" encoding="UTF-8"?><root><continueOK SATISSURVFLAG="false" HAS_TERMINAL="false" HAS_GIF="false" ISCREATE_CUST="false" IS_NEED_OCCUPY="true" ISZHIFUPINGTAI="false" ISPAPERLESSSTATE="false" IS_NEED_WRITE_CARD="false" IS_NET_TYPE_CODE="50" strNetTypeFirst="0050" IS_DEAL_AFTER_ORDERSUB="true" TRADE_ID_ORDERSUB="8516062333053246" TRADE_TYPE_CODE_ORDERSUB="0120" IS_TAXPAYER="0" RSP_CODE_FORDZQ=" CALCULATE_ID="><data/></continueOK></root>
+			            	var body = transport.responseText || '';
+			            	var content = (body.match(/IS_NEED_OCCUPY=(\'|\")(.*?)(\'|\")/i) || [])[2] || false;
+			            	if(/true/.test(content)){
+				            	Cs.ctrl.Web.showInfo("处理成功");
+			            	}else{
+			            		Cs.ctrl.Web.showInfo("处理失败");
+			            	}
+			            	
 			            }
 			        });
 			    };
@@ -567,15 +602,6 @@ casper.then(function getSubmitResult(){
 		response.status = '失败';
 		response.content = resultText || '';
 	}
-
-	// var content = contentHtml.match(/.?IS_NEED_OCCUPY=\'(.+?)\'.*/i) || [];
-	// if(/true/.test(content[1] || '')){
-	// 	response.status = '成功';
-	// 	response.content = content[1] || '';
-	// }else{
-	// 	response.status = '失败';
-	// 	response.content = content[1] || '';
-	// }
 });
 
 casper.run(function(){
