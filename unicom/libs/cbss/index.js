@@ -1,6 +1,7 @@
 exports.login = require('./lib/login');
 exports.refreshCookie = require('./lib/cookie');
 exports.orderFlux = require('./lib/order.flux');
+exports.orderYiwang = require('./lib/order.yiwang');
 
 var escapeRegExp = function(str) { 
 	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"); 

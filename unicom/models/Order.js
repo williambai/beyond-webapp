@@ -485,16 +485,6 @@ module.exports = exports = function(connection){
 						var productName  = order.goods.name || '';
 						var productPrice = order.goods.price;
 						var productBarcode = order.goods.barcode;
-						var productZk = 100; //** 原价
-						if(/五折/.test(productName)){
-							productName = productName.replace('[五折]','');
-							productBarcode = productBarcode.slice(0,-3);
-							productZk = 50;
-						}else if(/六折/.test(productName)){
-							productName = productName.replace('[六折]','');
-							productBarcode = productBarcode.slice(0,-3);
-							productZk = 60;
-						}
 						//** 去掉最前面的4G标志
 						productName = productName.replace(/^4G/,'');
 						//** process 4G order
@@ -503,6 +493,16 @@ module.exports = exports = function(connection){
 							productBarcode == '3001_50_500_0' || //** 全国流量包(50元/500M)
 							productBarcode == '3002_100_1536_0'){ //** 省内流量包(100元/1.5G)
 							//** 第一部分：账务管理，流量包资源订购
+							var productZk = 100; //** 原价
+							if(/五折/.test(productName)){
+								productName = productName.replace('[五折]','');
+								productBarcode = productBarcode.slice(0,-3);
+								productZk = 50;
+							}else if(/六折/.test(productName)){
+								productName = productName.replace('[六折]','');
+								productBarcode = productBarcode.slice(0,-3);
+								productZk = 60;
+							}
 							CBSS.orderFlux({
 								cwd: path.resolve(__dirname,'..'),//** 当前工作路径
 								tempdir: './_tmp',
@@ -514,6 +514,67 @@ module.exports = exports = function(connection){
 									price: productPrice,
 									barcode: productBarcode,
 									zk: productZk,
+								}
+							},function(err, result){
+								//** CBSS 接口返回错误
+								if(err) console.log(err);
+								//** 将状态改为“成功”或“失败”
+								result = result || {};
+								//** 如果不是登陆状态
+								if(!result.login) return done(null,{logout: true});
+								var RespCode = result.code || '88';
+								var RespDesc = (result.status || '') + ': ' + (result.message || '未知错误');
+								var EffectTime = '';
+								var status = (RespCode == 200) ? '成功' : '失败';
+								Order.findByIdAndUpdate(
+									order._id,
+									{
+										$set: {
+											status: status
+										},
+										$push: {
+											'histories':  {
+												respCode: RespCode,
+												respDesc: RespDesc,
+												effectTime: EffectTime,
+												respTime: new Date(),
+											}
+										}
+									}, {
+										'upsert': false,
+										'new': true,
+									}, function(err){
+										if(err) return done(err);
+										//** 发送业务“处理成功”或“处理失败短信”短信
+										//** 尊敬的用户您好，您订购的（产品名称）系统已受理，请耐心等待，订购结果将短信告知。
+										var sms = {};
+										//** sms业务代码部分
+										sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
+										sms.receiver = order.customer.mobile;
+										sms.content = (status == '成功'  
+												? '恭喜您，您订购的(' + order.goods.name + ')已订购成功。' 
+												: '(' + order.goods.name + ')订购失败，详情请咨询10010，或到就近营业厅咨询办理。');
+										sms.status = '新建';
+										PlatformSms
+											.create(sms, function(err){
+												if(err) return done(err);
+												//** 处理下一个
+												_process();
+											});
+									});
+							});
+						}else if(/^8.*TD$/.test(productBarcode)){
+							//** 第二部分：移网产品/变更
+							CBSS.orderYiwang({
+								cwd: path.resolve(__dirname,'..'),//** 当前工作路径
+								tempdir: './_tmp',
+								release: staffAccount.release,//** 是否是产品环境
+								staffId: staffAccount.staffId,//** 工号
+								phone: order.customer.mobile,//** 订购业务的客户手机号码
+								product: {
+									name: productName,
+									price: productPrice,
+									barcode: productBarcode,
 								}
 							},function(err, result){
 								//** CBSS 接口返回错误

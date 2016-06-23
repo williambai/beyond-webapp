@@ -21,7 +21,7 @@ var casper = require('casper').create({
 
 casper.on('resource.requested',function(resource){
 	if(!/\.(css|gif|png|jpg)$/.test(resource.url)){
-		if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_request.txt', '['+ resource.id + '] '+ resource.url + ': ' + JSON.stringify(resource) + '\n', 'a');
+		if(false) fs.write(tempdir + '/' + staffId + '_yiwang_request.txt', '['+ resource.id + '] '+ resource.url + ': ' + JSON.stringify(resource) + '\n', 'a');
 	}
 });
 
@@ -121,11 +121,13 @@ casper.then(function nav(){
 		if(homePageMeta){
 			//** 已登录
 		    response.login = true;
-			response.status = '已登录';
+			response.status = 'login';
+			response.message = '已登录';
 		}else{
 			//** 未登录
 		    response.login = false;
-			response.status = '未登录';
+			response.status = 'logout';
+			response.message = '未登录';
 			casper.echo('<response>' + JSON.stringify(response) + '</response>');
 			casper.exit(0);
 			casper.bypass(99);
@@ -338,12 +340,13 @@ casper.then(function updateYiwangForm(){
 				var userName = userNameNode && userNameNode.getAttribute('value') || '';
 				return ((userName == '') ? false : true);
 			});
-		},null,function(){
+		},null,function custNotFound(){
 			var contentHtml = this.getHTML();
-			fs.write(tempdir + '/' + staffId + '_yiwang_pageFormUpdatedTimeout.html', contentHtml, 644);
-			casper.capture(tempdir + '/' + staffId + '_yiwang_pageFormUpdatedTimeout.jpg');
-			response.status = '失败';
-			response.content = '该用户不能办理业务';
+			if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_pageFormUpdatedTimeout.html', contentHtml, 644);
+			if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_pageFormUpdatedTimeout.jpg');
+			response.code = 40130;
+			response.status = 'judge';
+			response.message = '失败: 该用户不能办理业务';
 			casper.echo('<response>' + JSON.stringify(response) + '</response>');
 			casper.exit(0);
 			casper.bypass(99);	
@@ -399,7 +402,6 @@ casper.then(function setProduct(){
 		console.log('productExpand2: ' + '\n\n');
 		console.log(productExpand2.outerHTML + '\n\n');
 		//** 点击产品包
-		// __utils__.click('input#_p' + productCode + 'k' + '51708887' + 'e' + '8101109' + 'TD');
 		__utils__.click('input#_p' + productCode);
 		var packageClicked = document.querySelector('div#p' + productCode);
 		console.log('packageClicked: ' + '\n\n');
@@ -415,7 +417,8 @@ casper.then(function submit(){
 		//注意：正式上线时，设置devMode = false
 		devServer = 'http://localhost:9200/post';
 	}
-	casper.evaluate(function setDevelopmentUrl(devServer){
+	casper.evaluate(function cutInAjax(devServer){
+		//** 接管 ajax 后续请求处理
 		Cs.Ajax._swallow =function(page, listener ,options, msg){
 		    var g = Cs.ctrl.Web.getTradeGlobal();
 		    servletPath = g.servletPath;   
@@ -534,16 +537,6 @@ casper.then(function submit(){
 		};
 	},devServer);
 
-	if(false){
-		casper.evaluate(function injectFinishChildSave(){
-			console.log('++++++++finishChildSave() ++++++\n');
-		});
-	}
-	if(false){
-		casper.evaluate(function doSubmitTrade(){
-			console.log('++++++++doSubmitTrade ++++++\n');
-		});
-	}
 	casper.then(function beforeSubmit(){
 		var contentHtml = this.getHTML();
 		if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_beforeSubmit.html', contentHtml, 644);
@@ -571,10 +564,11 @@ casper.then(function waitSubmitProcessing(){
 		});
 	},null,function(){
 		var contentHtml = this.getHTML();
-		fs.write(tempdir + '/' + staffId + '_yiwang_SubmitTimeout.html', contentHtml, 644);
-		casper.capture(tempdir + '/' + staffId + '_yiwang_SubmitTimeout.jpg');
-		response.status = '失败';
-		response.content = '超时错误：正在处理，请稍候...';
+		if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_SubmitTimeout.html', contentHtml, 644);
+		if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_SubmitTimeout.jpg');
+		response.code = 40150;
+		response.status = 'judge';
+		response.message = '超时错误：正在处理，请稍候...';
 		// casper.echo('<response>' + JSON.stringify(response) + '</response>');
 		// casper.exit(0);
 		// casper.bypass(99);	
@@ -583,8 +577,8 @@ casper.then(function waitSubmitProcessing(){
 
 casper.then(function getSubmitResult(){
 	var contentHtml = this.getHTML();
-	fs.write(tempdir + '/' + staffId + '_yiwang_SubmitResult.html', contentHtml, 644);
-	casper.capture(tempdir + '/' + staffId + '_yiwang_SubmitResult.jpg');
+	if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_SubmitResult.html', contentHtml, 644);
+	if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_SubmitResult.jpg');
 
 
 	var statusText = casper.evaluate(function(){
@@ -596,11 +590,13 @@ casper.then(function getSubmitResult(){
 		return resultNode.innerText;
 	});
 	if(/成功/.test(statusText || '')){
-		response.status = '成功';
-		response.content = resultText || '';
+		response.code = 200;
+		response.status = 'submit';
+		response.message = '(成功) ' + (resultText || '');
 	}else{
-		response.status = '失败';
-		response.content = resultText || '';
+		response.code = 40500;
+		response.status = 'submit';
+		response.message = '(失败) ' + (resultText || '');
 	}
 });
 

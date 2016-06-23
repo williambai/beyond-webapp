@@ -5,6 +5,7 @@ console.log(account);
 orderYiwang({
 	cwd: __dirname,//** 当前工作路径
 	tempdir: './_tmp',
+	release: false,//** 开发模式
 	staffId: account.staffId,
 	phone: '15692740700',
 	// phone: '18685106847', //** 李奇
