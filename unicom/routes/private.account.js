@@ -27,8 +27,8 @@
  				// res.write('received upload:\n\n');
  				// var util = require('util');
  				// res.end(util.inspect({files: req.files}));
- 				var file = req.files.files;
- 				var filename = app.randomHex() + '.' + file.extension; //file.name;
+ 				var file = req.files.files || {};
+ 				var filename = app.randomHex() + (file.extension ? ('.' + file.extension) : ''); //file.name;
  				var tmp_path = file.path;
  				var new_path = path.join(__dirname, '../public/_images/', filename);
  				var avatar = '/_images/' + filename;

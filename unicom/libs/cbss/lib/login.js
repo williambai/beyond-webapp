@@ -46,6 +46,14 @@ module.exports = exports = function(options, done){
 			if(fs.existsSync(captchaImageFile)){
 				// captchaParser.getAllOcr(captchaImageFile, trainDataMap, function(err, result){
 				captchaParser.getAllOcrSimple(captchaImageFile, function(err, result){
+					if(err){
+						logger.error(err);
+						//** 虽然错误，但是继续流程，输入空验证码，保证phantomjs正确关闭
+						//** 未识别出验证码，输入空验证码
+						child.stdin.write('');
+						child.stdin.write('\n');
+						return;
+					}
 					console.log('captcha text: ' + result);
 					//** 输入验证码
 					child.stdin.write(result);
