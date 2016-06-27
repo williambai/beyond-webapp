@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var mongooseToCsv = require('mongoose-to-csv');
 var CSV = require('comma-separated-values');
 var async = require('async');
+var crypto = require('crypto');
 
 var schema = new mongoose.Schema({
 	email: {
@@ -115,7 +116,9 @@ module.exports = exports = function(connection) {
 			if(/@/.test(record.email)) return cb();
 			//** 设置应用
 			record.apps = ['channel'];
-
+			if(record.password){
+				record.password = crypto.createHash('sha256').update(record.password).digest('hex');
+			}
 			//** 更新数据
 			Account.findOneAndUpdate({
 				email: record.email,

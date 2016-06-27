@@ -1,5 +1,7 @@
+var _ = require('underscore');
 var regexp = require('../libs/regexp');
- exports = module.exports = function(app, models) {
+
+exports = module.exports = function(app, models) {
 
  	var getOne = function(req, res) {
  		var id = req.params.id;

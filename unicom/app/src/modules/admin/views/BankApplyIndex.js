@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    bankTpl = require('../templates/_entityBank.tpl'),
+    bankTpl = require('../templates/_entityBankApply.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 var ListView = require('./__ListView');
@@ -11,14 +11,14 @@ Backbone.$ = $;
 //** Bank模型
 var Bank = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/finance/banks',	
+	urlRoot: config.api.host + '/protect/finance/bank/applys',	
 	defaults: {
 	},
 });
 //** Bank集合
 var BankCollection = Backbone.Collection.extend({
 	model: Bank,
-	url: config.api.host + '/protect/finance/banks',
+	url: config.api.host + '/protect/finance/bank/applys',
 });
 
 //** List子视图
@@ -85,11 +85,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .add': 'addView',
+		'click .pass': 'pass',
+		'click .fail': 'fail',
 		'click .edit': 'editView',
-		'click .delete': 'remove',
-		'click .export': 'exportBank',
-		'click .apply': 'applyBank',
 	},
 
 	load: function() {
@@ -100,13 +98,13 @@ exports = module.exports = Backbone.View.extend({
 			el: '#list',
 		});
 		this.listView.trigger('load');
-		this.searchView = new BankSearchView({
-			el: '#search',
-		});
-		this.searchView.done = function(query){
-			that.listView.trigger('refresh', query);
-		};
-		this.searchView.trigger('load');
+		// this.searchView = new BankSearchView({
+		// 	el: '#search',
+		// });
+		// this.searchView.done = function(query){
+		// 	that.listView.trigger('refresh', query);
+		// };
+		// this.searchView.trigger('load');
 	},
 
 	scroll: function() {
@@ -114,34 +112,40 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
-	addView: function(evt){
-		this.router.navigate('bank/add',{trigger: true});
-		return false;
-	},
 
-	editView: function(evt){
-		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		this.router.navigate('bank/edit/'+ id,{trigger: true});
-		return false;
-	},
-
-	remove: function(evt){
-		if(window.confirm('您确信要删除吗？')){
+	pass: function(evt){
+		if(window.confirm('您确信要审核通过吗？')){
 			var id = this.$(evt.currentTarget).closest('.item').attr('id');
 			var model = new Bank({_id: id});
-			model.destroy({wait: true});
+			model.set('status', '通过');
+			model.save(null, {
+				xhrFields: {
+					withCredentials: true
+				},
+			});
 			this.listView.trigger('refresh');
 		}
 		return false;
 	},
 
-	exportBank: function(){
-		this.router.navigate('bank/export',{trigger: true});
+	fail: function(evt){
+		if(window.confirm('您确信要审核不通过吗？')){
+			var id = this.$(evt.currentTarget).closest('.item').attr('id');
+			var model = new Bank({_id: id});
+			model.set('status', '放弃');
+			model.save(null, {
+				xhrFields: {
+					withCredentials: true
+				},
+			});
+			this.listView.trigger('refresh');
+		}
 		return false;
 	},
 
-	applyBank: function(){
-		this.router.navigate('bank/apply/index',{trigger: true});
+	editView: function(evt){
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
+		this.router.navigate('bank/apply/edit/'+ id,{trigger: true});
 		return false;
 	},
 	

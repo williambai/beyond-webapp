@@ -54,6 +54,7 @@ exports = module.exports = FormView.extend({
 		'click #send-file': 'showFileExplorer',
 		'change input[type=file]': 'uploadAvatar',
 		'submit form': 'submit',
+		'click .cancel': 'cancel',
 	},
 
 	load: function() {
@@ -164,6 +165,11 @@ exports = module.exports = FormView.extend({
 				withCredentials: true
 			},
 		});
+		return false;
+	},
+	
+	cancel: function(){
+		this.router.navigate('profile/me',{trigger: true, replace: true});
 		return false;
 	},
 

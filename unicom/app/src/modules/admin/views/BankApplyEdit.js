@@ -2,7 +2,7 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    meTpl = require('../templates/_entityMe.tpl');
+    bankTpl = require('../templates/_entityBankApply.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -10,28 +10,13 @@ Backbone.$ = $;
 //** 模型
 var Bank = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/private/finance/banks',
-	validation: {
-		'bankName': {
-			required: true,
-			msg: '请输入开户银行名称'
-		},
-		'accountNo': {
-			required: true,
-			msg: '请输入银行卡号',
-		},
-		'accountName': {
-			required: true,
-			msg: '请输入账户姓名',
-		},
-		'cardId': {
-			required: true,
-			msg: '请输入身份证号码',
-		},
+	urlRoot: config.api.host + '/protect/finance/bank/applys',
+	defaults: {
+		display_sort: 0,
 	}
 });
 
-//** 主页面
+//** 主视图
 exports = module.exports = FormView.extend({
 
 	el: '#bankForm',
@@ -40,9 +25,9 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new Bank({_id: 'me'});
-		var page = $(meTpl);
-		var editTemplate = $('#bankTemplate', page).html();
+		this.model = new Bank({_id: options.id});
+		var page = $(bankTpl);
+		var editTemplate = $('#editTemplate', page).html();
 		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
@@ -84,38 +69,36 @@ exports = module.exports = FormView.extend({
 
 	submit: function() {
 		var that = this;
-		if(window.confirm('您确信要修改银行卡信息吗？')){
-			//clear errors
-			this.$('.form-group').removeClass('has-error');
-			this.$('.form-group').find('span.help-block').empty();
-			var arr = this.$('form').serializeArray();
-			var errors = [];
-			_.each(arr,function(obj){
-				var error = that.model.preValidate(obj.name,obj.value);
-				if(error){
-					errors.push(error);
-					that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
-					that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
-				}
-			});
-			if(!_.isEmpty(errors)) return false;
-			//validate finished.
+		//clear errors
+		this.$('.form-group').removeClass('has-error');
+		this.$('.form-group').find('span.help-block').empty();
+		var arr = this.$('form').serializeArray();
+		var errors = [];
+		_.each(arr,function(obj){
+			var error = that.model.preValidate(obj.name,obj.value);
+			if(error){
+				errors.push(error);
+				that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
+				that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
+			}
+		});
+		if(!_.isEmpty(errors)) return false;
+		//validate finished.
 
-			var object = this.$('form').serializeJSON();
-			this.model.set(object);
-			// console.log(this.model.attributes);
-			this.model.save(null, {
-				xhrFields: {
-					withCredentials: true
-				},
-			});
-		}
+		var object = this.$('form').serializeJSON();
+		this.model.set(object);
+		// console.log(this.model.attributes);
+		this.model.save(null, {
+			xhrFields: {
+				withCredentials: true
+			},
+		});
 		return false;
 	},
 	
 
 	cancel: function(){
-		this.router.navigate('me/index',{trigger: true, replace: true});
+		this.router.navigate('bank/apply/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -127,7 +110,7 @@ exports = module.exports = FormView.extend({
 			this.render();
 		}else{
 			//second fetch: submit
-			this.router.navigate('me/index',{trigger: true, replace: true});
+			this.router.navigate('bank/apply/index',{trigger: true, replace: true});
 		}
 	},
 

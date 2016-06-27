@@ -129,8 +129,10 @@
 						<input type="text" name="cardId" value="<%= model.cardId %>" class="form-control"/>
 						<span class="help-block"></span>
 					</div>
-					<p></p>
-					<p>请确保您绑定的银行卡信息准确无误，以便能够正常收到wo助手发放的佣金。</p>
+					<br/>
+					<p>请确保您绑定的银行卡信息准确无误，以便能够正常收到wo助手发放的佣金。
+					</p>
+					<p style="color:red;">注意：修改银行卡信息需要等待后台审核通过后才能生效。</p>
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
@@ -143,6 +145,8 @@
 					</div>
 				</form>
 			</div>
+			<br/>
+			<br/>
 		</div>
 	</div>
 	<div id="bonusListTemplate">

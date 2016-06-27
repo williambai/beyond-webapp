@@ -240,6 +240,16 @@ exports = module.exports = [{
 			"getMore": "true",
 			"getOne": "true"
 		},
+		"protect_finance_bank_apply": {
+			"route": "/protect/finance/bank/applys",
+			"nickname": "protect_finance_bank_apply",
+			"name": "银行卡申请审核",
+			"remove": "false",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
 		"protect_finance_bonus": {
 			"route": "/protect/finance/bonuses",
 			"nickname": "protect_finance_bonus",

@@ -258,10 +258,35 @@
 					<span class="help-block"></span>
 				</div>
 				<div class="form-group">
-					<label for="email">电子邮件：</label>
+					<label for="email">手机号码/电子邮件：</label>
 					<input type="text" name="email" value="<%= model.email %>" class="form-control" readonly>
 					<span class="help-block"></span>
 				</div>
+					<div class="form-group">
+						<label for="department">渠道名称：</label>
+						<input type="text" value="<%= model.department && model.department.name %>" class="form-control" placeholder="请输入渠道名称，并在列表中选择" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="department">渠道编码：</label>
+						<input type="text" value="<%= model.department && model.department.nickname %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="email">所在城市：</label>
+						<input type="text" value="<%= model.department && model.department.city %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="email">所在地区：</label>
+						<input type="text" value="<%= model.department && model.department.district %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label for="email">所在网格：</label>
+						<input type="text" value="<%= model.department && model.department.grid %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
 				<div class="form-group">
 					<label for="password">密码：</label>
 					<input type="password" name="password" class="form-control"/>
@@ -278,7 +303,14 @@
 					<span class="help-block"></span>
 				</div>
 				<div class="form-group">
-					<input type="submit" class="btn btn-block btn-primary"/>
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group">
+						<input type="submit" value="提交" class="btn btn-danger">
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-primary cancel">取消</button>
+					</div>
+					</div>
 				</div>
 			</form>
 		</div>
@@ -303,7 +335,14 @@
 		</div>
 		<p class="clearfix"></p>
 		<hr>
-		<h2>我的自传</h2>
+		<h4>部门信息</h4>
+		<p>渠道名称：<%= model.department && model.department.name %></p>
+		<p>渠道编码：<%= model.department && model.department.nickname %></p>
+		<p>所在城市：<%= model.department && model.department.city %></p>
+		<p>所在地区：<%= model.department && model.department.district %></p>
+		<p>所在网格：<%= model.department && model.department.grid %></p>
+		<hr>
+		<h4>我的自传</h4>
 		<%if(model.biography && model.biography.length > 0){ %>
 			<p><%= model.biography %></p>
 		<%}else{ %>

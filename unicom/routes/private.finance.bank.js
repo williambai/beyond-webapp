@@ -1,3 +1,8 @@
+/**
+ * 用户申请、更新和查看收款银行卡信息
+ * 
+ */
+
 var _ = require('underscore');
 
  exports = module.exports = function(app, models) {
@@ -6,7 +11,8 @@ var _ = require('underscore');
  		var doc = req.body;
  		doc.uid = req.session.accountId;
  		doc.mobile = req.session.email;
- 		models.FinanceBank
+ 		doc.status = '新建';
+ 		models.FinanceBankApply
  			.create(doc,function(err) {
  			if (err) return res.send(err);
  			res.send({});
@@ -14,7 +20,7 @@ var _ = require('underscore');
  	};
  	var remove = function(req,res){
  		var id = req.params.id;
- 		models.FinanceBank
+ 		models.FinanceBankApply
  			.findOneAndRemove({
  				_id: id,
  				uid: req.session.accountId, //** 只能删自己的
@@ -28,20 +34,14 @@ var _ = require('underscore');
  		var set = req.body;
  		//** 移除id
  		set = _.omit(set,'_id');
+ 		set = _.omit(set, '__v');
  		set.uid = meId;
  		set.mobile = req.session.email;
- 		models.FinanceBank
- 			.findOneAndUpdate({
-	 			uid: meId, //** 只能改自己的 			
-	 		}, {
- 				$set: set
- 			}, {
- 				'upsert': true,
- 				'new': true,
- 			},
- 			function(err, doc) {
+ 		set.status = '新建';
+ 		models.FinanceBankApply
+ 			.create(set,function(err) {
  				if (err) return res.send(err);
- 				res.send(doc);
+ 				res.send({message: '申请成功。'});
  			}
  		);
  	};

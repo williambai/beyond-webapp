@@ -200,23 +200,23 @@
 						</tr>
 						<tr>
 							<td>6</td>
-							<td>manager</td>
-							<td>负责人</td>
-						</tr>
-						<tr>
-							<td>7</td>
-							<td>phone</td>
-							<td>联系电话</td>
-						</tr>
-						<tr>
-							<td>8</td>
 							<td>address</td>
 							<td>所在地址</td>
 						</tr>
 						<tr>
-							<td>9</td>
+							<td>7</td>
 							<td>zipcode</td>
 							<td>邮政编码</td>
+						</tr>
+						<tr>
+							<td>8</td>
+							<td>manager</td>
+							<td>负责人</td>
+						</tr>
+						<tr>
+							<td>9</td>
+							<td>phone</td>
+							<td>联系电话</td>
 						</tr>
 						<tr>
 							<td>10</td>
@@ -308,23 +308,23 @@
 						</tr>
 						<tr>
 							<td>6</td>
-							<td>manager</td>
-							<td>负责人</td>
-						</tr>
-						<tr>
-							<td>7</td>
-							<td>phone</td>
-							<td>联系电话</td>
-						</tr>
-						<tr>
-							<td>8</td>
 							<td>address</td>
 							<td>所在地址</td>
 						</tr>
 						<tr>
-							<td>9</td>
+							<td>7</td>
 							<td>zipcode</td>
 							<td>邮政编码</td>
+						</tr>
+						<tr>
+							<td>8</td>
+							<td>manager</td>
+							<td>负责人</td>
+						</tr>
+						<tr>
+							<td>9</td>
+							<td>phone</td>
+							<td>联系电话</td>
 						</tr>
 						<tr>
 							<td>10</td>

@@ -105,6 +105,13 @@ exports = module.exports = [
         "status": "有效"
     },
     {
+        "description": "银行卡申请审核：审核用户的银行卡信息。",
+        "name": "银行卡申请审核",
+        "nickname": "protect_finance_bank_apply",
+        "route": "/protect/finance/bank/applys",
+        "status": "有效"
+    },
+    {
         "description": "佣金管理：管理用户的佣金。",
         "name": "佣金管理",
         "nickname": "protect_finance_bonus",

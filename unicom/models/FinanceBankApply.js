@@ -1,6 +1,6 @@
 /**
  * 财务模块
- * - 用户银行卡
+ * - 用户申请收款银行卡，待管理员审核后覆盖用户银行卡FinanceBank方可生效
  */
 var mongoose = require('mongoose');
 var mongooseToCsv = require('mongoose-to-csv');
@@ -21,9 +21,16 @@ var schema = new mongoose.Schema({
 		type: Date,
 		default: Date.now
 	},
+	status: {
+		type: String,
+		enum: {
+			values: '新建|通过|放弃'.split('|'),
+			message: 'enum validator failed for path {PATH} with value {VALUE}',
+		}
+	},
 });
 
-schema.set('collection', 'finance.banks');
+schema.set('collection', 'finance.banks.apply');
 
 //** 导出csv
 schema.plugin(mongooseToCsv,{
@@ -42,5 +49,5 @@ schema.plugin(mongooseToCsv,{
 
 module.exports = exports = function(connection){
 	connection = connection || mongoose;
-	return connection.model('FinanceBank', schema);
+	return connection.model('FinanceBankApply', schema);
 };

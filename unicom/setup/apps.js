@@ -30,6 +30,7 @@ exports = module.exports = [
             "protect_goods",
             "protect_sms",
             "protect_finance_bank",
+            "protect_finance_bank_apply",
             "protect_finance_bonus",
             "protect_department",
             "channel_category",
