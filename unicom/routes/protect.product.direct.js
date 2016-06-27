@@ -19,7 +19,7 @@ var regexp = require('../libs/regexp');
  					//** 保存goods
  					doc.goods = goods;
 			 		//** 将所属分类按字符串保存
-			 		doc.category = (doc.category || '').join(',');
+			 		doc.category = (doc.category || []).join(',');
  					models.ProductDirect
  						.create(doc, function(err) {
 	 						if (err) return res.send(err);

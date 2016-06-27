@@ -16,39 +16,46 @@ var CronJob = require('cron').CronJob;
 
 //** MongoDB packages
 var mongoose = require('mongoose');
-mongoose.connect(config.db.URI, function onMongooseError(err) {
-	if (err) {
-		logger.error('Error: can not open Mongodb.');
-		throw err;
-	}
-});
-//** import MongoDB's models
 var models = {};
-fs.readdirSync(path.join(__dirname, '../models')).forEach(function(file) {
-	if (/\.js$/.test(file)) {
-		var modelName = file.substr(0, file.length - 3);
-		models[modelName] = require('../models/' + modelName)(mongoose);
-	}
-});
 
 //** schedule Jobs
-// var refreshWechatAccessTokenJob = new CronJob({
-// 	cronTime: '00 */59 * * * *',
-// 	onTick: function() {
-// 		models.PlatformWeChat.updateAccessToken(function(err,result) {
-// 			if(err) return logger.error(err);
-// 			logger.debug('Wechat AccessToken: ' + JSON.stringify(result));
-// 			logger.info('call Wechat AccessToken peroid job successfully.');
-// 		});
-// 	},
-// 	start: true,
-// 	runOnInit: true,//** execute right now!
-// });
+var refreshWechatAccessTokenJob = function(){
+	new CronJob({
+		cronTime: '00 */59 * * * *',
+		onTick: function() {
+			models.PlatformWeChat.updateAccessToken(function(err,result) {
+				if(err) return logger.error(err);
+				logger.debug('Wechat AccessToken: ' + JSON.stringify(result));
+				logger.info('call Wechat AccessToken peroid job successfully.');
+			});
+		},
+		start: true,
+		runOnInit: true,//** execute right now!
+	});
+};
+
+mongoose.connect(config.db.URI, function onMongodbConnected(err) {
+	if (err) {
+		logger.error('Error: 微信定时服务 can not open Mongodb.');
+		mongoose.disconnect();
+		return process.exit(1);
+	}
+	//** import MongoDB's models Sync
+	fs.readdirSync(path.join(__dirname, '../models')).forEach(function(file) {
+		if (/\.js$/.test(file)) {
+			var modelName = file.substr(0, file.length - 3);
+			models[modelName] = require('../models/' + modelName)(mongoose);
+		}
+	});
+	//** 启动服务
+	// refreshWechatAccessTokenJob();
+	logger.info('微信定时服务已开启。');
+});
 
 //** process uncaughtException
 process.on('uncaughtException', function(err){
-	logger.error('CronJob 异常退出，请及时处理！');
+	logger.error('微信定时服务 异常退出，请及时处理！');
 	logger.error(err);
+	mongoose.disconnect();
 	process.exit(1);
 });
-logger.info('微信定时服务已开启。');

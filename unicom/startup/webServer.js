@@ -174,24 +174,16 @@ app.server.listen(config.server.PORT, function() {
 	logger.info(config.server.NAME + ' App is running at ' + config.server.PORT + ' now.');
 });
 
-// var fork = require('child_process').fork;
-//** start SGIP Service
-// var sgipService = fork('./sgipService');
-//** start cron jobs
-// var cronJobs = fork('./cronJobs');
 
 //** kill child process when SIGTERM received
 process.on('SIGTERM', function(){
 	logger.warn('receive SIGTERM and process exit.');
-	// sgipService.kill('SIGTERM');
-	// cronJobs.kill('SIGTERM');
 	process.exit(1);
 });
 
 //** process uncaughtException
 process.on('uncaughtException', function(){
 	logger.warn('uncaughtException and process exit.');
-	// sgipService.kill('SIGTERM');
-	// cronJobs.kill('SIGTERM');
+	mongoose.disconnect();
 	process.exit(1);
 });

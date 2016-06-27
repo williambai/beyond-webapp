@@ -18,20 +18,7 @@ var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
 
 //** MongoDB packages
 var mongoose = require('mongoose');
-mongoose.connect(config.db.URI, function onMongooseError(err) {
-	if (err) {
-		logger.error('Error: can not open Mongodb.');
-		throw err;
-	}
-});
-//** import MongoDB's models
 var models = {};
-fs.readdirSync(path.join(__dirname, '../models')).forEach(function(file) {
-	if (/\.js$/.test(file)) {
-		var modelName = file.substr(0, file.length - 3);
-		models[modelName] = require('../models/' + modelName)(mongoose);
-	}
-});
 
 var refreshPeroid = 427000;
 
@@ -113,19 +100,38 @@ var processOrderJob = function(accountsByCity){
 	};
 
 //** 启动
-login(accounts,function(err){
-	if(err) return logger.error(err);
-	setTimeout(function(){
-		refreshCookieJob(accounts);
-	},refreshPeroid);
-	setTimeout(function(){
-		processOrderJob(accountsEnable);
-	}, 7000);
-});
+var startService = function(){
+	login(accounts,function(err){
+		if(err) return logger.error(err);
+		setTimeout(function(){
+			refreshCookieJob(accounts);
+		},refreshPeroid);
+		setTimeout(function(){
+			processOrderJob(accountsEnable);
+		}, 7000);
+		var cities = [];
+		accounts.forEach(function(acc){
+			if(acc.status == '有效') cities.push(acc.city);
+		});
+		logger.info('贵州省联通CBSS城市(' + cities.join(' | ') + ') 处理4G订单服务已开启。');
+	});
+};
 
-var cities = [];
-accounts.forEach(function(acc){
-	if(acc.status == '有效') cities.push(acc.city);
+//** 连接数据库
+mongoose.connect(config.db.URI, function onMongodbConnected(err) {
+	if (err) {
+		logger.error('Error: 贵州省 cbssService can not open Mongodb.');
+		mongoose.disconnect();
+		return process.exit(1);
+	}
+	//** import MongoDB's models Sync
+	fs.readdirSync(path.join(__dirname, '../models')).forEach(function(file) {
+		if (/\.js$/.test(file)) {
+			var modelName = file.substr(0, file.length - 3);
+			models[modelName] = require('../models/' + modelName)(mongoose);
+		}
+	});
+	startService();
 });
 //** process uncaughtException
 process.on('uncaughtException', function(err){
@@ -134,6 +140,6 @@ process.on('uncaughtException', function(err){
 	mongoose.disconnect();
 	process.exit(1);
 });
-logger.info('贵州省联通CBSS城市(' + cities.join(' | ') + ') 处理4G订单服务已开启。');
+
 
 

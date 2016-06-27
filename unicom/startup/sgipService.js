@@ -13,20 +13,7 @@ log4js.configure(path.join(__dirname,'../config/log4js.json'), {cwd: path.resolv
 var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
 //** MongoDB packages
 var mongoose = require('mongoose');
-mongoose.connect(config.db.URI, function onMongooseError(err) {
-	if (err) {
-		logger.error('Error: can not open Mongodb.');
-		throw err;
-	}
-});
-//** import MongoDB's models
 var models = {};
-fs.readdirSync(path.join(__dirname, '../models')).forEach(function(file) {
-	if (/\.js$/.test(file)) {
-		var modelName = file.substr(0, file.length - 3);
-		models[modelName] = require('../models/' + modelName)(mongoose);
-	}
-});
 
 //** SGIP1.2 protocol
 var Receiver = require('../libs/sms').Receiver;
@@ -94,11 +81,11 @@ sgipSerice.listen(config.sp.listener.port, function() {
  * 
  */
 
-
 //** 每过5秒钟检查并发送短信
 var sendSMSJob = function(){
 		models.PlatformSms.sendSms(function(err,result){
 			if(err || !result) {
+				logger.error('SGIP短信发送异常，请检查网关。');
 				logger.error(err);
 				setTimeout(sendSMSJob,7000);
 				return;
@@ -111,14 +98,33 @@ var sendSMSJob = function(){
 			setTimeout(sendSMSJob,5000);
 		});
 	};
-//** 立即发送短信
-setTimeout(sendSMSJob,100);
 
-logger.info('SGIP短信定时发送服务已开启。');
+mongoose.connect(config.db.URI, function onMongodbConnected(err) {
+	if (err) {
+		logger.error('Error: sgipService 服务 can not open Mongodb.');
+		return sgipSerice.close(function(){
+			mongoose.disconnect();
+			process.exit(1);
+		});
+	}
+	//** import MongoDB's models Sync
+	fs.readdirSync(path.join(__dirname, '../models')).forEach(function(file) {
+		if (/\.js$/.test(file)) {
+			var modelName = file.substr(0, file.length - 3);
+			models[modelName] = require('../models/' + modelName)(mongoose);
+		}
+	});
+	//** 立即发送短信
+	setTimeout(sendSMSJob,100);
+	logger.info('SGIP短信定时发送服务已开启。');
+});
 
 //** process uncaughtException
 process.on('uncaughtException', function(err){
 	logger.error('sgipService 服务异常退出，请及时处理!');
 	logger.error(err);
-	process.exit(1);
+	sgipSerice.close(function(){
+		mongoose.disconnect();
+		process.exit(1);
+	});
 });

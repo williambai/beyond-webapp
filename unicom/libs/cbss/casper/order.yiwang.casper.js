@@ -354,13 +354,25 @@ casper.then(function updateYiwangForm(){
 	});
 
 	casper.then(function parseUpdatedYiwangHtml(){
-		casper.then(function(){
-			var resourceHtml = this.getHTML();
-			if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_pageFormUpdated.html', resourceHtml, 644);
-			if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_pageFormUpdated.jpg');
-		});
+		var resourceHtml = this.getHTML();
+		if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_pageFormUpdated.html', resourceHtml, 644);
+		if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_pageFormUpdated.jpg');
+		var hasChecked = casper.evaluate(function(productCode){
+			var kId = productCode.indexOf('k');
+			var productId = productCode.slice(0,kId);
+			var productNode = document.querySelector('input#_p' + productId);
+			return (productNode && productNode.hasAttribute('checked')) || false;
+		},order.product.code);
+		//** 用户已经订购过
+		if(hasChecked){
+			response.code = 40160;
+			response.status = 'judge';
+			response.message = '失败: 该用户已经办理过该业务。';
+			casper.echo('<response>' + JSON.stringify(response) + '</response>');
+			casper.exit(0);
+			casper.bypass(99);
+		}
 	});
-
 });
 
 casper.then(function expandPackageList(){
