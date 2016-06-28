@@ -21,7 +21,8 @@
 				"./logs",
 				"./test",
 				"./libs/cbss/_tmp"
-			]
+			],
+			"ignore_watch_string": "./_app ./_dest ./_tmp ./app ./build ./commands ./public ./logs ./test ./libs/cbss/_tmp"
 		},{
 			"name": "SgipService",
 			"script": "./startup/sgipService.js",

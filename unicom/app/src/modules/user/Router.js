@@ -15,6 +15,7 @@ var FeedbackEditView = require('../../views/_FeedbackEdit');
 
 var IndexView = require('./views/Index');
 var ActivityIndexView = require('./views/ActivityIndex');
+var PhoneIndexView = require('./views/PhoneIndex');
 
 var HelpIndexView = require('./views/HelpIndex');
 var MeIndexView = require('./views/MeIndex');
@@ -68,6 +69,7 @@ exports = module.exports = Backbone.Router.extend({
 		'product/view/:id': 'productOrder',//** 产品推荐
 
 		'activity/index': 'activityIndex',
+		'phone/index': 'phoneIndex',
 		'order/index': 'orderIndex',
 		'customer/index': 'customerIndex',
 
@@ -517,6 +519,20 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(activityIndexView);
 		activityIndexView.trigger('load');
+	},
+
+	phoneIndex: function() {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '同事圈');
+		var phoneIndexView = new PhoneIndexView({
+			router: this,
+			el: '#content'
+		});
+		this.changeView(phoneIndexView);
+		phoneIndexView.trigger('load');
 	},
 
 });

@@ -45,6 +45,11 @@ _.extend(config,{
 	// 	"features": [],
 	// },{
 		"id": 8,
+		"name": "号码检测",
+		"hash": "phone/index",
+		"features": [],
+	},{
+		"id": 8,
 		"name": "我的客户",
 		"hash": "customer/index",
 		"features": [],

@@ -1,9 +1,9 @@
-var BSS = require('../lib/addOrder');
+var addOrder = require('../lib/addOrder');
 
 //** Unit Test
 if(process.argv[1] == __filename){
 	//** 测试 addOrder()
-	BSS.addOrder({
+	addOrder({
 		url: 'http://130.85.50.34:7772/XMLReceiver',
 		requestId: 'seq00001' + parseInt(Math.random()*10000),
 		ProductId: '9085037900',

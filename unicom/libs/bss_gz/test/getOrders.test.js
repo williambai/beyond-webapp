@@ -7,12 +7,12 @@
  * 
  */
 
-var BSS = require('../lib/getOrders');
+var getOrders = require('../lib/getOrders');
 
 //** Unit Test
 if(process.argv[1] == __filename){
 	//** 测试 getOrders()
-	BSS.getOrders({
+	getOrders({
 		url: process.argv[3] || 'http://130.85.50.34:7772/XMLReceiver',
 		requestId: 'ALUOP151123071351894382625439' + parseInt(Math.random()*10000),
 		BusinessType: '00',

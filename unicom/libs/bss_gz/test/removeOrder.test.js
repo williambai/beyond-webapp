@@ -1,9 +1,9 @@
-var BSS = require('../lib/removeOrder');
+var removeOrder = require('../lib/removeOrder');
 
 //** Unit Test
 if(process.argv[1] == __filename){
 	//** 测试 removeOrder()
-	BSS.removeOrder({
+	removeOrder({
 		url: 'http://130.85.50.34:7772/XMLReceiver',
 		requestId: 'seq00001' + parseInt(Math.random()*10000),
 		ProductId: '99013000',

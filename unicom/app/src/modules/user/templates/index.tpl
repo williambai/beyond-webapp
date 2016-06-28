@@ -59,10 +59,10 @@
 				<div class="row">
 					<div class="col-sm-7 col-xs-7 menu-block-left">
 						<div class="text-center menu-block-1x" style="background-color:red;">
-							<a href="#sale/lead/index">
+							<a href="#phone/index">
 								<h4>
 									<i class="fa fa-road fa-lg"></i>
-									&nbsp;销售线索
+									&nbsp;号码检测
 								</h4>
 							</a>
 						</div>
