@@ -13,6 +13,7 @@ var schema = new mongoose.Schema({
 	price: Number,
 	unit: String,
 	quantity: Number,
+	scope: String, //** 产品适用区域
 	effectMethod: [String], //** 立即生效|次月生效
 	starttime: String,
 	endtime: String,
@@ -30,6 +31,7 @@ var schema = new mongoose.Schema({
 		price: Number, //** 产品单价(product.price)
 		unit: String, //** 产品单位(product.unit)
 		bonus: Number, //** 单个产品佣金
+		scope: String, //** 产品适用区域
 	},
 	// bonus: {
 	// 	income: Number,//** 佣金收入

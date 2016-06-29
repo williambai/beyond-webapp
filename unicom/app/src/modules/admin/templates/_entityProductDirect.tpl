@@ -57,7 +57,7 @@
 						<img width="50px" heigh="50px">
 					</div>
 					<div class="col-xs-9">
-						<h4><%= model.name %>&nbsp;<span class="bg-success"><%= model.status %></span></h4>
+						<h4><span style="color:red;">[<%= model.scope %>]</span><%= model.name %>&nbsp;<span style="color:red;"><%= model.status %></span></h4>
 						<p>产品分类：<%= model.category %></p>
 						<p>产品标签：<%= model.tags %></p>
 						<%if(model.starttime){ %>
@@ -90,6 +90,11 @@
 					<div class="form-group">
 						<label>物料编码：</label>
 						<input type="text" name="goods[barcode]" value="<%= model.goods.barcode %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>适用区域：</label>
+						<input type="text" name="scope" value="<%= model.scope %>" class="form-control" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

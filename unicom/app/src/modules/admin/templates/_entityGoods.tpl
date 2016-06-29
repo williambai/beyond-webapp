@@ -44,7 +44,7 @@
 		</div>
 		<h4><%= model.name %>&nbsp;&nbsp;类型：<%= model.category %></h4>
 		<!-- <p><%= model.price %><%= model.unit %>, 状态：<%= model.status %></p> -->
-		<p>物料编码：<%= model.barcode %>&nbsp;&nbsp;业务编码：<%= model.smscode %></p>
+		<p><span style="color:red;">[<%= model.scope %>]</span>物料编码：<%= model.barcode %>&nbsp;&nbsp;业务编码：<%= model.smscode %></p>
 		<hr/>
 	</div>
  	<div id="editTemplate">
@@ -80,6 +80,21 @@
 							<input type="radio" name="category" value="2G" checked>&nbsp;&nbsp;2G
 							<input type="radio" name="category" value="3G">&nbsp;&nbsp;3G
 							<input type="radio" name="category" value="4G">&nbsp;&nbsp;4G
+						</div>
+					</div>
+					<div class="form-group">
+						<label>适用区域：</label>
+						<div style="padding-left:30px;">
+							<input type="radio" name="scope" value="全省" checked>&nbsp;&nbsp;全省
+							<input type="radio" name="scope" value="贵阳">&nbsp;&nbsp;贵阳
+							<input type="radio" name="scope" value="遵义">&nbsp;&nbsp;遵义
+							<input type="radio" name="scope" value="黔东南">&nbsp;&nbsp;黔东南
+							<input type="radio" name="scope" value="安顺">&nbsp;&nbsp;安顺
+							<input type="radio" name="scope" value="黔南">&nbsp;&nbsp;黔南
+							<input type="radio" name="scope" value="六盘水">&nbsp;&nbsp;六盘水
+							<input type="radio" name="scope" value="黔西南">&nbsp;&nbsp;黔西南
+							<input type="radio" name="scope" value="铜仁">&nbsp;&nbsp;铜仁
+							<input type="radio" name="scope" value="毕节">&nbsp;&nbsp;毕节
 						</div>
 					</div>
 					<div class="form-group">

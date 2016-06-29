@@ -16,6 +16,7 @@ var schema = new mongoose.Schema({
 	price: Number, //** 产品建议价格
 	unit: String, //** 产品价格单位
 	quantity: Number, //** 产品库存：库存量
+	scope: String, //** 产品适用区域
 	bonus: { //** 单个佣金
 		type: Number,
 		default: 0,

@@ -136,6 +136,9 @@ exports = module.exports = FormView.extend({
 		}
 		var category = this.model.get('category');
 		this.$(('input[name=category][value='+ category +']')).attr('checked',true)
+		var scope = this.model.get('scope');
+		this.$(('input[name=scope][value='+ scope +']')).attr('checked',true)
+
 		var status = this.model.get('status');
 		if(status){
 			this.$('input[name=status][value='+ status +']').attr('checked',true);
