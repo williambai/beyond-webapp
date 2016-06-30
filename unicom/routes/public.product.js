@@ -84,12 +84,17 @@ var regexp = require('../libs/regexp');
  		var per = req.query.per || 20;
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
+ 		//** 限定地区
+		var scopeRegex = new RegExp('(全省|' + (req.session.department.city || '全省') + ')','i');
  		switch(action){
  			case 'category':
 				var searchStr = decodeURIComponent(req.query.category) || '';
 				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
  				models.ProductDirect
  					.find({
+ 						scope: {
+ 							$regex: scopeRegex
+ 						},
  						category: {
  							$regex: searchRegex
  						},
@@ -105,6 +110,9 @@ var regexp = require('../libs/regexp');
  			default:
 		 		models.ProductDirect
 		 			.find({
+ 						scope: {
+ 							$regex: scopeRegex
+ 						},
 		 				status: '有效',
 		 			})
 		 			.sort({display_sort: -1})
