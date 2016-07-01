@@ -13,6 +13,8 @@
  			});
  	};
  	var getMore = function(req, res) {
+ 		return res.send([]);
+
  		var per = 20;
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
