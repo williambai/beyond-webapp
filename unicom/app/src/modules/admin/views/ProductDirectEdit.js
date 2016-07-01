@@ -124,7 +124,8 @@ exports = module.exports = FormView.extend({
 					goods += '<li class="list-group-item" id="' +
 							item._id + '" price="'+ 
 							item.price + '" unit="'+ 
-							item.unit + '" description="'+ 
+							item.unit + '" bonus="'+ 
+							item.bonus + '" description="'+ 
 							item.description + '" quantity="'+ 
 							(item.quantity || '') +'">'+ 
 							item.smscode + '|' +
@@ -144,6 +145,7 @@ exports = module.exports = FormView.extend({
 		var id= $(evt.currentTarget).attr('id');
 		var price = $(evt.currentTarget).attr('price');
 		var unit = $(evt.currentTarget).attr('unit');
+		var bonus = $(evt.currentTarget).attr('bonus');
 		var description = $(evt.currentTarget).attr('description');
 		var quantity = $(evt.currentTarget).attr('quantity');
 		var goods = $(evt.currentTarget).text().split('|');
@@ -154,6 +156,7 @@ exports = module.exports = FormView.extend({
 		this.$('input[name=scope]').val(goods[3]);
 		this.$('input[name=price]').val(price);
 		this.$('input[name=unit]').val(unit);
+		this.$('input[name="goods[bonus]"]').val(bonus);
 		this.$('textarea[name=description]').val(description);
 		this.$('input[name=quantity]').val(quantity);
 		this.$('#goods').empty();

@@ -35,7 +35,7 @@
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4><%= model.name %></h4>
+		<h4><span style="color:red;">[<%= model.city %>]</span><%= model.name %></h4>
 		<p>城市：<%= model.city %>&nbsp;地区：<%= model.district %>&nbsp;网格：<%= model.grid %></p>
 	</div>
 	<div id="editTemplate">

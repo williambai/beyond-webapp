@@ -50,7 +50,7 @@
 		<div class="pull-right" id="<%= model._id %>">
 			<button class="btn btn-success edit">详情</button>
 		</div>
-		<h4><%= model.goods && model.goods.name %>&nbsp;<span style="color:red;"><%= model.status %></span></h4>
+		<h4><span style="color:red;">[<%= model.department && model.department.city %>]</span><%= model.goods && model.goods.name %>&nbsp;<span style="color:red;"><%= model.status %></span></h4>
 		<p><i class="fa fa-user"></i>&nbsp;<%= model.customer && model.customer.mobile %>&nbsp;&nbsp;是&nbsp;<%= model.createBy && model.createBy.mobile %>&nbsp;创建</p>
 		<p><i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %>&nbsp;&nbsp;<i class="fa fa-calendar"></i>&nbsp;<%= new Date(model.lastupdatetime).toLocaleString() %></p>
 		<hr/>

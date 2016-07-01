@@ -43,7 +43,7 @@
 			<button class="btn btn-success edit">编辑</button>
 			<button class="btn btn-danger delete">删除</button>
 		</div>
-		<h4 class="media-heading"><%= model.username %>&nbsp;&nbsp;<%= model.email %>&nbsp;<span style="color:red;"><%= model.status %></span></h4>
+		<h4 class="media-heading"><span style="color:red;">[<%= model.department && model.department.city %>]</span><%= model.username %>&nbsp;&nbsp;<%= model.email %>&nbsp;<span style="color:red;"><%= model.status %></span></h4>
 		<h5><%= model.department.name %></h5>
 		<p>城市：<%= model.department.city %>&nbsp;地区：<%= model.department.district %>&nbsp;网格：<%= model.department.grid %></p>
 		<hr/>

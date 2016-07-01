@@ -58,7 +58,7 @@
 					</div>
 					<div class="col-xs-9">
 						<h4><span style="color:red;">[<%= model.scope %>]</span><%= model.name %>&nbsp;<span style="color:red;"><%= model.status %></span></h4>
-						<p>产品分类：<%= model.category %></p>
+						<p>产品分类：<%= model.category %>&nbsp;<span style="color:red;">[佣金：<%= model.goods && model.goods.bonus %>]</span></p>
 						<p>产品标签：<%= model.tags %></p>
 						<%if(model.starttime){ %>
 						<p>活动时间：<%= model.starttime %> ~ <%= model.endtime %></p>
@@ -120,6 +120,11 @@
 						<input type="text" name="unit" value="<%= model.unit %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
+ 					<div class="form-group">
+						<label>佣金：</label>
+						<input type="text" name="goods[bonus]" value="<%= model.goods && model.goods.bonus %>" class="form-control" readonly>
+						<span class="help-block"></span>
+					</div>
 					<div class="form-group">
 						<label>产品数量：</label>
 						<input type="text" name="quantity" value="0" class="form-control">
@@ -168,12 +173,7 @@
 						<input type="text" name="display_sort" value="<%= model.display_sort %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
-<!-- 					<div class="form-group">
-						<label>佣金：</label>
-						<input type="text" name="bonus[income]" value="<%= model.bonus.income %>" class="form-control">
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
+<!--					<div class="form-group">
 						<label>返佣分批次数：</label>
 						<input type="text" name="bonus[times]" value="<%= model.bonus.times %>" class="form-control">
 						<span class="help-block"></span>
