@@ -1,5 +1,5 @@
 var orderFlux = require('../lib/order.flux');
-var account = (require('../../../config/cbss').accounts)[1];//** 贵阳
+var account = (require('../../../config/cbss').accounts)[1];//** 1 贵阳， 9 遵义
 console.log(account);
 orderFlux({
 	cwd: __dirname,//** 当前工作路径

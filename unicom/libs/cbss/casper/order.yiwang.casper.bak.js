@@ -21,21 +21,21 @@ var casper = require('casper').create({
 
 casper.on('resource.requested',function(resource){
 	if(!/\.(css|gif|png|jpg)$/.test(resource.url)){
-		if(true) fs.write(tempdir + '/' + staffId + '_yiwang_request.txt', '['+ resource.id + '] '+ resource.url + ': ' + JSON.stringify(resource) + '\n', 'a');
+		if(false) fs.write(tempdir + '/' + staffId + '_yiwang_request.txt', '['+ resource.id + '] '+ resource.url + ': ' + JSON.stringify(resource) + '\n', 'a');
 	}
 });
 
 casper.on('resource.error',function(resource){
-	if(true) fs.write(tempdir + '/' + staffId + '_yiwang_resource_error.txt', resource.url,'a');
+	if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_remote_message.txt', 'resource.error: ' + resource.url + '\n','a');
 });
 
 casper.on('remote.message', function(message){
-	if(true) fs.write(tempdir + '/' + staffId + '_yiwang_remote_message.txt', message,'a');
-});
-casper.on('remote.alert', function(message){
-	if(true) fs.write(tempdir + '/' + staffId + '_yiwang_remote_message.txt', message,'a');
+	if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_remote_message.txt', message,'a');
 });
 
+casper.on('remote.alert', function(message){
+	if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_remote_message.txt', message,'a');
+});
 
 phantom.cookiesEnabled = true;
 
@@ -43,6 +43,8 @@ phantom.cookiesEnabled = true;
 console.log(JSON.stringify(casper.cli.options));
 var debug = casper.cli.options['debug'] || false;
 var tempdir = casper.cli.options['tempdir'] || './_tmp';
+//** 是否是开发模式
+var devMode = (!!casper.cli.options['release'] || casper.cli.options['release'] == 'true') ? false : true; //** 是否是开发模式
 
 var staffId = casper.cli.options['staffId'] || '';
 
@@ -51,7 +53,7 @@ var order = {
 	product: {
 		name: casper.cli.options['prod_name'] || '',
 		price: casper.cli.options['prod_price'] || '',
-		resourceCode: casper.cli.options['prod_code'] || '',
+		code: casper.cli.options['prod_code'] || '',
 	},
 };
 
@@ -61,25 +63,25 @@ var homePageParams = {
 
 //** load cookie
 var cookie_file = tempdir + '/' + staffId + '_cookie.txt';
-// if(fs.exists(cookie_file)){
-// 	var data = fs.read(cookie_file) || "[]";
-// 	try {
-// 		phantom.cookies = JSON.parse(data);
-// 	} catch (e) {
-// 	}
-// 	// console.log(JSON.stringify(phantom.cookies));
-// }
+if(fs.exists(cookie_file)){
+	var data = fs.read(cookie_file) || "[]";
+	try {
+		phantom.cookies = JSON.parse(data);
+	} catch (e) {
+	}
+	// console.log(JSON.stringify(phantom.cookies));
+}
 
 //** load homePageParams
-// var homeMeta = tempdir + '/' + staffId + '_homeMeta.txt';
-// if(fs.exists(homeMeta)){
-// 	var data = fs.read(homeMeta) || "[]";
-// 	try {
-// 		homePageParams = JSON.parse(data);
-// 	} catch (e) {
-// 	}
-// 	// console.log(JSON.stringify(homePageParams));
-// }
+var homeMeta = tempdir + '/' + staffId + '_homeMeta.txt';
+if(fs.exists(homeMeta)){
+	var data = fs.read(homeMeta) || "[]";
+	try {
+		homePageParams = JSON.parse(data);
+	} catch (e) {
+	}
+	// console.log(JSON.stringify(homePageParams));
+}
 
 //****  内部中间变量 begin ******/
 var urls = {
@@ -87,16 +89,6 @@ var urls = {
 	resourceUrl: '',
 	packageUrl: '',
 };
-var loginRandomCode = '';
-var loginCheckCode = '';
-//** 可选流量包
-var resTableList = [];
-//** 可选流量包对应的form表单参数
-var resourceParam = {};
-//** 
-var xCodingString = '';
-//**
-var rMap = {};
 //****  内部中间变量 end ******/
 
 var response = {};
@@ -105,199 +97,79 @@ casper.userAgent('Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like
 
 casper.start();
 
-var account ={
-	username: 'ASCBWZS1',//** 贵阳
-	password: 'Lq19880625',
-	provinceId: '85',//** 省份id
-};
 
-casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + account.username, {
-	method: 'get',
-	headers: {
-		"Accept": "text/html, application/xhtml+xml, */*",
-		"Referer": "https://gz.cbss.10010.com/essframe",
-		"Accept-Language": "zh-CN",
-		"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-		"Content-Type": "application/x-www-form-urlencoded",
-		"Host": "gz.cbss.10010.com",
-		"Connection": "Keep-Alive",
-		"Cache-Control": "no-cache",
-	},
-});
-
-casper.then(function checkLogin(){
-	var homePageHtml = this.getHTML();
-	var homePageMeta = homePageHtml.match(/<meta.*provinceId.*?>/i);
-	if(homePageMeta){
-		//** 已登录
-	    response.login = true;
-		// response.meta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
-		response.status = '已登录';
-		casper.echo('<response>' + JSON.stringify(response) + '</response>');
-		casper.exit(0);
-		casper.bypass(99);
-	}else{
-		//** 未登录
-		response.status = '未登录';
-	}
-});
-
-casper.then(function openLoginPage(){
-	casper.open('https://cbss.10010.com');
-});
-
-casper.then(function downloadCaptchaImage() {
-	this.download('https://gz.cbss.10010.com/image?mode=validate&width=60&height=20', tempdir + '/'+ account.username + '_captcha.jpg');
-});
-
-casper.then(function inputCaptcha() {
-	var confirm = '';
-	while (confirm != 'yes') {
-		// this.echo('please input account username: ', 'INFO');
-		// account.username = system.stdin.readLine();
-		// this.echo('please input "' + account.username + '" password: ', 'INFO');
-		// account.password = system.stdin.readLine();
-		// this.echo('please input "' + account.username + '" province id: ', 'INFO');
-		// account.provinceId = system.stdin.readLine();
-		this.echo('captcha.png has been download, please open ../_tmp/'+ account.username + '_captcha.jpg and read the verifyCode.','INFO');
-		this.echo('please input captcha verifyCode: ','INFO');
-		verifyCode = system.stdin.readLine();
-		this.echo('-------- inputs ------');
-		this.echo('account: ' + account.username, 'INFO');
-		this.echo('password: ' + account.password, 'INFO');
-		this.echo('provinceId: ' + account.provinceId, 'INFO');
-		this.echo('captcha verifyCode: ' + verifyCode, 'INFO');
-		this.echo('----------------------');
-		this.echo('do you confirm, yes or no?', 'WARNING');
-		confirm = system.stdin.readLine();
-	}
-});
-
-casper.then(function proxyLoginSubmit(){
-	this.open('https://gz.cbss.10010.com/essframe?service=page/LoginProxy&login_type=redirectLogin', {
-		method: 'post',
-		headers: {
-			"Accept": "text/html, application/xhtml+xml, */*",
-			"Referer": "https://cbss.10010.com/essframe",
-			"Accept-Language": "zh-CN",
-			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-			"Content-Type":"application/x-www-form-urlencoded",
-			"Host":"gz.cbss.10010.com",
-			"Connection":"Keep-Alive",
-			"Cache-Control":"no-cache",
-		},
-		encoding: 'utf8',
-		data: {
-			"service": "direct/1/Home/$Form",
-			"sp": "S0",
-			"Form0": "LOGIN_PROVINCE_REDIRECT_URL,AUTH_TYPE,CAPTURE_URL,WHITE_LIST_LOGIN,IPASS_LOGIN,IPASS_SERVICE_URL,IPASS_LOGIN_PROVINCE,IPASS_LOGINOUT_DOMAIN,SIGNATURE_CODE,SIGNATURE_DATA,IPASS_ACTIVATE,STAFF_ID,$FormConditional,$FormConditional$0,LOGIN_PROVINCE_CODE,$FormConditional$1,$FormConditional$2,$FormConditional$3,$FormConditional$4,$FormConditional$5,$TextField,$TextField$0,$TextField$1,$TextField$2,$TextField$3,$TextField$4,$TextField$5,$TextField$6,$TextField$7,$TextField$8,$TextField$9,$TextField$10,$TextField$11,$TextField$12,$TextField$13,$TextField$14,$TextField$15,$TextField$16,$TextField$17,$TextField$18,$TextField$19,$TextField$20,$TextField$21,$TextField$22,$TextField$23,$TextField$24,$TextField$25,$TextField$26,$TextField$27,$TextField$28,$TextField$29,$TextField$30",
-			"$FormConditional": "F",
-			"$FormConditional$0": "T",
-			"$FormConditional$1": "T",
-			"$FormConditional$2": "T",
-			"$FormConditional$3": "F",
-			"$FormConditional$4": "F",
-			"$FormConditional$5": "F",
-			"LOGIN_PROVINCE_REDIRECT_URL": "https://gz.cbss.10010.com/essframe",
-			"AUTH_TYPE": "0",
-			"CAPTURE_URL": "/image?mode=validate",
-			"width": "60",
-			"height": "20",
-			"WHITE_LIST_LOGIN": "",
-			"IPASS_LOGIN": "",
-			"IPASS_SERVICE_URL": "",
-			"IPASS_LOGIN_PROVINCE": "",
-			"IPASS_LOGINOUT_DOMAIN": "",
-			"SIGNATURE_CODE": "",
-			"IPASS_ACTIVATE": "",
-			"STAFF_ID": account.username,
-			"LOGIN_PASSWORD": account.password,
-			"LOGIN_PROVINCE_CODE": account.provinceId,
-			"VERIFY_CODE": verifyCode,
+casper.then(function nav(){
+	casper.then(function getNavHtml(){
+		casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + staffId, {
+			method: 'get',
+			headers: {
+				"Accept": "text/html, application/xhtml+xml, */*",
+				"Referer": "https://gz.cbss.10010.com/essframe",
+				"Accept-Language": "zh-CN",
+				"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
+				"Content-Type": "application/x-www-form-urlencoded",
+				"Host": "gz.cbss.10010.com",
+				"Connection": "Keep-Alive",
+				"Cache-Control": "no-cache",
+			},
+		});
+	});
+	casper.then(function checkLogin(){
+		var navHtml = this.getHTML();
+		var homePageMeta = navHtml.match(/<meta.*provinceId.*?>/i);
+		// console.log(homePageMeta);
+		if(homePageMeta){
+			//** 已登录
+		    response.login = true;
+			response.status = 'login';
+			response.message = '已登录';
+		}else{
+			//** 未登录
+		    response.login = false;
+			response.status = 'logout';
+			response.message = '未登录';
+			casper.echo('<response>' + JSON.stringify(response) + '</response>');
+			casper.exit(0);
+			casper.bypass(99);
 		}
+	});
+	casper.then(function parseNavHtml(){
+		var navHtml = this.getHTML();
+		//** 加载homePageParams吗?
+		homePageParams = RegexUtils.extractHomePageMeta(navHtml) || {};
+		var resourceUrlMatched = RegexUtils.regexMatch(/.*clickMenuItem\(this\);openmenu\('(.+?personalserv\.changeelement\.ChangeElement.+?)'\).*/i, navHtml) || [];
+		var resourceUrl = resourceUrlMatched[1] || '';
+		resourceUrl = resourceUrl.replace(/&amp;/g,'&');
+		urls.resourceUrl = resourceUrl;
+		// fs.write(tempdir + '/' + staffId + '_yiwang_resource_url.txt', urls.resourceUrl, 644);
+		if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_frameNav.html', navHtml, 644);
+		if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_frameNav.jpg');
 	});
 });
 
-casper.then(function loginSubmit(){
-	this.open('https://gz.cbss.10010.com/essframe', {
-		method: 'post',
-		headers: {
-			"Accept": "text/html, application/xhtml+xml, */*",
-			"Referer": "https://gz.cbss.10010.com/essframe?service=page/LoginProxy&login_type=redirectLogin",
-			"Accept-Language": "zh-CN",
-			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-			"Content-Type":"application/x-www-form-urlencoded",
-			"Host":"gz.cbss.10010.com",
-			"Connection":"Keep-Alive",
-			"Cache-Control":"no-cache",
-		},
-		encoding: 'gbk',
-		data: {
-			"service": "direct/1/LoginProxy/$Form",
-			"sp": "S0",
-			"Form0": "ACTION_MODE,STAFF_ID,LOGIN_PASSWORD,NEED_SMS_VERIFY,SUBSYS_CODE,LOGIN_TYPE,authDomainType,soap,menuId,error,authType,LOGIN_PROVINCE_CODE,VERIFY_CODE,WHITE_LIST_LOGIN,IPASS_SERVICE_URL,IPASS_CHECK_MESSAGE,IPASS_LOGIN_PROVINCE,SIGNATURE_CODE,SIGNATURE_DATA,IPASS_LOGIN,IPASS_ACTIVATE,NEED_INSTALL_CERT,IPASS_INSTALL_RESULT,IPASS_INSTALL_MESSAGE,IPASS_LOGINOUT_DOMAIN,btnProxyLogin",
-			"ACTION_MODE": "",
-			"STAFF_ID": account.username,
-			"LOGIN_PASSWORD": account.password,
-			"NEED_SMS_VERIFY": "",
-			"SUBSYS_CODE": "",
-			"LOGIN_TYPE": "redirectLogin",
-			"authDomainType": "",
-			"soap": "",
-			"menuId": "",
-			"error": "",
-			"authType": "",
-			"LOGIN_PROVINCE_CODE": account.provinceId,
-			"VERIFY_CODE": verifyCode,
-			"WHITE_LIST_LOGIN": "",
-			"IPASS_SERVICE_URL": "",
-			"IPASS_CHECK_MESSAGE": "",
-			"IPASS_LOGIN_PROVINCE": "",
-			"SIGNATURE_CODE": "",
-			"SIGNATURE_DATA": "",
-			"IPASS_LOGIN": "",
-			"IPASS_ACTIVATE": "",
-			"NEED_INSTALL_CERT": "",
-			"IPASS_INSTALL_RESULT": "",
-			"IPASS_INSTALL_MESSAGE": "",
-			"IPASS_LOGINOUT_DOMAIN": "",
-			"btnProxyLogin": "提交查询内容",
-		}
+
+//** 左边框，用于获得下一步访问地址
+casper.then(function sideBar(){
+	casper.then(function getSideBarHtml(){
+		casper.open('https://gz.cbss.10010.com/essframe?service=page/Sidebar',{
+			method: 'get',
+			headers: {
+				"Accept": "text/html, application/xhtml+xml, */*",
+				"Referer": "https://gz.cbss.10010.com/essframe",
+				"Accept-Language": "zh-CN",
+				"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
+				"Content-Type": "application/x-www-form-urlencoded",
+				"Host": "gz.cbss.10010.com",
+				"Connection": "Keep-Alive",
+				"Cache-Control": "no-cache",
+			},
+			encoding: 'utf8',
+		});
 	});
-});
-
-casper.then(function saveHomePageMeta(){
-	var homePageHtml = this.getHTML();
-	fs.write(tempdir + '/' + staffId + '_home.html', homePageHtml, 644);
-	casper.capture(tempdir + '/' + staffId + '_home.jpg');
-	var homePageMeta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
-	if(homePageMeta['provinceid']){
-		//** 已登录
-	    response.login = true;
-	    response.message = '登录页参数获取成功！';
-	    response.meta = homePageMeta;
-	    homePageParams = homePageMeta;
-		fs.write(tempdir + '/' + account.username + '_homeMeta.txt', JSON.stringify(homePageMeta), 644);
-	}else{
-		//** 未登录
-	    response.login = false;
-	    response.message = '登录页参数获取失败！';
-	}
-});
-
-//** save cookies
-casper.then(function saveCookie(){
-	var cookies = JSON.stringify(phantom.cookies);
-	fs.write(cookie_file, cookies, 644);
-});
-
-casper.wait(20000);
-
-
-var custUrl = '';
-casper.then(function(){
-	casper.withFrame('sidebarframe', function(){
+	casper.then(function parserSideBarHtml(){
 			var sideBarHtml = this.getHTML();
+			if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_frameSidebar.html', sideBarHtml, 644);
+
 			var custUrlMatched = RegexUtils.regexMatch(/menuaddr="(.+?)"/i, sideBarHtml) || [];
 			if(custUrlMatched[1] == undefined){
 				rspcasper.status = '没取到url，用户认证异常';		
@@ -305,580 +177,445 @@ casper.then(function(){
 				casper.bypass(99);
 				return;
 			}
-			custUrl = custUrlMatched[1] || '';
+
+			var custUrl = custUrlMatched[1] || '';
+			// console.log('custUrl(raw): ' + custUrl);
 			custUrl = custUrl.replace(/&amp;/g, '&');
 			custUrl += "&staffId=" + homePageParams['staffid']
 		            + "&departId=" + homePageParams['deptid']
 		            + "&subSysCode=" + homePageParams['subsyscode']
 		            + "&eparchyCode=" + homePageParams['epachyid'];
-	});
-	casper.then(function(){
-			casper.evaluate(function(custUrl){
-				document.querySelector('frame#contentframe').setAttribute('src', 'https://gz.cbss.10010.com/' + custUrl);
-				// redirectTo('pub.chkcust.MainChkCust', 'init', '&RIGHT_CODE=csCreateCustTrade', 'chkcustframe');
-			},custUrl);
+		    urls.custUrl = custUrl;
+		    // console.log('custUrl: ' + custUrl);
 	});
 });
 
-// casper.then(function(){
-// 	// var resourceUrl = '';
-// 	// casper.withFrame('navframe',function(){
-// 	// 		var frameNav = this.getHTML();
-// 	// 		var resourceUrlMatched = RegexUtils.regexMatch(/.*clickMenuItem\(this\);openmenu\('(.+?OrderGprsRes.+?)'\).*/i, frameNav) || [];
-// 	// 		resourceUrl = resourceUrlMatched[1] || '';
-// 	// 		resourceUrl = resourceUrl.replace(/&amp;/g,'&');
-// 	// });
-// 	// casper.withFrame('contentframe',function(){
-// 	// 		casper.evaluate(function(resourceUrl){
-// 	// 			document.querySelector('iframe#chkcustframe').setAttribute('src',resourceUrl);
-// 	// 		},'https://gz.cbss.10010.com' + resourceUrl);
-
-// 	// });
-// 	// casper.then(function(){
-
-// 	// });
-
-// 	casper.page.switchToChildFrame('navframe');	
-// 	casper.click('#BIL6216');
-// 	casper.page.switchToParentFrame();
-// });
-
-casper.wait(20000);
-
-casper.then(function(){
-	casper.withFrame('contentframe',function(){
-		var BSS_CUSTSERV_JSESSIONID = '';
-		phantom.cookies.forEach(function(cookie){
-			if(cookie.name == 'BSS_CUSTSERV_JSESSIONID') BSS_CUSTSERV_JSESSIONID = cookie.value;
+casper.then(function custAuthMain(){
+	casper.then(function getCustAuthMainHtml(){
+		casper.open("https://gz.cbss.10010.com/" + urls.custUrl,{
+			method: 'get',
+			headers: {
+				"Accept": "text/html, application/xhtml+xml, */*",
+				"Referer": "https://gz.cbss.10010.com/essframe?service=page/Sidebar",
+				"Accept-Language": "zh-CN",
+				"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
+				"Content-Type": "application/x-www-form-urlencoded",
+				"Host": "gz.cbss.10010.com",
+				"Connection": "Keep-Alive",
+				"Cache-Control": "no-cache",
+			},
+			encoding: 'utf8',
 		});
-		console.log('++++++');
-		console.log('BSS_CUSTSERV_JSESSIONID: ' + BSS_CUSTSERV_JSESSIONID);
-		var custUrlNew = 'custserv;BSS_CUSTSERV_JSESSIONID=' + BSS_CUSTSERV_JSESSIONID 
-						+ '?service=page/pub.chkcust.MainChkCust'
-						+ '&listener=init'
-						+ '&RIGHT_CODE=csCreateCustTrade'
- 						+ "&staffId=" + homePageParams['staffid']
-			            + "&departId=" + homePageParams['deptid']
-			            + "&subSysCode=custserv"
-			            + "&eparchyCode=" + homePageParams['epachyid'];
+	});
+	// casper.wait(10000);
+    casper.then(function parseCustAuthMainHtml(){
+    	//** 客户统一认证
+    	var custAuthMainHtml = this.getHTML();
+    	if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_custAuthMain.html', custAuthMainHtml, 644);
+    });
+});
 
-		console.log(custUrlNew);
-		// casper.page.switchToChildFrame('contentframe');
-		casper.evaluate(function(custUrlNew){
-			document.querySelector('#chkcustframe').setAttribute('src', 'https://gz.cbss.10010.com/' + custUrlNew);
-		},custUrlNew);
-		casper.wait(10000);
-		casper.withFrame('chkcustframe', function(){		
-			var frameChkcust = this.getHTML();
-			// casper.page.switchToParentFrame();
-			
+casper.then(function yiwangPage(){
+	var packageUrl = urls.resourceUrl + "&staffId="
+                + homePageParams['staffid'] + "&departId="
+                + homePageParams['deptid']
+                + "&subSysCode=BSS&eparchyCode="
+                + homePageParams['epachyid'];
+    urls.packageUrl = packageUrl;
+	casper.then(function getYiwangHtml(){
+		casper.open("https://gz.cbss.10010.com" + packageUrl ,{
+			method: 'get',
+			headers: {
+				"Accept": "text/html, application/xhtml+xml, */*",
+				"Referer": "https://gz.cbss.10010.com/" + urls.custUrl,
+				"Accept-Language": "zh-CN",
+				"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
+				"Content-Type": "application/x-www-form-urlencoded",
+				"Host": "gz.cbss.10010.com",
+				"Connection": "Keep-Alive",
+				"Cache-Control": "no-cache",
+			},
+			encoding: 'gbk',
+		});
+	});
+	casper.then(function patchScipts(){
+		casper.page.injectJs('../casper/js/patch/public.js');
+		casper.page.injectJs('../casper/js/patch/ajax.js');
+		casper.page.injectJs('../casper/js/patch/Cs.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/Win.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/TabSet.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/LookupCombo.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/tipster.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/Light.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/Trade.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/PageFlow.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/LayoutHelper.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/Product.js');
+		casper.page.injectJs('../casper/js/patch/Product.js');
+		casper.page.injectJs('../casper/js/app/popupdialog/PopMobileInfo.js');
+		casper.page.injectJs('../casper/js/app/personalserv/changeelement/ChangeElement.js');
+		casper.page.injectJs('../casper/js/app/personalserv/createuser/CreateUserOther.js');
+		casper.page.injectJs('../casper/js/patch/debug.js');
+
+		casper.then(function init(){
 			casper.evaluate(function(){
-				document.querySelector('#serialNumber1').setAttribute('value','15692740700');
-				document.click('input[onclick="queryUserInfoBySerialNumber($F(\'serialNumber1\'));"]');
+				pagevisit = getPageVisit();
+				codeBase = '/WebTools.CAB#version=1,4';
+				_baudRate = 1200;
+				nowTip = docTip;
+				// completePageLoad();
+				Cs.ctrl.Web.init();
+				// Cs.ctrl.Web.dealTradeMsg();
+				Cs.ctrl.Trade.init();
+			});
+		});
+	});	
+	casper.then(function parseYiwangHtml(){
+		var yiwangHtml = this.getHTML();
+		if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_pageForm.html', yiwangHtml, 644);
+		if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_pageForm.jpg');
+	});
+
+});
+
+//** 刷新移网产品/服务变更订购页面
+casper.then(function updateYiwangForm(){
+	//** 通过号码获取用户已办理资源包和可办理资源包
+	casper.then(function postYiwangForm(){
+		casper.thenEvaluate(function(phone){
+			// document.querySelector('form[name="Form0"]').setAttribute('action','http://localhost:9200');
+			document.querySelector('input[name=SERIAL_NUMBER]').setAttribute('value', phone);
+		},order.phone);
+
+		casper.then(function(){
+			casper.evaluate(function(){
+				__utils__.click('input[name="subQueryTrade"]');
+
 			});
 		});
 	});
-});
 
-// casper.then(function(){
-// 	casper.withFrame('navframe', function(){
-// 		// casper.click('#BIL6216');
-// 		var navHtml = this.getHTML();
-// 		var resourceUrlMatched = RegexUtils.regexMatch(/.*clickMenuItem\(this\);openmenu\('(.+?OrderGprsRes.+?)'\).*/i, navHtml) || [];
-// 		var resourceUrl = resourceUrlMatched[1] || '';
-// 		// resourceUrl = resourceUrl.replace(/&amp;/g,'&');
+	casper.wait(2000);
 
-// 		casper.then(function(){
-// 				casper.evaluate(function(resourceUrl){
-// 					openmenu(resourceUrl);
-// 				},resourceUrl);
-// 		});
-// 	});
-// });
+	casper.then(function patchScipts(){
+		casper.page.injectJs('../casper/js/patch/public.js');
+		casper.page.injectJs('../casper/js/patch/ajax.js');
+		casper.page.injectJs('../casper/js/patch/Cs.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/Win.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/TabSet.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/LookupCombo.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/tipster.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/Light.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/Trade.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/PageFlow.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/LayoutHelper.js');
+		casper.page.injectJs('../casper/js/scripts-custserv/core/Product.js');
+		casper.page.injectJs('../casper/js/patch/Product.js');
+		casper.page.injectJs('../casper/js/app/popupdialog/PopMobileInfo.js');
+		casper.page.injectJs('../casper/js/app/personalserv/changeelement/ChangeElement.js');
+		casper.page.injectJs('../casper/js/patch/ChangeElement.js');
+		casper.page.injectJs('../casper/js/app/personalserv/createuser/CreateUserOther.js');
+		casper.page.injectJs('../casper/js/patch/debug.js');
 
-casper.wait(20000);
+		casper.then(function init(){
+			casper.evaluate(function(){
+				pagevisit = getPageVisit();
+				codeBase = '/WebTools.CAB#version=1,4';
+				_baudRate = 1200;
+				nowTip = docTip;
+				// completePageLoad();
+				Cs.ctrl.Web.init();
+				// Cs.ctrl.Web.dealTradeMsg();
+				Cs.ctrl.Trade.init();
+				// Cs.ctrl.Trade.afterQuery();
 
-casper.then(function(){
-	var frameMain = this.getHTML();
-	fs.write(tempdir + '/' + staffId + '_frameMain.html', frameMain, 644);
-	casper.capture(tempdir + '/' + staffId + '_frameMain.jpg');
-});
+			});
+		});
+	});	
 
-casper.withFrame('navframe',function(){
-	var frameNav = this.getHTML();
-	fs.write(tempdir + '/' + staffId + '_frameNav.html', frameNav, 644);	
-});
+	casper.then(function waitUser(){
+		casper.waitFor(function processing(){
+			return casper.evaluate(function(){
+				var userNameNode = document.querySelector('#CUST_NAME');
+				var userName = userNameNode && userNameNode.getAttribute('value') || '';
+				return ((userName == '') ? false : true);
+			});
+		},null,function custNotFound(){
+			var contentHtml = this.getHTML();
+			if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_pageFormUpdatedTimeout.html', contentHtml, 644);
+			if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_pageFormUpdatedTimeout.jpg');
+			response.code = 40130;
+			response.status = 'judge';
+			response.message = '失败: 该用户不能办理业务';
+			casper.echo('<response>' + JSON.stringify(response) + '</response>');
+			casper.exit(0);
+			casper.bypass(99);	
+		},10000);
+	});
 
-casper.withFrame('sidebarframe',function(){
-	var frameSidebar = this.getHTML();
-	fs.write(tempdir + '/' + staffId + '_frameSidebar.html', frameSidebar, 644);
-});
-
-casper.withFrame('slipframe',function(){
-	var frameSlip = this.getHTML();
-	fs.write(tempdir + '/' + staffId + '_frameSlip.html', frameSlip, 644);
-});
-
-casper.withFrame('contentframe',function(){
-	var frameContent = this.getHTML();
-	fs.write(tempdir + '/' + staffId + '_frameContent.html', frameContent, 644);
-	casper.withFrame('chkcustframe', function(){		
-		var frameChkcust = this.getHTML();
-		fs.write(tempdir + '/' + staffId + '_frameChkcust.html', frameChkcust, 644);
-		casper.capture(tempdir + '/' + staffId + '_frameChkcust.jpg');
+	casper.then(function parseUpdatedYiwangHtml(){
+		var resourceHtml = this.getHTML();
+		if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_pageFormUpdated.html', resourceHtml, 644);
+		if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_pageFormUpdated.jpg');
+		var hasChecked = casper.evaluate(function(productCode){
+			var kId = productCode.indexOf('k');
+			var productId = productCode.slice(0,kId);
+			var productNode = document.querySelector('input#_p' + productId);
+			return (productNode && productNode.hasAttribute('checked')) || false;
+		},order.product.code);
+		//** 用户已经订购过
+		if(hasChecked){
+			response.code = 40160;
+			response.status = 'judge';
+			response.message = '失败: 该用户已经办理过该业务。';
+			casper.echo('<response>' + JSON.stringify(response) + '</response>');
+			casper.exit(0);
+			casper.bypass(99);
+		}
 	});
 });
 
-casper.then(function(){
-	casper.capture(tempdir + '/' + staffId + '_frameMain1.jpg');
+casper.then(function expandPackageList(){
+	casper.evaluate(function(productCode){
+		var kId = productCode.indexOf('k');
+		var productId = productCode.slice(0,kId);
+		var productInputNode = document.querySelector('input#_p' + productId);
+		console.log('productInputNode: ' + '\n\n');
+		console.log(productInputNode.outerHTML + '\n\n');
+		var productExpandNode = document.querySelector('img#closeopen' + productId);
+		console.log('productExpandNode: ' + '\n\n');
+		console.log(productExpandNode.outerHTML + '\n\n');
+		//** 点击展开产品包
+		__utils__.click('img#closeopen' + productId);
+	},order.product.code);
+
 });
 
-// //** save cookies
-// casper.then(function saveCookie(){
-// 	var cookies = JSON.stringify(phantom.cookies);
-// 	// this.echo(JSON.stringify(phantom.cookies));
-// 	fs.write(tempdir + '/_cookie.txt', cookies, 644);
-// });
+casper.then(function expandProductList(){
+	casper.evaluate(function(productCode){
+		var kId = productCode.indexOf('k');
+		var productId = productCode.slice(0,kId);
+		var productExpand1 = document.querySelector('div#p' + productId);
+		console.log('productExpand1: ' + '\n\n');
+		console.log(productExpand1.outerHTML + '\n\n');
+		var eId = productCode.indexOf('e');
+		var packageId = productCode.slice(0,eId);
+		//** 点击展开产品
+		__utils__.click('img#closeopen' + packageId);
+	},order.product.code);
+
+});
+
+casper.then(function setProduct(){
+	casper.evaluate(function(productCode){
+		var eId = productCode.indexOf('e');
+		var packageId = productCode.slice(0,eId);
+		var productExpand2 = document.querySelector('div#p' + packageId);
+		console.log('productExpand2: ' + '\n\n');
+		console.log(productExpand2.outerHTML + '\n\n');
+		//** 点击产品包
+		__utils__.click('input#_p' + productCode);
+		var packageClicked = document.querySelector('div#p' + productCode);
+		console.log('packageClicked: ' + '\n\n');
+		console.log(packageClicked.outerHTML + '\n\n');
+	},order.product.code);
+});
+
+casper.then(function submit(){
+	var devServer = '';
+	if(devMode){
+		console.log('++++++++setDevelopmentUrl ++++++\n');
+		//** 开发阶段，设置提交到测试地址。
+		//注意：正式上线时，设置devMode = false
+		devServer = 'http://localhost:9200/post';
+	}
+	casper.evaluate(function cutInAjax(devServer){
+		//** 接管 ajax 后续请求处理
+		Cs.Ajax._swallow =function(page, listener ,options, msg){
+		    var g = Cs.ctrl.Web.getTradeGlobal();
+		    servletPath = g.servletPath;   
+		    
+		    var pageName = page||"";
+		    if (pageName.blank()){
+		        pageName = g.pageName;
+		    }
+		    
+		    Cs.ctrl.Web.showInfo(msg||"正在处理，请稍候...");
+		    
+		    var u = servletPath+"?service=swallow/"+pageName+"/"+listener+"/1";
+
+		    console.log('--Cs.Ajax._swallow 请求url = ');
+		    console.log(u + '\n\n');
+		    u = devServer + u;
+		    options.onComplete = function(transport){
+		    		//<?xml version="1.0" encoding="UTF-8"?><root><message></message><TradeSubmitOk tradeId='8516062231226597' RIGHT_CODE='csChangeServiceTrade' subscribeId='8516062231226597' proviceOrderId='8516062231226597'><Fee feenum='0'></Fee><TradeData prepayTag="1" tradeTypeCode="0120" strisneedprint="1" serialNumber="15692740700" tradeReceiptInfo="[{&quot;RECEIPT_INFO5&quot;:&quot;&quot;,&quot;RECEIPT_INFO2&quot;:&quot;&quot;,&quot;RECEIPT_INFO1&quot;:&quot;&quot;,&quot;RECEIPT_INFO4&quot;:&quot;&quot;,&quot;RECEIPT_INFO3&quot;:&quot;&quot;}]" netTypeCode="0050"/></TradeSubmitOk></root>
+		    	    console.log('==== doSubmitTrade 响应: ====\n');
+		    	    console.log(transport.responseText);
+		    	    var body = transport.responseText || '';
+			    	//** for development
+			    	//** 开发用假数据
+			    	//** body = '<?xml version="1.0" encoding="UTF-8"?><root><message></message><TradeSubmitOk tradeId="8516062231226597" RIGHT_CODE="csChangeServiceTrade" subscribeId="8516062231226597" proviceOrderId="8516062231226597"><Fee feenum="0"></Fee><TradeData prepayTag="1" tradeTypeCode="0120" strisneedprint="1" serialNumber="15692740700" tradeReceiptInfo="[{&quot;RECEIPT_INFO5&quot;:&quot;&quot;,&quot;RECEIPT_INFO2&quot;:&quot;&quot;,&quot;RECEIPT_INFO1&quot;:&quot;&quot;,&quot;RECEIPT_INFO4&quot;:&quot;&quot;,&quot;RECEIPT_INFO3&quot;:&quot;&quot;}]" netTypeCode="0050"/></TradeSubmitOk></root>';
+			    	var tradeId = (body.match(/tradeId=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	console.log('\ntradeId: ' + tradeId);
+			    	// if(tradeId == ''){
+			    	// 	Cs.ctrl.Web.showInfo("处理失败: doSubmitTrade响应错误");
+			    	// 	return;
+			    	// }
+			    	var serialNumber = (body.match(/serialNumber=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	var netTypeCodeAll = (body.match(/netTypeCode=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	var tradeTypeCode = (body.match(/tradeTypeCode=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	var prepayTag = (body.match(/prepayTag=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	var strisneedprint = (body.match(/strisneedprint=(\'|\")(.*?)(\'|\")/i) || [])[2] || '';
+			    	var tradeReceiptInfo = ((body.match(/tradeReceiptInfo=(\'|\")(.*?)(\'|\")/i) || [])[2] || '').replace(/&quot;/ig,'"');
+			    	var custNameNode = document.querySelector('#CUST_NAME');
+			    	var custName = (custNameNode && custNameNode.getAttribute('value')) || '';
+			    	var custIdNode = document.querySelector('#_CUST_ID');
+			    	var custId = (custIdNode && custIdNode.getAttribute('value')) || '';
+			    	var userIdNode = document.querySelector('#USER_ID_HIDEN');
+			    	var userId = (userIdNode && userIdNode.getAttribute('value')) || '';
+			    	var acctIdNode = document.querySelector('#ACCT_ID');
+			    	var acctId = (acctIdNode && acctIdNode.getAttribute('value')) || '';
+			    	var netTypeCodeNode = document.querySelector('#NET_TYPE_CODE');
+			    	var netTypeCode = (netTypeCodeNode && netTypeCodeNode.getAttribute('value')) || '';
+
+				    var params = '';
+				    params += 'cancelTag=false' + '&';
+				    params += 'funcType=0' + '&';
+				    params += 'dataType=0' + '&';
+				    var tradeMain =  {};
+				    tradeMain.TRADE_ID = tradeId;
+				    tradeMain.TRADE_TYPE = '移网产品/服务变更';
+				    tradeMain.SERIAL_NUMBER = serialNumber;
+				    tradeMain.TRADE_FEE = '0.00';
+				    tradeMain.CUST_NAME = custName;
+				    tradeMain.CUST_ID = custId;
+		            tradeMain.USER_ID = userId;
+		            tradeMain.ACCT_ID = acctId;
+		            tradeMain.NET_TYPE_CODE = netTypeCode;
+		            tradeMain.TRADE_TYPE_CODE = encodeURIComponent(tradeTypeCode || '');
+		            params += 'tradeMain=' + encodeURIComponent('[' + JSON.stringify(tradeMain) + ']') + '&';
+		            params += 'fees=' + encodeURIComponent('[]') + '&';
+		            params += 'unChargedfees=' + encodeURIComponent('[]') + '&';
+		            params += 'feePayMoney=' + encodeURIComponent('[]') + '&';
+		            params += 'feeCheck=' + encodeURIComponent('[]') + '&';
+		            params += 'feePos=' + encodeURIComponent('[]') + '&';
+				    params += 'DerateFee=false' + '&';
+		            var base = {};
+		            base.preayTag = prepayTag;
+		            base.tradeTypeCode = encodeURIComponent(tradeTypeCode || '');
+		            base.strisneedprint = strisneedprint;
+		            base.serialNumber = serialNumber;
+		            base.tradeReceiptInfo = tradeReceiptInfo;
+		            base.netTypeCode = netTypeCodeAll;
+		            params += 'base=' + encodeURIComponent(JSON.stringify(base) || '') + '&';
+		            params += 'CASH=' + encodeURIComponent('0.00') + '&'; 
+		            params += 'SEND_TYPE=0' + '&';
+		            params += 'TRADE_ID=' + tradeId + '&';
+		            params += 'TRADE_ID_MORE_STR=' + tradeId + '&';
+		            params += 'SERIAL_NUMBER_STR=' + serialNumber + '&';
+		            params += 'TRADE_TYPE_CODE_STR=' + tradeTypeCode + '&';
+		            params += 'NET_TYPE_CODE_STR=' + netTypeCode + '&';
+		            params += 'DEBUTY_CODE='  + '&';
+		            params += 'IS_NEED_WRITE_CARD=false' + '&';
+		            params += 'WRAP_TRADE_TYPE=tradeType' + '&';
+		            params += 'CUR_TRADE_IDS=' + '&';
+		            params += 'CUR_TRADE_TYPE_CODES=' + '&';
+		            params += 'CUR_SERIAL_NUMBERS=' + '&';
+		            params += 'CUR_NET_TYPE_CODES=' + '&';
+		            params += 'isAfterFee=' + '&';
+		            params += 'globalPageName=personalserv.dealtradefee.DealTradeFee';
+		            console.log('\n----continueTrade POST params:' + params);
+		            var continueTradeUrl = devServer + '/custserv?service=swallow/personalserv.dealtradefee.DealTradeFee/continueTradeReg/1';
+				    new Ajax.Request(continueTradeUrl,{
+			            parameters: params,            
+			            method: 'post',        
+			            asynchronous: true,            
+			            onComplete: function(transport){
+			            	console.log('==== continueTrade 响应: ====\n');
+			            	console.log(transport.responseText);
+			            	//** <?xml version="1.0" encoding="UTF-8"?><root><continueOK SATISSURVFLAG="false" HAS_TERMINAL="false" HAS_GIF="false" ISCREATE_CUST="false" IS_NEED_OCCUPY="true" ISZHIFUPINGTAI="false" ISPAPERLESSSTATE="false" IS_NEED_WRITE_CARD="false" IS_NET_TYPE_CODE="50" strNetTypeFirst="0050" IS_DEAL_AFTER_ORDERSUB="true" TRADE_ID_ORDERSUB="8516062333053246" TRADE_TYPE_CODE_ORDERSUB="0120" IS_TAXPAYER="0" RSP_CODE_FORDZQ=" CALCULATE_ID="><data/></continueOK></root>
+			            	var body = transport.responseText || '';
+			            	var content = (body.match(/IS_NEED_OCCUPY=(\'|\")(.*?)(\'|\")/i) || [])[2] || false;
+			            	if(/true/.test(content)){
+				            	Cs.ctrl.Web.showInfo("处理成功");
+			            	}else{
+			            		Cs.ctrl.Web.showInfo("处理失败");
+			            	}
+			            	
+			            }
+			        });
+			    };
+		    new Ajax.Request(u,options);
+		};
+	},devServer);
+
+	casper.then(function beforeSubmit(){
+		var contentHtml = this.getHTML();
+		if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_beforeSubmit.html', contentHtml, 644);
+		if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_beforeSubmit.jpg');
+	});
+	//** 提交表单
+	casper.then(function clickSubmit(){
+		casper.evaluate(function(){
+			Cs.ctrl.Trade.doBeforeSubmitCheckHack();
+			Cs.ctrl.Trade.doBeforeSubmitCheckCustId();
+			Cs.ctrl.Trade.doBeforeSubmit('otherCheckCustId');
+			Cs.ctrl.Trade.doSubmitTrade();
+			// __utils__.click('input#submitTrade');
+			// Cs.ctrl.Trade.doSubmitTrade();
+		});
+	});
+	// casper.wait(10000);
+});
+
+casper.then(function waitSubmitProcessing(){
+	casper.waitFor(function processing(){
+		return casper.evaluate(function(){
+			var waitNode = document.querySelector('#_waitInfoContent');
+			return (!/请稍候/.test(waitNode.innerText || ''));
+		});
+	},null,function(){
+		var contentHtml = this.getHTML();
+		if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_SubmitTimeout.html', contentHtml, 644);
+		if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_SubmitTimeout.jpg');
+		response.code = 40150;
+		response.status = 'judge';
+		response.message = '超时错误：正在处理，请稍候...';
+		// casper.echo('<response>' + JSON.stringify(response) + '</response>');
+		// casper.exit(0);
+		// casper.bypass(99);	
+	},10000);
+});
+
+casper.then(function getSubmitResult(){
+	var contentHtml = this.getHTML();
+	if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_SubmitResult.html', contentHtml, 644);
+	if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_SubmitResult.jpg');
+
+
+	var statusText = casper.evaluate(function(){
+		var resultNode = document.querySelector('#_waitInfoContent');
+		return resultNode.innerText;
+	});
+	var resultText = casper.evaluate(function(){
+		var resultNode = document.querySelector('#showTabIdRow');
+		return resultNode.innerText;
+	});
+	if(/成功/.test(statusText || '')){
+		response.code = 200;
+		response.status = 'submit';
+		response.message = '(成功) ' + (resultText || '');
+	}else{
+		response.code = 40500;
+		response.status = 'submit';
+		response.message = '(失败) ' + (resultText || '');
+	}
+});
 
 casper.run(function(){
-casper.echo('<response>' + JSON.stringify(response) + '</response>');
-casper.exit(0);
-casper.bypass(99);
+	casper.echo('<response>' + JSON.stringify(response) + '</response>');
+	casper.exit(0);
+	casper.bypass(99);
 });
 
 
-// casper.then(function nav(){
-// 	casper.then(function getNavHtml(){
-// 		casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + staffId, {
-// 			method: 'get',
-// 			headers: {
-// 				"Accept": "text/html, application/xhtml+xml, */*",
-// 				"Referer": "https://gz.cbss.10010.com/essframe",
-// 				"Accept-Language": "zh-CN",
-// 				"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-// 				"Content-Type": "application/x-www-form-urlencoded",
-// 				"Host": "gz.cbss.10010.com",
-// 				"Connection": "Keep-Alive",
-// 				"Cache-Control": "no-cache",
-// 			},
-// 		});
-// 	});
-// 	casper.then(function checkLogin(){
-// 		var navHtml = this.getHTML();
-// 		fs.write(tempdir + '/' + staffId + '_nav.html', navHtml, 644);
-// 		var homePageMeta = navHtml.match(/<meta.*provinceId.*?>/i);
-// 		console.log(homePageMeta);
-// 		if(homePageMeta){
-// 			//** 已登录
-// 		    response.login = true;
-// 			response.status = '已登录';
-// 		}else{
-// 			//** 未登录
-// 		    response.login = false;
-// 			response.status = '未登录';
-// 			casper.echo('<response>' + JSON.stringify(response) + '</response>');
-// 			casper.exit(0);
-// 			casper.bypass(99);
-// 		}
-// 	});
-// 	casper.then(function parseNavHtml(){
-// 		var navHtml = this.getHTML();
-// 		//** 加载homePageParams吗?
-// 		homePageParams = RegexUtils.extractHomePageMeta(navHtml) || {};
-// 		var resourceUrlMatched = RegexUtils.regexMatch(/.*clickMenuItem\(this\);openmenu\('(.+?OrderGprsRes.+?)'\).*/i, navHtml) || [];
-// 		var resourceUrl = resourceUrlMatched[1] || '';
-// 		resourceUrl = resourceUrl.replace(/&amp;/g,'&');
-// 		urls.resourceUrl = resourceUrl;
-// 		fs.write(tempdir + '/' + staffId + '_resource_url.txt', urls.resourceUrl, 644);
-// 		casper.capture(tempdir + '/' + staffId + '_nav.jpg');
-// 	});
-// });
-
-
-//** 左边框，用于获得下一步访问地址
-// casper.withFrame('sidebarframe',function(){
-// 	casper.then(function sideBar(){
-// 		// casper.then(function getSideBarHtml(){
-// 		// 	casper.open('https://gz.cbss.10010.com/essframe?service=page/Sidebar',{
-// 		// 		method: 'get',
-// 		// 		headers: {
-// 		// 			"Accept": "text/html, application/xhtml+xml, */*",
-// 		// 			"Referer": "https://gz.cbss.10010.com/essframe",
-// 		// 			"Accept-Language": "zh-CN",
-// 		// 			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-// 		// 			"Content-Type": "application/x-www-form-urlencoded",
-// 		// 			"Host": "gz.cbss.10010.com",
-// 		// 			"Connection": "Keep-Alive",
-// 		// 			"Cache-Control": "no-cache",
-// 		// 		},
-// 		// 		encoding: 'utf8',
-// 		// 	});
-// 		// });
-// 		casper.then(function parserSideBarHtml(){
-// 				var sideBarHtml = this.getHTML();
-// 				fs.write(tempdir + '/' + staffId + '_sidebar.html', sideBarHtml, 644);
-// 				casper.capture(tempdir + '/' + staffId + '_sidebar.jpg');
-// 				var custUrlMatched = RegexUtils.regexMatch(/menuaddr="(.+?)"/i, sideBarHtml) || [];
-// 				if(custUrlMatched[1] == undefined){
-// 					rspcasper.status = '没取到url，用户认证异常';		
-// 					this.exit(0);
-// 					casper.bypass(99);
-// 					return;
-// 				}
-// 				var loginRandomCodeMatched = RegexUtils.regexMatch(/LOGIN_RANDOM_CODE=(\d+)/i, sideBarHtml) || [];
-// 				loginRandomCode = loginRandomCodeMatched[1] || '';
-// 				var loginCheckCodeMatched = RegexUtils.regexMatch(/LOGIN_CHECK_CODE=(\d+)/i, sideBarHtml) || [];
-// 				loginCheckCode = loginCheckCodeMatched[1] || '';
-
-// 				var custUrl = custUrlMatched[1] || '';
-// 				console.log('custUrl(raw): ' + custUrl);
-// 				custUrl = custUrl.replace(/&amp;/g, '&');
-// 				custUrl += "&staffId=" + homePageParams['staffid']
-// 			            + "&departId=" + homePageParams['deptid']
-// 			            + "&subSysCode=" + homePageParams['subsyscode']
-// 			            + "&eparchyCode=" + homePageParams['epachyid'];
-// 			    urls.custUrl = custUrl;
-// 				fs.write(tempdir + '/' + staffId + '_cust_url.txt', custUrl, 644);
-// 		});
-// 	});
-// });
-
-// casper.withFrame('contentframe', function(){
-// 	casper.then(function custAuthMain(){
-// 		casper.then(function getCustAuthMainHtml(){
-// 			casper.open("https://gz.cbss.10010.com/" + urls.custUrl,{
-// 				method: 'get',
-// 				headers: {
-// 					"Accept": "text/html, application/xhtml+xml, */*",
-// 					"Referer": "https://gz.cbss.10010.com/essframe?service=page/Sidebar",
-// 					"Accept-Language": "zh-CN",
-// 					"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-// 					"Content-Type": "application/x-www-form-urlencoded",
-// 					"Host": "gz.cbss.10010.com",
-// 					"Connection": "Keep-Alive",
-// 					"Cache-Control": "no-cache",
-// 				},
-// 				encoding: 'utf8',
-// 			});
-// 		});
-
-// 		casper.then(function(){
-// 			casper.wait(5000);
-// 		});
-
-// 	    casper.then(function parseCustAuthMainHtml(){
-// 	    	//** 客户统一认证
-// 	    	var custAuthMainHtml = this.getHTML();
-// 	    	fs.write(tempdir + '/' + staffId + '_cust_auth_main.html', custAuthMainHtml, 644);
-// 	    });
-// 	    casper.withFrame('chkcustframe', function(){
-// 	    	casper.then(function(){
-// 		    	var custHtml = this.getHTML();
-// 		    	fs.write(tempdir + '/' + staffId + 'yiwang_cust.html', custHtml, 644);
-// 	    	});
-// 	    });
-// 	});
-
-
-
-// 	casper.then(function authenticate(){
-// 		var authenticateUrl =
-// 		    "custserv?service=swallow/pub.chkcust.MainChkCust/authenticate/1";
-// 		var referUrl =
-// 		    "https://gz.cbss.10010.com/custserv?service=page/pub.chkcust.MainChkCust&listener=&staffId="
-// 		        + homePageParams["staffid"]
-// 		        + "&departId="
-// 		        + homePageParams["deptid"]
-// 		        + "&subSysCode=custserv&eparchyCode="
-// 		        + homePageParams["epachyid"];
-// 		 var inparam = '{"CHECK_MODE":"8","EPARCHY_CODE":"'+ homePageParams["epachyid"] + '","ID_TYPE_CODE":"1","PSPT_ID":"","SERIAL_NUMBER":"' + order.phone + '"}';
-// 		console.log(inparam);
-// 		var ajaxReturnData ='empty';
-// 		casper.then(function postAuthenticate(){
-// 			ajaxReturnData = casper.evaluate(function(url, data, referUrl){
-// 				url = url + '&globalPageName=' + data.globalPageName + '&inparam={"CHECK_MODE":"8","SERIAL_NUMBER":"15692740700"}';// + data.inparam;
-// 				return __utils__.sendAJAX(url, 'POST', {}, false,
-// 				{
-// 					"Accept": "text/html, application/xhtml+xml, */*",
-// 	                "x-prototype-version": "1.5.1",
-// 					"Referer": referUrl,
-// 	        		"x-requested-with": "XMLHttpRequest",
-// 					"Accept-Language": "zh-CN",
-// 					"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-// 					"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-// 					"Host": "gz.cbss.10010.com",
-// 					"Connection": "Keep-Alive",
-// 					"Cache-Control": "no-cache",
-// 				}
-// 				);
-// 			}, "https://gz.cbss.10010.com/" + authenticateUrl,
-// 				{
-// 					inparam: inparam,
-// 					globalPageName: "pub.chkcust.MainChkCust",
-// 				},
-// 				// '{"inparam":"'+ inparam +'","globalPageName":"pub.chkcust.MainChkCust"}',
-// 				referUrl
-// 			);
-// 			// casper.open(,{
-// 			// 	method: 'post',
-// 			// 	headers: {
-// 			// 		"Accept": "text/html, application/xhtml+xml, */*",
-// 	  //               "x-prototype-version": "1.5.1",
-// 			// 		"Referer": referUrl,
-// 	  //       		"x-requested-with": "XMLHttpRequest",
-// 			// 		"Accept-Language": "zh-CN",
-// 			// 		"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-// 			// 		"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-// 			// 		"Host": "gz.cbss.10010.com",
-// 			// 		"Connection": "Keep-Alive",
-// 			// 		"Cache-Control": "no-cache",
-// 			// 	},
-// 			// 	data: {
-// 			// 		"inparam": JSON.stringify(inparam),
-// 			// 		"globalPageName": "pub.chkcust.MainChkCust",
-// 			// 	},
-// 			// 	encoding: 'utf8',
-// 			// });
-// 		});
-// 	    casper.then(function parseAuthenticateHtml(){
-// 	    	//** 首页用户认证
-// 	    	// require('utils').dump(ajaxReturnData);
-// 	    	var custAuthHomeHtml = ajaxReturnData;
-// 	    	fs.write(tempdir + '/' + staffId + '_cust_auth_home.html', custAuthHomeHtml, 644);
-// 	    	casper.capture(tempdir + '/' + staffId + '_cust_auth_home.jpg');
-// 	    });
-// 	});
-// });
-
-
-// casper.then(function nav(){
-// 	casper.then(function getNavHtml(){
-// 		casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + staffId, {
-// 			method: 'get',
-// 			headers: {
-// 				"Accept": "text/html, application/xhtml+xml, */*",
-// 				"Referer": "https://gz.cbss.10010.com/essframe",
-// 				"Accept-Language": "zh-CN",
-// 				"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-// 				"Content-Type": "application/x-www-form-urlencoded",
-// 				"Host": "gz.cbss.10010.com",
-// 				"Connection": "Keep-Alive",
-// 				"Cache-Control": "no-cache",
-// 			},
-// 		});
-// 	});
-// 	casper.then(function checkLogin(){
-// 		var navHtml = this.getHTML();
-// 		fs.write(tempdir + '/' + staffId + '_nav.html', navHtml, 644);
-// 		var homePageMeta = navHtml.match(/<meta.*provinceId.*?>/i);
-// 		console.log(homePageMeta);
-// 		if(homePageMeta){
-// 			//** 已登录
-// 		    response.login = true;
-// 			response.status = '已登录';
-// 		}else{
-// 			//** 未登录
-// 		    response.login = false;
-// 			response.status = '未登录';
-// 			casper.echo('<response>' + JSON.stringify(response) + '</response>');
-// 			casper.exit(0);
-// 			casper.bypass(99);
-// 		}
-// 	});
-// 	casper.then(function parseNavHtml(){
-// 		var navHtml = this.getHTML();
-// 		//** 加载homePageParams吗?
-// 		homePageParams = RegexUtils.extractHomePageMeta(navHtml) || {};
-// 		var resourceUrlMatched = RegexUtils.regexMatch(/.*clickMenuItem\(this\);openmenu\('(.+?OrderGprsRes.+?)'\).*/i, navHtml) || [];
-// 		var resourceUrl = resourceUrlMatched[1] || '';
-// 		resourceUrl = resourceUrl.replace(/&amp;/g,'&');
-// 		urls.resourceUrl = resourceUrl;
-// 		fs.write(tempdir + '/' + staffId + '_resource_url.txt', urls.resourceUrl, 644);
-// 		casper.capture(tempdir + '/' + staffId + '_nav.jpg');
-// 	});
-// });
-
-
-//** 左边框，用于获得下一步访问地址
-// casper.withFrame('sidebarframe',function(){
-// 	casper.then(function sideBar(){
-// 		// casper.then(function getSideBarHtml(){
-// 		// 	casper.open('https://gz.cbss.10010.com/essframe?service=page/Sidebar',{
-// 		// 		method: 'get',
-// 		// 		headers: {
-// 		// 			"Accept": "text/html, application/xhtml+xml, */*",
-// 		// 			"Referer": "https://gz.cbss.10010.com/essframe",
-// 		// 			"Accept-Language": "zh-CN",
-// 		// 			"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-// 		// 			"Content-Type": "application/x-www-form-urlencoded",
-// 		// 			"Host": "gz.cbss.10010.com",
-// 		// 			"Connection": "Keep-Alive",
-// 		// 			"Cache-Control": "no-cache",
-// 		// 		},
-// 		// 		encoding: 'utf8',
-// 		// 	});
-// 		// });
-// 		casper.then(function parserSideBarHtml(){
-// 				var sideBarHtml = this.getHTML();
-// 				fs.write(tempdir + '/' + staffId + '_sidebar.html', sideBarHtml, 644);
-// 				casper.capture(tempdir + '/' + staffId + '_sidebar.jpg');
-// 				var custUrlMatched = RegexUtils.regexMatch(/menuaddr="(.+?)"/i, sideBarHtml) || [];
-// 				if(custUrlMatched[1] == undefined){
-// 					rspcasper.status = '没取到url，用户认证异常';		
-// 					this.exit(0);
-// 					casper.bypass(99);
-// 					return;
-// 				}
-// 				var loginRandomCodeMatched = RegexUtils.regexMatch(/LOGIN_RANDOM_CODE=(\d+)/i, sideBarHtml) || [];
-// 				loginRandomCode = loginRandomCodeMatched[1] || '';
-// 				var loginCheckCodeMatched = RegexUtils.regexMatch(/LOGIN_CHECK_CODE=(\d+)/i, sideBarHtml) || [];
-// 				loginCheckCode = loginCheckCodeMatched[1] || '';
-
-// 				var custUrl = custUrlMatched[1] || '';
-// 				console.log('custUrl(raw): ' + custUrl);
-// 				custUrl = custUrl.replace(/&amp;/g, '&');
-// 				custUrl += "&staffId=" + homePageParams['staffid']
-// 			            + "&departId=" + homePageParams['deptid']
-// 			            + "&subSysCode=" + homePageParams['subsyscode']
-// 			            + "&eparchyCode=" + homePageParams['epachyid'];
-// 			    urls.custUrl = custUrl;
-// 				fs.write(tempdir + '/' + staffId + '_cust_url.txt', custUrl, 644);
-// 		});
-// 	});
-// });
-
-// casper.withFrame('contentframe', function(){
-// 	casper.then(function custAuthMain(){
-// 		casper.then(function getCustAuthMainHtml(){
-// 			casper.open("https://gz.cbss.10010.com/" + urls.custUrl,{
-// 				method: 'get',
-// 				headers: {
-// 					"Accept": "text/html, application/xhtml+xml, */*",
-// 					"Referer": "https://gz.cbss.10010.com/essframe?service=page/Sidebar",
-// 					"Accept-Language": "zh-CN",
-// 					"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-// 					"Content-Type": "application/x-www-form-urlencoded",
-// 					"Host": "gz.cbss.10010.com",
-// 					"Connection": "Keep-Alive",
-// 					"Cache-Control": "no-cache",
-// 				},
-// 				encoding: 'utf8',
-// 			});
-// 		});
-
-// 		casper.then(function(){
-// 			casper.wait(5000);
-// 		});
-
-// 	    casper.then(function parseCustAuthMainHtml(){
-// 	    	//** 客户统一认证
-// 	    	var custAuthMainHtml = this.getHTML();
-// 	    	fs.write(tempdir + '/' + staffId + '_cust_auth_main.html', custAuthMainHtml, 644);
-// 	    });
-// 	    casper.withFrame('chkcustframe', function(){
-// 	    	casper.then(function(){
-// 		    	var custHtml = this.getHTML();
-// 		    	fs.write(tempdir + '/' + staffId + 'yiwang_cust.html', custHtml, 644);
-// 	    	});
-// 	    });
-// 	});
-
-
-
-// 	casper.then(function authenticate(){
-// 		var authenticateUrl =
-// 		    "custserv?service=swallow/pub.chkcust.MainChkCust/authenticate/1";
-// 		var referUrl =
-// 		    "https://gz.cbss.10010.com/custserv?service=page/pub.chkcust.MainChkCust&listener=&staffId="
-// 		        + homePageParams["staffid"]
-// 		        + "&departId="
-// 		        + homePageParams["deptid"]
-// 		        + "&subSysCode=custserv&eparchyCode="
-// 		        + homePageParams["epachyid"];
-// 		 var inparam = '{"CHECK_MODE":"8","EPARCHY_CODE":"'+ homePageParams["epachyid"] + '","ID_TYPE_CODE":"1","PSPT_ID":"","SERIAL_NUMBER":"' + order.phone + '"}';
-// 		console.log(inparam);
-// 		var ajaxReturnData ='empty';
-// 		casper.then(function postAuthenticate(){
-// 			ajaxReturnData = casper.evaluate(function(url, data, referUrl){
-// 				url = url + '&globalPageName=' + data.globalPageName + '&inparam={"CHECK_MODE":"8","SERIAL_NUMBER":"15692740700"}';// + data.inparam;
-// 				return __utils__.sendAJAX(url, 'POST', {}, false,
-// 				{
-// 					"Accept": "text/html, application/xhtml+xml, */*",
-// 	                "x-prototype-version": "1.5.1",
-// 					"Referer": referUrl,
-// 	        		"x-requested-with": "XMLHttpRequest",
-// 					"Accept-Language": "zh-CN",
-// 					"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-// 					"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-// 					"Host": "gz.cbss.10010.com",
-// 					"Connection": "Keep-Alive",
-// 					"Cache-Control": "no-cache",
-// 				}
-// 				);
-// 			}, "https://gz.cbss.10010.com/" + authenticateUrl,
-// 				{
-// 					inparam: inparam,
-// 					globalPageName: "pub.chkcust.MainChkCust",
-// 				},
-// 				// '{"inparam":"'+ inparam +'","globalPageName":"pub.chkcust.MainChkCust"}',
-// 				referUrl
-// 			);
-// 			// casper.open(,{
-// 			// 	method: 'post',
-// 			// 	headers: {
-// 			// 		"Accept": "text/html, application/xhtml+xml, */*",
-// 	  //               "x-prototype-version": "1.5.1",
-// 			// 		"Referer": referUrl,
-// 	  //       		"x-requested-with": "XMLHttpRequest",
-// 			// 		"Accept-Language": "zh-CN",
-// 			// 		"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
-// 			// 		"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-// 			// 		"Host": "gz.cbss.10010.com",
-// 			// 		"Connection": "Keep-Alive",
-// 			// 		"Cache-Control": "no-cache",
-// 			// 	},
-// 			// 	data: {
-// 			// 		"inparam": JSON.stringify(inparam),
-// 			// 		"globalPageName": "pub.chkcust.MainChkCust",
-// 			// 	},
-// 			// 	encoding: 'utf8',
-// 			// });
-// 		});
-// 	    casper.then(function parseAuthenticateHtml(){
-// 	    	//** 首页用户认证
-// 	    	// require('utils').dump(ajaxReturnData);
-// 	    	var custAuthHomeHtml = ajaxReturnData;
-// 	    	fs.write(tempdir + '/' + staffId + '_cust_auth_home.html', custAuthHomeHtml, 644);
-// 	    	casper.capture(tempdir + '/' + staffId + '_cust_auth_home.jpg');
-// 	    });
-// 	});
-// });
-
-
-
-// casper.then(function(){
-// 		var BSS_CUSTSERV_JSESSIONID = '';
-// 		phantom.cookies.forEach(function(cookie){
-// 			if(cookie.name == 'BSS_CUSTSERV_JSESSIONID') BSS_CUSTSERV_JSESSIONID = cookie.value;
-// 		});
-// 		console.log('++++++');
-// 		console.log('BSS_CUSTSERV_JSESSIONID: ' + BSS_CUSTSERV_JSESSIONID);
-// 		var custUrlNew = 'custserv;BSS_CUSTSERV_JSESSIONID=' + BSS_CUSTSERV_JSESSIONID 
-// 						+ '?service=page/pub.chkcust.MainChkCust'
-// 						+ '&listener=init'
-// 						+ '&RIGHT_CODE=csCreateCustTrade'
-//  						+ "&staffId=" + homePageParams['staffid']
-// 			            + "&departId=" + homePageParams['deptid']
-// 			            + "&subSysCode=custserv"
-// 			            + "&eparchyCode=" + homePageParams['epachyid'];
-
-// 		console.log(custUrlNew);
-// 		// casper.page.switchToChildFrame('contentframe');
-// 		casper.evaluate(function(custUrlNew){
-// 			document.querySelector('#chkcustframe').setAttribute('src', 'https://gz.cbss.10010.com/' + custUrlNew);
-// 		},custUrlNew);
-// 		casper.wait(10000);
-// 		casper.withFrame('chkcustframe', function(){		
-// 			var frameChkcust = this.getHTML();
-// 		});
-// });

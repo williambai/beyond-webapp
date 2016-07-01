@@ -283,8 +283,8 @@ casper.then(function updateYiwangForm(){
 	//** 通过号码获取用户已办理资源包和可办理资源包
 	casper.then(function postYiwangForm(){
 		casper.thenEvaluate(function(phone){
-			// document.querySelector('form[name="Form0"]').setAttribute('action','http://localhost:9200');
-			document.querySelector('input[name=SERIAL_NUMBER]').setAttribute('value', phone);
+			var phoneInputNode = document.querySelector('input[name=SERIAL_NUMBER]');
+			if(phoneInputNode) phoneInputNode.setAttribute('value', phone);
 		},order.phone);
 
 		casper.then(function(){
@@ -295,7 +295,7 @@ casper.then(function updateYiwangForm(){
 		});
 	});
 
-	casper.wait(2000);
+	// casper.wait(2000);
 
 	casper.then(function patchScipts(){
 		casper.page.injectJs('../casper/js/patch/public.js');
@@ -353,71 +353,156 @@ casper.then(function updateYiwangForm(){
 		},10000);
 	});
 
-	casper.then(function parseUpdatedYiwangHtml(){
+	casper.then(function saveUpdatedYiwangHtml(){
 		var resourceHtml = this.getHTML();
 		if(devMode) fs.write(tempdir + '/' + staffId + '_yiwang_pageFormUpdated.html', resourceHtml, 644);
 		if(devMode) casper.capture(tempdir + '/' + staffId + '_yiwang_pageFormUpdated.jpg');
-		var hasChecked = casper.evaluate(function(productCode){
-			var kId = productCode.indexOf('k');
-			var productId = productCode.slice(0,kId);
-			var productNode = document.querySelector('input#_p' + productId);
-			return (productNode && productNode.hasAttribute('checked')) || false;
-		},order.product.code);
-		//** 用户已经订购过
-		if(hasChecked){
-			response.code = 40160;
-			response.status = 'judge';
-			response.message = '失败: 该用户已经办理过该业务。';
-			casper.echo('<response>' + JSON.stringify(response) + '</response>');
-			casper.exit(0);
-			casper.bypass(99);
-		}
 	});
 });
-
-casper.then(function expandPackageList(){
+//** 第一种方法
+casper.then(function expandProductPackages(){
 	casper.evaluate(function(productCode){
-		var kId = productCode.indexOf('k');
-		var productId = productCode.slice(0,kId);
+		var productCodes = [];
+		//** 判断是否是需要多个选项，多个选项以 | 分割
+		if(/\|/.test(productCode)){
+			productCodes = productCode.split('|');
+		}else{
+			productCodes = [productCode];
+		}
+		//** 取第一个的产品Id
+		productCode0 = productCodes[0] || '';
+		var kId = productCode0.indexOf('k') == -1 ? productCode0.length : productCode0.indexOf('k');
+		var productId = productCode0.slice(0,kId);
 		var productInputNode = document.querySelector('input#_p' + productId);
 		console.log('productInputNode: ' + '\n\n');
-		console.log(productInputNode.outerHTML + '\n\n');
+		console.log((productInputNode && productInputNode.outerHTML) + '\n\n');
 		var productExpandNode = document.querySelector('img#closeopen' + productId);
 		console.log('productExpandNode: ' + '\n\n');
-		console.log(productExpandNode.outerHTML + '\n\n');
+		console.log((productExpandNode && productExpandNode.outerHTML) + '\n\n');
 		//** 点击展开产品包
 		__utils__.click('img#closeopen' + productId);
 	},order.product.code);
 
 });
 
-casper.then(function expandProductList(){
+casper.then(function expandPackageElements(){
 	casper.evaluate(function(productCode){
-		var kId = productCode.indexOf('k');
-		var productId = productCode.slice(0,kId);
+		var productCodes = [];
+		//** 判断是否是需要多个选项，多个选项以 | 分割
+		if(/\|/.test(productCode)){
+			productCodes = productCode.split('|');
+		}else{
+			productCodes = [productCode];
+		}
+		//** 取第一个的产品Id
+		productCode0 = productCodes[0] || '';
+		var kId = productCode0.indexOf('k') == -1 ? productCode0.length : productCode0.indexOf('k');
+		var productId = productCode0.slice(0,kId);
 		var productExpand1 = document.querySelector('div#p' + productId);
-		console.log('productExpand1: ' + '\n\n');
-		console.log(productExpand1.outerHTML + '\n\n');
-		var eId = productCode.indexOf('e');
-		var packageId = productCode.slice(0,eId);
+		console.log('\n--- productExpand1: ---' + '\n\n');
+		console.log((productExpand1 && productExpand1.outerHTML) + '\n\n');
+		var eId = productCode0.indexOf('e') == -1 ? productCode0.length : productCode0.indexOf('e');
+		var packageId = productCode0.slice(0,eId);
 		//** 点击展开产品
 		__utils__.click('img#closeopen' + packageId);
 	},order.product.code);
 
 });
 
-casper.then(function setProduct(){
+casper.then(function judgePakcageElementSelected(){
+	var hasChecked = casper.evaluate(function(productCode){
+		var productCodes = [];
+		//** 判断是否是需要多个选项，多个选项以 | 分割
+		if(/\|/.test(productCode)){
+			productCodes = productCode.split('|');
+		}else{
+			productCodes = [productCode];
+		}
+		//** 取第一个的产品Id
+		productCode0 = productCodes[0] || '';
+		//** 产品级别的互斥
+		var kId = productCode0.indexOf('k') == -1 ? productCode0.length : productCode0.indexOf('k');
+		var productId = productCode0.slice(0,kId);
+		var productNode = document.querySelector('input#_p' + productId);
+		//** 产品包级别的互斥
+		// var eId = productCode0.indexOf('e') == -1 ? productCode0.length : productCode0.indexOf('e');
+		// var packageId = productCode0.slice(0,eId);
+		// var productNode = document.querySelector('input#_p' + packageId);
+		return (productNode && productNode.hasAttribute('checked')) || false;
+	},order.product.code);
+	//** 用户已经订购过
+	if(hasChecked){
+		response.code = 40160;
+		response.status = 'judge';
+		response.message = '失败: 该用户已经办理过该业务或同类业务。';
+		casper.echo('<response>' + JSON.stringify(response) + '</response>');
+		casper.exit(0);
+		casper.bypass(99);
+	}
+});
+
+casper.then(function setProductPackageElements(){
 	casper.evaluate(function(productCode){
-		var eId = productCode.indexOf('e');
-		var packageId = productCode.slice(0,eId);
-		var productExpand2 = document.querySelector('div#p' + packageId);
-		console.log('productExpand2: ' + '\n\n');
-		console.log(productExpand2.outerHTML + '\n\n');
-		//** 点击产品包
-		__utils__.click('input#_p' + productCode);
-		var packageClicked = document.querySelector('div#p' + productCode);
-		console.log('packageClicked: ' + '\n\n');
-		console.log(packageClicked.outerHTML + '\n\n');
+		var productCodes = [];
+		//** 判断是否是需要多个选项，多个选项以 | 分割
+		if(/\|/.test(productCode)){
+			productCodes = productCode.split('|');
+		}else{
+			productCodes = [productCode];
+		}
+		//** 取第一个的产品Id
+		productCode0 = productCodes[0] || '';
+		var kId = productCode0.indexOf('k') == -1 ? productCode0.length : productCode0.indexOf('k');
+		var productId = productCode0.slice(0,kId);
+		var productExpand2 = document.querySelector('div#p' + productId);
+		console.log('\n--- productExpand2: ---' + '\n\n');
+		console.log((productExpand2 && productExpand2.outerHTML) + '\n\n');
+		for(var i =0; i < productCodes.length; i++){
+			// var eId = productCode0.indexOf('e') == -1 ? productCode0.length : productCode0.indexOf('e');
+			// var packageId = productCode0.slice(0,eId);
+			// var packageExpand = document.querySelector('div#p' + packageId);
+			// console.log('packageExpand: ' + '\n\n');
+			// console.log((packageExpand && packageExpand.outerHTML) + '\n\n');
+			//** 点击产品包
+			__utils__.click('input#_p' + productCodes[i]);
+			// var elementClicked = document.querySelector('div#_p' + productCodes[i]);
+			// console.log('elementClicked: ' + '\n\n');
+			// console.log((elementClicked && elementClicked.outerHTML) + '\n\n');
+		};
+
+	},order.product.code);
+});
+
+casper.then(function confirmProductChecked(){
+	casper.evaluate(function(productCode){
+		var productCodes = [];
+		//** 判断是否是需要多个选项，多个选项以 | 分割
+		if(/\|/.test(productCode)){
+			productCodes = productCode.split('|');
+		}else{
+			productCodes = [productCode];
+		}
+		//** 取第一个的产品Id
+		productCode0 = productCodes[0] || '';
+		var kId = productCode0.indexOf('k') == -1 ? productCode0.length : productCode0.indexOf('k');
+		var productId = productCode0.slice(0,kId);
+		var eId = productCode0.indexOf('e') == -1 ? productCode0.length : productCode0.indexOf('e');
+		var packageId = productCode0.slice(0,eId);
+		var packageInputNode = document.querySelector('input#_p' + packageId);
+		var productInputNode = document.querySelector('input#_p' + productId);
+		//** 如果package没设置checked，设置它
+		if(packageInputNode){
+			if(!(packageInputNode.hasAttribute('checked'))){
+				packageInputNode.setAttribute('checked',true);
+			}
+		}
+		//** 如果product没设置checked，设置它
+		if(productInputNode){
+			if(!(productInputNode.hasAttribute('checked'))){
+				productInputNode.setAttribute('checked', true);
+			}
+		}
+
 	},order.product.code);
 });
 
@@ -567,12 +652,28 @@ casper.then(function submit(){
 	});
 	// casper.wait(10000);
 });
+//** 第二种方法
+// casper.then(function submit(){
+// 	casper.page.injectJs('../casper/js/patch/yiwang.js');
+// 	casper.evaluate(function cutInAjax(productCode){
+// 		var kId = productCode.indexOf('k') == -1 ? productCode.length : productCode.indexOf('k');
+// 		var productId = productCode.slice(0,kId);
+// 		yiwang.getPackageByPId({
+// 			productId: productId,
+// 		},function(err, result1){
+// 			if(err) return Cs.ctrl.Web.showInfo("getPackageByPId处理失败");
+// 			console.log('result1:' + result1);
+// 			Cs.ctrl.Web.showInfo("处理成功");
+// 		});
+// 	},product.code);
+// });
+
 
 casper.then(function waitSubmitProcessing(){
 	casper.waitFor(function processing(){
 		return casper.evaluate(function(){
 			var waitNode = document.querySelector('#_waitInfoContent');
-			return (!/请稍候/.test(waitNode.innerText || ''));
+			return (!/请稍候/.test((waitNode && waitNode.innerText) || ''));
 		});
 	},null,function(){
 		var contentHtml = this.getHTML();
@@ -595,11 +696,11 @@ casper.then(function getSubmitResult(){
 
 	var statusText = casper.evaluate(function(){
 		var resultNode = document.querySelector('#_waitInfoContent');
-		return resultNode.innerText;
+		return ((resultNode && resultNode.innerText) || '');
 	});
 	var resultText = casper.evaluate(function(){
 		var resultNode = document.querySelector('#showTabIdRow');
-		return resultNode.innerText;
+		return ((resultNode && resultNode.innerText) || '');
 	});
 	if(/成功/.test(statusText || '')){
 		response.code = 200;
