@@ -219,7 +219,7 @@ module.exports = exports = function(connection){
 							//** sms业务代码部分
 							sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
 							sms.receiver = order.customer.mobile;
-							sms.content = '尊敬的用户您好，欢迎订购(' + order.goods.name + ')，资费:(' + order.goods.price + ' ' + order.goods.unit +')，回复“Y”确认订购。';
+							sms.content = '尊敬的用户您好，欢迎订购(' + order.goods.name + ')，资费:(' + order.goods.price + ' ' + order.goods.unit +')，回复“Y”确认订购(10分钟内有效)。';
 							sms.status = '新建';
 							PlatformSms
 								.create(sms, function(err){
