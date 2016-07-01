@@ -42,6 +42,7 @@ var sendSMS = function(docs, done) {
 		logger.debug('>> 1.bind');
 	});
 
+	client.setTimeout(10000);
 	client.on('close', function(err){
 		logger.debug('client close: ' + (err ? '异常': '正常'));
 	});
@@ -55,6 +56,14 @@ var sendSMS = function(docs, done) {
 		}
 	});
 
+	client.on('timeout', function(){
+		logger.error('client 连接短信网关超时异常。');
+		if(!endFlag){
+			client.destroy();
+			endFlag = true;
+			done && done({code: 'timeout',errmsg: '发送短信超时异常。'});
+		}
+	});
 	client.on('error', function(err) {
 		logger.error(err);
 		if(!endFlag){
