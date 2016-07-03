@@ -39,9 +39,9 @@ var OrderView = FormView.extend({
 		this.product = options.product;
 		this.model = new ProductOrder();
 		var page = $(productTpl);
-		var orderTemplate = $('#orderTemplate', page).html();
+		var orderTemplate = $('#recommendTemplate', page).html();
 		this.template = _.template(_.unescape(orderTemplate || ''));
-		var successTpl = $('#orderSuccessTemplate', page).html();
+		var successTpl = $('#recommendSuccessTemplate', page).html();
 		this.successTemplate = _.template(_.unescape(successTpl || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
@@ -115,8 +115,8 @@ var OrderView = FormView.extend({
 			return false;
 		};
 		this.model.set('mobile', mobiles);
-		//** 订购行为
-		this.model.set('action','order');
+		//** 推荐行为
+		this.model.set('action','recommend');
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true

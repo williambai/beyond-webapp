@@ -39,7 +39,8 @@
 				<!-- <button class="btn btn-danger promote wechat">微信推广</button> -->
 				<!-- <% } %> -->
 				<!-- <button class="btn btn-danger sms">短信推广</button> -->
-				<button class="btn btn-success view">订购推荐</button>
+				<button class="btn btn-danger order">订购</button>
+				<button class="btn btn-success recommend">推荐</button>
 				</p>
 				<hr/>
 			</div>
@@ -78,7 +79,7 @@
 	<div id="orderTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h5 class="panel-title text-center">推荐给客户</h5>
+				<h5 class="panel-title text-center">申请订购</h5>
 			</div>
 			<div class="panel-body">
 				<form id="orderForm">
@@ -118,19 +119,75 @@
 				</form>
 			</div>
 		</div>
+		<h4>使用说明：</h4>
+		<hr/>
+		<p>订购平台将向您的手机发送二次确认短信，请在规定的时间内，按照短信上的提示信息完成订购。</p>
+		<p><span style="color:red;">仅限贵州省联通手机的用户，其他地区的用户暂时无法收到短信。</span></p>
+		<br/>
 	</div>
-	<div id="successTemplate">
+	<div id="orderSuccessTemplate">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">申请订购成功</h5>
+			</div>
+			<div class="panel-body">
+				<p>恭喜您！产品订购申请已受理。您将会收到订购平台发送的二次确认短信，请按照短信上的提示信息完成订购！</p>
+				<button class="btn btn-primary btn-block back">返回</button>
+			</div>
+		</div>
+	</div>
+	<div id="orderFailTemplate">
+		<p>申请订购失败。查看</p>
+		<div>
+		</div>
+	</div>
+	<div id="recommendTemplate">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">推荐给客户</h5>
+			</div>
+			<div class="panel-body">
+				<form id="orderForm">
+					<div class="form-group">
+						<label></label>
+						<input type="text" name="mobile[]" class="form-control" placeholder="客户手机号码">
+						<span class="help-block"></span>
+					</div>
+					<div class="form-group hidden">
+						<label>生效时间：</label>
+						<div style="padding-left:30px;" id="effectMethod">
+						</div>
+					</div>
+ 					<div class="form-group">
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group">
+							<input type="submit" value="确定" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-success cancel">取消</button>
+						</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<h4>使用说明：</h4>
+		<hr/>
+		<p>订购平台将向客户的手机发送二次确认短信，客户必须在规定的时间内，按照短信上的提示信息完成订购。</p>
+		<br/>
+	</div>
+	<div id="recommendSuccessTemplate">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h5 class="panel-title text-center">推荐成功</h5>
 			</div>
 			<div class="panel-body">
-				<p>恭喜你，推荐成功！</p>
+				<p>恭喜您，推荐成功！客户将收到订购平台发送的二次确认短信，他(她)必须在规定的时间内，按照短信上的提示完成订购！</p>
 				<button class="btn btn-primary btn-block back">返回</button>
 			</div>
 		</div>
 	</div>
-	<div id="failTemplate">
+	<div id="recommendFailTemplate">
 		<p>推荐失败页面，查看</p>
 		<div>
 		</div>

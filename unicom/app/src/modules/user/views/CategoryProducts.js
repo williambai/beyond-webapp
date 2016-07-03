@@ -74,7 +74,8 @@ exports = module.exports = Backbone.View.extend({
 		'scroll': 'scroll',
 		'click .back': 'back',
 		'click .search': 'search',
-		'click .view': 'productView',
+		'click .order': 'productOrder',
+		'click .recommend': 'productRecommend',
 		'click .wechat': 'wechat',
 		'click .sms': 'sms',
 	},
@@ -112,9 +113,15 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 
-	productView: function(evt){
+	productOrder: function(evt){
 		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		this.router.navigate('product/view/'+ id,{trigger: true});
+		this.router.navigate('product/order/'+ id,{trigger: true});
+		return false;
+	},
+
+	productRecommend: function(evt){
+		var id = this.$(evt.currentTarget).closest('.item').attr('id');
+		this.router.navigate('product/recommend/'+ id,{trigger: true});
 		return false;
 	},
 

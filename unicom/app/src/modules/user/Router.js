@@ -29,6 +29,7 @@ var CategoryIndexView = require('./views/CategoryIndex');
 var CategoryProductView = require('./views/CategoryProducts');
 var ProductHotsView = require('./views/ProductHots');
 var ProductOrderView = require('./views/ProductOrder');
+var ProductRecommendView = require('./views/ProductRecommend');
 var OrderIndexView = require('./views/OrderIndex');
 var CustomerIndexView = require('./views/CustomerIndex');
 var SaleLeadIndexView = require('./views/SaleLeadIndex');
@@ -66,7 +67,8 @@ exports = module.exports = Backbone.Router.extend({
 		'category/index': 'categoryIndex',//** 产品分类
 		'category/:cid/products': 'categoryProduct',//** 按分类查找产品
 		'product/hots': 'productHot',//** 热门产品
-		'product/view/:id': 'productOrder',//** 产品推荐
+		'product/order/:id': 'productOrder',//** 产品订购
+		'product/recommend/:id': 'productRecommend',//** 产品推荐
 
 		'activity/index': 'activityIndex',
 		'phone/index': 'phoneIndex',
@@ -440,7 +442,7 @@ exports = module.exports = Backbone.Router.extend({
 			window.location.hash = 'login';
 			return;
 		}
-		//this.appEvents.trigger('set:brand', '产品推荐');
+		//this.appEvents.trigger('set:brand', '产品订购');
 		var productOrderView = new ProductOrderView({
 			router: this,
 			el: '#content',
@@ -448,6 +450,21 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(productOrderView);
 		productOrderView.trigger('load');
+	},
+
+	productRecommend: function(id) {
+		if (!this.logined) {
+			window.location.hash = 'login';
+			return;
+		}
+		//this.appEvents.trigger('set:brand', '产品推荐');
+		var productRecommendView = new ProductRecommendView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(productRecommendView);
+		productRecommendView.trigger('load');
 	},
 
 	orderIndex: function() {

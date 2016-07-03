@@ -269,14 +269,14 @@ module.exports = exports = function(connection) {
 			PlatformSms
 				.create(doc, function(err) {
 					if (err) return done(err);
+					//** 提取客户号码，去除最前面的86
+					var mobile = (doc.sender || '').replace(/^86/, '');
+					//** 提取业务(短信)代码，去除SPNumber(10655836)部分
+					var regexSmscode = new RegExp('^' + spConfig.options.SPNumber, 'i');
+					var smscode = (doc.receiver || '').replace(regexSmscode,'');
 					var content = doc.content || '';
-					//** 只要不是明确回复N（全角半角都算）或否，或不，或不回复，都订上
-					if(!/[N|n|Ｎ|ｎ|不|否]/.test(content)){
-						//** 提取客户号码，去除最前面的86
-						var mobile = (doc.sender || '').replace(/^86/, '');
-						//** 提取业务(短信)代码，去除SPNumber(10655836)部分
-						var regexSmscode = new RegExp('^' + spConfig.options.SPNumber, 'i');
-						var smscode = (doc.receiver || '').replace(regexSmscode,'');
+					if(/\d{4,6}/.test(content)){
+						//** 用户订购模式，接收用户回复，按照验证码修改订单状态
 						//** 更新Order状态，由新建 -> 已确认
 						Order
 							.findOneAndUpdate({
@@ -284,8 +284,9 @@ module.exports = exports = function(connection) {
 								'lastupdatetime': {
 									$gt: new Date(Date.now()-600000), 
 								},
-								'customer.mobile': mobile,
+								'createBy.mobile': mobile,
 								'goods.smscode': smscode,
+								'comfirmCode': content, //** 确认验证码
 								'status': '新建',
 							}, {
 								$set: {
@@ -298,6 +299,34 @@ module.exports = exports = function(connection) {
 								if (err || !order) return done(err);
 								done(null);
 							});
+					}else{
+						//** 用户推荐模式，接收客户回复
+						//** 只要不是明确回复N（全角半角都算）或否，或不，或不回复，都订上
+						if(!/[N|n|Ｎ|ｎ|不|否]/.test(content)){
+							//** 更新Order状态，由新建 -> 已确认
+							Order
+								.findOneAndUpdate({
+									//** 在最近10分钟内的订单
+									'lastupdatetime': {
+										$gt: new Date(Date.now()-600000), 
+									},
+									'customer.mobile': mobile,
+									'goods.smscode': smscode,
+									'status': '新建',
+								}, {
+									$set: {
+										status: '已确认',
+									}
+								}, {
+									'upsert': false,
+									'new': true,
+								}, function(err, order) {
+									if (err || !order) return done(err);
+									done(null);
+								});
+						}else{
+							done(null);
+						}
 					}
 				});
 

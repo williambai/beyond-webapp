@@ -68,6 +68,7 @@ var schema = new mongoose.Schema({
 		grid: String, //** 网格编码
 		district: String, //** 地区编码			
 	},
+	confirmCode: Number, //** 短信上行确认验证码
 	status: { //** 订单状态
 		type: String,
 		enum: {
@@ -147,6 +148,7 @@ module.exports = exports = function(connection){
 	 * @param {Function} done    [description]
 	 */
 	schema.statics.add = function(options,done){
+		var action = options.action || 'order';  //** 两种行为：recommend or order 发送短信对象不同
 		var product = options.product;
 		var mobiles = options.mobiles;
 		var effect = options.effect;
@@ -187,6 +189,7 @@ module.exports = exports = function(connection){
 											},
 											department: account.department,//** 创建订单的用户营业厅
 											status: '新建',
+											confirmCode: _.random(1000,9999),//** 创建随机验证码
 										};
 									callback(null,order);
 								});
@@ -217,24 +220,48 @@ module.exports = exports = function(connection){
 						function createSms(order,callback){
 							var sms = {};
 							//** sms业务代码部分
-							sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
-							sms.receiver = order.customer.mobile;
-							sms.content = '尊敬的用户您好，欢迎订购(' + order.goods.name + ')，资费:(' + order.goods.price + ' ' + order.goods.unit +')，回复“Y”确认订购(10分钟内有效)。';
-							sms.status = '新建';
-							PlatformSms
-								.create(sms, function(err){
-									if(err) return callback(err);
+							if(action == 'recommend'){
+								//** 推荐模式
+								sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
+								sms.receiver = order.customer.mobile;
+								sms.content = '尊敬的用户您好，欢迎订购(' + order.goods.name + ')，资费:(' + order.goods.price + ' ' + order.goods.unit +')，回复“Y”确认订购(10分钟内有效)。';
+								sms.status = '新建';
+								PlatformSms
+									.create(sms, function(err){
+										if(err) return callback(err);
+										callback(null);
+									});
+							}else if(action == 'order'){
+								//** 订购模式
+								if(/1\d{10}/.test(order.createBy.mobile)){
+									sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
+									sms.receiver = order.createBy.mobile || '';
+									sms.content = '您(' + (order.createBy.mobile || '') + ')为 ' + order.customer.mobile + ' 用户申请订购(' + order.goods.name + ')，资费:(' + order.goods.price + ' ' + order.goods.unit +')，回复验证码确认订购(10分钟内有效): '+ order.confirmCode +'。';
+									sms.status = '新建';
+									PlatformSms
+										.create(sms, function(err){
+											if(err) return callback(err);
+											callback(null);
+										});
+								}else{
 									callback(null);
-								});
+								}
+							}
 						},
 						function createActivity(callback) {
+							var body = '';
+							if(action == 'recommend'){
+								body = '向朋友推荐了<u>' + product.name + '</u>产品';
+							}else{
+								body = '向帮助朋友订购了<u>' + product.name + '</u>产品';
+							}
 							var activity = {
 								uid: account.accountId,
 								username: account.username,
 								avatar: account.avatar || '/images/avatar.jpg',
 								type: 'text',
 								content: {
-									body: '向朋友推荐了<u>' + product.name + '</u>产品',
+									body: body,
 								}
 							};
 							AccountActivity
@@ -383,17 +410,21 @@ module.exports = exports = function(connection){
 										var sms = {};
 										//** sms业务代码部分
 										sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
-										sms.receiver = order.customer.mobile;
-										sms.content = (status == '成功'  
-												? '恭喜您，您订购的(' + order.goods.name + ')已订购成功。' 
-												: '(' + order.goods.name + ')订购失败，详情请咨询10010，或到就近营业厅咨询办理。');
 										sms.status = '新建';
-										PlatformSms
-											.create(sms, function(err){
-												if(err) return done(err);
-												//** 处理下一个
-												_process();
-											});
+										if(status == '成功'){
+											sms.receiver = order.customer.mobile;
+											sms.content = '恭喜您，您订购的(' + order.goods.name + ')已订购成功。' ;
+											PlatformSms
+												.create(sms, function(err){
+													if(err) return done(err);
+													//** 处理下一个
+													_process();
+												});
+										}else{
+											sms.content = '(' + order.goods.name + ')订购失败，详情请咨询10010，或到就近营业厅咨询办理。';
+											//** 处理下一个
+											_process();
+										}
 									});
 							});
 						}
@@ -550,17 +581,21 @@ module.exports = exports = function(connection){
 										var sms = {};
 										//** sms业务代码部分
 										sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
-										sms.receiver = order.customer.mobile;
-										sms.content = (status == '成功'  
-												? '恭喜您，您订购的(' + order.goods.name + ')已订购成功。' 
-												: '(' + order.goods.name + ')订购失败，详情请咨询10010，或到就近营业厅咨询办理。');
 										sms.status = '新建';
-										PlatformSms
-											.create(sms, function(err){
-												if(err) return done(err);
-												//** 处理下一个
-												_process();
-											});
+										if(status == '成功'){
+											sms.receiver = order.customer.mobile;
+											sms.content = '恭喜您，您订购的(' + order.goods.name + ')已订购成功。' ;
+											PlatformSms
+												.create(sms, function(err){
+													if(err) return done(err);
+													//** 处理下一个
+													_process();
+												});
+										}else{
+											sms.content = '(' + order.goods.name + ')订购失败，详情请咨询10010，或到就近营业厅咨询办理。';
+											//** 处理下一个
+											_process();
+										}
 									});
 							});
 						}else if(/^8.*TD$/.test(productBarcode)){
@@ -611,17 +646,21 @@ module.exports = exports = function(connection){
 										var sms = {};
 										//** sms业务代码部分
 										sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
-										sms.receiver = order.customer.mobile;
-										sms.content = (status == '成功'  
-												? '恭喜您，您订购的(' + order.goods.name + ')已订购成功。' 
-												: '(' + order.goods.name + ')订购失败，详情请咨询10010，或到就近营业厅咨询办理。');
 										sms.status = '新建';
-										PlatformSms
-											.create(sms, function(err){
-												if(err) return done(err);
-												//** 处理下一个
-												_process();
-											});
+										if(status == '成功'){
+											sms.receiver = order.customer.mobile;
+											sms.content = '恭喜您，您订购的(' + order.goods.name + ')已订购成功。' ;
+											PlatformSms
+												.create(sms, function(err){
+													if(err) return done(err);
+													//** 处理下一个
+													_process();
+												});
+										}else{
+											sms.content = '(' + order.goods.name + ')订购失败，详情请咨询10010，或到就近营业厅咨询办理。';
+											//** 处理下一个
+											_process();
+										}
 									});
 							});
 						}else{

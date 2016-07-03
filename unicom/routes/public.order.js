@@ -13,10 +13,12 @@ exports = module.exports = function(app, models) {
 	var add = function(req, res) {
 		var product = req.body.product || {};
 		var mobiles = req.body.mobile || [];
+		var action = req.body.action || 'order'; //** 默认为订购行为
 		var effect = req.body.effect || '次月生效';
 		mobiles = _.without(mobiles, '');
 		models.Order
 			.add({
+				action: action, 
 				product: product,
 				mobiles: mobiles,
 				effect: effect,
