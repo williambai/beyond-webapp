@@ -35,7 +35,8 @@ exports = module.exports = [
             "protect_department",
             "channel_category",
             "protect_media",
-            "protect_carousel"
+            "protect_carousel",
+            "protect_stats_cities"
         ]
     },
     {

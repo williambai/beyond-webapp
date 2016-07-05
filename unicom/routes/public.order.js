@@ -13,7 +13,7 @@ exports = module.exports = function(app, models) {
 	var add = function(req, res) {
 		var product = req.body.product || {};
 		var mobiles = req.body.mobile || [];
-		var action = req.body.action || 'order'; //** 默认为订购行为
+		var action = req.body.action || 'recommend'; //** 默认为推荐行为
 		var effect = req.body.effect || '次月生效';
 		mobiles = _.without(mobiles, '');
 		models.Order

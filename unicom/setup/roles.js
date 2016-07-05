@@ -260,5 +260,15 @@ exports = module.exports = [{
 			"getMore": "true",
 			"getOne": "true"
 		},
+		"protect_stats_city": {
+			"route": "/protect/stats/cities",
+			"nickname": "protect_stats_city",
+			"name": "统计管理",
+			"remove": "true",
+			"update": "true",
+			"add": "true",
+			"getMore": "true",
+			"getOne": "true"
+		},
 	}
 }]

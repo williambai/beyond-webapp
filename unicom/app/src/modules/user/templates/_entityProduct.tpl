@@ -39,7 +39,7 @@
 				<!-- <button class="btn btn-danger promote wechat">微信推广</button> -->
 				<!-- <% } %> -->
 				<!-- <button class="btn btn-danger sms">短信推广</button> -->
-				<button class="btn btn-danger order">订购</button>
+				<!-- <button class="btn btn-danger order">订购</button> -->
 				<button class="btn btn-success recommend">推荐</button>
 				</p>
 				<hr/>

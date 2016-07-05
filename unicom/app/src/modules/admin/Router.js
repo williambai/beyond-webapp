@@ -57,6 +57,10 @@ var DepartmentExportView = require('./views/DepartmentExport');
 var SmsIndexView = require('./views/SmsIndex');
 var SmsEditView = require('./views/SmsEdit');
 
+var StatsIndexView = require('./views/StatsIndex');
+var StatsAccountView = require('./views/StatsAccount');
+var StatsOrderView = require('./views/StatsOrder');
+
 // var PageStaticIndexView = require('./views/_PageStaticIndex');
 // var PageStaticEditView = require('./views/_PageStaticEdit');
 // var PageDynamicIndexView = require('./views/_PageDynamicIndex');
@@ -222,6 +226,10 @@ exports = module.exports = Backbone.Router.extend({
 		'revenue/add': 'revenueEdit',
 		'revenue/view/:id': 'revenueView',
 		'revenue/edit/:id': 'revenueEdit',
+
+		'stats/index': 'statsIndex',
+		'stats/account': 'statsAccount',
+		'stats/order': 'statsOrder',
 
 		// 'grid/index': 'gridIndex',
 		// 'grid/add': 'gridEdit',
@@ -772,6 +780,49 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(smsEditView);
 		smsEditView.trigger('load');
+	},	
+
+
+	statsIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','统计管理');
+		var statsIndexView = new StatsIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(statsIndexView);
+		statsIndexView.trigger('load');
+	},	
+
+	statsAccount: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','用户统计');
+		var statsAccountView = new StatsAccountView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(statsAccountView);
+		statsAccountView.trigger('load');
+	},	
+
+	statsOrder: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','订单统计');
+		var statsOrderView = new StatsOrderView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(statsOrderView);
+		statsOrderView.trigger('load');
 	},	
 
 	pageStaticIndex: function(){

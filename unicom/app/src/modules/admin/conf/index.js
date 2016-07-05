@@ -47,6 +47,11 @@ _.extend(config,{
 		"features": ["protect_finance_bank"],
 	}, {
 		"id": 2,
+		"name": "统计管理",
+		"hash": "stats/index",
+		"features": [],
+	}, {
+		"id": 2,
 		"name": "物料管理",
 		"hash": "goods/index",
 		"features": ["protect_goods"],

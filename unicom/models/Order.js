@@ -7,7 +7,6 @@ var utils = require('../libs/utils');
 //** SP配置文件
 var spConfig = require('../config/sp').SGIP12;
 var _ = require('underscore');
-var async = require('async');
 var BSS = require('../libs/bss_gz');//** 贵州联通BSS系统
 var CBSS = require('../libs/cbss');//** 联通CBSS系统
 var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
@@ -148,9 +147,9 @@ module.exports = exports = function(connection){
 	 * @param {Function} done    [description]
 	 */
 	schema.statics.add = function(options,done){
-		var action = options.action || 'order';  //** 两种行为：recommend or order 发送短信对象不同
+		var action = options.action || 'recommend';  //** 两种行为：recommend or order 发送短信对象不同
 		var product = options.product;
-		var mobiles = options.mobiles;
+		var mobiles = options.mobiles || [];
 		var effect = options.effect;
 		var account = options.account;
 
@@ -159,9 +158,9 @@ module.exports = exports = function(connection){
 		var PlatformSms = connection.model('PlatformSms');
 		var AccountActivity = connection.model('AccountActivity');
 		//** 按单个手机执行
-		async.each(
+		async.eachSeries(
 			mobiles,
-			function(mobile,done){
+			function(mobile,cb){
 				async.waterfall(
 					[
 						function getProduct(callback) {
@@ -269,8 +268,8 @@ module.exports = exports = function(connection){
 						}
 					],
 					function(err, result) {
-						if (err) return done(err);
-						done(null);
+						if (err) return cb(err);
+						cb(null);
 					});
 			},
 			done

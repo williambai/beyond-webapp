@@ -175,6 +175,13 @@ exports = module.exports = [
         "status": "有效"
     },
     {
+        "description": "统计管理：管理员查看统计报表。",
+        "name": "统计管理",
+        "nickname": "protect_stats_city",
+        "route": "/protect/stats/cities",
+        "status": "有效"
+    },
+    {
         "description": "静态网页管理：管理员新增、删除和修改page。",
         "name": "静态网页管理",
         "nickname": "protect_page",
