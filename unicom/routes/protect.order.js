@@ -79,6 +79,12 @@ exports = module.exports = function(app, models) {
  						status: status
  					});
  				}
+ 				query.where({
+ 					'lastupdatetime': {
+ 						$gt: from,
+ 						$lte: to
+ 					}
+ 				});
  				query.sort({
  						_id: -1
  					})

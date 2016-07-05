@@ -47,9 +47,16 @@ exports = module.exports = function(app, models) {
  				var searchStr = req.query.searchStr || '';
  				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
  				models.PlatformSession.find({
-						'_id': {
-							$regex: searchRegex
-						}
+						$or:[{
+								'_id': {
+									$regex: searchRegex
+								}
+	 						},{
+	 							'session':{
+	 								$regex: searchRegex
+	 							}
+	 						}
+						]
  					})
  					.sort({
  						_id: -1
