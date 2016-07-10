@@ -5,6 +5,7 @@ var path = require('path');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 var regexp = require('../libs/regexp');
+var iconv = require('iconv-lite');
 
 exports = module.exports = function(app, models) {
 
@@ -62,6 +63,7 @@ exports = module.exports = function(app, models) {
  				//** 搜索字符串
  				var searchStr = req.query.searchStr || '';
  				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
+ 				var city = req.query.city;
  				var status = req.query.status;
  				var query = models.Order.find({
  					$or: [{
@@ -74,9 +76,16 @@ exports = module.exports = function(app, models) {
  						}
  					}]
  				});
+ 				if (!_.isEmpty(city)) {
+	 				var cityStr = city || '';
+	 				var cityRegex = new RegExp(regexp.escape(cityStr), 'i');
+ 					query.where({
+ 						'department.city': cityRegex
+ 					});
+ 				}
  				if (!_.isEmpty(status)) {
  					query.where({
- 						status: status
+ 						'status': status
  					});
  				}
  				query.where({
@@ -101,22 +110,42 @@ exports = module.exports = function(app, models) {
  				var from = new Date(req.query.from || 0);
  				//** 查询结束时间
  				var to = new Date(req.query.to || Date.now());
+ 				var city = req.query.city;
 				res.writeHead(200, {
 					'Content-Type': 'text/csv;charset=utf-8',
 					'Content-Disposition': 'attachment; filename=orders.csv'
 				});
-				models.Order
-					.findAndStreamCsv({
-						'lastupdatetime': {
-							$gt: from,
-							$lte: to
-						}
-					})
-					.pipe(res);
+ 				if (_.isEmpty(city)) {
+	 				models.Order
+	 					.findAndStreamCsv({
+	 						'lastupdatetime': {
+	 							$gt: from,
+	 							$lte: to
+	 						}
+	 					})
+	 					.pipe(iconv.encodeStream('GBK'))
+	 					.pipe(res);
+ 				}else{
+	 				var cityStr = city || '';
+	 				var cityRegex = new RegExp(regexp.escape(cityStr), 'i');
+					models.Order
+						.findAndStreamCsv({
+	 						'department.city': cityRegex,
+							'lastupdatetime': {
+								$gt: from,
+								$lte: to
+							}
+						})
+						.pipe(iconv.encodeStream('GBK'))
+						.pipe(res);
+ 				}
  				break;
  			default:
+ 				// var cityStr = req.session.department.city || '';
+ 				// var cityRegex = new RegExp(regexp.escape(cityStr), 'i');
  				models.Order
- 					.find({})
+ 					.find({
+ 					})
  					.sort({
  						_id: -1
  					})

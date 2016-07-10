@@ -89,6 +89,7 @@ gulp.task('server:js', function(done) {
             '!public/_tmp/**/**',
             '!public/upload/**/*',
             '!libs/cbss/casper/js/**/*',
+            '!chrome/**/*'
         ])
         .pipe(uglify().on('error', function(e) {
             console.log(e);

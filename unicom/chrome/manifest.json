@@ -1,0 +1,20 @@
+{
+	"manifest_version": 2,
+	"name": "cbss transform",
+	"version": "0.0.1",
+	"background": { "scripts": ["third/jquery-2.0.0.min.js", "background.js"] },
+	"page_action": {
+		"default_icon": {
+			"19": "assets/cbss_19.png",
+			"38": "assets/cbss_38.png"
+		},
+		"default_title": "cbss transform", // shown in tooltip
+		"default_popup": "popup.html"
+	},
+	"permissions" : ["tabs","*://*/"],
+	"content_scripts":[{
+		"matches":["*://*.cbss.10010.com/*"],
+		"js":["third/jquery-2.0.0.min.js", "content_script.js"]
+	}],
+	"web_accessible_resources": ["patch/login.js","patch/public.js","patch/login_submit.js","patch/ajax.js","patch/ChangeElement.js"]
+}

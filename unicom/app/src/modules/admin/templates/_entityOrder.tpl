@@ -16,32 +16,40 @@
 		</div>
 	</div>	
 	<div id="searchTemplate">
-		<form id="searchForm" class="form-inline">
+		<form id="searchForm" class="form">
 			<input type="hidden" name="action" value="search">
-			<div class="form-group">
+			<div class="form-group form-inline">
 				<label>&nbsp;从：&nbsp;</label>
-				<input type="date" name="from" class="form-control" placeholder="yyyy/mm/dd">&nbsp;&nbsp;
-			</div>
-			<div class="form-group">
+				<input type="date" name="from" class="form-control" placeholder="yyyy/mm/dd">
 				<label>&nbsp;到：&nbsp;</label>
-				<input type="date" name="to" class="form-control" placeholder="yyyy/mm/dd">&nbsp;&nbsp;
-			</div>
-			<div class="form-group">
-				<label>&nbsp;&nbsp;</label>
-				<input type="text" name="searchStr" class="form-control" placeholder="手机号码">&nbsp;&nbsp;
-			</div>
-			<div class="form-group">
+				<input type="date" name="to" class="form-control" placeholder="yyyy/mm/dd">
+				<label>&nbsp;地区：&nbsp;</label>
+				<select class="form-control" name="city">
+					<option value="">不限</option>
+					<option value="贵阳">贵阳</option>
+					<option value="遵义">遵义</option>
+					<option value="黔东南">黔东南</option>
+					<option value="安顺">安顺</option>
+					<option value="黔南">黔南</option>
+					<option value="六盘水">六盘水</option>
+					<option value="黔西南">黔西南</option>
+					<option value="铜仁">铜仁</option>
+					<option value="毕节">毕节</option>
+				</select>
+				<label>&nbsp;状态：&nbsp;</label>
 				<select class="form-control" name="status">
-					<option value="">全部</option>
+					<option value="">不限</option>
 					<option value="新建">新建</option>
 					<option value="已确认">用户已确认</option>
 					<option value="已处理">系统已处理</option>
 					<option value="成功">成功</option>
 					<option value="失败">失败</option>
-				</select>&nbsp;&nbsp;
+				</select>
 			</div>
-			<div class="form-group">
-				<input type="submit" value="筛选" class="btn btn-info btn-block">
+			<div class="form-group form-inline">
+				<label>&nbsp;搜索：&nbsp;</label>
+				<input type="text" name="searchStr" class="form-control" placeholder="手机号码">&nbsp;&nbsp;
+				<input type="submit" value="筛选" class="btn btn-info">
 			</div>
 		</form>
 		<hr/>
@@ -51,7 +59,7 @@
 			<button class="btn btn-success edit">详情</button>
 		</div>
 		<h4><span style="color:red;">[<%= model.department && model.department.city %>]</span><%= model.goods && model.goods.name %>&nbsp;<span style="color:red;"><%= model.status %></span></h4>
-		<p><i class="fa fa-user"></i>&nbsp;<%= model.customer && model.customer.mobile %>&nbsp;&nbsp;是&nbsp;<%= model.createBy && model.createBy.mobile %>&nbsp;创建</p>
+		<p><i class="fa fa-user"></i><span style="color:red;">[<%= model.createBy && model.createBy.username %>&nbsp;(<%= model.createBy && model.createBy.mobile %>)&nbsp;]</span>&nbsp;<%= model.customer && model.customer.mobile %></p>
 		<p><i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %>&nbsp;&nbsp;<i class="fa fa-calendar"></i>&nbsp;<%= new Date(model.lastupdatetime).toLocaleString() %></p>
 		<hr/>
 	</div>
@@ -187,6 +195,21 @@
 						<label>截止日期：</label>
 							<input type="date" name="to" value="" class="form-control">
 							<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>地区：</label>
+						<select class="form-control" name="city">
+							<option value="">不限</option>
+							<option value="贵阳">贵阳</option>
+							<option value="遵义">遵义</option>
+							<option value="黔东南">黔东南</option>
+							<option value="安顺">安顺</option>
+							<option value="黔南">黔南</option>
+							<option value="六盘水">六盘水</option>
+							<option value="黔西南">黔西南</option>
+							<option value="铜仁">铜仁</option>
+							<option value="毕节">毕节</option>
+						</select>
 					</div>
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
