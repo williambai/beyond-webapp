@@ -102,9 +102,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .edit': 'editOrder',
-		'click .delete': 'removeOrder',
-		'click .export': 'exportOrder',
+		// 'click .edit': 'editOrder',
+		// 'click .delete': 'removeOrder',
+		// 'click .export': 'exportOrder',
 	},
 
 	load: function() {
@@ -130,31 +130,31 @@ exports = module.exports = Backbone.View.extend({
 		return false;
 	},
 	
-	addOrder: function(){
-		this.router.navigate('order/add',{trigger: true});
-		return false;
-	},
+	// addOrder: function(){
+	// 	this.router.navigate('order/add',{trigger: true});
+	// 	return false;
+	// },
 
-	editOrder: function(evt){
-		var id = this.$(evt.currentTarget).parent().attr('id');
-		this.router.navigate('order/edit/'+ id,{trigger: true});
-		return false;
-	},
+	// editOrder: function(evt){
+	// 	var id = this.$(evt.currentTarget).parent().attr('id');
+	// 	// this.router.navigate('order/edit/'+ id,{trigger: true});
+	// 	return false;
+	// },
 
-	removeOrder: function(evt){
-		if(window.confirm('您确信要删除吗？')){
-			var id = this.$(evt.currentTarget).parent().attr('id');
-			var model = new Order({_id: id});
-			model.destroy({wait: true});
-			this.listView.trigger('refresh');
-		}
-		return false;
-	},
+	// removeOrder: function(evt){
+	// 	if(window.confirm('您确信要删除吗？')){
+	// 		var id = this.$(evt.currentTarget).parent().attr('id');
+	// 		var model = new Order({_id: id});
+	// 		model.destroy({wait: true});
+	// 		this.listView.trigger('refresh');
+	// 	}
+	// 	return false;
+	// },
 
-	exportOrder: function(evt){
-		this.router.navigate('order/export',{trigger: true});
-		return false;
-	},
+	// exportOrder: function(evt){
+	// 	this.router.navigate('order/export',{trigger: true});
+	// 	return false;
+	// },
 
 	render: function() {
 		if (!this.loaded) {

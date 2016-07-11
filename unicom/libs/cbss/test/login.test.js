@@ -1,7 +1,7 @@
 var path = require('path');
 var logger = require('log4js').getLogger(path.relative(process.cwd(), __filename));
 var login = require('../lib/login');
-var account = (require('../../../config/cbss').accounts)[9];//** 1 贵阳 ,9 遵义
+var account = (require('../../../config/cbss').accounts)[1];//** 1 贵阳 ,9 遵义
 console.log(account);
 
 login({

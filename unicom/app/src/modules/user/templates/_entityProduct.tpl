@@ -188,8 +188,14 @@
 		</div>
 	</div>
 	<div id="recommendFailTemplate">
-		<p>推荐失败页面，查看</p>
-		<div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">推荐失败</h5>
+			</div>
+			<div class="panel-body">
+				<p><%= model && model.errmsg %></p>
+				<button class="btn btn-primary btn-block back">返回</button>
+			</div>
 		</div>
 	</div>
 </div>

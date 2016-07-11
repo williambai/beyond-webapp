@@ -157,6 +157,8 @@ module.exports = exports = function(connection){
 		var Order = connection.model('Order');
 		var PlatformSms = connection.model('PlatformSms');
 		var AccountActivity = connection.model('AccountActivity');
+		var CustomerPhone = connection.model('CustomerPhone');
+
 		//** 按单个手机执行
 		async.eachSeries(
 			mobiles,
@@ -191,6 +193,34 @@ module.exports = exports = function(connection){
 											confirmCode: _.random(1000,9999),//** 创建随机验证码
 										};
 									callback(null,order);
+								});
+						},
+						function checkMobile(order, callback){
+							CustomerPhone
+								.getInfoByPhone({
+									mobile: order.customer.mobile,
+								},function(err, doc) {
+									//** 如果错误，继续流程
+									if (err) return callback(null, order);
+
+									if(model.info && (model.info.OpenDate != '')){
+										//** 仅能订购2/3G业务
+										if(/(2G|3G)/.test(order && order.goods && order.goods.category)){
+											callback(null, order);
+										}else{
+											callback({code: 40102, errmsg: '无法受理，请尝试给该用户办理4G同类业务。'});
+										}
+									}else if(model.info && (model.info.OpenDate =='')){
+										//** 仅能订购4G业务
+										if(/4G/.test(order && order.goods && order.goods.category)){
+											callback(null, order);
+										}else{
+											callback({code: 40102, errmsg: '无法受理，请尝试给该用户办理2/3G同类业务。'});
+										}
+									}else{
+										//** 无结果
+										callback(null, order);
+									}
 								});
 						},
 						function createOrder(order,callback) {

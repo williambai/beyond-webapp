@@ -43,6 +43,8 @@ var OrderView = FormView.extend({
 		this.template = _.template(_.unescape(orderTemplate || ''));
 		var successTpl = $('#recommendSuccessTemplate', page).html();
 		this.successTemplate = _.template(_.unescape(successTpl || ''));
+		var failureTpl = $('#recommendFailTemplate', page).html();
+		this.failureTemplate = _.template(_.unescape(failureTpl || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -117,6 +119,10 @@ var OrderView = FormView.extend({
 		this.model.set('mobile', mobiles);
 		//** 推荐行为
 		this.model.set('action','recommend');
+		//** 禁用按钮
+		that.$('input[type=submit]').attr('disabled',true);
+		//** 显示loading
+		that.$('.panel-title').prepend('<span><i class="fa fa-spinner fa-pulse fa-fw"></i></span>');
 		this.model.save(null, {
 			xhrFields: {
 				withCredentials: true
@@ -132,7 +138,11 @@ var OrderView = FormView.extend({
 	},
 
 	done: function(response){
-		this.$el.html(this.successTemplate());
+		if(response && (response.code == '40102')){
+			this.$el.html(this.failureTemplate({model: response.toJSON()}));
+		}else{
+			this.$el.html(this.successTemplate());
+		}
 	},
 
 	render: function(){

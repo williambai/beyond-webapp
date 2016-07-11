@@ -56,6 +56,7 @@ module.exports = exports = function(options, done) {
 	request({
 			url: options.url,
 			method: 'POST',
+			timeout: 5000,
 			headers: {
 				'Accept': 'application/xml',
 				'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko',

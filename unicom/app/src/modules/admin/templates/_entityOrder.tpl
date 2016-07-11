@@ -56,7 +56,8 @@
 	</div>
 	<div id="itemTemplate">
 		<div class="pull-right" id="<%= model._id %>">
-			<button class="btn btn-success edit">详情</button>
+			<!-- <button class="btn btn-success edit">详情</button> -->
+			<a class="btn btn-success" href="admin.html#order/edit/<%= model._id %>" target="order_detail">详情</a>
 		</div>
 		<h4><span style="color:red;">[<%= model.department && model.department.city %>]</span><%= model.goods && model.goods.name %>&nbsp;<span style="color:red;"><%= model.status %></span></h4>
 		<p><i class="fa fa-user"></i><span style="color:red;">[<%= model.createBy && model.createBy.username %>&nbsp;(<%= model.createBy && model.createBy.mobile %>)&nbsp;]</span>&nbsp;<%= model.customer && model.customer.mobile %></p>
