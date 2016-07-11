@@ -133,7 +133,7 @@ schema.plugin(mongooseToCsv, {
 		},
 		'发生时间': function(doc){
 			var date = doc.lastupdatetime;
-			return utils.dateFormat(date, 'yyyyMMddhhmmss');
+			return utils.dateFormat(date, 'yyyy-MM-dd:hh:mm:ss');
 		}
 	}
 });

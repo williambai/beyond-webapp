@@ -104,7 +104,7 @@ exports = module.exports = Backbone.View.extend({
 		'scroll': 'scroll',
 		// 'click .edit': 'editOrder',
 		// 'click .delete': 'removeOrder',
-		// 'click .export': 'exportOrder',
+		'click .export': 'exportOrder',
 	},
 
 	load: function() {
@@ -151,10 +151,10 @@ exports = module.exports = Backbone.View.extend({
 	// 	return false;
 	// },
 
-	// exportOrder: function(evt){
-	// 	this.router.navigate('order/export',{trigger: true});
-	// 	return false;
-	// },
+	exportOrder: function(evt){
+		this.router.navigate('order/export',{trigger: true});
+		return false;
+	},
 
 	render: function() {
 		if (!this.loaded) {
