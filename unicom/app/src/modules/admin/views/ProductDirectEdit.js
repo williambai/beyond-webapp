@@ -128,9 +128,9 @@ exports = module.exports = FormView.extend({
 							item.bonus + '" description="'+ 
 							item.description + '" quantity="'+ 
 							(item.quantity || '') +'">'+ 
-							item.smscode + '|' +
-							item.barcode + '|' + 
-							item.name + '|' +
+							item.smscode + '^' +
+							item.barcode + '^' + 
+							item.name + '^' +
 							item.scope
 							'</li>';
 				});
@@ -148,7 +148,7 @@ exports = module.exports = FormView.extend({
 		var bonus = $(evt.currentTarget).attr('bonus');
 		var description = $(evt.currentTarget).attr('description');
 		var quantity = $(evt.currentTarget).attr('quantity');
-		var goods = $(evt.currentTarget).text().split('|');
+		var goods = $(evt.currentTarget).text().split('^');
 		this.$('input[name="goods[id]"]').val(id);
 		this.$('input[name="goods[barcode]"]').val(goods[1]);
 		this.$('input[name="goods[name]"]').val(goods[2]);

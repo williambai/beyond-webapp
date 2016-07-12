@@ -2420,10 +2420,18 @@ function queryPackageInfo(productId){
 	 * 根据用户标识+产品标识获取包信息 返回 pkgByPId 节点(modify_tag='1')
 	 * 根据用户标识+产品标识获取包(用户信息与参数信息整合)信息 返回 pkgByPId 节点(modify_tag='2')
 	 */
+	//tfs:282985 开户首月计费模式变更 add by xingxy17 begin
+	//增加入参菜单权限和开关
+	var csRightCode = getRightCode();
+	var csCreateuserFirstdiscnt = '';
+	if($("CS_CREATEUSER_FIRSTDISCNT")&&csRightCode == "csCreateUserTrade"){
+		csCreateuserFirstdiscnt = $F("CS_CREATEUSER_FIRSTDISCNT");
+	}
+    //tfs:282985 end
 	//QC:96235 BEGIN
 	//Cs.Ajax.swallowXmlCache("pkgByPId:"+productId, prodPage, "getPackageByPId", "productId="+productId+"&modifyTag="+$('_p'+productId).modifyTag+"&userId="+userId+"&productMode="+$('_p'+productId).productMode+"&curProductId="+curProductId+"&onlyUserInfos="+onlyUserInfos+"&productInvalid="+$('_p'+productId).productInvalid, "正在查询产品信息，请稍候......", '', noCache);
-    Cs.Ajax.swallowXmlCache("pkgByPId:"+productId, prodPage, "getPackageByPId", "productId="+productId+"&modifyTag="+$('_p'+productId).modifyTag+"&userId="+userId+"&productMode="+$('_p'+productId).productMode+"&curProductId="+curProductId+"&onlyUserInfos="+onlyUserInfos+"&productInvalid="+$('_p'+productId).productInvalid+"&tradeTypeCode="+tradeTypeCode, "正在查询产品信息，请稍候......", '', noCache);
-    //QC:96235 END
+    Cs.Ajax.swallowXmlCache("pkgByPId:"+productId, prodPage, "getPackageByPId", "productId="+productId+"&modifyTag="+$('_p'+productId).getAttribute('modifyTag')+"&userId="+userId+"&productMode="+$('_p'+productId).getAttribute('productMode')+"&curProductId="+curProductId+"&onlyUserInfos="+onlyUserInfos+"&productInvalid="+$('_p'+productId).getAttribute('productInvalid')+"&tradeTypeCode="+$('_TRADE_TYPE_CODE').getAttribute('value')+"&csRightCode="+csRightCode+"&csCreateuserFirstdiscnt="+csCreateuserFirstdiscnt, "正在查询产品信息，请稍候......", '', noCache);
+        //QC:96235 END
 }
 
 //控制产品展示 ‘+’ ‘-’ 号--miyro_lan
@@ -2590,8 +2598,15 @@ function queryElementByPkgId(packageId, productId){
 	}
 	$productIdOfPkg=productId;  //保存产品信息，展现时需要
 
-	//根据包标识获取元素信息 返回 eleByPkgId 节点
-	Cs.Ajax.swallowXmlCache("eleByPkgId:"+packageId, prodPage, "getElementByPkgId", "packageId="+packageId+"&packageTrans="+$('_p'+productId+'k'+packageId).packageTrans+"&productId="+productId+"&userId="+userId+"&prodModifyTag="+$('_p'+productId).modifyTag+"&packModifyTag="+$('_p'+productId+'k'+packageId).modifyTag+"&curProductId="+curProductId+"&onlyUserInfos="+onlyUserInfos+"&packageInvalid="+$('_p'+productId+'k'+packageId).packageInvalid+"&userEparchyCode="+_userEparchyCode+"&userCityCode="+_userCityCode+"&userCallingArea="+_userCallingArea+"&CallingAreaInfo="+Object.toJSON(Cs.ctrl.Trade.CallingAreaInfo)+"&tradeTypeCode="+tradeTypeCode+"&discntItem="+lightDiscntItemValue, "正在查询包信息，请稍候......", '' , noCache);		
+	//tfs:282985 开户首月计费模式变更 add by xingxy17 begin
+	//增加入参菜单权限和开关
+	var csRightCode = getRightCode();
+	var csCreateuserFirstdiscnt = '';
+	if($("CS_CREATEUSER_FIRSTDISCNT")&&csRightCode == "csCreateUserTrade"){
+		csCreateuserFirstdiscnt = $F("CS_CREATEUSER_FIRSTDISCNT");
+	}
+    //tfs:282985 end
+	Cs.Ajax.swallowXmlCache("eleByPkgId:"+packageId, prodPage, "getElementByPkgId", "packageId="+packageId+"&packageTrans="+$('_p'+productId+'k'+packageId).getAttribute('packageTrans')+"&productId="+productId+"&userId="+userId+"&prodModifyTag="+$('_p'+productId).modifyTag+"&packModifyTag="+$('_p'+productId+'k'+packageId).getAttribute('modifyTag')+"&curProductId="+curProductId+"&onlyUserInfos="+onlyUserInfos+"&packageInvalid="+$('_p'+productId+'k'+packageId).getAttribute('packageInvalid')+"&userEparchyCode="+_userEparchyCode+"&userCityCode="+_userCityCode+"&userCallingArea="+_userCallingArea+"&CallingAreaInfo="+Object.toJSON(Cs.ctrl.Trade.CallingAreaInfo)+"&tradeTypeCode="+tradeTypeCode+"&discntItem="+lightDiscntItemValue+"&csRightCode="+csRightCode+"&csCreateuserFirstdiscnt="+csCreateuserFirstdiscnt, "正在查询包信息，请稍候......", '' , noCache);
 }
 
 //展现包中元素信息

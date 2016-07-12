@@ -203,14 +203,14 @@ module.exports = exports = function(connection){
 									//** 如果错误，继续流程
 									if (err) return callback(null, order);
 
-									if(model.info && (model.info.OpenDate != '')){
+									if(doc.info && (doc.info.OpenDate != '')){
 										//** 仅能订购2/3G业务
 										if(/(2G|3G)/.test(order && order.goods && order.goods.category)){
 											callback(null, order);
 										}else{
 											callback({code: 40102, errmsg: '无法受理，请尝试给该用户办理4G同类业务。'});
 										}
-									}else if(model.info && (model.info.OpenDate =='')){
+									}else if(doc.info && (doc.info.OpenDate =='')){
 										//** 仅能订购4G业务
 										if(/4G/.test(order && order.goods && order.goods.category)){
 											callback(null, order);
