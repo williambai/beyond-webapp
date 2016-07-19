@@ -31,7 +31,7 @@
 					<div class="media-body">
 						<h4><%= model.name %></h4>
 						<p><%= model.tags %></p>
-						<!-- <p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：<%= model.bonus.income %>&nbsp;元&nbsp;&nbsp;积分：<%= model.bonus.points %></p> -->
+						<p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：<%= model.goods.bonus %>&nbsp;元&nbsp;&nbsp;</p>
 					</div>
 				</div>
 				<p style="text-align:right">
@@ -62,7 +62,7 @@
 							<%= model.name %>
 						</h4>
 						<p><%= model.tags %></p>
-						<p>&nbsp;</p>
+						<p>佣金：<%= model.goods.bonus %>元</p>
 					</div>
 				</div>
 				<div class="col-xs-4">

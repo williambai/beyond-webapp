@@ -1,15 +1,61 @@
+var fs = require('fs');
+var path = require('path');
+var log4js = require('log4js');
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 var regexp = require('../libs/regexp');
- exports = module.exports = function(app, models) {
+var async = require('async');
+var iconv = require('iconv-lite');
+var utils = require('../libs/utils');
+
+exports = module.exports = function(app, models) {
 
  	var _ = require('underscore');
 
- 	var add = function(req, res) {
- 		var doc = req.body;
- 		models.FinanceBonus.create(doc,function(err) {
- 			if (err) return res.send(err);
- 			res.send({});
- 		});
- 	};
+	var add = function(req, res) {
+ 		var type = req.body.type || '';
+ 		switch (type) {
+ 			case 'import':
+	 			var attachments;
+	 			if (typeof req.body.attachment == 'string') {
+	 				attachments = [];
+	 				attachments.push(req.body.attachment);
+	 			} else {
+	 				attachments = req.body.attachment;
+	 			}
+	 			attachments = attachments || [];
+	 			logger.debug('attachments:' + attachments);
+	 			var docs = [];
+	 			async.eachSeries(attachments, function(attachment, cb) {
+	 				var file = path.join(__dirname, '../public', attachment);
+	 				if (!fs.existsSync(file)) {
+	 					return cb({
+	 						code: 40440,
+	 						msg: '文件不存在'
+	 					});
+	 				}
+	 				logger.debug('file: ' + file);
+	 				//** 导入csv
+	 				var data = fs.readFileSync(file,{encoding: 'utf8'});
+	 				models.FinanceBonusUnicom.importCSV(data,function(err){
+	 					if(err) return cb({
+	 								code: 500110,
+	 								errmsg: '导入数据格式不规范，请检查数据。'
+	 							});
+	 					cb(null);
+	 				});
+	 			}, function(err, result) {
+	 				if (err) return res.send(err);
+	 				res.send({});
+	 			}); 
+ 				break;
+ 			default:
+		 		var doc = req.body;
+		 		models.FinanceBonus.create(doc,function(err) {
+		 			if (err) return res.send(err);
+		 			res.send({});
+		 		});
+	 	}
+	};
  	var remove = function(req, res) {
  		var id = req.params.id;
  		models.FinanceBonus.findByIdAndRemove(id, function(err, doc) {
@@ -82,6 +128,18 @@ var regexp = require('../libs/regexp');
 		 				if (err) return res.send(err);
 		 				res.send(docs);
 		 			});
+ 				break;
+ 			case 'export': 
+				res.writeHead(200, {
+					'Content-Type': 'text/csv;charset=utf-8',
+					'Content-Disposition': 'attachment; filename=bonus.csv'
+				});
+				models.FinanceBonusUnicom
+					.findAndStreamCsv({
+		 				month: utils.dateFormat(new Date(year,month-1), 'yyyyMM'),						
+					})
+					.pipe(iconv.encodeStream('GBK'))
+					.pipe(res);
  				break;
  			default:
 		 		models.FinanceBonus

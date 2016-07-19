@@ -423,30 +423,44 @@ module.exports = exports = function(app, models) {
 		logger.debug('从('+ app +')自动登录...');
 		//** 用户正在使用该app		
 		if (_.indexOf(req.session.apps, app) != -1) {
-			models.PlatformApp
-				.findOne({
-					nickname: app
-				})
-				.exec(function(err,doc){
+			models
+				.Account
+				.findById(req.session.accountId)
+				.exec(function(err, account){
 					if(err) return res.send(err);
-					//** 取出app允许的features
-					var features = doc && doc.features || [];
-					// logger.debug('app features: ' + JSON.stringify(features));
-					// logger.debug('req.session.grant: ' + JSON.stringify(req.session.grant));
-					//** 计算app可使用的资源与用户权限的交集
-					var grant = {};
-					_.each(features,function(feature){
-						grant[feature] = req.session.grant[feature];
-					});
-					logger.debug('自动登录，取app.features与account.grant的交集: ' + JSON.stringify(grant));
-					res.send({
-						id: req.session.accountId,
-						email: req.session.email,
-						username: req.session.username,
-						avatar: req.session.avatar,
-						grant: grant
-					});
-					logger.info(req.session.email + '自动登录成功！');
+					if (!account) return res.send({
+							code: 40103,
+							errmsg: '用户不存在'
+						});
+					//** 更新session
+					req.session.username = account.username;
+					req.session.avatar = account.avatar || '';
+					req.session.department = account.department || {}; //** 设置用户部门
+					models.PlatformApp
+						.findOne({
+							nickname: app
+						})
+						.exec(function(err,doc){
+							if(err) return res.send(err);
+							//** 取出app允许的features
+							var features = doc && doc.features || [];
+							// logger.debug('app features: ' + JSON.stringify(features));
+							// logger.debug('req.session.grant: ' + JSON.stringify(req.session.grant));
+							//** 计算app可使用的资源与用户权限的交集
+							var grant = {};
+							_.each(features,function(feature){
+								grant[feature] = req.session.grant[feature];
+							});
+							logger.debug('自动登录，取app.features与account.grant的交集: ' + JSON.stringify(grant));
+							res.send({
+								id: req.session.accountId,
+								email: req.session.email,
+								username: req.session.username,
+								avatar: req.session.avatar,
+								grant: grant
+							});
+							logger.info(req.session.email + '自动登录成功！');
+						});
 				});
 			return;	
 		}

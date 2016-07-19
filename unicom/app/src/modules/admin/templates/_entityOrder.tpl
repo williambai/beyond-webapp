@@ -86,12 +86,13 @@
 						<input type="text" class="form-control" value="<%= model.goods.name %>" readonly>
 						<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+<!-- 					<div class="form-group">
 						<label>生效方式：</label>
 							<input type="text" value="<%= model.effect %>" class="form-control" readonly>
 							<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+ -->
+ 					<div class="form-group">
 						<label>业务(短信)编码：</label>
 						<input type="text" class="form-control" value="<%= model.goods.smscode %>" readonly>
 						<span class="help-block"></span>

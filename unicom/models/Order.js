@@ -54,6 +54,18 @@ var schema = new mongoose.Schema({
 		type: Number,
 		default: 0,
 	},
+	paymenttype: Number, //** 佣金发放方式
+	payment: [{
+		month: String, //** 佣金应付时间
+		money: Number, //** 佣金应付数量
+		status: { //** 佣金应付状态
+			type: String,
+			enum: {
+				values: '未发|已发|未出账'.split('|'),
+				message: 'enum validator failed for path {PATH} with value {VALUE}',
+			}
+		}
+	}],
 	createBy: { //** 订单创建者
 		id: String,
 		username: String,
@@ -154,6 +166,7 @@ module.exports = exports = function(connection){
 		var account = options.account;
 
 		var ProductDirect = connection.model('ProductDirect');
+		var Goods = connection.model('Goods');
 		var Order = connection.model('Order');
 		var PlatformSms = connection.model('PlatformSms');
 		var AccountActivity = connection.model('AccountActivity');
@@ -170,18 +183,29 @@ module.exports = exports = function(connection){
 								.findById(product._id)
 								.exec(function(err, prod){
 									if(err || !prod) return callback(err);
-									var goods = prod.goods || {};
-									goods.unit = goods.unit || prod.unit || '';
+									callback(null,prod);
+								});
+						},
+						function getGoods(product, callback){
+							var barcode = (product.goods && product.goods.barcode);
+							if(!barcode) return callback({code: 404124,errmsg: '该产品不存在或已下线，请咨询管理员或选择其他产品。'});
+							Goods
+								.findOne({barcode:barcode})
+								.exec(function(err,goods){
+									if(err) return callback(err);
+									if(!goods) return callback({code: 404125,errmsg: '该产品不存在或已下线，请咨询管理员或选择其他产品。'});									
+									goods.unit = goods.unit || product.unit || '';
 									var order = {
 											customer: {
 												mobile: mobile,
 											},
 											goods: goods,
 											effect: effect,
-											thumbnail: prod.thumbnail_url,
+											thumbnail: product.thumbnail_url,
 											quantity: 1,
 											total: goods.price, 
-											bonus: goods.bonus, 
+											bonus: goods.bonus,
+											paymenttype: goods.paymenttype,
 											createBy: {//** 创建订单的用户
 												id: account.accountId,
 												username: account.username,
@@ -192,6 +216,59 @@ module.exports = exports = function(connection){
 											status: '新建',
 											confirmCode: _.random(1000,9999),//** 创建随机验证码
 										};
+									//** 按佣金发放方式分配佣金，默认为2次
+									order.paymenttype = order.paymenttype || 2;
+									order.payment = [];
+									if(order.paymenttype == 1){
+										//** 一次发放(第2月)
+										var now = new Date();
+										now.setMonth(now.getMonth() +1);
+										order.payment.push({
+											month: utils.dateFormat(now, 'yyyyMM'),
+											money: order.goods.bonus || 0,
+											status: '未发'
+										});
+									}else if(order.paymenttype == 2){
+										//** 二次发放(第2月)
+										var now = new Date();
+										now.setMonth(now.getMonth() +1);
+										order.payment.push({
+											month: utils.dateFormat(now, 'yyyyMM'),
+											money: parseFloat((0.25 * order.goods.bonus).toFixed(2)) || 0,
+											status: '未发'
+										});
+										//** 二次发放(第4月)
+										now.setMonth(now.getMonth() +2);
+										order.payment.push({
+											month: utils.dateFormat(now, 'yyyyMM'),
+											money: parseFloat((0.75 * order.goods.bonus).toFixed(2)) || 0,
+											status: '未发'
+										});
+
+									}else if(order.paymenttype == 3){
+										//** 三次发放(第2月)
+										var now = new Date();
+										now.setMonth(now.getMonth() +1);
+										order.payment.push({
+											month: utils.dateFormat(now, 'yyyyMM'),
+											money: parseFloat((0.25 * order.goods.bonus).toFixed(2)) || 0,
+											status: '未发'
+										});
+										//** 三次发放(第4月)
+										now.setMonth(now.getMonth() +2);
+										order.payment.push({
+											month: utils.dateFormat(now, 'yyyyMM'),
+											money: parseFloat((0.75 * order.goods.bonus).toFixed(2)) || 0,
+											status: '未发'
+										});
+										//** 三次发放(第7月)
+										now.setMonth(now.getMonth() +2);
+										order.payment.push({
+											month: utils.dateFormat(now, 'yyyyMM'),
+											money: parseFloat((0.5 * order.goods.bonus).toFixed(2)) || 0,
+											status: '未发'
+										});
+									}
 									callback(null,order);
 								});
 						},

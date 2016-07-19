@@ -87,17 +87,17 @@
 					</div>
 					<div class="form-group">
 						<label for="email">所在城市：</label>
-						<input type="text" name="department[city]" value="<%= model.department.city %>" class="form-control">
+						<input type="text" name="department[city]" value="<%= model.department.city %>" class="form-control" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label for="email">所在地区：</label>
-						<input type="text" name="department[district]" value="<%= model.department.district %>" class="form-control">
+						<input type="text" name="department[district]" value="<%= model.department.district %>" class="form-control" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
 						<label for="email">所在网格：</label>
-						<input type="text" name="department[grid]" value="<%= model.department.grid %>" class="form-control">
+						<input type="text" name="department[grid]" value="<%= model.department.grid %>" class="form-control" readonly>
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">

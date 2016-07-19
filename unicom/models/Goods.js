@@ -21,6 +21,14 @@ var schema = new mongoose.Schema({
 		type: Number,
 		default: 0,
 	},
+	paymenttype: { //** 佣金发放分配方式
+		type: Number,
+		enum: {
+			values: '1|2|3'.split('|'),//** 0: 2/4(二次), 1: 2(一次), 2: 2/4/7(三次)
+			message: 'enum validator failed for path {PATH} with value {VALUE}',
+		},
+		default: 2
+	},
 	status: {
 		type: String,
 		enum: {

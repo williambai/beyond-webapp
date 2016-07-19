@@ -2,55 +2,45 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    goodsTpl = require('../templates/_entityGoods.tpl');
+    bonusTpl = require('../templates/_entityBonus.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
 //** 模型
-var Goods = Backbone.Model.extend({
+var Bonus = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/goods',	
-	defaults: {
-	},
+	urlRoot: config.api.host + '/protect/finance/bonuses',
+
 	validation: {
-	    'name': {
-	    	minLength: 2,
-	    	msg:'长度至少两位'
-	    },
-	    'barcode': {
-			required: true,
-			msg: '请输入运营商系统的物料号'
-	    },
-	    'smscode': {
-	    	min: 0,
-	    	max: 99999999,
-	    	msg:'请输入八位以内的数字'
-	    },
 	},
 });
 
-//** 主页面
+//** 主视图
 exports = module.exports = FormView.extend({
-
-	el: '#goodsForm',
+	el: '#importForm',
 
 	modelFilled: false,
 
-	initialize: function(options) {
+	initialize: function(options){
 		this.router = options.router;
-		this.model = new Goods({_id: options.id});
-		var page = $(goodsTpl);
-		var editTemplate = $('#editTemplate', page).html();
-		this.template = _.template(_.unescape(editTemplate || ''));
+		this.model = new Bonus();
+		var page = $(bonusTpl);
+		var importTemplate = $('#importTemplate', page).html();
+		var reportTemplate = $('#importReportTemplate',page).html();
+		this.template = _.template(_.unescape(importTemplate || ''));
+		this.reportTemplate = _.template(_.unescape(reportTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
-		'keyup input[type=text]': 'inputText',
+		'click .send-file': 'showFileExplorer',
+		'change input[name=file]': 'addAttachment',
+		'click .attachment': 'removeAttachment',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
+
 
 	load: function(){
 		if(this.model.isNew()){
@@ -81,6 +71,60 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	showFileExplorer: function() {
+		$('input[name=file]').click();
+		return false;
+	},
+
+	addAttachment: function(evt) {
+		var that = this;
+		var formData = new FormData();
+		formData.append('files', evt.currentTarget.files[0]);
+		$.ajax({
+			url: config.api.host + '/public/attachments',
+			type: 'POST',
+			data: formData,
+			xhrFields: {
+				withCredentials: true
+			},
+			cache: false, //MUST be false
+			processData: false, //MUST be false
+			contentType: false, //MUST be false
+		}).done(function(data) {
+			if (data) {
+				that.$('.attachments').append('<span class="attachment"><input type="hidden" name="attachment" value="' + data.url + '"><img src="/images/excel.jpg" width="80px" height="80px">&nbsp;</span>');
+				that.$('input[name=file]').val('');
+			}
+		}).fail(function(err) {
+			console.log(err);
+		});
+		return false;
+	},
+
+	removeAttachment: function(evt) {
+		if (confirm('放弃上传它吗？')) {
+			var that = this;
+			var filename = $(evt.currentTarget).find('img').attr('src');
+			$.ajax({
+				url: config.api.host + '/public/attachments',
+				type: 'DELETE',
+				data: {
+					filename: filename
+				},
+				xhrFields: {
+					withCredentials: true
+				},
+			}).done(function() {
+				//remove attatchment
+				$(evt.currentTarget).remove();
+			}).fail(function() {
+
+			});
+		}
+		return false;
+	},
+
+
 	submit: function() {
 		var that = this;
 		//clear errors
@@ -109,12 +153,12 @@ exports = module.exports = FormView.extend({
 		});
 		return false;
 	},
-	
+
 	cancel: function(){
-		this.router.navigate('goods/index',{trigger: true, replace: true});
+		this.router.navigate('bonus/index',{trigger: true, replace: true});
 		return false;
 	},
-	
+
 	//fetch event: done
 	done: function(response){
 		var that = this;
@@ -125,29 +169,15 @@ exports = module.exports = FormView.extend({
 
 		}else{
 			//second fetch: submit
-			this.router.navigate('goods/index',{trigger: true, replace: true});
+			// this.router.navigate('account/index',{trigger: true, replace: true});
+			//reset form
+			// that.$('input[name=file]').val('');
+			// that.$('.attachments').empty();
+			that.$el.html(this.reportTemplate({}));
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
-		if(this.model.isNew()){
-			this.$('.panel-title').text('新增物料');
-		}
-		var category = this.model.get('category');
-		this.$(('input[name=category][value='+ category +']')).attr('checked',true)
-		var scope = this.model.get('scope');
-		this.$(('input[name=scope][value='+ scope +']')).attr('checked',true)
-
-		var paymenttype = this.model.get('paymenttype');
-		if(paymenttype){
-			this.$('input[name=paymenttype][value='+ paymenttype +']').attr('checked',true);
-		}
-
-		var status = this.model.get('status');
-		if(status){
-			this.$('input[name=status][value='+ status +']').attr('checked',true);
-		}
-		return this;
 	},
 });

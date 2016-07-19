@@ -19,7 +19,8 @@
 
  		models.Order
  			.find({
- 				'createBy.id': req.session.accountId, //** 只能看自己的 			 				
+ 				'createBy.id': req.session.accountId, //** 只能看自己的 
+ 				'status': '成功', //** 仅显示成功订单			 				
  			})
  			.sort({_id: -1})
  			.skip(per * page)

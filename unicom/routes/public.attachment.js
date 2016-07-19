@@ -1,3 +1,4 @@
+var iconv = require('iconv-lite');
 exports =module.exports = function(app,models){
 	var path = require('path');
 	var fs = require('fs');
@@ -13,13 +14,26 @@ exports =module.exports = function(app,models){
 			var tmp_path = file.path;
 			var new_path = path.join(__dirname, '../public/_images/',filename);
 			var attachment = '/_images/' + filename;
-			fs.rename(tmp_path,new_path,function(err){
-				if(err) console.error(err);
-				if(err) return res.send({code: 40000, errmsg: 'upload error.'});
+			if(file.extension == 'csv'){
+ 				//** 导入和转化csv
+				var reader = fs.createReadStream(tmp_path,{encoding: null});
+				var writer = fs.createWriteStream(new_path, {encoding: 'utf8'});
+				reader
+					.pipe(iconv.decodeStream('GBK'))
+					.pipe(iconv.encodeStream('utf8'))
+					.pipe(writer);
 				file.name = filename;
 				file.url = attachment;
 				res.send(file);
-			});
+			}else{
+				fs.rename(tmp_path,new_path,function(err){
+					if(err) console.error(err);
+					if(err) return res.send({code: 40000, errmsg: 'upload error.'});
+					file.name = filename;
+					file.url = attachment;
+					res.send(file);
+				});
+			}
 		};
 
 	var remove = function(req,res){

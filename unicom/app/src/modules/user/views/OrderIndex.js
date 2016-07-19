@@ -39,6 +39,27 @@ var OrderListView = ListView.extend({
 		var item = this.template({model: model.toJSON()});
 		var $item = $(item);
 		$item.find('img').attr('src', model.get('thumbnail'));
+		var status = model.get('status');
+		var paymentType = model.get('paymenttype');
+		var payments = model.get('payment');	
+		if(status == '成功'){
+			if(paymentType && payments && payments instanceof Array){
+				var paymentHtml = '<table class="table table-bordered"><caption>此单佣金发放计划表</caption><thead class="">';
+				paymentHtml += '<th>时间(年月)</th>';
+				paymentHtml += '<th>金额(元)</th>';
+				// paymentHtml += '<th>状态</th>';
+				paymentHtml += '</thead>';
+				payments.forEach(function(payment){
+					paymentHtml += '<tr>';
+					paymentHtml += '<td>' + payment.month + '</td>';
+					paymentHtml += '<td>' + payment.money + '</td>';
+					// paymentHtml += '<td style="color:red;">' + payment.status + '</td>';
+					paymentHtml += '</tr>';
+				});
+				paymentHtml += '</table>';
+				$item.find('.payment').append(paymentHtml);
+			}
+		}	
 		return $item.html();
 	},
 });

@@ -8,6 +8,15 @@
 				<h4 class="panel-title text-center">佣金管理</h4>
 			</div>
 			<div class="panel-body">
+				<div>
+					<div class="">
+						<div class="btn btn-danger import">1.局方出账导入</div>
+						<div class="btn btn-primary export">2.我方出账导出</div>
+<!-- 						<div class="btn btn-danger">3.佣金发放导出</div>
+						<div class="btn btn-primary">4.佣金发放后导入</div>
+ -->					</div>
+				</div>
+				<p>&nbsp;</p>
 				<div id="search">
 				</div>
 				<div id="list">
@@ -19,11 +28,11 @@
 		<form id="searchForm" class="form-inline">
 			<input type="hidden" name="action" value="search">
 			<div class="form-group">
-				<label>年份：</label>
-				<input type="text" name="year" class="form-control" value="<%= (new Date()).getFullYear() %>">&nbsp;&nbsp;
+				<label>&nbsp;年份：</label>
+				<input type="text" name="year" class="form-control" value="<%= (new Date()).getFullYear() %>">
 			</div>
 			<div class="form-group">
-				<label>&nbsp;&nbsp;</label>
+				<label>&nbsp;月份：</label>
 				<select class="form-control" name="month">
 					<option value="1">1 月</option>
 					<option value="2">2 月</option>
@@ -37,21 +46,22 @@
 					<option value="10">10 月</option>
 					<option value="11">11 月</option>
 					<option value="12">12 月</option>
-				</select>&nbsp;&nbsp;
+				</select>
 			</div>
 			<div class="form-group">
+				<label>&nbsp;状态：</label>
 				<select class="form-control" name="status">
 					<option value="">全部</option>
 					<option value="未核算">未核算</option>
 					<option value="已核算">已核算</option>
-				</select>&nbsp;&nbsp;
+				</select>
 			</div>
 			<div class="form-group">
-				<label>&nbsp;&nbsp;</label>
-				<input type="text" name="searchStr" class="form-control" placeholder="用户名或手机号">&nbsp;&nbsp;
+				<label>&nbsp;搜索：</label>
+				<input type="text" name="searchStr" class="form-control" placeholder="用户名或手机号">
 			</div>
 			<div class="form-group">
-				<input type="submit" value="查询" class="btn btn-info btn-block">
+				<input type="submit" value="过滤" class="btn btn-info btn-block">
 			</div>
 		</form>
 		<hr/>
@@ -59,7 +69,7 @@
 	<div id="itemTemplate">
 		<div class="item" id="<%= model._id %>">
 			<div class="pull-right" >
-				<button class="btn btn-success edit">发放</button>
+				<button class="btn btn-success edit">修改</button>
 				<button class="btn btn-danger delete">删除</button>
 			</div>
 			<h4><%= model.name %>&nbsp;&nbsp;<%= model.mobile %></h4>
@@ -134,5 +144,136 @@
 				</form>
 			</div>
 		</div>
+	</div>
+	<div id="importTemplate">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title text-center">导入局方出账数据</h4>
+			</div>
+			<div class="panel-body">
+				<p>请点击<i class="fa fa-plus-circle"></i>选择要上传的文件，点击已上传的文件，可以取消上传。</p>
+				<p>友情提示：为保证导入效率，每次最好仅选择导入一个文件。</p>
+				<form>
+					<input type="hidden" name="type" value="import">
+					<div class="form-group">
+						<span class="attachments"></span>
+						<span>
+							<button class="btn btn-promary send-file"> <i class="fa fa-5x fa-plus-circle"></i>
+							</button>
+						</span>
+					</div>
+					<div style="color:red;">
+						<p>注意1：文件格式为CSV，如果是Excel文件，请先另存为CSV再导入。</p>
+						<p>注意2：导入时，请先将表示列名称的首行删除，并且保证最后一行不要留空行。(即，文件只留数据，不留标题和空行)</p>
+					</div>
+					<div class="form-group">
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group">
+							<input type="submit" value="导入" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-primary back">取消</button>
+						</div>
+						</div>
+					</div>
+				<input class="hidden" type="file" name="file"/>
+				</form>
+				<hr>
+				<h4>导入csv数据表格列格式如下：</h4>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>列序号</th>
+							<th>列名称(即：csv第一行名称)</th>
+							<th>列含义</th>
+						</tr>
+					</thead>
+					<tbody>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>	
+	<div id="importReportTemplate">
+		<div class="panel panel-default" id="reportForm">
+			<div class="panel-heading">
+				<h3 class="panel-title text-center">导入结果报告</h3>
+			</div>
+			<div class="panel-body">
+				<button class="btn btn-primary btn-block back">返回</button>
+			</div>
+		</div>
+	</div>
+	<div id="exportTemplate">
+		<div class="panel panel-default" id="exportForm">
+			<div class="panel-heading">
+				<h3 class="panel-title text-center">导出我方出账数据</h3>
+			</div>
+			<div class="panel-body">
+				<form>
+					<input type="hidden" name="action" value="export">
+					<div class="form-group">
+						<label>&nbsp;年份：</label>
+						<input type="text" name="year" class="form-control" value="<%= (new Date()).getFullYear() %>">
+					</div>
+					<div class="form-group">
+						<label>&nbsp;月份：</label>
+						<select class="form-control" name="month">
+							<option value="1" selected>1 月</option>
+							<option value="2">2 月</option>
+							<option value="3">3 月</option>
+							<option value="4">4 月</option>
+							<option value="5">5 月</option>
+							<option value="6">6 月</option>
+							<option value="7">7 月</option>
+							<option value="8">8 月</option>
+							<option value="9">9 月</option>
+							<option value="10">10 月</option>
+							<option value="11">11 月</option>
+							<option value="12">12 月</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>地区：</label>
+						<select class="form-control" name="city">
+							<option value="">不限</option>
+							<option value="贵阳">贵阳</option>
+							<option value="遵义">遵义</option>
+							<option value="黔东南">黔东南</option>
+							<option value="安顺">安顺</option>
+							<option value="黔南">黔南</option>
+							<option value="六盘水">六盘水</option>
+							<option value="黔西南">黔西南</option>
+							<option value="铜仁">铜仁</option>
+							<option value="毕节">毕节</option>
+						</select>
+					</div>
+ 					<div class="form-group">
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group">
+							<input type="submit" value="导出" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-primary back">取消</button>
+						</div>
+						</div>
+					</div>
+				</form>
+				<hr>				
+				<h4>导出CSV数据列格式如下：</h4>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>列序号</th>
+							<th>列名称(即：csv第一行名称)</th>
+							<th>列含义</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>

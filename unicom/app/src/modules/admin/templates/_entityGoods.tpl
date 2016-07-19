@@ -118,6 +118,14 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
+						<label>佣金发放方式：</label>
+						<div style="padding-left:30px;">
+							<input type="radio" name="paymenttype" value="1">&nbsp;&nbsp;分一次(第2月)&nbsp;&nbsp;
+							<input type="radio" name="paymenttype" value="2" checked>&nbsp;&nbsp;分两次(第2/4月)&nbsp;&nbsp;
+							<input type="radio" name="paymenttype" value="3">&nbsp;&nbsp;分三次(第2/4/7月)
+						</div>
+					</div>
+					<div class="form-group">
 						<label>状态：</label>
 						<div style="padding-left:30px;">
 							<input type="radio" name="status" value="有效">&nbsp;&nbsp;有效

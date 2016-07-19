@@ -60,6 +60,7 @@ exports = module.exports = function(app, models) {
  				var from = new Date(req.query.from || 0);
  				//** 查询结束时间
  				var to = new Date(req.query.to || Date.now());
+ 				to = new Date(to.getTime() + 1000 * 3600 * 24);
  				//** 搜索字符串
  				var searchStr = req.query.searchStr || '';
  				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');

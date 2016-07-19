@@ -85,6 +85,8 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
+		'click .import': 'importBonus',
+		'click .export': 'exportBonus',
 		'click .add': 'addView',
 		'click .edit': 'editView',
 		'click .delete': 'remove',
@@ -109,6 +111,16 @@ exports = module.exports = Backbone.View.extend({
 
 	scroll: function() {
 		this.listView.scroll();
+		return false;
+	},
+
+	importBonus: function(){
+		this.router.navigate('bonus/import',{trigger: true});
+		return false;
+	},
+
+	exportBonus: function(){
+		this.router.navigate('bonus/export',{trigger: true});
 		return false;
 	},
 

@@ -33,8 +33,11 @@ var BankExportView = require('./views/BankExport');
 var BankApplyIndexView = require('./views/BankApplyIndex');
 var BankApplyEditView = require('./views/BankApplyEdit');
 
+var BonusImportView = require('./views/BonusImport');
+var BonusExportView = require('./views/BonusExport');
 var BonusIndexView = require('./views/BonusIndex');
 var BonusEditView = require('./views/BonusEdit');
+
 var OrderIndexView = require('./views/OrderIndex');
 // var OrderViewView = require('./views/_OrderView');
 var OrderEditView = require('./views/OrderEdit');
@@ -129,6 +132,8 @@ exports = module.exports = Backbone.Router.extend({
 		'account/import': 'accountImport',
 		'account/export': 'accountExport',
 
+		'bonus/import': 'bonusImport',
+		'bonus/export': 'bonusExport',
 		'bonus/index': 'bonusIndex',
 		'bonus/add': 'bonusEdit',
 		'bonus/edit/:id': 'bonusEdit',
@@ -476,6 +481,35 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(bonusIndexView);
 		bonusIndexView.trigger('load');
+	},	
+
+
+	bonusImport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','局方出账导入');
+		var bonusImportView = new BonusImportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(bonusImportView);
+		bonusImportView.trigger('load');
+	},	
+
+	bonusExport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','我方出账导出');
+		var bonusExportView = new BonusExportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(bonusExportView);
+		bonusExportView.trigger('load');
 	},	
 
 	bonusEdit: function(id){
