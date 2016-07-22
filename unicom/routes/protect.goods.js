@@ -23,13 +23,18 @@ exports = module.exports = function(app, models) {
 				}
 				attachments = attachments || [];
 				logger.debug('attachments:' + attachments);
-				var docs = [];
+				if(attachments.length == 0){
+					return res.send({
+						code: 40441,
+						errmsg: '请选择要导入的文件'
+					});
+				}
 				async.each(attachments, function(attachment, cb) {
 					var file = path.join(__dirname, '../public', attachment);
 					if (!fs.existsSync(file)) {
 						return cb({
 							code: 40440,
-							msg: '文件不存在'
+							errmsg: '文件不存在'
 						});
 					}
 					logger.debug('file: ' + file);
@@ -139,6 +144,19 @@ exports = module.exports = function(app, models) {
 					logger.error('正则表达式错误：' + e);
 					res.send({});
 				}
+				break;
+			case 'exportTpl':
+				res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+				res.setHeader("Content-Disposition", "attachment; filename=goods.xlsx");
+				models.Goods
+					.toExcelTemplate(function(err,workbook){
+						if(err) return res.send(err);
+						workbook.xlsx
+							.write(res)
+							.then(function(){
+								res.end();
+							});
+					});
 				break;
 			case 'export':
 				res.setHeader('Content-Type', 'application/vnd.openxmlformats');

@@ -42,6 +42,7 @@ exports = module.exports = FormView.extend({
 		'change input[name=file]': 'addAttachment',
 		'click .attachment': 'removeAttachment',
 		'submit form': 'submit',
+		'click .exportTpl': 'exportTpl',
 		'click .back': 'cancel',
 	},
 
@@ -128,6 +129,10 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	exportTpl: function(){
+		window.location.href = config.api.host + '/protect/departments?type=exportTpl';
+		return false;
+	},
 
 	submit: function() {
 		var that = this;
@@ -182,6 +187,46 @@ exports = module.exports = FormView.extend({
 	},
 
 	render: function(){
+		var that = this;
 		this.$el.html(this.template({model: this.model.toJSON()}));
+        var rows = [{
+            name: '序号',
+            description: '可以为空'
+        }, {
+            name: '渠道名称'
+        }, {
+            name: '渠道编码',
+            description: '必须唯一'
+        }, {
+            name: '所在网格',
+            description: '',
+        }, {
+            name: '所在地区',
+            description: '',
+        }, {
+            name: '所在城市',
+            description: '贵阳/遵义等',
+        }, {
+            name: '通讯地址',
+            description: '',
+        }, {
+            name: '邮政编码',
+            description: ''
+        }, {
+            name: '负责人',
+            description: '',
+        }, {
+            name: '联系电话',
+            description: ''
+        }, {
+            name: '网站地址',
+            description: '',
+        }, {
+            name: '备注',
+            description: ''
+        }];
+        rows.forEach(function(row, index) {
+            this.$('tbody').append('<tr><td>' + (1 + index) + '</td><td>' + row.name + '</td><td>' + (row.description ? row.description : '') + '</td></tr>');
+        });
 	},
 });

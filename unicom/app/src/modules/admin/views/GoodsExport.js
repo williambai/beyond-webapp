@@ -131,6 +131,9 @@ exports = module.exports = FormView.extend({
             model: this.model.toJSON()
         }));
         var rows = [{
+            name: '序号',
+            description: '可以为空'
+        }, {
             name: '产品名称'
         }, {
             name: '产品分类',

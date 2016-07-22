@@ -92,7 +92,7 @@
 					</div>
 					<div class="form-group">
 						<label>网站地址：</label>
-						<input type="text" name="website" value="<%= model.website %>" class="form-control">
+						<input type="text" name="website" value="<%- model.website %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
@@ -128,7 +128,7 @@
 				<h4 class="panel-title text-center">导入渠道</h4>
 			</div>
 			<div class="panel-body">
-				<p>请点击<i class="fa fa-plus-circle"></i>选择要上传的文件，点击已上传的文件，可以取消上传。</p>
+				<p style="color:red;">请点击<i class="fa fa-plus-circle"></i>选择要上传的文件，点击已上传的文件，可以取消上传。</p>
 				<p>友情提示：为保证导入效率，每次最好仅选择导入一个文件。</p>
 				<form>
 					<input type="hidden" name="type" value="import">
@@ -139,7 +139,7 @@
 							</button>
 						</span>
 					</div>
-					<div class="form-group">
+<!-- 					<div class="form-group">
 						<label>导入方式：</label>
 						<div style="padding-left:30px;">
 							<input type="radio" name="method" value="增量" checked>&nbsp;&nbsp;增量&nbsp;&nbsp;
@@ -150,84 +150,33 @@
 						<p>注意1：请慎重选择全量导入方式。全量导入将先删除当前数据表中现有的全部数据，然后导入新数据。</p>
 						<p>注意2：导入时，请先将表示列名称的首行删除，并且保证最后一行不要留空行。(即，文件只留数据，不留标题和空行)</p>
 					</div>
-					<div class="form-group">
+ -->
+ 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
-							<input type="submit" value="导入" class="btn btn-danger">
-						</div>
-						<div class="btn-group">
-							<button class="btn btn-primary back">取消</button>
-						</div>
+								<input type="submit" value="确定" class="btn btn-danger">
+							</div>
+							<div class="btn-group">
+								<button class="btn btn-success exportTpl">下载模板</button>
+							</div>
+							<div class="btn-group">
+								<button class="btn btn-primary back">取消</button>
+							</div>
 						</div>
 					</div>
 				<input class="hidden" type="file" name="file"/>
 				</form>
 				<hr>
-				<h4>导入csv数据表格列格式如下：</h4>
+				<h4>导入Excel数据表格列格式如下：</h4>
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>列序号</th>
-							<th>列名称(即：csv第一行名称)</th>
-							<th>列含义</th>
+							<th>序号</th>
+							<th>名称</th>
+							<th>备注</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>name</td>
-							<td>渠道名称</td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>nickname</td>
-							<td>渠道编码</td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>city</td>
-							<td>所在城市</td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>district</td>
-							<td>所在地区</td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>grid</td>
-							<td>所在网格</td>
-						</tr>
-						<tr>
-							<td>6</td>
-							<td>address</td>
-							<td>所在地址</td>
-						</tr>
-						<tr>
-							<td>7</td>
-							<td>zipcode</td>
-							<td>邮政编码</td>
-						</tr>
-						<tr>
-							<td>8</td>
-							<td>manager</td>
-							<td>负责人</td>
-						</tr>
-						<tr>
-							<td>9</td>
-							<td>phone</td>
-							<td>联系电话</td>
-						</tr>
-						<tr>
-							<td>10</td>
-							<td>website</td>
-							<td>网站地址</td>
-						</tr>
-						<tr>
-							<td>11</td>
-							<td>description</td>
-							<td>渠道描述</td>
-						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -270,72 +219,17 @@
 					</div>
 				</form>
 				<hr>				
-				<h4>导出excel数据表格列格式如下：</h4>
+				<h4>导出Excel数据表格列格式如下：</h4>
 				<p></p>
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>列序号</th>
-							<th>列名称(即：csv第一行名称)</th>
-							<th>列含义</th>
+							<th>序号</th>
+							<th>名称</th>
+							<th>备注</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>name</td>
-							<td>渠道名称</td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>nickname</td>
-							<td>渠道编码</td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>city</td>
-							<td>所在城市</td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>district</td>
-							<td>所在地区</td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>grid</td>
-							<td>所在网格</td>
-						</tr>
-						<tr>
-							<td>6</td>
-							<td>address</td>
-							<td>所在地址</td>
-						</tr>
-						<tr>
-							<td>7</td>
-							<td>zipcode</td>
-							<td>邮政编码</td>
-						</tr>
-						<tr>
-							<td>8</td>
-							<td>manager</td>
-							<td>负责人</td>
-						</tr>
-						<tr>
-							<td>9</td>
-							<td>phone</td>
-							<td>联系电话</td>
-						</tr>
-						<tr>
-							<td>10</td>
-							<td>website</td>
-							<td>网站地址</td>
-						</tr>
-						<tr>
-							<td>11</td>
-							<td>description</td>
-							<td>渠道描述</td>
-						</tr>
 					</tbody>
 				</table>
 			</div>

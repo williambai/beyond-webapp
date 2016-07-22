@@ -22,25 +22,35 @@ exports = module.exports = function(app, models) {
 	 			}
 	 			attachments = attachments || [];
 	 			logger.debug('attachments:' + attachments);
-	 			var docs = [];
+				if(attachments.length == 0){
+					return res.send({
+						code: 40441,
+						errmsg: '请选择要导入的文件'
+					});
+				}
 	 			async.each(attachments, function(attachment, cb) {
 	 				var file = path.join(__dirname, '../public', attachment);
 	 				if (!fs.existsSync(file)) {
 	 					return cb({
 	 						code: 40440,
-	 						msg: '文件不存在'
+	 						errmsg: '文件不存在'
 	 					});
 	 				}
 	 				logger.debug('file: ' + file);
-	 				//** 导入csv
-	 				var data = fs.readFileSync(file,{encoding: 'utf8'});
-	 				models.Department.importCSV(data,function(err){
-	 					if(err) return cb({
-	 								code: 500110,
-	 								errmsg: '导入数据格式不规范，请检查数据。'
-	 							});
-	 					cb(null);
-	 				});
+					//** 导入excel
+					models.Department.fromExcel(file, function(err,result){
+						if(err) return cb(err);
+						cb(null,result);
+					});
+	 				// //** 导入csv
+	 				// var data = fs.readFileSync(file,{encoding: 'utf8'});
+	 				// models.Department.importCSV(data,function(err){
+	 				// 	if(err) return cb({
+	 				// 				code: 500110,
+	 				// 				errmsg: '导入数据格式不规范，请检查数据。'
+	 				// 			});
+	 				// 	cb(null);
+	 				// });
 	 			}, function(err, result) {
 	 				if (err) return res.send(err);
 	 				res.send({});
@@ -120,7 +130,7 @@ exports = module.exports = function(app, models) {
  							$regex: searchRegex
  						}
  					}, {
- 						'path': {
+ 						'nickname': {
  							$regex: searchRegex
  						}
  					}]
@@ -140,14 +150,40 @@ exports = module.exports = function(app, models) {
  						res.send(docs);
  					});
  				break;
- 			case 'export': 
-				res.writeHead(200, {
-					'Content-Type': 'text/csv;charset=utf-8',
-					'Content-Disposition': 'attachment; filename=departments.csv'
-				});
+ 			case 'exportTpl': 
+ 				var filename = 'department.xlsx';
+				res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+				res.setHeader("Content-Disposition", "attachment; filename=" + filename);
 				models.Department
-					.findAndStreamCsv({})
-					.pipe(res);
+					.toExcelTemplate(function(err,workbook){
+						if(err) return res.send(err);
+						workbook.xlsx
+							.write(res)
+							.then(function(){
+								res.end();
+							});
+					});
+ 				break;
+ 			case 'export': 
+ 				var filename = 'department.xlsx';
+				res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+				res.setHeader("Content-Disposition", "attachment; filename=" + filename);
+				models.Department
+					.toExcel({},function(err,workbook){
+						if(err) return res.send(err);
+						workbook.xlsx
+							.write(res)
+							.then(function(){
+								res.end();
+							});
+					});
+				// res.writeHead(200, {
+				// 	'Content-Type': 'text/csv;charset=utf-8',
+				// 	'Content-Disposition': 'attachment; filename=departments.csv'
+				// });
+				// models.Department
+				// 	.findAndStreamCsv({})
+				// 	.pipe(res);
  				break;
  			default:
  				models.Department

@@ -157,7 +157,7 @@
 				<h4 class="panel-title text-center">导入物料</h4>
 			</div>
 			<div class="panel-body">
-				<p>请点击<i class="fa fa-plus-circle"></i>选择要上传的文件，点击已上传的文件，可以取消上传。</p>
+				<p style="color:red;">请点击<i class="fa fa-plus-circle"></i>选择要上传的文件，点击已上传的文件，可以取消上传。</p>
 				<p>友情提示：为保证导入效率，每次最好仅选择导入一个文件。</p>
 				<form>
 					<input type="hidden" name="action" value="import">
@@ -185,11 +185,14 @@
  					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
-							<input type="submit" value="导入" class="btn btn-danger">
-						</div>
-						<div class="btn-group">
-							<button class="btn btn-primary back">取消</button>
-						</div>
+								<input type="submit" value="确定" class="btn btn-danger">
+							</div>
+							<div class="btn-group">
+								<button class="btn btn-success exportTpl">下载模板</button>
+							</div>
+							<div class="btn-group">
+								<button class="btn btn-primary back">取消</button>
+							</div>
 						</div>
 					</div>
 					<input class="hidden" type="file" name="file"/>

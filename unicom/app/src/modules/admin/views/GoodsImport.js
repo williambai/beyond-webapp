@@ -43,6 +43,7 @@ exports = module.exports = FormView.extend({
 		'change input[name=file]': 'addAttachment',
 		'click .attachment': 'removeAttachment',
 		'submit form': 'submit',
+		'click .exportTpl': 'exportTpl',
 		'click .back': 'cancel',
 	},
 
@@ -129,6 +130,11 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	exportTpl: function(){
+		window.location.href = config.api.host + '/protect/goods?action=exportTpl';
+		return false;
+	},
+
 
 	submit: function() {
 		var that = this;
@@ -185,6 +191,9 @@ exports = module.exports = FormView.extend({
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
         var rows = [{
+            name: '序号',
+            description: '可以为空'
+        }, {
             name: '产品名称'
         }, {
             name: '产品分类',

@@ -41,15 +41,8 @@ var schema = new mongoose.Schema({
 
 schema.set('collection', 'goods');
 
-schema.statics.toExcel = function(query, done) {
-    query = query || {};
-    var Goods = connection.model('Goods');
-    Goods
-        .find(query)
-        .exec(function(err, goods) {
-            var workbook = new Excel.Workbook();
-            var sheet = workbook.addWorksheet('sheet1');
-            sheet.columns = [{
+//** Excel 标题头
+var columns = [{
                 header: '序号',
                 key: 'id'
             }, {
@@ -105,6 +98,23 @@ schema.statics.toExcel = function(query, done) {
                 key: 'description',
                 width: 50,
             }];
+ //** Excel模板
+schema.statics.toExcelTemplate = function(done){
+    var workbook = new Excel.Workbook();
+    var sheet = workbook.addWorksheet('sheet1');
+    sheet.columns = columns;
+    done(null, workbook);
+};
+
+schema.statics.toExcel = function(query, done) {
+    query = query || {};
+    var Goods = connection.model('Goods');
+    Goods
+        .find(query)
+        .exec(function(err, goods) {
+            var workbook = new Excel.Workbook();
+            var sheet = workbook.addWorksheet('sheet1');
+            sheet.columns = columns;
             for (var i = 0; i < goods.length; i++) {
                 sheet.addRow({
                     id: i,
