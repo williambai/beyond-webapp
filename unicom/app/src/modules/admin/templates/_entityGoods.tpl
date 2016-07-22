@@ -60,14 +60,19 @@
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>物料名称：</label>
+						<label>产品名称：</label>
 						<input type="text" name="name" value="<%= model.name %>" class="form-control">
 						<span class="help-block"></span>
 					</div>
 					<div class="form-group">
-						<label>物料编码：</label>
-						<input type="text" name="barcode" value="<%= model.barcode %>" class="form-control" placeholder="BSS系统对应的业务ID">
+						<label>订购编码：</label>
+						<input type="text" name="barcode" value="<%= model.barcode %>" class="form-control" placeholder="联通系统中对应的业务订购编码">
 						<span class="help-block"></span>
+					</div>
+					<div class="form-group">
+						<label>产品包编码：</label>
+						<input type="text" name="packagecode" value="<%= model.packagecode %>" class="form-control" placeholder="联通系统中的订购编码对应的产品集合">
+						<span class="help-block">格式：p{package_id}k{package_id}e{element_id}，多个以|分开</span>
 					</div>
 					<div class="form-group">
 						<label>物料描述：</label>
@@ -163,18 +168,21 @@
 							</button>
 						</span>
 					</div>
-					<div class="form-group">
+<!--
+ 					<div class="form-group">
 						<label>导入方式：</label>
 						<div style="padding-left:30px;">
 							<input type="radio" name="method" value="增量" checked>&nbsp;&nbsp;增量&nbsp;&nbsp;
 							<input type="radio" name="method" value="全量">&nbsp;&nbsp;全量&nbsp;&nbsp;
 						</div>
 					</div>
-					<div style="color:red;">
+ -->
+<!--  					<div style="color:red;">
 						<p>注意1：请慎重选择全量导入方式。全量导入将先删除当前数据表中现有的全部数据，然后导入新数据。</p>
 						<p>注意2：导入时，请先将表示列名称的首行删除，并且保证最后一行不要留空行。(即，文件只留数据，不留标题和空行)</p>
 					</div>
-					<div class="form-group">
+ -->
+ 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
 							<input type="submit" value="导入" class="btn btn-danger">
@@ -187,17 +195,17 @@
 					<input class="hidden" type="file" name="file"/>
 				</form>
 				<hr>
-				<h4>导入csv数据表格列格式如下：</h4>
+				<h4>导入Excel数据表格列格式如下：</h4>
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>列序号</th>
-							<th>列名称(即：csv第一行名称)</th>
-							<th>列含义</th>
+							<th>序号</th>
+							<th>名称</th>
+							<th>备注</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
+<!-- 						<tr>
 							<td>1</td>
 							<td>name</td>
 							<td>产品名称</td>
@@ -246,7 +254,7 @@
 							<td>10</td>
 							<td>description</td>
 							<td>产品描述</td>
-						</tr>
+						</tr> -->
 					</tbody>
 				</table>
 			</div>
@@ -270,12 +278,14 @@
 			<div class="panel-body">
 				<form>
 					<input type="hidden" name="action" value="export">
+<!-- 				
 					<div class="form-group">
 						<label>物料分类：</label>
 						<input type="text" name="category" class="form-control" placeholder="请输入物料分类名称，为空，则全部导出">
 						<span class="help-block"></span>
 					</div>
-					<div class="form-group">
+ -->
+ 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
 							<input type="submit" value="导出" class="btn btn-danger">
@@ -287,67 +297,17 @@
 					</div>
 				</form>
 				<hr>				
-				<h4>导出csv数据表格列格式如下：</h4>
+				<h4>导出Excel数据表格列格式如下：</h4>
 				<p></p>
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>列序号</th>
-							<th>列名称(即：csv第一行名称)</th>
-							<th>列含义</th>
+							<th>序号</th>
+							<th>名称</th>
+							<th>备注</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>name</td>
-							<td>产品名称</td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>category</td>
-							<td>产品分类(2G/3G/4G)</td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>barcode</td>
-							<td>产品编码</td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>smscode</td>
-							<td>业务编码</td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>price</td>
-							<td>产品价格</td>
-						</tr>
-						<tr>
-							<td>6</td>
-							<td>unit</td>
-							<td>价格单位</td>
-						</tr>
-						<tr>
-							<td>7</td>
-							<td>quantity</td>
-							<td>产品库存数量</td>
-						</tr>
-						<tr>
-							<td>8</td>
-							<td>bonus</td>
-							<td>佣金</td>
-						</tr>
-						<tr>
-							<td>9</td>
-							<td>status</td>
-							<td>产品状态(有效/无效)</td>
-						</tr>
-						<tr>
-							<td>10</td>
-							<td>description</td>
-							<td>产品描述</td>
-						</tr>
 					</tbody>
 				</table>
 			</div>

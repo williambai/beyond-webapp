@@ -6,6 +6,7 @@ var async = require('async');
 var log4js = require('log4js');
 var logger = log4js.getLogger(path.relative(process.cwd(), __filename));
 var regexp = require('../libs/regexp');
+var iconv = require('iconv-lite');
 
 exports = module.exports = function(app, models) {
 
@@ -32,15 +33,20 @@ exports = module.exports = function(app, models) {
 						});
 					}
 					logger.debug('file: ' + file);
-	 				//** 导入csv
-	 				var data = fs.readFileSync(file,{encoding: 'utf8'});
-	 				models.Goods.importCSV(data,function(err){
-	 					if(err) return cb({
-	 								code: 500110,
-	 								errmsg: '导入数据格式不规范，请检查数据。'
-	 							});
-	 					cb(null);
-	 				});
+					//** 导入excel
+					models.Goods.fromExcel(file, function(err,result){
+						if(err) return cb(err);
+						cb(null,result);
+					});
+	 				// //** 导入csv
+	 				// var data = fs.readFileSync(file,{encoding: 'utf8'});
+	 				// models.Goods.importCSV(data,function(err){
+	 				// 	if(err) return cb({
+	 				// 				code: 500110,
+	 				// 				errmsg: '导入数据格式不规范，请检查数据。'
+	 				// 			});
+	 				// 	cb(null);
+	 				// });
 				}, function(err, result) {
 					if (err) return res.send(err);
 					res.send({});
@@ -135,13 +141,25 @@ exports = module.exports = function(app, models) {
 				}
 				break;
 			case 'export':
-				res.writeHead(200, {
-					'Content-Type': 'text/csv;charset=utf-8',
-					'Content-Disposition': 'attachment; filename=goods.csv'
-				});
+				res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+				res.setHeader("Content-Disposition", "attachment; filename=goods.xlsx");
 				models.Goods
-					.findAndStreamCsv({})
-					.pipe(res);
+					.toExcel({},function(err,workbook){
+						if(err) return res.send(err);
+						workbook.xlsx
+							.write(res)
+							.then(function(){
+								res.end();
+							});
+					});
+				// res.writeHead(200, {
+				// 	'Content-Type': 'text/csv;charset=utf-8',
+				// 	'Content-Disposition': 'attachment; filename=goods.csv'
+				// });
+				// models.Goods
+				// 	.findAndStreamCsv({})
+ 			// 		.pipe(iconv.encodeStream('GBK'))
+				// 	.pipe(res);
 				break;
 			default:
 				models.Goods

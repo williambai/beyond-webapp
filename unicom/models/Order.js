@@ -30,6 +30,7 @@ var schema = new mongoose.Schema({
 		category: String, //** 产品分类(goods.category)
 		barcode: String, //** 产品编码(goods.barcode)
 		smscode: String, //** 业务(SMS)编码(goods.smscode)
+		packagecode: String, //** 对账用的原始产品集合
 		price: Number, //** 产品单价(product.price)
 		unit: String, //** 产品单位(product.unit)
 		bonus: Number, //** 单个产品佣金

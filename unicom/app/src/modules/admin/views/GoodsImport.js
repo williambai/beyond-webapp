@@ -14,13 +14,9 @@ var Goods = Backbone.Model.extend({
 	defaults: {
 	},
 	validation: {
-	    'name': {
-	    	minLength: 2,
-	    	msg:'长度至少两位'
-	    },
-	    'barcode': {
+	    'attachment': {
 			required: true,
-			msg: '请输入运营商系统的物料号'
+			msg: '请上传文件'
 	    }
 	},
 });
@@ -188,5 +184,46 @@ exports = module.exports = FormView.extend({
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+        var rows = [{
+            name: '产品名称'
+        }, {
+            name: '产品分类',
+            description: '2G/3G/4G'
+        }, {
+            name: '订购编码',
+            description: '字符串，且不能重复',
+        }, {
+            name: '业务编码',
+            description: '必须是数字，且不重复',
+        }, {
+            name: '产品编码',
+            description: '由p{prduct_id}k{package_id}e{element_id}组合而成, 多个以|分割',
+        }, {
+            name: '价格',
+            description: '必须是数字',
+        }, {
+            name: '价格单位',
+            description: '元，元/月等'
+        }, {
+            name: '库存数量',
+            description: '必须是数字',
+        }, {
+            name: '适用地区',
+            description: '全省/贵阳/遵义等'
+        }, {
+            name: '佣金',
+            description: '必须是数字',
+        }, {
+            name: '佣金发放方式',
+            description: '1: 次月发放；2: 第2/4月发放；3: 第2/4/7月发放'
+        }, {
+            name: '状态',
+            description: '有效/无效'
+        }, {
+            name: '产品描述'
+        }];
+        rows.forEach(function(row, index) {
+            this.$('tbody').append('<tr><td>' + (1 + index) + '</td><td>' + row.name + '</td><td>' + (row.description ? row.description : '') + '</td></tr>');
+        });
 	},
 });
