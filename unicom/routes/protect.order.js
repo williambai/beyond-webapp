@@ -106,40 +106,92 @@ exports = module.exports = function(app, models) {
  					});
  				break;
 
+ 			case 'exportTpl': 
+ 				var filename = 'order.xlsx';
+				res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+				res.setHeader("Content-Disposition", "attachment; filename=" + filename);
+				models.Order
+					.toExcelTemplate(function(err,workbook){
+						if(err) return res.send(err);
+						workbook.xlsx
+							.write(res)
+							.then(function(){
+								res.end();
+							});
+					});
+ 				break;
  			case 'export': 
+ 				var filename = 'order.xlsx';
  				//** 查询起始时间
  				var from = new Date(req.query.from || 0);
  				//** 查询结束时间
  				var to = new Date(req.query.to || Date.now());
+ 				to = new Date(to.getTime() + 1000 * 3600 * 24);
  				var city = req.query.city;
-				res.writeHead(200, {
-					'Content-Type': 'text/csv;charset=utf-8',
-					'Content-Disposition': 'attachment; filename=orders.csv'
-				});
- 				if (_.isEmpty(city)) {
-	 				models.Order
-	 					.findAndStreamCsv({
-	 						'lastupdatetime': {
-	 							$gt: from,
-	 							$lte: to
-	 						}
-	 					})
-	 					.pipe(iconv.encodeStream('GBK'))
-	 					.pipe(res);
- 				}else{
-	 				var cityStr = city || '';
-	 				var cityRegex = new RegExp(regexp.escape(cityStr), 'i');
+				res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+				res.setHeader("Content-Disposition", "attachment; filename=" + filename);
+				if(_.isEmpty(city)){
 					models.Order
-						.findAndStreamCsv({
+						.toExcel({
+							'lastupdatetime': {
+								$gt: from,
+								$lte: to
+							}							
+						},function(err,workbook){
+							if(err) return res.send(err);
+							workbook.xlsx
+								.write(res)
+								.then(function(){
+									res.end();
+								});
+						});
+				}else{
+					var cityStr = city || '';
+					var cityRegex = new RegExp(regexp.escape(cityStr), 'i');
+					models.Order
+						.toExcel({
 	 						'department.city': cityRegex,
 							'lastupdatetime': {
 								$gt: from,
 								$lte: to
 							}
-						})
-						.pipe(iconv.encodeStream('GBK'))
-						.pipe(res);
- 				}
+						},function(err,workbook){
+							if(err) return res.send(err);
+							workbook.xlsx
+								.write(res)
+								.then(function(){
+									res.end();
+								});
+						});
+				}
+				// res.writeHead(200, {
+				// 	'Content-Type': 'text/csv;charset=utf-8',
+				// 	'Content-Disposition': 'attachment; filename=orders.csv'
+				// });
+ 			// 	if (_.isEmpty(city)) {
+	 		// 		models.Order
+	 		// 			.findAndStreamCsv({
+	 		// 				'lastupdatetime': {
+	 		// 					$gt: from,
+	 		// 					$lte: to
+	 		// 				}
+	 		// 			})
+	 		// 			.pipe(iconv.encodeStream('GBK'))
+	 		// 			.pipe(res);
+ 			// 	}else{
+	 		// 		var cityStr = city || '';
+	 		// 		var cityRegex = new RegExp(regexp.escape(cityStr), 'i');
+				// 	models.Order
+				// 		.findAndStreamCsv({
+	 		// 				'department.city': cityRegex,
+				// 			'lastupdatetime': {
+				// 				$gt: from,
+				// 				$lte: to
+				// 			}
+				// 		})
+				// 		.pipe(iconv.encodeStream('GBK'))
+				// 		.pipe(res);
+ 			// 	}
  				break;
  			default:
  				// var cityStr = req.session.department.city || '';

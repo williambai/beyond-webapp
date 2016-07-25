@@ -112,10 +112,42 @@ exports = module.exports = FormView.extend({
 		}
 	},
 
-	render: function() {
-		this.$el.html(this.template({
-			model: this.model.toJSON()
-		}));
-		return this;
+	render: function(){
+		var that = this;
+		this.$el.html(this.template({model: this.model.toJSON()}));
+        var rows = [{
+            name: '序号',
+            description: '可以为空'
+        }, {
+            name: '姓名'
+        }, {
+            name: '手机号码',
+            description: '必须唯一'
+        }, {
+            name: '初始密码',
+            description: '保留六位初始密码'
+        }, {
+            name: '渠道名称',
+            description: ''
+        }, {
+            name: '渠道编码',
+            description: ''
+        }, {
+            name: '所在网格',
+            description: '',
+        }, {
+            name: '所在地区',
+            description: '',
+        }, {
+            name: '所在城市',
+            description: '贵阳/遵义等',
+        }, {
+            name: '状态',
+            description: '未验证/正常/禁用，三种状态之一'
+        }];
+        rows.forEach(function(row, index) {
+            this.$('tbody').append('<tr><td>' + (1 + index) + '</td><td>' + row.name + '</td><td>' + (row.description ? row.description : '') + '</td></tr>');
+        });
+        return this;
 	},
 });

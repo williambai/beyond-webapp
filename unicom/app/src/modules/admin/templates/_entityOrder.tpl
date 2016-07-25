@@ -10,9 +10,31 @@
 			<div class="panel-body">
 				<div id="search">
 				</div>
-				<div id="list">
+				<div id="list1">
 				</div>
 			</div>
+		</div>
+		<div>
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>时间</th>
+						<th>推荐姓名</th>
+						<th>推荐号码</th>
+						<th>订购号码</th>
+						<th>类型</th>
+						<th>产品名称</th>
+						<th>渠道名称</th>
+						<th>网格</th>
+						<th>地区</th>
+						<th>城市</th>
+						<th>状态</th>
+						<th>详情</th>
+					</tr>
+				</thead>
+				<tbody id="list">
+				</tbody>
+			</table>
 		</div>
 	</div>	
 	<div id="searchTemplate">
@@ -55,6 +77,8 @@
 		<hr/>
 	</div>
 	<div id="itemTemplate">
+	</div>
+	<div id="itemTemplate1">
 		<div class="pull-right" id="<%= model._id %>">
 			<!-- <button class="btn btn-success edit">详情</button> -->
 			<a class="btn btn-success" href="admin.html#order/edit/<%= model._id %>" target="order_detail">详情</a>
@@ -226,86 +250,16 @@
 				</form>
 				<hr>
 				<p></p>
-				<h4>导入csv数据表格列格式如下：</h4>
+				<h4>导入Excel数据表格列格式如下：</h4>
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>列序号</th>
-							<th>列名称(即：csv第一行名称)</th>
-							<th>列含义</th>
+							<th>序号</th>
+							<th>名称</th>
+							<th>备注</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>customer.mobile</td>
-							<td>客户号码</td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>goods.name</td>
-							<td>产品名称</td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>goods.category</td>
-							<td>产品类别</td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>goods.barcode</td>
-							<td>产品编码</td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>goods.price</td>
-							<td>产品价格</td>
-						</tr>
-						<tr>
-							<td>6</td>
-							<td>createBy.name</td>
-							<td>推荐人姓名</td>
-						</tr>
-						<tr>
-							<td>7</td>
-							<td>createBy.mobile</td>
-							<td>推荐人号码</td>
-						</tr>
-						<tr>
-							<td>8</td>
-							<td>goods.bonus</td>
-							<td>推荐人佣金</td>
-						</tr>
-						<tr>
-							<td>9</td>
-							<td>department.name</td>
-							<td>渠道名称</td>
-						</tr>
-						<tr>
-							<td>10</td>
-							<td>department.city</td>
-							<td>所在城市</td>
-						</tr>
-						<tr>
-							<td>11</td>
-							<td>department.district</td>
-							<td>所在地区</td>
-						</tr>
-						<tr>
-							<td>12</td>
-							<td>department.grid</td>
-							<td>所在网格</td>
-						</tr>
-						<tr>
-							<td>13</td>
-							<td>lastupdatetime</td>
-							<td>发生时间</td>
-						</tr>
-						<tr>
-							<td>14</td>
-							<td>status</td>
-							<td>订单状态</td>
-						</tr>
 					</tbody>
 				</table>
 			</div>

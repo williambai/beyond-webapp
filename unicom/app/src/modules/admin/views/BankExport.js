@@ -127,9 +127,40 @@ exports = module.exports = FormView.extend({
 	},
 
 	render: function() {
-		this.$el.html(this.template({
-			model: this.model.toJSON()
-		}));
+		var that = this;
+		this.$el.html(this.template({model: this.model.toJSON()}));
+        var rows = [{
+            name: '序号',
+            description: '可以为空'
+        }, {
+            name: '用户姓名'
+        }, {
+            name: '手机号码'
+        }, {
+            name: '银行卡姓名',
+            description: ''
+        }, {
+            name: '银行卡号码',
+            description: '',
+        }, {
+            name: '银行卡有效期',
+            description: '如，2019-12',
+        }, {
+            name: '身份证号码',
+            description: '银行卡实名制',
+        }, {
+            name: '银行名称',
+            description: '',
+        }, {
+            name: '银行代码',
+            description: ''
+        }, {
+            name: '银行地址',
+            description: '',
+        }];
+        rows.forEach(function(row, index) {
+            this.$('tbody').append('<tr><td>' + (1 + index) + '</td><td>' + row.name + '</td><td>' + (row.description ? row.description : '') + '</td></tr>');
+        });
 		return this;
 	},
 });

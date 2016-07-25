@@ -28,6 +28,7 @@ var GoodsImportView = require('./views/GoodsImport');
 var GoodsExportView = require('./views/GoodsExport');
 var BankIndexView = require('./views/BankIndex');
 var BankEditView = require('./views/BankEdit');
+var BankImportView = require('./views/BankImport');
 var BankExportView = require('./views/BankExport');
 
 var BankApplyIndexView = require('./views/BankApplyIndex');
@@ -142,6 +143,7 @@ exports = module.exports = Backbone.Router.extend({
 		'bank/add': 'bankEdit',
 		'bank/edit/:id': 'bankEdit',
 		'bank/export': 'bankExport',
+		'bank/import': 'bankImport',
 		'bank/apply/index': 'bankApplyIndex',
 		'bank/apply/edit/:id': 'bankApplyEdit',
 
@@ -555,6 +557,20 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(bankEditView);
 		bankEditView.trigger('load');
+	},	
+
+	bankImport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','导入银行卡');
+		var bankImportView = new BankImportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(bankImportView);
+		bankImportView.trigger('load');
 	},	
 
 	bankExport: function(){

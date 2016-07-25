@@ -89,6 +89,7 @@ exports = module.exports = Backbone.View.extend({
 		'click .edit': 'editView',
 		'click .delete': 'remove',
 		'click .export': 'exportBank',
+		'click .import': 'importBank',
 		'click .apply': 'applyBank',
 	},
 
@@ -137,6 +138,11 @@ exports = module.exports = Backbone.View.extend({
 
 	exportBank: function(){
 		this.router.navigate('bank/export',{trigger: true});
+		return false;
+	},
+
+	importBank: function(){
+		this.router.navigate('bank/import',{trigger: true});
 		return false;
 	},
 

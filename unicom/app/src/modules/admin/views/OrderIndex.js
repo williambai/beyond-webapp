@@ -39,14 +39,39 @@ var OrderListView  = ListView.extend({
 	initialize: function(options){
 		var page = $(orderTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
+		// console.log('++++++')
+		// console.log(itemTemplate);
 		this.template = _.template(_.unescape(itemTemplate || ''));
 		this.collection = new OrderCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
+
 	getNewItemView: function(model){
 		this._transformTime(model);
-		return this.template({model: model.toJSON()});
+		var customer = model.get('customer') || {};
+		var goods = model.get('goods') || {};
+		var createBy = model.get('createBy') || {};
+		var department = model.get('department') || {};
+		var html = '<tr>';
+		html += '<td>' + Utils.dateFormat(new Date(model.get('lastupdatetime') || 0), 'yyyy-MM-dd') + '</td>';
+		html += '<td>' + (createBy.username || '') + '</td>';
+		html += '<td>' + (createBy.mobile  || '') + '</td>';
+		html += '<td>' + (customer.mobile  || '') + '</td>';
+		html += '<td>' + (goods.category || '') + '</td>';
+		html += '<td>' + (goods.name ||'')  + '</td>';
+		html += '<td>' + (department.name || '') + '</td>';
+		html += '<td>' + (department.grid || '') + '</td>';
+		html += '<td>' + (department.district || '') + '</td>';
+		html += '<td>' + (department.city || '') + '</td>';
+		html += '<td>' + model.get('status') + '</td>';
+		html += '<td><a class="" href="admin.html#order/edit/' + model.get('_id') + '" target="order_detail">详情</a></td>';
+		html += '</tr>';
+		return html;
 	},
+	// getNewItemView: function(model){
+	// 	this._transformTime(model);
+	// 	return this.template({model: model.toJSON()});
+	// },
 
 	_transformTime: function(model){
 		var createtime = model.get('lastupdatetime');

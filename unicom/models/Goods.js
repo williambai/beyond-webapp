@@ -98,7 +98,8 @@ var columns = [{
                 key: 'description',
                 width: 50,
             }];
- //** Excel模板
+
+//** Excel模板
 schema.statics.toExcelTemplate = function(done){
     var workbook = new Excel.Workbook();
     var sheet = workbook.addWorksheet('sheet1');

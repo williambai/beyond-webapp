@@ -146,8 +146,9 @@ exports = module.exports = function(app, models) {
 				}
 				break;
 			case 'exportTpl':
+ 				var filename = 'goods.xlsx';
 				res.setHeader('Content-Type', 'application/vnd.openxmlformats');
-				res.setHeader("Content-Disposition", "attachment; filename=goods.xlsx");
+				res.setHeader("Content-Disposition", "attachment; filename=" + filename);
 				models.Goods
 					.toExcelTemplate(function(err,workbook){
 						if(err) return res.send(err);
@@ -159,8 +160,9 @@ exports = module.exports = function(app, models) {
 					});
 				break;
 			case 'export':
+ 				var filename = 'goods.xlsx';
 				res.setHeader('Content-Type', 'application/vnd.openxmlformats');
-				res.setHeader("Content-Disposition", "attachment; filename=goods.xlsx");
+				res.setHeader("Content-Disposition", "attachment; filename=" + filename);
 				models.Goods
 					.toExcel({},function(err,workbook){
 						if(err) return res.send(err);

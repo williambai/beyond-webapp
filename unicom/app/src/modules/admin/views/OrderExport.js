@@ -126,10 +126,58 @@ exports = module.exports = FormView.extend({
 		}
 	},
 
+
 	render: function() {
-		this.$el.html(this.template({
-			model: this.model.toJSON()
-		}));
+		var that = this;
+		this.$el.html(this.template({model: this.model.toJSON()}));
+        var rows = [{
+            name: '序号',
+            description: ''
+        }, {
+            name: '客户号码'
+        }, {
+            name: '产品名称',
+            description: ''
+        }, {
+            name: '产品类别',
+            description: '',
+        }, {
+            name: '产品编码',
+            description: '',
+        }, {
+            name: '产品价格',
+            description: '',
+        }, {
+            name: '产品佣金',
+            description: '',
+        }, {
+            name: '推荐人姓名',
+            description: '',
+        }, {
+            name: '推荐人号码',
+            description: '',
+        }, {
+            name: '渠道名称',
+            description: '',
+        }, {
+            name: '所在网格',
+            description: '',
+        }, {
+            name: '所在地区',
+            description: '',
+        }, {
+            name: '所在城市',
+            description: '贵阳/遵义等',
+        }, {
+            name: '发生时间',
+            description: '',
+        }, {
+            name: '订单状态',
+            description: '',
+        }];
+        rows.forEach(function(row, index) {
+            this.$('tbody').append('<tr><td>' + (1 + index) + '</td><td>' + row.name + '</td><td>' + (row.description ? row.description : '') + '</td></tr>');
+        });
 		return this;
 	},
 });

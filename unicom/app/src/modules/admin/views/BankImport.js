@@ -2,22 +2,15 @@ var _ = require('underscore');
 var FormView = require('./__FormView'),
 	$ = require('jquery'),
 	Backbone = require('backbone'),
-    accountTpl = require('../templates/_entityAccount.tpl');
+    bankTpl = require('../templates/_entityBank.tpl');
 var config = require('../conf');
 
 Backbone.$ = $;
 
 //** 模型
-var Account = Backbone.Model.extend({
+var Bank = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/accounts',
-
-	validation: {
-		name: {
-			required : true,
-			msg: '请输入渠道名称'
-		},
-	},
+	urlRoot: config.api.host + '/protect/finance/banks',
 });
 
 //** 主视图
@@ -28,8 +21,8 @@ exports = module.exports = FormView.extend({
 
 	initialize: function(options){
 		this.router = options.router;
-		this.model = new Account();
-		var page = $(accountTpl);
+		this.model = new Bank();
+		var page = $(bankTpl);
 		var importTemplate = $('#importTemplate', page).html();
 		var reportTemplate = $('#importReportTemplate',page).html();
 		this.template = _.template(_.unescape(importTemplate || ''));
@@ -131,7 +124,7 @@ exports = module.exports = FormView.extend({
 
 
 	exportTpl: function(){
-		window.location.href = config.api.host + '/protect/accounts?type=exportTpl';
+		window.location.href = config.api.host + '/protect/finance/banks?action=exportTpl';
 		return false;
 	},
 
@@ -165,7 +158,7 @@ exports = module.exports = FormView.extend({
 	},
 
 	cancel: function(){
-		this.router.navigate('account/index',{trigger: true, replace: true});
+		this.router.navigate('bank/index',{trigger: true, replace: true});
 		return false;
 	},
 
@@ -187,41 +180,41 @@ exports = module.exports = FormView.extend({
 		}
 	},
 
-	render: function(){
+	render: function() {
 		var that = this;
 		this.$el.html(this.template({model: this.model.toJSON()}));
         var rows = [{
             name: '序号',
             description: '可以为空'
         }, {
-            name: '姓名'
+            name: '用户姓名'
         }, {
-            name: '手机号码',
-            description: '必须唯一'
+            name: '手机号码'
         }, {
-            name: '初始密码',
-            description: '保留六位初始密码'
-        }, {
-            name: '渠道名称',
+            name: '银行卡姓名',
             description: ''
         }, {
-            name: '渠道编码',
+            name: '银行卡号码',
+            description: '',
+        }, {
+            name: '银行卡有效期',
+            description: '如，2019-12',
+        }, {
+            name: '身份证号码',
+            description: '银行卡实名制',
+        }, {
+            name: '银行名称',
+            description: '',
+        }, {
+            name: '银行代码',
             description: ''
         }, {
-            name: '所在网格',
+            name: '银行地址',
             description: '',
-        }, {
-            name: '所在地区',
-            description: '',
-        }, {
-            name: '所在城市',
-            description: '贵阳/遵义等',
-        }, {
-            name: '状态',
-            description: '未验证/正常/禁用，三种状态之一'
         }];
         rows.forEach(function(row, index) {
             this.$('tbody').append('<tr><td>' + (1 + index) + '</td><td>' + row.name + '</td><td>' + (row.description ? row.description : '') + '</td></tr>');
         });
+		return this;
 	},
 });

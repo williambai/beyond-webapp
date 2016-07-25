@@ -10,6 +10,7 @@ var _ = require('underscore');
  	var add = function(req, res) {
  		var doc = req.body;
  		doc.uid = req.session.accountId;
+ 		doc.username = req.session.username;
  		doc.mobile = req.session.email;
  		doc.status = '新建';
  		models.FinanceBankApply
@@ -36,6 +37,7 @@ var _ = require('underscore');
  		set = _.omit(set,'_id');
  		set = _.omit(set, '__v');
  		set.uid = meId;
+ 		set.username = req.session.username;
  		set.mobile = req.session.email;
  		set.status = '新建';
  		models.FinanceBankApply

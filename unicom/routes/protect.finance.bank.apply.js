@@ -21,7 +21,7 @@ exports = module.exports = function(app, models) {
  			function(err,bank){
 	 			if(err) return res.send(err);
 	 			if(status == '通过'){
-	 				set = _.pick(bank,'mobile','bankName','bankCode','bankAddr','accountName','accountNo','cardId','expired');//** 只允许修改的参数
+	 				set = _.pick(bank,'mobile','username','bankName','bankCode','bankAddr','accountName','accountNo','cardId','expired');//** 只允许修改的参数
 	 				set.lastupdatetime = new Date();
 	 				//** 更新银行卡信息
 					models.FinanceBank.findOneAndUpdate({
@@ -64,7 +64,7 @@ exports = module.exports = function(app, models) {
  				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
  				var query = models.FinanceBankApply.find({
  					$or: [{
- 						'accountName': {
+ 						'username': {
  							$regex: searchRegex
  						}
  					}, {

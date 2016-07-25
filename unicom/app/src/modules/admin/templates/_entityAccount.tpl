@@ -160,7 +160,7 @@
 				<h4 class="panel-title text-center">导入用户</h4>
 			</div>
 			<div class="panel-body">
-				<p>请点击<i class="fa fa-plus-circle"></i>选择要上传的文件，点击已上传的文件，可以取消上传。</p>
+				<p style="color:red;">请点击<i class="fa fa-plus-circle"></i>选择要上传的文件，点击已上传的文件，可以取消上传。</p>
 				<p>友情提示：为保证导入效率，每次最好仅选择导入一个文件。</p>
 				<form>
 					<input type="hidden" name="type" value="import">
@@ -171,7 +171,7 @@
 							</button>
 						</span>
 					</div>
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<label>导入方式：</label>
 						<div style="padding-left:30px;">
 							<input type="radio" name="method" value="增量" checked>&nbsp;&nbsp;增量&nbsp;&nbsp;
@@ -181,12 +181,15 @@
 					<div style="color:red;">
 						<p>注意1：请慎重选择全量导入方式。全量导入将先删除当前数据表中现有的全部数据，然后导入新数据。</p>
 						<p>注意2：导入时，请先将表示列名称的首行删除，并且保证最后一行不要留空行。(即，文件只留数据，不留标题和空行)</p>
-					</div>
+					</div> -->
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
-							<input type="submit" value="导入" class="btn btn-danger">
-						</div>
+								<input type="submit" value="确定" class="btn btn-danger">
+							</div>
+							<div class="btn-group">
+								<button class="btn btn-success exportTpl">下载模板</button>
+							</div>
 						<div class="btn-group">
 							<button class="btn btn-primary back">取消</button>
 						</div>
@@ -195,61 +198,16 @@
 				<input class="hidden" type="file" name="file"/>
 				</form>
 				<hr>
-				<h4>导入csv数据表格列格式如下：</h4>
+				<h4>导入Excel数据表格列格式如下：</h4>
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>列序号</th>
-							<th>列名称(即：csv第一行名称)</th>
-							<th>列含义</th>
+							<th>序号</th>
+							<th>名称(</th>
+							<th>备注</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>username</td>
-							<td>用户姓名</td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>email</td>
-							<td>手机号码</td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>password</td>
-							<td>密码</td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>department.name</td>
-							<td>渠道名称</td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>department.nickname</td>
-							<td>渠道编码</td>
-						</tr>
-						<tr>
-							<td>6</td>
-							<td>department.city</td>
-							<td>所在城市</td>
-						</tr>
-						<tr>
-							<td>7</td>
-							<td>department.district</td>
-							<td>所在地区</td>
-						</tr>
-						<tr>
-							<td>8</td>
-							<td>department.grid</td>
-							<td>所在网格</td>
-						</tr>
-						<tr>
-							<td>9</td>
-							<td>status</td>
-							<td>状态(正常)</td>
-						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -289,57 +247,12 @@
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>列序号</th>
-							<th>列名称(即：csv第一行名称)</th>
-							<th>列含义</th>
+							<th>序号</th>
+							<th>名称</th>
+							<th>备注</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>username</td>
-							<td>用户姓名</td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>email</td>
-							<td>手机号码</td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>password</td>
-							<td>密码</td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>department.name</td>
-							<td>渠道名称</td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>department.nickname</td>
-							<td>渠道编码</td>
-						</tr>
-						<tr>
-							<td>6</td>
-							<td>department.city</td>
-							<td>所在城市</td>
-						</tr>
-						<tr>
-							<td>7</td>
-							<td>department.district</td>
-							<td>所在地区</td>
-						</tr>
-						<tr>
-							<td>8</td>
-							<td>department.grid</td>
-							<td>所在网格</td>
-						</tr>
-						<tr>
-							<td>9</td>
-							<td>status</td>
-							<td>状态(正常)</td>
-						</tr>
 					</tbody>
 				</table>
 			</div>

@@ -1,9 +1,58 @@
+var util = require('util');
+var path = require('path');
+var fs = require('fs');
+var log4js = require('log4js');
+var logger = log4js.getLogger(path.relative(process.cwd(),__filename));
 var _ = require('underscore');
+var async = require('async');
 var regexp = require('../libs/regexp');
 
 exports = module.exports = function(app, models) {
 
- 	var getOne = function(req, res) {
+ 	var add = function(req, res) {
+	 		var action = req.body.action || '';
+	 		switch(action){
+	 			case 'import':
+		 			var attachments;
+		 			if (typeof req.body.attachment == 'string') {
+		 				attachments = [];
+		 				attachments.push(req.body.attachment);
+		 			} else {
+		 				attachments = req.body.attachment;
+		 			}
+		 			attachments = attachments || [];
+		 			logger.debug('attachments:' + attachments);
+					if(attachments.length == 0){
+						return res.send({
+							code: 40441,
+							errmsg: '请选择要导入的文件'
+						});
+					}
+		 			async.each(attachments, function(attachment, cb) {
+		 				var file = path.join(__dirname, '../public', attachment);
+		 				if (!fs.existsSync(file)) {
+		 					return cb({
+		 						code: 40440,
+		 						msg: '文件不存在'
+		 					});
+		 				}
+		 				logger.debug('file: ' + file);
+		 				//** 导入excel
+		 				models.FinanceBank.fromExcel(file, function(err,result){
+		 					if(err) return cb(err);
+		 					cb(null,result);
+		 				});
+			 			}, function(err, result) {
+		 				if (err) return res.send(err);
+		 				res.send({});
+		 			}); 
+ 				break;
+ 			default:
+ 				res.send({});
+ 				break;
+ 		}
+ 	};
+ 	var getOne = function(req,res){
  		var id = req.params.id;
  		models.FinanceBank
  			.findById(id)
@@ -42,14 +91,33 @@ exports = module.exports = function(app, models) {
  						res.send(docs);
  					});
  				break;
- 			case 'export': 
-				res.writeHead(200, {
-					'Content-Type': 'text/csv;charset=utf-8',
-					'Content-Disposition': 'attachment; filename=banks.csv'
-				});
+			case 'exportTpl':
+ 				var filename = 'bank.xlsx';
+				res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+				res.setHeader("Content-Disposition", "attachment; filename=" + filename);
 				models.FinanceBank
-					.findAndStreamCsv({})
-					.pipe(res);
+					.toExcelTemplate(function(err,workbook){
+						if(err) return res.send(err);
+						workbook.xlsx
+							.write(res)
+							.then(function(){
+								res.end();
+							});
+					});
+				break;
+ 			case 'export': 
+ 				var filename = 'bank.xlsx';
+				res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+				res.setHeader("Content-Disposition", "attachment; filename=" + filename);
+				models.FinanceBank
+					.toExcel({},function(err,workbook){
+						if(err) return res.send(err);
+						workbook.xlsx
+							.write(res)
+							.then(function(){
+								res.end();
+							});
+					});
  				break;
  			default:
  				models.FinanceBank
@@ -69,6 +137,11 @@ exports = module.exports = function(app, models) {
  	/**
  	 * router outline
  	 */
+
+ 	/**
+ 	 * add protect/finance/banks
+ 	 */
+ 	app.post('/protect/finance/banks', app.grant, add);
 
  	/**
  	 * get protect/finance/banks

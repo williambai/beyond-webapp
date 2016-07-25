@@ -3,6 +3,7 @@
 		<div class="panel panel-default">
 			<div class="pull-right">
 				<button class="btn btn-danger apply">审核</button>
+				<button class="btn btn-primary import">导入</button>
 				<button class="btn btn-primary export">导出</button>
 			</div>
 			<div class="panel-heading">
@@ -35,9 +36,9 @@
 				<div class="pull-right">
 					<button class="btn btn-success edit">详情</button>
 				</div>
-				<h4><%= model.accountName %></h4>
+				<h4>[<%= model.username %>]<%= model.mobile %></h4>
 				<p><%= model.bankName %></p>
-				<p><i class="fa fa-user"></i>&nbsp;<%= model.mobile %></p>
+				<p style="color:red;">账户：<%= model.accountName %>&nbsp;卡号：<%= model.accountNo %></p>
 			</div>
 			<hr/>
 		</div>
@@ -49,6 +50,11 @@
 					<h5 class="panel-title text-center">银行卡</h5>
 				</div>
 				<div class="panel-body">
+					<div class="form-group">
+						<label>用户姓名：</label>
+						<input type="text" class="form-control" value="<%= model.username %>" readonly>
+						<span class="help-block"></span>
+					</div>
 					<div class="form-group">
 						<label>邮箱/手机号码：</label>
 						<input type="text" class="form-control" value="<%= model.mobile %>" readonly>
@@ -99,6 +105,64 @@
 			</div>
 		</form>
 	</div>
+	<div id="importTemplate">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title text-center">导入渠道</h4>
+			</div>
+			<div class="panel-body">
+				<p style="color:red;">请点击<i class="fa fa-plus-circle"></i>选择要上传的文件，点击已上传的文件，可以取消上传。</p>
+				<p>友情提示：为保证导入效率，每次最好仅选择导入一个文件。</p>
+				<form>
+					<input type="hidden" name="action" value="import">
+					<div class="form-group">
+						<span class="attachments"></span>
+						<span>
+							<button class="btn btn-promary send-file"> <i class="fa fa-5x fa-plus-circle"></i>
+							</button>
+						</span>
+					</div>
+ 					<div class="form-group">
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group">
+								<input type="submit" value="确定" class="btn btn-danger">
+							</div>
+							<div class="btn-group">
+								<button class="btn btn-success exportTpl">下载模板</button>
+							</div>
+							<div class="btn-group">
+								<button class="btn btn-primary back">取消</button>
+							</div>
+						</div>
+					</div>
+				<input class="hidden" type="file" name="file"/>
+				</form>
+				<hr>
+				<h4>导入Excel数据表格列格式如下：</h4>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>名称</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>	
+	<div id="importReportTemplate">
+		<div class="panel panel-default" id="reportForm">
+			<div class="panel-heading">
+				<h3 class="panel-title text-center">导入结果报告</h3>
+			</div>
+			<div class="panel-body">
+				<button class="btn btn-primary btn-block back">返回</button>
+			</div>
+		</div>
+	</div>
 	<div id="exportTemplate">
 		<div class="panel panel-default" id="exportForm">
 			<div class="panel-heading">
@@ -129,56 +193,16 @@
 					</div>
 				</form>
 				<hr>				
-				<h4>导入csv数据表格列格式如下：</h4>
+				<h4>导出Excel数据表格列格式如下：</h4>
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>列序号</th>
-							<th>列名称(即：csv第一行名称)</th>
-							<th>列含义</th>
+							<th>序号</th>
+							<th>名称</th>
+							<th>备注</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>mobile</td>
-							<td>手机号码</td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>bankName</td>
-							<td>银行名称</td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>bankCode</td>
-							<td>银行代码</td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>bankAddr</td>
-							<td>开户地址</td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>accountName</td>
-							<td>银行卡主姓名</td>
-						</tr>
-						<tr>
-							<td>6</td>
-							<td>accountNo</td>
-							<td>银行卡号码</td>
-						</tr>
-						<tr>
-							<td>7</td>
-							<td>cardId</td>
-							<td>身份证号码</td>
-						</tr>
-						<tr>
-							<td>8</td>
-							<td>expired</td>
-							<td>有效期</td>
-						</tr>
 					</tbody>
 				</table>
 			</div>

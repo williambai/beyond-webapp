@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
-var mongooseToCsv = require('mongoose-to-csv');
-var CSV = require('comma-separated-values');
 var async = require('async');
+var Excel = require('exceljs');
 var path = require('path');
 var utils = require('../libs/utils');
 //** SP配置文件
@@ -75,7 +74,8 @@ var schema = new mongoose.Schema({
 	},
 	department: {
 		id: String,
-		name: String, //** 营业厅名称
+		name: String, //** 渠道名称
+		nickname: String, //** 渠道编码
 		city: String, //** 城市名称
 		grid: String, //** 网格编码
 		district: String, //** 地区编码			
@@ -101,58 +101,120 @@ schema.post('save', function(){
 
 schema.set('collection', 'orders');
 
-//** 导出csv
-schema.plugin(mongooseToCsv, {
-	headers: '客户号码 产品名称 产品类别 产品编码 产品价格 推荐人姓名 推荐人号码 推荐人佣金 渠道名称 所在城市 所在地区 所在网格 发生时间 订单状态',
-	constraints: {
-		'订单状态': 'status',
-	},
-	virtuals: {
-		'客户号码': function(doc){
-			return doc.customer.mobile;
-		},
-		'产品名称': function(doc){
-			return doc.goods.name;
-		},
-		'产品编码': function(doc){
-			return doc.goods.barcode;
-		},
-		'产品类别': function(doc){
-			return doc.goods.category;
-		},
-		'产品价格': function(doc){
-			return doc.goods.price;
-		},
-		'推荐人姓名': function(doc){
-			return doc.createBy.username;
-		},
-		'推荐人号码': function(doc){
-			return doc.createBy.mobile;
-		},
-		'推荐人佣金': function(doc){
-			return doc.goods.bonus;
-		},
-		'渠道名称': function(doc){
-			return doc.department.name;
-		},
-		'所在城市': function(doc){
-			return doc.department.city;
-		},
-		'所在地区': function(doc){
-			return doc.department.district;
-		},
-		'所在网格': function(doc){
-			return doc.department.grid;
-		},
-		'发生时间': function(doc){
-			var date = doc.lastupdatetime;
-			return utils.dateFormat(date, 'yyyy-MM-dd:hh:mm:ss');
-		}
-	}
-});
+//** Excel 头
+var columns = [{
+                header: '序号',
+                key: 'id'
+            }, {
+                header: '客户号码',
+                key: 'customerMobile',
+                width: 10
+            }, {
+                header: '产品名称',
+                key: 'goodsName',
+                width: 30,
+            }, {
+                header: '产品类别',
+                key: 'goodsCategory',
+                width: 10,
+            }, {
+                header: '产品编码',
+                key: 'goodsPackageCode',
+                width: 20,
+            }, {
+                header: '产品价格',
+                key: 'goodsPrice',
+                width: 10,
+            }, {
+                header: '产品佣金',
+                key: 'goodsBonus',
+                width: 10,
+            }, {
+                header: '佣金发放方式',
+                key: 'paymenttype',
+                width: 10,
+            }, {
+                header: '推荐人姓名',
+                key: 'createByUsername',
+                width: 10,
+            }, {
+                header: '推荐人手机',
+                key: 'createByMobile',
+                width: 15,
+             }, {
+                header: '渠道名称',
+                key: 'departmentName',
+                width: 20,
+            }, {
+                header: '渠道编码',
+                key: 'departmentNickname',
+                width: 10,
+            }, {
+                header: '所在网格',
+                key: 'departmentGrid',
+                width: 10,
+            }, {
+                header: '所在地区',
+                key: 'departmentDistrict',
+                width: 10,
+            }, {
+                header: '所在城市',
+                key: 'departmentCity',
+                width: 10,
+            }, {
+                header: '发生时间',
+                key: 'lastupdatetime',
+                width: 20,
+            }, {
+                header: '状态',
+                key: 'status',
+                width: 10,
+            }];
 
-module.exports = exports = function(connection){
-	connection = connection || mongoose;
+//** Excel模板
+schema.statics.toExcelTemplate = function(done){
+    var workbook = new Excel.Workbook();
+    var sheet = workbook.addWorksheet('sheet1');
+    sheet.columns = columns;
+    done(null, workbook);
+};
+
+schema.statics.toExcel = function(query, done) {
+    query = query || {};
+    var Order = connection.model('Order');
+    Order
+        .find(query)
+        .exec(function(err, doc) {
+        	if(err) return done(err);
+            var workbook = new Excel.Workbook();
+            var sheet = workbook.addWorksheet('sheet1');
+            sheet.columns = columns;
+            for (var i = 0; i < doc.length; i++) {
+                sheet.addRow({
+                    id: i,
+                    customerMobile: doc[i].customer && doc[i].customer.mobile,
+                    goodsName: doc[i].goods && doc[i].goods.name,
+                    goodsCategory: doc[i].goods && doc[i].goods.category,
+                    goodsPackageCode: doc[i].goods && doc[i].goods.packagecode,
+                    goodsPrice: doc[i].goods && doc[i].goods.price,
+                    paymenttype: doc[i].paymenttype || 2,
+                    createByUsername: doc[i].createBy && doc[i].createBy.username,
+                    createByMobile: doc[i].createBy && doc[i].createBy.mobile,
+                    deaprtmentName: doc[i].department && doc[i].department.name || '错误',
+                    departmentNickname: doc[i].department && doc[i].department.nickname || '错误',
+                    departmentGrid: doc[i].department && doc[i].department.grid || '错误',
+                    departmentDistrict: doc[i].department && doc[i].department.district || '错误',
+                    departmentCity: doc[i].department && doc[i].department.city || '错误',
+                    lastupdatetime: utils.dateFormat(doc[i].lastupdatetime, 'yyyy-MM-dd:hh:mm:ss'),
+                    status: doc[i].status,
+                });
+            }
+            done(null, workbook);
+        });
+};
+
+module.exports = exports = function(conn){
+	connection = conn || mongoose;
 
 	/**
 	 * 新增订单
@@ -1102,3 +1164,57 @@ module.exports = exports = function(connection){
 
 	return connection.model('Order', schema);
 };
+
+// var mongooseToCsv = require('mongoose-to-csv');
+// var CSV = require('comma-separated-values');
+
+// //** 导出csv
+// schema.plugin(mongooseToCsv, {
+// 	headers: '客户号码 产品名称 产品类别 产品编码 产品价格 推荐人姓名 推荐人号码 推荐人佣金 渠道名称 所在城市 所在地区 所在网格 发生时间 订单状态',
+// 	constraints: {
+// 		'订单状态': 'status',
+// 	},
+// 	virtuals: {
+// 		'客户号码': function(doc){
+// 			return doc.customer.mobile;
+// 		},
+// 		'产品名称': function(doc){
+// 			return doc.goods.name;
+// 		},
+// 		'产品编码': function(doc){
+// 			return doc.goods.barcode;
+// 		},
+// 		'产品类别': function(doc){
+// 			return doc.goods.category;
+// 		},
+// 		'产品价格': function(doc){
+// 			return doc.goods.price;
+// 		},
+// 		'推荐人姓名': function(doc){
+// 			return doc.createBy.username;
+// 		},
+// 		'推荐人号码': function(doc){
+// 			return doc.createBy.mobile;
+// 		},
+// 		'推荐人佣金': function(doc){
+// 			return doc.goods.bonus;
+// 		},
+// 		'渠道名称': function(doc){
+// 			return doc.department.name;
+// 		},
+// 		'所在城市': function(doc){
+// 			return doc.department.city;
+// 		},
+// 		'所在地区': function(doc){
+// 			return doc.department.district;
+// 		},
+// 		'所在网格': function(doc){
+// 			return doc.department.grid;
+// 		},
+// 		'发生时间': function(doc){
+// 			var date = doc.lastupdatetime;
+// 			return utils.dateFormat(date, 'yyyy-MM-dd:hh:mm:ss');
+// 		}
+// 	}
+// });
+
