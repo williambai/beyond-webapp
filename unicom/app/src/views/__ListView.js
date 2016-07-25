@@ -40,6 +40,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	refresh: function(query){
+		this.page = 0;
 		this.$el.empty();
 		this.collection.url = this.collectionUrl + (query ? ('?' + query) : '');
 		this.collection.fetch({

@@ -55,6 +55,7 @@ exports = module.exports = function(app, models) {
  		var per = 20;
 
  		switch (action) {
+ 			case 'count':
  			case 'search':
  				//** 查询起始时间
  				var from = new Date(req.query.from || 0);
@@ -65,6 +66,8 @@ exports = module.exports = function(app, models) {
  				var searchStr = req.query.searchStr || '';
  				var searchRegex = new RegExp(regexp.escape(searchStr), 'i');
  				var city = req.query.city;
+ 				var district = req.query.district;
+ 				var grid = req.query.grid;
  				var status = req.query.status;
  				var query = models.Order.find({
  					$or: [{
@@ -84,6 +87,20 @@ exports = module.exports = function(app, models) {
  						'department.city': cityRegex
  					});
  				}
+ 				if (!_.isEmpty(district)) {
+	 				var districtStr = district || '';
+	 				var districtRegex = new RegExp(regexp.escape(districtStr), 'i');
+ 					query.where({
+ 						'department.district': districtRegex
+ 					});
+ 				}
+ 				if (!_.isEmpty(grid)) {
+	 				var gridStr = grid || '';
+	 				var gridRegex = new RegExp(regexp.escape(gridStr), 'i');
+ 					query.where({
+ 						'department.grid': gridRegex
+ 					});
+ 				}
  				if (!_.isEmpty(status)) {
  					query.where({
  						'status': status
@@ -95,15 +112,22 @@ exports = module.exports = function(app, models) {
  						$lte: to
  					}
  				});
- 				query.sort({
- 						_id: -1
- 					})
- 					.skip(per * page)
- 					.limit(per)
- 					.exec(function(err, docs) {
- 						if (err) return res.send(err);
- 						res.send(docs);
+ 				if(action == 'count'){
+ 					query.count(function(err,total){
+ 						if(err) return res.send(err);
+ 						res.send({total: total});
  					});
+ 				}else{
+ 					query.sort({
+ 							_id: -1
+ 						})
+ 						.skip(per * page)
+ 						.limit(per)
+ 						.exec(function(err, docs) {
+ 							if (err) return res.send(err);
+ 							res.send(docs);
+ 						});
+ 				}
  				break;
 
  			case 'exportTpl': 

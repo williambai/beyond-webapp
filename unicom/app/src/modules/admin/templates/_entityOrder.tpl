@@ -40,12 +40,70 @@
 	<div id="searchTemplate">
 		<form id="searchForm" class="form">
 			<input type="hidden" name="action" value="search">
-			<div class="form-group form-inline">
+			<div class="row">
+				<div class="col-xs-4">
+					<label>城市：</label>
+					<select class="form-control" name="city">
+						<option value="">全部</option>
+						<option value="贵阳">贵阳</option>
+						<option value="遵义">遵义</option>
+						<option value="黔东南">黔东南</option>
+						<option value="安顺">安顺</option>
+						<option value="黔南">黔南</option>
+						<option value="六盘水">六盘水</option>
+						<option value="黔西南">黔西南</option>
+						<option value="铜仁">铜仁</option>
+						<option value="毕节">毕节</option>
+					</select>
+				</div>
+				<div class="col-xs-4">
+					<label>区/县：</label>
+					<input type="text" name="district" class="form-control" placeholder="区县名称">&nbsp;&nbsp;
+				</div>
+				<div class="col-xs-4">
+					<label>网格：</label>
+					<input type="text" name="grid" class="form-control" placeholder="网格名称">&nbsp;&nbsp;
+				</div>
+			</div>
+			<div class="row">
+				<!-- <div class="col-xs-1">从：</div> -->
+				<div class="col-xs-4">
+					<label>从：</label>
+					<input type="date" name="from" class="form-control" placeholder="yyyy/mm/dd">&nbsp;&nbsp;
+				</div>
+				<div class="col-xs-4">
+					<label>到：</label>
+					<input type="date" name="to" class="form-control" placeholder="yyyy/mm/dd">&nbsp;&nbsp;
+				</div>
+				<div class="col-xs-4">
+					<label>状态：</label>
+					<select class="form-control" name="status">
+						<option value="">全部</option>
+						<option value="新建">新建</option>
+						<option value="已确认">用户已确认</option>
+						<option value="已处理">系统已处理</option>
+						<option value="成功">成功</option>
+						<option value="失败">失败</option>
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-4">
+					<input type="text" name="searchStr" class="form-control" placeholder="推荐/订购手机号码">&nbsp;&nbsp;
+				</div>
+				<div class="col-xs-4">
+					<label></label>
+					<input type="submit" value="筛选" class="btn btn-info">
+				</div>				
+				<div class="col-xs-4">
+				</div>
+			</div>
+<!-- 			<div class="form-group form-inline">
 				<label>&nbsp;从：&nbsp;</label>
 				<input type="date" name="from" class="form-control" placeholder="yyyy/mm/dd">
 				<label>&nbsp;到：&nbsp;</label>
 				<input type="date" name="to" class="form-control" placeholder="yyyy/mm/dd">
-				<label>&nbsp;地区：&nbsp;</label>
+				<label>&nbsp;城市：&nbsp;</label>
 				<select class="form-control" name="city">
 					<option value="">不限</option>
 					<option value="贵阳">贵阳</option>
@@ -58,6 +116,12 @@
 					<option value="铜仁">铜仁</option>
 					<option value="毕节">毕节</option>
 				</select>
+				<div class="form-group form-inline">
+					<label>&nbsp;区/县：&nbsp;</label>
+					<input type="text" name="district" class="form-control" placeholder="">&nbsp;&nbsp;
+					<label>&nbsp;网格：&nbsp;</label>
+					<input type="text" name="grid" class="form-control" placeholder="">&nbsp;&nbsp;
+				</div>
 				<label>&nbsp;状态：&nbsp;</label>
 				<select class="form-control" name="status">
 					<option value="">不限</option>
@@ -72,9 +136,10 @@
 				<label>&nbsp;搜索：&nbsp;</label>
 				<input type="text" name="searchStr" class="form-control" placeholder="手机号码">&nbsp;&nbsp;
 				<input type="submit" value="筛选" class="btn btn-info">
-			</div>
+			</div> -->
 		</form>
-		<hr/>
+		<h4 id="total" style="text-align:right;color:red;"></h4>
+		<!-- <hr/> -->
 	</div>
 	<div id="itemTemplate">
 	</div>

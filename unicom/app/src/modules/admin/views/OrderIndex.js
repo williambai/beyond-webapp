@@ -101,13 +101,32 @@ var OrderSearchView = SearchView.extend({
 	},
 
 	search: function(){
+		var that = this;
 		var query = this.$('form').serialize();
 		this.done(query);
+		//** 获取总数
+		var countQuery = query.replace(/action=search/,'action=count');
+		$.ajax({
+			url: config.api.host + '/protect/orders?' + countQuery,
+			type: 'GET',
+			xhrFields: {
+				withCredentials: true
+			},
+		}).done(function(data) {
+			var html = '共';
+			html += data.total || 0;
+			html += '条';
+			that.$('#total').html(html);
+		});
 		return false;
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		var now = new Date();
+		now.setDate(1);
+		this.$('input[name=from]').val(Utils.dateFormat(now,'yyyy-MM-dd'));
+		return this;
 	},
 });
 //** 主页面
