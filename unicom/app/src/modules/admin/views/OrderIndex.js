@@ -39,8 +39,6 @@ var OrderListView  = ListView.extend({
 	initialize: function(options){
 		var page = $(orderTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
-		// console.log('++++++')
-		// console.log(itemTemplate);
 		this.template = _.template(_.unescape(itemTemplate || ''));
 		this.collection = new OrderCollection();
 		ListView.prototype.initialize.apply(this,options);
@@ -146,8 +144,8 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		// 'click .edit': 'editOrder',
-		// 'click .delete': 'removeOrder',
+		// 'click .previous': 'prev',
+		'click .next': 'next',
 		'click .export': 'exportOrder',
 	},
 
@@ -170,10 +168,18 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	scroll: function() {
-		this.listView.scroll();
+		// this.listView.scroll();
 		return false;
 	},
 	
+	// prev: function(){
+	// 	this.listView.prevPage();
+	// 	return false;
+	// },
+	next: function(){
+		this.listView.nextPage();
+		return false;
+	},
 	// addOrder: function(){
 	// 	this.router.navigate('order/add',{trigger: true});
 	// 	return false;

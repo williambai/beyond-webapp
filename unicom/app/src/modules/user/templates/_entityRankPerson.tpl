@@ -40,7 +40,7 @@
 		<div>
 			<div class="row item" id="<%= model._id %>">
 				<div class="col-xs-2">
-					<h4><span class="badge"><%= model.series %></span></h4>
+					<h5>第&nbsp;<span class="badge" style="background-color:#EA5119;"><%= model.series %></span>&nbsp;名</h5>
 				</div>
 				<div class="col-xs-6">
 					<h4><%= model.username %></h4>
@@ -48,7 +48,7 @@
 				</div>
 				<div class="col-xs-4">
 					<h5>
-						<span class="badge" style="background-color:#EA5119"><%= model.quantity %></span>&nbsp;笔&nbsp;<span style="text-align:right;"><%= model.total %>&nbsp;元</span>
+						<span style="text-align:right;"><%= model.total %>&nbsp;元</span>[共&nbsp;<span><%= model.quantity %></span>&nbsp;笔]
 					</h5>
 				</div>
 			</div>

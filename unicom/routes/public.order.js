@@ -60,7 +60,7 @@ exports = module.exports = function(app, models) {
 			case 'rankg': //** 营业厅排行
 				var days = parseInt(req.query.days || 1); //** 向前天数
 				var place = req.query.place || 'grid'; //** 数据过滤/切分类型
-				models.Order.rankByPerson({
+				models.Order.rankByDepartment({
 					days: days,
 					place: place,
 					department: req.session.department || {},

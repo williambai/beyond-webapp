@@ -80,11 +80,17 @@ exports = module.exports = function(app, models) {
  						}
  					}]
  				});
- 				if (!_.isEmpty(city)) {
-	 				var cityStr = city || '';
-	 				var cityRegex = new RegExp(regexp.escape(cityStr), 'i');
+ 				query.where({
+ 					'lastupdatetime': {
+ 						$gt: from,
+ 						$lte: to
+ 					}
+ 				});
+ 				if (!_.isEmpty(grid)) {
+	 				var gridStr = grid || '';
+	 				var gridRegex = new RegExp(regexp.escape(gridStr), 'i');
  					query.where({
- 						'department.city': cityRegex
+ 						'department.grid': gridRegex
  					});
  				}
  				if (!_.isEmpty(district)) {
@@ -94,11 +100,11 @@ exports = module.exports = function(app, models) {
  						'department.district': districtRegex
  					});
  				}
- 				if (!_.isEmpty(grid)) {
-	 				var gridStr = grid || '';
-	 				var gridRegex = new RegExp(regexp.escape(gridStr), 'i');
+ 				if (!_.isEmpty(city)) {
+	 				var cityStr = city || '';
+	 				var cityRegex = new RegExp(regexp.escape(cityStr), 'i');
  					query.where({
- 						'department.grid': gridRegex
+ 						'department.city': cityRegex
  					});
  				}
  				if (!_.isEmpty(status)) {
@@ -106,12 +112,7 @@ exports = module.exports = function(app, models) {
  						'status': status
  					});
  				}
- 				query.where({
- 					'lastupdatetime': {
- 						$gt: from,
- 						$lte: to
- 					}
- 				});
+ 				console.log(JSON.stringify(query.getQuery()));
  				if(action == 'count'){
  					query.count(function(err,total){
  						if(err) return res.send(err);
@@ -174,11 +175,11 @@ exports = module.exports = function(app, models) {
 					var cityRegex = new RegExp(regexp.escape(cityStr), 'i');
 					models.Order
 						.toExcel({
-	 						'department.city': cityRegex,
 							'lastupdatetime': {
 								$gt: from,
 								$lte: to
-							}
+							},
+	 						'department.city': cityRegex,
 						},function(err,workbook){
 							if(err) return res.send(err);
 							workbook.xlsx
@@ -224,7 +225,7 @@ exports = module.exports = function(app, models) {
  					.find({
  					})
  					.sort({
- 						_id: -1
+ 						lastupdatetime: -1
  					})
  					.skip(per * page)
  					.limit(per)

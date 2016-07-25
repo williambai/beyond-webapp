@@ -95,6 +95,8 @@ var schema = new mongoose.Schema({
 	},
 });
 
+schema.index({'lastupdatetime': -1, 'department.grid': 1, 'department.district': 1, 'department.city': 1});
+
 schema.post('save', function(){
 	//** 如果是4G业务，则需要在CbssOrder中添加一条记录
 });
@@ -1037,7 +1039,18 @@ module.exports = exports = function(conn){
 		var Order = connection.model('Order');
 		var Account = connection.model('Account');
 		var aggregate = Order.aggregate();
-
+		//** 缩小数据量
+		aggregate.append({
+			$project: {
+				quantity: 1,
+				total: 1,
+				bonus: 1,
+				createBy:1,
+				department: 1,
+				status: 1,
+				lastupdatetime: 1,
+			}
+		});
 		switch(place){
 			case 'city':
 				//** 过滤时间段和department.city字段
@@ -1051,6 +1064,24 @@ module.exports = exports = function(conn){
 						'department.city': city,
 						'status': '成功',
 					}
+				});
+				//** 按department.district分组
+				aggregate.append({
+					$group: {
+						_id: '$department.district',
+						quantity: {
+							'$sum': '$quantity',
+						},
+						total: {
+							'$sum': '$total',
+						},
+						bonus: {
+							'$sum': '$bonus',
+						},
+						count: {
+							'$sum': 1
+						}
+					},
 				});
 				break;
 			case 'district':
@@ -1066,8 +1097,25 @@ module.exports = exports = function(conn){
 						'status': '成功',
 					}
 				});
+				//** 按department.grid分组
+				aggregate.append({
+					$group: {
+						_id: '$department.grid',
+						quantity: {
+							'$sum': '$quantity',
+						},
+						total: {
+							'$sum': '$total',
+						},
+						bonus: {
+							'$sum': '$bonus',
+						},
+						count: {
+							'$sum': 1
+						}
+					},
+				});
 				break;
-
 			case 'grid':
 			default:
 				//** 过滤时间段和department.grid字段
@@ -1082,38 +1130,26 @@ module.exports = exports = function(conn){
 						'status': '成功',
 					}
 				});
+				//** 按department.name分组
+				aggregate.append({
+					$group: {
+						_id: '$department.name',
+						quantity: {
+							'$sum': '$quantity',
+						},
+						total: {
+							'$sum': '$total',
+						},
+						bonus: {
+							'$sum': '$bonus',
+						},
+						count: {
+							'$sum': 1
+						}
+					},
+				});
 				break;
 		}
-		//** 缩小数据量
-		aggregate.append({
-			$project: {
-				quantity: 1,
-				total: 1,
-				bonus: 1,
-				createBy:1,
-				department: 1,
-				status: 1,
-				lastupdatetime: 1,
-			}
-		});
-		//** 按department.name分组
-		aggregate.append({
-			$group: {
-				_id: '$department.name',
-				quantity: {
-					'$sum': '$quantity',
-				},
-				total: {
-					'$sum': '$total',
-				},
-				bonus: {
-					'$sum': '$bonus',
-				},
-				count: {
-					'$sum': 1
-				}
-			},
-		});
 		//** 按数量降序排列
 		aggregate
 			.sort({quantity: -1})

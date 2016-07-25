@@ -15,7 +15,15 @@
 			</div>
 		</div>
 		<div>
-			<table class="table table-bordered">
+<!-- 
+			<nav>
+			  <ul class="pager">
+			    <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> 上一页</a></li>
+			    <li class="next"><a href="#">下一页 <span aria-hidden="true">&rarr;</span></a></li>
+			  </ul>
+			</nav>
+ -->
+ 			<table class="table table-bordered">
 				<thead>
 					<tr>
 						<th>时间</th>
@@ -35,6 +43,12 @@
 				<tbody id="list">
 				</tbody>
 			</table>
+			<nav>
+			  <ul class="pager">
+<!-- 			    <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> 上一页</a></li>
+ -->			    <li class="next"><a href="#">下一页 <span aria-hidden="true">&rarr;</span></a></li>
+			  </ul>
+			</nav>
 		</div>
 	</div>	
 	<div id="searchTemplate">
