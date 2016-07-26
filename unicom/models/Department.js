@@ -33,7 +33,7 @@ var columns = [{
                 width: 10,
             }, {
                 header: '所在网格',
-                key: 'gird',
+                key: 'grid',
                 width: 20,
             }, {
                 header: '所在地区',
@@ -91,17 +91,17 @@ schema.statics.fromExcel = function(filename,done){
 				sheets[i].eachRow(function(row,rowNumber){
 					// console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values));
 					var set = {
-					    name: row.values[2],
-					    nickname: row.values[3],
-					    grid: row.values[4],
-					    district: row.values[5],
-					    city: row.values[6],
-					    address: row.values[7],
-					    zipcode: row.values[8],
-					    manager: row.values[9],
-					    phone: row.values[10],
-					    website: row.values[11] && JSON.stringify(row.values[11]) || '',
-					    description: row.values[12],
+					    name: typeof row.values[2] == 'string' ? row.values[2] : '',
+					    nickname: typeof row.values[3] == 'string' ? row.values[3] : '',
+					    grid: typeof row.values[4] == 'string' ? row.values[4] : '',
+					    district: typeof row.values[5] == 'string' ? row.values[5] : '',
+					    city: typeof row.values[6] == 'string' ? row.values[6] : '',
+					    address: typeof row.values[7] == 'string' ? row.values[7] : '',
+					    zipcode: typeof row.values[8] == 'string' ? row.values[8] : '',
+					    manager: typeof row.values[9] == 'string' ? row.values[9] : '',
+					    phone: typeof row.values[10] == 'string' ? row.values[10] : '',
+					    website: typeof row.values[11] == 'string' ? row.values[11] : (JSON.stringify(row.values[11]) || ''),
+					    description: typeof row.values[12] == 'string' ? row.values[12] : '',
 					};
 					//** 过滤标题行
 					if (!(set.name == '渠道名称' || set.nickname == '渠道编码')) {
@@ -114,7 +114,6 @@ schema.statics.fromExcel = function(filename,done){
 			//** 记录无法更新的数据集合
 			var wrongSets = [];
 			async.eachSeries(sets, function(set, cb) {
-			    console.log(set)
 			    Department
 			        .findOneAndUpdate({
 			            nickname: set.nickname,

@@ -44,7 +44,7 @@ exports = module.exports = function(app, models) {
 	 				//** 导入excel
 	 				models.Account.fromExcel(file, function(err,result){
 	 					if(err) return cb(err);
-	 					cb(null,result);
+	 					cb(null);
 	 				});
 	 				// //** 导入csv
 	 				// var data = fs.readFileSync(file,{encoding: 'utf8'});
@@ -55,7 +55,7 @@ exports = module.exports = function(app, models) {
 	 				// 			});
 	 				// 	cb(null);
 	 				// });
-	 			}, function(err, result) {
+	 			}, function(err) {
 	 				if (err) return res.send(err);
 	 				res.send({});
 	 			}); 

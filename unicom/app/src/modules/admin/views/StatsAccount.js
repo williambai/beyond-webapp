@@ -84,7 +84,7 @@ exports = module.exports = Backbone.View.extend({
 		var city = this.$(evt.currentTarget).attr('city') || '';
 		var district = this.$(evt.currentTarget).attr('district') || '';
 		this.collection.reset();
-		this.collection.url = config.api.host + '/protect/accounts?type=stats&city=' + city + '&district=' + district,
+		this.collection.url = config.api.host + '/protect/stats/cities?action=account&city=' + city + '&district=' + district,
 		this.render();
 		this.load();
 		return false;
