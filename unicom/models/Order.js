@@ -215,6 +215,178 @@ schema.statics.toExcel = function(query, done) {
         });
 };
 
+//** 统计各城市订单数
+schema.statics.statByCity = function(options, done){
+	if(options instanceof Function){
+		done = options;
+		options = {};
+	}
+	var Order = connection.model('Order');
+	var aggregate = Order.aggregate();
+	//** 缩小数据量
+	aggregate.append({
+		$project: {
+			quantity: 1,
+			total: 1,
+			bonus: 1,
+			createBy:1,
+			department: 1,
+			status: 1,
+			lastupdatetime: 1,
+		}
+	});
+	//** 按department.city分组
+	aggregate.append({
+		$match: {
+			lastupdatetime: {
+				$gte: options.from,
+				$lt: options.to,
+			},
+			'status': '成功',
+		}
+	});
+	//** 按department.city分组
+	aggregate.append({
+		$group: {
+			_id: '$department.city',
+			quantity: {
+				'$sum': '$quantity',
+			},
+			total: {
+				'$sum': '$total',
+			},
+			bonus: {
+				'$sum': '$bonus',
+			},
+			count: {
+				'$sum': 1
+			}
+		},
+	});
+	aggregate.exec(function(err,docs){
+		if(err) return done(err);
+		done(null,{
+			docs: docs
+		});
+	});	
+};
+
+//** 统计城市地区订单数
+schema.statics.statByDistrict = function(options, done){
+	if(options instanceof Function){
+		done = options;
+		options = {};
+	}
+	var Order = connection.model('Order');
+	var aggregate = Order.aggregate();
+	//** 缩小数据量
+	aggregate.append({
+		$project: {
+			quantity: 1,
+			total: 1,
+			bonus: 1,
+			createBy:1,
+			department: 1,
+			status: 1,
+			lastupdatetime: 1,
+		}
+	});
+	//** 按department.city分组
+	aggregate.append({
+		$match: {
+			lastupdatetime: {
+				$gte: options.from,
+				$lt: options.to,
+			},
+			'department.city': options.city,
+			'status': '成功',
+		}
+	});
+	//** 按department.city分组
+	aggregate.append({
+		$group: {
+			_id: '$department.district',
+			quantity: {
+				'$sum': '$quantity',
+			},
+			total: {
+				'$sum': '$total',
+			},
+			bonus: {
+				'$sum': '$bonus',
+			},
+			count: {
+				'$sum': 1
+			}
+		},
+	});
+	aggregate.exec(function(err,docs){
+		if(err) return done(err);
+		done(null,{
+			city: options.city,
+			docs: docs
+		});
+	});	
+};
+//** 统计城市地区网格订单数
+schema.statics.statByGrid = function(options, done){
+	if(options instanceof Function){
+		done = options;
+		options = {};
+	}
+	var Order = connection.model('Order');
+	var aggregate = Order.aggregate();
+	//** 缩小数据量
+	aggregate.append({
+		$project: {
+			quantity: 1,
+			total: 1,
+			bonus: 1,
+			createBy:1,
+			department: 1,
+			status: 1,
+			lastupdatetime: 1,
+		}
+	});
+	//** 按department.city分组
+	aggregate.append({
+		$match: {
+			lastupdatetime: {
+				$gte: options.from,
+				$lt: options.to,
+			},
+			'department.city': options.city,
+			'department.district': options.district,
+			'status': '成功',
+		}
+	});
+	//** 按department.city分组
+	aggregate.append({
+		$group: {
+			_id: '$department.grid',
+			quantity: {
+				'$sum': '$quantity',
+			},
+			total: {
+				'$sum': '$total',
+			},
+			bonus: {
+				'$sum': '$bonus',
+			},
+			count: {
+				'$sum': 1
+			}
+		},
+	});
+	aggregate.exec(function(err,docs){
+		if(err) return done(err);
+		done(null,{
+			city: options.city,
+			district: options.district,
+			docs: docs
+		});
+	});	
+};
 module.exports = exports = function(conn){
 	connection = conn || mongoose;
 

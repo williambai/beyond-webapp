@@ -130,7 +130,6 @@ exports = module.exports = function(app, models) {
  						});
  				}
  				break;
-
  			case 'exportTpl': 
  				var filename = 'order.xlsx';
 				res.setHeader('Content-Type', 'application/vnd.openxmlformats');

@@ -215,6 +215,100 @@ schema.statics.fromExcel = function(filename,done){
 		});
 };
 
+//** 统计各城市用户数
+schema.statics.statByCity = function(options, done){
+	if(options instanceof Function){
+		done = options;
+		options = {};
+	}
+	// var now = new Date();
+	// options.month = options.month || (now.getMonth() + 1);
+	// if(options.month < 1 || options.month > 12) options.month = now.getMonth() + 1;
+	// options.year = options.year || now.getFullYear();
+	// console.log(options);
+	var Account = connection.model('Account');
+	var aggregate = Account.aggregate();
+	//** 按department.city分组
+	aggregate.append({
+		$group: {
+			_id: '$department.city',
+			userCount: {
+				'$sum': 1
+			}
+		},
+	});
+	//** 逐个处理数据
+	aggregate.exec(function(err,docs){
+		if(err) return done(err);
+		done(null,{
+			docs: docs
+		});
+	});	
+};
+schema.statics.statByDistrict = function(options, done){
+	if(options instanceof Function){
+		done = options;
+		options = {};
+	}
+	var Account = connection.model('Account');
+	var aggregate = Account.aggregate();
+	//** 按department.district分组
+	aggregate.append({
+		$match: {
+			'department.city': options.city,
+		}
+	});
+	aggregate.append({
+		$group: {
+			_id: '$department.district',
+			userCount: {
+				'$sum': 1
+			}
+		},
+	});
+	//** 逐个处理数据
+	aggregate.exec(function(err,docs){
+		if(err) return done(err);
+		done(null,{
+			city: options.city,
+			docs: docs
+		});
+	});	
+};
+schema.statics.statByGrid = function(options, done){
+	if(options instanceof Function){
+		done = options;
+		options = {};
+	}
+	var Account = connection.model('Account');
+	var aggregate = Account.aggregate();
+	//** 按department.grid分组
+	aggregate.append({
+		$match: {
+			'department.city': options.city,
+			'department.district': options.district,
+		}
+	});
+	aggregate.append({
+		$group: {
+			_id: '$department.grid',
+			userCount: {
+				'$sum': 1
+			}
+		},
+	});
+	//** 逐个处理数据
+	aggregate.exec(function(err,docs){
+		if(err) return done(err);
+		done(null,{
+			city: options.city,
+			district: options.district,
+			docs: docs
+		});
+	});	
+};
+
+
 module.exports = exports = function(conn) {
 	connection = conn || mongoose;
 	return connection.model('Account', schema);
