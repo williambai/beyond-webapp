@@ -158,17 +158,17 @@ schema.statics.fromExcel = function(filename,done){
 				sheets[i].eachRow(function(row,rowNumber){
 					// console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values));
 					var set = {
-					    username: typeof row.values[2] == 'string' ? row.values[2] : '',
-					    email: typeof row.values[3] == 'string' ? row.values[3] : '',
-					    password: typeof row.values[4] == 'string' ? row.values[4] : '',
+					    username: String(row.values[2]) || '',
+					    email: String(row.values[3]) || '',
+					    password: String(row.values[4]) || '',
 					    department: {
-					    	name: typeof row.values[5] == 'string' ? row.values[5] : '',
-					    	nickname: typeof row.values[6] == 'string' ? row.values[6] : '',
-					    	grid: typeof row.values[7] == 'string' ? row.values[7] : '',
-					    	district: typeof row.values[8] == 'string' ? row.values[8] : '',
-					    	city: typeof row.values[9] == 'string' ? row.values[9] : '',
+					    	name: String(row.values[5]) || '',
+					    	nickname: String(row.values[6]) || '',
+					    	grid: String(row.values[7]) || '',
+					    	district: String(row.values[8]) || '',
+					    	city: String(row.values[9]) || '',
 					    },
-					    status: typeof row.values[10] == 'string' ? row.values[10] : '未验证',
+					    status: String(row.values[10]) || '未验证',
 					};
 					//** 过滤标题行
 					if (!(set.username == '姓名' || set.email == '手机号码')) {
@@ -208,7 +208,6 @@ schema.statics.fromExcel = function(filename,done){
 			}, function(err, result) {
 				if(err) console.log(err);
 			    // if (err) return done(err);
-			    console.log(wrongSets)
 			    done(null, wrongSets);
 			});
 		});
@@ -228,6 +227,11 @@ schema.statics.statByCity = function(options, done){
 	var Account = connection.model('Account');
 	var aggregate = Account.aggregate();
 	//** 按department.city分组
+	aggregate.append({
+		$match: {
+			'status': '正常',
+		}
+	});
 	aggregate.append({
 		$group: {
 			_id: '$department.city',

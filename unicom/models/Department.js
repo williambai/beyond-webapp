@@ -91,17 +91,17 @@ schema.statics.fromExcel = function(filename,done){
 				sheets[i].eachRow(function(row,rowNumber){
 					// console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values));
 					var set = {
-					    name: typeof row.values[2] == 'string' ? row.values[2] : '',
-					    nickname: typeof row.values[3] == 'string' ? row.values[3] : '',
-					    grid: typeof row.values[4] == 'string' ? row.values[4] : '',
-					    district: typeof row.values[5] == 'string' ? row.values[5] : '',
-					    city: typeof row.values[6] == 'string' ? row.values[6] : '',
-					    address: typeof row.values[7] == 'string' ? row.values[7] : '',
-					    zipcode: typeof row.values[8] == 'string' ? row.values[8] : '',
-					    manager: typeof row.values[9] == 'string' ? row.values[9] : '',
-					    phone: typeof row.values[10] == 'string' ? row.values[10] : '',
-					    website: typeof row.values[11] == 'string' ? row.values[11] : (JSON.stringify(row.values[11]) || ''),
-					    description: typeof row.values[12] == 'string' ? row.values[12] : '',
+					    name: String(row.values[2]) || '',
+					    nickname: String(row.values[3]) || '',
+					    grid: String(row.values[4]) || '',
+					    district: String(row.values[5]) || '',
+					    city: String(row.values[6]) || '',
+					    address: String(row.values[7]) || '',
+					    zipcode: String(row.values[8]) || '',
+					    manager: String(row.values[9]) || '',
+					    phone:  String(row.values[10]) || '',
+                        website: String(row.values[11]) || '',
+					    description:  String(row.values[12]) || '',
 					};
 					//** 过滤标题行
 					if (!(set.name == '渠道名称' || set.nickname == '渠道编码')) {

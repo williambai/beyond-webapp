@@ -29,7 +29,7 @@ exports = module.exports = function(app, models) {
 						errmsg: '请选择要导入的文件'
 					});
 				}
-				async.each(attachments, function(attachment, cb) {
+				async.eachSeries(attachments, function(attachment, cb) {
 					var file = path.join(__dirname, '../public', attachment);
 					if (!fs.existsSync(file)) {
 						return cb({
