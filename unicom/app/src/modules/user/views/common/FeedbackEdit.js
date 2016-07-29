@@ -1,37 +1,46 @@
 var _ = require('underscore');
-var FormView = require('./common/__FormView');
+var FormView = require('./__FormView');
 var	$ = require('jquery');
 var	Backbone = require('backbone');
-var config = require('../conf');
+var config = require('../../conf');
 
 Backbone.$ = $;
 
 //** 模型
-var ChangePass = Backbone.Model.extend({
+var Feedback = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/private/account/changepass',
-	validation: {
-		'old_password': {
-			required: true,
-			msg: '请输入原密码'
-		},
-	}
+	urlRoot: config.api.host + '/private/feedbacks',	
+	
+	defaults: {
+	},
+	
+	// validation: {
+	// 	'name': {
+	// 		required: true,
+	// 		msg: '请输入客户姓名'
+	// 	}
+	// },	
 });
 
+//** 主视图
 exports = module.exports = FormView.extend({
 
-	el: '#accountForm',
-	template: _.template($('#tpl-me-account').html()),
+	el: '#feedbackForm',
+	template: _.template($('#tpl-feedback-edit').html()),
+
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
-		this.model = new ChangePass();
+		this.model = new Feedback({_id: options.id});
 		FormView.prototype.initialize.apply(this, options);
 	},
 
 	events: {
 		'keyup input[type=text]': 'inputText',
+		'click .send-file': 'showFileExplorer',
+		'change input[name=file]': 'addAttachment',
+		'click .attachment': 'removeAttachment',
 		'submit form': 'submit',
 		'click .back': 'cancel',
 	},
@@ -65,6 +74,59 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 
+	showFileExplorer: function() {
+		$('input[name=file]').click();
+		return false;
+	},
+
+	addAttachment: function(evt) {
+		var that = this;
+		var formData = new FormData();
+		formData.append('files', evt.currentTarget.files[0]);
+		$.ajax({
+			url: config.api.host + '/public/attachments',
+			type: 'POST',
+			data: formData,
+			xhrFields: {
+				withCredentials: true
+			},
+			cache: false, //MUST be false
+			processData: false, //MUST be false
+			contentType: false, //MUST be false
+		}).done(function(data) {
+			if (data) {
+				that.$('.attachments').append('<span class="attachment"><input type="hidden" name="content[urls]" value="' + data.url + '"><img src="' + data.url + '" width="80px" height="80px">&nbsp;</span>');
+				that.$('input[name=file]').val('');
+			}
+		}).fail(function(err) {
+			console.log(err);
+		});
+		return false;
+	},
+
+	removeAttachment: function(evt) {
+		if (confirm('放弃上传它吗？')) {
+			var that = this;
+			var filename = $(evt.currentTarget).find('img').attr('src');
+			$.ajax({
+				url: config.api.host + '/public/attachments',
+				type: 'DELETE',
+				data: {
+					filename: filename
+				},
+				xhrFields: {
+					withCredentials: true
+				},
+			}).done(function() {
+				//remove attatchment
+				$(evt.currentTarget).remove();
+			}).fail(function() {
+
+			});
+		}
+		return false;
+	},
+
 	submit: function() {
 		var that = this;
 		//clear errors
@@ -85,31 +147,6 @@ exports = module.exports = FormView.extend({
 
 		var object = this.$('form').serializeJSON();
 		this.model.set(object);
-		var password = this.model.get('password');
-		var cpassword = this.model.get('cpassword');
-		if(password != cpassword){
-			var error = '两次输入不一致';
-			that.$('[name="cpassword"]').parent().addClass('has-error');
-			that.$('[name="cpassword"]').parent().find('span.help-block').text(error);
-			return false;			
-		}
-		if(!_.isEmpty(password) && password.length < 5){
-			var error = '密码长度至少五位';
-			that.$('[name="password"]').parent().addClass('has-error');
-			that.$('[name="password"]').parent().find('span.help-block').text(error);
-			return false;
-		}
-		if(_.isEmpty(password)){
-			if(that.model.isNew()){
-				var error = '用户必须设置密码';
-				that.$('[name="password"]').parent().addClass('has-error');
-				that.$('[name="password"]').parent().find('span.help-block').text(error);
-				return false;
-			}else {
-				this.model.unset('password',{silent: true});
-				this.model.unset('cpassword',{silent: true});			
-			}
-		}
 		// console.log(this.model.attributes);
 		this.model.save(null, {
 			xhrFields: {
@@ -119,26 +156,28 @@ exports = module.exports = FormView.extend({
 		return false;
 	},
 	
-
 	cancel: function(){
-		this.router.navigate('me/index',{trigger: true, replace: true});
+		this.router.navigate('feedback/index',{trigger: true, replace: true});
 		return false;
 	},
-
+	
 	//fetch event: done
 	done: function(response){
+		var that = this;
 		if(!this.modelFilled){
 			//first fetch: get model
 			this.modelFilled = true;
 			this.render();
+
 		}else{
 			//second fetch: submit
-			this.router.navigate('me/index',{trigger: true, replace: true});
+			this.router.navigate('feedback/index',{trigger: true, replace: true});
 		}
 	},
 
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
+		if(this.model.isNew()) this.$('.panel-title').text('新增反馈');
 		return this;
 	},
 });

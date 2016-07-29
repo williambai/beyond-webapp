@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var FormView = require('./__FormView');
+var FormView = require('./common/__FormView');
 var	$ = require('jquery');
 var	Backbone = require('backbone');
 var config = require('../conf');

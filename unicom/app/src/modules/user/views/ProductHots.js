@@ -4,7 +4,7 @@ var	Backbone = require('backbone');
 var config = require('../conf');
 
 Backbone.$ = $;
-var ListView = require('./__ListView');
+var ListView = require('./common/__ListView');
 
 //** Product模型
 var Product = Backbone.Model.extend({

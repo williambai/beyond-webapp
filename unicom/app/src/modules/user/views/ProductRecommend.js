@@ -2,7 +2,7 @@ var _ = require('underscore');
 var Backbone = require('backbone');
 var	$ = require('jquery');
 var config = require('../conf');
-var FormView = require('./__FormView');
+var FormView = require('./common/__FormView');
 
 Backbone.$ = $;
 

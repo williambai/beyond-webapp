@@ -1,10 +1,10 @@
 var _ = require('underscore');
 var $ = require('jquery');
 var	Backbone = require('backbone');
-var ListView = require('./__ListView');
-var SearchView = require('./__SearchView');
+var ListView = require('./common/__ListView');
+var SearchView = require('./common/__SearchView');
 var config = require('../conf');
-var Utils = require('./__Util');
+var Utils = require('./common/__Util');
 
 Backbone.$ = $;
 

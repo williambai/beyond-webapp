@@ -2,7 +2,7 @@ var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
 var config = require('../conf');
-var ListView = require('./__ListView');
+var ListView = require('./common/__ListView');
 Backbone.$ = $;
 
 //** Category模型

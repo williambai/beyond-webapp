@@ -141,8 +141,8 @@ var _bundleJS = function(arr,done){
 gulp.task('index.js',function(done){
 	var entries = [
 		'index.js',
-		'confirm.js',
-		'reset.js',
+		// 'confirm.js',
+		// 'reset.js',
 		'wechat.js',
 	];
 	_bundleJS(entries,done);

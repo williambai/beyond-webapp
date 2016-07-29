@@ -3,16 +3,16 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 var config = require('./conf');
 
-var LayoutView = require('./views/__Layout');
-var SideBarLeftView = require('./views/common/SideBarLeft');
-var RegisterView = require('../../views/_Register');
-var ForgotPasswordView = require('../../views/_ForgotPassword');
-var LoginView = require('../../views/_Login');
-var WeChatLoginView = require('../../views/_WeChatLogin');
-var MyAccountViewView = require('../../views/_MyAccountView');
-var MyAccountEditView = require('../../views/_MyAccountEdit');
-var FeedbackIndexView = require('../../views/_FeedbackIndex');
-var FeedbackEditView = require('../../views/_FeedbackEdit');
+var LayoutView = require('./views/common/__Layout');
+var SideBarLeftView = require('./views/common/_SideBarLeft');
+var RegisterView = require('./views/common/Register');
+var ForgotPasswordView = require('./views/common/ForgotPassword');
+var LoginView = require('./views/common/Login');
+var WeChatLoginView = require('./views/common/WeChatLogin');
+var MyAccountViewView = require('./views/common/MyAccountView');
+var MyAccountEditView = require('./views/common/MyAccountEdit');
+var FeedbackIndexView = require('./views/common/FeedbackIndex');
+var FeedbackEditView = require('./views/common/FeedbackEdit');
 
 var IndexView = require('./views/Index');
 var ActivityIndexView = require('./views/ActivityIndex');
