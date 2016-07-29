@@ -1,8 +1,6 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-	Backbone = require('backbone'),
-    activityTpl = require('../templates/_entityActivity.tpl'),
-	loadingTpl = require('../templates/__loading.tpl');
+var $ = require('jquery');
+var	Backbone = require('backbone');
 var config = require('../conf');
 var ListView = require('./__ListView');
 var Utils = require('./__Util');
@@ -25,11 +23,9 @@ var ActivityCollection = Backbone.Collection.extend({
 //** List子视图
 var ActivityListView = ListView.extend({
 	el: '#list',
+	template: _.template($('#tpl-activity-item').html()),
 
 	initialize: function(options){
-		var page = $(activityTpl);
-		var itemTemplate = $('#itemTemplate', page).html();
-		this.template = _.template(_.unescape(itemTemplate || ''));
 		this.collection = new ActivityCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
@@ -59,14 +55,10 @@ var ActivityListView = ListView.extend({
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
-
-	loadingTemplate: _.template(loadingTpl),
+	template: _.template($('#tpl-activity-index').html()),
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(activityTpl);
-		var indexTemplate = $('#indexTemplate', page).html();
-		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
 	},
 
@@ -106,11 +98,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 	
 	render: function() {
-		if (!this.loaded) {
-			this.$el.html(this.loadingTemplate());
-		} else {
-			this.$el.html(this.template());
-		}
+		this.$el.html(this.template());
 		return this;
 	},
 });

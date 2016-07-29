@@ -1,8 +1,7 @@
 var _ = require('underscore');
-var FormView = require('./__FormView'),
-	$ = require('jquery'),
-	Backbone = require('backbone'),
-    leadTpl = require('../templates/_entitySaleLead.tpl');
+var FormView = require('./__FormView');
+var	$ = require('jquery');
+var	Backbone = require('backbone');
 var config = require('../conf');
 
 //** 模型
@@ -17,15 +16,12 @@ var SaleLead = Backbone.Model.extend({
 exports = module.exports = FormView.extend({
 
 	el: '#accountForm',
-
+	template: _.template($('#tpl-sale-edit').html()),
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
 		this.model = new SaleLead({_id: options.id});
-		var page = $(leadTpl);
-		var editTemplate = $('#editTemplate', page).html();
-		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 

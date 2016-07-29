@@ -1,8 +1,6 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-	Backbone = require('backbone'),
-    meTpl = require('../templates/_entityMe.tpl'),
-	loadingTpl = require('../templates/__loading.tpl');
+var $ = require('jquery');
+var	Backbone = require('backbone');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -10,14 +8,10 @@ Backbone.$ = $;
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
-
-	loadingTemplate: _.template(loadingTpl),
+	template: _.template($('#tpl-me-index').html()),
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(meTpl);
-		var indexTemplate = $('#indexTemplate', page).html();
-		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
 	},
 
@@ -73,11 +67,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
-		if (!this.loaded) {
-			this.$el.html(this.loadingTemplate());
-		} else {
-			this.$el.html(this.template());
-		}
+		this.$el.html(this.template());
 		return this;
 	},
 });

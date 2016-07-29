@@ -1,8 +1,7 @@
 var _ = require('underscore');
-var FormView = require('./__FormView'),
-	$ = require('jquery'),
-	Backbone = require('backbone'),
-    meTpl = require('../templates/_entityMe.tpl');
+var FormView = require('./__FormView');
+var	$ = require('jquery');
+var	Backbone = require('backbone');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -22,15 +21,12 @@ var ChangePass = Backbone.Model.extend({
 exports = module.exports = FormView.extend({
 
 	el: '#accountForm',
-
+	template: _.template($('#tpl-me-account').html()),
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
 		this.model = new ChangePass();
-		var page = $(meTpl);
-		var editTemplate = $('#accountTemplate', page).html();
-		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 

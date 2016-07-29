@@ -1,8 +1,6 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-	Backbone = require('backbone'),
-    categoryTpl = require('../templates/_entityCategory.tpl'),
-	loadingTpl = require('../templates/__loading.tpl');
+var $ = require('jquery');
+var Backbone = require('backbone');
 var config = require('../conf');
 var ListView = require('./__ListView');
 Backbone.$ = $;
@@ -24,11 +22,9 @@ var CategoryCollection = Backbone.Collection.extend({
 var CategoryListView = ListView.extend({
 
 	el: '#list',
+	template: _.template($('#tpl-category-item').html()),
 
 	initialize: function(options){
-		var page = $(categoryTpl);
-		var itemTemplate = $('#itemTemplate', page).html();
-		this.template = _.template(_.unescape(itemTemplate || ''));
 		this.collection = new CategoryCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
@@ -44,14 +40,10 @@ var CategoryListView = ListView.extend({
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
-
-	loadingTemplate: _.template(loadingTpl),
+	template: _.template($('#tpl-category-index').html()),
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(categoryTpl);
-		var indexTemplate = $('#indexTemplate', page).html();
-		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
 	},
 
@@ -82,11 +74,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
-		if (!this.loaded) {
-			this.$el.html(this.loadingTemplate());
-		} else {
-			this.$el.html(this.template());
-		}
+		this.$el.html(this.template());
 		return this;
 	},
 });

@@ -1,18 +1,1325 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-	<title>贵州联通沃助手 - 中国联通</title>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
-	<meta name="apple-mobile-web-app-status-bar-style" content="yes">
-	<link rel="stylesheet" href="css/app.css">
-	<link rel="apple-touch-icon" href="images/touch-icon-iphone.png" />
-	<link rel="apple-touch-icon" sizes="72x72" href="images/touch-icon-ipad.png" />
-	<link rel="apple-touch-icon" sizes="114x114" href="images/touch-icon-iphone4.png" />
+    <title>贵州联通沃助手 - 中国联通</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+    <meta name="apple-mobile-web-app-status-bar-style" content="yes">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="apple-touch-icon" href="images/touch-icon-iphone.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/touch-icon-ipad.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/touch-icon-iphone4.png" />
 </head>
+
 <body>
-	<script type="text/javascript" src="js/index.js"></script>
+    <div id="sidebar-left" class="sidebar sidebar-left">
+        <div class="scrollable" style="padding-top:70px;">
+            <div class="scrollable-header app-name">
+                <a href="#" onclick="window.location.reload();return false;">贵州联通沃助手</a>
+            </div>
+            <div id="menu" class="scrollable-content">
+                <div class="list-group">
+                    <a class="list-group-item active" href="#login">
+                        <i class="fa fa-meh-o fa-fw"></i> &nbsp;未登录
+                        <i class="fa fa-chevron-right pull-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar sidebar-right">
+        <div class="scrollable" style="padding-top:70px;">
+            <div class="scrollable-header app-name">
+                待办事宜
+                <a href="#friends" class="pull-right">
+                    <i class="fa fa-search"></i> 管理
+                </a>
+            </div>
+            <div class="scrollable-content">
+                <div id="chat" class="list-group"></div>
+            </div>
+        </div>
+    </div>
+    <div class="app">
+        <div class="navbar navbar-app navbar-absolute-top">
+            <div class="navbar-brand navbar-brand-center">贵州联通沃助手</div>
+            <div class="btn-group pull-left">
+                <div class="btn sidebar-toggle" id="left-sidebar-toggle">
+                    <i class="fa fa-bars fa-lg"></i> &nbsp;菜单
+                </div>
+            </div>
+            <div class="btn-group pull-right">
+                <div class="btn" id="right-sidebar-toggle">
+                    <i class="fa fa-home fa-lg"></i> &nbsp;主页
+                </div>
+            </div>
+        </div>
+        <div class="navbar navbar-app navbar-absolute-top" id="deviceready" style="display:none;">
+            <div class="navbar-brand-center">
+                <h4 class="bg-warning">网络不通</h4>
+            </div>
+        </div>
+        <div class="app-body">
+            <div class="app-content">
+                <div class="scrollable">
+                    <div id="content" class="scrollable-content section">
+                        <p>正在加载中...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+<!-- 左栏 -->
+<script type="text/template" id="tpl-sidebar-left">
+    <div class="scrollable" style="padding-top:70px;">
+        <div class="scrollable-header app-name">
+            <a href="#" onclick="window.location.reload();return false;">贵州联通沃助手</a>
+        </div>
+        <div id="menu" class="scrollable-content">
+            <div class="list-group">
+                <a class="list-group-item active" href="#login">
+                    <i class="fa fa-meh-o fa-fw"></i> &nbsp;未登录
+                    <i class="fa fa-chevron-right pull-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</script>
+<!-- 首页 -->
+<script type="text/template" id="tpl-index">
+    <div>
+        <div id="carousel">
+            <div id="app-carousel" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#app-carousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#app-carousel" data-slide-to="1"></li>
+                    <li data-target="#app-carousel" data-slide-to="2"></li>
+                </ol>
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                </div>
+                <!-- Controls -->
+                <a class="left carousel-control" href="#app-carousel" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#app-carousel" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="menu_block">
+        <div class="menu-block">
+            <div class="row">
+                <div class="col-sm-7 col-xs-7 menu-block-left">
+                    <div class="text-center menu-block-2x" style="background-color:red;">
+                        <a href="#order/index">
+                            <h4> <i class="fa fa-bar-chart fa-lg"></i>
+									&nbsp;我的业绩
+								</h4>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-5 col-xs-5 menu-block-right">
+                    <div class="text-center menu-block-1x first" style="background-color:green;">
+                        <a href="#product/hots">
+                            <h4> <i class="fa fa-star-o fa-lg"></i>
+									&nbsp;热门产品
+								</h4>
+                        </a>
+                    </div>
+                    <div class="text-center menu-block-1x" style="background-color:green;">
+                        <a href="#category/index">
+                            <h4>
+									<i class="fa fa-book fa-lg"></i>
+									&nbsp;所有产品
+								</h4>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-7 col-xs-7 menu-block-left">
+                    <div class="text-center menu-block-1x" style="background-color:red;">
+                        <a href="#phone/index">
+                            <h4>
+									<i class="fa fa-road fa-lg"></i>
+									&nbsp;号码检测
+								</h4>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-5 col-xs-5 menu-block-right">
+                    <div class="text-center menu-block-1x" style="background-color:green;">
+                        <a href="#customer/index">
+                            <h4>
+									<i class="fa fa-group fa-lg"></i>
+									&nbsp;客户关怀
+								</h4>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-7 col-xs-7 menu-block-left">
+                    <div class="text-center menu-block-1x" style="background-color:red;">
+                        <a href="#activity/index">
+                            <h4>
+									<i class="fa fa-film fa-lg"></i>
+									&nbsp;同事圈&nbsp;&nbsp;
+								</h4>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-5 col-xs-5 menu-block-right">
+                    <div class="text-center menu-block-1x" style="background-color:green;">
+                        <a href="#me/index">
+                            <h4>
+									<i class="fa fa-user fa-lg"></i>
+									&nbsp;个人中心
+								</h4>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="copyright">
+        <div class="text-center">
+            <hr>
+            <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司</p>
+            <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
+        </div>
+    </div>
+</script>
+<!-- 产品目录 -->
+<script type="text/template" id="tpl-category-index">
+	<div id="indexTemplate">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">所有产品</h5>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div id="list">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 产品目录条目 -->
+<script type="text/tempalte" id="tpl-category-item">
+	<div>
+		<div class="item col-xs-6" id="<%= model._id %>">
+			<div class="text-center">
+				<img src="" width="80px" height="80px">
+				<h4><%= model.name %></h4>
+				<p>&nbsp;</p>
+			</div>
+		</div>
+	</div>
+</script>
+
+<!-- 分类中的产品 -->
+<script type="text/tempalte" id="tpl-category-product-index">
+	<div>
+		<div class="nav-back">
+			<button class="btn btn-primary pull-left back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+			<h4 class="text-center"><%= model.name %></h4>
+		</div>
+		<p>&nbsp;</p>
+		<div id="list">
+		</div>
+	</div>
+</script>
+<!-- 热门产品 -->
+<script type="text/template" id="tpl-product-hot">
+	<div id="hotTemplate">
+		<div class="panel panel-default">
+ 			<div class="panel-heading">
+				<h5 class="panel-title text-center">热门产品</h5>
+			</div>
+			<div class="panel-body">
+				<div id="list">
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 产品条目 -->
+<script type="text/template" id="tpl-product-item">
+	<div>
+		<div class="item" id="<%= model._id %>" data="<%= model.name %>">
+			<div class="media">
+				<div class="media-left">
+					<img width="50px" height="50px">
+				</div>
+				<div class="media-body">
+					<h4><%= model.name %></h4>
+					<p><%= model.tags %></p>
+					<p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：<%= model.goods.bonus %>&nbsp;元&nbsp;&nbsp;</p>
+				</div>
+			</div>
+			<p style="text-align:right">
+			<!-- <% if(/MicroMessenger/.test(navigator.userAgent)){ %> -->
+			<!-- <button class="btn btn-danger promote wechat">微信推广</button> -->
+			<!-- <% } %> -->
+			<!-- <button class="btn btn-danger sms">短信推广</button> -->
+			<!-- <button class="btn btn-danger order">订购</button> -->
+			<button class="btn btn-success recommend">推荐</button>
+			</p>
+			<hr/>
+		</div>
+	</div>
+</script>
+<!-- 产品详情 -->
+<script type="text/template" id="tpl-product-view">
+	<div>
+		<div class="nav-back">
+			<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+		</div>
+		<br/>
+		<div class="row">
+			<div class="col-xs-8">
+				<div class="pull-left">
+					<img width="50px" height="50px">
+				</div>
+				<div style="padding-left:60px;">
+					<h4 >
+						<%= model.name %>
+					</h4>
+					<p><%= model.tags %></p>
+					<p>佣金：<%= model.goods.bonus %>元</p>
+				</div>
+			</div>
+			<div class="col-xs-4">
+				<h4 style="text-align:right;"><%= model.price %>&nbsp;<%= model.unit %>
+				</h4>
+			</div>
+		</div>
+		<div id="orderView"></div>
+		<h4>产品说明：</h4>
+		<hr/>
+		<p><%= model.description %></p>
+	</div>
+</script>
+
+<!-- 产品订单 -->
+<script type="text/template" id="tpl-product-order">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">申请订购</h5>
+		</div>
+		<div class="panel-body">
+			<form id="orderForm">
+				<div class="form-group">
+					<label></label>
+					<input type="text" name="mobile[]" class="form-control" placeholder="客户手机号码">
+					<span class="help-block"></span>
+				</div>
+<!--
+					<div class="form-group">
+					<label></label>
+					<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label></label>
+					<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
+					<span class="help-block"></span>
+				</div>
+				<div id="insertItemBefore"></div>
+-->
+				<div class="form-group hidden">
+					<label>生效时间：</label>
+					<div style="padding-left:30px;" id="effectMethod">
+					</div>
+				</div>
+					<div class="form-group">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group">
+						<input type="submit" value="确定" class="btn btn-danger">
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-success cancel">取消</button>
+					</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<h4>使用说明：</h4>
+	<hr/>
+	<p>订购平台将向您的手机发送二次确认短信，请在规定的时间内，按照短信上的提示信息完成订购。</p>
+	<p><span style="color:red;">仅限贵州省联通手机的用户，其他地区的用户暂时无法收到短信。</span></p>
+	<br/>
+</script>
+
+<!-- 订单成功 -->
+<script type="text/template" id="tpl-order-success">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">申请订购成功</h5>
+		</div>
+		<div class="panel-body">
+			<p>恭喜您！产品订购申请已受理。您将会收到订购平台发送的二次确认短信，请按照短信上的提示信息完成订购！</p>
+			<button class="btn btn-primary btn-block back">返回</button>
+		</div>
+	</div>
+</script>
+
+<!-- 订单失败 -->
+<script type="text/template" id="tpl-order-failure">
+		<p>申请订购失败。查看</p>
+		<div>
+		</div>
+</script>
+
+<!-- 产品推荐 -->
+<script type="text/template" id="tpl-product-recommend">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">推荐给客户</h5>
+		</div>
+		<div class="panel-body">
+			<form id="orderForm">
+				<div class="form-group">
+					<label></label>
+					<input type="text" name="mobile[]" class="form-control" placeholder="客户手机号码">
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group hidden">
+					<label>生效时间：</label>
+					<div style="padding-left:30px;" id="effectMethod">
+					</div>
+				</div>
+					<div class="form-group">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group">
+						<input type="submit" value="确定" class="btn btn-danger">
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-success cancel">取消</button>
+					</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<h4>使用说明：</h4>
+	<hr/>
+	<p>订购平台将向客户的手机发送二次确认短信，客户必须在规定的时间内，按照短信上的提示信息完成订购。</p>
+	<br/>
+</script>
+<!-- 推荐成功 -->
+<script type="text/template" id="tpl-recommend-success">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">推荐成功</h5>
+		</div>
+		<div class="panel-body">
+			<p>恭喜您，推荐成功！客户将收到订购平台发送的二次确认短信，他(她)必须在规定的时间内，按照短信上的提示完成订购！</p>
+			<button class="btn btn-primary btn-block back">返回</button>
+		</div>
+	</div>
+</script>
+<!-- 推荐失败 -->
+<script type="text/template" id="tpl-recommend-failure">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">推荐失败</h5>
+		</div>
+		<div class="panel-body">
+			<p><%= model && model.errmsg %></p>
+			<button class="btn btn-primary btn-block back">返回</button>
+		</div>
+	</div>
+</script>
+<!-- 我的订单 -->
+<script type="text/template" id="tpl-me-order-index">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">我的工作成绩</h5>
+		</div>
+		<div class="panel-body">
+			<div id="list">
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 我的订单条目 -->
+<script type="text/template" id="tpl-me-order-item">
+	<div>
+		<div class="item" id="<%= model._id %>">
+			<div class="media">
+				<div class="media-left">
+					<img src="" width="50px" height="50px">
+				</div>
+				<div class="media-body">
+					<h4><span style="color:red;"><!-- <i class="fa fa-flag"></i>&nbsp; --><%= model.status %></span>&nbsp;<%= model.goods && model.goods.name %></h4>
+			 		<p><i class="fa fa-user"></i>&nbsp;<%= model.customer && model.customer.mobile %></p>
+			 		<div class="payment"></div>
+					<p><i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %></p>
+				</div>
+				<div class="media-right">
+			 		<div class="pull-right">
+			 			<h4><!-- <i class="fa fa-cart-arrow-down"></i> -->￥<%= model.total && model.total.toFixed(2) %></h4>
+			 			<h4><i class="fa fa-gift"></i>&nbsp;<%= model.bonus %></h4>
+			 			<!-- <h4><i class="fa fa-thumbs-o-up"></i>&nbsp;+&nbsp;<%= model.bonus && model.bonus.points %></h4> -->
+			 		</div>
+				</div>
+			</div>
+
+		</div>
+		<hr/>
+	</div>
+</script>
+<!-- 我的客户 -->
+<script type="text/template" id="tpl-me-customer-index">
+	<div class="panel panel-default">
+		<div class="pull-right">
+			<button class="btn btn-primary"><i class="fa fa-filter fa-lg"></i></button>
+		</div>
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">我的客户</h5>
+		</div>
+		<div class="panel-body">
+			<div id="list">
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 我的客户条目 -->
+<script type="text/template" id="tpl-me-customer-item">
+	<div class="pull-right" id="<%= model._id %>">
+		<!-- <button class="btn btn-success recommend">推荐产品</button> -->
+		<a class="btn btn-danger" href="tel:<%= model.mobile %>">打电话</a>
+		<!-- <button class="btn btn-info view">了解客户</button> -->
+	</div>
+	<div>
+ 		<h4><%= model.name %>&nbsp;&nbsp;<%= model.mobile %></h4>
+		<p>客户关怀：3天前&nbsp;&nbsp;&nbsp;当前状态：有效</p>
+	</div>
+	<hr/>
+</script>
+<!-- 我的客户过滤 -->
+<script type="text/template" id="tpl-me-customer-search">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title text-center">筛选条件</h4>
+		</div>
+		<div class="panel-body">
+			<form id="searchForm">
+				<input type="hidden" name="type" value="search">
+				<div class="form-group">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group">
+						<input type="submit" value="确定" class="btn btn-danger">
+					</div>
+					<div class="btn-group">
+						<input type="reset" value="重置" class="btn btn-primary">
+					</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</script>
+<!-- 号码检查 -->
+<script type="text/template" id="tpl-phone-index">
+	<div>
+		<div id="carouselView"></div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">号码检测</h5>
+			</div>
+			<div class="panel-body">
+				<div id="search">
+				</div>
+				<div id="view">
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 号码检查搜索 -->
+<script type="text/template" id="tpl-phone-search">
+	<form id="orderForm">
+		<div class="form-group">
+			<label></label>
+			<input type="text" name="mobile" class="form-control" placeholder="客户手机号码">
+			<span class="help-block"></span>
+		</div>
+			<div class="form-group">
+			<div class="btn-group btn-group-justified">
+				<div class="btn-group">
+				<input type="submit" value="确定" class="btn btn-danger">
+			</div>
+			<div class="btn-group">
+				<button class="btn btn-success back">返回</button>
+			</div>
+			</div>
+		</div>
+	</form>
+</script>
+<!-- 号码检查结果 -->
+<script type="text/template" id="tpl-phone-result">
+	<hr>
+	<h4>检验结果</h4>
+	<p style="color:red;"><%= model.errmsg %></p>
+	<% if(model.info && (model.info.OpenDate != '')){ %>
+	<p>仅能订购2/3G业务</p>
+	<% }else if(model.info && (model.info.OpenDate =='')){ %>
+	<p>仅能订购4G业务</p>
+	<% }else{ %>
+	<p>无结果</p>
+	<% } %>
+</script>
+<!-- 同事圈 -->
+<script type="text/template" id="tpl-activity-index">
+	<div>
+		<div id="carouselView"></div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">同事圈</h5>
+			</div>
+			<div class="panel-body">
+				<div id="list">
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 同事圈头部轮播 -->
+<script type="text/template" id="tpl-activity-carousel">
+	<div id="app-carousel" class="carousel slide" data-ride="carousel">
+	  <!-- Indicators -->
+	  <ol class="carousel-indicators">
+	    <li data-target="#app-carousel" data-slide-to="0" class="active"></li>
+	    <li data-target="#app-carousel" data-slide-to="1"></li>
+	    <li data-target="#app-carousel" data-slide-to="2"></li>
+	  </ol>
+
+	  <!-- Wrapper for slides -->
+	  <div class="carousel-inner" role="listbox">
+	    <div class="item active">
+	      <img src="/_tmp/1.jpg" alt="...">
+	      <div class="carousel-caption">
+	      </div>
+	    </div>
+	    <div class="item">
+	      <img src="/_tmp/2.jpg" alt="...">
+	      <div class="carousel-caption">
+	      </div>
+	    </div>
+	    <div class="item">
+	      <img src="/_tmp/3.jpeg" alt="...">
+	      <div class="carousel-caption">
+	      </div>
+	    </div>
+	  </div>
+
+	  <!-- Controls -->
+	  <a class="left carousel-control" href="#app-carousel" role="button" data-slide="prev">
+	    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+	    <span class="sr-only">Previous</span>
+	  </a>
+	  <a class="right carousel-control" href="#app-carousel" role="button" data-slide="next">
+	    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+	    <span class="sr-only">Next</span>
+	  </a>
+	</div>
+</script>
+<!-- 同事圈动态条目 -->
+<script type="text/template" id="tpl-activity-item">
+	<div class="media">
+		<div class="pull-left">
+			<a href="#profile/<%= model.uid %>
+				">
+				<img class="media-object" src="" width="64px;" height="64px;"></a>
+		</div>
+		<div class="media-body">
+			<h4 class="media-heading">
+				<a href="#space/<%= model.uid %>
+					">
+					<%= model.username %></a>
+			</h4>
+			<%= model.content %>
+				<p>
+				<i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %>
+			</p>
+<!--
+				<span class="pull-right">
+						<a class="good"> <i class="fa fa-heart-o"></i>
+							&nbsp;点赞
+						</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<a class="comment-toggle"> <i class="fa fa-pencil-square-o"></i>
+							&nbsp;评论
+						</a>
+				</span>
+			</p>
+			<div class="comment-editor"></div>
+			<div class="comments">
+			</div> 
+-->
+		</div>
+		<div class="media-right"></div>
+	</div>
+	<hr>
+</script>
+
+<!-- 帮助中心首页 -->
+<script type="text/template" id="tpl-help-index">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">帮助中心</h5>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-xs-6" id="experience">
+					<div class="text-center">
+						<img src="/images/experience.png" width="80px" height="80px">
+						<h4>经验交流</h4>
+						<p>&nbsp;</p>
+					</div>
+				</div>
+				<div class="col-xs-6" id="policy">
+					<div class="text-center">
+						<img src="/images/policy_brokerage.png" width="80px" height="80px">
+						<h4>佣金政策</h4>
+						<p>&nbsp;</p>
+					</div>
+				</div>
+				<div class="col-xs-6" id="sale">
+					<div class="text-center">
+						<img src="/images/repository.png" width="80px" height="80px">
+						<h4>营销话术</h4>
+						<p>&nbsp;</p>
+					</div>
+				</div>
+				<div class="col-xs-6" id="faq">
+					<div class="text-center">
+						<img src="/images/faq.png" width="80px" height="80px">
+						<h4>新手指南</h4>
+						<p>&nbsp;</p>
+					</div>
+				</div>
+				<div class="col-xs-6" id="feedback">
+					<div class="text-center">
+						<img src="/images/feedback.png" width="80px" height="80px">
+						<h4>问题反馈</h4>
+						<p>&nbsp;</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<!-- 帮助中心佣金政策 -->
+<script type="text/template" id="tpl-help-policy">
+	<div>
+		<div class="nav-back">
+			<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+		</div>
+<!-- 		
+		<h4>佣金政策</h4>
+		<p>1、销售记录对账</p>
+		<p>
+			每月各营业厅通过关注贵州联通官方微信的沃助手，通过沃助手对用户进行增值产品的推荐订购。所有的订购记录都会在沃助手系统中保存。
+		</p>
+		<p>联通将当月增值产品佣金的订购记录导出，系统根据订购记录进行对账，得出每个月每个营业厅和营业员的佣金表。</p>
+		<p>3、佣金发放</p>
+		<p>
+			系统根据佣金记录，可算出每个营业厅个人当月佣金以及营业厅老板佣金。根据次月月渠道老板与营销员5：5佣金分配规则，按照比例发放。推荐的产品订购生效后，次月仍在网，次月月底31日前发放佣金。系统将佣金直接汇至营业员绑定的银行卡（建行或农行），发短信、微信或QQ群提醒到个人。每月发放佣金时发短信告知代理商和营业员，告知发放时间，发放数目和反馈电话等。
+		</p>
+		<p>4、佣金查询</p>
+		<p>每月营业员销售产品的佣金记录将展现到佣金界面。营业员可查询到每月增值业务的佣金明细。</p>
+		<p>5、后期稽核</p>
+		<p>
+			每个月营业员可根据佣金界面显示的个人佣金金额与自身发展量进行对比。如果出现偏差，则可通过QQ群、电话等渠道进行反馈。沃助手后台会根据反馈意见及时和代理商、营业员沟通。
+		</p> -->
+	</div>
+</script>
+
+<!-- 帮助中心销售技巧 -->
+<script type="text/template" id="tpl-help-sale">
+	<div>
+		<div class="nav-back">
+			<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+		</div>
+		<p>1、3G流量包推荐话术</p>
+		<p>
+			1、××先生（女士）！目前100M手机上网流量是我们免费赠送给您的，如果您没有用，等同于赠送给您的这价值10块钱的流量包浪费了，我给您发一些实用的手机应用链接，这些手机应用对您的生活和工作很适用，您不妨试用一下，稍后请您注意查收。如果流量不够用，可以购买我们的联通加油包。
+		</p>
+		<p>
+			2、××先生（女士）！您本机办理的是10元包100M流量，这才到月中，您已经使用了一大半了，如果流量不够用的话，建议您可以办理个大流量的套餐，比如20元包300M，流量翻倍只多十元，您觉得呢？
+		</p>
+		<p>
+			3、××先生（女士）！您办理的是固话（宽带）和手机组合的自主套餐，我们可以免除您固话（宽带）的月租、来显彩铃以及手机的来显和功能费，我看到您上个月有高额的流量超时费，建议您办理流量加油包，立即生效，现在开始就可以省钱。
+		</p>
+		<p>
+			4、××先生（女士）！手机上网流量超出了之后每M流量大概3毛多，如果您平时上网比较多，您可以办理流量包，10元可以包100M，20元可以包300M,如果您需要办理，我现在就可以帮您办理了。
+		</p>
+		<p>
+			5、××先生（女士）！您的上网流量比较多，您可以选择叠加流量包，需要提醒您的是，流量加油包只可以不同档次叠加，但最多只能叠加一次。如果您平常用手机看视频，推荐使用定向流量包，比如：爱奇艺，沃看贵州等产品，每个月包6G的流量，网络视频、电影、电视剧一应俱全。
+		</p>
+		<p>
+			6、××先生（女士）！我们现在每月赠送给您100M流量使用，如果不够用，您还可以再叠加办理20元包300M，现在就为您办理好吗？
+		</p>
+		<p>2、来电提醒推荐话术</p>
+		<p>
+			1、××先生（女士）！通过我们的系统显示发现您平时电话也比较多，如果漏接了家人或朋友的重要来电就可能给您的生活带来很大的影响，也可能会因此耽误很多事情的！您说是不是？然而现在简单了,联通推出啦来电提醒服务，这就会帮您解决这样的问题，您为什么不体验一下呢！最近应许多客户的要求为他们开通了来电提醒业务，现在就可以为您开通，一会您回复一条确认信息就办理成功了。稍后请您注意确认。
+		</p>
+		<p>3、短信包推荐话术</p>
+		<p>
+			1、××先生（女士）您好！通过我们的系统了解到您经常是使用发短信比较多，现在发短信非常便宜了。联通专门为像您这样的客户量身定做了短信包，当您使用它的时候就不会因为发短信多而苦恼了，您原来每个月发200条短信需要花费您20钱，现在定了短信包发200条短信只收您10元钱，这样一下就帮您省了10元钱，是不是很划算，那我就帮您办理好吗！
+		</p>
+		<p>4、炫铃推荐话术</p>
+		<p>
+			1、××先生（女士），您好！通过刚才对您的了解，看得出您是一个很想和家人或朋友一起分享喜悦的人，相信您一定会经常和家人或朋友进行沟通联系，如果接到您家里和朋友打给您的电话您也一定很开心！如果您的家人在拨打您电话时能听到您精心为他设计的优美音乐与祝福，您的家人和朋友一定会很开心。这就是我们的炫铃产品，可以让您的亲朋好友享受到这份喜悦，您还犹豫什么呢？那我马上为您开通吧！
+		</p>
+		<p>
+			2、现在的炫铃功能升级了，您知道吗？炫铃还能展现您的个性，很多人都喜欢把炫铃设置成自己特别喜欢的铃声，让别人知道自己的心情与品位。在节日或某个人生日时，还可以设置成节祝福的铃声，这样让别人打您电话时，第一反应就是给对方一个祝福的声音，对方对您感觉会很好。现在炫铃还有很多特别的功能，能为您不同的朋友设置不同的铃声，还能在不同的时段设置不同的铃声，甚至还可以把自己的制作的声音作为铃声，这些都特别能彰显您的个性与品位。您看这么好的功能，那我就帮您办了吧！
+		</p>
+		<p>5、来电秘书</p>
+		<p>
+			1、**先生（女士），您觉得联通信号怎么样？如果有时候出现断断续续的情况会影响您接听电话，我们现在有个来电秘书业务，当您手机处于信号不好的情况，来电秘书会帮您接听电话，在您手机恢复正常使用的时候，我们会将您漏接的电话用短信方式通知您，每个月只要3元，这样您就不会错过任何一个重要电话了，您看需要我帮您开通吗？
+		</p>
+		<p>
+			2. **先生（女士），一看您就是一个商务人士，您每个月电话非常多，我们现在提供一个很方便的功能，是来电秘书业务，当您手机关机，不在服务区的时候，来电秘书会记录您的漏接来电，在您手机开机或回服务区的时候，系统会把您漏接的信息以短信的方式通知您，这样您就不会错过任何一个电话了。
+		</p>
+		<p>6、 wo看贵州</p>
+		<p>
+			1、自己的手机并打开“沃看贵州”软件给顾客体验说上面有26个台，随时都可以观看，又不消耗流量，而且上面还有电影并且经常更新，一个月才10元，每天哪里用不到10元呢？墩国美营业员张磊推荐“沃看贵州”，首先询问顾客平时有没有看电视的习惯，接着拿出电话推介话术
+		</p>
+		<p>以下话术来自武汉王家湾网格经理李乾，他编好后发给网格内各个员工，让平时不太会讲话的同事打电话时照着读：</p>
+		<p>
+			1、针对3G流量包业务：##先生（女士）！手机上网流量超出后每兆大概3毛到1元钱，如果您平时上网比较多，建议您订购一个流量包业务，（介绍流量包情况）如果您同意的话我们现在就可以为您办理，不需要您去营业厅排队啦，只要在收到短信后回复Y就可以！
+		</p>
+		<p>
+			2、针对漏话提醒业务：##先生（女士）！通过我们的系统显示发现您平时电话比较多，如果漏接了重要来电可能会对您的工作和生活产生影响。现在您只需回复短信Y即可开通我们的漏话提醒业务，再也不用担心漏掉重要电话啦！
+		</p>
+		<p>
+			3、唐家墩国美营业员张磊推荐“沃看贵州”：首先询问顾客平时有没有看电视的习惯，接着拿出自己的手机并打开“沃看贵州”软件给顾客体验说上面有26个台，随时都可以观看，又不消耗流量，而且上面还有电影并且经常更新，一个月才10元，每天哪里用不到10元呢？
+		</p>
+		<p>4、3G套餐中只用66元套餐包含短信，客户选择其他套餐时对其进行提醒并建议其开通短信包业务；</p>
+		<p>
+			5、客户选择A套餐时：询问客户平时一般上网习惯，若客户经常会用手机看直播、电影等，即向其介绍“沃看贵州”（下载占空间，在线看的话套餐内流量远远不够）；
+		</p>
+		<p>6、客户选择B套餐时：告知客户100M以内的流量仅够每天刷一次微博，逛两次空间，建议其增加流量包；</p>
+		<p>
+			7、根据客户类型：客户若为商业人士，向其推荐漏话提醒、短信包；对年轻的白领主要推荐沃看贵州、流量包、炫铃业务；对中老年人主要推荐资费便宜、关系日常生活的生活包、天气预报等业务；在推荐时，注意把握推介的力度，建议同龄人之间、异性之间推荐力度可以大一些。
+		</p>
+		<p></p>
+	</div>
+</script>
+<!-- 帮助中心常见问题 -->
+<script type="text/template" id="tpl-help-faq">
+	<div>
+		<div class="nav-back">
+			<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+		</div>
+<!-- 
+		<p></p>
+		<p>1、“联通沃助手”是什么？</p>
+		<p></p>
+		<p>
+			答：“联通沃助手”是贵州联通在移动互联网经营环境下，基于微信并且结合当前渠道数信业务营销中存在的实际问题，联合第三方公司打造的一款可实现联通自有及社会渠道销售人员快速、简洁实施各类营销动作的移动工作平台。
+		</p>
+		<p></p>
+		<p>2、“联通沃助手”如何注册使用，对使用人员和设备选择有何要求？</p>
+		<p></p>
+		<p>
+			答：“联通沃助手”向贵州联通公司所有员工及代理商、营销渠道等相关人员开放使用。支持苹果和安卓系统系列的智能手机，并且关注贵州联通官方微信。需要开通人员用联通手机号码和个人身份信息进行注册申请即可。还可以联系联通分公司相关责任部门申请注册使用。
+		</p>
+		<p></p>
+		<p>3、使用“联通沃助手”推荐业务有什么优势？</p>
+		<p></p>
+		<p>
+			答：用“联通沃助手”为客户办理业务非常高效方便，可以随时随地的全员营销；省去客户到营业厅排队的时间，打开手机就可以方便快捷的给客户推荐业务，增进与客户的交流互动，帮助每一位营销人员更好的维系好自己的客户。
+		</p>
+		<p></p>
+		<p>4、“联通沃助手”有那些功能？</p>
+		<p></p>
+		<p>
+			答：主要包括产品销售、内容推荐、业绩查询、英雄榜、客户管理、政策奖励、知识库等几大主要功能。向客户发送所需的推荐业务后，客户回复确认短信即为一次有效完整的销售行为；业绩查询包括销售流水、佣金、销售记录等功能查询；按照地域和时间纬度公示销售标兵排行。
+		</p>
+		<p></p>
+		<p>5、如何使用“联通沃助手”向客户推荐增值服务业务？</p>
+		<p></p>
+		<p>
+			答：登录进入贵州联通官方微信点击进入“联通沃助手”首页，呈现出不同类型的增值服务明细，营销人员根据客户手机套餐推荐匹配的增值服务产品（如：3G国内流量包、3G省内流量包）。
+		</p>
+		<p></p>
+		<p>6、向客户发送推荐业务短信是否有限制？</p>
+		<p></p>
+		<p>
+			答：有限制；每天发送不得超过50条推荐短信息，每月发送总计不得超过500条推荐短信息，每日21时后停止短信息服务，第二日早7时恢复短信息服务。
+		</p>
+		<p></p>
+		<p>7、怎么样查看销售流水记录？</p>
+		<p></p>
+		<p>
+			答：登录进入贵州联通官方微信“联通沃助手”首页，点击"销售流水"，系统会根据日期和时间的由近及远的记录营销人员的销售记录。
+		</p>
+		<p></p>
+		<p>8、怎么样查询个人佣金？</p>
+		<p></p>
+		<p>
+			答：登录进入贵州联通官方微信“联通沃助手”首页，选择点击"我的"，选择"个人佣金"，系统会根据按日、月、年时间段纬度统计营销人员所得佣金数额。
+		</p>
+		<p></p>
+		<p>9、目前佣金和奖励政策是怎么样的？</p>
+		<p></p>
+		<p>答：增值业务产品销售业绩奖励标准遵循联通公司相关政策，省公司按照统一标准奖励给分公司进行下发，详情见通告拦相关内容。</p>
+		<p></p>
+		<p>10、无法登录，提示噢~TAT~服务器貌似现在有点小情绪，请稍后重试一下~！</p>
+		<p></p>
+		<p>答：检查手机WLAN网络设置和3G移动数据连接是否开启。</p>
+		<p></p>
+		<p>11、如何联系沃助手？</p>
+		<p></p>
+		<p>答：我们的客服电话为：</p>
+		<p></p>
+		<p>沃助手营销讨论群：</p>
+		<p></p>
+-->
+	</div>
+</script>
+<!-- 个人中心首页 -->
+<script type="text/template" id="tpl-me-index">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">个人中心</h5>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-xs-6" id="bonus">
+					<div class="text-center">
+						<img src="/images/bonus.png" width="80px" height="80px">
+						<h4>我的佣金</h4>
+						<p>&nbsp;</p>
+					</div>
+				</div>
+				<div class="col-xs-6" id="bank">
+					<div class="text-center">
+						<img src="/images/bank.png" width="80px" height="80px">
+						<h4>我的银行卡</h4>
+						<p>&nbsp;</p>
+					</div>
+				</div>
+				<div class="col-xs-6" id="changepass">
+					<div class="text-center">
+						<img src="/images/changepass.png" width="80px" height="80px">
+						<h4>修改密码</h4>
+						<p>&nbsp;</p>
+					</div>
+				</div>
+				<div class="col-xs-6" id="sale">
+					<div class="text-center">
+						<img src="/images/faq.png" width="80px" height="80px">
+						<h4>销售记录</h4>
+						<p>&nbsp;</p>
+					</div>
+				</div>
+				<div class="col-xs-6" id="person_rank">
+					<div class="text-center">
+						<img src="/images/person_rank.png" width="80px" height="80px">
+						<h4>个人排行</h4>
+						<p>&nbsp;</p>
+					</div>
+				</div>
+				<div class="col-xs-6" id="group_rank">
+					<div class="text-center">
+						<img src="/images/group_rank.png" width="80px" height="80px">
+						<h4>团队排行</h4>
+						<p>&nbsp;</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 个人中心密码修改 -->
+<script type="text/template" id="tpl-me-account">
+	<div>
+		<div>
+			<div class="nav-back">
+				<button class="btn btn-primary pull-left back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+				<h4 class="text-center">修改密码</h4>
+			</div>
+			<p>&nbsp;</p>
+			<form id="accountForm">
+				<div class="form-group">
+					<label for="email">原密码：</label>
+					<input type="password" name="old_password" class="form-control">
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label for="password">新密码：</label>
+					<input type="password" name="password" class="form-control"/>
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label for="password">新密码(再次)：</label>
+					<input type="password" name="cpassword" class="form-control"/>
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group">
+						<input type="submit" value="确定" class="btn btn-danger">
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-success back">取消</button>
+					</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</script>
+<!-- 个人中心银行账户 -->
+<script type="text/template" id="tpl-me-bank">
+	<div>
+		<div>
+			<div class="nav-back">
+				<button class="btn btn-primary pull-left back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+				<h4 class="text-center">修改银行卡</h4>
+			</div>
+			<p>&nbsp;</p>
+			<form id="accountForm">
+				<div class="form-group">
+					<label for="bankName">发卡银行</label>
+					<input type="text" name="bankName" value="<%= model.bankName %>" class="form-control">
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label for="bankAddr">开户行地址：</label>
+					<input type="text" name="bankAddr" value="<%= model.bankAddr %>" placeholder="如果不记得，可以不填" class="form-control"/>
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label for="accountName">户名：</label>
+					<input type="text" name="accountName" value="<%= model.accountName %>" class="form-control"/>
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label for="accountNo">卡号：</label>
+					<input type="text" name="accountNo" value="<%= model.accountNo %>" class="form-control"/>
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label for="expired">有效期：</label>
+					<input type="text" name="expired" value="<%= model.expired %>" class="form-control" placeholder="yyyy/mm/dd">
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label for="cardId">身份证号码：</label>
+					<input type="text" name="cardId" value="<%= model.cardId %>" class="form-control"/>
+					<span class="help-block"></span>
+				</div>
+				<br/>
+				<p>请确保您绑定的银行卡信息准确无误，以便能够正常收到wo助手发放的佣金。
+				</p>
+				<p style="color:red;">注意：修改银行卡信息需要等待后台审核通过后才能生效。</p>
+				<div class="form-group">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group">
+						<input type="submit" value="确定" class="btn btn-danger">
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-success back">取消</button>
+					</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<br/>
+		<br/>
+	</div>
+</script>
+<!-- 个人中心佣金 -->
+<script type="text/template" id="tpl-me-bonus-index">
+	<div>
+		<div class="nav-back">
+			<button class="btn btn-primary pull-left back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+			<h4 class="text-center">每月佣金收入</h4>
+		</div>
+		<p>&nbsp;</p>
+		<div id="list">
+		</div>
+	</div>
+</script>
+<!-- 个人中心佣金条目 -->
+<script type="text/template" id="tpl-me-bonus-item">
+	<div>
+		<div class="item" id="<%= model._id %>">
+			<div class="row">
+				<div class="col-xs-10">
+					<h4><%= model.year %>&nbsp;年&nbsp;<%= model.month %>&nbsp;月&nbsp;(<%= model.status %>)</h4>
+				</div>
+				<div class="clo-xs-2 text-center">
+					<h4 class=""><%= model.amount %>&nbsp;元</h4>
+				</div>
+			</div>
+		</div>
+		<hr/>
+	</div>
+</script>
+<!-- 个人中心佣金订单 -->
+<script type="type/template" id="tpl-me-bonus-order-index">
+	<div>
+		<div class="nav-back">
+			<button class="btn btn-primary pull-left back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+			<h4 class="text-center"><%= model.year %>年<%= model.month %>月佣金收入明细</h4>
+		</div>
+		<p>&nbsp;</p>
+		<div id="list">
+		</div>
+	</div>
+</script>
+<!-- 个人中心佣金订单条目 -->
+<script type="type/template" id="tpl-me-bonus-order-item">
+	<div>
+		<div class="item" id="<%= model._id %>">
+			<div class="media">
+				<div class="media-left">
+					<img src="" width="50px" height="50px">
+				</div>
+				<div class="media-body">
+					<h4><%= model.goods.name %>&nbsp;&nbsp;<i class="fa fa-flag"></i>&nbsp;<%= model.status %></h4>
+			 		<p><i class="fa fa-user"></i>&nbsp;<%= model.customer.mobile %></p>
+					<p><i class="fa fa-clock-o"></i>&nbsp;<%= new Date(model.lastupdatetime).toLocaleString() %></p>
+				</div>
+				<div class="media-right">
+			 		<div class="pull-right">
+			 			<h4><!-- <i class="fa fa-cart-arrow-down"></i> -->&nbsp;￥<%= model.bonus %></h4>
+<!-- 				 			<h4><i class="fa fa-gift"></i>&nbsp;+&nbsp;<%= model.bonus.income %></h4>
+			 			<h4><i class="fa fa-thumbs-o-up"></i>&nbsp;+&nbsp;<%= model.bonus.points %></h4>
+-->				 		</div>
+				</div>
+			</div>
+
+		</div>
+		<hr/>
+	</div>
+</script>
+<!-- 个人排行榜过滤 -->
+<script type="text/template" id="tpl-rank-person-search">
+	<div>
+		<div class="pull-right">
+			<ul class="nav nav-tabs">
+			  <li role="presentation" class="rankDay active" data="1"><a href="#">今天</a></li>
+			  <li role="presentation" class="rankDay" data="2"><a href="#">最近两天</a></li>
+			  <li role="presentation" class="rankDay" data="7"><a href="#">最近一周</a></li>
+			  <li role="presentation" class="rankDay" data="30"><a href="#">最近一月</a></li>
+			</ul>
+		</div>
+		<div class="clearfix"></div>
+		<hr/>
+		<div class="tabs">
+			<ul class="nav nav-tabs">
+			  <li role="presentation" class="rankPlace active" data="department"><a href="#">营业厅</a></li>
+			  <li role="presentation" class="rankPlace" data="grid"><a href="#">本网格</a></li>
+			  <li role="presentation" class="rankPlace" data="district"><a href="#">本地区</a></li>
+			  <li role="presentation" class="rankPlace" data="city"><a href="#">所在市</a></li>
+			</ul>
+		</div>
+	</div>
+</script>
+<!-- 个人排行榜列表 -->
+<script type="text/template" id="tpl-rank-person-index">
+	<div>
+		<div id="search">
+		</div>
+		<div class="panel panel-danger">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">个人排行榜</h5>
+			</div>
+			<div class="panel-body">
+				<div id="list">
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 个人排行榜条目 -->
+<script type="text/template" id="tpl-rank-person-item">
+	<div>
+		<div class="row item" id="<%= model._id %>">
+			<div class="col-xs-2">
+				<h5>第&nbsp;<span class="badge" style="background-color:#EA5119;"><%= model.series %></span>&nbsp;名</h5>
+			</div>
+			<div class="col-xs-6">
+				<h4><%= model.username %></h4>
+				<h5><%= model.department && model.department.name %></h5>
+			</div>
+			<div class="col-xs-4">
+				<h5>
+					<span style="text-align:right;"><%= model.total %>&nbsp;元</span>[共&nbsp;<span><%= model.quantity %></span>&nbsp;笔]
+				</h5>
+			</div>
+		</div>
+		<hr/>
+	</div>
+</script>
+<!-- 团队排行过滤 -->
+<script type="text/template" id="tpl-rank-team-search">
+	<div>
+		<div class="pull-right">
+			<ul class="nav nav-tabs">
+			  <li role="presentation" class="rankDay active" data="1"><a href="#">今天</a></li>
+			  <li role="presentation" class="rankDay" data="2"><a href="#">最近两天</a></li>
+			  <li role="presentation" class="rankDay" data="7"><a href="#">最近一周</a></li>
+			  <li role="presentation" class="rankDay" data="30"><a href="#">最近一月</a></li>
+			</ul>
+		</div>
+		<div class="clearfix"></div>
+		<hr/>
+		<div class="tabs">
+			<ul class="nav nav-tabs">
+			  <li role="presentation" class="rankPlace active" data="grid"><a href="#">本网格</a></li>
+			  <li role="presentation" class="rankPlace" data="district"><a href="#">本地区</a></li>
+			  <li role="presentation" class="rankPlace" data="city"><a href="#">所在市</a></li>
+			</ul>
+		</div>
+	</div>
+</script>
+<!-- 团队排行列表 -->
+<script type="text/template" id="tpl-rank-team-index">
+	<div>
+		<div id="search">
+		</div>
+		<div class="panel panel-danger">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">团队排行榜</h5>
+			</div>
+			<div class="panel-body">
+				<div id="list">
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 团队排行条目 -->
+<script type="text/template" id="tpl-rank-team-item">
+	<div>
+		<div class="row item" id="<%= model._id %>">
+			<div class="col-xs-2">
+				<h5>第&nbsp;<span class="badge" style="background-color:#EA5119;"><%= model.series %></span>&nbsp;名</h5>
+			</div>
+			<div class="col-xs-6">
+				<h5><%= model._id || '' %></h5>
+			</div>
+			<div class="col-xs-4">
+				<h5>
+					<span style="text-align:right;"><%= model.total %>&nbsp;元</span>[共&nbsp;<span><%= model.quantity %></span>&nbsp;笔]
+				</h5>
+			</div>
+		</div>
+		<hr/>
+	</div>
+</script>
+<!-- 销售线索 -->
+<script type="text/template" id="tpl-sale-index">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title text-center">销售线索管理</h4>
+		</div>
+		<div class="panel-body">
+			<div id="search">
+			</div>
+			<div id="list">
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 销售线索条目 -->
+<script type="text/template" id="tpl-sale-item">
+	<div class="item" id="<%= model._id %>">
+ 		<div class="pull-right">
+			<button class="btn btn-success edit">详情</button>
+			<!-- <button class="btn btn-danger delete">删除</button> -->
+		</div>
+		<div>
+			<h4><%= model.customer && model.customer.phone %>&nbsp;&nbsp;<span class="bg-success"><%= model.customer && model.customer.name %></span></h4>
+			<p><%= model.product && model.product.name %></p>
+			<p><i class="fa fa-clock-o"></i>&nbsp;<%= model.deltatime %>&nbsp;<i class="fa fa-flag"></i>&nbsp;<%= model.status %></p>
+		</div>
+	</div>
+	<hr/>
+</script>
+<!-- 销售线索编辑 -->
+<script type="text/template" id="tpl-sale-edit">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="panel-title text-center">修改销售线索</h4>
+		</div>
+		<div class="panel-body">
+			<form id="accountForm">
+				<div class="form-group">
+					<label for="name">产品名称：</label>
+					<input type="text" name="product[name]" value="<%= model.product && model.product.name %>" class="form-control" disabled>
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label for="description">产品描述：</label>
+					<textarea name="product[description]" class="form-control" disabled><%= model.product && model.product.description %></textarea>
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label for="quantity">订购数量：</label>
+					<input type="text" name="product[quantity]" value="<%= model.product && model.product.quantity %>" class="form-control" disabled>
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label for="name">客户姓名：</label>
+					<input type="text" name="customer[name]" value="<%= model.customer && model.customer.name %>" class="form-control" disabled>
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label for="phone">电话号码：<a href="tel:<%= model.customer && model.customer.phone %>" class="btn btn-danger">拨打电话</a></label>
+					<input type="text" name="customer[phone]" value="<%= model.customer && model.customer.phone %>" class="form-control" disabled>
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label for="attach">客户留言：</label>
+					<textarea name="customer[attach]" class="form-control" disabled><%= model.customer && model.customer.attach %></textarea>
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label>状态：</label>
+					<div style="padding-left:30px;">
+						<input type="radio" name="status" value="未处理" checked>&nbsp;&nbsp;未处理&nbsp;&nbsp;
+						<input type="radio" name="status" value="废弃">&nbsp;&nbsp;废弃&nbsp;&nbsp;
+						<input type="radio" name="status" value="成功">&nbsp;&nbsp;成功&nbsp;&nbsp;
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group">
+							<input type="submit" value="提交" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-primary back">取消</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</script>
+<script type="text/javascript" src="js/index.js"></script>
+
 </html>

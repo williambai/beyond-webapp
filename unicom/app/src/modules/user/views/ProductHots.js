@@ -1,8 +1,6 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-	Backbone = require('backbone'),
-    productTpl = require('../templates/_entityProduct.tpl'),
-	loadingTpl = require('../templates/__loading.tpl');
+var $ = require('jquery');
+var	Backbone = require('backbone');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -30,11 +28,9 @@ var ProductCollection = Backbone.Collection.extend({
 //** 列表子视图
 var ProductListView = ListView.extend({
 	el: '#list',
+	template: _.template($('#tpl-product-item').html()),
 
 	initialize: function(options){
-		var page = $(productTpl);
-		var itemTemplate = $('#itemTemplate', page).html();
-		this.template = _.template(_.unescape(itemTemplate || ''));
 		this.collection = new ProductCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
@@ -50,15 +46,10 @@ var ProductListView = ListView.extend({
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
-
-	loadingTemplate: _.template(loadingTpl),
+	template: _.template($('#tpl-product-hot').html()),
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(productTpl);
-		var indexTemplate = $('#hotTemplate', page).html();
-		this.template = _.template(_.unescape(indexTemplate || ''));
-
 		this.on('load', this.load, this);
 	},
 
@@ -136,11 +127,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
-		if (!this.loaded) {
-			this.$el.html(this.loadingTemplate());
-		} else {
-			this.$el.html(this.template());
-		}
+		this.$el.html(this.template());
 		return this;
 	},
 });

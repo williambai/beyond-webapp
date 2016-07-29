@@ -1,3 +1,7 @@
+/**
+ * Page 配置文件
+ * @type {[type]}
+ */
 var _ = require('underscore');
 
 var config = require('../../../conf');

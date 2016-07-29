@@ -1,8 +1,6 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-	Backbone = require('backbone'),
-    leadTpl = require('../templates/_entitySaleLead.tpl'),
-	loadingTpl = require('../templates/__loading.tpl');
+var $ = require('jquery');
+var	Backbone = require('backbone');
 var config = require('../conf');
 var ListView = require('./__ListView');
 var Utils = require('./__Util');
@@ -26,11 +24,9 @@ var SaleLeadCollection = Backbone.Collection.extend({
 
 var SaleLeadListView = ListView.extend({
 	el: '#list',
+	template: _.template($('#tpl-sale-item').html()),
 
 	initialize: function(options){
-		var page = $(leadTpl);
-		var itemTemplate = $('#itemTemplate', page).html();
-		this.template = _.template(_.unescape(itemTemplate || ''));
 		this.collection = new SaleLeadCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
@@ -43,14 +39,10 @@ var SaleLeadListView = ListView.extend({
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
-
-	loadingTemplate: _.template(loadingTpl),
+	template: _.template($('#tpl-sale-index').html()),
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(leadTpl);
-		var indexTemplate = $('#indexTemplate', page).html();
-		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
 	},
 
@@ -63,7 +55,6 @@ exports = module.exports = Backbone.View.extend({
 
 	load: function() {
 		var that = this;
-		this.loaded = true;
 		this.render();
 
 		this.listView = new SaleLeadListView({
@@ -100,11 +91,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
-		if (!this.loaded) {
-			this.$el.html(this.loadingTemplate());
-		} else {
-			this.$el.html(this.template());
-		}
+		this.$el.html(this.template());
 		return this;
 	},
 });

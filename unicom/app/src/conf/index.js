@@ -1,3 +1,7 @@
+/**
+ * Site 配置文件
+ * @type {[type]}
+ */
 exports = module.exports = {
     api: {
         host: 'http://localhost:8092',

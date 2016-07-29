@@ -162,10 +162,6 @@
 							</button>
 						</span>
 					</div>
-					<div style="color:red;">
-						<p>注意1：文件格式为CSV，如果是Excel文件，请先另存为CSV再导入。</p>
-						<p>注意2：导入时，请先将表示列名称的首行删除，并且保证最后一行不要留空行。(即，文件只留数据，不留标题和空行)</p>
-					</div>
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
@@ -179,17 +175,16 @@
 				<input class="hidden" type="file" name="file"/>
 				</form>
 				<hr>
-				<h4>导入csv数据表格列格式如下：</h4>
+				<h4>导入Excel数据表格列格式如下：</h4>
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>列序号</th>
-							<th>列名称(即：csv第一行名称)</th>
-							<th>列含义</th>
+							<th>序号</th>
+							<th>名称</th>
+							<th>备注</th>
 						</tr>
 					</thead>
 					<tbody>
-
 					</tbody>
 				</table>
 			</div>
@@ -261,13 +256,13 @@
 					</div>
 				</form>
 				<hr>				
-				<h4>导出CSV数据列格式如下：</h4>
+				<h4>导出Excel数据列格式如下：</h4>
 				<table class="table table-striped">
 					<thead>
 						<tr>
-							<th>列序号</th>
-							<th>列名称(即：csv第一行名称)</th>
-							<th>列含义</th>
+							<th>序号</th>
+							<th>名称</th>
+							<th>备注</th>
 						</tr>
 					</thead>
 					<tbody>

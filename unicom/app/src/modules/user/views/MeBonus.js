@@ -1,8 +1,6 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-	Backbone = require('backbone'),
-    meTpl = require('../templates/_entityMe.tpl'),
-	loadingTpl = require('../templates/__loading.tpl');
+var $ = require('jquery');
+var	Backbone = require('backbone');
 var ListView = require('./__ListView');
 var config = require('../conf');
 var Utils = require('./__Util');
@@ -26,11 +24,9 @@ var BonusCollection = Backbone.Collection.extend({
 //** 列表子视图	
 var BonusListView = ListView.extend({
 	el: '#list',
+	template: _.template($('#tpl-me-bonus-item').html()),
 
 	initialize: function(options){
-		var page = $(meTpl);
-		var itemTemplate = $('#bonusItemTemplate', page).html();
-		this.template = _.template(_.unescape(itemTemplate || ''));
 		this.collection = new BonusCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
@@ -43,15 +39,10 @@ var BonusListView = ListView.extend({
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
-
-	loadingTemplate: _.template(loadingTpl),
+	template: _.template($('#tpl-me-bonus-index').html()),
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(meTpl);
-		var indexTemplate = $('#bonusListTemplate', page).html();
-		this.template = _.template(_.unescape(indexTemplate || ''));
-
 		this.on('load', this.load, this);
 	},
 
@@ -89,11 +80,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
-		if (!this.loaded) {
-			this.$el.html(this.loadingTemplate());
-		} else {
-			this.$el.html(this.template());
-		}
+		this.$el.html(this.template());
 		return this;
 	},
 });

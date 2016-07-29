@@ -1,8 +1,6 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-	Backbone = require('backbone'),
-    rankTpl = require('../templates/_entityRankPerson.tpl'),
-	loadingTpl = require('../templates/__loading.tpl');
+var $ = require('jquery');
+var	Backbone = require('backbone');
 var ListView = require('./__ListView');
 var SearchView = require('./__SearchView');
 var config = require('../conf');
@@ -26,11 +24,9 @@ var OrderCollection = Backbone.Collection.extend({
 //** search视图
 var OrderSearchView = SearchView.extend({
 	el: '#search',
+	template: _.template($('#tpl-rank-person-search').html()),
 
 	initialize: function(options){
-		var page = $(rankTpl);
-		var searchTemplate = $('#searchTemplate', page).html();
-		this.template = _.template(_.unescape(searchTemplate || ''));
 		this.on('load', this.load,this);
 	},
 
@@ -71,11 +67,10 @@ var OrderSearchView = SearchView.extend({
 //** 列表子视图	
 var OrderListView = ListView.extend({
 	el: '#list',
+	template: _.template($('#tpl-rank-person-item').html()),
+
 	series: 0,
 	initialize: function(options){
-		var page = $(rankTpl);
-		var itemTemplate = $('#itemTemplate', page).html();
-		this.template = _.template(_.unescape(itemTemplate || ''));
 		this.collection = new OrderCollection();
 		ListView.prototype.initialize.apply(this,options);
 		this.on('reset:series', this.resetSeries, this);
@@ -94,14 +89,10 @@ var OrderListView = ListView.extend({
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
-
-	loadingTemplate: _.template(loadingTpl),
+	template: _.template($('#tpl-rank-person-index').html()),
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(rankTpl);
-		var indexTemplate = $('#indexTemplate', page).html();
-		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
 	},
 
@@ -111,7 +102,6 @@ exports = module.exports = Backbone.View.extend({
 
 	load: function() {
 		var that = this;
-		this.loaded = true;
 		this.render();
 
 		this.searchView = new OrderSearchView({
@@ -137,11 +127,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 	
 	render: function() {
-		if (!this.loaded) {
-			this.$el.html(this.loadingTemplate());
-		} else {
-			this.$el.html(this.template());
-		}
+		this.$el.html(this.template());
 		return this;
 	},
 });

@@ -1,9 +1,7 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-	Backbone = require('backbone'),
-    ListView = require('./__ListView'),
-    productTpl = require('../templates/_entityProduct.tpl'),
-	loadingTpl = require('../templates/__loading.tpl');
+var $ = require('jquery');
+var	Backbone = require('backbone');
+var ListView = require('./__ListView');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -37,11 +35,9 @@ var ProductCollection = Backbone.Collection.extend({
 //** 列表子视图
 var ProductListView = ListView.extend({
 	el: '#list',
+	template: _.template($('#tpl-product-item').html()),
 
 	initialize: function(options){
-		var page = $(productTpl);
-		var itemTemplate = $('#itemTemplate', page).html();
-		this.template = _.template(_.unescape(itemTemplate || ''));
 		this.collection = new ProductCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
@@ -56,17 +52,12 @@ var ProductListView = ListView.extend({
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
-
-	loadingTemplate: _.template(loadingTpl),
+	template: _.template($('#tpl-category-product-index').html()),
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(productTpl);
 		this.model = new Category({_id: options.id});
 		this.model.on('change', this.modelChanged, this);
-		var indexTemplate = $('#indexTemplate', page).html();
-		this.template = _.template(_.unescape(indexTemplate || ''));
-
 		this.on('load', this.load, this);
 	},
 
@@ -157,11 +148,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 	
 	render: function() {
-		if (!this.loaded) {
-			this.$el.html(this.loadingTemplate());
-		} else {
-			this.$el.html(this.template({model: this.model.toJSON()}));
-		}
+		this.$el.html(this.template({model: this.model.toJSON()}));
 		return this;
 	},
 });

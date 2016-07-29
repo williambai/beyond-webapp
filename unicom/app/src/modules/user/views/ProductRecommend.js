@@ -1,7 +1,6 @@
 var _ = require('underscore');
-var Backbone = require('backbone'),
-	$ = require('jquery'),
-    productTpl = require('../templates/_entityProduct.tpl');
+var Backbone = require('backbone');
+var	$ = require('jquery');
 var config = require('../conf');
 var FormView = require('./__FormView');
 
@@ -33,18 +32,14 @@ var ProductOrder = Backbone.Model.extend({
 var OrderView = FormView.extend({
 
 	el: '#orderForm',
+	template: _.template($('#tpl-product-recommend').html()),
+	successTemplate: _.template($('#tpl-recommend-success').html()),
+	failureTemplate: _.template($('#tpl-recommend-failure').html()),
 
 	initialize: function(options) {
 		this.router = options.router;
 		this.product = options.product;
 		this.model = new ProductOrder();
-		var page = $(productTpl);
-		var orderTemplate = $('#recommendTemplate', page).html();
-		this.template = _.template(_.unescape(orderTemplate || ''));
-		var successTpl = $('#recommendSuccessTemplate', page).html();
-		this.successTemplate = _.template(_.unescape(successTpl || ''));
-		var failureTpl = $('#recommendFailTemplate', page).html();
-		this.failureTemplate = _.template(_.unescape(failureTpl || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
@@ -170,14 +165,12 @@ var OrderView = FormView.extend({
 exports = module.exports = Backbone.View.extend({
 
 	el: '#productView',
+	template: _.template($('#tpl-product-view').html()),
 
 	initialize: function(options) {
 		this.router = options.router;
 		this.model = new Product({_id: options.id});
 		this.model.on('change', this.change ,this);
-		var page = $(productTpl);
-		var viewTemplate = $('#viewTemplate', page).html();
-		this.template = _.template(_.unescape(viewTemplate || ''));
 		this.on('load', this.load, this);
 	},
 

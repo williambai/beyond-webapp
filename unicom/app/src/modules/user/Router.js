@@ -4,6 +4,7 @@ var Backbone = require('backbone');
 var config = require('./conf');
 
 var LayoutView = require('./views/__Layout');
+var SideBarLeftView = require('./views/common/SideBarLeft');
 var RegisterView = require('../../views/_Register');
 var ForgotPasswordView = require('../../views/_ForgotPassword');
 var LoginView = require('../../views/_Login');
@@ -88,6 +89,7 @@ exports = module.exports = Backbone.Router.extend({
 			appEvents: this.appEvents,
 		});
 		this.layoutView.trigger('load');
+		this.sideBarLeftView = new SideBarLeftView();
 	},
 
 	onLogined: function(account) {
@@ -95,7 +97,7 @@ exports = module.exports = Backbone.Router.extend({
 		this.account = account;
 		this.logined = true;
 		/** default menu */
-		// this.layoutView.trigger('update:menu', _.sortBy(_.flatten(_.values(config.menu)), 'id'));
+		// this.sideBarLeftView.trigger('update:menu', _.sortBy(_.flatten(_.values(config.menu)), 'id'));
 		// return;
 		/** -OR- customize menu */
 		var menu_default = config.menu || [];
@@ -108,7 +110,7 @@ exports = module.exports = Backbone.Router.extend({
 			var intersection = _.intersection(features,menu_features);
 			if(!_.isEmpty(intersection)) menu_granted.push(menu);
 		});
-		that.layoutView.trigger('update:menu', menu_granted);
+		that.sideBarLeftView.trigger('update:menu', menu_granted);
 	},
 
 	onLogout: function() {

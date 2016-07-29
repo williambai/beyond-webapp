@@ -1,8 +1,6 @@
 var _ = require('underscore');
-var $ = require('jquery'),
-	Backbone = require('backbone'),
-    meTpl = require('../templates/_entityMe.tpl'),
-	loadingTpl = require('../templates/__loading.tpl');
+var $ = require('jquery');
+var	Backbone = require('backbone');
 var ListView = require('./__ListView');
 var config = require('../conf');
 var Utils = require('./__Util');
@@ -36,11 +34,9 @@ var OrderCollection = Backbone.Collection.extend({
 //** 列表子视图	
 var OrderListView = ListView.extend({
 	el: '#list',
+	template: _.template($('#tpl-me-bonus-order-item').html()),
 
 	initialize: function(options){
-		var page = $(meTpl);
-		var itemTemplate = $('#bonusOrderItemTemplate', page).html();
-		this.template = _.template(_.unescape(itemTemplate || ''));
 		this.collection = new OrderCollection();
 		ListView.prototype.initialize.apply(this,options);
 	},
@@ -57,16 +53,12 @@ var OrderListView = ListView.extend({
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
-
-	loadingTemplate: _.template(loadingTpl),
+	template: _.template($('#tpl-me-bonus-order-index').html()),
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(meTpl);
 		this.model = new Bonus({_id: options.id});
 		this.model.on('change', this.modelChanged, this);
-		var indexTemplate = $('#bonusOrderListTemplate', page).html();
-		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
 	},
 
@@ -108,11 +100,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
-		if (!this.loaded) {
-			this.$el.html(this.loadingTemplate());
-		} else {
-			this.$el.html(this.template({model: this.model.toJSON()}));
-		}
+		this.$el.html(this.template({model: this.model.toJSON()}));
 		return this;
 	},
 });

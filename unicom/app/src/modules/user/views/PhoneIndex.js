@@ -1,8 +1,6 @@
 var _ = require('underscore');
-var Backbone = require('backbone'),
-	$ = require('jquery'),
-    phoneTpl = require('../templates/_entityPhoneInfo.tpl'),
-	loadingTpl = require('../templates/__loading.tpl');
+var Backbone = require('backbone');
+var	$ = require('jquery');
 var config = require('../conf');
 var FormView = require('./__FormView');
 
@@ -23,12 +21,11 @@ var Phone = Backbone.Model.extend({
 //** view子视图
 var PhoneViewView = Backbone.View.extend({
 	el: '#view',
+	template: _.template($('#tpl-phone-result').html()),
+
 	initialize: function(options){
-		var page = $(phoneTpl);
 		this.model = options.model;
 		this.model.on('change', this.render,this);
-		var viewTemplate = $('#viewTemplate', page).html();
-		this.template = _.template(_.unescape(viewTemplate || ''));
 	},
 	render: function(){
 		this.$el.html(this.template({model: this.model.toJSON()}));
@@ -38,12 +35,10 @@ var PhoneViewView = Backbone.View.extend({
 //** Search子视图
 var PhoneSearchView = Backbone.View.extend({
 	el: '#search',
+	template: _.template($('#tpl-phone-search').html()),
 
 	initialize: function(options){
-		var page = $(phoneTpl);
 		this.model = new Phone();
-		var searchTemplate = $('#searchTemplate', page).html();
-		this.template = _.template(_.unescape(searchTemplate || ''));
 		this.on('load', this.load,this);
 	},
 
@@ -96,14 +91,10 @@ var PhoneSearchView = Backbone.View.extend({
 exports = module.exports = Backbone.View.extend({
 
 	el: '#content',
-
-	loadingTemplate: _.template(loadingTpl),
+	template: _.template($('#tpl-phone-index').html()),
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(phoneTpl);
-		var indexTemplate = $('#indexTemplate', page).html();
-		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
 	},
 
@@ -112,7 +103,6 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	load: function(){
-		this.loaded = true;
 		this.render();
 		this.searchView = new PhoneSearchView({
 			el: '#search',
@@ -127,11 +117,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
-		if (!this.loaded) {
-			this.$el.html(this.loadingTemplate());
-		} else {
-			this.$el.html(this.template());
-		}
+		this.$el.html(this.template());
 		return this;
 	},
 });

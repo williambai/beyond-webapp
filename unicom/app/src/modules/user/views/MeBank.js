@@ -1,8 +1,7 @@
 var _ = require('underscore');
-var FormView = require('./__FormView'),
-	$ = require('jquery'),
-	Backbone = require('backbone'),
-    meTpl = require('../templates/_entityMe.tpl');
+var FormView = require('./__FormView');
+var $ = require('jquery');
+var	Backbone = require('backbone');
 var config = require('../conf');
 
 Backbone.$ = $;
@@ -35,15 +34,13 @@ var Bank = Backbone.Model.extend({
 exports = module.exports = FormView.extend({
 
 	el: '#bankForm',
+	template: _.template($('#tpl-me-bank').html()),
 
 	modelFilled: false,
 
 	initialize: function(options) {
 		this.router = options.router;
 		this.model = new Bank({_id: 'me'});
-		var page = $(meTpl);
-		var editTemplate = $('#bankTemplate', page).html();
-		this.template = _.template(_.unescape(editTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
 
