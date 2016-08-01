@@ -126,7 +126,7 @@ var source = require('vinyl-source-stream');
 var _bundleJS = function(arr,done){
 	var entry = arr.pop();
 	if(!entry) return done();
-	gulp.src(path.join(__dirname,'src',entry), { read: false })
+	gulp.src(path.join(__dirname, entry), { read: false })
 		.pipe(browserify({
 			transform: stringify({
 		        extensions: ['.tpl'], minify: true
@@ -140,24 +140,22 @@ var _bundleJS = function(arr,done){
 
 gulp.task('index.js',function(done){
 	var entries = [
-		'index.js',
-		// 'confirm.js',
-		// 'reset.js',
-		'wechat.js',
+		'src/index.js',
+		'src/wechat.js',
 	];
 	_bundleJS(entries,done);
 });
 
 gulp.task('superadmin.js',function(done){
 	var entries = [
-		'superadmin.js'
+		'src/superadmin.js'
 	];
 	_bundleJS(entries,done);
 });
 
 gulp.task('admin.js',function(done){
 	var entries = [
-		'admin.js'
+		'src/admin.js'
 	];
 	_bundleJS(entries,done);
 });

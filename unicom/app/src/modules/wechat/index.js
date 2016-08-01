@@ -1,7 +1,7 @@
 var $ = require('jquery');
 var Backbone = require('backbone');
 
-var router = new(require('../user/Router'))();
+var router = new(require('./Router'))();
 var config = require('./conf');
 
 Backbone.$ = $;
