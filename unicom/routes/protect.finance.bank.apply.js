@@ -25,7 +25,7 @@ exports = module.exports = function(app, models) {
 	 				set.lastupdatetime = new Date();
 	 				//** 更新银行卡信息
 					models.FinanceBank.findOneAndUpdate({
-							uid: bank.uid,
+							mobile: bank.mobile,
 			 		},
 						{
 							$set: set
