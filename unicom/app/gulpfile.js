@@ -140,28 +140,28 @@ var _bundleJS = function(arr,done){
 
 gulp.task('index.js',function(done){
 	var entries = [
-		'src/index.js',
-		'src/wechat.js',
+		'scripts/index.js',
+		'scripts/wechat.js',
 	];
 	_bundleJS(entries,done);
 });
 
-gulp.task('superadmin.js',function(done){
+gulp.task('super.js',function(done){
 	var entries = [
-		'src/superadmin.js'
+		'scripts/super.js'
 	];
 	_bundleJS(entries,done);
 });
 
 gulp.task('admin.js',function(done){
 	var entries = [
-		'src/admin.js'
+		'scripts/admin.js'
 	];
 	_bundleJS(entries,done);
 });
 
 gulp.task('js', function(done){
-	seq('index.js','admin.js','superadmin.js',done);
+	seq('index.js','admin.js','super.js',done);
 });
 /*======================================================================
 =            Compile less                            =
