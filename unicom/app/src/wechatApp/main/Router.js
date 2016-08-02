@@ -3,16 +3,17 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 var config = require('../conf');
 
-var LayoutView = require('../_base/__Layout');
-var SideBarLeftView = require('../_base/_SideBarLeft');
-var RegisterView = require('../signup/views/Register');
-var ForgotPasswordView = require('../signup/views/ForgotPassword');
-var LoginView = require('../signup/views/Login');
-var WeChatLoginView = require('../signup/views/WeChatLogin');
-var MyAccountViewView = require('../profile/views/MyAccountView');
-var MyAccountEditView = require('../profile/views/MyAccountEdit');
+// var LayoutView = require('./views/__Layout');
+var LayoutView = require('../../userApp/main/views/__Layout');
+var SideBarLeftView = require('../../userApp/main/views/_SideBarLeft');
+var RegisterView = require('../../userApp/main/views/Register');
+var ForgotPasswordView = require('../../userApp/main/views/ForgotPassword');
+var LoginView = require('../../userApp/main/views/Login');
+var WeChatLoginView = require('../../userApp/main/views/WeChatLogin');
+var MyAccountViewView = require('../../userApp/profile/views/MyAccountView');
+var MyAccountEditView = require('../../userApp/profile/views/MyAccountEdit');
 
-var IndexView = require('../index/views/Index');
+var IndexView = require('../../userApp/index/views/Index');
 
 exports = module.exports = Backbone.Router.extend({
 

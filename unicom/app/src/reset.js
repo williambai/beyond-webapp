@@ -1,1 +1,0 @@
-require('./modules/user/modules/resetPassword')();

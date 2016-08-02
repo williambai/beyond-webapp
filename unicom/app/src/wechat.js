@@ -1,2 +1,2 @@
-require('./modules/wechat')();
-// require('./wechatApp');
+// require('./modules/wechat')();
+require('./wechatApp');

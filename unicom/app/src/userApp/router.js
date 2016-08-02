@@ -1,20 +1,20 @@
 //** routers
 var config = require('./conf');
 
-var signup = new (require('./signup/router'));
-new (require('./activity/Router'))({appEvents: signup.appEvents});
-new (require('./profile/Router'))({appEvents: signup.appEvents});
-new (require('./category/Router'))({appEvents: signup.appEvents});
-new (require('./customer/Router'))({appEvents: signup.appEvents});
-new (require('./feedback/Router'))({appEvents: signup.appEvents});
-new (require('./index/Router'))({appEvents: signup.appEvents});
-new (require('./me/Router'))({appEvents: signup.appEvents});
-new (require('./order/Router'))({appEvents: signup.appEvents});
-new (require('./phone/Router'))({appEvents: signup.appEvents});
-new (require('./product/Router'))({appEvents: signup.appEvents});
-new (require('./rank/Router'))({appEvents: signup.appEvents});
-// new (require('./salelead/Router'))({appEvents: signup.appEvents});
-new (require('./help/Router'))({appEvents: signup.appEvents});
+var main = new (require('./main/router'));
+new (require('./activity/Router'))({appEvents: main.appEvents});
+new (require('./profile/Router'))({appEvents: main.appEvents});
+new (require('./category/Router'))({appEvents: main.appEvents});
+new (require('./customer/Router'))({appEvents: main.appEvents});
+new (require('./feedback/Router'))({appEvents: main.appEvents});
+new (require('./index/Router'))({appEvents: main.appEvents});
+new (require('./me/Router'))({appEvents: main.appEvents});
+new (require('./order/Router'))({appEvents: main.appEvents});
+new (require('./phone/Router'))({appEvents: main.appEvents});
+new (require('./product/Router'))({appEvents: main.appEvents});
+new (require('./rank/Router'))({appEvents: main.appEvents});
+// new (require('./salelead/Router'))({appEvents: main.appEvents});
+new (require('./help/Router'))({appEvents: main.appEvents});
 
 
 var checkLogin = function(callback) {
@@ -27,10 +27,10 @@ var checkLogin = function(callback) {
 		crossDomain: true,
 	}).done(function(data) {
 		if (!!data.code) return callback(false);
-		signup.appEvents.trigger('logined', data);
+		main.appEvents.trigger('logined', data);
 		return callback(true);
 	}).fail(function() {
-		signup.appEvents.trigger('logout');
+		main.appEvents.trigger('logout');
 		return callback(false);
 	});
 };
