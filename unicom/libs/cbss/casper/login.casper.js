@@ -16,7 +16,7 @@ var casper = require('casper').create({
 	},
 	timeout: 120000,
 	waitTimeout: 10000,
-	// logLevel: "debug",
+	logLevel: "debug",
 	verbose: true
 });
 
@@ -71,6 +71,7 @@ casper.open('https://gz.cbss.10010.com/essframe?service=page/Nav&STAFF_ID=' + ac
 
 casper.then(function checkLogin(){
 	var homePageHtml = this.getHTML();
+	fs.write(tempdir + '/checkLogin.html', homePageHtml, 644);
 	var homePageMeta = homePageHtml.match(/<meta.*provinceId.*?>/i);
 	if(homePageMeta){
 		//** 已登录
@@ -217,6 +218,22 @@ casper.then(function loginSubmit(){
 casper.then(function saveHomePageMeta(){
 	var homePageHtml = this.getHTML();
 	fs.write(tempdir + '/home.html', homePageHtml, 644);
+	//** TODO 账号过期，无法使用??
+	// var hasError = homePageHtml.test(/(警告|错误)/);
+	// if(hasError){
+	// 	//** 账户问题
+	// 	var message = casper.evaluate(function(){
+	// 		var contentNodes = document.getElementsByClassName('content') || [];
+	// 		var contentNode = contentNodes[0];
+	// 		if(contentNode) return contentNode.innerText || '';
+	// 		return '';
+	// 	});
+	// 	response.login = false;
+	// 	response.code = 401;
+	// 	response.status = 'warn';
+	// 	response.message = message;
+	// 	return;
+	// }
 	var homePageMeta = RegexUtils.extractHomePageMeta(homePageHtml) || {};
 	if(homePageMeta['provinceid']){
 		//** 已登录
