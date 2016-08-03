@@ -1627,46 +1627,57 @@
 </script>
 <!-- 登录 -->
 <script type="text/template" id="tpl-login">
-	<p></p>
-	<p></p>
-	<div class="">
-	    <div class="">
-	        <div class="">
-	            <div class="panel panel-default" id="loginForm">
-	                <div class="panel-heading">
-	                    <h3 class="panel-title text-center">登&nbsp;&nbsp;录</h3>
-	                </div>
-	                <div class="panel-body">
-	                    <div id="error"></div>
-	                    <form role="form">
-	                        <div class="form-group" id="email">
-	                            <input type="text" name="email" class="form-control input-sm" placeholder="手机号码/邮件地址">
-	                            <span class="help-block"></span>
-	                        </div>
+	<div>
+		<p></p>
+		<p></p>
+		<div class="">
+		    <div class="">
+		        <div class="">
+		            <div class="panel panel-default" id="loginForm">
+		                <div class="panel-heading">
+		                    <h3 class="panel-title text-center">登&nbsp;&nbsp;录</h3>
+		                </div>
+		                <div class="panel-body">
+		                    <div id="error"></div>
+		                    <form role="form">
+		                        <div class="form-group">
+		                            <input type="text" name="email" class="form-control input-sm" placeholder="手机号码/邮件地址">
+		                            <span class="help-block"></span>
+		                        </div>
 
-	                        <div class="form-group" id="password">
-	                            <input type="password" name="password" class="form-control input-sm" placeholder="密码">
-	                            <span class="help-block"></span>
-	                        </div>
+		                        <div class="form-group">
+		                            <input type="password" name="password" class="form-control input-sm" placeholder="密码">
+		                            <span class="help-block"></span>
+		                        </div>
 
-                            <div class="form-group">
-                            	<a href="#" id="wechatLogin" style="color:red;">已经绑定微信，使用微信快捷登录</a>
-                        	</div>
+		                        <div class="form-group">
+		                        	<div class="pull-right">
+			                        	<p><a href="#"  id="register">还没有账号，去注册吧！</a></p>
+			                        	<p><a href="#" id="forgot">忘记密码？</a></p>
+			                        </div>
+			                        <div>
+									<% if(!/MicroMessenger/.test(navigator.userAgent)){ %>
+										<p>
+											<a href="#" id="wechatLogin" style="color:red;">微信登录</a>
+										</p>		
+									<% } %>
+			                        </div>
+		                    	</div>
+								<br/>
+		                        <br/>
+		                        <input type="submit" value="登&nbsp;&nbsp;录" class="btn btn-primary btn-block">
+		                    </form>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
 
-	                        <br>
-	                        <input type="submit" value="登&nbsp;&nbsp;录" class="btn btn-primary btn-block">
-	                    </form>
-	                </div>
-	            </div>
-	        </div>
-	    </div>
-	</div>
-	<p>&nbsp;</p>
-
-	<div class="text-center">
-	    <hr>
-	    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司&nbsp;&nbsp;技术支持QQ群：</p>
-	    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
+		<div class="text-center">
+		    <hr>
+		    <p>版权所有@2014~2016&nbsp;&nbsp;苏州普德邦网络技术有限公司&nbsp;&nbsp;技术支持QQ群：</p>
+		    <p>支持IPhone、IPad、Android等移动终端。Windows、Mac等桌面系统，请使用&nbsp;Chrome&nbsp;谷歌最新浏览器访问<a href="https://www.baidu.com/s?wd=chrome浏览器官方下载" target="_blank">下载</a>
+		</div>
 	</div>
 </script>
 <!-- 微信登录 -->

@@ -30,7 +30,7 @@ var checkLogin = function(callback) {
 		main.appEvents.trigger('logined', data);
 		return callback(true);
 	}).fail(function() {
-		main.appEvents.trigger('logout');
+		window.location.hash = 'login';
 		return callback(false);
 	});
 };

@@ -100,12 +100,16 @@ var regexp = require('../libs/regexp');
  						},
  						status: '有效',
  					})
+		 			.sort({display_sort: -1})
 		 			.skip(per * page)
 		 			.limit(per)
 		 			.exec(function(err, docs) {
 		 				if (err) return res.send(err);
 		 				res.send(docs);
 		 			});
+ 				break;
+ 			case 'hot':
+ 				res.send([]);
  				break;
  			default:
 		 		models.ProductDirect

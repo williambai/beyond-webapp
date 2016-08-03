@@ -74,7 +74,7 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	scroll: function() {
-		this.listView.scroll();
+		// this.listView.scroll();
 		return false;
 	},
 
