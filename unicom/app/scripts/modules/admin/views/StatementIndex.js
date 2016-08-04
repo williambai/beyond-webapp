@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var $ = require('jquery'),
 	Backbone = require('backbone'),
-    bonusTpl = require('../templates/_entityBonus.tpl'),
+    statementTpl = require('../templates/_entityStatement.tpl'),
 	loadingTpl = require('../templates/__loading.tpl');
 var config = require('../conf');
 var ListView = require('./__ListView');
@@ -11,14 +11,14 @@ Backbone.$ = $;
 //** Bonus模型
 var Bonus = Backbone.Model.extend({
 	idAttribute: '_id',
-	urlRoot: config.api.host + '/protect/finance/bonuses',	
+	urlRoot: config.api.host + '/protect/finance/statements',	
 	defaults: {
 	},
 });
 //** Bonus集合
 var BonusCollection = Backbone.Collection.extend({
 	model: Bonus,
-	url: config.api.host + '/protect/finance/bonuses',
+	url: config.api.host + '/protect/finance/statements',
 });
 
 //** List子视图
@@ -26,7 +26,7 @@ var BonusListView = ListView.extend({
 	el: '#list',
 
 	initialize: function(options){
-		var page = $(bonusTpl);
+		var page = $(statementTpl);
 		var itemTemplate = $('#itemTemplate', page).html();
 		this.template = _.template(_.unescape(itemTemplate || ''));
 		this.collection = new BonusCollection();
@@ -42,7 +42,7 @@ var BonusSearchView = SearchView.extend({
 	el: '#search',
 
 	initialize: function(options){
-		var page = $(bonusTpl);
+		var page = $(statementTpl);
 		var searchTemplate = $('#searchTemplate', page).html();
 		this.template = _.template(_.unescape(searchTemplate || ''));
 		this.model = new (Backbone.Model.extend({}));
@@ -77,7 +77,7 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
-		var page = $(bonusTpl);
+		var page = $(statementTpl);
 		var indexTemplate = $('#indexTemplate', page).html();
 		this.template = _.template(_.unescape(indexTemplate || ''));
 		this.on('load', this.load, this);
@@ -85,12 +85,9 @@ exports = module.exports = Backbone.View.extend({
 
 	events: {
 		'scroll': 'scroll',
-		'click .statementImport': 'importStatement', //** 1
-		'click .statementExport': 'exportStatement', //** 2
-		'click .bonusExec': 'execBonus', //** 3
-		'click .bonusExport': 'exportBonus', //** 4
-		'click .bonusStatus': 'updateBonusStatus', //** 5
-		'click .add': 'addView',
+		'click .import': 'importStatement', //** 1
+		'click .export': 'exportStatement', //** 2
+		// 'click .add': 'addView',
 		'click .edit': 'editView',
 		'click .delete': 'remove',
 	},
@@ -118,13 +115,13 @@ exports = module.exports = Backbone.View.extend({
 	},
 
 	addView: function(evt){
-		this.router.navigate('bonus/add',{trigger: true});
+		this.router.navigate('statement/add',{trigger: true});
 		return false;
 	},
 
 	editView: function(evt){
 		var id = this.$(evt.currentTarget).closest('.item').attr('id');
-		this.router.navigate('bonus/edit/'+ id,{trigger: true});
+		this.router.navigate('statement/edit/'+ id,{trigger: true});
 		return false;
 	},
 
@@ -147,21 +144,6 @@ exports = module.exports = Backbone.View.extend({
 		this.router.navigate('statement/export',{trigger: true});
 		return false;
 	},
-
-	execBonus: function(){
-		this.router.navigate('bonus/exec',{trigger: true});
-		return false;
-	},
-
-	exportBonus: function(){
-		this.router.navigate('bonus/export',{trigger: true});
-		return false;
-	},
-
-	updateBonusStatus: function(){
-		this.router.navigate('bonus/status/update',{trigger: true});
-		return false;
-	},
 	
 	render: function() {
 		if (!this.loaded) {
@@ -169,6 +151,6 @@ exports = module.exports = Backbone.View.extend({
 		} else {
 			this.$el.html(this.template());
 		}
-       return this;
+		return this;
 	},
 });

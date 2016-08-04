@@ -32,6 +32,7 @@ exports = module.exports = [
             "protect_finance_bank",
             "protect_finance_bank_apply",
             "protect_finance_bonus",
+            "protect_finance_statement",
             "protect_department",
             "channel_category",
             "protect_media",

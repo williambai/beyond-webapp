@@ -32,6 +32,11 @@ _.extend(config,{
 		"features": ["protect_account","protect_role","protect_app"],
 	}, {
 		"id": 2,
+		"name": "对账单管理",
+		"hash": "statement/index",
+		"features": ["protect_finance_bonus"],
+	}, {
+		"id": 2,
 		"name": "佣金管理",
 		"hash": "bonus/index",
 		"features": ["protect_finance_bonus"],

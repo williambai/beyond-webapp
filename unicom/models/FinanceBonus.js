@@ -3,6 +3,9 @@
  * - 用户佣金发放
  */
 var mongoose = require('mongoose');
+var connection = mongoose;
+var Excel = require('exceljs');
+
 var async = require('async');
 
 var schema = new mongoose.Schema({
@@ -30,6 +33,80 @@ var schema = new mongoose.Schema({
 });
 
 schema.set('collection', 'finance.bonuses');
+
+
+//** Excel 头
+var columns = [{
+                header: '序号',
+                key: 'id'
+            }, {
+                header: '年份',
+                key: 'year',
+                width: 10,
+            }, {
+                header: '月份',
+                key: 'month',
+                width: 20,
+            }, {
+                header: '姓名',
+                key: 'name',
+                width: 10
+            }, {
+                header: '手机号码',
+                key: 'mobile',
+                width: 30,
+            }, {
+                header: '发生佣金',
+                key: 'amount',
+                width: 10,
+            }, {
+                header: '税费扣除',
+                key: 'tax',
+                width: 10,
+            }, {
+                header: '实际佣金',
+                key: 'cash',
+                width: 10,
+            }, {
+                header: '状态',
+                key: 'status',
+                width: 10,
+            }];
+
+//** Excel模板
+schema.statics.toExcelTemplate = function(done){
+    var workbook = new Excel.Workbook();
+    var sheet = workbook.addWorksheet('sheet1');
+    sheet.columns = columns;
+    done(null, workbook);
+};
+
+schema.statics.toExcel = function(query, done) {
+    query = query || {};
+    var FinanceBonus = connection.model('FinanceBonus');
+    FinanceBonus
+        .find(query)
+        .exec(function(err, doc) {
+            var workbook = new Excel.Workbook();
+            var sheet = workbook.addWorksheet('sheet1');
+            sheet.columns = columns;
+            for (var i = 0; i < doc.length; i++) {
+                sheet.addRow({
+                    id: i,
+                    year: doc[i].year,
+                    month: doc[i].month,
+                    name: doc[i].name,
+                    mobile: doc[i].mobile,
+                    amount: doc[i].amount,
+                    tax: doc[i].tax,
+                    cash: doc[i].cash,
+                    status: doc[i].status,
+                });
+            }
+            done(null, workbook);
+        });
+};
+
 
 module.exports = exports = function(connection){
 	connection = connection || mongoose;

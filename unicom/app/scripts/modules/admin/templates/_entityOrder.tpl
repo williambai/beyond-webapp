@@ -171,7 +171,7 @@
 		<form>
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h5 class="panel-title text-center">编辑订单</h5>
+					<h5 class="panel-title text-center">客户订单</h5>
 				</div>
 				<div class="panel-body">
 					<div class="form-group">
@@ -179,77 +179,130 @@
 						<input type="text" class="form-control" value="<%= model._id %>" readonly>
 						<span class="help-block"></span>
 					</div>
-					<div class="form-group">
-						<label>业务号码：</label>
-							<input type="text" value="<%= model.customer.mobile %>&nbsp;&nbsp;<%= model.customer.name %>" class="form-control" readonly>
-							<span class="help-block"></span>
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h5 class="panel-title text-center">客户信息</h5>
+						</div>
+						<div class="panel-body">
+							<div class="form-group">
+								<label>客户姓名：</label>
+									<input type="text" value="" class="form-control" readonly>
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>客户号码：</label>
+									<input type="text" value="<%= model.customer.mobile %>&nbsp;&nbsp;<%= model.customer.name %>" class="form-control" readonly>
+									<span class="help-block"></span>
+							</div>
+						</div>
 					</div>
-					<div class="form-group">
-						<label>产品名称：</label>
-						<input type="text" class="form-control" value="<%= model.goods.name %>" readonly>
-						<span class="help-block"></span>
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h5 class="panel-title text-center">产品信息</h5>
+						</div>
+						<div class="panel-body">
+							<div class="form-group">
+								<label>产品名称：</label>
+								<input type="text" class="form-control" value="<%= model.goods && model.goods.name %>" readonly>
+								<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>产品类型：</label>
+								<input type="text" class="form-control" value="<%= model.goods && model.goods.category %>" readonly>
+								<span class="help-block"></span>
+							</div>
+		<!-- 					<div class="form-group">
+								<label>生效方式：</label>
+									<input type="text" value="<%= model.effect %>" class="form-control" readonly>
+									<span class="help-block"></span>
+							</div>
+		 -->
+		 					<div class="form-group">
+								<label>业务(短信)编码：</label>
+								<input type="text" class="form-control" value="<%= model.goods && model.goods.smscode %>" readonly>
+								<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>订购编码：</label>
+								<input type="text" class="form-control" value="<%= model.goods && model.goods.barcode %>" readonly>
+								<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>对账编码：</label>
+								<input type="text" name="packagecode" class="form-control" value="<%= model.goods && model.goods.packagecode %>">
+								<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>订购数量：</label>
+								<input type="text" class="form-control" value="<%= model.quantity %>" readonly>
+								<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>总价：</label>
+								<input type="text" class="form-control" value="<%= model.total %>" readonly>
+								<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>佣金：</label>
+									<input type="text" value="<%= model.bonus %>" class="form-control"  readonly>
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>佣金类型：</label>
+									<input type="text" value="<%= model.paymenttype %>" class="form-control"  readonly>
+									<span class="help-block"></span>
+							</div>
+		<!-- 					<div class="form-group">
+								<label>积分：</label>
+									<input type="text" value="<%= model.bonus.points %>" class="form-control" readonly>
+									<span class="help-block"></span>
+							</div>
+		 -->
+		 				</div>
+			 		</div>
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h5 class="panel-title text-center">发展人信息</h5>
+						</div>
+						<div class="panel-body">
+		 					<div class="form-group">
+								<label>姓名：</label>
+									<input type="text" value="<%= model.createBy.username %>" class="form-control" readonly>
+									<span class="help-block"></span>
+							</div>
+		 					<div class="form-group">
+								<label style="color:red;">手机号码：</label>
+									<input type="text" value="<%= model.createBy.mobile %>" class="form-control" readonly>
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>所属营业厅：</label>
+									<input type="text" name="department_name" value="<%= model.department.name %>" class="form-control">
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>所属城市：</label>
+									<input type="text" name="department_city" value="<%= model.department.city %>" class="form-control">
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>所属地区编码：</label>
+									<input type="text" name="department_district" value="<%= model.department.district %>" class="form-control">
+									<span class="help-block"></span>
+							</div>
+							<div class="form-group">
+								<label>所属网络编码：</label>
+									<input type="text" name="department_grid" value="<%= model.department.grid %>" class="form-control">
+									<span class="help-block"></span>
+							</div>
+						</div>
 					</div>
-<!-- 					<div class="form-group">
-						<label>生效方式：</label>
-							<input type="text" value="<%= model.effect %>" class="form-control" readonly>
-							<span class="help-block"></span>
-					</div>
- -->
- 					<div class="form-group">
-						<label>业务(短信)编码：</label>
-						<input type="text" class="form-control" value="<%= model.goods.smscode %>" readonly>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>物料编码：</label>
-						<input type="text" class="form-control" value="<%= model.goods.barcode %>" readonly>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>产品数量：</label>
-						<input type="text" class="form-control" value="<%= model.quantity %>" readonly>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>总价：</label>
-						<input type="text" class="form-control" value="<%= model.total %>" readonly>
-						<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>佣金：</label>
-							<input type="text" value="<%= model.bonus %>" class="form-control"  readonly>
-							<span class="help-block"></span>
-					</div>
-<!-- 					<div class="form-group">
-						<label>积分：</label>
-							<input type="text" value="<%= model.bonus.points %>" class="form-control" readonly>
-							<span class="help-block"></span>
-					</div>
- -->
- 					<div class="form-group">
-						<label>订单创建人：</label>
-							<input type="text" value="<%= model.createBy.mobile %>" class="form-control" readonly>
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>所属营业厅：</label>
-							<input type="text" value="<%= model.department.name %>" class="form-control" readonly>
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>所属城市：</label>
-							<input type="text" value="<%= model.department.city %>" class="form-control" readonly>
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>所属地区编码：</label>
-							<input type="text" value="<%= model.department.district %>" class="form-control" readonly>
-							<span class="help-block"></span>
-					</div>
-					<div class="form-group">
-						<label>所属网络编码：</label>
-							<input type="text" value="<%= model.department.grid %>" class="form-control" readonly>
-							<span class="help-block"></span>
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h5 class="panel-title text-center">佣金信息</h5>
+						</div>
+						<div class="panel-body payment">
+						</div>
 					</div>
 					<div class="form-group">
 						<label>订单状态：</label>
@@ -265,7 +318,7 @@
 					<div class="form-group">
 						<div class="btn-group btn-group-justified">
 							<div class="btn-group">
-								<input type="submit" value="更改订单状态" class="btn btn-danger">
+								<input type="submit" value="更改订单" class="btn btn-danger">
 							</div>
 							<div class="btn-group">
 								<button class="btn btn-primary back">取消</button>

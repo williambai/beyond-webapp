@@ -25,9 +25,40 @@ exports = module.exports = function(app, models) {
  	};
  	var update = function(req, res) {
  		var id = req.params.id;
- 		var set = req.body;
+ 		var set = {
+ 			'goods.packagecode': req.body.packagecode || '',
+ 			'department.name': req.body.department_name || '',
+ 			'department.city': req.body.department_city || '贵阳',
+ 			'department.district': req.body.department_district || '',
+ 			'department.grid': req.body.department_grid || '',
+ 			'status': req.body.status,
+ 		};
+ 		// var history = '';
+ 		// if(req.body.packagecode != req.body.goods.pakcagecode){
+ 		// 	history += '对账编码：' + req.body.goods.packagecode + ' => ' + req.body.packagecode;
+ 		// }
+ 		// if(req.body.department_name != req.body.department.name){
+ 		// 	history += '部门名称：' + req.body.department.name + ' => ' + req.body.department_name;
+ 		// }
+ 		// if(req.body.department_city != req.body.department.city){
+ 		// 	history += '城市：' + req.body.department.city + ' => ' + req.body.department_city;
+ 		// }
+ 		// if(req.body.department_district != req.body.department.district){
+ 		// 	history += '地区：' + req.body.department.district + ' => ' + req.body.department_district;
+ 		// }
+ 		// if(req.body.department_grid != req.body.department.grid){
+ 		// 	history += '网格：' + req.body.department.grid + ' => ' + req.body.department_grid;
+ 		// }
+ 		// if(req.body._status != req.body.status){
+ 		// 	history += '状态：' + req.body.status + ' => ' + req.body._status;
+ 		// }
+ 		// //** 没改变
+ 		// if(history == '') return res.send({}); 			
  		models.Order.findByIdAndUpdate(id, {
- 				$set: set
+ 				$set: set,
+ 				// $push: {
+ 				// 	'histories': history,
+ 				// }
  			}, {
  				'upsert': false,
  				'new': true,

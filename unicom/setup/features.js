@@ -119,6 +119,13 @@ exports = module.exports = [
         "status": "有效"
     },
     {
+        "description": "对账单管理：管理局方对账单的导入导出。",
+        "name": "对账单管理",
+        "nickname": "protect_finance_statement",
+        "route": "/protect/finance/statements",
+        "status": "有效"
+    },
+    {
         "description": "客户管理：管理员新增、删除和修改客户。",
         "name": "客户管理",
         "nickname": "protect_customer",

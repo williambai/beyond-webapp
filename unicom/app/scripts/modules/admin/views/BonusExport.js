@@ -24,7 +24,7 @@ exports = module.exports = FormView.extend({
 		this.router = options.router;
 		this.model = new (Backbone.Model.extend({}));
 		var page = $(bonusTpl);
-		var exportTemplate = $('#exportTemplate', page).html();
+		var exportTemplate = $('#bonusExportTemplate', page).html();
 		this.template = _.template(_.unescape(exportTemplate || ''));
 		FormView.prototype.initialize.apply(this, options);
 	},
@@ -116,6 +116,45 @@ exports = module.exports = FormView.extend({
 		this.$el.html(this.template({
 			model: this.model.toJSON()
 		}));
-		return this;
+		var columns = [{
+                header: '序号',
+                key: 'id'
+            }, {
+                header: '年份',
+                key: 'year',
+                width: 10,
+            }, {
+                header: '月份',
+                key: 'month',
+                width: 20,
+            }, {
+                header: '姓名',
+                key: 'name',
+                width: 10
+            }, {
+                header: '手机号码',
+                key: 'mobile',
+                width: 30,
+            }, {
+                header: '发生佣金',
+                key: 'amount',
+                width: 10,
+            }, {
+                header: '税费扣除',
+                key: 'tax',
+                width: 10,
+            }, {
+                header: '实际佣金',
+                key: 'cash',
+                width: 10,
+            }, {
+                header: '状态',
+                key: 'status',
+                width: 10,
+            }];
+ 		columns.forEach(function(row, index) {
+            this.$('tbody').append('<tr><td>' + (1 + index) + '</td><td>' + row.header + '</td><td>' + (row.description ? row.description : '') + '</td></tr>');
+        });
+        return this;
 	},
 });

@@ -6,34 +6,55 @@ var regexp = require('../libs/regexp');
 var async = require('async');
 var iconv = require('iconv-lite');
 var utils = require('../libs/utils');
+var _ = require('underscore');
 
 exports = module.exports = function(app, models) {
 
- 	var _ = require('underscore');
-
 	var add = function(req, res) {
- 		var type = req.body.type || '';
- 		switch (type) {
- 			case 'bonusExec':
- 				//** 核算汇总佣金
- 				res.send({});
- 				break;
- 			case 'bonusStatus':
- 				//** 按月批量修改佣金状态为“已发放”
- 				res.send({});
+ 		var action = req.body.action || '';
+ 		switch (action) {
+ 			case 'import':
+	 			var attachments;
+	 			if (typeof req.body.attachment == 'string') {
+	 				attachments = [];
+	 				attachments.push(req.body.attachment);
+	 			} else {
+	 				attachments = req.body.attachment;
+	 			}
+	 			attachments = attachments || [];
+				logger.debug('attachments:' + attachments);
+				if(attachments.length == 0){
+					return res.send({
+						code: 40441,
+						errmsg: '请选择要导入的文件'
+					});
+				}
+	 			async.eachSeries(attachments, function(attachment, cb) {
+	 				var file = path.join(__dirname, '../public', attachment);
+	 				if (!fs.existsSync(file)) {
+	 					return cb({
+	 						code: 40440,
+	 						msg: '文件不存在'
+	 					});
+	 				}
+	 				logger.debug('file: ' + file);
+					//** 导入excel
+					models.FinanceBonusUnicom.fromExcel(file, function(err,result){
+						if(err) return cb(err);
+						cb(null,result);
+					});
+	 			}, function(err, result) {
+	 				if (err) return res.send(err);
+	 				res.send({});
+	 			}); 
  				break;
  			default:
  				res.send({});
-		 		// var doc = req.body;
-		 		// models.FinanceBonus.create(doc,function(err) {
-		 		// 	if (err) return res.send(err);
-		 		// 	res.send({});
-		 		// });
 	 	}
 	};
  	var remove = function(req, res) {
  		var id = req.params.id;
- 		models.FinanceBonus.findByIdAndRemove(id, function(err, doc) {
+ 		models.FinanceBonusUnicom.findByIdAndRemove(id, function(err, doc) {
  			if (err) return res.send(err);
  			res.send(doc);
  		});
@@ -42,9 +63,9 @@ exports = module.exports = function(app, models) {
  	var update = function(req, res) {
  		var id = req.params.id;
  		var set = req.body;
- 		set = _.pick(set,'tax','cash','reason','status');//** 只允许修改的参数
+ 		set = _.pick(set,'sellerName','sellerMobile');//** 只允许修改的参数
  		set.lastupdatetime = new Date();
- 		models.FinanceBonus.findByIdAndUpdate(id,
+ 		models.FinanceBonusUnicom.findByIdAndUpdate(id,
  			{
  				$set: set
  			}, {
@@ -59,7 +80,7 @@ exports = module.exports = function(app, models) {
  	};
  	var getOne = function(req, res) {
  		var id = req.params.id;
- 		models.FinanceBonus
+ 		models.FinanceBonusUnicom
  			.findById(id)
  			.exec(function(err, doc) {
  				if (err) return res.send(err);
@@ -79,11 +100,14 @@ exports = module.exports = function(app, models) {
  			case 'search':
  				var searchStr = req.query.searchStr || '';
  				var searchRegex = new RegExp(regexp.escape(searchStr),'i');
- 				var query = models.FinanceBonus.find({
- 						year: year,
- 						month: month,
+ 				var query = models.FinanceBonusUnicom.find({
+ 						month: utils.dateFormat(new Date(year,month-1), 'yyyyMM'),
 	 					$or: [{
-	 						'name': {
+	 						'sellerMobile': {
+	 							$regex: searchRegex
+	 						}
+	 					}, {
+	 						'sellerName': {
 	 							$regex: searchRegex
 	 						}
 	 					}, {
@@ -104,15 +128,14 @@ exports = module.exports = function(app, models) {
 		 				res.send(docs);
 		 			});
  				break;
-			case 'bonusExport':
- 				//** 导出佣金
- 				var filename = 'bonus'+ utils.dateFormat(new Date(year,month-1), 'yyyyMM') +'.xlsx';
+			case 'export':
+				//** 导出对账单
+ 				var filename = 'statement'+ utils.dateFormat(new Date(year,month-1), 'yyyyMM') +'.xlsx';
 				res.setHeader('Content-Type', 'application/vnd.openxmlformats');
 				res.setHeader("Content-Disposition", "attachment; filename=" + filename);
-				models.FinanceBonus
+				models.FinanceBonusUnicom
 					.toExcel({
-						year: utils.dateFormat(new Date(year,month-1), 'yyyy'),
-						month: utils.dateFormat(new Date(year,month-1), 'MM'),						
+						month: utils.dateFormat(new Date(year,month-1), 'yyyyMM'),						
 					},function(err,workbook){
 						if(err) return res.send(err);
 						workbook.xlsx
@@ -123,7 +146,7 @@ exports = module.exports = function(app, models) {
 					});
  				break;
  			default:
-		 		models.FinanceBonus
+		 		models.FinanceBonusUnicom
 		 			.find({})
 		 			.sort({lastupdatetime: -1})
 		 			.skip(per * page)
@@ -139,34 +162,34 @@ exports = module.exports = function(app, models) {
  	 * router outline
  	 */
  	/**
- 	 * add protect/finance/bonuses
+ 	 * add protect/finance/statements
  	 * action:
  	 *     
  	 */
- 	app.post('/protect/finance/bonuses', app.grant, add);
+ 	app.post('/protect/finance/statements', app.grant, add);
  	/**
- 	 * update protect/finance/bonuses
+ 	 * update protect/finance/statements
  	 * action:
  	 *     
  	 */
- 	app.put('/protect/finance/bonuses/:id', app.grant, update);
+ 	app.put('/protect/finance/statements/:id', app.grant, update);
 
  	/**
- 	 * delete protect/finance/bonuses
+ 	 * delete protect/finance/statements
  	 * action:
  	 *     
  	 */
- 	app.delete('/protect/finance/bonuses/:id', app.grant, remove);
+ 	app.delete('/protect/finance/statements/:id', app.grant, remove);
  	/**
- 	 * get protect/finance/bonuses
+ 	 * get protect/finance/statements
  	 */
- 	app.get('/protect/finance/bonuses/:id', app.grant, getOne);
+ 	app.get('/protect/finance/statements/:id', app.grant, getOne);
 
  	/**
- 	 * get protect/finance/bonuses
+ 	 * get protect/finance/statements
  	 *      ?year=#&month=#
  	 * action:
  	 * 		?action=search&searchStr=#&year=#&month=#
  	 */
- 	app.get('/protect/finance/bonuses', app.grant, getMore);
+ 	app.get('/protect/finance/statements', app.grant, getMore);
  };

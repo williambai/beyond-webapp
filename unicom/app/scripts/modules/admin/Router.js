@@ -34,10 +34,16 @@ var BankExportView = require('./views/BankExport');
 var BankApplyIndexView = require('./views/BankApplyIndex');
 var BankApplyEditView = require('./views/BankApplyEdit');
 
-var BonusImportView = require('./views/BonusImport');
-var BonusExportView = require('./views/BonusExport');
+var StatementIndexView = require('./views/StatementIndex');
+var StatementEditView = require('./views/StatementEdit');
+var StatementImportView = require('./views/StatementImport');
+var StatementExportView = require('./views/StatementExport');
+
 var BonusIndexView = require('./views/BonusIndex');
 var BonusEditView = require('./views/BonusEdit');
+var BonusExportView = require('./views/BonusExport');
+var BonusExecView = require('./views/BonusExec');
+var BonusStatusUpdateView = require('./views/BonusStatusUpdate');
 
 var OrderIndexView = require('./views/OrderIndex');
 // var OrderViewView = require('./views/_OrderView');
@@ -133,11 +139,17 @@ exports = module.exports = Backbone.Router.extend({
 		'account/import': 'accountImport',
 		'account/export': 'accountExport',
 
-		'bonus/import': 'bonusImport',
-		'bonus/export': 'bonusExport',
+		'statement/index': 'statementIndex',
+		'statement/edit/:id': 'statementEdit',
+		'statement/import': 'statementImport',
+		'statement/export': 'statementExport',
+
 		'bonus/index': 'bonusIndex',
 		'bonus/add': 'bonusEdit',
 		'bonus/edit/:id': 'bonusEdit',
+		'bonus/exec': 'bonusExec',
+		'bonus/export': 'bonusExport',
+		'bonus/status/update': 'bonusStatusUpdate',
 
 		'bank/index': 'bankIndex',
 		'bank/add': 'bankEdit',
@@ -471,6 +483,63 @@ exports = module.exports = Backbone.Router.extend({
 		accountExportView.trigger('load');
 	},	
 
+	statementIndex: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','对账单管理');
+		var statementIndexView = new StatementIndexView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(statementIndexView);
+		statementIndexView.trigger('load');
+	},	
+
+	statementEdit: function(id){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','修改对账单');
+		var statementEditView = new StatementEditView({
+			router: this,
+			el: '#content',
+			id: id,
+		});
+		this.changeView(statementEditView);
+		statementEditView.trigger('load');
+	},	
+
+	statementImport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','局方出账导入');
+		var statementImportView = new StatementImportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(statementImportView);
+		statementImportView.trigger('load');
+	},	
+
+	statementExport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','我方出账导出');
+		var statementExportView = new StatementExportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(statementExportView);
+		statementExportView.trigger('load');
+	},	
+
 	bonusIndex: function(){
 		if(!this.logined){
 			window.location.hash = 'login';
@@ -483,35 +552,6 @@ exports = module.exports = Backbone.Router.extend({
 		});
 		this.changeView(bonusIndexView);
 		bonusIndexView.trigger('load');
-	},	
-
-
-	bonusImport: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','局方出账导入');
-		var bonusImportView = new BonusImportView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(bonusImportView);
-		bonusImportView.trigger('load');
-	},	
-
-	bonusExport: function(){
-		if(!this.logined){
-			window.location.hash = 'login';
-			return;
-		}
-		this.appEvents.trigger('set:brand','我方出账导出');
-		var bonusExportView = new BonusExportView({
-			router: this,
-			el: '#content',
-		});
-		this.changeView(bonusExportView);
-		bonusExportView.trigger('load');
 	},	
 
 	bonusEdit: function(id){
@@ -528,6 +568,49 @@ exports = module.exports = Backbone.Router.extend({
 		this.changeView(bonusEditView);
 		bonusEditView.trigger('load');
 	},	
+
+	bonusExec: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','核算佣金');
+		var bonusExecView = new BonusExecView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(bonusExecView);
+		bonusExecView.trigger('load');
+	},	
+
+	bonusExport: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','导出佣金');
+		var bonusExportView = new BonusExportView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(bonusExportView);
+		bonusExportView.trigger('load');
+	},	
+
+	bonusStatusUpdate: function(){
+		if(!this.logined){
+			window.location.hash = 'login';
+			return;
+		}
+		this.appEvents.trigger('set:brand','批量修改佣金状态');
+		var bonusStatusUpdateView = new BonusStatusUpdateView({
+			router: this,
+			el: '#content',
+		});
+		this.changeView(bonusStatusUpdateView);
+		bonusStatusUpdateView.trigger('load');
+	},	
+
 
 	bankIndex: function(){
 		if(!this.logined){

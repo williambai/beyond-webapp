@@ -114,31 +114,33 @@ exports = module.exports = FormView.extend({
 	},
 
 	submit: function() {
-		var that = this;
-		//clear errors
-		this.$('.form-group').removeClass('has-error');
-		this.$('.form-group').find('span.help-block').empty();
-		var arr = this.$('form').serializeArray();
-		var errors = [];
-		_.each(arr,function(obj){
-			var error = that.model.preValidate(obj.name,obj.value);
-			if(error){
-				errors.push(error);
-				that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
-				that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
-			}
-		});
-		if(!_.isEmpty(errors)) return false;
-		//validate finished.
+		if(window.confirm('请慎重更改订单信息。您确信要更改订单吗？')){
+			var that = this;
+			//clear errors
+			this.$('.form-group').removeClass('has-error');
+			this.$('.form-group').find('span.help-block').empty();
+			var arr = this.$('form').serializeArray();
+			var errors = [];
+			_.each(arr,function(obj){
+				var error = that.model.preValidate(obj.name,obj.value);
+				if(error){
+					errors.push(error);
+					that.$('[name="' + obj.name + '"]').parent().addClass('has-error');
+					that.$('[name="' + obj.name + '"]').parent().find('span.help-block').text(error);
+				}
+			});
+			if(!_.isEmpty(errors)) return false;
+			//validate finished.
 
-		var object = this.$('form').serializeJSON();
-		this.model.set(object);
-		// console.log(this.model.attributes);
-		this.model.save(null, {
-			xhrFields: {
-				withCredentials: true
-			},
-		});
+			var object = this.$('form').serializeJSON();
+			this.model.set(object);
+			// console.log(this.model.attributes);
+			this.model.save(null, {
+				xhrFields: {
+					withCredentials: true
+				},
+			});
+		}
 		return false;
 	},
 	
@@ -179,6 +181,24 @@ exports = module.exports = FormView.extend({
 		// this.$('#items').html(itemsView);
 		var status = this.model.get('status');
 		this.$('input[name=status][value='+ status +']').attr('checked',true);
+		//** 佣金
+		var payments = this.model.get('payment');	
+		if(payments && payments instanceof Array){
+			var paymentHtml = '<table class="table table-bordered"><caption>此单佣金发放计划表</caption><thead class="">';
+			paymentHtml += '<th>时间(年月)</th>';
+			paymentHtml += '<th>金额(元)</th>';
+			paymentHtml += '<th>状态</th>';
+			paymentHtml += '</thead>';
+			payments.forEach(function(payment){
+				paymentHtml += '<tr>';
+				paymentHtml += '<td>' + payment.month + '</td>';
+				paymentHtml += '<td>' + payment.money + '</td>';
+				paymentHtml += '<td style="color:red;">' + payment.status + '</td>';
+				paymentHtml += '</tr>';
+			});
+			paymentHtml += '</table>';
+			this.$('.payment').append(paymentHtml);
+		}
 		var histories = this.model.get('histories');
 		if(histories){
 			histories = _.sortBy(histories,'respTime');
