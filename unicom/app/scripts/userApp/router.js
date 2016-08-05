@@ -1,22 +1,28 @@
 //** routers
+var Backbone = require('backbone');
+var _ = require('underscore');
 var config = require('./conf');
 
-var main = new (require('./main/router'));
-new (require('./activity/Router'))({appEvents: main.appEvents});
-new (require('./profile/Router'))({appEvents: main.appEvents});
-new (require('./category/Router'))({appEvents: main.appEvents});
-new (require('./customer/Router'))({appEvents: main.appEvents});
-new (require('./feedback/Router'))({appEvents: main.appEvents});
-new (require('./index/Router'))({appEvents: main.appEvents});
-new (require('./me/Router'))({appEvents: main.appEvents});
-new (require('./order/Router'))({appEvents: main.appEvents});
-new (require('./phone/Router'))({appEvents: main.appEvents});
-new (require('./product/Router'))({appEvents: main.appEvents});
-new (require('./rank/Router'))({appEvents: main.appEvents});
-// new (require('./salelead/Router'))({appEvents: main.appEvents});
-new (require('./help/Router'))({appEvents: main.appEvents});
+//** 应用级别的事件
+var appEvents = _.extend({}, Backbone.Events);
 
+//** 路由集合
+new (require('./main/router'))({appEvents: appEvents});
+new (require('./activity/Router'))({appEvents: appEvents});
+new (require('./profile/Router'))({appEvents: appEvents});
+new (require('./category/Router'))({appEvents: appEvents});
+new (require('./customer/Router'))({appEvents: appEvents});
+new (require('./feedback/Router'))({appEvents: appEvents});
+new (require('./index/Router'))({appEvents: appEvents});
+new (require('./me/Router'))({appEvents: appEvents});
+new (require('./order/Router'))({appEvents: appEvents});
+new (require('./phone/Router'))({appEvents: appEvents});
+new (require('./product/Router'))({appEvents: appEvents});
+new (require('./rank/Router'))({appEvents: appEvents});
+// new (require('./salelead/Router'))({appEvents: appEvents});
+new (require('./help/Router'))({appEvents: appEvents});
 
+//** 路由入口
 var checkLogin = function(callback) {
 	$.ajax({
 		url: config.api.host + '/login/check/' + config.app.nickname,
@@ -27,7 +33,7 @@ var checkLogin = function(callback) {
 		crossDomain: true,
 	}).done(function(data) {
 		if (!!data.code) return callback(false);
-		main.appEvents.trigger('logined', data);
+		appEvents.trigger('logined', data);
 		return callback(true);
 	}).fail(function() {
 		window.location.hash = 'login';

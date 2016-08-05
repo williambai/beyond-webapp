@@ -1,5 +1,6 @@
 var Router = require('../_base/__Router');
-var ActivityIndexView = require('./views/ActivityIndex');
+// var ActivityIndexView = require('./views/ActivityIndex');
+var ActivityIndexView = require('./views/Index');
 
 exports = module.exports = Router.extend({
 
