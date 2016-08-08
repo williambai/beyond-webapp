@@ -10,11 +10,11 @@ exports = module.exports = Backbone.View.extend({
 
 	initialize: function(options){
 		this.appEvents = options.appEvents;
-
 		this.$el
 			.addClass('has-sidebar-left')
 			.addClass('has-sidebar-right')
-			.addClass('has-navbar-top');
+			.addClass('has-navbar-top')
+			.addClass('has-navbar-bottom');
 		this.appEvents.on('set:brand', this.updateBrand,this);
 		this.on('load', this.load,this);
 		this.on('update:menu', this.updateMenu,this);

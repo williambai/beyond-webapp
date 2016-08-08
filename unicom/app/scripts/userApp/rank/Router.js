@@ -20,7 +20,7 @@ exports = module.exports = Router.extend({
 			el: '#content',
 			id: id,
 		});
-		this.changeView(rankPersonView);
+		this.appEvents.trigger('changeView',rankPersonView);
 		rankPersonView.trigger('load');
 	},	
 
@@ -35,7 +35,7 @@ exports = module.exports = Router.extend({
 			el: '#content',
 			id: id,
 		});
-		this.changeView(rankTeamView);
+		this.appEvents.trigger('changeView',rankTeamView);
 		rankTeamView.trigger('load');
 	},	
 

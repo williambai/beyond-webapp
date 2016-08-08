@@ -17,7 +17,7 @@ exports = module.exports = Router.extend({
 			router: this,
 			el: '#content'
 		});
-		this.changeView(phoneIndexView);
+		this.appEvents.trigger('changeView',phoneIndexView);
 		phoneIndexView.trigger('load');
 	},
 

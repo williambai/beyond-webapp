@@ -16,7 +16,7 @@ exports = module.exports = Router.extend({
 		var indexView = new IndexView({
 			router: this,
 		});
-		this.changeView(indexView);
+		this.appEvents.trigger('changeView',indexView);
 		indexView.trigger('load');
 	},
 

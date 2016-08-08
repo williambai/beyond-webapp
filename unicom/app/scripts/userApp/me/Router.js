@@ -26,7 +26,7 @@ exports = module.exports = Router.extend({
 			router: this,
 			el: '#content',
 		});
-		this.changeView(meIndexView);
+		this.appEvents.trigger('changeView',meIndexView);
 		meIndexView.trigger('load');
 	},	
 
@@ -40,7 +40,7 @@ exports = module.exports = Router.extend({
 			router: this,
 			el: '#content',
 		});
-		this.changeView(meChangePassView);
+		this.appEvents.trigger('changeView',meChangePassView);
 		meChangePassView.trigger('load');
 	},	
 
@@ -54,7 +54,7 @@ exports = module.exports = Router.extend({
 			router: this,
 			el: '#content',
 		});
-		this.changeView(meBankView);
+		this.appEvents.trigger('changeView',meBankView);
 		meBankView.trigger('load');
 	},	
 
@@ -68,7 +68,7 @@ exports = module.exports = Router.extend({
 			router: this,
 			el: '#content',
 		});
-		this.changeView(meBonusView);
+		this.appEvents.trigger('changeView',meBonusView);
 		meBonusView.trigger('load');
 	},	
 
@@ -83,7 +83,7 @@ exports = module.exports = Router.extend({
 			el: '#content',
 			id: id,
 		});
-		this.changeView(meBonusOrderView);
+		this.appEvents.trigger('changeView',meBonusOrderView);
 		meBonusOrderView.trigger('load');
 	},	
 

@@ -21,7 +21,7 @@ exports = module.exports = Router.extend({
 			router: this,
 			el: '#content',
 		});
-		this.changeView(productHotView);
+		this.appEvents.trigger('changeView',productHotView);
 		productHotView.trigger('load');
 	},
 
@@ -36,7 +36,7 @@ exports = module.exports = Router.extend({
 			el: '#content',
 			id: id,
 		});
-		this.changeView(productOrderView);
+		this.appEvents.trigger('changeView',productOrderView);
 		productOrderView.trigger('load');
 	},
 
@@ -51,7 +51,7 @@ exports = module.exports = Router.extend({
 			el: '#content',
 			id: id,
 		});
-		this.changeView(productRecommendView);
+		this.appEvents.trigger('changeView',productRecommendView);
 		productRecommendView.trigger('load');
 	},
 

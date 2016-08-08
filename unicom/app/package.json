@@ -1,9 +1,9 @@
 {
-  "name": "beyond-spec1-app-generator",
+  "name": "unicom",
   "version": "1.0.1",
-  "description": "beyond standard web application generator.",
+  "description": "unicom project apps.",
   "private": true,
-  "author": "Suzhou Beyond Co., Ltd.",
+  "author": "Suzhou Pdbang Co., Ltd.",
   "scripts": {
     "dev": "gulp development",
     "test": "node test"

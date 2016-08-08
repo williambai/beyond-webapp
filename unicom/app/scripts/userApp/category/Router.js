@@ -35,7 +35,7 @@ exports = module.exports = Router.extend({
 			el: '#content',
 			id: id,
 		});
-		this.changeView(categoryProductView);
+		this.appEvents.trigger('changeView',categoryProductView);
 		categoryProductView.trigger('load');
 	},
 

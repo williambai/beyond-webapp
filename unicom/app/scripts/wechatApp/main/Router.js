@@ -21,7 +21,7 @@ exports = module.exports = Backbone.Router.extend({
 	account: null, //login account
 	logined: false,
 	currentView: null,
-	appEvents: _.extend({}, Backbone.Events), //app events
+	appEvents: null, //app events
 
 	routes: {
 		'': 'index',
@@ -33,7 +33,8 @@ exports = module.exports = Backbone.Router.extend({
 		'forgotpassword': 'forgotPassword',
 	},
 
-	initialize: function() {
+	initialize: function(options) {
+		this.appEvents = (options && options.appEvents) || _.extend({}, Backbone.Events);
 		this.appEvents.on('logined', this.onLogined, this);
 		this.appEvents.on('logout', this.onLogout, this);
 		this.layoutView = new LayoutView({

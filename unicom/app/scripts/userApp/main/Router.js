@@ -15,7 +15,7 @@ var MyAccountEditView = require('../profile/views/MyAccountEdit');
 
 var IndexView = require('../index/views/Index');
 
-exports = module.exports = Backbone.Router.extend({
+exports = module.exports = Router.extend({
 
 	appCode: config.app.nickname,
 	account: null, //login account
@@ -70,16 +70,6 @@ exports = module.exports = Backbone.Router.extend({
 		window.location.reload();
 	},
 
-	changeView: function(view) {
-		if (null != this.currentView) {
-			this.currentView.undelegateEvents();
-		}
-		this.currentView = view;
-		$('body').removeClass('has-navbar-bottom');
-		$('.bottom-bar').remove();
-		this.currentView.render();
-	},
-
 	index: function() {
 		if (!this.logined) {
 			window.location.hash = 'login';
@@ -89,7 +79,7 @@ exports = module.exports = Backbone.Router.extend({
 		var indexView = new IndexView({
 			router: this,
 		});
-		this.changeView(indexView);
+		this.appEvents.trigger('changeView',indexView);
 		indexView.trigger('load');
 	},
 
@@ -104,7 +94,7 @@ exports = module.exports = Backbone.Router.extend({
 			appCode: this.appCode,
 			el: '#content'
 		});
-		this.changeView(registerView);
+		this.appEvents.trigger('changeView',registerView);
 		registerView.trigger('load');
 	},
 
@@ -118,7 +108,7 @@ exports = module.exports = Backbone.Router.extend({
 			router: this,
 			el: '#content'
 		});
-		this.changeView(forgotPassword);
+		this.appEvents.trigger('changeView',forgotPassword);
 		forgotPassword.trigger('load');
 	},
 
@@ -134,7 +124,7 @@ exports = module.exports = Backbone.Router.extend({
 			el: '#content',
 			appEvents: this.appEvents,
 		});
-		this.changeView(loginView);
+		this.appEvents.trigger('changeView',loginView);
 		loginView.trigger('load');
 	},
 
@@ -150,7 +140,7 @@ exports = module.exports = Backbone.Router.extend({
 			el: '#content',
 			appEvents: this.appEvents,
 		});
-		this.changeView(loginView);
+		this.appEvents.trigger('changeView',loginView);
 		loginView.trigger('load');
 	},
 
@@ -182,7 +172,7 @@ exports = module.exports = Backbone.Router.extend({
 			id: id,
 			appEvents: this.appEvents,
 		});
-		this.changeView(profileViewView);
+		this.appEvents.trigger('changeView',profileViewView);
 		profileViewView.trigger('load');
 	},
 
@@ -197,7 +187,7 @@ exports = module.exports = Backbone.Router.extend({
 			el: '#content',
 			id: 'me',
 		});
-		this.changeView(profileEditView);
+		this.appEvents.trigger('changeView',profileEditView);
 		profileEditView.trigger('load');
 	},
 

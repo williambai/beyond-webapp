@@ -24,7 +24,7 @@ exports = module.exports = Router.extend({
 			id: id,
 			appEvents: this.appEvents,
 		});
-		this.changeView(profileViewView);
+		this.appEvents.trigger('changeView',profileViewView);
 		profileViewView.trigger('load');
 	},
 
@@ -39,7 +39,7 @@ exports = module.exports = Router.extend({
 			el: '#content',
 			id: 'me',
 		});
-		this.changeView(profileEditView);
+		this.appEvents.trigger('changeView',profileEditView);
 		profileEditView.trigger('load');
 	},
 });
