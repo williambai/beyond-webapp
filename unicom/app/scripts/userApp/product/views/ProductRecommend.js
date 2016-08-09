@@ -45,8 +45,9 @@ var OrderView = FormView.extend({
 
 	events: {
 		'keyup input[type=text]': 'inputText',
+		'click .checkphone': 'checkPhone',
 		'submit form': 'submit',
-		'click .addItem': 'addItem',
+		// 'click .addItem': 'addItem',
 		'click .cancel': 'cancel',
 		'click .back': 'cancel',
 	},
@@ -73,6 +74,44 @@ var OrderView = FormView.extend({
 		return false;
 	},
 
+	checkPhone: function(){
+		var that = this;
+		var phone = this.$('input[name="mobile[]"]').val();
+		if(!/^(186|185|156|131|130|155|132)\d{8}$/.test(phone)){
+			this.$('input[name="mobile[]"]').closest('.form-group').addClass('has-error');
+			this.$('input[name="mobile[]"]').closest('.form-group').find('span.help-block').text('请输入有效号码');
+			return false;
+		}
+		that.$('#checkresult').html('<span>正在检查，请稍后...</span>');
+		$.ajax({
+			url: config.api.host + '/public/customer/phones/' + phone,
+			type: 'GET',
+			xhrFields: {
+				withCredentials: true
+			},
+			crossDomain: true,
+		}).done(function(data) {
+			var html = '';
+			if(data.code){
+				html = '<h5 style="color:red;">无法检测号码</h5>';
+				return that.$('#checkresult').html(html);
+			}
+			html = '';
+			html += '<h4>检验结果</h4>';
+			if(data.info && (data.info.OpenDate != '')){
+				html += '<p>该号码仅能订购2/3G业务，请确认该业务属于2/3G业务后再订购。</p>';
+			}else if(data.info && (data.info.OpenDate =='')){
+				html += '<p>该号码仅能订购4G业务，请确认该业务属于4G业务后再订购。</p>'
+			}else{
+				html += '<p>无结果</p>';
+			}
+			that.$('#checkresult').html(html);
+		}).fail(function(err) {
+			var error = '<h5 style="color:red;">无法检测号码</h5>';
+			that.$('#checkresult').html(error);
+		});
+		return false;
+	},
 
 	addItem: function(){
 		this.$('#insertItemBefore').prepend('<div class="form-group"><label></label><input name="mobile[]" class="form-control" placeholder="手机号码"></div>');

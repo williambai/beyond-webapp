@@ -272,7 +272,7 @@
 				<div class="media-body">
 					<h4><%= model.name %></h4>
 					<p><%= model.tags %></p>
-					<p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：<%= model.goods.bonus %>&nbsp;元&nbsp;&nbsp;</p>
+					<p>售价：<%= model.price %>&nbsp;<%= model.unit %>&nbsp;&nbsp;返佣：&nbsp;<%= (model.goods && model.goods.bonus && !isNaN(model.goods.bonus)) ? model.goods.bonus + '元' : '待定' %>&nbsp;&nbsp;</p>
 				</div>
 			</div>
 			<p style="text-align:right">
@@ -304,7 +304,7 @@
 						<%= model.name %>
 					</h4>
 					<p><%= model.tags %></p>
-					<p>佣金：<%= model.goods.bonus %>元</p>
+					<p>佣金：<%= (model.goods && model.goods.bonus && !isNaN(model.goods.bonus)) ? model.goods.bonus + '元' : '待定' %></p>
 				</div>
 			</div>
 			<div class="col-xs-4">
@@ -411,19 +411,23 @@
 					<div class="form-group">
 					<div class="btn-group btn-group-justified">
 						<div class="btn-group">
-						<input type="submit" value="确定" class="btn btn-danger">
-					</div>
-					<div class="btn-group">
-						<button class="btn btn-success cancel">取消</button>
-					</div>
+							<button class="btn btn-primary checkphone">号码检查</button>
+						</div>
+						<div class="btn-group">
+							<input type="submit" value="确定" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-success cancel">取消</button>
+						</div>
 					</div>
 				</div>
 			</form>
+			<div id="checkresult"></div>
 		</div>
 	</div>
 	<h4>使用说明：</h4>
-	<hr/>
-	<p>订购平台将向客户的手机发送二次确认短信，客户必须在规定的时间内，按照短信上的提示信息完成订购。</p>
+	<hr/><p>1. 先检查用户号码，根据检查结果，判断是否可以订购该产品。</p>
+	<p>2. 点击“确认”后，订购平台将向客户的手机发送二次确认短信，客户必须在规定的时间内，按照短信上的提示信息完成订购。</p>
 	<br/>
 </script>
 <!-- 推荐成功 -->
