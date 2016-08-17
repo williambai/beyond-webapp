@@ -1,0 +1,16 @@
+{
+  "name": "pdbang-unicom-cbss",
+  "version": "1.0.1",
+  "description": "pdbang unicom",
+  "private": true,
+  "author": "Suzhou PDBang Co., Ltd.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "pm2 start ./config/pm2_dev.json",
+    "start": "pm2 start ./config/pm2.json"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "compression": "^1.6.2"
+  }
+}
