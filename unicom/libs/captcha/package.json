@@ -1,0 +1,10 @@
+{
+  "name": "captcha",
+  "version": "1.0.1",
+  "description": "pdbang unicom",
+  "private": true,
+  "author": "Suzhou PDBang Co., Ltd.",
+  "main": "index.js",
+  "dependencies": {
+  }
+}

@@ -3,7 +3,7 @@ var connection = mongoose;
 var request = require('request');
 var signature = require('../lib/signature');
 var _ = require('underscore');
-var CBSS = require('../../../libs/cbss');//** 联通CBSS系统
+var CBSS = require('unicom-cbss');//** 联通CBSS系统
 
 var schema = new mongoose.Schema({
 
