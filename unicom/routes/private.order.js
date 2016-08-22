@@ -20,7 +20,9 @@
  		models.Order
  			.find({
  				'createBy.id': req.session.accountId, //** 只能看自己的 
- 				'status': '成功', //** 仅显示成功订单			 				
+ 				'status': {//** 仅显示成功和失败的订单
+ 					$in: ['成功','失败']
+ 				}, 			 				
  			})
  			.sort({_id: -1})
  			.skip(per * page)
