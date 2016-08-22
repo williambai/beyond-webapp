@@ -80,6 +80,7 @@ gulp.task('server:js', function(done) {
     gulp.src([
             '**/*.js',
             '!_*/**/*',
+            '!api/**/*',
             '!app/**/*',
             '!build/**/*',
             '!config/**/*',

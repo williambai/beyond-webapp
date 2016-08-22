@@ -39,23 +39,34 @@ var OrderListView = ListView.extend({
 		var paymentType = model.get('paymenttype');
 		var payments = model.get('payment');	
 		if(status == '成功'){
-			if(paymentType && payments && payments instanceof Array){
-				var paymentHtml = '<table class="table table-bordered"><caption>此单佣金发放计划表</caption><thead class="">';
-				paymentHtml += '<th>时间(年月)</th>';
-				paymentHtml += '<th>金额(元)</th>';
-				// paymentHtml += '<th>状态</th>';
-				paymentHtml += '</thead>';
-				payments.forEach(function(payment){
-					paymentHtml += '<tr>';
-					paymentHtml += '<td>' + payment.month + '</td>';
-					paymentHtml += '<td>' + payment.money + '</td>';
-					// paymentHtml += '<td style="color:red;">' + payment.status + '</td>';
-					paymentHtml += '</tr>';
+			// if(paymentType && payments && payments instanceof Array){
+			// 	var paymentHtml = '<table class="table table-bordered"><caption>此单佣金发放计划表</caption><thead class="">';
+			// 	paymentHtml += '<th>时间(年月)</th>';
+			// 	paymentHtml += '<th>金额(元)</th>';
+			// 	// paymentHtml += '<th>状态</th>';
+			// 	paymentHtml += '</thead>';
+			// 	payments.forEach(function(payment){
+			// 		paymentHtml += '<tr>';
+			// 		paymentHtml += '<td>' + payment.month + '</td>';
+			// 		paymentHtml += '<td>' + payment.money + '</td>';
+			// 		// paymentHtml += '<td style="color:red;">' + payment.status + '</td>';
+			// 		paymentHtml += '</tr>';
+			// 	});
+			// 	paymentHtml += '</table>';
+			// 	$item.find('.payment').append(paymentHtml);
+			// }
+		}else{
+			var histories = model.get('histories');
+			if(histories && histories instanceof Array){
+				var historyHtml = '失败原因：';
+				var errorMessage = '';
+				histories.forEach(function(history){
+					if(history.respDesc) errorMessage = history.respDesc;
 				});
-				paymentHtml += '</table>';
-				$item.find('.payment').append(paymentHtml);
+				historyHtml += errorMessage;
+				$item.find('.payment').append(historyHtml);
 			}
-		}	
+		}
 		return $item.html();
 	},
 });
