@@ -9,18 +9,13 @@ exports = module.exports = function(options){
 		var timestamp = req.query.timestamp;
 		var nonce = req.query.nonce;
 		if(!(key && timestamp && nonce)) return res.status(400).send('请求参数错误\n');
-		var account = clients[key];
-		if(!account) return res.status(403).send('key不存在');
-		var args = {
-			key: key,
-			timestamp: timestamp,
-			nonce: nonce,
-			secret: account.secret,
-		};
-		var signed = signature.unsign(args);
-		// console.log(signed);
-		if( signed != req.signature) return res.status(401).send('未授权，请与管理员联系。');
-		req.user = account;
+		var client = clients[key];
+		if(!client) return res.status(403).send('key不存在');
+		var signed = signature.unsign(client.secret,req.query);
+		// console.log('req.query: ' + JSON.stringify(req.query));
+		// console.log('signed: ' + signed);
+		if( signed != req.query.signature) return res.status(401).send('未授权，请与管理员联系。');
+		req.client = client;
 		next();
 	};
 }

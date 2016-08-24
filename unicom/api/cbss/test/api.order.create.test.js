@@ -4,13 +4,8 @@
  */
 
 var request = require('request');
-var signature = require('./lib/signature');
-
-var client = {
-		key: 'key',
-		secret: 'secret',
-		callback_url: 'http://localhost:3000/callback',
-};
+var signature = require('../lib/signature');
+var client = require('../config/clients')['9E251F7C'];//** test账号
 
 var order = {
 	customer: {
@@ -36,12 +31,14 @@ var result = {
 	};
 
 request({
+	url: 'http://localhost:3000/orders',
 	method: 'POST',
-	url: client.callback_url,
-	qs: signature.sign(client.key, client.secret),
+	qs: signature.sign(client.key, client.secret,{
+		// callback: 'http://localhost:3001',
+	}),
 	json: true,
 	body: result,
 },function(err,httpResponse,body){
 	if(err) console.log(err);
-	console.log('body:' + body);
+	console.log('body:' + JSON.stringify(body));
 });
