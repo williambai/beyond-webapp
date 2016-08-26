@@ -3,6 +3,7 @@ var $ = require('jquery');
 var	Backbone = require('backbone');
 var FormView = require('../../_base/__FormView');
 var config = require('../../conf');
+var QRCode = require('../../_base/qrcode');
 
 Backbone.$ = $;
 
@@ -111,6 +112,15 @@ exports = module.exports = FormView.extend({
 	render: function() {
 		this.$el.html(this.template({model: this.model.toJSON()}));
 		this.$('img#avatar').attr('src', this.model.get('avatar'));
+		var account = this.router.account || {};
+		var qrcode = new QRCode(document.getElementById("qrcode"), {
+		    text: 'http://gzwo.pdbang.cn/public.html?uid='+ encodeURIComponent(account.email),
+		    width: 150,
+		    height: 150,
+		    colorDark : '#000000',
+		    colorLight : '#ffffff',
+		    correctLevel : QRCode.CorrectLevel.H
+		});
 		return this;
 	}
 });

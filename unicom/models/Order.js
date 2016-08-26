@@ -577,19 +577,30 @@ module.exports = exports = function(conn){
 									});
 							}else if(action == 'order'){
 								//** 订购模式
-								if(/1\d{10}/.test(order.createBy.mobile)){
-									sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
-									sms.receiver = order.createBy.mobile || '';
-									sms.content = '您(' + (order.createBy.mobile || '') + ')为 ' + order.customer.mobile + ' 用户申请订购(' + order.goods.name + ')，资费:(' + order.goods.price + ' ' + order.goods.unit +')，回复验证码确认订购(10分钟内有效): '+ order.confirmCode +'。';
-									sms.status = '新建';
-									PlatformSms
-										.create(sms, function(err){
-											if(err) return callback(err);
-											callback(null);
-										});
-								}else{
-									callback(null);
-								}
+								sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
+								sms.receiver = order.customer.mobile;
+								sms.content = '尊敬的用户您好，欢迎订购(' + order.goods.name + ')，资费:(' + order.goods.price + ' ' + order.goods.unit +')，回复“Y”确认订购(10分钟内有效)。';
+								sms.status = '新建';
+								PlatformSms
+									.create(sms, function(err){
+										if(err) return callback(err);
+										callback(null);
+									});
+								// if(/1\d{10}/.test(order.createBy.mobile)){
+								// 	sms.sender = String(order.goods && order.goods.smscode).replace(/\D/g,''); 
+								// 	sms.receiver = order.createBy.mobile || '';
+								// 	sms.content = '您(' + (order.createBy.mobile || '') + ')为 ' + order.customer.mobile + ' 用户申请订购(' + order.goods.name + ')，资费:(' + order.goods.price + ' ' + order.goods.unit +')，回复验证码确认订购(10分钟内有效): '+ order.confirmCode +'。';
+								// 	sms.status = '新建';
+								// 	PlatformSms
+								// 		.create(sms, function(err){
+								// 			if(err) return callback(err);
+								// 			callback(null);
+								// 		});
+								// }else{
+								// 	callback(null);
+								// }
+							}else{
+								callback();
 							}
 						},
 						function createActivity(callback) {
@@ -597,7 +608,7 @@ module.exports = exports = function(conn){
 							if(action == 'recommend'){
 								body = '向朋友推荐了<u>' + product.name + '</u>产品';
 							}else{
-								body = '向帮助朋友订购了<u>' + product.name + '</u>产品';
+								body = '朋友订购了<u>' + product.name + '</u>产品';
 							}
 							var activity = {
 								uid: account.accountId,

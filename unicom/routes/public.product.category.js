@@ -34,11 +34,11 @@
  	/**
  	 * get protect/product/categories
  	 */
- 	app.get('/public/product/categories/:id', app.isLogin, getOne);
+ 	app.get('/public/product/categories/:id', getOne);
 
  	/**
  	 * get public/product/categories
  	 * type:
  	 */
- 	app.get('/public/product/categories', app.isLogin, getMore);
+ 	app.get('/public/product/categories', getMore);
  };

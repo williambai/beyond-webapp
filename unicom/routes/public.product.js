@@ -85,7 +85,7 @@ var regexp = require('../libs/regexp');
  		var page = (!req.query.page || req.query.page < 0) ? 0 : req.query.page;
  		page = (!page || page < 0) ? 0 : page;
  		//** 限定地区
-		var scopeRegex = new RegExp('(全省|' + (req.session.department.city || '全省') + ')','i');
+		var scopeRegex = new RegExp('(全省' + ((req.session && req.session.department && req.session.department.city) ? ( '|' + req.session.department.city) : '|全省') + ')','i');
  		switch(action){
  			case 'category':
 				var searchStr = decodeURIComponent(req.query.category) || '';

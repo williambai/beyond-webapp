@@ -142,6 +142,7 @@ gulp.task('index.js',function(done){
 	var entries = [
 		'scripts/index.js',
 		'scripts/wechat.js',
+		'scripts/public.js'
 	];
 	_bundleJS(entries,done);
 });

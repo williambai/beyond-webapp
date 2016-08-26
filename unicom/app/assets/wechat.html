@@ -297,6 +297,13 @@
 			</div>
 		</div>
 		<div id="orderView"></div>
+		<div>
+			<h4>该产品推广二维码</h4>
+			<hr>
+			<div id="qrcode" class="center"></div><br>
+			<p>下载、打印或张贴该二维码，客户可以扫码实现自助订购该产品，也可以分享二维码给你的朋友哦。</p>
+		</div>
+		<br>
 		<h4>产品说明：</h4>
 		<hr/>
 		<p><%= model.description %></p>
@@ -1600,6 +1607,13 @@
 	<p>所在城市：<%= model.department && model.department.city %></p>
 	<p>所在地区：<%= model.department && model.department.district %></p>
 	<p>所在网格：<%= model.department && model.department.grid %></p>
+	<hr>
+	<div>
+		<h4>我的推广二维码</h4>
+		<hr>
+		<div id="qrcode" class="center"></div><br>
+		<p>下载、打印或张贴该二维码，客户可以扫码实现自助订购。客户订购产品的佣金归您哦。</p>
+	</div>
 	<hr>
 	<h4>我的自传</h4>
 	<%if(model.biography && model.biography.length > 0){ %>

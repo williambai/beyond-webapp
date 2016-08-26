@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>贵州联通沃助手 - 中国联通</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-ui">
+    <meta name="apple-mobile-web-app-status-bar-style" content="yes">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="apple-touch-icon" href="images/touch-icon-iphone.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/touch-icon-ipad.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="images/touch-icon-iphone4.png" />
+</head>
+
+<body class="has-navbar-top has-navbar-bottom">
+    <div class="app">
+        <div class="navbar navbar-app navbar-absolute-top">
+            <div class="navbar-brand navbar-brand-center">贵州联通沃助手</div>
+        </div>
+        <div class="navbar navbar-app navbar-absolute-top" id="deviceready" style="display:none;">
+            <div class="navbar-brand-center">
+                <h4 class="bg-warning">网络不通</h4>
+            </div>
+        </div>
+		<div class="navbar navbar-app navbar-absolute-bottom">
+	        <div class="btn-group justified">
+	          <a href="#category/index" class="btn btn-navbar"><i class="fa fa-lg fa-home fa-navbar"></i>所有产品</a>
+	          <a href="#product/hots" class="btn btn-navbar"><i class="fa fa-lg fa-star fa-navbar"></i> 热门产品</a>
+	        </div>
+	    </div>
+        <div class="app-body">
+            <div class="app-content">
+                <div class="scrollable">
+                    <div id="content" class="scrollable-content section">
+                        <p>正在加载中...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- 产品目录 -->
+<script type="text/template" id="tpl-category-index">
+	<div id="indexTemplate">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">所有产品</h5>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div id="list">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 产品目录条目 -->
+<script type="text/tempalte" id="tpl-category-item">
+	<div>
+		<div class="item col-xs-6" id="<%= model._id %>">
+			<div class="text-center">
+				<img src="" width="80px" height="80px">
+				<h4><%= model.name %></h4>
+				<p>&nbsp;</p>
+			</div>
+		</div>
+	</div>
+</script>
+
+<!-- 分类中的产品 -->
+<script type="text/tempalte" id="tpl-category-product-index">
+	<div>
+		<div class="nav-back">
+			<button class="btn btn-primary pull-left back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+			<h4 class="text-center"><%= model.name %></h4>
+		</div>
+		<p>&nbsp;</p>
+		<div id="list">
+		</div>
+	</div>
+</script>
+<!-- 热门产品 -->
+<script type="text/template" id="tpl-product-hot">
+	<div id="hotTemplate">
+		<div class="panel panel-default">
+ 			<div class="panel-heading">
+				<h5 class="panel-title text-center">热门产品</h5>
+			</div>
+			<div class="panel-body">
+				<div id="list">
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 产品条目 -->
+<script type="text/template" id="tpl-product-item">
+	<div>
+		<div class="item" id="<%= model._id %>" data="<%= model.name %>">
+			<div class="media">
+				<div class="media-left">
+					<img width="50px" height="50px">
+				</div>
+				<div class="media-body">
+					<h4><%= model.name %></h4>
+					<p><%= model.tags %></p>
+					<p>售价：<%= model.price %>&nbsp;<%= model.unit %><!--&nbsp;&nbsp;返佣：&nbsp;<%= (model.goods && model.goods.bonus && !isNaN(model.goods.bonus)) ? model.goods.bonus + '元' : '待定' %>&nbsp;&nbsp; --></p>
+				</div>
+			</div>
+			<p style="text-align:right">
+			<!-- <% if(/MicroMessenger/.test(navigator.userAgent)){ %> -->
+			<!-- <button class="btn btn-danger promote wechat">微信推广</button> -->
+			<!-- <% } %> -->
+			<!-- <button class="btn btn-danger sms">短信推广</button> -->
+			<!-- <button class="btn btn-danger order">订购</button> -->
+			<button class="btn btn-success recommend">推荐</button>
+			</p>
+			<hr/>
+		</div>
+	</div>
+</script>
+<!-- 产品详情 -->
+<script type="text/template" id="tpl-product-view">
+	<div>
+		<div class="nav-back">
+			<button class="btn btn-primary back"><i class="fa fa-reply">&nbsp;</i>返回</button>
+		</div>
+		<br/>
+		<div class="row">
+			<div class="col-xs-8">
+				<div class="pull-left">
+					<img width="50px" height="50px">
+				</div>
+				<div style="padding-left:60px;">
+					<h4 >
+						<%= model.name %>
+					</h4>
+					<p><%= model.tags %></p>
+					<!--<p>佣金：<%= (model.goods && model.goods.bonus && !isNaN(model.goods.bonus)) ? model.goods.bonus + '元' : '待定' %></p> -->
+				</div>
+			</div>
+			<div class="col-xs-4">
+				<h4 style="text-align:right;"><%= model.price %>&nbsp;<%= model.unit %>
+				</h4>
+			</div>
+		</div>
+		<div id="orderView"></div>
+		<div>
+			<h4>该产品推广二维码</h4>
+			<hr>
+			<div id="qrcode" class="center"></div><br>
+			<p>下载、打印或张贴该二维码，客户可以扫码实现自助订购该产品，也可以分享二维码给你的朋友哦。</p>
+		</div>
+		<br>
+		<h4>产品说明：</h4>
+		<hr/>
+		<p><%= model.description %></p>
+	</div>
+</script>
+
+<!-- 产品订单 -->
+<script type="text/template" id="tpl-product-order">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">申请订购</h5>
+		</div>
+		<div class="panel-body">
+			<form id="orderForm">
+				<div class="form-group">
+					<label></label>
+					<input type="text" name="mobile[]" class="form-control" placeholder="客户手机号码">
+					<span class="help-block"></span>
+				</div>
+<!--
+					<div class="form-group">
+					<label></label>
+					<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group">
+					<label></label>
+					<input type="text" name="mobile[]" class="form-control" placeholder="手机号码">
+					<span class="help-block"></span>
+				</div>
+				<div id="insertItemBefore"></div>
+-->
+				<div class="form-group hidden">
+					<label>生效时间：</label>
+					<div style="padding-left:30px;" id="effectMethod">
+					</div>
+				</div>
+					<div class="form-group">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group">
+						<input type="submit" value="确定" class="btn btn-danger">
+					</div>
+					<div class="btn-group">
+						<button class="btn btn-success cancel">取消</button>
+					</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<h4>使用说明：</h4>
+	<hr/>
+	<p>订购平台将向您的手机发送二次确认短信，请在规定的时间内，按照短信上的提示信息完成订购。</p>
+	<p><span style="color:red;">仅限贵州省联通手机的用户，其他地区的用户暂时无法收到短信。</span></p>
+	<br/>
+</script>
+
+<!-- 订单成功 -->
+<script type="text/template" id="tpl-order-success">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">申请订购成功</h5>
+		</div>
+		<div class="panel-body">
+			<p>恭喜您！产品订购申请已受理。您将会收到订购平台发送的二次确认短信，请按照短信上的提示信息完成订购！</p>
+			<button class="btn btn-primary btn-block back">返回</button>
+		</div>
+	</div>
+</script>
+
+<!-- 订单失败 -->
+<script type="text/template" id="tpl-order-failure">
+		<p>申请订购失败。查看</p>
+		<div>
+		</div>
+</script>
+
+<!-- 产品推荐 -->
+<script type="text/template" id="tpl-product-recommend">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">推荐给客户</h5>
+		</div>
+		<div class="panel-body">
+			<form id="orderForm">
+				<div class="form-group">
+					<label></label>
+					<input type="text" name="mobile[]" class="form-control" placeholder="客户手机号码">
+					<span class="help-block"></span>
+				</div>
+				<div class="form-group hidden">
+					<label>生效时间：</label>
+					<div style="padding-left:30px;" id="effectMethod">
+					</div>
+				</div>
+					<div class="form-group">
+					<div class="btn-group btn-group-justified">
+						<div class="btn-group">
+							<button class="btn btn-primary checkphone">号码检查</button>
+						</div>
+						<div class="btn-group">
+							<input type="submit" value="确定" class="btn btn-danger">
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-success cancel">取消</button>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div id="checkresult"></div>
+		</div>
+	</div>
+	<h4>使用说明：</h4>
+	<hr/><p>1. 先检查用户号码，根据检查结果，判断是否可以订购该产品。</p>
+	<p>2. 点击“确认”后，订购平台将向客户的手机发送二次确认短信，客户必须在规定的时间内，按照短信上的提示信息完成订购。</p>
+	<br/>
+</script>
+<!-- 推荐成功 -->
+<script type="text/template" id="tpl-recommend-success">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">推荐成功</h5>
+		</div>
+		<div class="panel-body">
+			<p>恭喜您，推荐成功！客户将收到订购平台发送的二次确认短信，他(她)必须在规定的时间内，按照短信上的提示完成订购！</p>
+			<button class="btn btn-primary btn-block back">返回</button>
+		</div>
+	</div>
+</script>
+<!-- 推荐失败 -->
+<script type="text/template" id="tpl-recommend-failure">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h5 class="panel-title text-center">推荐失败</h5>
+		</div>
+		<div class="panel-body">
+			<p><%= model && model.errmsg %></p>
+			<button class="btn btn-primary btn-block back">返回</button>
+		</div>
+	</div>
+</script>
+<!-- 号码检查 -->
+<script type="text/template" id="tpl-phone-index">
+	<div>
+		<div id="carouselView"></div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title text-center">号码检测</h5>
+			</div>
+			<div class="panel-body">
+				<div id="search">
+				</div>
+				<div id="view">
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 号码检查搜索 -->
+<script type="text/template" id="tpl-phone-search">
+	<form id="orderForm">
+		<div class="form-group">
+			<label></label>
+			<input type="text" name="mobile" class="form-control" placeholder="客户手机号码">
+			<span class="help-block"></span>
+		</div>
+			<div class="form-group">
+			<div class="btn-group btn-group-justified">
+				<div class="btn-group">
+				<input type="submit" value="确定" class="btn btn-danger">
+			</div>
+			<div class="btn-group">
+				<button class="btn btn-success back">返回</button>
+			</div>
+			</div>
+		</div>
+	</form>
+</script>
+<!-- 号码检查结果 -->
+<script type="text/template" id="tpl-phone-result">
+	<hr>
+	<h4>检验结果</h4>
+	<p style="color:red;"><%= model.errmsg %></p>
+	<% if(model.info && (model.info.OpenDate != '')){ %>
+	<p>仅能订购2/3G业务</p>
+	<% }else if(model.info && (model.info.OpenDate =='')){ %>
+	<p>仅能订购4G业务</p>
+	<% }else{ %>
+	<p>无结果</p>
+	<% } %>
+</script>
+<script type="text/javascript" src="js/public.js"></script>
+
+</html>
