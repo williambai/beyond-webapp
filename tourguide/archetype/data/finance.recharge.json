@@ -1,0 +1,16 @@
+[{
+	"_id": 1001,
+	"recharge": 10,
+	"status": "新建"
+},{
+	"_id": 1001,
+	"recharge": 10,
+	"status": "成功",
+	"transaction": {}
+},{
+	"_id": 1001,
+	"recharge": 10,
+	"status": "失败",
+	"message": "余额不足",
+	"transaction": {}
+}]

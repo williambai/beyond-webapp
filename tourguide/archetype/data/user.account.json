@@ -1,0 +1,58 @@
+[{
+	"_id": 1001,
+	"username": "15600000000",
+	"password": "123456",
+	"roles": "",
+	"apps": ["tourist"],
+	"status": "有效"
+},{
+	"_id": 1002,
+	"username": "demo@appmod.cn",
+	"password": "123456",
+	"roles": "",
+	"apps": ["tourist"],
+	"status": "有效"
+},{
+	"_id": 2001,
+	"username": "guide@appmod.cn",
+	"password": "123456",
+	"roles": "guide",
+	"apps": ["guide"],
+	"status": "有效"
+},{
+	"_id": 2002,
+	"username": "guide2@appmod.cn",
+	"password": "123456",
+	"roles": "guide",
+	"apps": ["guide"],
+	"status": "有效"
+},{
+	"_id": 30001,
+	"username": "gov@appmod.cn",
+	"password": "123456",
+	"roles": "gov",
+	"apps": ["gov"],
+	"status": "有效"
+},{
+	"_id": 30002,
+	"username": "gov2@appmod.cn",
+	"password": "123456",
+	"roles": "gov",
+	"apps": ["gov"],
+	"status": "有效"
+},{
+	"_id": 40001,
+	"username": "admin@appmod.cn",
+	"password": "123456",
+	"roles": "admin",
+	"apps": ["admin"],
+	"status": "有效"
+},{
+	"_id": 50001,
+	"username": "super@appmod.cn",
+	"password": "123456",
+	"roles": "super",
+	"apps": ["super"],
+	"status": "有效"
+}]
+

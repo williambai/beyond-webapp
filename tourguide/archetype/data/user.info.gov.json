@@ -1,0 +1,17 @@
+[{
+	"_id": 30001,
+	"realname": "旅游局管理员1",
+	"avatar": "avatar.png",
+	"country": "中国",
+	"province": "北京",
+	"city": "北京",
+	"district": "海淀区"
+},{
+	"_id": 30002,
+	"realname": "旅游局管理员2",
+	"avatar": "avatar.png",
+	"country": "中国",
+	"province": "北京",
+	"city": "北京",
+	"district": "海淀区"
+}]

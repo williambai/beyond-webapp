@@ -1,0 +1,15 @@
+{
+	"name": "$name/String",
+	"first": "$first/String",
+	"description": "$desciption/String",
+	"address": "$address/String",
+	"city": "$city/String",
+	"province": "$province/String",
+	"country": "$country/String",
+	"zipcode": "$zipcode/String",
+	"point": {
+		"lan": "$lan/Double",
+		"lat": "$lat/Double"
+	},
+	"stars": "$stars/Integer"
+}

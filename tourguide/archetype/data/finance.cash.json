@@ -1,0 +1,20 @@
+[{
+	"_id": 1001,
+	"cash": 10,
+	"status": "申请"
+},{
+	"_id": 1002,
+	"cash": 10,
+	"status": "已受理"
+},{
+	"_id": 2001,
+	"cash": 10,
+	"status": "成功",
+	"transaction": {}
+},{
+	"_id": 2002,
+	"cash": 10,
+	"status": "驳回",
+	"message": "账户不存在",
+	"transaction": {}
+}]

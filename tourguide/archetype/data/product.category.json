@@ -1,0 +1,67 @@
+[{
+	"_id": 7001,
+	"name": "国家",
+	"category": "区划",
+	"type": "root",
+	"items": [{
+		"_id": 7002,
+		"name": "中国",
+	}]
+},{
+	"_id": 7002,
+	"name": "中国",
+	"category": "区划",
+	"type": "leaf",
+	"items": [{
+		"_id": 7003,
+		"name": "北京",
+	},{
+		"_id": 7005,
+		"name": "江苏省",
+	}]
+},{
+	"_id": 7003,
+	"name": "北京",
+	"category": "区划",
+	"type": "leaf",
+	"items": [{
+		"_id": null,
+		"name": "海淀区",
+	}]
+},{
+	"_id": 7005,
+	"name": "江苏省",
+	"category": "区划",
+	"type": "leaf",
+	"items": [{
+		"_id": 7006,
+		"name": "南京",
+	},{
+		"_id": 7007,
+		"name": "苏州",
+	}]
+},{
+	"_id": 7007,
+	"name": "苏州",
+	"category": "区划",
+	"type": "leaf",
+	"items": [{
+		"_id": null,
+		"name": "姑苏区",
+	},{
+		"_id": null,
+		"name": "园区",
+	}]
+},,{
+	"_id": 7010,
+	"name": "等级",
+	"category": "等级",
+	"type": "root",
+	"items": [{
+		"_id": null,
+		"name": "AAAAA",
+	},{
+		"_id": null,
+		"name": "AAAA",
+	}]
+}]

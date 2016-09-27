@@ -1,0 +1,52 @@
+[{
+	"_id": 5001,
+	"name": "北京故宫",
+	"description": "",
+	"country": "中国",
+	"province": "北京",
+	"city": "北京",
+	"district": "海淀区",
+	"address":"",
+	"price": "",
+	"website":"",
+	"phone": "",
+	"location": {},
+	"categories": [{
+		"name": "国家",
+		"value": "中国"
+	},{
+		"name": "省份",
+		"value": "北京"
+	},{
+		"name": "城市",
+		"value": "北京"
+	},{
+		"name": "区/县",
+		"value": "海淀区"
+	},{
+		"name": "等级",
+		"value": "AAAAA"
+	}],
+	"tags": ["AAAA级景区","休闲"],
+	"pictures": [{
+		"titile": "",
+		"thumbnail": "",
+		"uri": "",
+		"display": 1
+	}],
+	"videos":[{
+		"titile": "",
+		"thumbnail": "",
+		"uri": "",
+		"display": 1
+	}],
+	"voices":[{
+		"titile": "",
+		"uri": "",
+		"display": 1
+	}],
+	"resources": [{
+		"uri": "http://www.baidu.com/#",
+		"casper": "baidu",
+	}]
+}]

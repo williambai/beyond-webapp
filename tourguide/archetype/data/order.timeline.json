@@ -1,0 +1,43 @@
+[{
+	"_id": 1,
+	"product": {
+
+	},
+	"buyer": {
+		"_id": 1001,
+		"realname": "",
+		"avatar": "",
+	},
+	"seller": {
+
+	},
+	"price": 100,
+	"unit": "小时",
+	"quantity": 2,
+	"meetplace": {
+		"name": "",
+		"description": "",
+		"features": "",
+		"location": {}
+	},
+	"status": "新建",
+	"histories": []
+},{
+	"_id": 2,
+	"product": {
+
+	},
+	"buyer": {
+		"_id": 1001,
+		"realname": "",
+		"avatar": "",
+	},
+	"seller": {
+
+	},
+	"price": 100,
+	"unit": "次",
+	"quantity": 1,
+	"status": "完成",
+	"histories": []
+}]

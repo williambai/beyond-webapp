@@ -1,0 +1,103 @@
+0 前提：
+
+根据key/secret验证签名正确。
+调用：/auth?key=xxx&timestamp=yyyy&nonce=zzzz&signature=wwww
+如果返回正确，格式如下：
+
+{code:0,message:'ok',timestamp:12344424232}
+
+如果code != 0 表示错误。
+
+1。提供cbss账号:
+
+account = {
+        "id": "xiaogan",
+        "release": false,
+        "province": "湖北省",
+        "city": "孝感",
+        "staffId": "KXGCFJH2",
+        "password": "password",
+        "provinceId": "71",
+        "cityId": "",
+};
+
+2. 提供callback_url:
+用于接收返回结果
+
+client = {
+    key: String, //** client key
+    secret: String, //** client secret
+    callback_url: String, //** 回调Url
+}
+
+3. 创建订单
+创建订单会立即返回，表示系统接收到订单请求。
+订单处理结果会通过callback_url通知，也可以通过订单查询接口主动查询。
+
+var order = {
+    customer: {
+        mobile: '18500000000',
+    },
+    product: {
+        name: 'product_name', //** 产品名称(goods.name)
+        category: '4G', //** 产品分类(goods.category)
+        packagecode: '12345k67890e54321TD|111k222e333TD', //** 原始产品集合
+        price: 10, //** 产品单价(product.price)
+        unit: '元/月', //** 产品单位(product.unit)
+    },
+    account: {
+        name: 'abcdef', //** cbss账户名称
+        province_id: '851', //** cbss账户省份编码
+        city: '贵阳', //** cbss账户所属城市
+    }
+};
+var result = {
+        action: 'create',
+        data: order,
+        timestamp: parseInt(((new Date()).getTime())/1000),
+    };
+
+request({
+    url: 'http://localhost:3000/orders',
+    method: 'POST',
+    qs: signature.sign(client.key, client.secret),
+    json: true,
+    body: result,
+},function(err,httpResponse,body){
+    if(err) console.log(err);
+    console.log('body:' + JSON.stringify(body));
+});
+
+4. 查询处理结果
+提供订单号，查询订单状态。
+
+var order_id = '57bc21f53e9cb15a2c123419';
+var result = {
+        action: 'getOne',
+        data: {
+            id: order_id,
+        },
+        timestamp: parseInt(((new Date()).getTime())/1000),
+    };
+
+request({
+    url: 'http://localhost:3000/orders',
+    method: 'POST',
+    qs: signature.sign(client.key, client.secret),
+    json: true,
+    body: result,
+},function(err,httpResponse,body){
+    if(err) console.log(err);
+    console.log('body:' + JSON.stringify(body));
+});
+
+5. callback_url接收到的结果，数据格式
+客户必须实现回调的处理流程，立即返回。
+
+var result = {
+    action: 'create', //** 调用功能： 'create', 'getOne', 'getMore'
+    data: {},//** json数据内容
+    timestamp: 12343532212, //** 时间戳
+};
+
+

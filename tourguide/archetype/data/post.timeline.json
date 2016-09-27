@@ -1,0 +1,93 @@
+[{
+	"_id": 6001,
+	"user": {
+		"_id": 1001,
+		"name": "",
+		"avatar": ""
+	},
+	"subject": {
+		"category": "guide",
+		"_id": 2001
+	},
+	"body": {
+		"content": "导游帖子",
+		"attachements": [{
+			"thumbnail": "",
+			"type": "",
+			"uri": ""
+		}]
+	},
+	"comments": [{
+		"_id": 1,
+		"user": {
+			"_id": 2001,
+			"name": "",
+			"avatar": ""
+		},
+		"body": {
+			"content": "评论"
+		},
+		"replies": [{
+			"_id": 1,
+			"user": {
+				"_id": 2001,
+				"name": "",
+				"avatar": ""
+			},
+			"body": {
+				"content": "回复"
+			}
+		}]
+	}],
+	"display": 1000,
+	"displayad": 0,
+	"allowComment": true,
+	"allowReply": true,
+	"status": "有效"
+},{
+	"_id": 6002,
+	"user": {
+		"_id": 1001,
+		"name": "",
+		"avatar": ""
+	},
+	"subject": {
+		"category": "goods",
+		"_id": 5001
+	},
+	"body": {
+		"content": "景点帖子",
+		"attachements": [{
+			"thumbnail": "",
+			"type": "",
+			"uri": ""
+		}]
+	},
+	"comments": [{
+		"_id": 1,
+		"user": {
+			"_id": 2001,
+			"name": "",
+			"avatar": ""
+		},
+		"body": {
+			"content": "评论"
+		},
+		"replies": [{
+			"_id": 1,
+			"user": {
+				"_id": 2001,
+				"name": "",
+				"avatar": ""
+			},
+			"body": {
+				"content": "回复"
+			}
+		}]
+	}],
+	"display": 100,
+	"displayad": 0,
+	"allowComment": true,
+	"allowReply": true,
+	"status": "有效"
+}]

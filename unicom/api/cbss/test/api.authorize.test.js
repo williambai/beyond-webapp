@@ -10,7 +10,9 @@ var client = require('../config/clients')['9E251F7C'];
 var qs = signature.sign(client.key, client.secret);
 console.log('query string: ' + JSON.stringify(qs));
 request({
-	url: 'http://localhost:3000/auth',
+	// url: 'http://localhost:3000/auth',
+	//http://wo.pdbang.cn/api/auth?key=xxx&timestamp=yyyy&nonce=zzzz&signature=wwww
+	url: 'http://wo.pdbang.cn/api/auth',
 	method: 'GET',
 	qs: qs,
 },function(err,httpResponse,body){

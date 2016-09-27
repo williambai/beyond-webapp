@@ -1,0 +1,47 @@
+[{
+	"_id": 2001,
+	"realname": "导游1",
+	"guideseries": "0000001",
+	"avatar": "avatar.png",
+	"country": "中国",
+	"province": "北京",
+	"city": "北京",
+	"district": "海淀区",
+	"sns": {
+		"weibo": {
+			"uri": "http://weibo.com/#",
+			"visible": true,
+		},
+		"qqzone": {
+			"uri": "http://zone.qq.com/#",
+			"visible": true,
+		},
+		"weixin": {
+			"uri": "tourguide",
+			"visible": true,
+		}
+	}
+},{
+	"_id": 2002,
+	"realname": "导游2",
+	"guideseries": "0000002",
+	"avatar": "avatar.png",
+	"country": "中国",
+	"province": "北京",
+	"city": "北京",
+	"district": "海淀区",
+	"sns": {
+		"weibo": {
+			"uri": "http://weibo.com/#",
+			"visible": true,
+		},
+		"qqzone": {
+			"uri": "http://zone.qq.com/#",
+			"visible": true,
+		},
+		"weixin": {
+			"uri": "tourguide",
+			"visible": true,
+		}
+	}
+}]
