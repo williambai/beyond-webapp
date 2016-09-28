@@ -6,6 +6,7 @@ var uuid = require('node-uuid');
 var schema = new mongoose.Schema({
 		name: String, //** 应用名称
 		description: String, //** 应用描述
+		aid: String, //** id
 		key: String, //** key
 		secret: String, //** secret
 		domain: String, //** domain 域名
