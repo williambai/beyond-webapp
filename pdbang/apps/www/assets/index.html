@@ -22,7 +22,7 @@
 		        <span class="icon-bar"></span>
 		        <span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="index.html"><img src="images/logo.png" height="25px" width="25px"></a>
+			<a class="navbar-brand" href="index.html"><img src="images/logo.png" height="25px"></a>
 		</div>
 		<div class="collapse navbar-collapse" id="navbar-collapse-1">
 			<ul class="nav navbar-nav">
@@ -33,9 +33,30 @@
 				<li><a href="member.html">我的应用</a></li>
 			</ul>
 		</div>
-		<img src="images/home-top.jpg" width="100%">
+		<div id="carousel-home" class="carousel slide" data-ride="carousel">
+			<ol class="carousel-indicators">
+				<li data-target="#carousel-home" data-slide-to="0" class="active"></li>
+				<li data-target="#carousel-home" data-slide-to="1"></li>
+				<li data-target="#carousel-home" data-slide-to="2"></li>
+				<li data-target="#carousel-home" data-slide-to="3"></li>
+			</ol>
+			<div class="carousel-inner" role="listbox">
+				<div class="item active">
+					<img src="images/home-top1.jpg" width="100%">
+				</div>
+				<div class="item">
+					<img src="images/home-top2.jpg" width="100%">
+				</div>
+				<div class="item">
+					<img src="images/home-top3.jpg" width="100%">
+				</div>
+				<div class="item">
+					<img src="images/home-top5.jpg" width="100%">
+				</div>
+			</div>
+		</div>
 	</nav>
-	<article id="content" class="markdown-body">正在加载中...</article>
+	<!-- <article id="content" class="markdown-body">正在加载中...</article> -->
 	<div>
 		<hr>
 		<p class="text-center">2015-2016@版权所有 苏州普德邦网络技术有限公司</p>
@@ -45,6 +66,11 @@
 </body>  
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type='text/javascript' src="js/bootstrap.js"></script>
+<script type="text/javascript">
+	$('.carousel').carousel({
+	  interval: 5000
+	})
+</script>
 <script type="text/javascript">
 $(function(){
 	var search = window.location.search || '';

@@ -1,1 +1,0 @@
-resetpass.tpl
