@@ -1,7 +1,7 @@
 ## 目录
 
-### 接入指南
-#### [新手指南](doc.html?page=new_user_guide)
+### 新手指南
+#### [接入指南](doc.html?page=new_user_guide)
 #### [获取access\_token](doc.html?page=access_token)
 
 ### 位置服务
